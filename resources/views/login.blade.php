@@ -7,7 +7,7 @@
         <meta name="robots" content="{{ env('META_ROBOT') }}">
 
         <title>.: CARENT :.</title>
-        <link rel="shortcut icon" type="image/png" href="images/favicon.png"/>
+        <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
         <link href="{{ mix('/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ mix('/css/login.css') }}" rel="stylesheet" type="text/css">
 
@@ -18,12 +18,15 @@
         <div class="row align-items-center justify-content-center">
           <div class="col-12 col-sm-9 col-md-6 col-lg-4">
             <form>
+              <div class="logo">
+                <img src="/images/logo-carent.png">
+              </div>
               <div class="form-group">
                 <label for="codigoUsuario">Código de usuario</label>
                 <input aria-describedby="codigoUsuarioHelp"
                        class="form-control"
                        id="codigoUsuario"
-                       type="email">
+                       type="text">
                 <small id="codigoUsuarioHelp" class="form-text text-muted">Ejemplo: 2209</small>
               </div>
               <div class="form-group">
@@ -31,7 +34,7 @@
                 <input class="form-control" id="clave" type="password">
               </div>
               <div class="form-group">
-                <button class="btn btn-primary" type="button">Entrar</button>
+                <button class="btn" type="button" v-on:click="login">Entrar</button>
               </div>
               <div class="form-group">
                 <a class="recuperarClave" v-on:click="modalRecuperarClave">Olvidé mi contraseña</a>
@@ -44,16 +47,21 @@
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">Recupera tu clave</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
-                FORM
+                Para recuperar su clave solo debe indicar su código de usuario y le llegará a su correo.
+                <form>
+                  <div class="form-group">
+                    <input class="form-control" id="codigoRecuperacion" type="text">
+                    <small id="codigoRecuperacionHelp" class="form-text text-muted">Ejemplo: 2209</small>
+                  </div>
+                </form>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn" v-on:click="modalRecuperarClave">Recuperar</button>
+                <button type="button" class="btn" v-on:click="recuperarClave">Recuperar</button>
               </div>
             </div>
           </div>

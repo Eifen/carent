@@ -2,6 +2,7 @@ require('bootstrap');
 window.Vue = require('vue');
 window.$ = require('jquery');
 window.axios = require('axios');
+window.AutoNumeric = require('autonumeric');
 var self;
 
 var app = new Vue({
@@ -16,8 +17,22 @@ var app = new Vue({
   },
   created: function () {
 
+
+
   },
   mounted: function () {
+
+    new AutoNumeric('#codigoUsuario', {
+      decimalPlaces: 0,
+      decimalCharacter: ',',
+      digitGroupSeparator: ''
+    });
+
+    new AutoNumeric('#codigoRecuperacion', {
+      decimalPlaces: 0,
+      decimalCharacter: ',',
+      digitGroupSeparator: ''
+    });
 
   },
   updated: function () {
@@ -28,7 +43,15 @@ var app = new Vue({
   methods:{
 
     modalRecuperarClave: function(){
-      alert(1)
+
+      $("#modal-recuperar-clave").modal("show");
+
+    },
+    recuperarClave: function(){
+      alert("recuperar");
+    },
+    login: function(){
+      alert("validar");
     }
 
   }// Fin methods
