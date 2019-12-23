@@ -6,15 +6,39 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="robots" content="{{ env('META_ROBOT') }}">
 
-        <title>Sofguar</title>
+        <title>.: CARENT :.</title>
         <link rel="shortcut icon" type="image/png" href="images/favicon.png"/>
-        <link href="{{ mix('/css/bootstrap.4.3.1.min.css') }}" rel="stylesheet" type="text/css">
-        <link href="{{ mix('/css/frontend/login.css') }}" rel="stylesheet" type="text/css">
+        <link href="{{ mix('/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+        <link href="{{ mix('/css/login.css') }}" rel="stylesheet" type="text/css">
 
     </head>
     <body>
 
       <div id="login" class="container-fluid">
+        <div class="row align-items-center justify-content-center">
+          <div class="col-12 col-sm-9 col-md-6 col-lg-4">
+            <form>
+              <div class="form-group">
+                <label for="codigoUsuario">Código de usuario</label>
+                <input aria-describedby="codigoUsuarioHelp"
+                       class="form-control"
+                       id="codigoUsuario"
+                       type="email">
+                <small id="codigoUsuarioHelp" class="form-text text-muted">Ejemplo: 2209</small>
+              </div>
+              <div class="form-group">
+                <label for="clave">Contraseña</label>
+                <input class="form-control" id="clave" type="password">
+              </div>
+              <div class="form-group">
+                <button class="btn btn-primary" type="button">Entrar</button>
+              </div>
+              <div class="form-group">
+                <a class="recuperarClave" v-on:click="modalRecuperarClave">Olvidé mi contraseña</a>
+              </div>
+            </form>
+          </div>
+        </div>
 
         <div id="modal-recuperar-clave" class="modal fade" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-dialog-centered" role="document">
@@ -29,7 +53,7 @@
                 FORM
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn" v-on:click="showBudgetModal">Recuperar</button>
+                <button type="button" class="btn" v-on:click="modalRecuperarClave">Recuperar</button>
               </div>
             </div>
           </div>
@@ -37,8 +61,8 @@
 
       </div>
 
-      <script src="{{ mix('/js/fontawesome-free-5.8.1.js') }}"></script>
-      <script src="{{ mix('/js/frontend/login.js') }}"></script>
+      <script src="{{ mix('/js/fontawesome-free-5.12.0.js') }}"></script>
+      <script src="{{ mix('/js/login.js') }}"></script>
 
     </body>
 </html>

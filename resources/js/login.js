@@ -1,11 +1,11 @@
-require('../bootstrap');
+require('bootstrap');
 window.Vue = require('vue');
 window.$ = require('jquery');
 window.axios = require('axios');
 var self;
 
 var app = new Vue({
-  
+
   el: '#login',
   data: {
     banner: [],
@@ -26,6 +26,10 @@ var app = new Vue({
 
   },
   methods:{
+
+    modalRecuperarClave: function(){
+      alert(1)
+    }
 
   }// Fin methods
 

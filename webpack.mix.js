@@ -11,6 +11,7 @@ const mix = require('laravel-mix');
  |
  */
 
- mix.js('resources/js/login.js', 'public/js')
-    .less('resources/less/login.less', 'public/css/frontend')
-    .styles('resources/css/bootstrap.4.3.1.min.css','public/css/bootstrap.4.3.1.min.css');
+ mix.js('resources/js/login.js', 'public/js/login.js')
+    .js('resources/js/fontawesome-free-5.12.0/all.min.js', 'public/js/fontawesome-free-5.12.0.js')
+    .less('resources/less/login.less', 'public/css/login.css')
+    .styles('resources/css/bootstrap-4.4.1/bootstrap.min.css','public/css/bootstrap.min.css');

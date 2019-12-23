@@ -1,13 +1,51 @@
-@font-face {
+/*@font-face {
   font-family: "Rawline";
   src: url("../../fonts/rawline/rawline-600.ttf");
-}
+}*/
 
 html{
   overflow-x: hidden;
 }
 
 #login{
+  background-color: #E9ECEF;
+  height: 100vh;
+
+  > .row {
+    height: 100vh;
+
+    form{
+      background-color: white;
+      border-radius: 3px;
+      padding: 15px;
+
+      .form-group{
+
+        .form-control{
+          border-radius: 2px;
+        }
+
+        .recuperarClave{
+          color: #007BFF;
+          transition: all .3s;
+
+          &:hover{
+            cursor: pointer;
+            text-decoration: underline;
+          }
+
+        }
+
+        .btn{
+          border-radius: 2px;
+          width: 100%;
+        }
+
+      }// Fin .form-group
+
+    }// Fin form
+
+  }// FIn > .row
 
   #modal-recuperar-clave{
 
@@ -19,7 +57,7 @@ html{
         .modal-header{
           border-bottom: 0px;
           color: #022C43;
-          font-family: "Rawline";
+          //font-family: "Rawline";
           padding: .5rem .5rem;
 
           .close{
@@ -38,7 +76,7 @@ html{
         }
 
         .modal-body{
-          font-family: "Brandon Grotesque";
+          //font-family: "Brandon Grotesque";
           padding: .5rem;
 
           .fa-check{
@@ -50,7 +88,7 @@ html{
 
         .modal-footer{
           border-top: 0px;
-          font-family: "Brandon Grotesque";
+          //font-family: "Brandon Grotesque";
           padding: .3rem;
 
           .btn{
