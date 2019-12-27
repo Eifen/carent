@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\UsuarioModel;
 
-class UsuarioController extends Controller
+class LoginController extends Controller
 {
 
     function encryptConfig(Request $request){
