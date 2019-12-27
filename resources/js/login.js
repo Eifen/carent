@@ -34,7 +34,7 @@ var app = new Vue({
     showSubmitModal: true
   },
   beforeCreate: function(){
-
+    
     self = this;
 
     const config = axios.get('/encryptConfig')
