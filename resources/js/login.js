@@ -77,6 +77,7 @@ var app = new Vue({
 
   },
   created: function () {
+    alert ("ANA BLANDIN");
 
   },
   mounted: function () {
