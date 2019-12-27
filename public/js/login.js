@@ -39249,7 +39249,7 @@ var app = new Vue({
     });
   },
   created: function created() {
-    alert("jose");
+    alert("jose 2");
   },
   mounted: function mounted() {
     new AutoNumeric('#codigoUsuario', {
