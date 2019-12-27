@@ -14,29 +14,77 @@ class LoginController extends Controller
       $modelo = new LoginModel();
       $config = $modelo->encryptConfig();
 
-      /*$key = pack("H*", "0123456789abcdef0123456789abcdef");
-      $iv =  pack("H*", "abcdef9876543210abcdef9876543210");
-      $decrypted = openssl_decrypt($request->input("clave"), 'AES-128-CBC', $key, OPENSSL_ZERO_PADDING, $iv);
-      $decrypted = trim($decrypted);*/
-
-
-      //return $secretKey;
-      /*$clave = "dc171216";
-      $clave2 = $request->input("clave");
-      $encrypted = Crypt::encryptString($clave);
-      $decrypted = Crypt::decryptString($encrypted);*/
-    return $config;
+      return $config;
 
     }
 
     function login(Request $request){
 
-      $codigoUsuario = $request->input("codigoUsuario");
+      $codigoUsuario = $this->desencriptarCryptoJS($request->input("codigoUsuario"));
+      $claveForm = $this->desencriptarCryptoJS($request->input("clave"));
 
-      $modelo = new UsuarioModel();
+      $modelo = new LoginModel();
       $usuario = $modelo->buscarUsuario($codigoUsuario);
+      $loginDenegado = $modelo->estatusLoginDenegado($usuario->id_estatus);
 
-      return $usuario;
+      if(!$loginDenegado){
+
+        if(!empty($usuario)){
+
+          $claveDB = $usuario->clave;
+          $claveDB = $this->desencriptarLaravel($claveDB);
+
+          if($claveDB === $claveForm){
+
+            $response = array("login" => true, "message" => "Bienvenido!, espere unos segundo mientras cargamos sus datos.");
+
+          }else{
+
+            $response = array("login" => false, "message" => "Contraseña inválida");
+
+          }
+
+        }else{
+
+          $response = array("login" => false, "message" => "El usuario no existe");
+
+        }
+
+      }else{
+
+        $response = array("login" => false, "message" => "El usuario está en estatus <b>".$usuario->estatus."</b>");
+
+      }// Fin if(!$loginDenegado)
+
+      return $response;
+
+    }
+
+    private function encriptarLaravel($valor){
+
+      $encrypted = Crypt::encryptString($valor);
+      return $encrypted;
+
+    }
+
+    private function desencriptarLaravel($valor){
+
+      $decrypted = Crypt::decryptString($valor);
+      return $decrypted;
+
+    }
+
+    private function desencriptarCryptoJS($valor){
+
+      $modelo = new LoginModel();
+      $config = $modelo->encryptConfig();
+
+      $key = pack("H*", $config["key"]);
+      $iv =  pack("H*", $config["iv"]);
+      $decrypted = openssl_decrypt($valor, 'AES-128-CBC', $key, OPENSSL_ZERO_PADDING, $iv);
+      $decrypted = trim($decrypted);
+
+      return $decrypted;
 
     }
 

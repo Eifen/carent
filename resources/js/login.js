@@ -23,24 +23,33 @@ var app = new Vue({
       show: false
     },
     copyRight: `Sofguar © ${new Date().getFullYear()}`,
-    disabledSubmitLogin: false,
-    disabledSubmitModal: false,
     formLogin: {
-      codigoUsuario : "",
-      clave: ""
+      codigoUsuario: {
+        value: ""
+      },
+      clave: {
+        value: ""
+      }
     },
     key: null,
     iv: null,
-    showSubmitModal: true
+    showSubmitModal: true,
+    submitLogin: {
+      content: "Entrar",
+      disabled: false
+    },
+    submitModalRecoveryPass: {
+      content: "Recuperar",
+      disabled: false,
+      show:true
+    }
   },
   beforeCreate: function(){
 
     self = this;
 
-    const config = axios.get('/encryptConfig', { params : {clave: "123456"}})
+    const config = axios.get('/encryptConfig')
     .then(function (response) {
-
-      //console.log(response);
 
       if(response.status === 200 && response.data.key && response.data.iv){
 
@@ -48,49 +57,50 @@ var app = new Vue({
         self.iv = response.data.iv;
         self.alertLogin = {class : "", message: "", show: false};
         self.alertRecoveryPass = {class : "", message: "", show: false};
-        self.showSubmitModal = true;
+        self.submitModalRecoveryPass.show = true;
 
       }else{
 
-        self.disabledSubmitLogin = true;
-        self.disabledSubmitModal = true;
-        self.alertLogin = {
-          class : "alert alert-warning",
-          message : "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-        self.alertRecoveryPass = {
-          class : "alert alert-warning",
-          message : "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-        self.showSubmitModal = false;
+        throw "error";
 
       }
 
     })
     .catch(error => {
 
-      self.submitLogin = true;
+      self.submitLogin.disabled = true;
+      self.submitModalRecoveryPass.show = false;
+      self.alertLogin = {
+        class : "alert alert-warning",
+        message : "Existe un error!, consulte con el administrador del sistema.",
+        show: true
+      };
+      self.alertRecoveryPass = {
+        class : "alert alert-warning",
+        message : "Existe un error!, consulte con el administrador del sistema.",
+        show: true
+      };
 
     });
 
   },
   created: function () {
-     
+
   },
   mounted: function () {
 
     new AutoNumeric('#codigoUsuario', {
       decimalPlaces: 0,
       decimalCharacter: ',',
-      digitGroupSeparator: ''
+      digitGroupSeparator: '',
+      leadingZero: 'keep'
     });
 
     new AutoNumeric('#codigoRecuperacion', {
       decimalPlaces: 0,
       decimalCharacter: ',',
-      digitGroupSeparator: ''
+      digitGroupSeparator: '',
+      leadingZero: 'keep'
     });
 
   },
@@ -101,12 +111,26 @@ var app = new Vue({
   },
   methods:{
 
+    encriptar: function(valor){
+
+      let key = CryptoJS.enc.Hex.parse(self.key);
+      let iv = CryptoJS.enc.Hex.parse(self.iv);
+
+      var encrypted = CryptoJS.AES.encrypt(valor, key, {
+          iv,
+          padding: CryptoJS.pad.ZeroPadding,
+      });
+
+      return encrypted.toString();
+
+    },
     desencriptar: function(valor){
-      return "hola";
+
+
+
     },
     valuesFormLogin: function(e){
-      self.formLogin[$(e.target).attr("id")] = $(e.target).val();
-
+      self.formLogin[$(e.target).attr("id")].value = $(e.target).val();
     },
     modalRecuperarClave: function(){
 
@@ -139,22 +163,41 @@ var app = new Vue({
 
       if(formValido){
 
+        self.alertLogin = {
+          class : "",
+          message : "",
+          show: false
+        };
+
         //Obtenemos valores
         let parametros = {
-          codigoUsuario: self.formLogin.codigoUsuario,
-          clave: self.formLogin.clave
+          codigoUsuario: self.encriptar(self.formLogin.codigoUsuario.value),
+          clave: self.encriptar(self.formLogin.clave.value)
         }
 
         axios.post('/login', parametros)
         .then(function (response) {
 
-          const data = response.data;
+          if(response.status === 200 && response.data.login === true){
+
+            console.log("LOGIN");
+
+          }else{
+
+            throw response.data;
+
+          }
 
         })
         .catch(error => {
 
-          console.log("ERROR LOGIN");
-          console.log(error);
+          var message = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+
+          self.alertLogin = {
+            class : "alert alert-warning",
+            message : message,
+            show: true
+          };
 
         });
 

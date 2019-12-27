@@ -18,14 +18,47 @@ class LoginModel extends Model
 
       return array("key" => $key, "iv" => $iv);
 
-    }
+    }// Fin encryptConfig
 
     function buscarUsuario($codigo){
 
-      $usuario = DB::select('SELECT id, clave, avatar, id_estatus FROM tbl_usuario WHERE codigo = "'.$codigo.'"');
+      $usuario = DB::select('SELECT u.id,
+                                    u.clave,
+                                    u.avatar,
+                                    u.id_estatus,
+                                    e.descripcion AS estatus
+                             FROM tbl_usuario u,
+                                  tbl_estatus e
+                             WHERE codigo = "'.$codigo.'"
+                             AND e.tabla = "tbl_usuario"
+                             AND e.valor = u.id_estatus');
 
-      return $usuario;
+      if(count($usuario) > 0){
 
-    }
+        return $usuario[0];
+
+      }else{
+
+        return array();
+
+      }
+
+    }// Fin buscarUsuario
+
+    function estatusLoginDenegado($id_estatus){
+
+      $estatus = DB::select('SELECT * FROM tbl_estatus_login_denegado WHERE id_estatus = '.$id_estatus);
+
+      if(count($estatus) > 0){
+
+        return true;
+
+      }else{
+
+        return false;
+
+      }
+
+    }// Fin estatusLoginDenegado
 
 }

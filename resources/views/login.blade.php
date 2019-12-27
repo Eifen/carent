@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-      
+
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -30,21 +30,26 @@
                        data-only-number="true"
                        id="codigoUsuario"
                        type="text"
-                       v-on:keypress="valuesFormLogin"
-                       v-bind:value="formLogin.codigoUsuario">
+                       v-on:change="valuesFormLogin"
+                       v-bind:value="formLogin.codigoUsuario.value">
                 <small id="codigoUsuarioHelp" class="form-text text-muted">Ejemplo: 2209</small>
                 <div class="mensaje"></div>
               </div>
               <div class="form-group">
                 <label for="clave">Contraseña</label>
                 <input class="form-control"
-                       id="clave" type="password"
-                       v-on:keypress="valuesFormLogin"
-                       v-bind:value="formLogin.clave">
+                       id="clave"
+                       type="password"
+                       v-on:change="valuesFormLogin"
+                       v-bind:value="formLogin.clave.value">
                 <div class="mensaje"></div>
               </div>
               <div>
-                <button class="btn" type="button" v-on:click="login" v-bind:disabled="disabledSubmitLogin">Entrar</button>
+                <button class="btn"
+                        type="button"
+                        v-on:click="login"
+                        v-bind:disabled="submitLogin.disabled"
+                        v-html="submitLogin.content"></button>
               </div>
               <div class="wrapper-recovery-pass">
                 <a class="recuperarClave" v-on:click="modalRecuperarClave">Olvidé mi contraseña</a>
@@ -73,7 +78,12 @@
                 </form>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn" v-on:click="recuperarClave" v-bind:disabled="disabledSubmitModal" v-if="showSubmitModal">Recuperar</button>
+                <button class="btn"
+                        type="button"
+                        v-bind:disabled="submitModalRecoveryPass.disabled"
+                        v-if="submitModalRecoveryPass.show"
+                        v-html="submitModalRecoveryPass.content"
+                        v-on:click="recuperarClave"></button>
                 <div v-bind:class="alertRecoveryPass.class" role="alert" v-if="alertRecoveryPass.show" v-html="alertRecoveryPass.message"></div>
               </div>
             </div>
