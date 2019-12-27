@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
+      
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -17,7 +18,7 @@
       <div id="login" class="container-fluid">
         <div class="row align-items-center justify-content-center">
           <div class="col-12 col-sm-9 col-md-6 col-lg-4">
-            <form>
+            <form id="formLogin">
               <div class="logo">
                 <img src="/images/logo-carent.png">
               </div>
@@ -25,20 +26,30 @@
                 <label for="codigoUsuario">Código de usuario</label>
                 <input aria-describedby="codigoUsuarioHelp"
                        class="form-control"
+                       data-validar="true"
+                       data-only-number="true"
                        id="codigoUsuario"
-                       type="text">
+                       type="text"
+                       v-on:keypress="valuesFormLogin"
+                       v-bind:value="formLogin.codigoUsuario">
                 <small id="codigoUsuarioHelp" class="form-text text-muted">Ejemplo: 2209</small>
+                <div class="mensaje"></div>
               </div>
               <div class="form-group">
                 <label for="clave">Contraseña</label>
-                <input class="form-control" id="clave" type="password">
+                <input class="form-control"
+                       id="clave" type="password"
+                       v-on:keypress="valuesFormLogin"
+                       v-bind:value="formLogin.clave">
+                <div class="mensaje"></div>
               </div>
-              <div class="form-group">
-                <button class="btn" type="button" v-on:click="login">Entrar</button>
+              <div>
+                <button class="btn" type="button" v-on:click="login" v-bind:disabled="disabledSubmitLogin">Entrar</button>
               </div>
-              <div class="form-group">
+              <div class="wrapper-recovery-pass">
                 <a class="recuperarClave" v-on:click="modalRecuperarClave">Olvidé mi contraseña</a>
               </div>
+              <div v-bind:class="alertLogin.class" role="alert" v-if="alertLogin.show" v-html="alertLogin.message"></div>
             </form>
           </div>
         </div>
@@ -57,11 +68,13 @@
                   <div class="form-group">
                     <input class="form-control" id="codigoRecuperacion" type="text">
                     <small id="codigoRecuperacionHelp" class="form-text text-muted">Ejemplo: 2209</small>
+                    <div class="mensaje"></div>
                   </div>
                 </form>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn" v-on:click="recuperarClave">Recuperar</button>
+                <button type="button" class="btn" v-on:click="recuperarClave" v-bind:disabled="disabledSubmitModal" v-if="showSubmitModal">Recuperar</button>
+                <div v-bind:class="alertRecoveryPass.class" role="alert" v-if="alertRecoveryPass.show" v-html="alertRecoveryPass.message"></div>
               </div>
             </div>
           </div>

@@ -11,6 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('login');
-});
+Route::get('/', function () { return view('login'); });
+Route::get('/encryptConfig', 'UsuarioController@encryptConfig');
+Route::post('/login', 'UsuarioController@login');

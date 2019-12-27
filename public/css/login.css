@@ -23,31 +23,41 @@ html {
 #login > .row form:hover {
   box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
 }
-#login > .row form .logo {
+#login > .row form > div.logo {
   margin-bottom: 40px;
   margin-top: 30px;
   text-align: center;
 }
-#login > .row form .logo img {
+#login > .row form > div.logo img {
   height: 90px;
   width: auto;
 }
-#login > .row form .form-group label {
+#login > .row form > div.form-group label {
   color: #091F40;
 }
-#login > .row form .form-group .form-control {
+#login > .row form > div.form-group .invalid-feedback {
+  display: block !important;
+}
+#login > .row form > div.form-group .form-control {
   border-radius: 2px;
 }
-#login > .row form .form-group .recuperarClave {
+#login > .row form > div.form-group .form-control.error {
+  border-color: #dc3545;
+}
+#login > .row form > div.wrapper-recovery-pass {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+#login > .row form > div.wrapper-recovery-pass .recuperarClave {
   color: #007BFF;
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
-#login > .row form .form-group .recuperarClave:hover {
+#login > .row form > div.wrapper-recovery-pass .recuperarClave:hover {
   cursor: pointer;
   text-decoration: underline;
 }
-#login > .row form .form-group .btn {
+#login > .row form > div .btn {
   background-color: #091F40;
   border: 2px solid #091F40;
   border-radius: 2px;
@@ -57,9 +67,12 @@ html {
   transition: all 0.3s;
   width: 100%;
 }
-#login > .row form .form-group .btn:hover {
+#login > .row form > div .btn:hover {
   background-color: #F6A81C;
   color: #091F40;
+}
+#login > .row form > div .btn:disabled {
+  cursor: not-allowed;
 }
 #login #modal-recuperar-clave .modal-dialog .modal-content {
   background-color: #ffffff;
@@ -97,6 +110,9 @@ html {
   border-top: 0px;
   padding: 0.3rem;
 }
+#login #modal-recuperar-clave .modal-dialog .modal-content .modal-footer .alert {
+  width: 100%;
+}
 #login #modal-recuperar-clave .modal-dialog .modal-content .modal-footer .btn {
   background-color: #091F40;
   border: 2px solid #091F40;
@@ -110,4 +126,7 @@ html {
 #login #modal-recuperar-clave .modal-dialog .modal-content .modal-footer .btn:hover {
   background-color: #F6A81C;
   color: #091F40;
+}
+#login #modal-recuperar-clave .modal-dialog .modal-content .modal-footer .btn:disabled {
+  cursor: not-allowed;
 }
