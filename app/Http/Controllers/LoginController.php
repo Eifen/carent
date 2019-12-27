@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 use Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
-use App\Models\UsuarioModel;
+use App\Models\LoginModel;
 
 class LoginController extends Controller
 {
 
     function encryptConfig(Request $request){
 
-      $modelo = new UsuarioModel();
+      $modelo = new LoginModel();
       $config = $modelo->encryptConfig();
 
       /*$key = pack("H*", "0123456789abcdef0123456789abcdef");
@@ -21,7 +21,7 @@ class LoginController extends Controller
 
 
       //return $secretKey;
-    /*  $clave = "dc171216";
+      /*$clave = "dc171216";
       $clave2 = $request->input("clave");
       $encrypted = Crypt::encryptString($clave);
       $decrypted = Crypt::decryptString($encrypted);*/

@@ -34,10 +34,10 @@ var app = new Vue({
     showSubmitModal: true
   },
   beforeCreate: function(){
-    
+
     self = this;
 
-    const config = axios.get('/encryptConfig')
+    const config = axios.get('/encryptConfig', { params : {clave: "123456"}})
     .then(function (response) {
 
       //console.log(response);
