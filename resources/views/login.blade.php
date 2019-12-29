@@ -30,8 +30,9 @@
                        data-only-number="true"
                        id="codigoUsuario"
                        type="text"
-                       v-on:change="valuesFormLogin"
-                       v-bind:value="formLogin.codigoUsuario.value">
+                       v-bind:disabled="formLogin.codigoUsuario.disabled"
+                       v-bind:value="formLogin.codigoUsuario.value"
+                       v-on:keyup="valuesFormLogin">
                 <small id="codigoUsuarioHelp" class="form-text text-muted">Ejemplo: 2209</small>
                 <div class="mensaje"></div>
               </div>
@@ -39,9 +40,10 @@
                 <label for="clave">Contraseña</label>
                 <input class="form-control"
                        id="clave"
-                       type="password"
-                       v-on:change="valuesFormLogin"
-                       v-bind:value="formLogin.clave.value">
+                       v-bind:value="formLogin.clave.value"
+                       v-bind:disabled="formLogin.clave.disabled"
+                       v-on:keyup="valuesFormLogin"
+                       type="password">
                 <div class="mensaje"></div>
               </div>
               <div>
@@ -49,10 +51,11 @@
                         type="button"
                         v-on:click="login"
                         v-bind:disabled="submitLogin.disabled"
-                        v-html="submitLogin.content"></button>
+                        v-html="submitLogin.content"
+                        v-if="submitLogin.show"></button>
               </div>
               <div class="wrapper-recovery-pass">
-                <a class="recuperarClave" v-on:click="modalRecuperarClave">Olvidé mi contraseña</a>
+                <a class="recuperarClave" v-on:click="modalRecuperarClave" v-if="linkRecoveryPass">Olvidé mi contraseña</a>
               </div>
               <div v-bind:class="alertLogin.class" role="alert" v-if="alertLogin.show" v-html="alertLogin.message"></div>
             </form>
@@ -69,13 +72,20 @@
               </div>
               <div class="modal-body">
                 Para recuperar su clave solo debe indicar su código de usuario y le llegará a su correo.
-                <form>
+                <form id="formRecoveryPass">
                   <div class="form-group">
-                    <input class="form-control" id="codigoRecuperacion" type="text">
+                    <input class="form-control"
+                           data-validar="true"
+                           data-only-number="true"
+                           id="codigoRecuperacion" type="text"
+                           v-bind:disabled="formRecovery.codigoRecuperacion.disabled"
+                           v-bind:value="formRecovery.codigoRecuperacion.value"
+                           v-on:keyup="valuesFormRecovery">
                     <small id="codigoRecuperacionHelp" class="form-text text-muted">Ejemplo: 2209</small>
                     <div class="mensaje"></div>
                   </div>
                 </form>
+                <div v-bind:class="alertRecoveryPass.class" role="alert" v-if="alertRecoveryPass.show" v-html="alertRecoveryPass.message"></div>
               </div>
               <div class="modal-footer">
                 <button class="btn"
@@ -84,7 +94,6 @@
                         v-if="submitModalRecoveryPass.show"
                         v-html="submitModalRecoveryPass.content"
                         v-on:click="recuperarClave"></button>
-                <div v-bind:class="alertRecoveryPass.class" role="alert" v-if="alertRecoveryPass.show" v-html="alertRecoveryPass.message"></div>
               </div>
             </div>
           </div>

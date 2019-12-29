@@ -13,7 +13,7 @@ class LoginController extends Controller
 
       $modelo = new LoginModel();
       $config = $modelo->encryptConfig();
-
+      
       return $config;
 
     }
@@ -36,7 +36,7 @@ class LoginController extends Controller
 
           if($claveDB === $claveForm){
 
-            $response = array("login" => true, "message" => "Bienvenido!, espere unos segundo mientras cargamos sus datos.");
+            $response = array("login" => true, "message" => "Bienvenido!, espere unos segundo mientras mientras es redireccionado.");
 
           }else{
 
@@ -55,6 +55,42 @@ class LoginController extends Controller
         $response = array("login" => false, "message" => "El usuario está en estatus <b>".$usuario->estatus."</b>");
 
       }// Fin if(!$loginDenegado)
+
+      return $response;
+
+    }
+
+    function recoverylogin(Request $request){
+
+      $codigoUsuario = $this->desencriptarCryptoJS($request->input("codigoUsuario"));
+
+      $modelo = new LoginModel();
+      $usuario = $modelo->buscarUsuario($codigoUsuario);
+
+      if(!empty($usuario)){
+
+        $claveDB = $usuario->clave;
+        $claveDB = $this->desencriptarLaravel($claveDB);
+
+        Mail::send('emailTemplates.recoveryPassword', ["clave" => $claveDB], function($message)  {
+
+            $message->from('sistema.carent@crowe.com.ve', 'CARENT')->to('dmolina101@gmail.com')->subject('Recuperación de Contraseña');
+
+        });
+
+        if(Mail::failures()){
+
+          $response = array("recovery" => false, "message" => "No se pudo enviar el correo, intente nuevamente.");
+
+        }
+
+        $response = array("recovery" => true, "message" => "Enviamos sus datos a su correo, por favor revise!.");
+
+      }else{
+
+        $response = array("recovery" => false, "message" => "El usuario no existe");
+
+      }
 
       return $response;
 

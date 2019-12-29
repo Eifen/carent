@@ -56,6 +56,10 @@ html{
               border-color: #dc3545;
             }
 
+            &:disabled{
+              cursor: not-allowed;
+            }
+
           }
 
         }// Fin .form-group
@@ -141,19 +145,32 @@ html{
 
             .form-group{
 
+              .invalid-feedback{
+                display: block !important;
+              }
+
               label{
                 color:#091F40;
               }
 
               .form-control{
                 border-radius: 2px;
-              }
 
-            }
+                &.error{
+                  border-color: #dc3545;
+                }
 
-          }
+                &:disabled{
+                  cursor: not-allowed;
+                }
 
-        }
+              }// Fin .form-control
+
+            }// Fin .form-group
+
+          }// Fin form
+
+        }// Fin .modal-body
 
         .modal-footer{
           border-top: 0px;
