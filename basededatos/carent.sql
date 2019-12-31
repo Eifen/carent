@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 27-12-2019 a las 05:29:59
+-- Tiempo de generación: 31-12-2019 a las 03:17:30
 -- Versión del servidor: 5.7.22
 -- Versión de PHP: 7.1.18
 
@@ -21,6 +21,40 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `carent`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_cargo_empleado`
+--
+
+CREATE TABLE `tbl_cargo_empleado` (
+  `id` int(11) NOT NULL,
+  `descripcion` varchar(50) NOT NULL,
+  `id_estatus` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `tbl_cargo_empleado`
+--
+
+INSERT INTO `tbl_cargo_empleado` (`id`, `descripcion`, `id_estatus`) VALUES
+(1, 'Contratado', 1),
+(2, 'Pasante', 1),
+(3, 'Asistente I', 1),
+(4, 'Asistente II', 1),
+(5, 'Asistente III', 1),
+(6, 'Semi-Senior I', 1),
+(7, 'Semi-Senior II', 1),
+(8, 'Semi-Senior III', 1),
+(9, 'Senior I', 1),
+(10, 'Senior II', 1),
+(11, 'Senior III', 1),
+(12, 'Supervisor', 1),
+(13, 'Gerente', 1),
+(14, 'Gerente Senior', 1),
+(15, 'Director', 1),
+(16, 'Socio', 1);
 
 -- --------------------------------------------------------
 
@@ -597,18 +631,45 @@ INSERT INTO `tbl_configuracion` (`id`, `nombre`, `valor`, `descripcion`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tbl_contacto`
+-- Estructura de tabla para la tabla `tbl_contacto_usuario`
 --
 
-CREATE TABLE `tbl_contacto` (
+CREATE TABLE `tbl_contacto_usuario` (
   `id` int(11) NOT NULL,
-  `nombre` varchar(30) NOT NULL,
-  `apellido` varchar(30) NOT NULL,
-  `cargo` varchar(50) NOT NULL,
-  `telefono` varchar(15) NOT NULL,
-  `telefono_otro` varchar(15) NOT NULL,
-  `correo` varchar(100) NOT NULL
+  `id_usuario` int(11) NOT NULL,
+  `correo_principal` varchar(255) NOT NULL,
+  `correo_secundario` varchar(255) NOT NULL,
+  `telefono_principal` varchar(30) NOT NULL,
+  `telefono_secundario` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `tbl_contacto_usuario`
+--
+
+INSERT INTO `tbl_contacto_usuario` (`id`, `id_usuario`, `correo_principal`, `correo_secundario`, `telefono_principal`, `telefono_secundario`) VALUES
+(1, 1, 'dmolina101@gmail.com', '', '04244463739', ''),
+(2, 2, 'josearturo0706@gmail.com', '', '', ''),
+(3, 3, 'ana.blandin@crowe.com.ve', '', '', '');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_division`
+--
+
+CREATE TABLE `tbl_division` (
+  `id` int(11) NOT NULL,
+  `descripcion` varchar(50) NOT NULL,
+  `id_estatus` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `tbl_division`
+--
+
+INSERT INTO `tbl_division` (`id`, `descripcion`, `id_estatus`) VALUES
+(1, 'Sin Division Asignada', 1);
 
 -- --------------------------------------------------------
 
@@ -693,7 +754,28 @@ INSERT INTO `tbl_estatus` (`id`, `tabla`, `valor`, `descripcion`) VALUES
 (3, 'tbl_usuario', 3, 'de vacaciones'),
 (4, 'tbl_usuario', 4, 'de reposo'),
 (5, 'tbl_tipo_contacto', 1, 'activo'),
-(6, 'tbl_tipo_contacto', 2, 'inactivo');
+(6, 'tbl_tipo_contacto', 2, 'inactivo'),
+(7, 'tbl_cargo_empleado', 1, 'activo'),
+(8, 'tbl_cargo_empleado', 2, 'inactivo');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_estatus_login_denegado`
+--
+
+CREATE TABLE `tbl_estatus_login_denegado` (
+  `id_estatus` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Estatus de usuario los cuales no se les permite el acceso';
+
+--
+-- Volcado de datos para la tabla `tbl_estatus_login_denegado`
+--
+
+INSERT INTO `tbl_estatus_login_denegado` (`id_estatus`) VALUES
+(2),
+(3),
+(4);
 
 -- --------------------------------------------------------
 
@@ -2244,8 +2326,8 @@ INSERT INTO `tbl_tipo_contacto` (`id`, `descripcion`, `estatus`) VALUES
 
 CREATE TABLE `tbl_usuario` (
   `id` int(11) NOT NULL,
-  `codigo` int(11) NOT NULL,
-  `clave` varchar(500) NOT NULL,
+  `codigo` varchar(6) NOT NULL,
+  `clave` text NOT NULL,
   `avatar` varchar(30) NOT NULL,
   `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -2255,11 +2337,19 @@ CREATE TABLE `tbl_usuario` (
 --
 
 INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `avatar`, `id_estatus`) VALUES
-(1, 0, '3b862d90a4f18b4fad02ebeced515dc7832026a3f477890cc36f3d89384a2a63fd96e5ba04f4e568192b112d6ec7b6fafa309a926debd3e64e8c0e645aa95b6fcc032a2685d3ae1aa19dafe270ec24c342fed96188185cf7f454fe432ae9366efb48a7cdcc3d8621', '', 1);
+(1, '0001', 'eyJpdiI6IlIyXC9wUnpZbE43MlYzY1VCT3NpcjR3PT0iLCJ2YWx1ZSI6IlVudlF0MldwdzZqK1BiQitudWUxWHc9PSIsIm1hYyI6IjA3YTk2MWNlNDVhOTI3ZjM4MTdlNDgzZDJmYzNhZTczNmI5ODViYTczODNlNTRiYzRmYjYyZDBiZmYwMjY3ZmEifQ==', '', 4),
+(2, '11525', 'eyJpdiI6IkVjZ2oySWtNK3N3ckp0SGJLVGZxMGc9PSIsInZhbHVlIjoick52NFY1bWNFUUloQXo2cXNDallPUT09IiwibWFjIjoiYjVmNTlmZWQyZGVhYjEyNmI5YjcxZmM4ZDY2NGI3ZmU1OTQ3YTEyZjBlYzU0YmJiYWY0YmVmMDk3ZjA2OTgwMiJ9', '', 1),
+(3, '11450', 'eyJpdiI6Im5MWkhxSEVKV2N3ZkhJZ01XZTU2eFE9PSIsInZhbHVlIjoiZ2N3a2l2Nm1DNHFKMGtPYkp4ZmdzQT09IiwibWFjIjoiMTNmNTllMGNjNTc0MjNlMWMwYzkwYTA0NGYyNzQ5ZmU5YTg4M2YzMDIzZGMyNzVhNjllNmRhNDYzOWQ3Yzc1NyJ9', '', 1);
 
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `tbl_cargo_empleado`
+--
+ALTER TABLE `tbl_cargo_empleado`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `tbl_ciudades`
@@ -2281,9 +2371,16 @@ ALTER TABLE `tbl_configuracion`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `tbl_contacto`
+-- Indices de la tabla `tbl_contacto_usuario`
 --
-ALTER TABLE `tbl_contacto`
+ALTER TABLE `tbl_contacto_usuario`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_usuario` (`id_usuario`);
+
+--
+-- Indices de la tabla `tbl_division`
+--
+ALTER TABLE `tbl_division`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -2342,6 +2439,12 @@ ALTER TABLE `tbl_usuario`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `tbl_cargo_empleado`
+--
+ALTER TABLE `tbl_cargo_empleado`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
 -- AUTO_INCREMENT de la tabla `tbl_ciudades`
 --
 ALTER TABLE `tbl_ciudades`
@@ -2360,10 +2463,16 @@ ALTER TABLE `tbl_configuracion`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de la tabla `tbl_contacto`
+-- AUTO_INCREMENT de la tabla `tbl_contacto_usuario`
 --
-ALTER TABLE `tbl_contacto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tbl_contacto_usuario`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `tbl_division`
+--
+ALTER TABLE `tbl_division`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_estados`
@@ -2375,7 +2484,7 @@ ALTER TABLE `tbl_estados`
 -- AUTO_INCREMENT de la tabla `tbl_estatus`
 --
 ALTER TABLE `tbl_estatus`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_municipios`
@@ -2405,7 +2514,7 @@ ALTER TABLE `tbl_tipo_contacto`
 -- AUTO_INCREMENT de la tabla `tbl_usuario`
 --
 ALTER TABLE `tbl_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas
@@ -2416,6 +2525,12 @@ ALTER TABLE `tbl_usuario`
 --
 ALTER TABLE `tbl_ciudades`
   ADD CONSTRAINT `tbl_ciudades_ibfk_1` FOREIGN KEY (`id_estado`) REFERENCES `tbl_estados` (`id_estado`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `tbl_contacto_usuario`
+--
+ALTER TABLE `tbl_contacto_usuario`
+  ADD CONSTRAINT `FK_ID_USUARIO` FOREIGN KEY (`id_usuario`) REFERENCES `tbl_usuario` (`id`);
 
 --
 -- Filtros para la tabla `tbl_empleado`
