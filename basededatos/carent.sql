@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 30-12-2019 a las 17:26:34
+-- Tiempo de generación: 31-12-2019 a las 03:17:30
 -- Versión del servidor: 5.7.22
 -- Versión de PHP: 7.1.18
 
@@ -649,7 +649,8 @@ CREATE TABLE `tbl_contacto_usuario` (
 
 INSERT INTO `tbl_contacto_usuario` (`id`, `id_usuario`, `correo_principal`, `correo_secundario`, `telefono_principal`, `telefono_secundario`) VALUES
 (1, 1, 'dmolina101@gmail.com', '', '04244463739', ''),
-(2, 2, 'josearturo0706@gmail.com', '', '', '');
+(2, 2, 'josearturo0706@gmail.com', '', '', ''),
+(3, 3, 'ana.blandin@crowe.com.ve', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -2337,7 +2338,8 @@ CREATE TABLE `tbl_usuario` (
 
 INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `avatar`, `id_estatus`) VALUES
 (1, '0001', 'eyJpdiI6IlIyXC9wUnpZbE43MlYzY1VCT3NpcjR3PT0iLCJ2YWx1ZSI6IlVudlF0MldwdzZqK1BiQitudWUxWHc9PSIsIm1hYyI6IjA3YTk2MWNlNDVhOTI3ZjM4MTdlNDgzZDJmYzNhZTczNmI5ODViYTczODNlNTRiYzRmYjYyZDBiZmYwMjY3ZmEifQ==', '', 4),
-(2, '11525', 'eyJpdiI6IkVjZ2oySWtNK3N3ckp0SGJLVGZxMGc9PSIsInZhbHVlIjoick52NFY1bWNFUUloQXo2cXNDallPUT09IiwibWFjIjoiYjVmNTlmZWQyZGVhYjEyNmI5YjcxZmM4ZDY2NGI3ZmU1OTQ3YTEyZjBlYzU0YmJiYWY0YmVmMDk3ZjA2OTgwMiJ9', '', 1);
+(2, '11525', 'eyJpdiI6IkVjZ2oySWtNK3N3ckp0SGJLVGZxMGc9PSIsInZhbHVlIjoick52NFY1bWNFUUloQXo2cXNDallPUT09IiwibWFjIjoiYjVmNTlmZWQyZGVhYjEyNmI5YjcxZmM4ZDY2NGI3ZmU1OTQ3YTEyZjBlYzU0YmJiYWY0YmVmMDk3ZjA2OTgwMiJ9', '', 1),
+(3, '11450', 'eyJpdiI6Im5MWkhxSEVKV2N3ZkhJZ01XZTU2eFE9PSIsInZhbHVlIjoiZ2N3a2l2Nm1DNHFKMGtPYkp4ZmdzQT09IiwibWFjIjoiMTNmNTllMGNjNTc0MjNlMWMwYzkwYTA0NGYyNzQ5ZmU5YTg4M2YzMDIzZGMyNzVhNjllNmRhNDYzOWQ3Yzc1NyJ9', '', 1);
 
 --
 -- Índices para tablas volcadas
@@ -2464,7 +2466,7 @@ ALTER TABLE `tbl_configuracion`
 -- AUTO_INCREMENT de la tabla `tbl_contacto_usuario`
 --
 ALTER TABLE `tbl_contacto_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_division`
@@ -2512,7 +2514,7 @@ ALTER TABLE `tbl_tipo_contacto`
 -- AUTO_INCREMENT de la tabla `tbl_usuario`
 --
 ALTER TABLE `tbl_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas
