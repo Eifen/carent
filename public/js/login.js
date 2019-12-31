@@ -39254,7 +39254,9 @@ var app = new Vue({
       };
     });
   },
-  created: function created() {},
+  created: function created() {
+    alert("ANA BLANDINSS");
+  },
   mounted: function mounted() {
     new AutoNumeric('#codigoUsuario', {
       decimalPlaces: 0,
