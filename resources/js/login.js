@@ -74,7 +74,7 @@ var app = new Vue({
 
     })
     .catch(error => {
-console.log(error);
+
       self.formLogin.codigoUsuario.disabled = true;
       self.formLogin.clave.disabled = true;
       self.submitLogin.disabled = true;
@@ -93,9 +93,7 @@ console.log(error);
     });
 
   },
-  created: function () {
-
-  },
+  created: function () {},
   mounted: function () {
 
     new AutoNumeric('#codigoUsuario', {
@@ -112,12 +110,33 @@ console.log(error);
       leadingZero: 'keep'
     });
 
-  },
-  updated: function () {
+    $('#modal-recuperar-clave').on('hidden.bs.modal', function () {
 
-    $('.aliado').tooltip();
+      self.alertRecoveryPass = {
+        class : "",
+        message : "",
+        show: false
+      };
+
+      self.submitModalRecoveryPass = {
+        content: "Recuperar",
+        disabled: false,
+        show:true
+      }
+
+      self.formRecovery = {
+        codigoRecuperacion: {
+          disabled: false,
+          value: ""
+        }
+      }
+
+      AutoNumeric.getAutoNumericElement("#codigoRecuperacion").set("");
+
+    })
 
   },
+  updated: function () {},
   methods:{
 
     encriptar: function(valor){
@@ -219,7 +238,15 @@ console.log(error);
           self.submitModalRecoveryPass.content = 'Recuperar';
           self.submitModalRecoveryPass.disabled = false;
 
-          var message = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+          if(error.response.status === 500){
+
+            var message = "Existe un error!, consulte con el administrador del sistema.";
+
+          }else{
+
+            var message = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+
+          }
 
           self.alertRecoveryPass = {
             class : "alert alert-warning",
@@ -286,6 +313,12 @@ console.log(error);
               show: true
             };
 
+            setTimeout(function(){
+
+              window.location.href = "/inicio";
+
+            }, 2000);
+
           }else{
 
             throw response.data;
@@ -300,7 +333,15 @@ console.log(error);
           self.submitLogin.content = 'Entrar';
           self.submitLogin.disabled = false;
 
-          var message = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+          if(error.response.status === 500){
+
+            var message = "Existe un error!, consulte con el administrador del sistema.";
+
+          }else{
+
+            var message = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+
+          }
 
           self.alertLogin = {
             class : "alert alert-warning",

@@ -13,7 +13,8 @@ class LoginController extends Controller
 
       $modelo = new LoginModel();
       $config = $modelo->encryptConfig();
-      
+      $pass = $this->encriptarLaravel("123456");
+
       return $config;
 
     }
@@ -71,10 +72,11 @@ class LoginController extends Controller
 
         $claveDB = $usuario->clave;
         $claveDB = $this->desencriptarLaravel($claveDB);
+        $correoDestinatario = $usuario->correo_principal;
 
-        Mail::send('emailTemplates.recoveryPassword', ["clave" => $claveDB], function($message)  {
+        Mail::send('emailTemplates.recoveryPassword', ["clave" => $claveDB], function($message) use ($correoDestinatario)  {
 
-            $message->from('sistema.carent@crowe.com.ve', 'CARENT')->to('dmolina101@gmail.com')->subject('Recuperación de Contraseña');
+            $message->from('sistema.carent@crowe.com.ve', 'CARENT')->to($correoDestinatario)->subject('Recuperación de Contraseña');
 
         });
 

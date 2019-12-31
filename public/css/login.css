@@ -118,11 +118,16 @@ html {
 #login #modal-recuperar-clave .modal-dialog .modal-content .modal-body form .form-group .form-control:disabled {
   cursor: not-allowed;
 }
+#login #modal-recuperar-clave .modal-dialog .modal-content .modal-body .alert {
+  margin-bottom: 0px;
+  width: 100%;
+}
 #login #modal-recuperar-clave .modal-dialog .modal-content .modal-footer {
   border-top: 0px;
   padding: 0.3rem;
 }
 #login #modal-recuperar-clave .modal-dialog .modal-content .modal-footer .alert {
+  margin-bottom: 0px;
   width: 100%;
 }
 #login #modal-recuperar-clave .modal-dialog .modal-content .modal-footer .btn {

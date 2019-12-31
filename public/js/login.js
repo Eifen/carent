@@ -39238,7 +39238,6 @@ var app = new Vue({
         throw "error";
       }
     })["catch"](function (error) {
-      console.log(error);
       self.formLogin.codigoUsuario.disabled = true;
       self.formLogin.clave.disabled = true;
       self.submitLogin.disabled = true;
@@ -39269,10 +39268,27 @@ var app = new Vue({
       digitGroupSeparator: '',
       leadingZero: 'keep'
     });
+    $('#modal-recuperar-clave').on('hidden.bs.modal', function () {
+      self.alertRecoveryPass = {
+        "class": "",
+        message: "",
+        show: false
+      };
+      self.submitModalRecoveryPass = {
+        content: "Recuperar",
+        disabled: false,
+        show: true
+      };
+      self.formRecovery = {
+        codigoRecuperacion: {
+          disabled: false,
+          value: ""
+        }
+      };
+      AutoNumeric.getAutoNumericElement("#codigoRecuperacion").set("");
+    });
   },
-  updated: function updated() {
-    $('.aliado').tooltip();
-  },
+  updated: function updated() {},
   methods: {
     encriptar: function encriptar(valor) {
       var key = CryptoJS.enc.Hex.parse(self.key);
@@ -39343,7 +39359,13 @@ var app = new Vue({
           self.formRecovery.codigoRecuperacion.disabled = false;
           self.submitModalRecoveryPass.content = 'Recuperar';
           self.submitModalRecoveryPass.disabled = false;
-          var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+
+          if (error.response.status === 500) {
+            var message = "Existe un error!, consulte con el administrador del sistema.";
+          } else {
+            var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+          }
+
           self.alertRecoveryPass = {
             "class": "alert alert-warning",
             message: message,
@@ -39393,6 +39415,9 @@ var app = new Vue({
               message: response.data.message,
               show: true
             };
+            setTimeout(function () {
+              window.location.href = "/inicio";
+            }, 2000);
           } else {
             throw response.data;
           }
@@ -39401,7 +39426,13 @@ var app = new Vue({
           self.formLogin.clave.disabled = false;
           self.submitLogin.content = 'Entrar';
           self.submitLogin.disabled = false;
-          var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+
+          if (error.response.status === 500) {
+            var message = "Existe un error!, consulte con el administrador del sistema.";
+          } else {
+            var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+          }
+
           self.alertLogin = {
             "class": "alert alert-warning",
             message: message,
