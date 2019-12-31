@@ -39254,7 +39254,9 @@ var app = new Vue({
       };
     });
   },
-  created: function created() {},
+  created: function created() {
+    alert("jose 2");
+  },
   mounted: function mounted() {
     new AutoNumeric('#codigoUsuario', {
       decimalPlaces: 0,
