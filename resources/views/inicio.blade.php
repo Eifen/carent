@@ -7,7 +7,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="robots" content="{{ env('META_ROBOT') }}">
 
-        <title>.: CARENT :.</title>
+        <title>.: CARENT :. | Inicio</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
         <link href="{{ mix('/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ mix('/css/login.css') }}" rel="stylesheet" type="text/css">
@@ -18,47 +18,7 @@
       <div id="login" class="container-fluid">
         <div class="row align-items-center justify-content-center">
           <div class="col-12 col-sm-9 col-md-6 col-lg-4">
-            <form id="formLogin">
-              <div class="logo">
-                <img src="/images/logo-carent.png">
-              </div>
-              <div class="form-group">
-                <label for="codigoUsuario">Código de usuario</label>
-                <input aria-describedby="codigoUsuarioHelp"
-                       class="form-control"
-                       data-validar="true"
-                       data-only-number="true"
-                       id="codigoUsuario"
-                       type="text"
-                       v-bind:disabled="formLogin.codigoUsuario.disabled"
-                       v-bind:value="formLogin.codigoUsuario.value"
-                       v-on:keyup="valuesFormLogin">
-                <small id="codigoUsuarioHelp" class="form-text text-muted">Ejemplo: 2209</small>
-                <div class="mensaje"></div>
-              </div>
-              <div class="form-group">
-                <label for="clave">Contraseña</label>
-                <input class="form-control"
-                       id="clave"
-                       v-bind:value="formLogin.clave.value"
-                       v-bind:disabled="formLogin.clave.disabled"
-                       v-on:keyup="valuesFormLogin"
-                       type="password">
-                <div class="mensaje"></div>
-              </div>
-              <div>
-                <button class="btn"
-                        type="button"
-                        v-on:click="login"
-                        v-bind:disabled="submitLogin.disabled"
-                        v-html="submitLogin.content"
-                        v-if="submitLogin.show"></button>
-              </div>
-              <div class="wrapper-recovery-pass">
-                <a class="recuperarClave" v-on:click="modalRecuperarClave" v-if="linkRecoveryPass">Olvidé mi contraseña</a>
-              </div>
-              <div v-bind:class="alertLogin.class" role="alert" v-if="alertLogin.show" v-html="alertLogin.message"></div>
-            </form>
+            Bienvenido al INICIO
           </div>
         </div>
 
