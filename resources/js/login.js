@@ -238,7 +238,7 @@ var app = new Vue({
           self.submitModalRecoveryPass.content = 'Recuperar';
           self.submitModalRecoveryPass.disabled = false;
 
-          if(error.response.status === 500){
+          if(error.response){
 
             var message = "Existe un error!, consulte con el administrador del sistema.";
 
@@ -333,7 +333,7 @@ var app = new Vue({
           self.submitLogin.content = 'Entrar';
           self.submitLogin.disabled = false;
 
-          if(error.response.status === 500){
+          if(error.response){
 
             var message = "Existe un error!, consulte con el administrador del sistema.";
 

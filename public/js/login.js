@@ -39254,9 +39254,7 @@ var app = new Vue({
       };
     });
   },
-  created: function created() {
-    alert("ANA BLANDINSS");
-  },
+  created: function created() {},
   mounted: function mounted() {
     new AutoNumeric('#codigoUsuario', {
       decimalPlaces: 0,
@@ -39362,7 +39360,7 @@ var app = new Vue({
           self.submitModalRecoveryPass.content = 'Recuperar';
           self.submitModalRecoveryPass.disabled = false;
 
-          if (error.response.status === 500) {
+          if (error.response) {
             var message = "Existe un error!, consulte con el administrador del sistema.";
           } else {
             var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
@@ -39429,7 +39427,7 @@ var app = new Vue({
           self.submitLogin.content = 'Entrar';
           self.submitLogin.disabled = false;
 
-          if (error.response.status === 500) {
+          if (error.response) {
             var message = "Existe un error!, consulte con el administrador del sistema.";
           } else {
             var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
