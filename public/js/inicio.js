@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -39163,10 +39163,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 
-/***/ "./resources/js/login.js":
-/*!*******************************!*\
-  !*** ./resources/js/login.js ***!
-  \*******************************/
+/***/ "./resources/js/inicio.js":
+/*!********************************!*\
+  !*** ./resources/js/inicio.js ***!
+  \********************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -39184,340 +39184,30 @@ var AES = __webpack_require__(/*! crypto-js/aes */ "./node_modules/crypto-js/aes
 
 var self;
 var app = new Vue({
-  el: '#login',
+  el: '#inicio',
   data: {
-    alertLogin: {
-      "class": "",
-      message: "",
-      show: false
-    },
-    alertRecoveryPass: {
-      "class": "",
-      message: "",
-      show: false
-    },
-    copyRight: "Sofguar \xA9 ".concat(new Date().getFullYear()),
-    formLogin: {
-      codigoUsuario: {
-        disabled: false,
-        value: ""
-      },
-      clave: {
-        disabled: false,
-        value: ""
-      }
-    },
-    formRecovery: {
-      codigoRecuperacion: {
-        disabled: false,
-        value: ""
-      }
-    },
-    iv: null,
-    key: null,
-    linkRecoveryPass: true,
-    showSubmitModal: true,
-    submitLogin: {
-      content: "Entrar",
-      disabled: false,
-      show: true
-    },
-    submitModalRecoveryPass: {
-      content: "Recuperar",
-      disabled: false,
-      show: true
-    }
+    copyRight: "Sofguar \xA9 ".concat(new Date().getFullYear())
   },
   beforeCreate: function beforeCreate() {
     self = this;
-    var config = axios.get('/encryptConfig').then(function (response) {
-      if (response.status === 200 && response.data.key && response.data.iv) {
-        self.key = response.data.key;
-        self.iv = response.data.iv;
-      } else {
-        throw "error";
-      }
-    })["catch"](function (error) {
-      self.formLogin.codigoUsuario.disabled = true;
-      self.formLogin.clave.disabled = true;
-      self.submitLogin.disabled = true;
-      self.submitModalRecoveryPass.show = false;
-      self.alertLogin = {
-        "class": "alert alert-warning",
-        message: "Existe un error!, consulte con el administrador del sistema.",
-        show: true
-      };
-      self.alertRecoveryPass = {
-        "class": "alert alert-warning",
-        message: "Existe un error!, consulte con el administrador del sistema.",
-        show: true
-      };
-    });
   },
   created: function created() {},
-  mounted: function mounted() {
-    new AutoNumeric('#codigoUsuario', {
-      decimalPlaces: 0,
-      decimalCharacter: ',',
-      digitGroupSeparator: '',
-      leadingZero: 'keep'
-    });
-    new AutoNumeric('#codigoRecuperacion', {
-      decimalPlaces: 0,
-      decimalCharacter: ',',
-      digitGroupSeparator: '',
-      leadingZero: 'keep'
-    });
-    $('#modal-recuperar-clave').on('hidden.bs.modal', function () {
-      self.alertRecoveryPass = {
-        "class": "",
-        message: "",
-        show: false
-      };
-      self.submitModalRecoveryPass = {
-        content: "Recuperar",
-        disabled: false,
-        show: true
-      };
-      self.formRecovery = {
-        codigoRecuperacion: {
-          disabled: false,
-          value: ""
-        }
-      };
-      AutoNumeric.getAutoNumericElement("#codigoRecuperacion").set("");
-    });
-  },
+  mounted: function mounted() {},
   updated: function updated() {},
-  methods: {
-    encriptar: function encriptar(valor) {
-      var key = CryptoJS.enc.Hex.parse(self.key);
-      var iv = CryptoJS.enc.Hex.parse(self.iv);
-      var encrypted = CryptoJS.AES.encrypt(valor, key, {
-        iv: iv,
-        padding: CryptoJS.pad.ZeroPadding
-      });
-      return encrypted.toString();
-    },
-    desencriptar: function desencriptar(valor) {},
-    valuesFormLogin: function valuesFormLogin(e) {
-      self.formLogin[$(e.target).attr("id")].value = $(e.target).val();
-      self.limpiarMensajeError(e);
-    },
-    valuesFormRecovery: function valuesFormRecovery(e) {
-      self.formRecovery[$(e.target).attr("id")].value = $(e.target).val();
-      self.limpiarMensajeError(e);
-    },
-    limpiarMensajeError: function limpiarMensajeError(e) {
-      $(e.target).removeClass("error");
-      $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
-    },
-    modalRecuperarClave: function modalRecuperarClave() {
-      $("#modal-recuperar-clave").modal("show");
-    },
-    recuperarClave: function recuperarClave() {
-      var formValido = true;
-      $("#formRecoveryPass .form-group .mensaje").html("").removeClass("invalid-feedback");
-      $("#formRecoveryPass .form-group .form-control").removeClass("error");
-      $("#formRecoveryPass .form-group").each(function (index, elemento) {
-        var input = $(elemento).find(".form-control")[0];
-        var valido = self.validarValor(input);
-
-        if (!valido.respuesta) {
-          $(elemento).find(".mensaje").html(valido.mensaje).addClass("invalid-feedback");
-          $(elemento).find(".form-control").addClass("error");
-          formValido = valido.respuesta;
-          return false;
-        }
-      });
-
-      if (formValido) {
-        self.alertRecoveryPass = {
-          "class": "",
-          message: "",
-          show: false
-        }; //Obtenemos valores
-
-        var parametros = {
-          codigoUsuario: self.encriptar(self.formRecovery.codigoRecuperacion.value)
-        };
-        self.submitModalRecoveryPass.content = '<i class="fas fa-cog fa-spin"></i>';
-        self.submitModalRecoveryPass.disabled = true;
-        self.formRecovery.codigoRecuperacion.disabled = true;
-        axios.post('/recoverylogin', parametros).then(function (response) {
-          if (response.status === 200 && response.data.recovery === true) {
-            self.submitModalRecoveryPass.show = false;
-            self.alertRecoveryPass = {
-              "class": "alert alert-success",
-              message: response.data.message,
-              show: true
-            };
-          } else {
-            throw response.data;
-          }
-        })["catch"](function (error) {
-          self.formRecovery.codigoRecuperacion.disabled = false;
-          self.submitModalRecoveryPass.content = 'Recuperar';
-          self.submitModalRecoveryPass.disabled = false;
-
-          if (error.response) {
-            var message = "Existe un error!, consulte con el administrador del sistema.";
-          } else {
-            var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
-          }
-
-          self.alertRecoveryPass = {
-            "class": "alert alert-warning",
-            message: message,
-            show: true
-          };
-        });
-      } // Fin if(formValido)
-
-    },
-    login: function login() {
-      var formValido = true;
-      $("#formLogin .form-group .mensaje").html("").removeClass("invalid-feedback");
-      $("#formLogin .form-group .form-control").removeClass("error");
-      $("#formLogin .form-group").each(function (index, elemento) {
-        var input = $(elemento).find(".form-control")[0];
-        var valido = self.validarValor(input);
-
-        if (!valido.respuesta) {
-          $(elemento).find(".mensaje").html(valido.mensaje).addClass("invalid-feedback");
-          $(elemento).find(".form-control").addClass("error");
-          formValido = valido.respuesta;
-          return false;
-        }
-      });
-
-      if (formValido) {
-        self.alertLogin = {
-          "class": "",
-          message: "",
-          show: false
-        }; //Obtenemos valores
-
-        var parametros = {
-          codigoUsuario: self.encriptar(self.formLogin.codigoUsuario.value),
-          clave: self.encriptar(self.formLogin.clave.value)
-        };
-        self.submitLogin.content = '<i class="fas fa-cog fa-spin"></i>';
-        self.submitLogin.disabled = true;
-        self.formLogin.codigoUsuario.disabled = true;
-        self.formLogin.clave.disabled = true;
-        axios.post('/login', parametros).then(function (response) {
-          if (response.status === 200 && response.data.login === true) {
-            self.submitLogin.show = false;
-            self.linkRecoveryPass = false;
-            self.alertLogin = {
-              "class": "alert alert-success",
-              message: response.data.message,
-              show: true
-            };
-            setTimeout(function () {
-              window.location.href = "/inicio";
-            }, 2000);
-          } else {
-            throw response.data;
-          }
-        })["catch"](function (error) {
-          self.formLogin.codigoUsuario.disabled = false;
-          self.formLogin.clave.disabled = false;
-          self.submitLogin.content = 'Entrar';
-          self.submitLogin.disabled = false;
-
-          if (error.response) {
-            var message = "Existe un error!, consulte con el administrador del sistema.";
-          } else {
-            var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
-          }
-
-          self.alertLogin = {
-            "class": "alert alert-warning",
-            message: message,
-            show: true
-          };
-        });
-      } // Fin if
-
-    },
-    validarValor: function validarValor(input) {
-      var respuesta = true;
-      var mensaje = '';
-
-      if (input.hasAttribute("data-validar")) {
-        if (input.getAttribute("data-validar") === "true") {
-          if (input.type === 'email') {
-            var regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            respuesta = regexEmail.test(input.value);
-            respuesta === false ? zenscroll.toY($(input).offset().top - 100) : "";
-            mensaje = "Correo inválido";
-          } else if (input.type === 'text' || input.type === 'textarea') {
-            if (input.getAttribute("data-min")) {
-              var minChar = input.getAttribute("data-min");
-              var numChar = input.value.length;
-
-              if (numChar < minChar) {
-                respuesta = false;
-                mensaje = "El campo debe contener al menos " + minChar + " caracteres!";
-                zenscroll.toY($(input).offset().top - 100);
-              }
-            }
-
-            if (input.getAttribute("data-only-number")) {
-              var regexNumber = /^\d+$/;
-              respuesta = regexNumber.test(input.value);
-              mensaje = "Solo números";
-              zenscroll.toY($(input).offset().top - 100);
-            }
-          }
-        }
-      }
-
-      return {
-        respuesta: respuesta,
-        mensaje: mensaje
-      };
-    }
-  } // Fin methods
+  methods: {} // Fin methods
 
 });
 
 /***/ }),
 
-/***/ "./resources/less/inicio.less":
-/*!************************************!*\
-  !*** ./resources/less/inicio.less ***!
-  \************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ "./resources/less/login.less":
-/*!***********************************!*\
-  !*** ./resources/less/login.less ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ 0:
-/*!**********************************************************************************************!*\
-  !*** multi ./resources/js/login.js ./resources/less/login.less ./resources/less/inicio.less ***!
-  \**********************************************************************************************/
+/***/ 1:
+/*!**************************************!*\
+  !*** multi ./resources/js/inicio.js ***!
+  \**************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Bitnami\wampstack-7.1.18-1\apache2\htdocs\sofguar\carent\resources\js\login.js */"./resources/js/login.js");
-__webpack_require__(/*! C:\Bitnami\wampstack-7.1.18-1\apache2\htdocs\sofguar\carent\resources\less\login.less */"./resources/less/login.less");
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.1.18-1\apache2\htdocs\sofguar\carent\resources\less\inicio.less */"./resources/less/inicio.less");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.1.18-1\apache2\htdocs\sofguar\carent\resources\js\inicio.js */"./resources/js/inicio.js");
 
 
 /***/ })
