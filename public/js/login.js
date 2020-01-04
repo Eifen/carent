@@ -39230,7 +39230,7 @@ var app = new Vue({
   },
   beforeCreate: function beforeCreate() {
     self = this;
-    var config = axios.get('/encryptConfig').then(function (response) {
+    axios.get('/encryptConfig').then(function (response) {
       if (response.status === 200 && response.data.key && response.data.iv) {
         self.key = response.data.key;
         self.iv = response.data.iv;

@@ -31,3 +31,4 @@ Route::get('/encryptConfig', 'LoginController@encryptConfig');
 Route::post('/login', 'LoginController@login');
 Route::post('/recoverylogin', 'LoginController@recoverylogin');
 Route::get('/inicio', 'InicioController@inicio');
+Route::get('/menUsuario', 'InicioController@menUsuario');

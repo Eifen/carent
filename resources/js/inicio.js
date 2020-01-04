@@ -8,6 +8,8 @@ const CryptoJS = require("crypto-js");
 const AES = require("crypto-js/aes");
 var self;
 
+Vue.component('menu-principal', require('./components/menuPrincipal.vue').default);
+
 var app = new Vue({
 
   el: '#inicio',

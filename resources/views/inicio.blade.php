@@ -16,10 +16,11 @@
     <body>
 
       <div id="inicio" class="container-fluid">
+        <menu-principal></menu-principal>
+
         <div class="row align-items-center justify-content-center">
           <div class="col-12 col-sm-9 col-md-6 col-lg-4">
             Bienvenido al INICIO {{ session('usuario_id') }}
-            {{ session('keys') }}
           </div>
         </div>
       </div>

@@ -58,7 +58,7 @@ var app = new Vue({
 
     self = this;
 
-    const config = axios.get('/encryptConfig')
+    axios.get('/encryptConfig')
     .then(function (response) {
 
       if(response.status === 200 && response.data.key && response.data.iv){
