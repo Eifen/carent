@@ -1,0 +1,24 @@
+/*@font-face {
+  font-family: "Rawline";
+  src: url("../../fonts/rawline/rawline-600.ttf");
+}*/
+html {
+  overflow-x: hidden;
+}
+#inicio {
+  background-color: #E9ECEF;
+  height: 100vh;
+}
+#inicio #menu-principal {
+  background-color: white;
+  margin-left: -15px;
+  margin-right: -15px;
+}
+#inicio #menu-principal .navbar-brand {
+  height: 100%;
+  position: relative;
+}
+#inicio #menu-principal .navbar-brand img {
+  height: 35px;
+  width: auto;
+}
