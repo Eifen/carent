@@ -23,6 +23,38 @@
   </nav>
 </template>
 
+<style>
+
+.nav-link{
+  color: #000000 !important;
+  transition: all .3s;
+}
+
+.nav-link:hover{
+  color:#F6A81C !important;
+  cursor:pointer;
+}
+
+.dropdown-submenu {
+  position: relative;
+}
+
+.dropdown-submenu>a:after {
+  content: "\f0da";
+  float: right;
+  border: none;
+  font-family: 'FontAwesome';
+}
+
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: 0px;
+  margin-left: 0px;
+}
+
+</style>
+
 <script>
 
   window.axios = require('axios');
@@ -59,7 +91,27 @@
 
       },
       mounted: function() {
-          console.log('Menú Montado!!!')
+      },
+      updated: function(){
+
+        $("ul.dropdown-menu [data-toggle='dropdown']").on("click", function(event) {
+
+          event.preventDefault();
+          event.stopPropagation();
+
+          $(this).siblings().toggleClass("show");
+
+          if (!$(this).next().hasClass('show')) {
+
+            $(this).parents('.dropdown-menu').first().find('.show').removeClass("show");
+          }
+
+          $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
+            $('.dropdown-submenu .show').removeClass("show");
+          });
+
+        });
+
       },
       methods: {
         armarMenu: function(menus){
@@ -78,7 +130,7 @@
                              <a class="nav-link dropdown-toggle" id="navbarDropdown-${indiceObjecto}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                ${menu.descripcion}
                              </a>
-                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown-${indiceObjecto}">
                                 ${submenu}
                              </ul>
                            </li>`;
@@ -86,7 +138,7 @@
 
             }else{
               htmlMenu += `<li class="nav-item">
-                             <a class="nav-link dropdown-toggle" id="navbarDropdown-${indiceObjecto}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                             <a class="nav-link" id="navbarDropdown-${indiceObjecto}" aria-haspopup="true">
                                ${menu.descripcion}
                              </a>
                            </li>`;
@@ -97,6 +149,7 @@
           return htmlMenu;
 
         }
+
       }
   }
 </script>
