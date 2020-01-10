@@ -1910,8 +1910,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 var self;
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -1956,7 +1954,7 @@ var self;
 
         if (Object.keys(menu.submenu).length > 0) {
           var submenu = self.armarMenu(menu.submenu);
-          htmlMenu += "<li class=\"nav-item dropdown\">\n                           <a class=\"nav-link dropdown-toggle\" id=\"navbarDropdown-".concat(indiceObjecto, "\" role=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n                             ").concat(menu.descripcion, "\n                           </a>\n                           <ul class=\"dropdown-menu\" aria-labelledby=\"navbarDropdown-").concat(indiceObjecto, "\">\n                              ").concat(submenu, "\n                           </ul>\n                         </li>");
+          htmlMenu += "<li class=\"nav-item dropdown dropdown-submenu\">\n                           <a class=\"nav-link dropdown-toggle\" id=\"navbarDropdown-".concat(indiceObjecto, "\" role=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n                             ").concat(menu.descripcion, "\n                           </a>\n                           <ul class=\"dropdown-menu\" aria-labelledby=\"navbarDropdown-").concat(indiceObjecto, "\">\n                              ").concat(submenu, "\n                           </ul>\n                         </li>");
         } else {
           htmlMenu += "<li class=\"nav-item\">\n                           <a class=\"nav-link\" id=\"navbarDropdown-".concat(indiceObjecto, "\" aria-haspopup=\"true\">\n                             ").concat(menu.descripcion, "\n                           </a>\n                         </li>");
         }
@@ -13191,7 +13189,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.nav-link{\n  color: #000000 !important;\n  -webkit-transition: all .3s;\n  transition: all .3s;\n}\n.nav-link:hover{\n  color:#F6A81C !important;\n  cursor:pointer;\n}\n.dropdown-submenu {\n  position: relative;\n}\n.dropdown-submenu>a:after {\n  content: \"\\F0DA\";\n  float: right;\n  border: none;\n  font-family: 'FontAwesome';\n}\n.dropdown-submenu>.dropdown-menu {\n  top: 0;\n  left: 100%;\n  margin-top: 0px;\n  margin-left: 0px;\n}\n\n", ""]);
+exports.push([module.i, "\n.nav-link{\n  color: #000000 !important;\n  -webkit-transition: all .3s;\n  transition: all .3s;\n}\n.nav-link:hover{\n  color:#F6A81C !important;\n  cursor:pointer;\n}\n#wrapper-menu-items .dropdown-submenu {\n  position: relative;\n}\n#wrapper-menu-items .dropdown-submenu>.dropdown-menu {\n  left: 90%;\n  margin-top: 0px;\n  margin-left: 0px;\n  top: 10;\n}\n#wrapper-menu-items > .dropdown-submenu > .dropdown-menu{\n  left: 7px;\n}\n\n\n", ""]);
 
 // exports
 
@@ -27589,6 +27587,7 @@ var render = function() {
         [
           _c("ul", {
             staticClass: "navbar-nav mr-auto",
+            attrs: { id: "wrapper-menu-items" },
             domProps: { innerHTML: _vm._s(_vm.menus) }
           }),
           _vm._v(" "),

@@ -8,7 +8,7 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto" v-html="menus"></ul>
+      <ul id="wrapper-menu-items" class="navbar-nav mr-auto" v-html="menus"></ul>
       <ul class="navbar-nav">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -35,23 +35,21 @@
   cursor:pointer;
 }
 
-.dropdown-submenu {
+#wrapper-menu-items .dropdown-submenu {
   position: relative;
 }
 
-.dropdown-submenu>a:after {
-  content: "\f0da";
-  float: right;
-  border: none;
-  font-family: 'FontAwesome';
-}
-
-.dropdown-submenu>.dropdown-menu {
-  top: 0;
-  left: 100%;
+#wrapper-menu-items .dropdown-submenu>.dropdown-menu {
+  left: 90%;
   margin-top: 0px;
   margin-left: 0px;
+  top: 10;
 }
+
+#wrapper-menu-items > .dropdown-submenu > .dropdown-menu{
+  left: 7px;
+}
+
 
 </style>
 
@@ -126,7 +124,7 @@
 
               let submenu = self.armarMenu(menu.submenu);
 
-              htmlMenu += `<li class="nav-item dropdown">
+              htmlMenu += `<li class="nav-item dropdown dropdown-submenu">
                              <a class="nav-link dropdown-toggle" id="navbarDropdown-${indiceObjecto}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                ${menu.descripcion}
                              </a>
