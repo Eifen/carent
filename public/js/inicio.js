@@ -1880,28 +1880,44 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+var self;
 /* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      "menus": null
+    };
+  },
   beforeCreate: function beforeCreate() {
+    self = this;
     axios.get('/menUsuario').then(function (response) {
-      console.log(response);
+      if (response.status === 200 && Object.keys(response.data).length > 0) {
+        self.menus = self.armarMenu(response.data);
+      } else {
+        throw "error";
+      }
     })["catch"](function (error) {
-      console.log("SAPEEE 2");
+      console.log("ERROR NO MENUS SAPEEE 2");
     });
   },
   mounted: function mounted() {
-    console.log('Menú Montado!');
+    console.log('Menú Montado!!!');
+  },
+  methods: {
+    armarMenu: function armarMenu(menus) {
+      var htmlMenu = "";
+      Object.keys(menus).forEach(function (indiceObjecto, indice) {
+        var menu = menus[indiceObjecto];
+
+        if (Object.keys(menu.submenu).length > 0) {
+          var submenu = self.armarMenu(menu.submenu);
+          htmlMenu += "<li class=\"nav-item dropdown\">\n                           <a class=\"nav-link dropdown-toggle\" id=\"navbarDropdown-".concat(indiceObjecto, "\" role=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n                             ").concat(menu.descripcion, "\n                           </a>\n                           <ul class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"navbarDropdown\">\n                              ").concat(submenu, "\n                           </ul>\n                         </li>");
+        } else {
+          htmlMenu += "<li class=\"nav-item\">\n                           <a class=\"nav-link dropdown-toggle\" id=\"navbarDropdown-".concat(indiceObjecto, "\" role=\"button\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n                             ").concat(menu.descripcion, "\n                           </a>\n                         </li>");
+        }
+      });
+      return htmlMenu;
+    }
   }
 });
 
@@ -26863,129 +26879,100 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c(
+    "nav",
+    {
+      staticClass: "navbar navbar-expand-lg navbar-light bg-light",
+      attrs: { id: "menu-principal" }
+    },
+    [
+      _vm._m(0),
+      _vm._v(" "),
+      _vm._m(1),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "collapse navbar-collapse",
+          attrs: { id: "navbarSupportedContent" }
+        },
+        [
+          _c("ul", {
+            staticClass: "navbar-nav mr-auto",
+            domProps: { innerHTML: _vm._s(_vm.menus) }
+          }),
+          _vm._v(" "),
+          _vm._m(2)
+        ]
+      )
+    ]
+  )
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("a", { staticClass: "navbar-brand" }, [
+      _c("img", { attrs: { src: "/images/logo-carent-menu-expandido.png" } })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c(
-      "nav",
+      "button",
       {
-        staticClass: "navbar navbar-expand-lg navbar-light bg-light",
-        attrs: { id: "menu-principal" }
+        staticClass: "navbar-toggler",
+        attrs: {
+          type: "button",
+          "data-toggle": "collapse",
+          "data-target": "#navbarSupportedContent",
+          "aria-controls": "navbarSupportedContent",
+          "aria-expanded": "false",
+          "aria-label": "Toggle navigation"
+        }
       },
-      [
-        _c("a", { staticClass: "navbar-brand" }, [
-          _c("img", {
-            attrs: { src: "/images/logo-carent-menu-expandido.png" }
-          })
-        ]),
-        _vm._v(" "),
+      [_c("span", { staticClass: "navbar-toggler-icon" })]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("ul", { staticClass: "navbar-nav" }, [
+      _c("li", { staticClass: "nav-item dropdown" }, [
         _c(
-          "button",
+          "a",
           {
-            staticClass: "navbar-toggler",
+            staticClass: "nav-link dropdown-toggle",
             attrs: {
-              type: "button",
-              "data-toggle": "collapse",
-              "data-target": "#navbarSupportedContent",
-              "aria-controls": "navbarSupportedContent",
-              "aria-expanded": "false",
-              "aria-label": "Toggle navigation"
+              href: "#",
+              id: "navbarDropdown",
+              role: "button",
+              "data-toggle": "dropdown",
+              "aria-haspopup": "true",
+              "aria-expanded": "false"
             }
           },
-          [_c("span", { staticClass: "navbar-toggler-icon" })]
+          [_vm._v("\n          Mi Cuenta\n        ")]
         ),
         _vm._v(" "),
         _c(
           "div",
           {
-            staticClass: "collapse navbar-collapse",
-            attrs: { id: "navbarSupportedContent" }
+            staticClass: "dropdown-menu dropdown-menu-right",
+            attrs: { "aria-labelledby": "navbarDropdown" }
           },
           [
-            _c("ul", { staticClass: "navbar-nav mr-auto" }, [
-              _c("li", { staticClass: "nav-item active" }, [
-                _c("a", { staticClass: "nav-link", attrs: { href: "#" } }, [
-                  _vm._v("Home "),
-                  _c("span", { staticClass: "sr-only" }, [_vm._v("(current)")])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "nav-item" }, [
-                _c("a", { staticClass: "nav-link", attrs: { href: "#" } }, [
-                  _vm._v("Link")
-                ])
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "nav-item dropdown" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "nav-link dropdown-toggle",
-                    attrs: {
-                      href: "#",
-                      id: "navbarDropdown",
-                      role: "button",
-                      "data-toggle": "dropdown",
-                      "aria-haspopup": "true",
-                      "aria-expanded": "false"
-                    }
-                  },
-                  [_vm._v("\n          Dropdown\n        ")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "dropdown-menu",
-                    attrs: { "aria-labelledby": "navbarDropdown" }
-                  },
-                  [
-                    _c(
-                      "a",
-                      { staticClass: "dropdown-item", attrs: { href: "#" } },
-                      [_vm._v("Action")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "a",
-                      { staticClass: "dropdown-item", attrs: { href: "#" } },
-                      [_vm._v("Another action")]
-                    ),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "dropdown-divider" }),
-                    _vm._v(" "),
-                    _c(
-                      "a",
-                      { staticClass: "dropdown-item", attrs: { href: "#" } },
-                      [_vm._v("Something else here")]
-                    )
-                  ]
-                )
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "nav-item" }, [
-                _c(
-                  "a",
-                  {
-                    staticClass: "nav-link disabled",
-                    attrs: {
-                      href: "#",
-                      tabindex: "-1",
-                      "aria-disabled": "true"
-                    }
-                  },
-                  [_vm._v("Disabled")]
-                )
-              ])
+            _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
+              _vm._v("Cambiar Contraseña")
             ])
           ]
         )
-      ]
-    )
+      ])
+    ])
   }
 ]
 render._withStripped = true

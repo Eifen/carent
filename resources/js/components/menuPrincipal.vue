@@ -8,26 +8,15 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
+      <ul class="navbar-nav mr-auto" v-html="menus"></ul>
+      <ul class="navbar-nav">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Dropdown
+            Mi Cuenta
           </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Something else here</a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Cambiar Contraseña</a>
           </div>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
         </li>
       </ul>
     </div>
@@ -37,26 +26,77 @@
 <script>
 
   window.axios = require('axios');
+  var self;
 
   export default {
-      beforeCreate(){
+      data() {
+        return {"menus": null};
+      },
+      beforeCreate: function(){
+
+        self = this;
 
         axios.get('/menUsuario')
         .then(function (response) {
 
-          console.log(response);
+          if(response.status === 200 && Object.keys(response.data).length > 0){
+
+            self.menus = self.armarMenu(response.data);
+
+          }else{
+
+            throw "error";
+
+          }
 
         })
         .catch(error => {
 
-          console.log("SAPEEE 2");
+          console.log("ERROR NO MENUS SAPEEE 2");
 
         });
 
 
       },
-      mounted() {
-          console.log('Menú Montado!')
+      mounted: function() {
+          console.log('Menú Montado!!!')
+      },
+      methods: {
+        armarMenu: function(menus){
+
+          var htmlMenu = "";
+
+          Object.keys(menus).forEach(function(indiceObjecto, indice) {
+
+            var menu = menus[indiceObjecto];
+
+            if(Object.keys(menu.submenu).length > 0){
+
+              let submenu = self.armarMenu(menu.submenu);
+
+              htmlMenu += `<li class="nav-item dropdown">
+                             <a class="nav-link dropdown-toggle" id="navbarDropdown-${indiceObjecto}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                               ${menu.descripcion}
+                             </a>
+                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                ${submenu}
+                             </ul>
+                           </li>`;
+
+
+            }else{
+              htmlMenu += `<li class="nav-item">
+                             <a class="nav-link dropdown-toggle" id="navbarDropdown-${indiceObjecto}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                               ${menu.descripcion}
+                             </a>
+                           </li>`;
+            }
+
+          });
+
+          return htmlMenu;
+
+        }
       }
   }
 </script>

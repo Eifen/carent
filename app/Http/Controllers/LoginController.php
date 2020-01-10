@@ -13,7 +13,6 @@ class LoginController extends Controller
 
       $modelo = new LoginModel();
       $config = $modelo->encryptConfig();
-      $pass = $this->encriptarLaravel("123456");
 
       return $config;
 
@@ -28,9 +27,9 @@ class LoginController extends Controller
       $usuario = $modelo->buscarUsuario($codigoUsuario);
       $loginDenegado = $modelo->estatusLoginDenegado($usuario->id_estatus);
 
-      if(!$loginDenegado){
+      if(!empty($usuario)){
 
-        if(!empty($usuario)){
+        if(!$loginDenegado){
 
           $claveDB = $usuario->clave;
           $claveDB = $this->desencriptarLaravel($claveDB);
@@ -53,15 +52,15 @@ class LoginController extends Controller
 
         }else{
 
-          $response = array("login" => false, "message" => "El usuario no existe");
+          $response = array("login" => false, "message" => "El usuario está en estatus <b>".$usuario->estatus."</b>");
 
         }
 
       }else{
 
-        $response = array("login" => false, "message" => "El usuario está en estatus <b>".$usuario->estatus."</b>");
+        $response = array("login" => false, "message" => "El usuario no existe");
 
-      }// Fin if(!$loginDenegado)
+      }// Fin !empty($usuario)
 
       return $response;
 
