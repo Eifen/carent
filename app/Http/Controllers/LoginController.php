@@ -13,7 +13,6 @@ class LoginController extends Controller
 
       $modelo = new LoginModel();
       $config = $modelo->encryptConfig();
-      $pass = $this->encriptarLaravel("123456");
 
       return $config;
 
@@ -28,14 +27,20 @@ class LoginController extends Controller
       $usuario = $modelo->buscarUsuario($codigoUsuario);
       $loginDenegado = $modelo->estatusLoginDenegado($usuario->id_estatus);
 
-      if(!$loginDenegado){
+      if(!empty($usuario)){
 
-        if(!empty($usuario)){
+        if(!$loginDenegado){
 
           $claveDB = $usuario->clave;
           $claveDB = $this->desencriptarLaravel($claveDB);
 
           if($claveDB === $claveForm){
+
+            //Se crean las variables de sessión
+            $request->session()->put('usuario_id', $usuario->id);
+            /*session('usuario_id', $usuario->id);
+            session('usuario_avatar', $usuario->avatar);
+            session('usuario_correo_principal', $usuario->correo_principal);*/
 
             $response = array("login" => true, "message" => "Bienvenido!, espere unos segundo mientras mientras es redireccionado.");
 
@@ -47,15 +52,15 @@ class LoginController extends Controller
 
         }else{
 
-          $response = array("login" => false, "message" => "El usuario no existe");
+          $response = array("login" => false, "message" => "El usuario está en estatus <b>".$usuario->estatus."</b>");
 
         }
 
       }else{
 
-        $response = array("login" => false, "message" => "El usuario está en estatus <b>".$usuario->estatus."</b>");
+        $response = array("login" => false, "message" => "El usuario no existe");
 
-      }// Fin if(!$loginDenegado)
+      }// Fin !empty($usuario)
 
       return $response;
 
