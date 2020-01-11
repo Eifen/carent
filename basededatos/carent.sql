@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 31-12-2019 a las 03:17:30
+-- Tiempo de generación: 10-01-2020 a las 16:04:07
 -- Versión del servidor: 5.7.22
 -- Versión de PHP: 7.1.18
 
@@ -756,7 +756,9 @@ INSERT INTO `tbl_estatus` (`id`, `tabla`, `valor`, `descripcion`) VALUES
 (5, 'tbl_tipo_contacto', 1, 'activo'),
 (6, 'tbl_tipo_contacto', 2, 'inactivo'),
 (7, 'tbl_cargo_empleado', 1, 'activo'),
-(8, 'tbl_cargo_empleado', 2, 'inactivo');
+(8, 'tbl_cargo_empleado', 2, 'inactivo'),
+(9, 'tbl_menu', 1, 'activo'),
+(10, 'tbl_menu', 2, 'inactivo');
 
 -- --------------------------------------------------------
 
@@ -776,6 +778,62 @@ INSERT INTO `tbl_estatus_login_denegado` (`id_estatus`) VALUES
 (2),
 (3),
 (4);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_menu`
+--
+
+CREATE TABLE `tbl_menu` (
+  `id` int(11) NOT NULL,
+  `id_menu_padre` int(11) NOT NULL,
+  `descripcion` varchar(50) NOT NULL,
+  `url` varchar(20) NOT NULL,
+  `orden` int(11) NOT NULL,
+  `id_estatus` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `tbl_menu`
+--
+
+INSERT INTO `tbl_menu` (`id`, `id_menu_padre`, `descripcion`, `url`, `orden`, `id_estatus`) VALUES
+(1, 0, 'Usuario', '', 0, 1),
+(2, 1, 'Crear Usuario', '', 0, 1),
+(3, 1, 'Buscar Usuario', '', 1, 1),
+(4, 0, 'Divisiones', '', 0, 1),
+(5, 4, 'Crear División', '', 0, 1),
+(6, 4, 'Buscar División', '', 1, 1),
+(7, 1, 'Eliminar Usuario', '', 2, 1),
+(8, 2, 'Crear Empleado', '', 0, 1),
+(9, 8, 'Crear Sub Empleado', '', 0, 1),
+(10, 5, 'Crear Subdivision', '', 0, 1),
+(11, 9, 'Crear sub sub empleado', '', 0, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_menu_usuario`
+--
+
+CREATE TABLE `tbl_menu_usuario` (
+  `id` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `id_menu` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `tbl_menu_usuario`
+--
+
+INSERT INTO `tbl_menu_usuario` (`id`, `id_usuario`, `id_menu`) VALUES
+(1, 1, 3),
+(2, 1, 2),
+(3, 1, 7),
+(4, 1, 9),
+(5, 1, 11),
+(6, 1, 10);
 
 -- --------------------------------------------------------
 
@@ -2337,7 +2395,7 @@ CREATE TABLE `tbl_usuario` (
 --
 
 INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `avatar`, `id_estatus`) VALUES
-(1, '0001', 'eyJpdiI6IlIyXC9wUnpZbE43MlYzY1VCT3NpcjR3PT0iLCJ2YWx1ZSI6IlVudlF0MldwdzZqK1BiQitudWUxWHc9PSIsIm1hYyI6IjA3YTk2MWNlNDVhOTI3ZjM4MTdlNDgzZDJmYzNhZTczNmI5ODViYTczODNlNTRiYzRmYjYyZDBiZmYwMjY3ZmEifQ==', '', 4),
+(1, '0001', 'eyJpdiI6IlIyXC9wUnpZbE43MlYzY1VCT3NpcjR3PT0iLCJ2YWx1ZSI6IlVudlF0MldwdzZqK1BiQitudWUxWHc9PSIsIm1hYyI6IjA3YTk2MWNlNDVhOTI3ZjM4MTdlNDgzZDJmYzNhZTczNmI5ODViYTczODNlNTRiYzRmYjYyZDBiZmYwMjY3ZmEifQ==', '', 1),
 (2, '11525', 'eyJpdiI6IkVjZ2oySWtNK3N3ckp0SGJLVGZxMGc9PSIsInZhbHVlIjoick52NFY1bWNFUUloQXo2cXNDallPUT09IiwibWFjIjoiYjVmNTlmZWQyZGVhYjEyNmI5YjcxZmM4ZDY2NGI3ZmU1OTQ3YTEyZjBlYzU0YmJiYWY0YmVmMDk3ZjA2OTgwMiJ9', '', 1),
 (3, '11450', 'eyJpdiI6Im5MWkhxSEVKV2N3ZkhJZ01XZTU2eFE9PSIsInZhbHVlIjoiZ2N3a2l2Nm1DNHFKMGtPYkp4ZmdzQT09IiwibWFjIjoiMTNmNTllMGNjNTc0MjNlMWMwYzkwYTA0NGYyNzQ5ZmU5YTg4M2YzMDIzZGMyNzVhNjllNmRhNDYzOWQ3Yzc1NyJ9', '', 1);
 
@@ -2401,6 +2459,20 @@ ALTER TABLE `tbl_estados`
 --
 ALTER TABLE `tbl_estatus`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `tbl_menu`
+--
+ALTER TABLE `tbl_menu`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `tbl_menu_usuario`
+--
+ALTER TABLE `tbl_menu_usuario`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_menu` (`id_menu`),
+  ADD KEY `id_usuario` (`id_usuario`);
 
 --
 -- Indices de la tabla `tbl_municipios`
@@ -2484,7 +2556,19 @@ ALTER TABLE `tbl_estados`
 -- AUTO_INCREMENT de la tabla `tbl_estatus`
 --
 ALTER TABLE `tbl_estatus`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT de la tabla `tbl_menu`
+--
+ALTER TABLE `tbl_menu`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT de la tabla `tbl_menu_usuario`
+--
+ALTER TABLE `tbl_menu_usuario`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_municipios`
@@ -2538,6 +2622,13 @@ ALTER TABLE `tbl_contacto_usuario`
 ALTER TABLE `tbl_empleado`
   ADD CONSTRAINT `fk_empleado_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `tbl_usuario` (`id`),
   ADD CONSTRAINT `tbl_empleado_ibfk_1` FOREIGN KEY (`id_parroquia`) REFERENCES `tbl_parroquias` (`id_parroquia`);
+
+--
+-- Filtros para la tabla `tbl_menu_usuario`
+--
+ALTER TABLE `tbl_menu_usuario`
+  ADD CONSTRAINT `tbl_menu_usuario_ibfk_1` FOREIGN KEY (`id_menu`) REFERENCES `tbl_menu` (`id`),
+  ADD CONSTRAINT `tbl_menu_usuario_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `tbl_usuario` (`id`);
 
 --
 -- Filtros para la tabla `tbl_municipios`
