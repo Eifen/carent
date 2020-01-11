@@ -96,6 +96,8 @@ var app = new Vue({
   created: function () {},
   mounted: function () {
 
+    console.log()
+
     new AutoNumeric('#codigoUsuario', {
       decimalPlaces: 0,
       decimalCharacter: ',',
@@ -401,6 +403,13 @@ var app = new Vue({
 
       return {respuesta: respuesta, mensaje: mensaje};
 
+    },
+    keyboard: function(e){
+
+      if (e.keyCode === 13){
+        self.login();
+      }
+      
     }
 
   }// Fin methods

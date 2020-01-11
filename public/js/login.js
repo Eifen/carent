@@ -39258,6 +39258,7 @@ var app = new Vue({
     alert("jose 2");
   },
   mounted: function mounted() {
+    console.log();
     new AutoNumeric('#codigoUsuario', {
       decimalPlaces: 0,
       decimalCharacter: ',',
@@ -39481,6 +39482,11 @@ var app = new Vue({
         respuesta: respuesta,
         mensaje: mensaje
       };
+    },
+    keyboard: function keyboard(e) {
+      if (e.keyCode === 13) {
+        self.login();
+      }
     }
   } // Fin methods
 
