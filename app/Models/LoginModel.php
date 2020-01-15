@@ -8,18 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class LoginModel extends Model
 {
 
-    function encryptConfig(){
-
-      $key = DB::select('SELECT valor FROM tbl_configuracion WHERE nombre = "encrypt-key"');
-      $key = $key[0]->valor;
-
-      $iv = DB::select('SELECT valor FROM tbl_configuracion WHERE nombre = "encrypt-iv"');
-      $iv = $iv[0]->valor;
-
-      return array("key" => $key, "iv" => $iv);
-
-    }// Fin encryptConfig
-
     function buscarUsuario($codigo){
 
       $usuario = DB::select('SELECT u.id,

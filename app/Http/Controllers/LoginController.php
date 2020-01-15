@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 use Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use App\Models\ConfigsModel;
 use App\Models\LoginModel;
+use Illuminate\Http\RedirectResponse;
 
 class LoginController extends Controller
 {
@@ -119,7 +121,7 @@ class LoginController extends Controller
 
     private function desencriptarCryptoJS($valor){
 
-      $modelo = new LoginModel();
+      $modelo = new ConfigsModel();
       $config = $modelo->encryptConfig();
 
       $key = pack("H*", $config["key"]);
@@ -128,6 +130,14 @@ class LoginController extends Controller
       $decrypted = trim($decrypted);
 
       return $decrypted;
+
+    }
+
+    function logout(Request $request){
+
+      $request->session()->flush();
+
+      return redirect()->route('loginView');
 
     }
 

@@ -15,7 +15,8 @@
             Mi Cuenta
           </a>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">Cambiar Contraseña</a>
+            <a class="dropdown-item" href="/cambiarClave">Cambiar Contraseña</a>
+            <a class="dropdown-item" href="/logout">Salir</a>
           </div>
         </li>
       </ul>
@@ -25,31 +26,46 @@
 
 <style>
 
-.nav-link{
+#menu-principal{
+  background-color: white;
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
+#menu-principal .navbar-brand{
+  height: 100%;
+  position: relative;
+}
+
+#menu-principal .navbar-brand img{
+  height: 35px;
+  width: auto;
+}
+
+#menu-principal .nav-link{
   color: #000000 !important;
   transition: all .3s;
 }
 
-.nav-link:hover{
+#menu-principal .nav-link:hover{
   color:#F6A81C !important;
   cursor:pointer;
 }
 
-#wrapper-menu-items .dropdown-submenu {
+#menu-principal #wrapper-menu-items .dropdown-submenu {
   position: relative;
 }
 
-#wrapper-menu-items .dropdown-submenu>.dropdown-menu {
+#menu-principal #wrapper-menu-items .dropdown-submenu>.dropdown-menu {
   left: 90%;
   margin-top: 0px;
   margin-left: 0px;
   top: 10;
 }
 
-#wrapper-menu-items > .dropdown-submenu > .dropdown-menu{
+#menu-principal #wrapper-menu-items > .dropdown-submenu > .dropdown-menu{
   left: 7px;
 }
-
 
 </style>
 
@@ -136,7 +152,7 @@
 
             }else{
               htmlMenu += `<li class="nav-item">
-                             <a class="nav-link" id="navbarDropdown-${indiceObjecto}" aria-haspopup="true">
+                             <a class="nav-link" id="navbarDropdown-${indiceObjecto}" aria-haspopup="true" href="${menu.url}">
                                ${menu.descripcion}
                              </a>
                            </li>`;

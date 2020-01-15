@@ -1,0 +1,175 @@
+<?php
+
+namespace App\Http\Controllers;
+use Mail;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
+use App\Models\ConfigsModel;
+use App\Models\UsuarioModel;
+use Illuminate\Http\RedirectResponse;
+
+class UsuarioController extends Controller
+{
+
+    function estados(Request $request){
+
+      $modelo = new UsuarioModel();
+      $estados = $modelo->estados();
+      return $estados;
+
+    }
+
+    function municipios(Request $request){
+
+      $id_estado = $request->input("id_estado");
+      $modelo = new UsuarioModel();
+      $municipios = $modelo->municipios($id_estado);
+      return $municipios;
+
+    }
+
+    function parroquias(Request $request){
+
+      $id_municipio = $request->input("id_municipio");
+      $modelo = new UsuarioModel();
+      $parroquias = $modelo->parroquias($id_municipio);
+      return $parroquias;
+
+    }
+
+    function divisiones(Request $request){
+
+      $modelo = new UsuarioModel();
+      $divisiones = $modelo->divisiones();
+      return $divisiones;
+
+    }
+
+    function cargos(Request $request){
+
+      $modelo = new UsuarioModel();
+      $cargos = $modelo->cargos();
+      return $cargos;
+
+    }
+
+    function crearUsuario(Request $request){
+
+      $modelo = new UsuarioModel();
+
+      $codigoUsuario = $this->desencriptarCryptoJS($request->input("codigoUsuario"));
+      $usuario = $modelo->buscarUsuario($codigoUsuario);
+
+      if(empty($usuario)){
+
+        $correos = $modelo->buscarCorreos($request->input("correoPrincipal"), $request->input("correoSecundario"));
+
+        if(!$correos["response"]){
+
+            $parametros = array(
+              "nombre1" => mb_strtoupper ($request->input("nombre1")),
+              "nombre2" => mb_strtoupper ($request->input("nombre2")),
+              "apellido1" => mb_strtoupper($request->input("apellido1")),
+              "apellido2" => mb_strtoupper($request->input("apellido2")),
+              "cedula" => $request->input("cedula"),
+              "fechaNacimiento" => $request->input("fechaNacimiento"),
+              "codigoUsuario" => $codigoUsuario,
+              "clave" => $this->encriptarLaravel($this->desencriptarCryptoJS($request->input("cedula"))),
+              "correoPrincipal" => strtolower($request->input("correoPrincipal")),
+              "correoSecundario" => strtolower($request->input("correoSecundario")),
+              "telefono1" => $request->input("telefono1"),
+              "telefono2" => $request->input("telefono2"),
+              "parroquia" => $request->input("parroquia"),
+              "division" => $request->input("division"),
+              "cargo" => $request->input("cargo")
+            );
+
+            $response = $modelo->crearUsuario($parametros);
+
+        }else{
+
+          $response = array("response" => false, "message" => "El correo principal o secundario ya se encuentra asociado a otro usuario");
+
+        }
+
+      }else{
+
+        $response = array("response" => false, "message" => "Ya existe un usuario con ese código de usuario");
+
+      }
+
+      return $response;
+
+    }
+
+    function login(Request $request){
+
+
+      $codigoUsuario = $this->desencriptarCryptoJS($request->input("codigoUsuario"));
+      $claveForm = $this->desencriptarCryptoJS($request->input("clave"));
+
+      $modelo = new ConfigsModel();
+      $usuario = $modelo->buscarUsuario($codigoUsuario);
+      $loginDenegado = $modelo->estatusLoginDenegado($usuario->id_estatus);
+
+      if(!empty($usuario)){
+
+        if(!$loginDenegado){
+
+          $claveDB = $usuario->clave;
+          $claveDB = $this->desencriptarLaravel($claveDB);
+
+          if($claveDB === $claveForm){
+
+            //Se crean las variables de sessión
+            $request->session()->put('usuario_id', $usuario->id);
+            /*session('usuario_id', $usuario->id);
+            session('usuario_avatar', $usuario->avatar);
+            session('usuario_correo_principal', $usuario->correo_principal);*/
+
+            $response = array("login" => true, "message" => "Bienvenido!, espere unos segundo mientras mientras es redireccionado.");
+
+          }else{
+
+            $response = array("login" => false, "message" => "Contraseña inválida");
+
+          }
+
+        }else{
+
+          $response = array("login" => false, "message" => "El usuario está en estatus <b>".$usuario->estatus."</b>");
+
+        }
+
+      }else{
+
+        $response = array("login" => false, "message" => "El usuario no existe");
+
+      }// Fin !empty($usuario)
+
+      return $response;
+
+    }
+
+    private function encriptarLaravel($valor){
+
+      $encrypted = Crypt::encryptString($valor);
+      return $encrypted;
+
+    }
+
+    private function desencriptarCryptoJS($valor){
+
+      $modelo = new ConfigsModel();
+      $config = $modelo->encryptConfig();
+
+      $key = pack("H*", $config["key"]);
+      $iv =  pack("H*", $config["iv"]);
+      $decrypted = openssl_decrypt($valor, 'AES-128-CBC', $key, OPENSSL_ZERO_PADDING, $iv);
+      $decrypted = trim($decrypted);
+
+      return $decrypted;
+
+    }
+
+}
