@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -27804,6 +27804,17 @@ function normalizeComponent (
 
 /***/ }),
 
+/***/ "./node_modules/vue-the-mask/dist/vue-the-mask.js":
+/*!********************************************************!*\
+  !*** ./node_modules/vue-the-mask/dist/vue-the-mask.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function(e,t){ true?module.exports=t():undefined})(this,function(){return function(e){function t(r){if(n[r])return n[r].exports;var a=n[r]={i:r,l:!1,exports:{}};return e[r].call(a.exports,a,a.exports,t),a.l=!0,a.exports}var n={};return t.m=e,t.c=n,t.i=function(e){return e},t.d=function(e,n,r){t.o(e,n)||Object.defineProperty(e,n,{configurable:!1,enumerable:!0,get:r})},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p=".",t(t.s=10)}([function(e,t){e.exports={"#":{pattern:/\d/},X:{pattern:/[0-9a-zA-Z]/},S:{pattern:/[a-zA-Z]/},A:{pattern:/[a-zA-Z]/,transform:function(e){return e.toLocaleUpperCase()}},a:{pattern:/[a-zA-Z]/,transform:function(e){return e.toLocaleLowerCase()}},"!":{escape:!0}}},function(e,t,n){"use strict";function r(e){var t=document.createEvent("Event");return t.initEvent(e,!0,!0),t}var a=n(2),o=n(0),i=n.n(o);t.a=function(e,t){var o=t.value;if((Array.isArray(o)||"string"==typeof o)&&(o={mask:o,tokens:i.a}),"INPUT"!==e.tagName.toLocaleUpperCase()){var u=e.getElementsByTagName("input");if(1!==u.length)throw new Error("v-mask directive requires 1 input, found "+u.length);e=u[0]}e.oninput=function(t){if(t.isTrusted){var i=e.selectionEnd,u=e.value[i-1];for(e.value=n.i(a.a)(e.value,o.mask,!0,o.tokens);i<e.value.length&&e.value.charAt(i-1)!==u;)i++;e===document.activeElement&&(e.setSelectionRange(i,i),setTimeout(function(){e.setSelectionRange(i,i)},0)),e.dispatchEvent(r("input"))}};var s=n.i(a.a)(e.value,o.mask,!0,o.tokens);s!==e.value&&(e.value=s,e.dispatchEvent(r("input")))}},function(e,t,n){"use strict";var r=n(6),a=n(5);t.a=function(e,t){var o=!(arguments.length>2&&void 0!==arguments[2])||arguments[2],i=arguments[3];return Array.isArray(t)?n.i(a.a)(r.a,t,i)(e,t,o,i):n.i(r.a)(e,t,o,i)}},function(e,t,n){"use strict";function r(e){e.component(s.a.name,s.a),e.directive("mask",i.a)}Object.defineProperty(t,"__esModule",{value:!0});var a=n(0),o=n.n(a),i=n(1),u=n(7),s=n.n(u);n.d(t,"TheMask",function(){return s.a}),n.d(t,"mask",function(){return i.a}),n.d(t,"tokens",function(){return o.a}),n.d(t,"version",function(){return c});var c="0.11.1";t.default=r,"undefined"!=typeof window&&window.Vue&&window.Vue.use(r)},function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var r=n(1),a=n(0),o=n.n(a),i=n(2);t.default={name:"TheMask",props:{value:[String,Number],mask:{type:[String,Array],required:!0},masked:{type:Boolean,default:!1},tokens:{type:Object,default:function(){return o.a}}},directives:{mask:r.a},data:function(){return{lastValue:null,display:this.value}},watch:{value:function(e){e!==this.lastValue&&(this.display=e)},masked:function(){this.refresh(this.display)}},computed:{config:function(){return{mask:this.mask,tokens:this.tokens,masked:this.masked}}},methods:{onInput:function(e){e.isTrusted||this.refresh(e.target.value)},refresh:function(e){this.display=e;var e=n.i(i.a)(e,this.mask,this.masked,this.tokens);e!==this.lastValue&&(this.lastValue=e,this.$emit("input",e))}}}},function(e,t,n){"use strict";function r(e,t,n){return t=t.sort(function(e,t){return e.length-t.length}),function(r,a){for(var o=!(arguments.length>2&&void 0!==arguments[2])||arguments[2],i=0;i<t.length;){var u=t[i];i++;var s=t[i];if(!(s&&e(r,s,!0,n).length>u.length))return e(r,u,o,n)}return""}}t.a=r},function(e,t,n){"use strict";function r(e,t){var n=!(arguments.length>2&&void 0!==arguments[2])||arguments[2],r=arguments[3];e=e||"",t=t||"";for(var a=0,o=0,i="";a<t.length&&o<e.length;){var u=t[a],s=r[u],c=e[o];s&&!s.escape?(s.pattern.test(c)&&(i+=s.transform?s.transform(c):c,a++),o++):(s&&s.escape&&(a++,u=t[a]),n&&(i+=u),c===u&&o++,a++)}for(var f="";a<t.length&&n;){var u=t[a];if(r[u]){f="";break}f+=u,a++}return i+f}t.a=r},function(e,t,n){var r=n(8)(n(4),n(9),null,null);e.exports=r.exports},function(e,t){e.exports=function(e,t,n,r){var a,o=e=e||{},i=typeof e.default;"object"!==i&&"function"!==i||(a=e,o=e.default);var u="function"==typeof o?o.options:o;if(t&&(u.render=t.render,u.staticRenderFns=t.staticRenderFns),n&&(u._scopeId=n),r){var s=u.computed||(u.computed={});Object.keys(r).forEach(function(e){var t=r[e];s[e]=function(){return t}})}return{esModule:a,exports:o,options:u}}},function(e,t){e.exports={render:function(){var e=this,t=e.$createElement;return(e._self._c||t)("input",{directives:[{name:"mask",rawName:"v-mask",value:e.config,expression:"config"}],attrs:{type:"text"},domProps:{value:e.display},on:{input:e.onInput}})},staticRenderFns:[]}},function(e,t,n){e.exports=n(3)}])});
+
+/***/ }),
+
 /***/ "./node_modules/vue/dist/vue.common.dev.js":
 /*!*************************************************!*\
   !*** ./node_modules/vue/dist/vue.common.dev.js ***!
@@ -40267,13 +40278,17 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/inicio.js":
-/*!********************************!*\
-  !*** ./resources/js/inicio.js ***!
-  \********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ "./resources/js/usuario/nuevoUsuario.js":
+/*!**********************************************!*\
+  !*** ./resources/js/usuario/nuevoUsuario.js ***!
+  \**********************************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue_the_mask__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-the-mask */ "./node_modules/vue-the-mask/dist/vue-the-mask.js");
+/* harmony import */ var vue_the_mask__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_the_mask__WEBPACK_IMPORTED_MODULE_0__);
 __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.js");
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
@@ -40282,34 +40297,505 @@ window.zenscroll = __webpack_require__(/*! zenscroll */ "./node_modules/zenscrol
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.AutoNumeric = __webpack_require__(/*! autonumeric */ "./node_modules/autonumeric/dist/autoNumeric.min.js");
 
+
 var CryptoJS = __webpack_require__(/*! crypto-js */ "./node_modules/crypto-js/index.js");
 
 var AES = __webpack_require__(/*! crypto-js/aes */ "./node_modules/crypto-js/aes.js");
 
 var self;
-Vue.component('menu-principal', __webpack_require__(/*! ./components/menuPrincipal.vue */ "./resources/js/components/menuPrincipal.vue")["default"]);
+Vue.use(vue_the_mask__WEBPACK_IMPORTED_MODULE_0___default.a);
+Vue.component('menu-principal', __webpack_require__(/*! ../components/menuPrincipal.vue */ "./resources/js/components/menuPrincipal.vue")["default"]);
 var app = new Vue({
-  el: '#inicio',
+  el: '#nuevoUsuario',
+  data: {
+    alertForm: {
+      "class": "",
+      message: "",
+      show: false
+    },
+    comboEstados: [],
+    comboMunicipios: [],
+    comboParroquias: [],
+    comboDivisiones: [],
+    comboCargos: [],
+    form: {
+      nombre1: {
+        disabled: false,
+        value: ""
+      },
+      nombre2: {
+        disabled: false,
+        value: ""
+      },
+      apellido1: {
+        disabled: false,
+        value: ""
+      },
+      apellido2: {
+        disabled: false,
+        value: ""
+      },
+      fechaNacimiento: {
+        disabled: false,
+        value: ""
+      },
+      codigoUsuario: {
+        disabled: false,
+        value: ""
+      },
+      cedula: {
+        disabled: false,
+        value: ""
+      },
+      estado: {
+        disabled: true,
+        validar: false,
+        value: ""
+      },
+      municipio: {
+        disabled: true,
+        help: "Municipio de la oficina en donde se desempeña",
+        validar: false,
+        value: ""
+      },
+      parroquia: {
+        disabled: true,
+        help: "Parroquia de la oficina en donde se desempeña",
+        validar: false,
+        value: ""
+      },
+      division: {
+        disabled: true,
+        validar: false,
+        value: ""
+      },
+      cargo: {
+        disabled: true,
+        validar: false,
+        value: ""
+      },
+      correoPrincipal: {
+        disabled: false,
+        value: ""
+      },
+      correoSecundario: {
+        disabled: false,
+        validar: false,
+        value: ""
+      },
+      telefono1: {
+        disabled: false,
+        value: ""
+      },
+      telefono2: {
+        disabled: false,
+        value: ""
+      },
+      empleado: {
+        checked: false
+      }
+    },
+    submitCrear: {
+      content: "Crear nuevo Usuario",
+      disabled: false,
+      show: true
+    },
+    key: null,
+    iv: null
+  },
   beforeCreate: function beforeCreate() {
     self = this;
+    axios.get('/encryptConfig').then(function (response) {
+      if (response.status === 200 && response.data.key && response.data.iv) {
+        self.key = response.data.key;
+        self.iv = response.data.iv;
+      } else {
+        throw "error";
+      }
+    })["catch"](function (error) {
+      Object.keys(self.form).forEach(function (indiceObjecto, indice) {
+        self.form[indiceObjecto].disabled = true;
+      });
+      self.submitCrear.disabled = true;
+      self.alertForm = {
+        "class": "alert alert-warning",
+        message: "Existe un error!, consulte con el administrador del sistema.",
+        show: true
+      };
+    });
   },
-  created: function created() {},
-  mounted: function mounted() {},
+  created: function created() {
+    self.cargos();
+    self.divisiones();
+    self.estados();
+  },
+  mounted: function mounted() {
+    new AutoNumeric('#codigoUsuario', {
+      decimalPlaces: 0,
+      decimalCharacter: ',',
+      digitGroupSeparator: '',
+      leadingZero: 'keep'
+    });
+    new AutoNumeric('#cedula', {
+      decimalPlaces: 0,
+      decimalCharacter: ',',
+      digitGroupSeparator: '.'
+    });
+  },
   updated: function updated() {},
-  methods: {} // Fin methods
+  methods: {
+    cargos: function cargos() {
+      axios.get('/cargos').then(function (response) {
+        if (response.status === 200 && response.data.length > 0) {
+          self.comboCargos = response.data;
+        } else {
+          throw "error";
+        }
+      })["catch"](function (error) {
+        Object.keys(self.form).forEach(function (indiceObjecto, indice) {
+          self.form[indiceObjecto].disabled = true;
+        });
+        self.submitCrear.disabled = true;
+        self.alertForm = {
+          "class": "alert alert-warning",
+          message: "Existe un error!, consulte con el administrador del sistema.",
+          show: true
+        };
+      });
+    },
+    divisiones: function divisiones() {
+      axios.get('/divisiones').then(function (response) {
+        if (response.status === 200 && response.data.length > 0) {
+          self.comboDivisiones = response.data;
+        } else {
+          throw "error";
+        }
+      })["catch"](function (error) {
+        Object.keys(self.form).forEach(function (indiceObjecto, indice) {
+          self.form[indiceObjecto].disabled = true;
+        });
+        self.submitCrear.disabled = true;
+        self.alertForm = {
+          "class": "alert alert-warning",
+          message: "Existe un error!, consulte con el administrador del sistema.",
+          show: true
+        };
+      });
+    },
+    estados: function estados() {
+      self.form.municipio.help = '<i class="fas fa-cog fa-spin"></i> buscando';
+      axios.get('/estados').then(function (response) {
+        if (response.status === 200 && response.data.length > 0) {
+          self.form.municipio.help = 'Municipio de la oficina en donde se desempeña';
+          self.comboEstados = response.data;
+        } else {
+          throw "error";
+        }
+      })["catch"](function (error) {
+        self.form.municipio.help = 'Municipio de la oficina en donde se desempeña';
+        Object.keys(self.form).forEach(function (indiceObjecto, indice) {
+          self.form[indiceObjecto].disabled = true;
+        });
+        self.submitCrear.disabled = true;
+        self.alertForm = {
+          "class": "alert alert-warning",
+          message: "Existe un error!, consulte con el administrador del sistema.",
+          show: true
+        };
+      });
+    },
+    municipios: function municipios() {
+      self.form.municipio.disabled = true;
+      self.form.parroquia.help = '<i class="fas fa-cog fa-spin"></i> buscando';
+      axios.get('/municipios', {
+        params: {
+          id_estado: self.form.estado.value
+        }
+      }).then(function (response) {
+        if (response.status === 200 && response.data.length > 0) {
+          self.form.parroquia.help = 'Parroquia de la oficina en donde se desempeña';
+          self.comboMunicipios = response.data;
+          self.form.municipio.disabled = false;
+        } else {
+          throw "error";
+        }
+      })["catch"](function (error) {
+        self.form.parroquia.help = 'Parroquia de la oficina en donde se desempeña';
+        Object.keys(self.form).forEach(function (indiceObjecto, indice) {
+          self.form[indiceObjecto].disabled = true;
+        });
+        self.submitCrear.disabled = true;
+        self.alertForm = {
+          "class": "alert alert-warning",
+          message: "Existe un error!, consulte con el administrador del sistema.",
+          show: true
+        };
+      });
+    },
+    parroquias: function parroquias() {
+      self.form.parroquia.disabled = true;
+      axios.get('/parroquias', {
+        params: {
+          id_municipio: self.form.municipio.value
+        }
+      }).then(function (response) {
+        if (response.status === 200 && response.data.length > 0) {
+          self.comboParroquias = response.data;
+          self.form.parroquia.disabled = false;
+        } else {
+          throw "error";
+        }
+      })["catch"](function (error) {
+        Object.keys(self.form).forEach(function (indiceObjecto, indice) {
+          self.form[indiceObjecto].disabled = true;
+        });
+        self.submitCrear.disabled = true;
+        self.alertForm = {
+          "class": "alert alert-warning",
+          message: "Existe un error!, consulte con el administrador del sistema.",
+          show: true
+        };
+      });
+    },
+    esEmpleado: function esEmpleado(e) {
+      if (self.form.empleado.checked) {
+        self.form.estado.disabled = false;
+        self.form.division.disabled = false;
+        self.form.cargo.disabled = false;
+        self.form.estado.validar = true;
+        self.form.municipio.validar = true;
+        self.form.parroquia.validar = true;
+        self.form.division.validar = true;
+        self.form.cargo.validar = true;
+        self.form.estado.value = "";
+      } else {
+        $(e.target).parents("form").find(".form-group .mensaje").html("").removeClass("invalid-feedback");
+        $(e.target).parents("form").find(".form-group .form-control").removeClass("error");
+        self.form.estado.disabled = true;
+        self.form.municipio.disabled = true;
+        self.form.parroquia.disabled = true;
+        self.form.division.disabled = true;
+        self.form.cargo.disabled = true;
+        self.form.estado.validar = false;
+        self.form.municipio.validar = false;
+        self.form.parroquia.validar = false;
+        self.form.division.validar = false;
+        self.form.cargo.validar = false;
+        self.form.estado.value = "";
+        self.form.municipio.value = "";
+        self.form.parroquia.value = "";
+        self.form.division.value = "";
+        self.form.cargo.value = "";
+      }
+    },
+    encriptar: function encriptar(valor) {
+      var key = CryptoJS.enc.Hex.parse(self.key);
+      var iv = CryptoJS.enc.Hex.parse(self.iv);
+      var encrypted = CryptoJS.AES.encrypt(valor, key, {
+        iv: iv,
+        padding: CryptoJS.pad.ZeroPadding
+      });
+      return encrypted.toString();
+    },
+    valuesForm: function valuesForm(e) {
+      if (e.target.type === 'text' || e.target.type === 'textarea' || e.target.type === 'email') {
+        self.form[e.target.id].value = e.target.value.trim() === "" ? "" : $(e.target).val();
+      }
+
+      self.limpiarMensajeError(e);
+    },
+    limpiarMensajeError: function limpiarMensajeError(e) {
+      $(e.target).removeClass("error");
+      $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
+    },
+    campoOpcionalARequerido: function campoOpcionalARequerido(e) {
+      self.valuesForm(e);
+      self.form[e.target.id].validar = self.form[e.target.id].value.length > 0 && self.form[e.target.id].validar === false ? true : false;
+    },
+    crear: function crear() {
+      var formValido = true;
+      $("form .form-group .mensaje").html("").removeClass("invalid-feedback");
+      $("form .form-group .form-control").removeClass("error");
+      $("form .form-group").each(function (index, elemento) {
+        if ($(elemento).find(".form-control").length > 0) {
+          var input = $(elemento).find(".form-control")[0];
+          var valido = self.validarValor(input);
+
+          if (!valido.respuesta) {
+            $(elemento).find(".mensaje").html(valido.mensaje).addClass("invalid-feedback");
+            $(elemento).find(".form-control").addClass("error");
+            formValido = valido.respuesta;
+            return false;
+          }
+        }
+      });
+
+      if (formValido) {
+        self.alertForm = {
+          "class": "",
+          message: "",
+          show: false
+        }; //Obtenemos valores
+
+        var parametros = {
+          nombre1: self.form.nombre1.value,
+          nombre2: self.form.nombre2.value,
+          apellido1: self.form.apellido1.value,
+          apellido2: self.form.apellido2.value,
+          fechaNacimiento: self.form.fechaNacimiento.value,
+          codigoUsuario: self.encriptar(self.form.codigoUsuario.value),
+          cedula: AutoNumeric.getAutoNumericElement("#cedula").getNumber(),
+          clave: self.encriptar(self.form.cedula.value),
+          parroquia: self.form.parroquia.value,
+          division: self.form.division.value,
+          cargo: self.form.cargo.value,
+          correoPrincipal: self.form.correoPrincipal.value,
+          correoSecundario: self.form.correoSecundario.value,
+          telefono1: self.form.telefono1.value,
+          telefono2: self.form.telefono2.value,
+          empleado: self.form.empleado.checked
+        };
+        self.submitCrear.content = '<i class="fas fa-cog fa-spin"></i>';
+        self.submitCrear.disabled = true;
+        Object.keys(self.form).forEach(function (indiceObjecto, indice) {
+          self.form[indiceObjecto].disabled = true;
+        });
+        axios.post('/crearUsuario', parametros).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.submitCrear.show = false;
+            self.alertForm = {
+              "class": "alert alert-success",
+              message: response.data.message,
+              show: true
+            };
+            setTimeout(function () {
+              window.location.href = "/formNuevoUsuario";
+            }, 5000);
+          } else {
+            throw response.data;
+          }
+        })["catch"](function (error) {
+          var indices = ["nombre1", "nombre2", "apellido1", "apellido2", "fechaNacimiento", "codigoUsuario", "cedula", "correoPrincipal", "correoSecundario", "telefono1", "telefono2"];
+
+          if (self.form.empleado.checked) {
+            indices.push("estado", "municipio", "parroquia", "division", "cargo");
+          }
+
+          indices.forEach(function (indiceObjecto, indice) {
+            self.form[indiceObjecto].disabled = false;
+          });
+          self.submitCrear.content = 'Crear nuevo Usuario';
+          self.submitCrear.disabled = false;
+
+          if (error.response) {
+            var message = "Existe un error!, consulte con el administrador del sistema.";
+          } else {
+            var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+          }
+
+          self.alertForm = {
+            "class": "alert alert-warning",
+            message: message,
+            show: true
+          };
+        });
+      } // Fin if
+
+    },
+    validarValor: function validarValor(input) {
+      var respuesta = true;
+      var mensaje = '';
+
+      if (input.hasAttribute("data-validar")) {
+        if (input.getAttribute("data-validar") === "true") {
+          if (input.type === 'email') {
+            var regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            respuesta = regexEmail.test(input.value);
+
+            if (!respuesta) {
+              zenscroll.toY($(input).offset().top - 100);
+              mensaje = "Correo inválido";
+            }
+          } else if (input.type === 'text' || input.type === 'textarea') {
+            if (input.getAttribute("data-min") && !input.getAttribute("data-name-lastname")) {
+              var minChar = Number(input.getAttribute("data-min")) === 0 ? 1 : input.getAttribute("data-min");
+              var numChar = input.value.length;
+              var regexName = /^[a-zA-Z ']+$/;
+
+              if (numChar < minChar) {
+                respuesta = false;
+                mensaje = "El campo debe contener al menos " + minChar + " caracteres!";
+                zenscroll.toY($(input).offset().top - 100);
+              }
+            } else if (input.getAttribute("data-min") && input.getAttribute("data-name-lastname")) {
+              var _minChar = input.getAttribute("data-min");
+
+              var _numChar = input.value.length;
+              var _regexName = /^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/;
+
+              if (_numChar < _minChar) {
+                respuesta = false;
+                mensaje = "El campo debe contener al menos " + _minChar + " caracteres!";
+                zenscroll.toY($(input).offset().top - 100);
+              } else if (!_regexName.test(input.value)) {
+                respuesta = false;
+                mensaje = "Solo se permiten letras y este caracter (',´)!";
+                zenscroll.toY($(input).offset().top - 100);
+              }
+            } else if (input.getAttribute("data-name-lastname")) {
+              if (input.value.length > 0) {
+                var _regexName2 = /^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/;
+                respuesta = _regexName2.test(input.value);
+
+                if (!respuesta) {
+                  mensaje = "Solo se permiten letras y este caracter (')!";
+                  zenscroll.toY($(input).offset().top - 100);
+                }
+              }
+            } else if (input.getAttribute("data-only-number")) {
+              var valor = input.getAttribute("data-formated-number") ? AutoNumeric.getAutoNumericElement("#" + input.id).getNumber() : input.value;
+              var regexNumber = /^\d+$/;
+              respuesta = regexNumber.test(valor);
+
+              if (!respuesta) {
+                mensaje = "Solo números";
+                zenscroll.toY($(input).offset().top - 100);
+              }
+            }
+          } else if (input.type === "select-one") {
+            if (input.value === "") {
+              respuesta = false;
+              mensaje = "Debe seleccionar una opción!";
+              zenscroll.toY($(input).offset().top - 100);
+            }
+          }
+        }
+      }
+
+      return {
+        respuesta: respuesta,
+        mensaje: mensaje
+      };
+    },
+    keyboard: function keyboard(e) {
+      if (e.keyCode === 13) {
+        self.crear();
+      }
+    }
+  } // Fin methods
 
 });
 
 /***/ }),
 
-/***/ 1:
-/*!**************************************!*\
-  !*** multi ./resources/js/inicio.js ***!
-  \**************************************/
+/***/ 3:
+/*!****************************************************!*\
+  !*** multi ./resources/js/usuario/nuevoUsuario.js ***!
+  \****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.1.18-1\apache2\htdocs\sofguar\carent\resources\js\inicio.js */"./resources/js/inicio.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.1.18-1\apache2\htdocs\sofguar\carent\resources\js\usuario\nuevoUsuario.js */"./resources/js/usuario/nuevoUsuario.js");
 
 
 /***/ })
