@@ -11,8 +11,11 @@ class InicioController extends Controller
 
     function inicio(Request $request){
 
-      $data = array();
-      return view('inicio', $data);
+      if(!session()->has("usuario_id")) {
+          return redirect()->route('loginView');
+      }
+
+      return view('inicio');
 
     }
 
@@ -22,6 +25,16 @@ class InicioController extends Controller
       $menus = $modelo->menUsuario(session("usuario_id"));
 
       return $menus;
+
+    }
+
+    function cambiarClave(Request $request){
+
+      if(!session()->has("usuario_id")) {
+          return redirect()->route('loginView');
+      }
+
+      return view('cambiarClave');
 
     }
 

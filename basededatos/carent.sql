@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 10-01-2020 a las 16:04:07
+-- Tiempo de generación: 15-01-2020 a las 08:58:58
 -- Versión del servidor: 5.7.22
 -- Versión de PHP: 7.1.18
 
@@ -638,9 +638,9 @@ CREATE TABLE `tbl_contacto_usuario` (
   `id` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
   `correo_principal` varchar(255) NOT NULL,
-  `correo_secundario` varchar(255) NOT NULL,
-  `telefono_principal` varchar(30) NOT NULL,
-  `telefono_secundario` varchar(30) NOT NULL
+  `correo_secundario` varchar(255) DEFAULT NULL,
+  `telefono_principal` varchar(30) DEFAULT NULL,
+  `telefono_secundario` varchar(30) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -648,7 +648,7 @@ CREATE TABLE `tbl_contacto_usuario` (
 --
 
 INSERT INTO `tbl_contacto_usuario` (`id`, `id_usuario`, `correo_principal`, `correo_secundario`, `telefono_principal`, `telefono_secundario`) VALUES
-(1, 1, 'dmolina101@gmail.com', '', '04244463739', ''),
+(1, 1, 'dmolina101@gmail.com', '', '(0000) - 000 0000', ''),
 (2, 2, 'josearturo0706@gmail.com', '', '', ''),
 (3, 3, 'ana.blandin@crowe.com.ve', '', '', '');
 
@@ -669,24 +669,17 @@ CREATE TABLE `tbl_division` (
 --
 
 INSERT INTO `tbl_division` (`id`, `descripcion`, `id_estatus`) VALUES
-(1, 'Sin Division Asignada', 1);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `tbl_empleado`
---
-
-CREATE TABLE `tbl_empleado` (
-  `id_usuario` int(11) NOT NULL,
-  `cedula` int(11) NOT NULL,
-  `nombre` varchar(100) NOT NULL,
-  `apellido` varchar(100) NOT NULL,
-  `fecha_nacimiento` date NOT NULL,
-  `id_cargo` int(11) NOT NULL,
-  `id_division` int(11) NOT NULL,
-  `id_parroquia` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+(1, 'Sin Division Asignada', 1),
+(2, 'Financiera', 1),
+(3, 'Tecnología', 1),
+(4, 'Método y Proceso', 1),
+(5, 'Asesoría Tributaria Legal', 1),
+(6, 'Recursos Humanos', 1),
+(7, 'Administración', 1),
+(8, 'Servicios General', 1),
+(9, 'Contraloría', 1),
+(10, 'Contabilidad', 1),
+(11, 'Legal', 1);
 
 -- --------------------------------------------------------
 
@@ -695,7 +688,7 @@ CREATE TABLE `tbl_empleado` (
 --
 
 CREATE TABLE `tbl_estados` (
-  `id_estado` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `estado` varchar(250) NOT NULL,
   `iso_3166-2` varchar(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -704,7 +697,7 @@ CREATE TABLE `tbl_estados` (
 -- Volcado de datos para la tabla `tbl_estados`
 --
 
-INSERT INTO `tbl_estados` (`id_estado`, `estado`, `iso_3166-2`) VALUES
+INSERT INTO `tbl_estados` (`id`, `estado`, `iso_3166-2`) VALUES
 (1, 'Amazonas', 'VE-X'),
 (2, 'Anzoátegui', 'VE-B'),
 (3, 'Apure', 'VE-C'),
@@ -758,7 +751,9 @@ INSERT INTO `tbl_estatus` (`id`, `tabla`, `valor`, `descripcion`) VALUES
 (7, 'tbl_cargo_empleado', 1, 'activo'),
 (8, 'tbl_cargo_empleado', 2, 'inactivo'),
 (9, 'tbl_menu', 1, 'activo'),
-(10, 'tbl_menu', 2, 'inactivo');
+(10, 'tbl_menu', 2, 'inactivo'),
+(11, 'tbl_division', 1, 'activo'),
+(12, 'tbl_division', 2, 'inactivo');
 
 -- --------------------------------------------------------
 
@@ -800,16 +795,10 @@ CREATE TABLE `tbl_menu` (
 
 INSERT INTO `tbl_menu` (`id`, `id_menu_padre`, `descripcion`, `url`, `orden`, `id_estatus`) VALUES
 (1, 0, 'Usuario', '', 0, 1),
-(2, 1, 'Crear Usuario', '', 0, 1),
+(2, 1, 'Crear Usuario', '/formNuevoUsuario', 0, 1),
 (3, 1, 'Buscar Usuario', '', 1, 1),
-(4, 0, 'Divisiones', '', 0, 1),
-(5, 4, 'Crear División', '', 0, 1),
-(6, 4, 'Buscar División', '', 1, 1),
-(7, 1, 'Eliminar Usuario', '', 2, 1),
-(8, 2, 'Crear Empleado', '', 0, 1),
-(9, 8, 'Crear Sub Empleado', '', 0, 1),
-(10, 5, 'Crear Subdivision', '', 0, 1),
-(11, 9, 'Crear sub sub empleado', '', 0, 2);
+(4, 0, 'Clientes', '', 0, 1),
+(5, 4, 'Crear Cliente', '/formNuevoCliente', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -830,10 +819,7 @@ CREATE TABLE `tbl_menu_usuario` (
 INSERT INTO `tbl_menu_usuario` (`id`, `id_usuario`, `id_menu`) VALUES
 (1, 1, 3),
 (2, 1, 2),
-(3, 1, 7),
-(4, 1, 9),
-(5, 1, 11),
-(6, 1, 10);
+(3, 1, 5);
 
 -- --------------------------------------------------------
 
@@ -842,7 +828,7 @@ INSERT INTO `tbl_menu_usuario` (`id`, `id_usuario`, `id_menu`) VALUES
 --
 
 CREATE TABLE `tbl_municipios` (
-  `id_municipio` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_estado` int(11) NOT NULL,
   `municipio` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -851,7 +837,7 @@ CREATE TABLE `tbl_municipios` (
 -- Volcado de datos para la tabla `tbl_municipios`
 --
 
-INSERT INTO `tbl_municipios` (`id_municipio`, `id_estado`, `municipio`) VALUES
+INSERT INTO `tbl_municipios` (`id`, `id_estado`, `municipio`) VALUES
 (1, 1, 'Alto Orinoco'),
 (2, 1, 'Atabapo'),
 (3, 1, 'Atures'),
@@ -1195,7 +1181,7 @@ INSERT INTO `tbl_municipios` (`id_municipio`, `id_estado`, `municipio`) VALUES
 --
 
 CREATE TABLE `tbl_parroquias` (
-  `id_parroquia` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_municipio` int(11) NOT NULL,
   `parroquia` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -1204,7 +1190,7 @@ CREATE TABLE `tbl_parroquias` (
 -- Volcado de datos para la tabla `tbl_parroquias`
 --
 
-INSERT INTO `tbl_parroquias` (`id_parroquia`, `id_municipio`, `parroquia`) VALUES
+INSERT INTO `tbl_parroquias` (`id`, `id_municipio`, `parroquia`) VALUES
 (1, 1, 'Alto Orinoco'),
 (2, 1, 'Huachamacare Acanaña'),
 (3, 1, 'Marawaka Toky Shamanaña'),
@@ -2386,7 +2372,16 @@ CREATE TABLE `tbl_usuario` (
   `id` int(11) NOT NULL,
   `codigo` varchar(6) NOT NULL,
   `clave` text NOT NULL,
-  `avatar` varchar(30) NOT NULL,
+  `cedula` int(11) NOT NULL,
+  `nombre_1` varchar(20) NOT NULL,
+  `nombre_2` varchar(20) DEFAULT NULL,
+  `apellido_1` varchar(20) NOT NULL,
+  `apellido_2` varchar(20) DEFAULT NULL,
+  `fecha_nacimiento` varchar(10) DEFAULT NULL,
+  `id_cargo` int(11) DEFAULT NULL,
+  `id_division` int(11) DEFAULT NULL,
+  `id_parroquia` int(11) DEFAULT NULL,
+  `avatar` varchar(30) DEFAULT NULL,
   `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -2394,10 +2389,10 @@ CREATE TABLE `tbl_usuario` (
 -- Volcado de datos para la tabla `tbl_usuario`
 --
 
-INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `avatar`, `id_estatus`) VALUES
-(1, '0001', 'eyJpdiI6IlIyXC9wUnpZbE43MlYzY1VCT3NpcjR3PT0iLCJ2YWx1ZSI6IlVudlF0MldwdzZqK1BiQitudWUxWHc9PSIsIm1hYyI6IjA3YTk2MWNlNDVhOTI3ZjM4MTdlNDgzZDJmYzNhZTczNmI5ODViYTczODNlNTRiYzRmYjYyZDBiZmYwMjY3ZmEifQ==', '', 1),
-(2, '11525', 'eyJpdiI6IkVjZ2oySWtNK3N3ckp0SGJLVGZxMGc9PSIsInZhbHVlIjoick52NFY1bWNFUUloQXo2cXNDallPUT09IiwibWFjIjoiYjVmNTlmZWQyZGVhYjEyNmI5YjcxZmM4ZDY2NGI3ZmU1OTQ3YTEyZjBlYzU0YmJiYWY0YmVmMDk3ZjA2OTgwMiJ9', '', 1),
-(3, '11450', 'eyJpdiI6Im5MWkhxSEVKV2N3ZkhJZ01XZTU2eFE9PSIsInZhbHVlIjoiZ2N3a2l2Nm1DNHFKMGtPYkp4ZmdzQT09IiwibWFjIjoiMTNmNTllMGNjNTc0MjNlMWMwYzkwYTA0NGYyNzQ5ZmU5YTg4M2YzMDIzZGMyNzVhNjllNmRhNDYzOWQ3Yzc1NyJ9', '', 1);
+INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `cedula`, `nombre_1`, `nombre_2`, `apellido_1`, `apellido_2`, `fecha_nacimiento`, `id_cargo`, `id_division`, `id_parroquia`, `avatar`, `id_estatus`) VALUES
+(1, '0001', 'eyJpdiI6IlIyXC9wUnpZbE43MlYzY1VCT3NpcjR3PT0iLCJ2YWx1ZSI6IlVudlF0MldwdzZqK1BiQitudWUxWHc9PSIsIm1hYyI6IjA3YTk2MWNlNDVhOTI3ZjM4MTdlNDgzZDJmYzNhZTczNmI5ODViYTczODNlNTRiYzRmYjYyZDBiZmYwMjY3ZmEifQ==', 0, '', NULL, '', NULL, NULL, NULL, NULL, NULL, '', 1),
+(2, '11525', 'eyJpdiI6IkVjZ2oySWtNK3N3ckp0SGJLVGZxMGc9PSIsInZhbHVlIjoick52NFY1bWNFUUloQXo2cXNDallPUT09IiwibWFjIjoiYjVmNTlmZWQyZGVhYjEyNmI5YjcxZmM4ZDY2NGI3ZmU1OTQ3YTEyZjBlYzU0YmJiYWY0YmVmMDk3ZjA2OTgwMiJ9', 0, '', NULL, '', NULL, NULL, NULL, NULL, NULL, '', 1),
+(3, '11450', 'eyJpdiI6Im5MWkhxSEVKV2N3ZkhJZ01XZTU2eFE9PSIsInZhbHVlIjoiZ2N3a2l2Nm1DNHFKMGtPYkp4ZmdzQT09IiwibWFjIjoiMTNmNTllMGNjNTc0MjNlMWMwYzkwYTA0NGYyNzQ5ZmU5YTg4M2YzMDIzZGMyNzVhNjllNmRhNDYzOWQ3Yzc1NyJ9', 0, '', NULL, '', NULL, NULL, NULL, NULL, NULL, '', 1);
 
 --
 -- Índices para tablas volcadas
@@ -2442,17 +2437,10 @@ ALTER TABLE `tbl_division`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `tbl_empleado`
---
-ALTER TABLE `tbl_empleado`
-  ADD KEY `id_usuario` (`id_usuario`),
-  ADD KEY `id_parroquia` (`id_parroquia`);
-
---
 -- Indices de la tabla `tbl_estados`
 --
 ALTER TABLE `tbl_estados`
-  ADD PRIMARY KEY (`id_estado`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `tbl_estatus`
@@ -2478,14 +2466,14 @@ ALTER TABLE `tbl_menu_usuario`
 -- Indices de la tabla `tbl_municipios`
 --
 ALTER TABLE `tbl_municipios`
-  ADD PRIMARY KEY (`id_municipio`),
+  ADD PRIMARY KEY (`id`),
   ADD KEY `id_estado` (`id_estado`);
 
 --
 -- Indices de la tabla `tbl_parroquias`
 --
 ALTER TABLE `tbl_parroquias`
-  ADD PRIMARY KEY (`id_parroquia`),
+  ADD PRIMARY KEY (`id`),
   ADD KEY `id_municipio` (`id_municipio`);
 
 --
@@ -2504,7 +2492,10 @@ ALTER TABLE `tbl_tipo_contacto`
 -- Indices de la tabla `tbl_usuario`
 --
 ALTER TABLE `tbl_usuario`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_cargo` (`id_cargo`),
+  ADD KEY `id_division` (`id_division`),
+  ADD KEY `id_parroquia` (`id_parroquia`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -2544,43 +2535,43 @@ ALTER TABLE `tbl_contacto_usuario`
 -- AUTO_INCREMENT de la tabla `tbl_division`
 --
 ALTER TABLE `tbl_division`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_estados`
 --
 ALTER TABLE `tbl_estados`
-  MODIFY `id_estado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_estatus`
 --
 ALTER TABLE `tbl_estatus`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_menu`
 --
 ALTER TABLE `tbl_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_menu_usuario`
 --
 ALTER TABLE `tbl_menu_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_municipios`
 --
 ALTER TABLE `tbl_municipios`
-  MODIFY `id_municipio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=463;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=463;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_parroquias`
 --
 ALTER TABLE `tbl_parroquias`
-  MODIFY `id_parroquia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1139;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1139;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_telefono`
@@ -2608,20 +2599,13 @@ ALTER TABLE `tbl_usuario`
 -- Filtros para la tabla `tbl_ciudades`
 --
 ALTER TABLE `tbl_ciudades`
-  ADD CONSTRAINT `tbl_ciudades_ibfk_1` FOREIGN KEY (`id_estado`) REFERENCES `tbl_estados` (`id_estado`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `tbl_ciudades_ibfk_1` FOREIGN KEY (`id_estado`) REFERENCES `tbl_estados` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `tbl_contacto_usuario`
 --
 ALTER TABLE `tbl_contacto_usuario`
   ADD CONSTRAINT `FK_ID_USUARIO` FOREIGN KEY (`id_usuario`) REFERENCES `tbl_usuario` (`id`);
-
---
--- Filtros para la tabla `tbl_empleado`
---
-ALTER TABLE `tbl_empleado`
-  ADD CONSTRAINT `fk_empleado_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `tbl_usuario` (`id`),
-  ADD CONSTRAINT `tbl_empleado_ibfk_1` FOREIGN KEY (`id_parroquia`) REFERENCES `tbl_parroquias` (`id_parroquia`);
 
 --
 -- Filtros para la tabla `tbl_menu_usuario`
@@ -2634,13 +2618,21 @@ ALTER TABLE `tbl_menu_usuario`
 -- Filtros para la tabla `tbl_municipios`
 --
 ALTER TABLE `tbl_municipios`
-  ADD CONSTRAINT `tbl_municipios_ibfk_1` FOREIGN KEY (`id_estado`) REFERENCES `tbl_estados` (`id_estado`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `tbl_municipios_ibfk_1` FOREIGN KEY (`id_estado`) REFERENCES `tbl_estados` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `tbl_parroquias`
 --
 ALTER TABLE `tbl_parroquias`
-  ADD CONSTRAINT `tbl_parroquias_ibfk_1` FOREIGN KEY (`id_municipio`) REFERENCES `tbl_municipios` (`id_municipio`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `tbl_parroquias_ibfk_1` FOREIGN KEY (`id_municipio`) REFERENCES `tbl_municipios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `tbl_usuario`
+--
+ALTER TABLE `tbl_usuario`
+  ADD CONSTRAINT `tbl_usuario_ibfk_1` FOREIGN KEY (`id_cargo`) REFERENCES `tbl_cargo_empleado` (`id`),
+  ADD CONSTRAINT `tbl_usuario_ibfk_2` FOREIGN KEY (`id_division`) REFERENCES `tbl_division` (`id`),
+  ADD CONSTRAINT `tbl_usuario_ibfk_3` FOREIGN KEY (`id_parroquia`) REFERENCES `tbl_parroquias` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

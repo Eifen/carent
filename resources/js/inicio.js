@@ -13,9 +13,6 @@ Vue.component('menu-principal', require('./components/menuPrincipal.vue').defaul
 var app = new Vue({
 
   el: '#inicio',
-  data: {
-    copyRight: `Sofguar © ${new Date().getFullYear()}`
-  },
   beforeCreate: function(){
 
     self = this;
