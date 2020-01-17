@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use App\Models\ConfigsModel;
 use App\Models\InicioModel;
 
 class InicioController extends Controller
@@ -35,6 +36,66 @@ class InicioController extends Controller
       }
 
       return view('cambiarClave');
+
+    }
+
+    function guardarNuevaClave(Request $request){
+
+      $modelo = new InicioModel();
+
+      $claveActual = $modelo->contraseñaActualUsuario($request->session()->get('usuario_id'));
+      $claveActual = $this->desencriptarLaravel($claveActual->clave);
+
+      if(!empty($claveActual)){
+
+        $claveActualForm = $this->desencriptarCryptoJS($request->input("claveActual"));
+        $nuevaClave = $this->encriptarLaravel($this->desencriptarCryptoJS($request->input("nuevaClave")));
+
+        if($claveActual === $claveActualForm){
+
+          $response = $modelo->actualizarContraseña($request->session()->get('usuario_id'), $nuevaClave);
+
+        }else{
+
+          $response = array("response" => false, "message" => "La contraseña actual es inválida!", "clave 1" => $claveActual->clave, "clave 2" => $claveActualForm);
+
+        }
+
+      }else{
+
+        $response = array("response" => false, "message" => "Ocurrio un error al tratar de actualizar la contraseña, por favor intente nuevamente!");
+
+      }
+
+      return $response;
+
+    }
+
+    private function encriptarLaravel($valor){
+
+      $encrypted = Crypt::encryptString($valor);
+      return $encrypted;
+
+    }
+
+    private function desencriptarLaravel($valor){
+
+      $decrypted = Crypt::decryptString($valor);
+      return $decrypted;
+
+    }
+
+    private function desencriptarCryptoJS($valor){
+
+      $modelo = new ConfigsModel();
+      $config = $modelo->encryptConfig();
+
+      $key = pack("H*", $config["key"]);
+      $iv =  pack("H*", $config["iv"]);
+      $decrypted = openssl_decrypt($valor, 'AES-128-CBC', $key, OPENSSL_ZERO_PADDING, $iv);
+      $decrypted = trim($decrypted);
+
+      return $decrypted;
 
     }
 

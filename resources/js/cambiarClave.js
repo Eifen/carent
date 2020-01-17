@@ -8,48 +8,35 @@ const CryptoJS = require("crypto-js");
 const AES = require("crypto-js/aes");
 var self;
 
+Vue.component('menu-principal', require('./components/menuPrincipal.vue').default);
+
 var app = new Vue({
 
   el: '#cambiarClave',
   data: {
-    alertLogin: {
+    alert: {
       class: "",
       message: "",
       show: false
     },
-    alertRecoveryPass: {
-      class: "",
-      message: "",
-      show: false
-    },
-    copyRight: `Sofguar © ${new Date().getFullYear()}`,
-    formLogin: {
-      codigoUsuario: {
+    form: {
+      claveActual: {
         disabled: false,
         value: ""
       },
-      clave: {
+      nuevaClave: {
         disabled: false,
         value: ""
-      }
-    },
-    formRecovery: {
-      codigoRecuperacion: {
+      },
+      repetirNuevaClave: {
         disabled: false,
         value: ""
       }
     },
     iv: null,
     key: null,
-    linkRecoveryPass: true,
-    showSubmitModal: true,
-    submitLogin: {
-      content: "Entrar",
-      disabled: false,
-      show:true
-    },
-    submitModalRecoveryPass: {
-      content: "Recuperar",
+    submit: {
+      content: "Cambiar Contraseña",
       disabled: false,
       show:true
     }
@@ -75,16 +62,11 @@ var app = new Vue({
     })
     .catch(error => {
 
-      self.formLogin.codigoUsuario.disabled = true;
-      self.formLogin.clave.disabled = true;
-      self.submitLogin.disabled = true;
-      self.submitModalRecoveryPass.show = false;
-      self.alertLogin = {
-        class : "alert alert-warning",
-        message : "Existe un error!, consulte con el administrador del sistema.",
-        show: true
-      };
-      self.alertRecoveryPass = {
+      Object.keys(self.form).forEach(function(indiceObjecto, indice) {
+        self.form[indiceObjecto].disabled = true;
+      });
+      self.submit.disabled = true;
+      self.alert = {
         class : "alert alert-warning",
         message : "Existe un error!, consulte con el administrador del sistema.",
         show: true
@@ -93,52 +75,6 @@ var app = new Vue({
     });
 
   },
-  created: function () {},
-  mounted: function () {
-
-    console.log()
-
-    new AutoNumeric('#codigoUsuario', {
-      decimalPlaces: 0,
-      decimalCharacter: ',',
-      digitGroupSeparator: '',
-      leadingZero: 'keep'
-    });
-
-    new AutoNumeric('#codigoRecuperacion', {
-      decimalPlaces: 0,
-      decimalCharacter: ',',
-      digitGroupSeparator: '',
-      leadingZero: 'keep'
-    });
-
-    $('#modal-recuperar-clave').on('hidden.bs.modal', function () {
-
-      self.alertRecoveryPass = {
-        class : "",
-        message : "",
-        show: false
-      };
-
-      self.submitModalRecoveryPass = {
-        content: "Recuperar",
-        disabled: false,
-        show:true
-      }
-
-      self.formRecovery = {
-        codigoRecuperacion: {
-          disabled: false,
-          value: ""
-        }
-      }
-
-      AutoNumeric.getAutoNumericElement("#codigoRecuperacion").set("");
-
-    })
-
-  },
-  updated: function () {},
   methods:{
 
     encriptar: function(valor){
@@ -154,36 +90,24 @@ var app = new Vue({
       return encrypted.toString();
 
     },
-    desencriptar: function(valor){
+    valuesForm: function(e){
 
-
-
-    },
-    valuesFormLogin: function(e){
-      self.formLogin[$(e.target).attr("id")].value = $(e.target).val();
+      self.form[e.target.id].value = (e.target.value.trim() === "") ? "" : $(e.target).val();
       self.limpiarMensajeError(e);
-    },
-    valuesFormRecovery: function(e){
-      self.formRecovery[$(e.target).attr("id")].value = $(e.target).val();
-      self.limpiarMensajeError(e);
+
     },
     limpiarMensajeError: function(e){
       $(e.target).removeClass("error");
       $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
     },
-    modalRecuperarClave: function(){
-
-      $("#modal-recuperar-clave").modal("show");
-
-    },
-    recuperarClave: function(){
+    cambiarContrasena: function(){
 
       var formValido = true;
 
-      $("#formRecoveryPass .form-group .mensaje").html("").removeClass("invalid-feedback");
-      $("#formRecoveryPass .form-group .form-control").removeClass("error");
+      $("form .form-group .mensaje").html("").removeClass("invalid-feedback");
+      $("form .form-group .form-control").removeClass("error");
 
-      $("#formRecoveryPass .form-group").each(function(index, elemento) {
+      $("form .form-group").each(function(index, elemento) {
 
         var input = $(elemento).find(".form-control")[0];
         var valido = self.validarValor(input);
@@ -199,7 +123,7 @@ var app = new Vue({
 
       if(formValido){
 
-        self.alertRecoveryPass = {
+        self.alert = {
           class : "",
           message : "",
           show: false
@@ -207,109 +131,24 @@ var app = new Vue({
 
         //Obtenemos valores
         let parametros = {
-          codigoUsuario: self.encriptar(self.formRecovery.codigoRecuperacion.value)
+          claveActual: self.encriptar(self.form.claveActual.value),
+          nuevaClave: self.encriptar(self.form.nuevaClave.value)
         }
 
-        self.submitModalRecoveryPass.content = '<i class="fas fa-cog fa-spin"></i>';
-        self.submitModalRecoveryPass.disabled = true;
-        self.formRecovery.codigoRecuperacion.disabled = true;
-
-        axios.post('/recoverylogin', parametros)
-        .then(function (response) {
-
-          if(response.status === 200 && response.data.recovery === true){
-
-            self.submitModalRecoveryPass.show = false;
-
-            self.alertRecoveryPass = {
-              class : "alert alert-success",
-              message : response.data.message,
-              show: true
-            };
-
-          }else{
-
-            throw response.data;
-
-          }
-
-        })
-        .catch(error => {
-
-          self.formRecovery.codigoRecuperacion.disabled = false;
-          self.submitModalRecoveryPass.content = 'Recuperar';
-          self.submitModalRecoveryPass.disabled = false;
-
-          if(error.response){
-
-            var message = "Existe un error!, consulte con el administrador del sistema.";
-
-          }else{
-
-            var message = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema.";
-
-          }
-
-          self.alertRecoveryPass = {
-            class : "alert alert-warning",
-            message : message,
-            show: true
-          };
-
+        self.submit.content = '<i class="fas fa-cog fa-spin"></i>';
+        self.submit.disabled = true;
+        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
+          self.form[indiceObjecto].disabled = true;
         });
 
-      }// Fin if(formValido)
-
-    },
-    login: function(){
-
-      var formValido = true;
-
-      $("#formLogin .form-group .mensaje").html("").removeClass("invalid-feedback");
-      $("#formLogin .form-group .form-control").removeClass("error");
-
-      $("#formLogin .form-group").each(function(index, elemento) {
-
-        var input = $(elemento).find(".form-control")[0];
-        var valido = self.validarValor(input);
-
-        if(!valido.respuesta){
-          $(elemento).find(".mensaje").html(valido.mensaje).addClass("invalid-feedback");
-          $(elemento).find(".form-control").addClass("error");
-          formValido = valido.respuesta;
-          return false;
-        }
-
-      });
-
-      if(formValido){
-
-        self.alertLogin = {
-          class : "",
-          message : "",
-          show: false
-        };
-
-        //Obtenemos valores
-        let parametros = {
-          codigoUsuario: self.encriptar(self.formLogin.codigoUsuario.value),
-          clave: self.encriptar(self.formLogin.clave.value)
-        }
-
-        self.submitLogin.content = '<i class="fas fa-cog fa-spin"></i>';
-        self.submitLogin.disabled = true;
-        self.formLogin.codigoUsuario.disabled = true;
-        self.formLogin.clave.disabled = true;
-
-        axios.post('/login', parametros)
+        axios.post('/guardarNuevaClave', parametros)
         .then(function (response) {
 
-          if(response.status === 200 && response.data.login === true){
+          if(response.status === 200 && response.data.response === true){
 
-            self.submitLogin.show = false;
-            self.linkRecoveryPass = false;
+            self.submit.show = false;
 
-            self.alertLogin = {
+            self.alert = {
               class : "alert alert-success",
               message : response.data.message,
               show: true
@@ -317,9 +156,9 @@ var app = new Vue({
 
             setTimeout(function(){
 
-              window.location.href = "/inicio";
+              window.location.href = "/cambiarClave";
 
-            }, 2000);
+            }, 5000);
 
           }else{
 
@@ -330,10 +169,11 @@ var app = new Vue({
         })
         .catch(error => {
 
-          self.formLogin.codigoUsuario.disabled = false;
-          self.formLogin.clave.disabled = false;
-          self.submitLogin.content = 'Entrar';
-          self.submitLogin.disabled = false;
+          Object.keys(self.form).forEach(function(indiceObjecto, indice) {
+            self.form[indiceObjecto].disabled = false;
+          });
+          self.submit.content = 'Cambiar Contraseña';
+          self.submit.disabled = false;
 
           if(error.response){
 
@@ -345,7 +185,7 @@ var app = new Vue({
 
           }
 
-          self.alertLogin = {
+          self.alert = {
             class : "alert alert-warning",
             message : message,
             show: true
@@ -365,14 +205,7 @@ var app = new Vue({
 
         if(input.getAttribute("data-validar") === "true"){
 
-          if(input.type === 'email'){
-
-            let regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            respuesta      = regexEmail.test(input.value);
-            (respuesta === false) ? zenscroll.toY($(input).offset().top - 100) : "" ;
-            mensaje        = "Correo inválido";
-
-          }else if(input.type === 'text' || input.type === 'textarea'){
+          if(input.type === 'password'){
 
             if(input.getAttribute("data-min")){
               let minChar = input.getAttribute("data-min");
@@ -386,12 +219,16 @@ var app = new Vue({
 
             }
 
-            if(input.getAttribute("data-only-number")){
+            if(input.getAttribute("data-equal")){
 
-              let regexNumber = /^\d+$/;
-              respuesta = regexNumber.test(input.value);
-              mensaje = "Solo números";
-              zenscroll.toY($(input).offset().top - 100);
+              let id = input.getAttribute("data-equal");
+              let valor = document.getElementById(id).value;
+
+              if(valor !== input.value){
+                respuesta = false;
+                mensaje   = 'La Contraseña no coincide con el campo "Nueva Contraseña"!';
+                zenscroll.toY($(input).offset().top - 100);
+              }
 
             }
 
