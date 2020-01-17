@@ -64,23 +64,6 @@ html{
 
         }// Fin .form-group
 
-        &.wrapper-recovery-pass{
-          margin-bottom: 10px;
-          margin-top: 10px;
-
-          .recuperarClave{
-            color: #007BFF;
-            transition: all .3s;
-
-            &:hover{
-              cursor: pointer;
-              text-decoration: underline;
-            }
-
-          }
-
-        }
-
         .btn{
           background-color: #091F40;
           border: 2px solid #091F40;
@@ -103,116 +86,13 @@ html{
 
       }
 
+      .alert{
+        margin-bottom: 0px;
+        margin-top: 10px;
+      }
+
     }// Fin form
 
   }// FIn > .row
 
-  #modal-recuperar-clave{
-
-    .modal-dialog{
-
-      .modal-content{
-        background-color: #ffffff;
-        border-radius: 2px !important;
-
-        .modal-header{
-          border-bottom: 0px;
-          color: #022C43;
-          //font-family: "Rawline";
-          padding: .5rem .5rem;
-
-          .close{
-            color: #022C43;
-            font-size: 2rem;
-            opacity: 1;
-            text-shadow: 0 1px 0 #FED600;
-            transition: all .3s;
-
-            &:hover{
-              color: #cc0000;
-            }
-
-          }
-
-        }
-
-        .modal-body{
-          //font-family: "Brandon Grotesque";
-          padding: .5rem;
-
-          form{
-            margin-top: 10px;
-
-            .form-group{
-
-              .invalid-feedback{
-                display: block !important;
-              }
-
-              label{
-                color:#091F40;
-              }
-
-              .form-control{
-                border-radius: 2px;
-
-                &.error{
-                  border-color: #dc3545;
-                }
-
-                &:disabled{
-                  cursor: not-allowed;
-                }
-
-              }// Fin .form-control
-
-            }// Fin .form-group
-
-          }// Fin form
-
-          .alert{
-            margin-bottom: 0px;
-            width: 100%;
-          }
-
-        }// Fin .modal-body
-
-        .modal-footer{
-          border-top: 0px;
-          //font-family: "Brandon Grotesque";
-          padding: .3rem;
-
-          .alert{
-            margin-bottom: 0px;
-            width: 100%;
-          }
-
-          .btn{
-            background-color: #091F40;
-            border: 2px solid #091F40;
-            border-radius: 2px;
-            color: rgba(255,255,255,1);
-            font-weight: 600;
-            padding: .375rem .75rem;
-            transition: all .3s;
-
-            &:hover{
-              background-color: #F6A81C;
-              color: #091F40;
-            }
-
-            &:disabled{
-              cursor: not-allowed;
-            }
-
-          }
-
-        }
-
-      }// Fin modal-content
-
-    }// Fin .modal-dialog
-
-  }// Fin #modal-recuperar-clave{
-
-}// Fin #login
+}// Fin #cambiarClave

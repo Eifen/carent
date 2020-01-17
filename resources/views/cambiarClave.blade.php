@@ -16,48 +16,55 @@
     <body>
 
       <div id="cambiarClave" class="container-fluid">
+
+        <menu-principal></menu-principal>
+
         <div class="row align-items-center justify-content-center">
           <div class="col-12 col-sm-9 col-md-6 col-lg-4">
-            <form id="formLogin">
+            <form>
               <div class="form-group">
                 <label for="clave">Contraseña Actual</label>
                 <input class="form-control"
                        id="claveActual"
-                       v-bind:value="formLogin.clave.value"
-                       v-bind:disabled="formLogin.clave.disabled"
-                       v-on:keyup="valuesFormLogin"
+                       v-bind:disabled="form.claveActual.disabled"
+                       v-model="form.claveActual.value"
+                       v-on:keyup="valuesForm"
                        type="password">
                 <div class="mensaje"></div>
               </div>
               <div class="form-group">
                 <label for="clave">Nueva Contraseña</label>
                 <input class="form-control"
+                       data-min="8"
+                       data-validar="true"
                        id="nuevaClave"
-                       v-bind:value="formLogin.clave.value"
-                       v-bind:disabled="formLogin.clave.disabled"
-                       v-on:keyup="valuesFormLogin"
+                       v-bind:disabled="form.nuevaClave.disabled"
+                       v-model="form.nuevaClave.value"
+                       v-on:keyup="valuesForm"
                        type="password">
                 <div class="mensaje"></div>
               </div>
               <div class="form-group">
                 <label for="clave">Repite la Nueva Contraseña</label>
                 <input class="form-control"
-                       id="repiteClave"
-                       v-bind:value="formLogin.clave.value"
-                       v-bind:disabled="formLogin.clave.disabled"
-                       v-on:keyup="valuesFormLogin"
+                       data-equal="nuevaClave"
+                       data-validar="true"
+                       id="repetirNuevaClave"
+                       v-bind:disabled="form.repetirNuevaClave.disabled"
+                       v-model="form.repetirNuevaClave.value"
+                       v-on:keyup="valuesForm"
                        type="password">
                 <div class="mensaje"></div>
               </div>
               <div>
                 <button class="btn"
                         type="button"
-                        v-on:click="login"
-                        v-bind:disabled="submitLogin.disabled"
-                        v-html="submitLogin.content"
-                        v-if="submitLogin.show"></button>
+                        v-on:click="cambiarContrasena"
+                        v-bind:disabled="submit.disabled"
+                        v-html="submit.content"
+                        v-if="submit.show"></button>
               </div>
-              <div v-bind:class="alertLogin.class" role="alert" v-if="alertLogin.show" v-html="alertLogin.message"></div>
+              <div v-bind:class="alert.class" role="alert" v-if="alert.show" v-html="alert.message"></div>
             </form>
           </div>
         </div>

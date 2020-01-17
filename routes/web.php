@@ -22,6 +22,7 @@ Route::get('/inicio', 'InicioController@inicio');
 Route::get('/menUsuario', 'InicioController@menUsuario');
 Route::get('/logout', 'LoginController@logout');
 Route::get('/cambiarClave', 'InicioController@cambiarClave');
+Route::post('/guardarNuevaClave', 'InicioController@guardarNuevaClave');
 Route::get('/formNuevoUsuario', function() {return view('usuario/nuevoUsuario');});
 Route::get('/estados', 'UsuarioController@estados');
 Route::get('/municipios', 'UsuarioController@municipios');
