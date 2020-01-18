@@ -26,6 +26,7 @@ var app = new Vue({
     comboParroquias: [],
     comboDivisiones: [],
     comboCargos: [],
+    refreshForm: false,
     form: {
       nombre1:{
         disabled: false,
@@ -508,18 +509,13 @@ var app = new Vue({
           if(response.status === 200 && response.data.response === true){
 
             self.submitCrear.show = false;
+            self.refreshForm = true; 
 
             self.alertForm = {
               class : "alert alert-success",
               message : response.data.message,
               show: true
             };
-
-            setTimeout(function(){
-
-              window.location.href = "/formNuevoUsuario";
-
-            }, 5000);
 
           }else{
 
@@ -669,6 +665,9 @@ var app = new Vue({
         self.crear();
       }
 
+    },
+    refreshView: function(){
+      window.location.href = "/formNuevoUsuario";
     }
 
   }// Fin methods

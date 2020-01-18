@@ -40318,6 +40318,7 @@ var app = new Vue({
     comboParroquias: [],
     comboDivisiones: [],
     comboCargos: [],
+    refreshForm: false,
     form: {
       nombre1: {
         disabled: false,
@@ -40663,14 +40664,12 @@ var app = new Vue({
         axios.post('/crearUsuario', parametros).then(function (response) {
           if (response.status === 200 && response.data.response === true) {
             self.submitCrear.show = false;
+            self.refreshForm = true;
             self.alertForm = {
               "class": "alert alert-success",
               message: response.data.message,
               show: true
             };
-            setTimeout(function () {
-              window.location.href = "/formNuevoUsuario";
-            }, 5000);
           } else {
             throw response.data;
           }
@@ -40781,6 +40780,9 @@ var app = new Vue({
       if (e.keyCode === 13) {
         self.crear();
       }
+    },
+    refreshView: function refreshView() {
+      window.location.href = "/formNuevoUsuario";
     }
   } // Fin methods
 

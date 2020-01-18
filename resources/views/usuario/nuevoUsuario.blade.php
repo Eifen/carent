@@ -285,6 +285,14 @@
               </div>
             </div>
 
+            <div class="row justify-content-center wrapper-refrescar" v-if="refreshForm">
+              <div class="col-12 col-md-6 col-lg-4">
+                <button class="btn"
+                        type="button"
+                        v-on:click="refreshView">Agregar un nuevo usuario</button>
+              </div>
+            </div>
+
             <div class="row wrapper-alert">
               <div class="col-12">
                 <div v-bind:class="alertForm.class" role="alert" v-if="alertForm.show" v-html="alertForm.message"></div>
