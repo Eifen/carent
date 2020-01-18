@@ -1,6 +1,5 @@
 require('bootstrap');
 window.Vue = require('vue');
-window.$ = require('jquery');
 window.zenscroll = require('zenscroll');
 window.axios = require('axios');
 window.AutoNumeric = require('autonumeric');
@@ -509,7 +508,7 @@ var app = new Vue({
           if(response.status === 200 && response.data.response === true){
 
             self.submitCrear.show = false;
-            self.refreshForm = true; 
+            self.refreshForm = true;
 
             self.alertForm = {
               class : "alert alert-success",

@@ -1,4 +1,5 @@
 {
+    "/js/buscarUsuario.js": "/js/buscarUsuario.js",
     "/js/cambiarClave.js": "/js/cambiarClave.js",
     "/js/fontawesome-free-5.12.0.js": "/js/fontawesome-free-5.12.0.js",
     "/js/inicio.js": "/js/inicio.js",
@@ -7,6 +8,7 @@
     "/css/inicio.css": "/css/inicio.css",
     "/css/cambiarClave.css": "/css/cambiarClave.css",
     "/css/nuevoUsuario.css": "/css/nuevoUsuario.css",
+    "/css/buscarUsuario.css": "/css/buscarUsuario.css",
     "/js/nuevoUsuario.js": "/js/nuevoUsuario.js",
     "/css/bootstrap.min.css": "/css/bootstrap.min.css"
 }
