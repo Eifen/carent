@@ -30,3 +30,4 @@ Route::get('/parroquias', 'UsuarioController@parroquias');
 Route::get('/divisiones', 'UsuarioController@divisiones');
 Route::get('/cargos', 'UsuarioController@cargos');
 Route::post('/crearUsuario', 'UsuarioController@crearUsuario');
+Route::get('/formBuscarUsuario', function() {return view('usuario/buscarUsuario');});
