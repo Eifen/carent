@@ -7,4 +7,48 @@ html {
 }
 #buscarUsuario {
   background-color: #E9ECEF;
+  min-height: 100vh;
+}
+#buscarUsuario .wrapper-forms {
+  margin-top: 3%;
+}
+#buscarUsuario .wrapper-forms form {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.13);
+  border-radius: 3px;
+  margin-bottom: 50px;
+  padding: 15px;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+#buscarUsuario .wrapper-forms form:hover {
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+}
+#buscarUsuario .wrapper-forms form .form-group {
+  margin-bottom: 0px;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+@media screen and (max-width: 768px) {
+  #buscarUsuario .wrapper-forms form .form-group {
+    margin-bottom: 12px;
+  }
+}
+#buscarUsuario .wrapper-forms form .form-group .btn {
+  width: 100%;
+}
+#buscarUsuario .wrapper-forms form .form-group .btn:disabled {
+  cursor: not-allowed;
+}
+#buscarUsuario .wrapper-forms form .form-group .invalid-feedback {
+  display: block !important;
+}
+#buscarUsuario .wrapper-forms form .form-group .form-control {
+  border-radius: 2px;
+}
+#buscarUsuario .wrapper-forms form .form-group .form-control.error {
+  border-color: #dc3545;
+}
+#buscarUsuario .wrapper-forms form .form-group .form-control:disabled {
+  cursor: not-allowed;
 }

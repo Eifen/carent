@@ -102,53 +102,8 @@ class UsuarioController extends Controller
 
     }
 
-    function login(Request $request){
-
-
-      $codigoUsuario = $this->desencriptarCryptoJS($request->input("codigoUsuario"));
-      $claveForm = $this->desencriptarCryptoJS($request->input("clave"));
-
-      $modelo = new ConfigsModel();
-      $usuario = $modelo->buscarUsuario($codigoUsuario);
-      $loginDenegado = $modelo->estatusLoginDenegado($usuario->id_estatus);
-
-      if(!empty($usuario)){
-
-        if(!$loginDenegado){
-
-          $claveDB = $usuario->clave;
-          $claveDB = $this->desencriptarLaravel($claveDB);
-
-          if($claveDB === $claveForm){
-
-            //Se crean las variables de sessión
-            $request->session()->put('usuario_id', $usuario->id);
-            /*session('usuario_id', $usuario->id);
-            session('usuario_avatar', $usuario->avatar);
-            session('usuario_correo_principal', $usuario->correo_principal);*/
-
-            $response = array("login" => true, "message" => "Bienvenido!, espere unos segundo mientras mientras es redireccionado.");
-
-          }else{
-
-            $response = array("login" => false, "message" => "Contraseña inválida");
-
-          }
-
-        }else{
-
-          $response = array("login" => false, "message" => "El usuario está en estatus <b>".$usuario->estatus."</b>");
-
-        }
-
-      }else{
-
-        $response = array("login" => false, "message" => "El usuario no existe");
-
-      }// Fin !empty($usuario)
-
-      return $response;
-
+    function buscarUsuario(Request $request){
+      return $request;
     }
 
     private function encriptarLaravel($valor){
