@@ -40,10 +40,17 @@
                 <label for="clave">Contraseña</label>
                 <input class="form-control"
                        id="clave"
-                       v-bind:value="formLogin.clave.value"
+                       ref="clave"
                        v-bind:disabled="formLogin.clave.disabled"
-                       v-on:keyup="valuesFormLogin"
-                       type="password">
+                       v-bind:value="formLogin.clave.value"
+                       v-bind:type="formLogin.clave.type"
+                       v-on:keyup="valuesFormLogin">
+                <div class="ver-clave true" v-on:click="verClave" v-if="verClaveIcon">
+                  <i class="fas fa-eye-slash"></i>
+                </div>
+                <div class="ver-clave false" v-on:click="verClave" v-else>
+                  <i class="fas fa-eye"></i>
+                </div>
                 <div class="mensaje"></div>
               </div>
               <div>
