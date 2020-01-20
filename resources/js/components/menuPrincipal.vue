@@ -71,6 +71,7 @@
 
 <script>
 
+  window.$ = require('jquery');
   window.axios = require('axios');
   var self;
 
@@ -98,7 +99,7 @@
         })
         .catch(error => {
 
-          console.log("ERROR NO MENUS SAPEEE 2");
+          console.log("ERROR NO MENUS");
 
         });
 

@@ -32,6 +32,9 @@ html {
   height: 90px;
   width: auto;
 }
+#login > .row form > div.form-group {
+  position: relative;
+}
 #login > .row form > div.form-group label {
   color: #091F40;
 }
@@ -46,6 +49,20 @@ html {
 }
 #login > .row form > div.form-group .form-control:disabled {
   cursor: not-allowed;
+}
+#login > .row form > div.form-group .form-control#clave {
+  padding-right: 28px;
+}
+#login > .row form > div.form-group .ver-clave {
+  bottom: 7px;
+  position: absolute;
+  right: 6px;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+#login > .row form > div.form-group .ver-clave:hover {
+  color: #F6A81C;
+  cursor: pointer;
 }
 #login > .row form > div.wrapper-recovery-pass {
   margin-bottom: 10px;

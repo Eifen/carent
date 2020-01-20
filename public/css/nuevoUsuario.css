@@ -100,6 +100,27 @@ html {
 #nuevoUsuario .wrapper-forms .wrapper-subtmit > div .btn:disabled {
   cursor: not-allowed;
 }
+#nuevoUsuario .wrapper-forms .wrapper-refrescar > div {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+#nuevoUsuario .wrapper-forms .wrapper-refrescar > div .btn {
+  background-color: #091F40;
+  border: 2px solid #091F40;
+  border-radius: 2px;
+  color: #ffffff;
+  font-weight: 600;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  width: 100%;
+}
+#nuevoUsuario .wrapper-forms .wrapper-refrescar > div .btn:hover {
+  background-color: #F6A81C;
+  color: #091F40;
+}
+#nuevoUsuario .wrapper-forms .wrapper-refrescar > div .btn:disabled {
+  cursor: not-allowed;
+}
 #nuevoUsuario .wrapper-forms .wrapper-alert {
   margin-top: 15px;
 }

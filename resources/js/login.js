@@ -30,6 +30,7 @@ var app = new Vue({
       },
       clave: {
         disabled: false,
+        type: "password",
         value: ""
       }
     },
@@ -39,6 +40,7 @@ var app = new Vue({
         value: ""
       }
     },
+    verClaveIcon: false,
     iv: null,
     key: null,
     linkRecoveryPass: true,
@@ -409,7 +411,20 @@ var app = new Vue({
       if (e.keyCode === 13){
         self.login();
       }
-      
+
+    },
+    verClave: function(e){
+   console.log(self.verClaveIcon);
+      if(self.$refs["clave"].type === "password"){
+        self.formLogin.clave.type = "text";
+        self.verClaveIcon = true;
+      }else{
+        self.formLogin.clave.type = "password";
+        self.verClaveIcon = false;
+      }
+
+      console.log(self.verClaveIcon);
+
     }
 
   }// Fin methods
