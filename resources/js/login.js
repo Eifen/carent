@@ -133,7 +133,7 @@ var app = new Vue({
         }
       }
 
-      AutoNumeric.getAutoNumericElement("#codigoRecuperacion").set("");
+      AutoNumeric.getAutoNumericElement(".codigoRecuperacion").set("");
 
     })
 

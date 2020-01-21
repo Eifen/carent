@@ -39287,7 +39287,7 @@ var app = new Vue({
           value: ""
         }
       };
-      AutoNumeric.getAutoNumericElement("#codigoRecuperacion").set("");
+      AutoNumeric.getAutoNumericElement(".codigoRecuperacion").set("");
     });
   },
   updated: function updated() {},
