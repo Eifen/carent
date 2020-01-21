@@ -98,16 +98,14 @@ var app = new Vue({
   created: function () {},
   mounted: function () {
 
-    console.log()
-
-    new AutoNumeric('#codigoUsuario', {
+    new AutoNumeric('.codigoUsuario', {
       decimalPlaces: 0,
       decimalCharacter: ',',
       digitGroupSeparator: '',
       leadingZero: 'keep'
     });
 
-    new AutoNumeric('#codigoRecuperacion', {
+    new AutoNumeric('.codigoRecuperacion', {
       decimalPlaces: 0,
       decimalCharacter: ',',
       digitGroupSeparator: '',
@@ -155,19 +153,6 @@ var app = new Vue({
 
       return encrypted.toString();
 
-    },
-    desencriptar: function(valor){
-
-
-
-    },
-    valuesFormLogin: function(e){
-      self.formLogin[$(e.target).attr("id")].value = $(e.target).val();
-      self.limpiarMensajeError(e);
-    },
-    valuesFormRecovery: function(e){
-      self.formRecovery[$(e.target).attr("id")].value = $(e.target).val();
-      self.limpiarMensajeError(e);
     },
     limpiarMensajeError: function(e){
       $(e.target).removeClass("error");

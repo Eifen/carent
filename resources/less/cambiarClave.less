@@ -40,6 +40,7 @@ html{
         }
 
         &.form-group{
+          position: relative;
 
           label{
             color:#091F40;
@@ -58,6 +59,19 @@ html{
 
             &:disabled{
               cursor: not-allowed;
+            }
+
+          }
+
+          .ver-clave{
+            top: 40px;
+            position: absolute;
+            right: 6px;
+            transition: all .3s;
+
+            &:hover{
+              color:#F6A81C;
+              cursor: pointer;
             }
 
           }

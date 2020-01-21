@@ -26,27 +26,26 @@
               <div class="form-group">
                 <label for="codigoUsuario">Código de usuario</label>
                 <input aria-describedby="codigoUsuarioHelp"
-                       class="form-control"
+                       class="form-control codigoUsuario"
                        data-validar="true"
                        data-only-number="true"
-                       id="codigoUsuario"
+                       ref="codigoUsuario"
                        type="text"
                        v-bind:disabled="formLogin.codigoUsuario.disabled"
-                       v-bind:value="formLogin.codigoUsuario.value"
-                       v-on:keyup="valuesFormLogin">
+                       v-model="formLogin.codigoUsuario.value"
+                       v-on:keyup="limpiarMensajeError">
                 <small id="codigoUsuarioHelp" class="form-text text-muted">Ejemplo: 2209</small>
                 <div class="mensaje"></div>
               </div>
               <div class="form-group">
                 <label for="clave">Contraseña</label>
                 <input class="form-control"
-                       id="clave"
                        ref="clave"
                        v-bind:disabled="formLogin.clave.disabled"
-                       v-bind:value="formLogin.clave.value"
                        v-bind:type="formLogin.clave.type"
-                       v-on:keyup="valuesFormLogin">
-                <div class="ver-clave true" v-on:click="verClave">
+                       v-model="formLogin.clave.value"
+                       v-on:keyup="limpiarMensajeError">
+                <div class="ver-clave" v-on:click="verClave">
                   <i v-bind:class="claseVerClaveIcon"></i>
                 </div>
                 <div class="mensaje"></div>
@@ -79,13 +78,13 @@
                 Para recuperar su clave solo debe indicar su código de usuario y le llegará a su correo.
                 <form id="formRecoveryPass">
                   <div class="form-group">
-                    <input class="form-control"
+                    <input class="form-control codigoRecuperacion"
                            data-validar="true"
                            data-only-number="true"
-                           id="codigoRecuperacion" type="text"
+                           ref="codigoRecuperacion" type="text"
                            v-bind:disabled="formRecovery.codigoRecuperacion.disabled"
-                           v-bind:value="formRecovery.codigoRecuperacion.value"
-                           v-on:keyup="valuesFormRecovery">
+                           v-model="formRecovery.codigoRecuperacion.value"
+                           v-on:keyup="limpiarMensajeError">
                     <small id="codigoRecuperacionHelp" class="form-text text-muted">Ejemplo: 2209</small>
                     <div class="mensaje"></div>
                   </div>
