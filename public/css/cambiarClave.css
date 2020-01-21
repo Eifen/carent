@@ -32,6 +32,9 @@ html {
   height: 90px;
   width: auto;
 }
+#cambiarClave > .row form > div.form-group {
+  position: relative;
+}
 #cambiarClave > .row form > div.form-group label {
   color: #091F40;
 }
@@ -46,6 +49,17 @@ html {
 }
 #cambiarClave > .row form > div.form-group .form-control:disabled {
   cursor: not-allowed;
+}
+#cambiarClave > .row form > div.form-group .ver-clave {
+  top: 40px;
+  position: absolute;
+  right: 6px;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+#cambiarClave > .row form > div.form-group .ver-clave:hover {
+  color: #F6A81C;
+  cursor: pointer;
 }
 #cambiarClave > .row form > div .btn {
   background-color: #091F40;
