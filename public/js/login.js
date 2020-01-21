@@ -39214,7 +39214,7 @@ var app = new Vue({
         value: ""
       }
     },
-    verClaveIcon: false,
+    claseVerClaveIcon: "fas fa-eye",
     iv: null,
     key: null,
     linkRecoveryPass: true,
@@ -39489,17 +39489,13 @@ var app = new Vue({
       }
     },
     verClave: function verClave(e) {
-      console.log(self.verClaveIcon);
-
       if (self.$refs["clave"].type === "password") {
         self.formLogin.clave.type = "text";
-        self.verClaveIcon = true;
+        self.claseVerClaveIcon = "fas fa-eye-slash";
       } else {
         self.formLogin.clave.type = "password";
-        self.verClaveIcon = false;
+        self.claseVerClaveIcon = "fas fa-eye";
       }
-
-      console.log(self.verClaveIcon);
     }
   } // Fin methods
 

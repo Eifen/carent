@@ -10,6 +10,7 @@
         <title>.: CARENT :.</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
         <link href="{{ mix('/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+        <link href="{{ mix('/css/fontawesome-free-5.12.0.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ mix('/css/login.css') }}" rel="stylesheet" type="text/css">
 
     </head>
@@ -45,11 +46,8 @@
                        v-bind:value="formLogin.clave.value"
                        v-bind:type="formLogin.clave.type"
                        v-on:keyup="valuesFormLogin">
-                <div class="ver-clave true" v-on:click="verClave" v-if="verClaveIcon">
-                  <i class="fas fa-eye-slash"></i>
-                </div>
-                <div class="ver-clave false" v-on:click="verClave" v-else>
-                  <i class="fas fa-eye"></i>
+                <div class="ver-clave true" v-on:click="verClave">
+                  <i v-bind:class="claseVerClaveIcon"></i>
                 </div>
                 <div class="mensaje"></div>
               </div>
@@ -108,7 +106,6 @@
 
       </div>
 
-      <script src="{{ mix('/js/fontawesome-free-5.12.0.js') }}"></script>
       <script src="{{ mix('/js/login.js') }}"></script>
 
     </body>
