@@ -40,7 +40,7 @@ var app = new Vue({
         value: ""
       }
     },
-    verClaveIcon: false,
+    claseVerClaveIcon: "fas fa-eye",
     iv: null,
     key: null,
     linkRecoveryPass: true,
@@ -98,16 +98,14 @@ var app = new Vue({
   created: function () {},
   mounted: function () {
 
-    console.log()
-
-    new AutoNumeric('#codigoUsuario', {
+    new AutoNumeric('.codigoUsuario', {
       decimalPlaces: 0,
       decimalCharacter: ',',
       digitGroupSeparator: '',
       leadingZero: 'keep'
     });
 
-    new AutoNumeric('#codigoRecuperacion', {
+    new AutoNumeric('.codigoRecuperacion', {
       decimalPlaces: 0,
       decimalCharacter: ',',
       digitGroupSeparator: '',
@@ -135,7 +133,7 @@ var app = new Vue({
         }
       }
 
-      AutoNumeric.getAutoNumericElement("#codigoRecuperacion").set("");
+      AutoNumeric.getAutoNumericElement(".codigoRecuperacion").set("");
 
     })
 
@@ -155,19 +153,6 @@ var app = new Vue({
 
       return encrypted.toString();
 
-    },
-    desencriptar: function(valor){
-
-
-
-    },
-    valuesFormLogin: function(e){
-      self.formLogin[$(e.target).attr("id")].value = $(e.target).val();
-      self.limpiarMensajeError(e);
-    },
-    valuesFormRecovery: function(e){
-      self.formRecovery[$(e.target).attr("id")].value = $(e.target).val();
-      self.limpiarMensajeError(e);
     },
     limpiarMensajeError: function(e){
       $(e.target).removeClass("error");
@@ -414,16 +399,14 @@ var app = new Vue({
 
     },
     verClave: function(e){
-   console.log(self.verClaveIcon);
+
       if(self.$refs["clave"].type === "password"){
         self.formLogin.clave.type = "text";
-        self.verClaveIcon = true;
+        self.claseVerClaveIcon = "fas fa-eye-slash";
       }else{
         self.formLogin.clave.type = "password";
-        self.verClaveIcon = false;
+        self.claseVerClaveIcon = "fas fa-eye";
       }
-
-      console.log(self.verClaveIcon);
 
     }
 

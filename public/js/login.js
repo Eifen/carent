@@ -39214,7 +39214,7 @@ var app = new Vue({
         value: ""
       }
     },
-    verClaveIcon: false,
+    claseVerClaveIcon: "fas fa-eye",
     iv: null,
     key: null,
     linkRecoveryPass: true,
@@ -39258,14 +39258,13 @@ var app = new Vue({
   },
   created: function created() {},
   mounted: function mounted() {
-    console.log();
-    new AutoNumeric('#codigoUsuario', {
+    new AutoNumeric('.codigoUsuario', {
       decimalPlaces: 0,
       decimalCharacter: ',',
       digitGroupSeparator: '',
       leadingZero: 'keep'
     });
-    new AutoNumeric('#codigoRecuperacion', {
+    new AutoNumeric('.codigoRecuperacion', {
       decimalPlaces: 0,
       decimalCharacter: ',',
       digitGroupSeparator: '',
@@ -39288,7 +39287,7 @@ var app = new Vue({
           value: ""
         }
       };
-      AutoNumeric.getAutoNumericElement("#codigoRecuperacion").set("");
+      AutoNumeric.getAutoNumericElement(".codigoRecuperacion").set("");
     });
   },
   updated: function updated() {},
@@ -39301,15 +39300,6 @@ var app = new Vue({
         padding: CryptoJS.pad.ZeroPadding
       });
       return encrypted.toString();
-    },
-    desencriptar: function desencriptar(valor) {},
-    valuesFormLogin: function valuesFormLogin(e) {
-      self.formLogin[$(e.target).attr("id")].value = $(e.target).val();
-      self.limpiarMensajeError(e);
-    },
-    valuesFormRecovery: function valuesFormRecovery(e) {
-      self.formRecovery[$(e.target).attr("id")].value = $(e.target).val();
-      self.limpiarMensajeError(e);
     },
     limpiarMensajeError: function limpiarMensajeError(e) {
       $(e.target).removeClass("error");
@@ -39489,17 +39479,13 @@ var app = new Vue({
       }
     },
     verClave: function verClave(e) {
-      console.log(self.verClaveIcon);
-
       if (self.$refs["clave"].type === "password") {
         self.formLogin.clave.type = "text";
-        self.verClaveIcon = true;
+        self.claseVerClaveIcon = "fas fa-eye-slash";
       } else {
         self.formLogin.clave.type = "password";
-        self.verClaveIcon = false;
+        self.claseVerClaveIcon = "fas fa-eye";
       }
-
-      console.log(self.verClaveIcon);
     }
   } // Fin methods
 

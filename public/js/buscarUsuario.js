@@ -33648,6 +33648,10 @@ var app = new Vue({
         axios.get('/buscarUsuario', {
           params: parametros
         }).then(function (response) {
+          console.log(response);
+          self.formSearch.submit.html = 'Consultar';
+          self.formSearch.submit.disabled = false;
+
           if (response.status === 200 && response.data.response === true) {} else {
             throw response.data;
           }
@@ -33670,9 +33674,9 @@ var app = new Vue({
         self.formSearch.submit.disabled = true;
       }
     },
-    evaluarCampo: function evaluarCampo(e) {
+    evaluarCampo: function evaluarCampo(id, e) {
       if (e.target.type === 'text') {
-        self.formSearch[e.target.id].value = e.target.value.trim() === "" ? "" : $(e.target).val();
+        self.formSearch[id].value = e.target.value.trim() === "" ? "" : $(e.target).val();
       }
 
       self.limpiarMensajeError(e);

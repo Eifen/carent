@@ -3,7 +3,6 @@ window.Vue = require('vue');
 window.$ = require('jquery');
 window.zenscroll = require('zenscroll');
 window.axios = require('axios');
-window.AutoNumeric = require('autonumeric');
 const CryptoJS = require("crypto-js");
 const AES = require("crypto-js/aes");
 var self;
@@ -22,16 +21,24 @@ var app = new Vue({
     form: {
       claveActual: {
         disabled: false,
+        type: "password",
         value: ""
       },
       nuevaClave: {
         disabled: false,
+        type: "password",
         value: ""
       },
       repetirNuevaClave: {
         disabled: false,
+        type: "password",
         value: ""
       }
+    },
+    claseVerClaveIcon: {
+      claveActual: "fas fa-eye",
+      nuevaClave: "fas fa-eye",
+      repetirNuevaClave: "fas fa-eye"
     },
     iv: null,
     key: null,
@@ -90,9 +97,9 @@ var app = new Vue({
       return encrypted.toString();
 
     },
-    valuesForm: function(e){
+    valuesForm: function(id, e){
 
-      self.form[e.target.id].value = (e.target.value.trim() === "") ? "" : $(e.target).val();
+      self.form[id].value = (e.target.value.trim() === "") ? "" : $(e.target).val();
       self.limpiarMensajeError(e);
 
     },
@@ -245,6 +252,23 @@ var app = new Vue({
 
       if (e.keyCode === 13){
         self.login();
+      }
+
+    },
+    verClave: function(e){
+
+      if(e.target.nodeName === "I"){
+        var id = e.target.parentNode.getAttribute("data-input");
+      }else{
+        var id = e.target.getAttribute("data-input");
+      }
+
+      if(self.$refs[id].type === "password"){
+        self.form[id].type = "text";
+        self.claseVerClaveIcon[id] = "fas fa-eye-slash";
+      }else{
+        self.form[id].type = "password";
+        self.claseVerClaveIcon[id] = "fas fa-eye";
       }
 
     }
