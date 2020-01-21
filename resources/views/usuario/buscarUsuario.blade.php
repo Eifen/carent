@@ -36,10 +36,10 @@
               </div>
               <div class="form-group col-12 col-md-6">
                 <input class="form-control"
-                       id="inputSearch"
+                       ref="inputSearch"
                        type="text"
                        v-bind:disabled="formSearch.inputSearch.disabled"
-                       v-on:keyup="evaluarCampo"
+                       v-on:keyup="evaluarCampo('inputSearch', $event)"
                        v-model="formSearch.inputSearch.value">
                 <div class="mensaje"></div>
               </div>
