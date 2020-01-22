@@ -135,7 +135,7 @@ var app = new Vue({
 
       AutoNumeric.getAutoNumericElement(".codigoRecuperacion").set("");
 
-    })
+    });
 
   },
   updated: function () {},

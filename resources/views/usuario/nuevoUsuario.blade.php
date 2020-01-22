@@ -27,7 +27,7 @@
                 <b>Campos obligatorios (<span class="campo-obligatorio">*</span>)</b>
               </div>
               <div class="form-group col-12 col-sm-6">
-                <label for="codigoUsuario">Primer Nombre <span class="campo-obligatorio">*</span></label>
+                <label for="nombre1">Primer Nombre <span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="nombre1Help"
                        class="form-control text-lowercase"
                        data-min="3"
@@ -42,7 +42,7 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
-                <label for="clave">Segundo Nombre</label>
+                <label for="nombre2">Segundo Nombre</label>
                 <input aria-describedby="nombre2Help"
                        class="form-control text-lowercase"
                        data-validar="true"
@@ -56,7 +56,7 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
-                <label for="codigoUsuario">Primer Apellido <span class="campo-obligatorio">*</span></label>
+                <label for="apellido1">Primer Apellido <span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="apellido1Help"
                        class="form-control text-lowercase"
                        data-min="3"
@@ -71,7 +71,7 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
-                <label for="clave">Segundo Apellido</label>
+                <label for="apellido2">Segundo Apellido</label>
                 <input aria-describedby="apellido2Help"
                        class="form-control text-lowercase"
                        data-validar="true"
@@ -99,7 +99,7 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
-                <label for="clave">Fecha de Nacimiento</label>
+                <label for="fechaNacimiento">Fecha de Nacimiento</label>
                 <input aria-describedby="fechaNacimientoHelp"
                        class="form-control"
                        id="fechaNacimiento"
