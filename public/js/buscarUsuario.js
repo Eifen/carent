@@ -33607,6 +33607,10 @@ Vue.component('menu-principal', __webpack_require__(/*! ../components/menuPrinci
 var app = new Vue({
   el: '#buscarUsuario',
   data: {
+    alert: {
+      message: "",
+      mostrar: false
+    },
     formSearch: {
       submit: {
         disabled: true,
@@ -33620,6 +33624,14 @@ var app = new Vue({
         disabled: false,
         value: ""
       }
+    },
+    usuarios: {
+      mostrar: false,
+      registros: []
+    },
+    detalleUsuario: {
+      error: false,
+      data: []
     }
   },
   beforeCreate: function beforeCreate() {
@@ -33627,17 +33639,16 @@ var app = new Vue({
   },
   created: function created() {},
   mounted: function mounted() {
-    /*new AutoNumeric('#codigoUsuario', {
-      decimalPlaces: 0,
-      decimalCharacter: ',',
-      digitGroupSeparator: '',
-      leadingZero: 'keep'
+    $('#modal-detalle-usuario').on('hidden.bs.modal', function () {
+      self.detalleUsuario.data = [];
+      self.detalleUsuario.error = false;
     });
-    */
   },
   updated: function updated() {},
   methods: {
     buscar: function buscar() {
+      self.alert.mostrar = false;
+
       if (self.formSearch.inputSearch.value.trim() !== "") {
         self.formSearch.submit.html = '<i class="fas fa-cog fa-spin"></i>';
         self.formSearch.submit.disabled = true;
@@ -33645,26 +33656,42 @@ var app = new Vue({
           buscarPor: self.formSearch.select.value,
           dato: self.formSearch.inputSearch.value
         };
-        axios.get('/buscarUsuario', {
+        axios.get('/buscarUsuarios', {
           params: parametros
         }).then(function (response) {
-          console.log(response);
           self.formSearch.submit.html = 'Consultar';
           self.formSearch.submit.disabled = false;
 
-          if (response.status === 200 && response.data.response === true) {} else {
+          if (response.status === 200 && response.data.response === true) {
+            self.usuarios.mostrar = true;
+            self.usuarios.registros = response.data.usuarios;
+          } else {
             throw response.data;
           }
-        })["catch"](function (error) {});
+        })["catch"](function (error) {
+          self.alert.mostrar = true;
+          self.usuarios.registros = [];
+          self.usuarios.mostrar = false;
+
+          if (error.response) {
+            var message = "Existe un error!, consulte con el administrador del sistema.";
+          } else {
+            var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+          }
+
+          self.alert.message = message;
+        });
       } else {
-        $("#inputSearch").parent().find(".mensaje").html("Campo requerido").addClass("invalid-feedback");
-        $("#inputSearch").addClass("error");
-        zenscroll.toY($("#inputSearch").offset().top - 100);
+        $(".inputSearch").parent().find(".mensaje").html("Campo requerido").addClass("invalid-feedback");
+        $(".inputSearch").addClass("error");
+        zenscroll.toY($(".inputSearch").offset().top - 100);
       }
     },
     tipoFiltro: function tipoFiltro(e) {
       var opcion = parseInt(e.target.value);
-      var valoresPermitidos = [1, 2, 3, 4];
+      var valoresPermitidos = [1, 2, 3, 4, 5];
+      self.usuarios.mostrar = false;
+      self.usuarios.registros = [];
 
       if (valoresPermitidos.includes(opcion)) {
         self.formSearch.inputSearch.disabled = false;
@@ -33679,11 +33706,38 @@ var app = new Vue({
         self.formSearch[id].value = e.target.value.trim() === "" ? "" : $(e.target).val();
       }
 
+      if (id === "inputSearch" && self.formSearch["inputSearch"].value.trim() === "") {
+        self.usuarios.registros = [];
+        self.usuarios.mostrar = false;
+      }
+
       self.limpiarMensajeError(e);
     },
     limpiarMensajeError: function limpiarMensajeError(e) {
       $(e.target).removeClass("error");
       $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
+    },
+    mostrarDetalleUsuario: function mostrarDetalleUsuario(idUsuario, e) {
+      self.detalleUsuario.error = false;
+      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
+      var parametros = {
+        idUsuario: idUsuario
+      };
+      axios.get('/detalleUsuario', {
+        params: parametros
+      }).then(function (response) {
+        if (response.status === 200 && response.data.response === true) {
+          self.detalleUsuario.data = response.data.info;
+          $('#modal-detalle-usuario').modal("show");
+          $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
+        } else {
+          throw response.data;
+        }
+      })["catch"](function (error) {
+        self.detalleUsuario.error = true;
+        $('#modal-detalle-usuario').modal("show");
+        $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
+      });
     }
   } // Fin methods
 
