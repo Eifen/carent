@@ -102,8 +102,47 @@ class UsuarioController extends Controller
 
     }
 
-    function buscarUsuario(Request $request){
-      return $request;
+    function buscarUsuarios(Request $request){
+
+      $modelo = new UsuarioModel();
+
+      $buscarPor = (int) $request->input("buscarPor");
+      $dato = strtolower($request->input("dato"));
+      $usuarios = $modelo->buscarUsuarios($buscarPor, $dato);
+
+      if(!empty($usuarios)){
+
+        $response = array("response" => true, "usuarios" => $usuarios);
+
+      }else{
+
+        $response = array("response" => false, "message" => "No se encontraron resultados");
+
+      }
+
+      return $response;
+
+    }
+
+    function detalleUsuario(Request $request){
+
+      $modelo = new UsuarioModel();
+      $id_usuario = (int) $request->input("idUsuario");
+
+      $infoUsuario = $modelo->detalleUsuario($id_usuario);
+
+      if(!empty($infoUsuario)){
+
+        $response = array("response" => true, "info" => $infoUsuario);
+
+      }else{
+
+        $response = array("response" => false, "message" => "No se encontraron resultados");
+
+      }
+
+      return $response;
+
     }
 
     private function encriptarLaravel($valor){
