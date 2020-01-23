@@ -33,3 +33,5 @@ Route::post('/crearUsuario', 'UsuarioController@crearUsuario');
 Route::get('/formBuscarUsuario', function() {return view('usuario/buscarUsuario');});
 Route::get('/buscarUsuarios', 'UsuarioController@buscarUsuarios');
 Route::get('/detalleUsuario', 'UsuarioController@detalleUsuario');
+Route::get('/formModificarUsuario', function() {return view('usuario/modificarUsuario');});
+Route::get('/detalleUsuarioModificar', 'UsuarioController@detalleUsuarioModificar');

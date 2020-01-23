@@ -220,37 +220,84 @@ class UsuarioModel extends Model
     function detalleUsuario($id_usuario){
 
       $info = DB::select('SELECT u.id,
-                                     u.codigo,
-                                     u.avatar,
-                                     u.cedula,
-                                     u.nombre_1,
-                                     u.nombre_2,
-                                     u.apellido_1,
-                                     u.apellido_2,
-                                     u.fecha_nacimiento,
-                                     e.descripcion AS estatus,
-                                     cu.correo_principal,
-                                     cu.correo_secundario,
-                                     cu.telefono_principal,
-                                     cu.telefono_secundario,
-                                     (SELECT d.descripcion FROM tbl_division d WHERE d.id = u.id_division) division,
-                                     (SELECT ce.descripcion FROM tbl_cargo_empleado ce WHERE ce.id = u.id_cargo) cargo,
-                                     (SELECT p.parroquia FROM tbl_parroquias p WHERE p.id = u.id_parroquia) parroquia,
-                                     (SELECT m.municipio
-                                      FROM tbl_municipios m
-                                      WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = u.id_parroquia)) municipio,
-                                     (SELECT e.estado
-                                      FROM tbl_estados e
-                                      WHERE e.id = (SELECT m.id_estado
-                                                    FROM tbl_municipios m
-                                                    WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = u.id_parroquia))) estado
-                             FROM tbl_usuario u,
-                                  tbl_estatus e,
-                                  tbl_contacto_usuario cu
-                             WHERE u.id = '.$id_usuario.'
-                             AND e.tabla = "tbl_usuario"
-                             AND e.valor = u.id_estatus
-                             AND u.id = cu.id_usuario');
+                                 u.codigo,
+                                 u.avatar,
+                                 u.cedula,
+                                 u.nombre_1,
+                                 u.nombre_2,
+                                 u.apellido_1,
+                                 u.apellido_2,
+                                 u.fecha_nacimiento,
+                                 e.descripcion AS estatus,
+                                 cu.correo_principal,
+                                 cu.correo_secundario,
+                                 cu.telefono_principal,
+                                 cu.telefono_secundario,
+                                 (SELECT d.descripcion FROM tbl_division d WHERE d.id = u.id_division) division,
+                                 (SELECT ce.descripcion FROM tbl_cargo_empleado ce WHERE ce.id = u.id_cargo) cargo,
+                                 (SELECT p.parroquia FROM tbl_parroquias p WHERE p.id = u.id_parroquia) parroquia,
+                                 (SELECT m.municipio
+                                  FROM tbl_municipios m
+                                  WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = u.id_parroquia)) municipio,
+                                 (SELECT e.estado
+                                  FROM tbl_estados e
+                                  WHERE e.id = (SELECT m.id_estado
+                                                FROM tbl_municipios m
+                                                WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = u.id_parroquia))) estado
+                          FROM tbl_usuario u,
+                               tbl_estatus e,
+                               tbl_contacto_usuario cu
+                          WHERE u.id = '.$id_usuario.'
+                          AND e.tabla = "tbl_usuario"
+                          AND e.valor = u.id_estatus
+                          AND u.id = cu.id_usuario');
+
+      if(count($info) > 0){
+
+        return $info[0];
+
+      }else{
+
+        return array();
+
+      }
+
+    }
+
+    function detalleUsuarioModificar($id_usuario){
+
+      $info = DB::select('SELECT u.id,
+                                 u.codigo,
+                                 u.avatar,
+                                 u.cedula,
+                                 u.nombre_1,
+                                 u.nombre_2,
+                                 u.apellido_1,
+                                 u.apellido_2,
+                                 u.fecha_nacimiento,
+                                 u.id_estatus,
+                                 cu.correo_principal,
+                                 cu.correo_secundario,
+                                 cu.telefono_principal,
+                                 cu.telefono_secundario,
+                                 (SELECT d.id FROM tbl_division d WHERE d.id = u.id_division) id_division,
+                                 (SELECT ce.id FROM tbl_cargo_empleado ce WHERE ce.id = u.id_cargo) id_cargo,
+                                 u.id_parroquia,
+                                 (SELECT m.id
+                                  FROM tbl_municipios m
+                                  WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = u.id_parroquia)) id_municipio,
+                                 (SELECT e.id
+                                  FROM tbl_estados e
+                                  WHERE e.id = (SELECT m.id_estado
+                                                FROM tbl_municipios m
+                                                WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = u.id_parroquia))) id_estado
+                          FROM tbl_usuario u,
+                               tbl_estatus e,
+                               tbl_contacto_usuario cu
+                          WHERE u.id = '.$id_usuario.'
+                          AND e.tabla = "tbl_usuario"
+                          AND e.valor = u.id_estatus
+                          AND u.id = cu.id_usuario');
 
       if(count($info) > 0){
 

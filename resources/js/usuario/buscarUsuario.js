@@ -93,6 +93,9 @@ var app = new Vue({
         })
         .catch(error => {
 
+          self.formSearch.submit.html = 'Consultar';
+          self.formSearch.submit.disabled = false;
+
           self.alert.mostrar = true;
 
           self.usuarios.registros = [];

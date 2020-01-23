@@ -11,7 +11,7 @@ use Illuminate\Http\RedirectResponse;
 class UsuarioController extends Controller
 {
 
-    function estados(Request $request){
+    function estados(){
 
       $modelo = new UsuarioModel();
       $estados = $modelo->estados();
@@ -37,7 +37,7 @@ class UsuarioController extends Controller
 
     }
 
-    function divisiones(Request $request){
+    function divisiones(){
 
       $modelo = new UsuarioModel();
       $divisiones = $modelo->divisiones();
@@ -45,7 +45,7 @@ class UsuarioController extends Controller
 
     }
 
-    function cargos(Request $request){
+    function cargos(){
 
       $modelo = new UsuarioModel();
       $cargos = $modelo->cargos();
@@ -134,6 +134,38 @@ class UsuarioController extends Controller
       if(!empty($infoUsuario)){
 
         $response = array("response" => true, "info" => $infoUsuario);
+
+      }else{
+
+        $response = array("response" => false, "message" => "No se encontraron resultados");
+
+      }
+
+      return $response;
+
+    }
+
+    function detalleUsuarioModificar(Request $request){
+
+      $modelo = new UsuarioModel();
+      $id_usuario = 1;//(int) $request->input("idUsuario");
+
+      $infoUsuario = $modelo->detalleUsuarioModificar($id_usuario);
+      $divisiones = $this->divisiones();
+      $cargos = $this->cargos();
+      $estados = $modelo->estados();
+      $municipios = $modelo->municipios($infoUsuario->id_estado);
+      $parroquias = $modelo->parroquias($infoUsuario->id_municipio);
+
+      if(!empty($infoUsuario)){
+
+        $response = array("response" => true,
+                          "info" => $infoUsuario,
+                          'divisiones' => $divisiones,
+                          "cargos" => $cargos,
+                          "estados" => $estados,
+                          "municipios" => $municipios,
+                          "parroquias" => $parroquias);
 
       }else{
 
