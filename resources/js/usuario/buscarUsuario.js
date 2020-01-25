@@ -59,7 +59,7 @@ var app = new Vue({
   },
   updated: function () {},
   methods:{
-    buscar: function(){
+    buscar: function(e){
 
       self.alert.mostrar = false;
 
@@ -92,6 +92,9 @@ var app = new Vue({
 
         })
         .catch(error => {
+
+          self.formSearch.submit.html = 'Consultar';
+          self.formSearch.submit.disabled = false;
 
           self.alert.mostrar = true;
 

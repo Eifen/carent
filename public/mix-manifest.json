@@ -8,6 +8,8 @@
     "/css/cambiarClave.css": "/css/cambiarClave.css",
     "/css/nuevoUsuario.css": "/css/nuevoUsuario.css",
     "/css/buscarUsuario.css": "/css/buscarUsuario.css",
+    "/css/modificarUsuario.css": "/css/modificarUsuario.css",
+    "/js/modificarUsuario.js": "/js/modificarUsuario.js",
     "/js/nuevoUsuario.js": "/js/nuevoUsuario.js",
     "/css/bootstrap.min.css": "/css/bootstrap.min.css",
     "/css/fontawesome-free-5.12.0.css": "/css/fontawesome-free-5.12.0.css"
