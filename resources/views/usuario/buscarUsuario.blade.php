@@ -16,7 +16,7 @@
     </head>
     <body>
 
-      <div id="buscarUsuario" class="container-fluid">
+      <div id="buscarUsuario" class="container-fluid" v-on:submit.prevent="buscar">
         <menu-principal></menu-principal>
 
         <div class="row align-items-center justify-content-center wrapper-forms">
@@ -54,7 +54,7 @@
             </form>
           </div>
 
-          <div class="col-12" v-if="usuarios.mostrar">
+          <div class="col-12" v-show="usuarios.mostrar">
             <table class="table">
               <thead>
                 <tr>
@@ -78,7 +78,9 @@
                     <i class="fas fa-search-plus" v-on:click="mostrarDetalleUsuario(usuario.id, $event)"></i>
                   </td>
                   <td>
-                    <i class="far fa-edit"></i>
+                    <a v-bind:href="'/formModificarUsuario/'+usuario.id" target="_self">
+                       <i class="far fa-edit"></i>
+                    </a>
                   </td>
                 </tr>
               </tbody>
@@ -86,7 +88,7 @@
           </div>
 
           <div class="col-12 col-sm-11 col-md-10 col-lg-8 col-xl-7" v-if="alert.mostrar">
-            <div class="alert alert-warning" v-html="alert.message"></div>
+            <div class="alert alert-warning text-center" v-html="alert.message"></div>
           </div>
 
         </div>

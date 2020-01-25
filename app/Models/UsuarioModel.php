@@ -220,37 +220,37 @@ class UsuarioModel extends Model
     function detalleUsuario($id_usuario){
 
       $info = DB::select('SELECT u.id,
-                                     u.codigo,
-                                     u.avatar,
-                                     u.cedula,
-                                     u.nombre_1,
-                                     u.nombre_2,
-                                     u.apellido_1,
-                                     u.apellido_2,
-                                     u.fecha_nacimiento,
-                                     e.descripcion AS estatus,
-                                     cu.correo_principal,
-                                     cu.correo_secundario,
-                                     cu.telefono_principal,
-                                     cu.telefono_secundario,
-                                     (SELECT d.descripcion FROM tbl_division d WHERE d.id = u.id_division) division,
-                                     (SELECT ce.descripcion FROM tbl_cargo_empleado ce WHERE ce.id = u.id_cargo) cargo,
-                                     (SELECT p.parroquia FROM tbl_parroquias p WHERE p.id = u.id_parroquia) parroquia,
-                                     (SELECT m.municipio
-                                      FROM tbl_municipios m
-                                      WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = u.id_parroquia)) municipio,
-                                     (SELECT e.estado
-                                      FROM tbl_estados e
-                                      WHERE e.id = (SELECT m.id_estado
-                                                    FROM tbl_municipios m
-                                                    WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = u.id_parroquia))) estado
-                             FROM tbl_usuario u,
-                                  tbl_estatus e,
-                                  tbl_contacto_usuario cu
-                             WHERE u.id = '.$id_usuario.'
-                             AND e.tabla = "tbl_usuario"
-                             AND e.valor = u.id_estatus
-                             AND u.id = cu.id_usuario');
+                                 u.codigo,
+                                 u.avatar,
+                                 u.cedula,
+                                 u.nombre_1,
+                                 u.nombre_2,
+                                 u.apellido_1,
+                                 u.apellido_2,
+                                 u.fecha_nacimiento,
+                                 e.descripcion AS estatus,
+                                 cu.correo_principal,
+                                 cu.correo_secundario,
+                                 cu.telefono_principal,
+                                 cu.telefono_secundario,
+                                 (SELECT d.descripcion FROM tbl_division d WHERE d.id = u.id_division) division,
+                                 (SELECT ce.descripcion FROM tbl_cargo_empleado ce WHERE ce.id = u.id_cargo) cargo,
+                                 (SELECT p.parroquia FROM tbl_parroquias p WHERE p.id = u.id_parroquia) parroquia,
+                                 (SELECT m.municipio
+                                  FROM tbl_municipios m
+                                  WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = u.id_parroquia)) municipio,
+                                 (SELECT e.estado
+                                  FROM tbl_estados e
+                                  WHERE e.id = (SELECT m.id_estado
+                                                FROM tbl_municipios m
+                                                WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = u.id_parroquia))) estado
+                          FROM tbl_usuario u,
+                               tbl_estatus e,
+                               tbl_contacto_usuario cu
+                          WHERE u.id = '.$id_usuario.'
+                          AND e.tabla = "tbl_usuario"
+                          AND e.valor = u.id_estatus
+                          AND u.id = cu.id_usuario');
 
       if(count($info) > 0){
 
@@ -263,5 +263,104 @@ class UsuarioModel extends Model
       }
 
     }
+
+    function detalleUsuarioModificar($id_usuario){
+
+      $info = DB::select('SELECT u.id,
+                                 u.codigo,
+                                 u.avatar,
+                                 u.cedula,
+                                 u.nombre_1,
+                                 u.nombre_2,
+                                 u.apellido_1,
+                                 u.apellido_2,
+                                 u.fecha_nacimiento,
+                                 u.id_estatus,
+                                 cu.correo_principal,
+                                 cu.correo_secundario,
+                                 cu.telefono_principal,
+                                 cu.telefono_secundario,
+                                 (SELECT d.id FROM tbl_division d WHERE d.id = u.id_division) id_division,
+                                 (SELECT ce.id FROM tbl_cargo_empleado ce WHERE ce.id = u.id_cargo) id_cargo,
+                                 u.id_parroquia,
+                                 (SELECT m.id
+                                  FROM tbl_municipios m
+                                  WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = u.id_parroquia)) id_municipio,
+                                 (SELECT e.id
+                                  FROM tbl_estados e
+                                  WHERE e.id = (SELECT m.id_estado
+                                                FROM tbl_municipios m
+                                                WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = u.id_parroquia))) id_estado
+                          FROM tbl_usuario u,
+                               tbl_estatus e,
+                               tbl_contacto_usuario cu
+                          WHERE u.id = '.$id_usuario.'
+                          AND e.tabla = "tbl_usuario"
+                          AND e.valor = u.id_estatus
+                          AND u.id = cu.id_usuario');
+
+      if(count($info) > 0){
+
+        return $info[0];
+
+      }else{
+
+        return array();
+
+      }
+
+    }
+
+    function estatusUsuario(){
+
+      $estatus = DB::select('SELECT e.valor as id,
+                                    e.descripcion
+                             FROM tbl_estatus e
+                             WHERE e.tabla = "tbl_usuario"
+                             ORDER BY descripcion ASC');
+
+      return $estatus;
+
+    }
+
+    function modificarUsuario($parametros){
+
+      DB::beginTransaction();
+
+      try {
+
+        $data = array("nombre_1" => $parametros["nombre1"],
+                      "nombre_2" => $parametros["nombre2"],
+                      "apellido_1" => $parametros["apellido1"],
+                      "apellido_2" => $parametros["apellido2"],
+                      "fecha_nacimiento" => $parametros["fechaNacimiento"],
+                      "id_cargo" => $parametros["cargo"],
+                      "id_division" => $parametros["division"],
+                      "id_parroquia" => $parametros["parroquia"],
+                      "id_estatus" => $parametros["estatus"],
+                      "cedula" => $parametros["cedula"]);
+
+        $update = DB::table('tbl_usuario')->where("id",$parametros["idUsuario"])->update($data);
+
+
+
+        $data = array("correo_principal" => $parametros["correoPrincipal"],
+                      "correo_secundario" => $parametros["correoSecundario"],
+                      "telefono_principal" => $parametros["telefono1"],
+                      "telefono_secundario" => $parametros["telefono2"]);
+
+        $contacto = DB::table('tbl_contacto_usuario')->where("id_usuario",$parametros["idUsuario"])->update($data);
+
+        DB::commit();
+        return array("response" => true, "message" => "Usuario actualizado con Éxito!.");
+
+      } catch(\Illuminate\Database\QueryException $ex){
+
+        DB::rollBack();
+        return array("response" => false, "message" => "Error al tratar de actualizar la información del usuario.");
+
+      }
+
+    }// Fin crearUsuario
 
 }
