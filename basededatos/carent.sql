@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 22-01-2020 a las 10:02:04
+-- Tiempo de generación: 24-01-2020 a las 16:26:12
 -- Versión del servidor: 5.7.22
 -- Versión de PHP: 7.1.18
 
@@ -648,7 +648,7 @@ CREATE TABLE `tbl_contacto_usuario` (
 --
 
 INSERT INTO `tbl_contacto_usuario` (`id`, `id_usuario`, `correo_principal`, `correo_secundario`, `telefono_principal`, `telefono_secundario`) VALUES
-(1, 1, 'dmolina101@gmail.com', '', '(0000) - 000 0000', ''),
+(1, 1, 'dmolina101@gmail.com', '', '(0000) - 000 0000', '(0000) - 000 0002'),
 (2, 2, 'josearturo0706@gmail.com', '', '', ''),
 (3, 3, 'ana.blandin@crowe.com.ve', '', '', '');
 
@@ -2390,7 +2390,7 @@ CREATE TABLE `tbl_usuario` (
 --
 
 INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `cedula`, `nombre_1`, `nombre_2`, `apellido_1`, `apellido_2`, `fecha_nacimiento`, `id_cargo`, `id_division`, `id_parroquia`, `avatar`, `id_estatus`) VALUES
-(1, '0001', 'eyJpdiI6IkMwNDJraDByc2V2WFU2MVZjWEtSVUE9PSIsInZhbHVlIjoiRHV3bGwreDdaXC9qeFNqMndXdFZMQXc9PSIsIm1hYyI6ImJmYzczMGMyODY2NjQyNzk0MGM3YThmN2IwMzg0OWRlZmQzMTgwNGViOTcxYmJkZTk2MTEyODVhN2ExNmY2MWQifQ==', 17671373, 'david', 'leonardo', 'molina', 'ruíz', '01/01/1982', 16, 3, 1131, '', 1),
+(1, '0001', 'eyJpdiI6IkMwNDJraDByc2V2WFU2MVZjWEtSVUE9PSIsInZhbHVlIjoiRHV3bGwreDdaXC9qeFNqMndXdFZMQXc9PSIsIm1hYyI6ImJmYzczMGMyODY2NjQyNzk0MGM3YThmN2IwMzg0OWRlZmQzMTgwNGViOTcxYmJkZTk2MTEyODVhN2ExNmY2MWQifQ==', 17671370, 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '01/01/1980', 16, 3, 1131, '', 1),
 (2, '11525', 'eyJpdiI6IkVjZ2oySWtNK3N3ckp0SGJLVGZxMGc9PSIsInZhbHVlIjoick52NFY1bWNFUUloQXo2cXNDallPUT09IiwibWFjIjoiYjVmNTlmZWQyZGVhYjEyNmI5YjcxZmM4ZDY2NGI3ZmU1OTQ3YTEyZjBlYzU0YmJiYWY0YmVmMDk3ZjA2OTgwMiJ9', 0, '', NULL, '', NULL, NULL, NULL, NULL, NULL, '', 1),
 (3, '11450', 'eyJpdiI6Im5MWkhxSEVKV2N3ZkhJZ01XZTU2eFE9PSIsInZhbHVlIjoiZ2N3a2l2Nm1DNHFKMGtPYkp4ZmdzQT09IiwibWFjIjoiMTNmNTllMGNjNTc0MjNlMWMwYzkwYTA0NGYyNzQ5ZmU5YTg4M2YzMDIzZGMyNzVhNjllNmRhNDYzOWQ3Yzc1NyJ9', 0, '', NULL, '', NULL, NULL, NULL, NULL, NULL, '', 1);
 
