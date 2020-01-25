@@ -59,7 +59,7 @@ var app = new Vue({
   },
   updated: function () {},
   methods:{
-    buscar: function(){
+    buscar: function(e){
 
       self.alert.mostrar = false;
 

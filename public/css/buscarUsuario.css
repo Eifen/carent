@@ -93,6 +93,9 @@ html {
 #buscarUsuario .wrapper-forms .table tbody tr td {
   text-align: center;
 }
+#buscarUsuario .wrapper-forms .table tbody tr td a {
+  color: #212529 !important;
+}
 #buscarUsuario .wrapper-forms .table tbody tr td .fas:hover,
 #buscarUsuario .wrapper-forms .table tbody tr td .far:hover {
   cursor: pointer;

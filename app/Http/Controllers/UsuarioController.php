@@ -145,17 +145,31 @@ class UsuarioController extends Controller
 
     }
 
+    function formModificarUsuario($idUsuario, Request $request){
+
+      $request->session()->put('id_usuario_mod', $idUsuario);
+      return view('usuario/modificarUsuario');
+
+    }
+
     function detalleUsuarioModificar(Request $request){
 
       $modelo = new UsuarioModel();
-      $id_usuario = 1;//(int) $request->input("idUsuario");
+      $id_usuario = (int) session("id_usuario_mod");
 
       $infoUsuario = $modelo->detalleUsuarioModificar($id_usuario);
+      $estatus = $modelo->estatusUsuario();
       $divisiones = $this->divisiones();
       $cargos = $this->cargos();
       $estados = $modelo->estados();
-      $municipios = $modelo->municipios($infoUsuario->id_estado);
-      $parroquias = $modelo->parroquias($infoUsuario->id_municipio);
+
+      if($infoUsuario->id_estado !== NULL){
+        $municipios = $modelo->municipios($infoUsuario->id_estado);
+        $parroquias = $modelo->parroquias($infoUsuario->id_municipio);
+      }else{
+        $municipios = array();
+        $parroquias = array();
+      }
 
       if(!empty($infoUsuario)){
 
@@ -165,13 +179,42 @@ class UsuarioController extends Controller
                           "cargos" => $cargos,
                           "estados" => $estados,
                           "municipios" => $municipios,
-                          "parroquias" => $parroquias);
+                          "parroquias" => $parroquias,
+                          "estatus" => $estatus);
 
       }else{
 
         $response = array("response" => false, "message" => "No se encontraron resultados");
 
       }
+
+      return $response;
+
+    }
+
+    function modificarUsuario(Request $request){
+
+      $modelo = new UsuarioModel();
+
+      $parametros = array(
+        "idUsuario" => $request->input("idUsuario"),
+        "nombre1" => mb_strtoupper($request->input("nombre1")),
+        "nombre2" => mb_strtoupper($request->input("nombre2")),
+        "apellido1" => mb_strtoupper($request->input("apellido1")),
+        "apellido2" => mb_strtoupper($request->input("apellido2")),
+        "cedula" => $request->input("cedula"),
+        "fechaNacimiento" => $request->input("fechaNacimiento"),
+        "correoPrincipal" => strtolower($request->input("correoPrincipal")),
+        "correoSecundario" => strtolower($request->input("correoSecundario")),
+        "telefono1" => $request->input("telefono1"),
+        "telefono2" => $request->input("telefono2"),
+        "parroquia" => $request->input("parroquia"),
+        "division" => $request->input("division"),
+        "cargo" => $request->input("cargo"),
+        "estatus" => $request->input("estatus")
+      );
+
+      $response = $modelo->modificarUsuario($parametros);
 
       return $response;
 

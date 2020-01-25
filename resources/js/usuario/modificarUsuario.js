@@ -72,6 +72,7 @@ const datosIniciales = () => {
                  infoUsu: response.data.info,
                  municipios: response.data.municipios,
                  parroquias: response.data.parroquias,
+                 estatus: response.data.estatus,
                  response: true
                });
 
@@ -95,6 +96,7 @@ var app = new Vue({
 
   el: '#modificarUsuario',
   data: {
+    idUsuario: null,
     alertForm: {
       class: "",
       message: "",
@@ -105,26 +107,26 @@ var app = new Vue({
     comboParroquias: [],
     comboDivisiones: [],
     comboCargos: [],
-    refreshForm: false,
+    comboEstatus: [],
     form: {
       nombre1:{
-        disabled: false,
+        disabled: true,
         value: ""
       },
       nombre2:{
-        disabled: false,
+        disabled: true,
         value: ""
       },
       apellido1:{
-        disabled: false,
+        disabled: true,
         value: ""
       },
       apellido2:{
-        disabled: false,
+        disabled: true,
         value: ""
       },
       fechaNacimiento: {
-        disabled: false,
+        disabled: true,
         value: ""
       },
       codigoUsuario: {
@@ -132,7 +134,7 @@ var app = new Vue({
         value: ""
       },
       cedula: {
-        disabled: false,
+        disabled: true,
         value: ""
       },
       estado: {
@@ -163,24 +165,28 @@ var app = new Vue({
         value: ""
       },
       correoPrincipal: {
-        disabled: false,
+        disabled: true,
         value: ""
       },
       correoSecundario: {
-        disabled: false,
+        disabled: true,
         validar: false,
         value: ""
       },
       telefono1: {
-        disabled: false,
+        disabled: true,
         value: ""
       },
       telefono2: {
-        disabled: false,
+        disabled: true,
         value: ""
       },
       empleado: {
         checked:false
+      },
+      estatus:{
+        disabled: true,
+        value: ""
       }
     },
     submitActualizar: {
@@ -189,7 +195,8 @@ var app = new Vue({
       show:true
     },
     key: null,
-    iv: null
+    iv: null,
+    dataInicial: false
   },
   beforeCreate: async function(){
 
@@ -206,6 +213,7 @@ var app = new Vue({
 
       if(dataInit.response){
 
+        self.idUsuario = dataInit.infoUsu.id;
         self.form.nombre1.value = dataInit.infoUsu.nombre_1;
         self.form.nombre2.value = dataInit.infoUsu.nombre_2;
         self.form.apellido1.value = dataInit.infoUsu.apellido_1;
@@ -217,9 +225,11 @@ var app = new Vue({
         self.form.correoSecundario.value = dataInit.infoUsu.correo_secundario;
         self.form.telefono1.value = dataInit.infoUsu.telefono_principal;
         self.form.telefono2.value = dataInit.infoUsu.telefono_secundario;
-        self.comboEstados = dataInit.comboEstados;
+        self.form.estatus.value = dataInit.infoUsu.id_estatus;
+        self.comboEstados = dataInit.estados;
         self.comboCargos = dataInit.cargos;
         self.comboDivisiones = dataInit.divisiones;
+        self.comboEstatus = dataInit.estatus;
 
         if(dataInit.infoUsu.id_cargo !== null && dataInit.infoUsu.id_division !== null){
 
@@ -248,7 +258,6 @@ var app = new Vue({
 
         }
 
-        console.log(dataInit);
       }else{
         errorInit();
       }
@@ -258,76 +267,51 @@ var app = new Vue({
     }
 
   },
-  created: function () {
+  created: async function () {
 
-    //self.estados();
+    let checkDataInitReady = setInterval(() => {
+      if (self.form.codigoUsuario.value  !== '') {
+        clearInterval(checkDataInitReady);
+
+        new AutoNumeric('#codigoUsuario', {
+          decimalPlaces: 0,
+          decimalCharacter: ',',
+          digitGroupSeparator: '',
+          leadingZero: 'keep',
+          modifyValueOnWheel: false
+        });
+
+        AutoNumeric.getAutoNumericElement("#codigoUsuario").set(self.form.codigoUsuario.value);
+
+        new AutoNumeric('#cedula', {
+          decimalPlaces: 0,
+          decimalCharacter: ',',
+          digitGroupSeparator: '.',
+          modifyValueOnWheel: false
+        });
+
+        AutoNumeric.getAutoNumericElement("#cedula").set(self.form.cedula.value);
+
+        var indices = ["nombre1","nombre2","apellido1","apellido2","fechaNacimiento","cedula","correoPrincipal","correoSecundario","telefono1","telefono2","estatus"];
+
+        indices.forEach(function(indiceObjecto, indice) {
+          self.form[indiceObjecto].disabled = false;
+        });
+
+      }
+    }, 1000);
 
   },
-  mounted: function () {
-
-    new AutoNumeric('#codigoUsuario', {
-      decimalPlaces: 0,
-      decimalCharacter: ',',
-      digitGroupSeparator: '',
-      leadingZero: 'keep'
-    });
-
-    AutoNumeric.getAutoNumericElement("#codigoUsuario").set(self.form.codigoUsuario.value);
-
-    new AutoNumeric('#cedula', {
-      decimalPlaces: 0,
-      decimalCharacter: ',',
-      digitGroupSeparator: '.'
-    });
-console.log(self.form.cedula.value)
-    AutoNumeric.getAutoNumericElement("#cedula").set(self.form.cedula.value);
-
+  mounted: async function () {
   },
   updated: function () {},
   methods:{
-    estados: function(){
-
-      self.form.municipio.help = '<i class="fas fa-cog fa-spin"></i> buscando';
-
-      axios.get('/estados')
-      .then(function (response) {
-
-        if(response.status === 200 && response.data.length > 0){
-
-          self.form.municipio.help = 'Municipio de la oficina en donde se desempeña';
-          self.comboEstados = response.data;
-
-        }else{
-
-          throw "error";
-
-        }
-
-      })
-      .catch(error => {
-
-        self.form.municipio.help = 'Municipio de la oficina en donde se desempeña';
-
-        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-
-          self.form[indiceObjecto].disabled = true;
-
-        });
-
-        self.submitActualizar.disabled = true;
-
-        self.alertForm = {
-          class : "alert alert-warning",
-          message : "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-
-      });
-
-    },
     municipios: function(){
 
+      self.form.municipio.value = ""
       self.form.municipio.disabled = true;
+      self.form.parroquia.value = ""
+      self.form.parroquia.disabled = true;
       self.form.parroquia.help = '<i class="fas fa-cog fa-spin"></i> buscando';
 
       axios.get('/municipios', { params: {
@@ -483,7 +467,7 @@ console.log(self.form.cedula.value)
       self.form[e.target.id].validar = (self.form[e.target.id].value.length > 0 && self.form[e.target.id].validar === false) ? true : false;
 
     },
-    crear: function(){
+    actualizar: function(){
 
       var formValido = true;
 
@@ -518,6 +502,7 @@ console.log(self.form.cedula.value)
 
         //Obtenemos valores
         let parametros = {
+          idUsuario: self.idUsuario,
           nombre1:  self.form.nombre1.value,
           nombre2: self.form.nombre2.value,
           apellido1: self.form.apellido1.value,
@@ -525,7 +510,6 @@ console.log(self.form.cedula.value)
           fechaNacimiento: self.form.fechaNacimiento.value,
           codigoUsuario: self.encriptar(self.form.codigoUsuario.value),
           cedula: AutoNumeric.getAutoNumericElement("#cedula").getNumber(),
-          clave: self.encriptar(self.form.cedula.value),
           parroquia: self.form.parroquia.value,
           division: self.form.division.value,
           cargo: self.form.cargo.value,
@@ -534,6 +518,7 @@ console.log(self.form.cedula.value)
           telefono1: self.form.telefono1.value,
           telefono2: self.form.telefono2.value,
           empleado: self.form.empleado.checked,
+          estatus: self.form.estatus.value
         }
 
         self.submitActualizar.content = '<i class="fas fa-cog fa-spin"></i>';
@@ -543,13 +528,24 @@ console.log(self.form.cedula.value)
           self.form[indiceObjecto].disabled = true;
         });
 
-        axios.post('/crearUsuario', parametros)
+        axios.post('/modificarUsuario', parametros)
         .then(function (response) {
 
           if(response.status === 200 && response.data.response === true){
 
-            self.submitActualizar.show = false;
-            self.refreshForm = true;
+            var indices = ["nombre1","nombre2","apellido1","apellido2","fechaNacimiento","cedula","correoPrincipal","correoSecundario","telefono1","telefono2", "estatus"];
+
+            if(self.form.empleado.checked){
+              indices.push("estado","municipio","parroquia","division","cargo");
+            }
+
+            indices.forEach(function(indiceObjecto, indice) {
+              self.form[indiceObjecto].disabled = false;
+            });
+
+            self.submitActualizar.content = 'Actualizar Datos';
+            self.submitActualizar.disabled = false;
+            self.submitActualizar.show = true;
 
             self.alertForm = {
               class : "alert alert-success",
@@ -566,7 +562,7 @@ console.log(self.form.cedula.value)
         })
         .catch(error => {
 
-          var indices = ["nombre1","nombre2","apellido1","apellido2","fechaNacimiento","codigoUsuario","cedula","correoPrincipal","correoSecundario","telefono1","telefono2"];
+          var indices = ["nombre1","nombre2","apellido1","apellido2","fechaNacimiento","cedula","correoPrincipal","correoSecundario","telefono1","telefono2"];
 
           if(self.form.empleado.checked){
             indices.push("estado","municipio","parroquia","division","cargo");
@@ -702,7 +698,7 @@ console.log(self.form.cedula.value)
     keyboard: function(e){
 
       if (e.keyCode === 13){
-        self.crear();
+        self.actualizar();
       }
 
     },

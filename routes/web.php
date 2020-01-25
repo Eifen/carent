@@ -33,5 +33,6 @@ Route::post('/crearUsuario', 'UsuarioController@crearUsuario');
 Route::get('/formBuscarUsuario', function() {return view('usuario/buscarUsuario');});
 Route::get('/buscarUsuarios', 'UsuarioController@buscarUsuarios');
 Route::get('/detalleUsuario', 'UsuarioController@detalleUsuario');
-Route::get('/formModificarUsuario', function() {return view('usuario/modificarUsuario');});
+Route::get('/formModificarUsuario/{idUsuario}', 'UsuarioController@formModificarUsuario')->where('idUsuario', '[0-9]+');//Validamos que solo pase números*/
 Route::get('/detalleUsuarioModificar', 'UsuarioController@detalleUsuarioModificar');
+Route::post('/modificarUsuario', 'UsuarioController@modificarUsuario');

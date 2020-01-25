@@ -286,7 +286,10 @@ var app = new Vue({
     },
     municipios: function(){
 
+      self.form.municipio.value = ""
       self.form.municipio.disabled = true;
+      self.form.parroquia.value = ""
+      self.form.parroquia.disabled = true;
       self.form.parroquia.help = '<i class="fas fa-cog fa-spin"></i> buscando';
 
       axios.get('/municipios', { params: {

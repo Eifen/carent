@@ -130,5 +130,6 @@ html {
 }
 #nuevoUsuario .wrapper-forms .wrapper-alert > div .alert {
   margin-bottom: 0px;
+  text-align: center;
   width: 100%;
 }

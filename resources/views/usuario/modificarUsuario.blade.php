@@ -20,6 +20,17 @@
         <menu-principal></menu-principal>
 
         <div class="row align-items-center justify-content-center wrapper-forms">
+
+          <div class="col-12 col-sm-11 col-md-9 col-lg-8 wrapper-back-btn">
+            <div class="row justify-content-center">
+              <div class="col-12 col-md-6 col-lg-4">
+                <a class="btn atras"
+                   href="{{ url()->previous() }}"
+                   type="button">Regresar</a>
+              </div>
+            </div>
+          </div>
+
           <div class="col-12 col-sm-11 col-md-9 col-lg-8">
             <h3>Estas modificando al Usuario</h3>
             <form class="row">
@@ -115,14 +126,26 @@
                 <label for="codigoUsuario">Código de usuario <span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="codigoUsuarioHelp"
                        class="form-control"
-                       data-validar="true"
-                       data-only-number="true"
                        id="codigoUsuario"
                        v-bind:disabled="form.codigoUsuario.disabled"
                        v-model="form.codigoUsuario.value"
                        v-on:keyup="valuesForm"
                        type="text">
-                <small id="codigoUsuarioHelp" class="form-text text-muted">Ejemplo: 2209</small>
+                <div class="mensaje"></div>
+              </div>
+              <div class="form-group col-12 col-sm-6">
+                <label for="estatus">Estatus <span class="campo-obligatorio">*</span></label>
+                <select aria-describedby="estatusHelp"
+                        class="form-control"
+                        id="estatus"
+                        v-bind:data-validar="form.estatus.validar"
+                        v-bind:disabled="form.estatus.disabled"
+                        v-model="form.estatus.value"
+                        v-on:click="limpiarMensajeError"
+                        type="text">
+                  <option v-bind:value="estatus.id" v-for="estatus in comboEstatus">@{{ estatus.descripcion }}</option>
+                </select>
+                <small id="estadoHelp" class="form-text text-muted">Estatus del usuario</small>
                 <div class="mensaje"></div>
               </div>
             </form>
@@ -277,20 +300,17 @@
 
             <div class="row justify-content-center wrapper-subtmit">
               <div class="col-12 col-md-6 col-lg-4">
-                <button class="btn"
+                <a class="btn atras"
+                   href="{{ url()->previous() }}"
+                   type="button">Regresar</a>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4">
+                <button class="btn subtmit"
                         type="button"
-                        v-on:click="crear"
+                        v-on:click="actualizar"
                         v-bind:disabled="submitActualizar.disabled"
                         v-html="submitActualizar.content"
                         v-if="submitActualizar.show"></button>
-              </div>
-            </div>
-
-            <div class="row justify-content-center wrapper-refrescar" v-if="refreshForm">
-              <div class="col-12 col-md-6 col-lg-4">
-                <button class="btn"
-                        type="button"
-                        v-on:click="refreshView">Actualizar datos del usuario</button>
               </div>
             </div>
 

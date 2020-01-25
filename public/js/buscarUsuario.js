@@ -33646,7 +33646,7 @@ var app = new Vue({
   },
   updated: function updated() {},
   methods: {
-    buscar: function buscar() {
+    buscar: function buscar(e) {
       self.alert.mostrar = false;
 
       if (self.formSearch.inputSearch.value.trim() !== "") {

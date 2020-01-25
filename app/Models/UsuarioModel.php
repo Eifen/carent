@@ -311,4 +311,56 @@ class UsuarioModel extends Model
 
     }
 
+    function estatusUsuario(){
+
+      $estatus = DB::select('SELECT e.valor as id,
+                                    e.descripcion
+                             FROM tbl_estatus e
+                             WHERE e.tabla = "tbl_usuario"
+                             ORDER BY descripcion ASC');
+
+      return $estatus;
+
+    }
+
+    function modificarUsuario($parametros){
+
+      DB::beginTransaction();
+
+      try {
+
+        $data = array("nombre_1" => $parametros["nombre1"],
+                      "nombre_2" => $parametros["nombre2"],
+                      "apellido_1" => $parametros["apellido1"],
+                      "apellido_2" => $parametros["apellido2"],
+                      "fecha_nacimiento" => $parametros["fechaNacimiento"],
+                      "id_cargo" => $parametros["cargo"],
+                      "id_division" => $parametros["division"],
+                      "id_parroquia" => $parametros["parroquia"],
+                      "id_estatus" => $parametros["estatus"],
+                      "cedula" => $parametros["cedula"]);
+
+        $update = DB::table('tbl_usuario')->where("id",$parametros["idUsuario"])->update($data);
+
+
+
+        $data = array("correo_principal" => $parametros["correoPrincipal"],
+                      "correo_secundario" => $parametros["correoSecundario"],
+                      "telefono_principal" => $parametros["telefono1"],
+                      "telefono_secundario" => $parametros["telefono2"]);
+
+        $contacto = DB::table('tbl_contacto_usuario')->where("id_usuario",$parametros["idUsuario"])->update($data);
+
+        DB::commit();
+        return array("response" => true, "message" => "Usuario actualizado con Éxito!.");
+
+      } catch(\Illuminate\Database\QueryException $ex){
+
+        DB::rollBack();
+        return array("response" => false, "message" => "Error al tratar de actualizar la información del usuario.");
+
+      }
+
+    }// Fin crearUsuario
+
 }
