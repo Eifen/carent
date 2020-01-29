@@ -28368,7 +28368,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("a", { staticClass: "navbar-brand" }, [
+    return _c("a", { staticClass: "navbar-brand", attrs: { href: "/" } }, [
       _c("img", { attrs: { src: "/images/logo-carent-menu-expandido.png" } })
     ])
   },
