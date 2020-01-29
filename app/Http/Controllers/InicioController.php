@@ -57,7 +57,7 @@ class InicioController extends Controller
 
         }else{
 
-          $response = array("response" => false, "message" => "La contraseña actual es inválida!", "clave 1" => $claveActual->clave, "clave 2" => $claveActualForm);
+          $response = array("response" => false, "message" => "La contraseña actual es inválida!");
 
         }
 

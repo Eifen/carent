@@ -27602,7 +27602,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("a", { staticClass: "navbar-brand" }, [
+    return _c("a", { staticClass: "navbar-brand", attrs: { href: "/" } }, [
       _c("img", { attrs: { src: "/images/logo-carent-menu-expandido.png" } })
     ])
   },
@@ -40195,18 +40195,15 @@ var app = new Vue({
     form: {
       claveActual: {
         disabled: false,
-        type: "password",
-        value: ""
+        type: "password"
       },
       nuevaClave: {
         disabled: false,
-        type: "password",
-        value: ""
+        type: "password"
       },
       repetirNuevaClave: {
         disabled: false,
-        type: "password",
-        value: ""
+        type: "password"
       }
     },
     claseVerClaveIcon: {
@@ -40253,11 +40250,11 @@ var app = new Vue({
       });
       return encrypted.toString();
     },
-    valuesForm: function valuesForm(id, e) {
-      self.form[id].value = e.target.value.trim() === "" ? "" : $(e.target).val();
-      self.limpiarMensajeError(e);
-    },
-    limpiarMensajeError: function limpiarMensajeError(e) {
+    limpiarMensajeError: function limpiarMensajeError(refName, e) {
+      if (self.$refs[refName].value.trim() === "") {
+        self.$refs[refName].value = "";
+      }
+
       $(e.target).removeClass("error");
       $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
     },
@@ -40285,8 +40282,8 @@ var app = new Vue({
         }; //Obtenemos valores
 
         var parametros = {
-          claveActual: self.encriptar(self.form.claveActual.value),
-          nuevaClave: self.encriptar(self.form.nuevaClave.value)
+          claveActual: self.encriptar(self.$refs["claveActual"].value),
+          nuevaClave: self.encriptar(self.$refs["nuevaClave"].value)
         };
         self.submit.content = '<i class="fas fa-cog fa-spin"></i>';
         self.submit.disabled = true;
@@ -40349,7 +40346,7 @@ var app = new Vue({
 
             if (input.getAttribute("data-equal")) {
               var id = input.getAttribute("data-equal");
-              var valor = document.getElementById(id).value;
+              var valor = self.$refs[id].value;
 
               if (valor !== input.value) {
                 respuesta = false;

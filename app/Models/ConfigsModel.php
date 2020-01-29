@@ -18,6 +18,6 @@ class ConfigsModel extends Model
 
       return array("key" => $key, "iv" => $iv);
 
-    }// Fin encryptConfig  
+    }// Fin encryptConfig
 
 }
