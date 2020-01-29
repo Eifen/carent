@@ -21,18 +21,15 @@ var app = new Vue({
     form: {
       claveActual: {
         disabled: false,
-        type: "password",
-        value: ""
+        type: "password"
       },
       nuevaClave: {
         disabled: false,
-        type: "password",
-        value: ""
+        type: "password"
       },
       repetirNuevaClave: {
         disabled: false,
-        type: "password",
-        value: ""
+        type: "password"
       }
     },
     claseVerClaveIcon: {
@@ -97,13 +94,12 @@ var app = new Vue({
       return encrypted.toString();
 
     },
-    valuesForm: function(id, e){
+    limpiarMensajeError: function(refName,e){
 
-      self.form[id].value = (e.target.value.trim() === "") ? "" : $(e.target).val();
-      self.limpiarMensajeError(e);
+      if(self.$refs[refName].value.trim() === ""){
+        self.$refs[refName].value = "";
+      }
 
-    },
-    limpiarMensajeError: function(e){
       $(e.target).removeClass("error");
       $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
     },
@@ -138,8 +134,8 @@ var app = new Vue({
 
         //Obtenemos valores
         let parametros = {
-          claveActual: self.encriptar(self.form.claveActual.value),
-          nuevaClave: self.encriptar(self.form.nuevaClave.value)
+          claveActual: self.encriptar(self.$refs["claveActual"].value),
+          nuevaClave: self.encriptar(self.$refs["nuevaClave"].value)
         }
 
         self.submit.content = '<i class="fas fa-cog fa-spin"></i>';
@@ -229,7 +225,7 @@ var app = new Vue({
             if(input.getAttribute("data-equal")){
 
               let id = input.getAttribute("data-equal");
-              let valor = document.getElementById(id).value;
+              let valor = self.$refs[id].value;
 
               if(valor !== input.value){
                 respuesta = false;

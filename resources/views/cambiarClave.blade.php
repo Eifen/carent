@@ -30,8 +30,7 @@
                        ref="claveActual"
                        v-bind:disabled="form.claveActual.disabled"
                        v-bind:type="form.claveActual.type"
-                       v-model="form.claveActual.value"
-                       v-on:keyup="valuesForm('claveActual', $event)">
+                       v-on:keyup="limpiarMensajeError('claveActual',$event)">
                 <div class="ver-clave" v-on:click="verClave" data-input="claveActual">
                   <i v-bind:class="claseVerClaveIcon.claveActual"></i>
                 </div>
@@ -45,8 +44,7 @@
                        ref="nuevaClave"
                        v-bind:disabled="form.nuevaClave.disabled"
                        v-bind:type="form.nuevaClave.type"
-                       v-model="form.nuevaClave.value"
-                       v-on:keyup="valuesForm('nuevaClave', $event)">
+                       v-on:keyup="limpiarMensajeError('nuevaClave',$event)">
                 <div class="ver-clave" v-on:click="verClave" data-input="nuevaClave">
                   <i v-bind:class="claseVerClaveIcon.nuevaClave"></i>
                 </div>
@@ -60,8 +58,7 @@
                        ref="repetirNuevaClave"
                        v-bind:disabled="form.repetirNuevaClave.disabled"
                        v-bind:type="form.repetirNuevaClave.type"
-                       v-model="form.repetirNuevaClave.value"
-                       v-on:keyup="valuesForm('repetirNuevaClave', $event)">
+                       v-on:keyup="limpiarMensajeError('repetirNuevaClave',$event)">
                 <div class="ver-clave" v-on:click="verClave" data-input="repetirNuevaClave">
                   <i v-bind:class="claseVerClaveIcon.repetirNuevaClave"></i>
                 </div>
