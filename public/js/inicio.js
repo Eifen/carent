@@ -6509,7 +6509,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#menu-principal{\n  background-color: white;\n  margin-left: -15px;\n  margin-right: -15px;\n}\n#menu-principal .navbar-brand{\n  height: 100%;\n  position: relative;\n}\n#menu-principal .navbar-brand img{\n  height: 35px;\n  width: auto;\n}\n#menu-principal .nav-link{\n  color: #000000 !important;\n  -webkit-transition: all .3s;\n  transition: all .3s;\n}\n#menu-principal .nav-link:hover{\n  color:#F6A81C !important;\n  cursor:pointer;\n}\n#menu-principal #wrapper-menu-items .dropdown-submenu {\n  position: relative;\n}\n#menu-principal #wrapper-menu-items .dropdown-submenu>.dropdown-menu {\n  left: 90%;\n  margin-top: 0px;\n  margin-left: 0px;\n  top: 10;\n}\n#menu-principal #wrapper-menu-items > .dropdown-submenu > .dropdown-menu{\n  left: 7px;\n}\n\n", ""]);
+exports.push([module.i, "\n#menu-principal{\r\n  background-color: white;\r\n  margin-left: -15px;\r\n  margin-right: -15px;\n}\n#menu-principal .navbar-brand{\r\n  height: 100%;\r\n  position: relative;\n}\n#menu-principal .navbar-brand img{\r\n  height: 35px;\r\n  width: auto;\n}\n#menu-principal .nav-link{\r\n  color: #000000 !important;\r\n  -webkit-transition: all .3s;\r\n  transition: all .3s;\n}\n#menu-principal .nav-link:hover{\r\n  color:#F6A81C !important;\r\n  cursor:pointer;\n}\n#menu-principal #wrapper-menu-items .dropdown-submenu {\r\n  position: relative;\n}\n#menu-principal #wrapper-menu-items .dropdown-submenu>.dropdown-menu {\r\n  left: 90%;\r\n  margin-top: 0px;\r\n  margin-left: 0px;\r\n  top: 10;\n}\n#menu-principal #wrapper-menu-items > .dropdown-submenu > .dropdown-menu{\r\n  left: 7px;\n}\r\n\r\n", ""]);
 
 // exports
 
@@ -33245,7 +33245,7 @@ var app = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.1.18-1\apache2\htdocs\sofguar\carent\resources\js\inicio.js */"./resources/js/inicio.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\inicio.js */"./resources/js/inicio.js");
 
 
 /***/ })
