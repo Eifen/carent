@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -33501,6 +33501,165 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 
+/***/ "./resources/js/cliente/buscarCliente.js":
+/*!***********************************************!*\
+  !*** ./resources/js/cliente/buscarCliente.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.js");
+
+window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+window.AutoNumeric = __webpack_require__(/*! autonumeric */ "./node_modules/autonumeric/dist/autoNumeric.min.js");
+window.zenscroll = __webpack_require__(/*! zenscroll */ "./node_modules/zenscroll/zenscroll.js");
+window.$ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+var self;
+Vue.component('menu-principal', __webpack_require__(/*! ../components/menuPrincipal.vue */ "./resources/js/components/menuPrincipal.vue")["default"]);
+var app = new Vue({
+  el: '#buscarCliente',
+  data: {
+    alert: {
+      message: "",
+      mostrar: false
+    },
+    formSearch: {
+      submit: {
+        disabled: true,
+        html: "Consultar"
+      },
+      inputSearch: {
+        disabled: true,
+        value: ""
+      },
+      select: {
+        disabled: false,
+        value: ""
+      }
+    },
+    clientes: {
+      mostrar: false,
+      registros: []
+    },
+    detalleCliente: {
+      error: false,
+      data: []
+    }
+  },
+  beforeCreate: function beforeCreate() {
+    self = this;
+  },
+  created: function created() {},
+  mounted: function mounted() {
+    $('#modal-detalle-cliente').on('hidden.bs.modal', function () {
+      self.detalleCliente.data = [];
+      self.detalleCliente.error = false;
+    });
+  },
+  updated: function updated() {},
+  methods: {
+    buscar: function buscar(e) {
+      self.alert.mostrar = false;
+
+      if (self.formSearch.inputSearch.value.trim() !== "") {
+        self.formSearch.submit.html = '<i class="fas fa-cog fa-spin"></i>';
+        self.formSearch.submit.disabled = true;
+        var parametros = {
+          buscarPor: self.formSearch.select.value,
+          dato: self.formSearch.inputSearch.value
+        };
+        axios.get('/buscarClientes', {
+          params: parametros
+        }).then(function (response) {
+          self.formSearch.submit.html = 'Consultar';
+          self.formSearch.submit.disabled = false;
+
+          if (response.status === 200 && response.data.response === true) {
+            self.clientes.mostrar = true;
+            self.clientes.registros = response.data.clientes;
+          } else {
+            throw response.data;
+          }
+        })["catch"](function (error) {
+          self.formSearch.submit.html = 'Consultar';
+          self.formSearch.submit.disabled = false;
+          self.alert.mostrar = true;
+          self.clientes.registros = [];
+          self.clientes.mostrar = false;
+
+          if (error.response) {
+            var message = "Existe un error!, consulte con el administrador del sistema.";
+          } else {
+            var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+          }
+
+          self.alert.message = message;
+        });
+      } else {
+        $(".inputSearch").parent().find(".mensaje").html("Campo requerido").addClass("invalid-feedback");
+        $(".inputSearch").addClass("error");
+        zenscroll.toY($(".inputSearch").offset().top - 100);
+      }
+    },
+    tipoFiltro: function tipoFiltro(e) {
+      var opcion = parseInt(e.target.value);
+      var valoresPermitidos = [1, 2, 3];
+      self.clientes.mostrar = false;
+      self.clientes.registros = [];
+
+      if (valoresPermitidos.includes(opcion)) {
+        self.formSearch.inputSearch.disabled = false;
+        self.formSearch.submit.disabled = false;
+      } else {
+        self.formSearch.inputSearch.disabled = true;
+        self.formSearch.submit.disabled = true;
+      }
+    },
+    evaluarCampo: function evaluarCampo(id, e) {
+      if (e.target.type === 'text') {
+        self.formSearch[id].value = e.target.value.trim() === "" ? "" : $(e.target).val();
+      }
+
+      if (id === "inputSearch" && self.formSearch["inputSearch"].value.trim() === "") {
+        self.clientes.registros = [];
+        self.clientes.mostrar = false;
+      }
+
+      self.limpiarMensajeError(e);
+    },
+    limpiarMensajeError: function limpiarMensajeError(e) {
+      $(e.target).removeClass("error");
+      $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
+    },
+    mostrarDetalleCliente: function mostrarDetalleCliente(idCliente, e) {
+      self.detalleCliente.error = false;
+      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
+      var parametros = {
+        idCliente: idCliente
+      };
+      axios.get('/detalleCliente', {
+        params: parametros
+      }).then(function (response) {
+        if (response.status === 200 && response.data.response === true) {
+          self.detalleCliente.data = response.data.info;
+          $('#modal-detalle-cliente').modal("show");
+          $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
+        } else {
+          throw response.data;
+        }
+      })["catch"](function (error) {
+        self.detalleCliente.error = true;
+        $('#modal-detalle-cliente').modal("show");
+        $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
+      });
+    }
+  } // Fin methods
+
+});
+
+/***/ }),
+
 /***/ "./resources/js/components/menuPrincipal.vue":
 /*!***************************************************!*\
   !*** ./resources/js/components/menuPrincipal.vue ***!
@@ -33588,173 +33747,14 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/usuario/buscarUsuario.js":
-/*!***********************************************!*\
-  !*** ./resources/js/usuario/buscarUsuario.js ***!
-  \***********************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.js");
-
-window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
-window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-window.AutoNumeric = __webpack_require__(/*! autonumeric */ "./node_modules/autonumeric/dist/autoNumeric.min.js");
-window.zenscroll = __webpack_require__(/*! zenscroll */ "./node_modules/zenscroll/zenscroll.js");
-window.$ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
-var self;
-Vue.component('menu-principal', __webpack_require__(/*! ../components/menuPrincipal.vue */ "./resources/js/components/menuPrincipal.vue")["default"]);
-var app = new Vue({
-  el: '#buscarUsuario',
-  data: {
-    alert: {
-      message: "",
-      mostrar: false
-    },
-    formSearch: {
-      submit: {
-        disabled: true,
-        html: "Consultar"
-      },
-      inputSearch: {
-        disabled: true,
-        value: ""
-      },
-      select: {
-        disabled: false,
-        value: ""
-      }
-    },
-    usuarios: {
-      mostrar: false,
-      registros: []
-    },
-    detalleUsuario: {
-      error: false,
-      data: []
-    }
-  },
-  beforeCreate: function beforeCreate() {
-    self = this;
-  },
-  created: function created() {},
-  mounted: function mounted() {
-    $('#modal-detalle-usuario').on('hidden.bs.modal', function () {
-      self.detalleUsuario.data = [];
-      self.detalleUsuario.error = false;
-    });
-  },
-  updated: function updated() {},
-  methods: {
-    buscar: function buscar(e) {
-      self.alert.mostrar = false;
-
-      if (self.formSearch.inputSearch.value.trim() !== "") {
-        self.formSearch.submit.html = '<i class="fas fa-cog fa-spin"></i>';
-        self.formSearch.submit.disabled = true;
-        var parametros = {
-          buscarPor: self.formSearch.select.value,
-          dato: self.formSearch.inputSearch.value
-        };
-        axios.get('/buscarUsuarios', {
-          params: parametros
-        }).then(function (response) {
-          self.formSearch.submit.html = 'Consultar';
-          self.formSearch.submit.disabled = false;
-
-          if (response.status === 200 && response.data.response === true) {
-            self.usuarios.mostrar = true;
-            self.usuarios.registros = response.data.usuarios;
-          } else {
-            throw response.data;
-          }
-        })["catch"](function (error) {
-          self.formSearch.submit.html = 'Consultar';
-          self.formSearch.submit.disabled = false;
-          self.alert.mostrar = true;
-          self.usuarios.registros = [];
-          self.usuarios.mostrar = false;
-
-          if (error.response) {
-            var message = "Existe un error!, consulte con el administrador del sistema.";
-          } else {
-            var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
-          }
-
-          self.alert.message = message;
-        });
-      } else {
-        $(".inputSearch").parent().find(".mensaje").html("Campo requerido").addClass("invalid-feedback");
-        $(".inputSearch").addClass("error");
-        zenscroll.toY($(".inputSearch").offset().top - 100);
-      }
-    },
-    tipoFiltro: function tipoFiltro(e) {
-      var opcion = parseInt(e.target.value);
-      var valoresPermitidos = [1, 2, 3, 4, 5];
-      self.usuarios.mostrar = false;
-      self.usuarios.registros = [];
-
-      if (valoresPermitidos.includes(opcion)) {
-        self.formSearch.inputSearch.disabled = false;
-        self.formSearch.submit.disabled = false;
-      } else {
-        self.formSearch.inputSearch.disabled = true;
-        self.formSearch.submit.disabled = true;
-      }
-    },
-    evaluarCampo: function evaluarCampo(id, e) {
-      if (e.target.type === 'text') {
-        self.formSearch[id].value = e.target.value.trim() === "" ? "" : $(e.target).val();
-      }
-
-      if (id === "inputSearch" && self.formSearch["inputSearch"].value.trim() === "") {
-        self.usuarios.registros = [];
-        self.usuarios.mostrar = false;
-      }
-
-      self.limpiarMensajeError(e);
-    },
-    limpiarMensajeError: function limpiarMensajeError(e) {
-      $(e.target).removeClass("error");
-      $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
-    },
-    mostrarDetalleUsuario: function mostrarDetalleUsuario(idUsuario, e) {
-      self.detalleUsuario.error = false;
-      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
-      var parametros = {
-        idUsuario: idUsuario
-      };
-      axios.get('/detalleUsuario', {
-        params: parametros
-      }).then(function (response) {
-        if (response.status === 200 && response.data.response === true) {
-          self.detalleUsuario.data = response.data.info;
-          $('#modal-detalle-usuario').modal("show");
-          $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
-        } else {
-          throw response.data;
-        }
-      })["catch"](function (error) {
-        self.detalleUsuario.error = true;
-        $('#modal-detalle-usuario').modal("show");
-        $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
-      });
-    }
-  } // Fin methods
-
-});
-
-/***/ }),
-
-/***/ 4:
+/***/ 7:
 /*!*****************************************************!*\
-  !*** multi ./resources/js/usuario/buscarUsuario.js ***!
+  !*** multi ./resources/js/cliente/buscarCliente.js ***!
   \*****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\usuario\buscarUsuario.js */"./resources/js/usuario/buscarUsuario.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\cliente\buscarCliente.js */"./resources/js/cliente/buscarCliente.js");
 
 
 /***/ })
