@@ -64,7 +64,7 @@
                   <th scope="col">Correo</th>
                   <th scope="col">Estatus</th>
                   <th scope="col"></th>
-                  <th scope="col"></th>
+                  <th scope="col" v-if="permisoActualizar"></th>
                 </tr>
               </thead>
               <tbody>
@@ -77,7 +77,7 @@
                   <td>
                     <i class="fas fa-search-plus" v-on:click="mostrarDetalleUsuario(usuario.id, $event)"></i>
                   </td>
-                  <td>
+                  <td v-if="permisoActualizar">
                     <a v-bind:href="'/formModificarUsuario/'+usuario.id" target="_self">
                        <i class="far fa-edit"></i>
                     </a>

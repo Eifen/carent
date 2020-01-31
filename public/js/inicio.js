@@ -1909,6 +1909,28 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 window.$ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 var self;
@@ -1927,7 +1949,7 @@ var self;
         throw "error";
       }
     })["catch"](function (error) {
-      console.log("ERROR NO MENUS");
+      self.menus = "<li class=\"nav-item\">\n                       <a class=\"nav-link btn btn-outline-danger\" aria-haspopup=\"true\">\n                         No posees men\xFAs asociados\n                       </a>\n                     </li>";
     });
   },
   mounted: function mounted() {},
@@ -6509,7 +6531,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#menu-principal{\n  background-color: white;\n  margin-left: -15px;\n  margin-right: -15px;\n}\n#menu-principal .navbar-brand{\n  height: 100%;\n  position: relative;\n}\n#menu-principal .navbar-brand img{\n  height: 35px;\n  width: auto;\n}\n#menu-principal .nav-link{\n  color: #000000 !important;\n  -webkit-transition: all .3s;\n  transition: all .3s;\n}\n#menu-principal .nav-link:hover{\n  color:#F6A81C !important;\n  cursor:pointer;\n}\n#menu-principal #wrapper-menu-items .dropdown-submenu {\n  position: relative;\n}\n#menu-principal #wrapper-menu-items .dropdown-submenu>.dropdown-menu {\n  left: 90%;\n  margin-top: 0px;\n  margin-left: 0px;\n  top: 10;\n}\n#menu-principal #wrapper-menu-items > .dropdown-submenu > .dropdown-menu{\n  left: 7px;\n}\n\n", ""]);
+exports.push([module.i, "\n#wrapper-menu-principal{\n  background-color: white;\n  margin-left: -15px;\n  margin-right: -15px;\n}\n#wrapper-menu-principal .navbar-brand{\n  height: 100%;\n  position: relative;\n}\n#wrapper-menu-principal .navbar-brand img{\n  height: 35px;\n  width: auto;\n}\n#wrapper-menu-principal .nav-link{\n  color: #000000 !important;\n  -webkit-transition: all .3s;\n  transition: all .3s;\n}\n#wrapper-menu-principal .nav-link:hover{\n  color:#F6A81C !important;\n  cursor:pointer;\n}\n#wrapper-menu-principal .nav-link.btn-outline-danger{\n  color:#DC3545 !important;\n  border-radius:3px !important;\n}\n#wrapper-menu-principal .nav-link.btn-outline-danger:hover{\n  color:#ffffff !important;\n}\n#wrapper-menu-principal #wrapper-menu-items .dropdown-submenu {\n  position: relative;\n}\n#wrapper-menu-principal #wrapper-menu-items .dropdown-submenu>.dropdown-menu {\n  left: 90%;\n  margin-top: 0px;\n  margin-left: 0px;\n  top: 10;\n}\n#wrapper-menu-principal #wrapper-menu-items > .dropdown-submenu > .dropdown-menu{\n  left: 7px;\n}\n#ul-opciones-cuenta .dropdown-menu .dropdown-item{\n  -webkit-transition: all .3s;\n  transition: all .3s;\n}\n#ul-opciones-cuenta .dropdown-menu .dropdown-item:hover{\n  color:#F6A81C !important;\n  cursor:pointer;\n}\n#ul-opciones-cuenta .dropdown-menu .dropdown-item:focus{\n  background-color:transparent;\n}\n\n", ""]);
 
 // exports
 
@@ -20891,7 +20913,7 @@ var render = function() {
     "nav",
     {
       staticClass: "navbar navbar-expand-lg navbar-light bg-light",
-      attrs: { id: "menu-principal" }
+      attrs: { id: "wrapper-menu-principal" }
     },
     [
       _vm._m(0),
@@ -20902,7 +20924,7 @@ var render = function() {
         "div",
         {
           staticClass: "collapse navbar-collapse",
-          attrs: { id: "navbarSupportedContent" }
+          attrs: { id: "menu-principal" }
         },
         [
           _c("ul", {
@@ -20937,8 +20959,8 @@ var staticRenderFns = [
         attrs: {
           type: "button",
           "data-toggle": "collapse",
-          "data-target": "#navbarSupportedContent",
-          "aria-controls": "navbarSupportedContent",
+          "data-target": "#menu-principal",
+          "aria-controls": "menu-principal",
           "aria-expanded": "false",
           "aria-label": "Toggle navigation"
         }
@@ -20950,49 +20972,53 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("ul", { staticClass: "navbar-nav" }, [
-      _c("li", { staticClass: "nav-item dropdown" }, [
-        _c(
-          "a",
-          {
-            staticClass: "nav-link dropdown-toggle",
-            attrs: {
-              href: "#",
-              id: "navbarDropdown",
-              role: "button",
-              "data-toggle": "dropdown",
-              "aria-haspopup": "true",
-              "aria-expanded": "false"
-            }
-          },
-          [_vm._v("\n          Mi Cuenta\n        ")]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass: "dropdown-menu dropdown-menu-right",
-            attrs: { "aria-labelledby": "navbarDropdown" }
-          },
-          [
-            _c(
-              "a",
-              {
-                staticClass: "dropdown-item",
-                attrs: { href: "/cambiarClave" }
-              },
-              [_vm._v("Cambiar Contraseña")]
-            ),
-            _vm._v(" "),
-            _c(
-              "a",
-              { staticClass: "dropdown-item", attrs: { href: "/logout" } },
-              [_vm._v("Salir")]
-            )
-          ]
-        )
-      ])
-    ])
+    return _c(
+      "ul",
+      { staticClass: "navbar-nav", attrs: { id: "ul-opciones-cuenta" } },
+      [
+        _c("li", { staticClass: "nav-item dropdown" }, [
+          _c(
+            "a",
+            {
+              staticClass: "nav-link dropdown-toggle",
+              attrs: {
+                href: "#",
+                id: "navbarDropdown",
+                role: "button",
+                "data-toggle": "dropdown",
+                "aria-haspopup": "true",
+                "aria-expanded": "false"
+              }
+            },
+            [_vm._v("\n          Mi Cuenta\n        ")]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "dropdown-menu dropdown-menu-right",
+              attrs: { "aria-labelledby": "navbarDropdown" }
+            },
+            [
+              _c(
+                "a",
+                {
+                  staticClass: "dropdown-item",
+                  attrs: { href: "/cambiarClave" }
+                },
+                [_vm._v("Cambiar Contraseña")]
+              ),
+              _vm._v(" "),
+              _c(
+                "a",
+                { staticClass: "dropdown-item", attrs: { href: "/logout" } },
+                [_vm._v("Salir")]
+              )
+            ]
+          )
+        ])
+      ]
+    )
   }
 ]
 render._withStripped = true

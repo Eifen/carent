@@ -217,6 +217,28 @@ class UsuarioModel extends Model
 
     }
 
+    function permisoActualizarUsuario($id_usuario){
+
+      $permiso = DB::select('SELECT CASE mu.U
+                                      WHEN 1 THEN "true"
+                                      ELSE "false"
+                                    END AS permiso
+                             FROM tbl_menu_usuario mu
+                             WHERE mu.id_usuario = '.$id_usuario.'
+                             AND mu.U = 1');
+
+      if(count($permiso) > 0){
+
+        return $permiso[0]->permiso;
+
+      }else{
+
+        return false;
+
+      }
+
+    }
+
     function detalleUsuario($id_usuario){
 
       $info = DB::select('SELECT u.id,
