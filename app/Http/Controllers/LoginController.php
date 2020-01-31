@@ -41,11 +41,11 @@ class LoginController extends Controller
             //Se crean las variables de sessión
             $request->session()->put('usuario_id', $usuario->id);
 
-            $response = array("login" => true, "message" => "Bienvenido!, espere unos segundo mientras mientras es redireccionado.", "claveBD" => $claveDB);
+            $response = array("login" => true, "message" => "Bienvenido!, espere unos segundo mientras mientras es redireccionado.");
 
           }else{
 
-            $response = array("login" => false, "message" => "Contraseña inválida", "claveBD" => $claveDB);
+            $response = array("login" => false, "message" => "Contraseña inválida");
 
           }
 
