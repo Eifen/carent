@@ -39504,6 +39504,39 @@ var app = new Vue({
 
 /***/ }),
 
+/***/ "./resources/less/cliente/buscarCliente.less":
+/*!***************************************************!*\
+  !*** ./resources/less/cliente/buscarCliente.less ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ "./resources/less/cliente/modificarCliente.less":
+/*!******************************************************!*\
+  !*** ./resources/less/cliente/modificarCliente.less ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ "./resources/less/cliente/nuevoCliente.less":
+/*!**************************************************!*\
+  !*** ./resources/less/cliente/nuevoCliente.less ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ "./resources/less/inicio.less":
 /*!************************************!*\
   !*** ./resources/less/inicio.less ***!
@@ -39560,9 +39593,9 @@ var app = new Vue({
 /***/ }),
 
 /***/ 0:
-/*!***********************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** multi ./resources/js/login.js ./resources/less/login.less ./resources/less/inicio.less ./resources/less/cambiarClave.less ./resources/less/usuario/nuevoUsuario.less ./resources/less/usuario/buscarUsuario.less ./resources/less/usuario/modificarUsuario.less ***!
-  \***********************************************************************************************************************************************************************************************************************************************************************/
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** multi ./resources/js/login.js ./resources/less/login.less ./resources/less/inicio.less ./resources/less/cambiarClave.less ./resources/less/usuario/nuevoUsuario.less ./resources/less/usuario/buscarUsuario.less ./resources/less/usuario/modificarUsuario.less ./resources/less/cliente/nuevoCliente.less ./resources/less/cliente/buscarCliente.less ./resources/less/cliente/modificarCliente.less ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -39572,7 +39605,10 @@ __webpack_require__(/*! C:\Bitnami\wampstack-7.1.18-1\apache2\htdocs\sofguar\car
 __webpack_require__(/*! C:\Bitnami\wampstack-7.1.18-1\apache2\htdocs\sofguar\carent\resources\less\cambiarClave.less */"./resources/less/cambiarClave.less");
 __webpack_require__(/*! C:\Bitnami\wampstack-7.1.18-1\apache2\htdocs\sofguar\carent\resources\less\usuario\nuevoUsuario.less */"./resources/less/usuario/nuevoUsuario.less");
 __webpack_require__(/*! C:\Bitnami\wampstack-7.1.18-1\apache2\htdocs\sofguar\carent\resources\less\usuario\buscarUsuario.less */"./resources/less/usuario/buscarUsuario.less");
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.1.18-1\apache2\htdocs\sofguar\carent\resources\less\usuario\modificarUsuario.less */"./resources/less/usuario/modificarUsuario.less");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.1.18-1\apache2\htdocs\sofguar\carent\resources\less\usuario\modificarUsuario.less */"./resources/less/usuario/modificarUsuario.less");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.1.18-1\apache2\htdocs\sofguar\carent\resources\less\cliente\nuevoCliente.less */"./resources/less/cliente/nuevoCliente.less");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.1.18-1\apache2\htdocs\sofguar\carent\resources\less\cliente\buscarCliente.less */"./resources/less/cliente/buscarCliente.less");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.1.18-1\apache2\htdocs\sofguar\carent\resources\less\cliente\modificarCliente.less */"./resources/less/cliente/modificarCliente.less");
 
 
 /***/ })
