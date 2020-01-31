@@ -74,7 +74,7 @@ class UsuarioController extends Controller
               "cedula" => $request->input("cedula"),
               "fechaNacimiento" => $request->input("fechaNacimiento"),
               "codigoUsuario" => $codigoUsuario,
-              "clave" => $this->encriptarLaravel($this->desencriptarCryptoJS($request->input("cedula"))),
+              "clave" => $this->encriptarLaravel($request->input("cedula")),
               "correoPrincipal" => strtolower($request->input("correoPrincipal")),
               "correoSecundario" => strtolower($request->input("correoSecundario")),
               "telefono1" => $request->input("telefono1"),
@@ -109,10 +109,11 @@ class UsuarioController extends Controller
       $buscarPor = (int) $request->input("buscarPor");
       $dato = strtolower($request->input("dato"));
       $usuarios = $modelo->buscarUsuarios($buscarPor, $dato);
+      $permisoActualizar = $modelo->permisoActualizarUsuario(session("usuario_id"));
 
       if(!empty($usuarios)){
 
-        $response = array("response" => true, "usuarios" => $usuarios);
+        $response = array("response" => true, "usuarios" => $usuarios, "permisoActualizar" => $permisoActualizar);
 
       }else{
 

@@ -1,15 +1,15 @@
 <template>
-  <nav id="menu-principal" class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav id="wrapper-menu-principal" class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="/">
       <img src="/images/logo-carent-menu-expandido.png">
     </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menu-principal" aria-controls="menu-principal" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse" id="menu-principal">
       <ul id="wrapper-menu-items" class="navbar-nav mr-auto" v-html="menus"></ul>
-      <ul class="navbar-nav">
+      <ul id="ul-opciones-cuenta" class="navbar-nav">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Mi Cuenta
@@ -26,45 +26,67 @@
 
 <style>
 
-#menu-principal{
+#wrapper-menu-principal{
   background-color: white;
   margin-left: -15px;
   margin-right: -15px;
 }
 
-#menu-principal .navbar-brand{
+#wrapper-menu-principal .navbar-brand{
   height: 100%;
   position: relative;
 }
 
-#menu-principal .navbar-brand img{
+#wrapper-menu-principal .navbar-brand img{
   height: 35px;
   width: auto;
 }
 
-#menu-principal .nav-link{
+#wrapper-menu-principal .nav-link{
   color: #000000 !important;
   transition: all .3s;
 }
 
-#menu-principal .nav-link:hover{
+#wrapper-menu-principal .nav-link:hover{
   color:#F6A81C !important;
   cursor:pointer;
 }
 
-#menu-principal #wrapper-menu-items .dropdown-submenu {
+#wrapper-menu-principal .nav-link.btn-outline-danger{
+  color:#DC3545 !important;
+  border-radius:3px !important;
+}
+
+#wrapper-menu-principal .nav-link.btn-outline-danger:hover{
+  color:#ffffff !important;
+}
+
+#wrapper-menu-principal #wrapper-menu-items .dropdown-submenu {
   position: relative;
 }
 
-#menu-principal #wrapper-menu-items .dropdown-submenu>.dropdown-menu {
+#wrapper-menu-principal #wrapper-menu-items .dropdown-submenu>.dropdown-menu {
   left: 90%;
   margin-top: 0px;
   margin-left: 0px;
   top: 10;
 }
 
-#menu-principal #wrapper-menu-items > .dropdown-submenu > .dropdown-menu{
+#wrapper-menu-principal #wrapper-menu-items > .dropdown-submenu > .dropdown-menu{
   left: 7px;
+}
+
+#ul-opciones-cuenta .dropdown-menu .dropdown-item{
+  transition: all .3s;
+}
+
+#ul-opciones-cuenta .dropdown-menu .dropdown-item:hover{
+  color:#F6A81C !important;
+  cursor:pointer;
+}
+
+#ul-opciones-cuenta .dropdown-menu .dropdown-item:focus{
+  background-color:transparent;
 }
 
 </style>
@@ -99,7 +121,11 @@
         })
         .catch(error => {
 
-          console.log("ERROR NO MENUS");
+          self.menus = `<li class="nav-item">
+                         <a class="nav-link btn btn-outline-danger" aria-haspopup="true">
+                           No posees menús asociados
+                         </a>
+                       </li>`;
 
         });
 
