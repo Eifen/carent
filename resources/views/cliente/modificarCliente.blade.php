@@ -129,7 +129,6 @@
                        v-bind:disabled="form.codigoCliente.disabled"
                        v-model="form.codigoCliente.value"
                        v-on:keyup="valuesForm"
-                       disabled
                        type="text">
                 <small id="codigoClienteHelp" class="form-text">Ejemplo: 2209</small>
                 <div class="mensaje"></div>
