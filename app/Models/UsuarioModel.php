@@ -335,7 +335,7 @@ class UsuarioModel extends Model
 
     function estatusUsuario(){
 
-      $estatus = DB::select('SELECT e.valor as id,
+      $estatus = DB::select('SELECT e.valor AS id,
                                     e.descripcion
                              FROM tbl_estatus e
                              WHERE e.tabla = "tbl_usuario"
