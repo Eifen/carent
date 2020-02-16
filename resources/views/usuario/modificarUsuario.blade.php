@@ -141,8 +141,7 @@
                         v-bind:data-validar="form.estatus.validar"
                         v-bind:disabled="form.estatus.disabled"
                         v-model="form.estatus.value"
-                        v-on:click="limpiarMensajeError"
-                        type="text">
+                        v-on:click="limpiarMensajeError">
                   <option v-bind:value="estatus.id" v-for="estatus in comboEstatus">@{{ estatus.descripcion }}</option>
                 </select>
                 <small id="estadoHelp" class="form-text text-muted">Estatus del usuario</small>
@@ -225,8 +224,7 @@
                         v-bind:disabled="form.estado.disabled"
                         v-model="form.estado.value"
                         v-on:change="municipios"
-                        v-on:click="limpiarMensajeError"
-                        type="text">
+                        v-on:click="limpiarMensajeError">
                   <option value="" disabled selected>Seleccione...</option>
                   <option v-bind:value="estado.id" v-for="estado in comboEstados">@{{ estado.estado }}</option>
                 </select>
@@ -242,8 +240,7 @@
                         v-bind:disabled="form.municipio.disabled"
                         v-model="form.municipio.value"
                         v-on:change="parroquias"
-                        v-on:click="limpiarMensajeError"
-                        type="text">
+                        v-on:click="limpiarMensajeError">
                   <option value="" disabled selected>Seleccione...</option>
                   <option v-bind:value="municipio.id" v-for="municipio in comboMunicipios">@{{ municipio.municipio }}</option>
                 </select>
@@ -258,8 +255,7 @@
                         v-bind:data-validar="form.parroquia.validar"
                         v-bind:disabled="form.parroquia.disabled"
                         v-model="form.parroquia.value"
-                        v-on:click="limpiarMensajeError"
-                        type="text">
+                        v-on:click="limpiarMensajeError">
                   <option value="" disabled selected>Seleccione...</option>
                   <option v-bind:value="parroquia.id" v-for="parroquia in comboParroquias">@{{ parroquia.parroquia }}</option>
                 </select>
@@ -274,8 +270,7 @@
                         v-bind:data-validar="form.division.validar"
                         v-bind:disabled="form.division.disabled"
                         v-model="form.division.value"
-                        v-on:click="limpiarMensajeError"
-                        type="text">
+                        v-on:click="limpiarMensajeError">
                   <option value="" disabled selected>Seleccione...</option>
                   <option v-bind:value="division.id" v-for="division in comboDivisiones">@{{ division.descripcion }}</option>
                 </select>
@@ -289,8 +284,7 @@
                         v-bind:data-validar="form.cargo.validar"
                         v-bind:disabled="form.cargo.disabled"
                         v-model="form.cargo.value"
-                        v-on:click="limpiarMensajeError"
-                        type="text">
+                        v-on:click="limpiarMensajeError">
                   <option value="" disabled selected>Seleccione...</option>
                   <option v-bind:value="cargo.id" v-for="cargo in comboCargos">@{{ cargo.descripcion }}</option>
                 </select>

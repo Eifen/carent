@@ -1,0 +1,961 @@
+require('bootstrap');
+window.Vue = require('vue');
+window.zenscroll = require('zenscroll');
+window.axios = require('axios');
+window.AutoNumeric = require('autonumeric');
+import VueTheMask from 'vue-the-mask';
+const CryptoJS = require("crypto-js");
+const AES = require("crypto-js/aes");
+var self;
+
+Vue.use(VueTheMask);
+Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
+
+var app = new Vue({
+
+  el: '#nuevoCliente',
+  data: {
+    alertForm: {
+      class: "",
+      message: "",
+      show: false
+    },
+    comboEstadosfi: [],
+    comboMunicipiosfi: [],
+    comboParroquiasfi: [],
+    comboEstadosfa: [],
+    comboMunicipiosfa: [],
+    comboParroquiasfa: [],
+
+    refreshForm: false,
+    form: {
+
+      codigoCliente:{
+        disabled: false,
+        value: ""
+      },
+      rif:{
+        disabled: false,
+        value: ""
+      },
+      nit:{
+        disabled: false,
+        value: ""
+      },
+      razon_social:{
+        disabled: false,
+        value: ""
+      },
+      estadofi: {
+        disabled: true,
+        validar: false,
+        value: ""
+      },
+      municipiofi: {
+        disabled: true,
+        help: "Municipio de la oficina fiscal",
+        validar: false,
+        value: ""
+      },
+      parroquiafi: {
+        disabled: true,
+        help: "Parroquia de la oficina fiscal",
+        validar: false,
+        value: ""
+      },
+      ciudad_fiscal: {
+        disabled: false,
+        value: ""
+      },
+      avenida_calle_fiscal: {
+        disabled: false,
+        value: ""
+      },
+      edificio_quinta_fiscal: {
+        disabled: false,
+        value: ""
+      },      
+      piso_fiscal: {
+        disabled: false,
+        value: ""
+      },
+      numero_fiscal:{
+        disabled: false,
+        value: ""
+      },
+      telefono_fiscal: {
+        disabled: false,
+        value: ""
+      },
+      fax_fiscal: {
+        disabled: false,
+        value: ""
+      },
+      email_fiscal: {
+        disabled: false,
+        value: ""
+      },
+      descripcion_factura:{
+        disabled: false,
+        value: ""
+      },
+      estadofa: {
+        disabled: true,
+        validar: false,
+        value: ""
+      },
+      municipiofa: {
+        disabled: true,
+        help: "Municipio de la oficina fiscal",
+        validar: false,
+        value: ""
+      },
+      parroquiafa: {
+        disabled: true,
+        help: "Parroquia de la oficina fiscal",
+        validar: false,
+        value: ""
+      },
+      ciudad_factura: {
+        disabled: false,
+        value: ""
+      },
+      avenida_calle_factura: {
+        disabled: false,
+        value: ""
+      },
+      edificio_quinta_factura: {
+        disabled: false,
+        value: ""
+      },
+      piso_factura: {
+        disabled: false,
+        value: ""
+      },
+      numero_factura: {
+        disabled: false,
+        value: ""
+      },
+      telefono_factura: {
+        disabled: false,
+        value: ""
+      },
+      fax_factura: {
+        disabled: false,
+        value: ""
+      },
+      correo_factura: {
+        disabled: false,
+        value: ""
+      },
+      empleado: {
+        checked: false
+      }
+    },
+    alert:{
+      message: "",
+      mostrar: false
+    },
+    formSearch: {
+      submit: {
+        disabled: true,
+        html: "Buscar"
+      },
+      inputSearch: {
+        disabled: true,
+        value: ""
+      },
+      select: {
+        disabled:false,
+        value: ""
+      }
+    },
+    usuarios: {
+      mostrar: false,
+      registros: []
+    },
+    detalleUsuario: {
+      error: false,
+      data: []
+    },
+      submitCrear: {
+      content: "Crear nuevo Cliente",
+      disabled: false,
+      show:true
+    },
+  },
+  beforeCreate: function(){
+
+    self = this;
+
+    axios.get('/encryptConfig')
+    .then(function (response) {
+
+      if(response.status === 200 && response.data.key && response.data.iv){
+
+        self.key = response.data.key;
+        self.iv = response.data.iv;
+
+      }else{
+
+        throw "error";
+
+      }
+
+    })
+    .catch(error => {
+
+      Object.keys(self.form).forEach(function(indiceObjecto, indice) {
+
+        self.form[indiceObjecto].disabled = true;
+
+      });
+
+      self.submitCrear.disabled = true;
+
+      self.alertForm = {
+        class : "alert alert-warning",
+        message : "Existe un error!, consulte con el administrador del sistema.",
+        show: true
+      };
+
+    });
+
+  },
+  created: function () {
+
+    self.estadosfi();
+    self.estadosfa();
+
+  },
+   mounted: function () {
+
+    new AutoNumeric('#codigoCliente', {
+      decimalPlaces: 0,
+      decimalCharacter: ',',
+      digitGroupSeparator: '',
+      leadingZero: 'keep'
+    });
+
+    new AutoNumeric('#rif', {
+      decimalPlaces: 0,
+      decimalCharacter: ',',
+      digitGroupSeparator: '.'
+    });
+
+    new AutoNumeric('#nit', {
+      decimalPlaces: 0,
+      decimalCharacter: ',',
+      digitGroupSeparator: '.'
+    });
+    new AutoNumeric('#numero_fiscal', {
+      decimalPlaces: 0,
+      decimalCharacter: ',',
+      digitGroupSeparator: '.'
+    });
+
+    new AutoNumeric('#numero_factura', {
+      decimalPlaces: 0,
+      decimalCharacter: ',',
+      digitGroupSeparator: '.'
+    });
+
+  },
+  updated: function () {},
+  methods:{
+
+    buscar: function(e){
+
+      self.alert.mostrar = false;
+
+      if(self.formSearch.inputSearch.value.trim() !== ""){
+
+        self.formSearch.submit.html = '<i class="fas fa-cog fa-spin"></i>';
+        self.formSearch.submit.disabled = true;
+
+        let parametros = {
+          buscarPor: self.formSearch.select.value,
+          dato: self.formSearch.inputSearch.value
+        };
+
+        axios.get('/buscarUsuarios', {params: parametros})
+        .then(function (response) {
+
+          self.formSearch.submit.html = 'Buscar';
+          self.formSearch.submit.disabled = false;
+
+          if(response.status === 200 && response.data.response === true){
+
+            self.usuarios.mostrar = true;
+            self.usuarios.registros = response.data.usuarios;
+            $('#modal-detalle-usuario').modal("show");
+            $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
+
+
+          }else{
+
+            throw response.data;
+
+          }
+
+        })
+        .catch(error => {
+
+          self.formSearch.submit.html = 'Buscar';
+          self.formSearch.submit.disabled = false;
+
+          self.alert.mostrar = true;
+
+          self.usuarios.registros = [];
+          self.usuarios.mostrar = false;
+
+          if(error.response){
+
+            var message = "Existe un error!, consulte con el administrador del sistema.";
+
+          }else{
+
+            var message = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+
+          }
+
+          self.alert.message = message;
+
+        });
+
+      }else{
+
+        $(".inputSearch").parent().find(".mensaje").html("Campo requerido").addClass("invalid-feedback");
+        $(".inputSearch").addClass("error");
+        zenscroll.toY($(".inputSearch").offset().top - 100);
+
+      }
+
+    },
+    tipoFiltro: function(e){
+
+      let opcion = parseInt(e.target.value);
+      let valoresPermitidos = [1,2,3,4];
+
+      self.usuarios.mostrar = false;
+      self.usuarios.registros = [];
+
+      if(valoresPermitidos.includes(opcion)){
+        self.formSearch.inputSearch.disabled = false;
+        self.formSearch.submit.disabled = false;
+      }else{
+        self.formSearch.inputSearch.disabled = true;
+        self.formSearch.submit.disabled = true;
+      }
+
+    },
+    evaluarCampo: function(id, e){
+
+      if(e.target.type === 'text'){
+        self.formSearch[id].value = (e.target.value.trim() === "") ? "" : $(e.target).val();
+      }
+
+      if(id === "inputSearch" && self.formSearch["inputSearch"].value.trim() === ""){
+        self.usuarios.registros = [];
+        self.usuarios.mostrar = false;
+      }
+
+      self.limpiarMensajeError(e);
+
+    },
+
+    SelecionarUsuario: function(idUsuario,e){
+
+      self.detalleUsuario.error = false;
+      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
+
+      let parametros = {
+        idUsuario: idUsuario
+      };
+
+      axios.get('/detalleUsuario', {params: parametros})
+      .then(function (response) {
+
+        if(response.status === 200 && response.data.response === true){
+
+          self.detalleUsuario.data = response.data.info;
+
+        }else{
+
+          throw response.data;
+
+        }
+
+      })
+      .catch(error => {
+
+        self.detalleUsuario.error = true;
+        $('#modal-detalle-usuario').modal("show");
+        $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
+
+      });
+
+    },
+
+
+
+     estadosfi: function(){
+
+      self.form.municipiofi.help = '<i class="fas fa-cog fa-spin"></i> buscando';
+
+      axios.get('/estados')
+      .then(function (response) {
+
+        if(response.status === 200 && response.data.length > 0){
+
+          self.form.municipiofi.help = 'Municipio de la oficina en donde se desempeña';
+          self.comboEstadosfi = response.data;
+
+        }else{
+
+          throw "error";
+
+        }
+
+      })
+      .catch(error => {
+
+        self.form.municipiofi.help = 'Municipio de la oficina en donde se desempeña';
+
+        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
+
+          self.form[indiceObjecto].disabled = true;
+
+        });
+
+        self.submitCrear.disabled = true;
+
+        self.alertForm = {
+          class : "alert alert-warning",
+          message : "Existe un error!, consulte con el administrador del sistema.",
+          show: true
+        };
+
+      });
+
+    },
+    municipiosfi: function(){
+
+      self.form.municipiofi.value = ""
+      self.form.municipiofi.disabled = true;
+      self.form.parroquiafi.value = ""
+      self.form.parroquiafi.disabled = true;
+      self.form.parroquiafi.help = '<i class="fas fa-cog fa-spin"></i> buscando';
+
+      axios.get('/municipios', { params: {
+         id_estado: self.form.estadofi.value
+      }})
+      .then(function (response) {
+
+        if(response.status === 200 && response.data.length > 0){
+
+          self.form.parroquiafi.help = 'Parroquia de la oficina en donde se desempeña';
+          self.comboMunicipiosfi = response.data;
+          self.form.municipiofi.disabled = false;
+
+        }else{
+
+          throw "error";
+
+        }
+
+      })
+      .catch(error => {
+
+        self.form.parroquiafi.help = 'Parroquia de la oficina en donde se desempeña';
+
+        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
+
+          self.form[indiceObjecto].disabled = true;
+
+        });
+
+        self.submitCrear.disabled = true;
+
+        self.alertForm = {
+          class : "alert alert-warning",
+          message : "Existe un error!, consulte con el administrador del sistema.",
+          show: true
+        };
+
+      });
+
+    },
+    parroquiasfi: function(){
+
+      self.form.parroquiafi.disabled = true;
+
+      axios.get('/parroquias', {params: {
+         id_municipio: self.form.municipiofi.value
+      }})
+      .then(function (response) {
+
+        if(response.status === 200 && response.data.length > 0){
+
+          self.comboParroquiasfi = response.data;
+          self.form.parroquiafi.disabled = false;
+
+        }else{
+
+          throw "error";
+
+        }
+
+      })
+      .catch(error => {
+
+        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
+
+          self.form[indiceObjecto].disabled = true;
+
+        });
+
+        self.submitCrear.disabled = true;
+
+        self.alertForm = {
+          class : "alert alert-warning",
+          message : "Existe un error!, consulte con el administrador del sistema.",
+          show: true
+        };
+
+      });
+
+    },
+
+    estadosfa: function(){
+
+      self.form.municipiofa.help = '<i class="fas fa-cog fa-spin"></i> buscando';
+
+      axios.get('/estados')
+      .then(function (response) {
+
+        if(response.status === 200 && response.data.length > 0){
+
+          self.form.municipiofa.help = 'Municipio de la oficina en donde se desempeña';
+          self.comboEstadosfa = response.data;
+
+        }else{
+
+          throw "error";
+
+        }
+
+      })
+      .catch(error => {
+
+        self.form.municipiofa.help = 'Municipio de la oficina en donde se desempeña';
+
+        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
+
+          self.form[indiceObjecto].disabled = true;
+
+        });
+
+        self.submitCrear.disabled = true;
+
+        self.alertForm = {
+          class : "alert alert-warning",
+          message : "Existe un error!, consulte con el administrador del sistema.",
+          show: true
+        };
+
+      });
+
+    },
+    municipiosfa: function(){
+
+      self.form.municipiofa.value = ""
+      self.form.municipiofa.disabled = true;
+      self.form.parroquiafa.value = ""
+      self.form.parroquiafa.disabled = true;
+      self.form.parroquiafa.help = '<i class="fas fa-cog fa-spin"></i> buscando';
+
+      axios.get('/municipios', { params: {
+         id_estado: self.form.estadofa.value
+      }})
+      .then(function (response) {
+
+        if(response.status === 200 && response.data.length > 0){
+
+          self.form.parroquiafa.help = 'Parroquia de la oficina en donde se desempeña';
+          self.comboMunicipiosfa = response.data;
+          self.form.municipiofa.disabled = false;
+
+        }else{
+
+          throw "error";
+
+        }
+
+      })
+      .catch(error => {
+
+        self.form.parroquiafa.help = 'Parroquia de la oficina en donde se desempeña';
+
+        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
+
+          self.form[indiceObjecto].disabled = true;
+
+        });
+
+        self.submitCrear.disabled = true;
+
+        self.alertForm = {
+          class : "alert alert-warning",
+          message : "Existe un error!, consulte con el administrador del sistema.",
+          show: true
+        };
+
+      });
+
+    },
+    parroquiasfa: function(){
+
+      self.form.parroquiafa.disabled = true;
+
+      axios.get('/parroquias', {params: {
+         id_municipio: self.form.municipiofa.value
+      }})
+      .then(function (response) {
+
+        if(response.status === 200 && response.data.length > 0){
+
+          self.comboParroquiasfa = response.data;
+          self.form.parroquiafa.disabled = false;
+
+        }else{
+
+          throw "error";
+
+        }
+
+      })
+      .catch(error => {
+
+        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
+
+          self.form[indiceObjecto].disabled = true;
+
+        });
+
+        self.submitCrear.disabled = true;
+
+        self.alertForm = {
+          class : "alert alert-warning",
+          message : "Existe un error!, consulte con el administrador del sistema.",
+          show: true
+        };
+
+      });
+
+    },
+
+    esEmpleado: function(e){
+
+      if(self.form.empleado.checked){
+
+        self.form.estadofi.disabled = false;
+        self.form.estadofa.disabled = false;
+
+        self.form.estadofi.validar = true;
+        self.form.municipiofi.validar = true;
+        self.form.parroquiafi.validar = true;
+        self.form.estadofa.validar = true;
+        self.form.municipiofa.validar = true;
+        self.form.parroquiafa.validar = true;
+
+        self.form.estadofi.value = "";
+        self.form.estadofa.value = "";
+
+      }else{
+
+        $(e.target).parents("form").find(".form-group .mensaje").html("").removeClass("invalid-feedback");
+        $(e.target).parents("form").find(".form-group .form-control").removeClass("error");
+
+        self.form.estadofi.disabled = true;
+        self.form.municipiofi.disabled = true;
+        self.form.parroquiafi.disabled = true;
+        self.form.estadofa.disabled = true;
+        self.form.municipiofa.disabled = true;
+        self.form.parroquiafa.disabled = true;
+
+        self.form.estadofi.validar = false;
+        self.form.municipiofi.validar = false;
+        self.form.parroquiafi.validar = false;
+        self.form.estadofa.validar = false;
+        self.form.municipiofa.validar = false;
+        self.form.parroquiafa.validar = false;
+
+        self.form.estadofi.value = "";
+        self.form.municipiofi.value = "";
+        self.form.parroquiafi.value = "";
+        self.form.estadofa.value = "";
+        self.form.municipiofa.value = "";
+        self.form.parroquiafa.value = "";
+      }
+
+    },
+
+    valuesForm: function(e){
+
+      if(e.target.type === 'text' || e.target.type === 'textarea' || e.target.type === 'email'){
+        self.form[e.target.id].value = (e.target.value.trim() === "") ? "" : $(e.target).val();
+      }
+
+      self.limpiarMensajeError(e);
+
+    },
+    limpiarMensajeError: function(e){
+      $(e.target).removeClass("error");
+      $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
+    },
+    campoOpcionalARequerido: function(e){
+
+      self.valuesForm(e);
+      self.form[e.target.id].validar = (self.form[e.target.id].value.length > 0 && self.form[e.target.id].validar === false) ? true : false;
+
+    },
+    crear: function(){
+
+      var formValido = true;
+
+      $("form .form-group .mensaje").html("").removeClass("invalid-feedback");
+      $("form .form-group .form-control").removeClass("error");
+
+      $("form .form-group").each(function(index, elemento) {
+
+        if($(elemento).find(".form-control").length > 0){
+
+          var input = $(elemento).find(".form-control")[0];
+          var valido = self.validarValor(input);
+
+          if(!valido.respuesta){
+            $(elemento).find(".mensaje").html(valido.mensaje).addClass("invalid-feedback");
+            $(elemento).find(".form-control").addClass("error");
+            formValido = valido.respuesta;
+            return false;
+          }
+
+        }
+
+      });
+
+      if(formValido){
+
+        self.alertForm = {
+          class : "",
+          message : "",
+          show: false
+        };
+
+        //Obtenemos valores
+        let parametros = {
+          idUsuario: self.detalleUsuario.data.id,
+          codigoCliente: AutoNumeric.getAutoNumericElement("#codigoCliente").getNumber(),
+          rif: AutoNumeric.getAutoNumericElement("#rif").getNumber(),
+          nit: AutoNumeric.getAutoNumericElement("#nit").getNumber(),
+          razon_social:  self.form.razon_social.value,
+          parroquiafi: self.form.parroquiafi.value,
+          ciudad_fiscal: self.form.ciudad_fiscal.value,
+          avenida_calle_fiscal: self.form.avenida_calle_fiscal.value,
+          edificio_quinta_fiscal: self.form.edificio_quinta_fiscal.value,
+          piso_fiscal: self.form.piso_fiscal.value,
+          numero_fiscal: AutoNumeric.getAutoNumericElement("#numero_fiscal").getNumber(),
+          telefono_fiscal: self.form.telefono_fiscal.value,
+          fax_fiscal: self.form.fax_fiscal.value,
+          email_fiscal: self.form.email_fiscal.value,
+          descripcion_factura: self.form.descripcion_factura.value,
+          parroquiafa: self.form.parroquiafa.value,
+          ciudad_factura: self.form.ciudad_factura.value,
+          avenida_calle_factura: self.form.avenida_calle_factura.value,
+          edificio_quinta_factura: self.form.edificio_quinta_factura.value,
+          piso_factura: self.form.piso_factura.value,
+          numero_factura: AutoNumeric.getAutoNumericElement("#numero_factura").getNumber(),
+          telefono_factura: self.form.telefono_factura.value,
+          fax_factura: self.form.fax_factura.value,
+          correo_factura: self.form.correo_factura.value,
+          empleado: self.form.empleado.checked,
+        }
+
+        self.submitCrear.content = '<i class="fas fa-cog fa-spin"></i>';
+        self.submitCrear.disabled = true;
+
+        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
+          self.form[indiceObjecto].disabled = true;
+        });
+
+        axios.post('/crearCliente', parametros)
+        .then(function (response) {
+
+          if(response.status === 200 && response.data.response === true){
+
+            self.submitCrear.show = false;
+            self.refreshForm = true;
+
+            self.alertForm = {
+              class : "alert alert-success",
+              message : response.data.message,
+              show: true
+            };
+
+          }else{
+
+            throw response.data;
+
+          }
+
+        })
+        .catch(error => {
+
+          var indices = ["idUsuario","codigoCliente","rif","nit","razon_social","ciudad_fiscal","avenida_calle_fiscal","edificio_quinta_fiscal","piso_fiscal","numero_fiscal","telefono_fiscal","fax_fiscal","email_fiscal","descripcion_factura","parroquia_factura","ciudad_factura","avenida_calle_factura","edificio_quinta_factura","piso_factura","numero_factura","telefono_factura","fax_factura","correo_factura"];
+  
+          if(self.form.empleado.checked){
+            indices.push("estadofi","municipiofi","parroquiafi","estadofa","municipiofa","parroquiafa");
+          }
+          indices.forEach(function(indiceObjecto, indice) {
+            self.form[indiceObjecto].disabled = false;
+          });
+          self.submitCrear.content = 'Crear nuevo Cliente';
+          self.submitCrear.disabled = false;
+
+          if(error.response){
+
+            var message = "Existe un error!, consulte con el administrador del sistema.";
+
+          }else{
+
+            var message = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+
+          }
+
+          self.alertForm = {
+            class : "alert alert-warning",
+            message : message,
+            show: true
+          };
+
+        });
+
+      }// Fin if
+
+    },
+    validarValor: function(input) {
+
+      var respuesta = true;
+      var mensaje   = '';
+
+      if(input.hasAttribute("data-validar")){
+
+        if(input.getAttribute("data-validar") === "true"){
+
+          if(input.type === 'email'){
+
+            let regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            respuesta      = regexEmail.test(input.value);
+
+            if(!respuesta){
+              zenscroll.toY($(input).offset().top - 100);
+              mensaje        = "Correo inválido";
+            }
+
+          }else if(input.type === 'text' || input.type === 'textarea'){
+
+            if(input.getAttribute("data-min") && !input.getAttribute("data-name-lastname")){
+
+              let minChar = (Number(input.getAttribute("data-min")) === 0) ? 1 : input.getAttribute("data-min");
+              let numChar = input.value.length
+              let regexName = /^[a-zA-Z ']+$/;
+
+              if(numChar < minChar){
+
+                respuesta = false;
+                mensaje   = "El campo debe contener al menos "+minChar+" caracteres!";
+                zenscroll.toY($(input).offset().top - 100);
+
+              }
+
+            }else if(input.getAttribute("data-min") && input.getAttribute("data-name-lastname")){
+
+              let minChar = input.getAttribute("data-min");
+              let numChar = input.value.length
+              let regexName = /^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/;
+
+              if(numChar < minChar){
+
+                respuesta = false;
+                mensaje   = "El campo debe contener al menos "+minChar+" caracteres!";
+                zenscroll.toY($(input).offset().top - 100);
+
+              }else if(!regexName.test(input.value)){
+
+                respuesta = false;
+                mensaje = "Solo se permiten letras y este caracter (',´)!";
+                zenscroll.toY($(input).offset().top - 100);
+
+              }
+
+            }else if(input.getAttribute("data-name-lastname")){
+
+              if(input.value.length > 0){
+
+                let regexName = /^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/;
+                respuesta = regexName.test(input.value);
+
+                if(!respuesta){
+                  mensaje = "Solo se permiten letras y este caracter (')!";
+                  zenscroll.toY($(input).offset().top - 100);
+                }
+
+              }
+
+            }else if(input.getAttribute("data-only-number")){
+
+              var valor = (input.getAttribute("data-formated-number")) ? AutoNumeric.getAutoNumericElement("#"+input.id).getNumber() : input.value;
+
+              let regexNumber = /^\d+$/;
+              respuesta = regexNumber.test(valor);
+
+              if(!respuesta){
+                mensaje = "Solo números";
+                zenscroll.toY($(input).offset().top - 100);
+              }
+
+            }
+
+          }else if(input.type === "select-one"){
+
+            if(input.value === ""){
+              respuesta = false;
+              mensaje = "Debe seleccionar una opción!";
+              zenscroll.toY($(input).offset().top - 100);
+            }
+
+          }
+
+        }
+
+      }
+
+      return {respuesta: respuesta, mensaje: mensaje};
+
+    },
+
+    keyboard: function(e){
+
+      if (e.keyCode === 13){
+        self.crear();
+      }
+
+    },
+    refreshView: function(){
+      window.location.href = "/formNuevoCliente";
+    }
+
+  }// Fin methods
+
+});

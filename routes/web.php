@@ -36,3 +36,18 @@ Route::get('/detalleUsuario', 'UsuarioController@detalleUsuario');
 Route::get('/formModificarUsuario/{idUsuario}', 'UsuarioController@formModificarUsuario')->where('idUsuario', '[0-9]+');//Validamos que solo pase números*/
 Route::get('/detalleUsuarioModificar', 'UsuarioController@detalleUsuarioModificar');
 Route::post('/modificarUsuario', 'UsuarioController@modificarUsuario');
+Route::get('/formNuevoCliente', function() {return view('cliente/nuevoCliente');});
+Route::get('/buscarCliente', 'ClienteController@buscarCliente');
+Route::get('/estados', 'ClienteController@estados');
+Route::get('/municipios', 'ClienteController@municipios');
+Route::get('/parroquias', 'ClienteController@parroquias');
+Route::post('/crearCliente', 'ClienteController@crearCliente');
+Route::get('/formBuscarCliente', function() {return view('cliente/buscarCliente');});
+Route::get('/buscarClientes', 'ClienteController@buscarClientes');
+Route::get('/detalleCliente', 'ClienteController@detalleCliente');
+Route::get('/buscarUsuarios', 'ClienteController@buscarUsuarios');
+Route::get('/detalleUsuario', 'ClienteController@detalleUsuario');
+
+Route::get('/formModificarCliente/{idCliente}', 'ClienteController@formModificarCliente')->where('idCliente', '[0-9]+');//Validamos que solo pase números*/
+Route::get('/detalleClienteModificar', 'ClienteController@detalleClienteModificar');
+Route::post('/modificarCliente', 'ClienteController@modificarCliente');

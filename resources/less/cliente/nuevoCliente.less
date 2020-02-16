@@ -7,12 +7,12 @@ html{
   overflow-x: hidden;
 }
 
-#modificarUsuario{
+#nuevoCliente{
   background-color: #E9ECEF;
 
   .wrapper-forms {
     padding-bottom: 50px;
-    padding-top: 70px;
+    padding-top: 100px;
 
     @media (max-width: 575px) {
       padding-bottom: 0px;
@@ -32,6 +32,18 @@ html{
       }
 
       > div{
+
+        &.logo{
+          margin-bottom: 40px;
+          margin-top: 30px;
+          text-align: center;
+
+          img{
+            height: 90px;
+            width: auto;
+          }
+
+        }
 
         &.wrapper-required-legend{
           margin-bottom: 20px;
@@ -97,30 +109,28 @@ html{
 
     }// Fin form
 
-    .wrapper-back-btn{
-      margin-bottom: 35px;
+    .wrapper-subtmit{
 
       > div{
-        padding-left: 5px;
-        padding-right: 5px;
+        padding-left: 0px;
+        padding-right: 0px;
 
         .btn{
-          background-color: transparent;
+          background-color: #091F40;
           border: 2px solid #091F40;
           border-radius: 2px;
-          color: #091F40;
+          color: rgba(255,255,255,1);
           font-weight: 600;
           transition: all .3s;
           width: 100%;
 
-          &.atras{
-            background-color: transparent;
-            color: #091F40;
-          }
-
           &:hover{
             background-color: #F6A81C;
             color: #091F40;
+          }
+
+          &:disabled{
+            cursor: not-allowed;
           }
 
         }
@@ -129,28 +139,20 @@ html{
 
     }
 
-    .wrapper-subtmit{
+    .wrapper-refrescar{
 
       > div{
-        padding-left: 5px;
-        padding-right: 5px;
+        padding-left: 0px;
+        padding-right: 0px;
 
         .btn{
+          background-color: #091F40;
           border: 2px solid #091F40;
           border-radius: 2px;
+          color: rgba(255,255,255,1);
           font-weight: 600;
           transition: all .3s;
           width: 100%;
-
-          &.subtmit{
-            background-color: #091F40;
-            color: rgba(255,255,255,1);
-          }
-
-          &.atras{
-            background-color: transparent;
-            color: #091F40;
-          }
 
           &:hover{
             background-color: #F6A81C;
@@ -176,7 +178,6 @@ html{
 
         .alert{
           margin-bottom: 0px;
-          text-align: center;
           width: 100%;
         }
 
@@ -186,4 +187,4 @@ html{
 
   }// Fin .wrapper-forms
 
-}// Fin #nuevoUsuario
+}// Fin #nuevoCliente
