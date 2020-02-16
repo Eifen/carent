@@ -20,6 +20,9 @@ const mix = require('laravel-mix');
     .js('resources/js/cliente/nuevoCliente.js', 'public/js/nuevoCliente.js')
     .js('resources/js/cliente/buscarCliente.js', 'public/js/buscarCliente.js')
     .js('resources/js/cliente/modificarCliente.js', 'public/js/modificarCliente.js')
+    .js('resources/js/crea/buscarRegistro.js', 'public/js/buscarRegistro.js')
+    .js('resources/js/crea/nuevoCargo.js', 'public/js/nuevoCargo.js')
+    .js('resources/js/crea/nuevaDivision.js', 'public/js/nuevaDivision.js')
     .less('resources/less/login.less', 'public/css/login.css')
     .less('resources/less/inicio.less', 'public/css/inicio.css')
     .less('resources/less/cambiarClave.less', 'public/css/cambiarClave.css')
@@ -29,5 +32,8 @@ const mix = require('laravel-mix');
     .less('resources/less/cliente/nuevoCliente.less', 'public/css/nuevoCliente.css')
     .less('resources/less/cliente/buscarCliente.less', 'public/css/buscarCliente.css')
     .less('resources/less/cliente/modificarCliente.less', 'public/css/modificarCliente.css')
+    .less('resources/less/crea/buscarRegistro.less', 'public/css/buscarRegistro.css')
+    .less('resources/less/crea/nuevoCargo.less', 'public/css/nuevoCargo.css')
+    .less('resources/less/crea/nuevaDivision.less', 'public/css/nuevaDivision.css')
     .styles('resources/css/bootstrap-4.4.1/bootstrap.min.css','public/css/bootstrap.min.css')
     .styles('resources/css/fontawesome-free-5.12.0/all.min.css','public/css/fontawesome-free-5.12.0.css');

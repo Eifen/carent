@@ -160,7 +160,7 @@
                        v-model="form.razon_social.value"
                        v-on:keyup="valuesForm"
                        type="text">
-                <small id="razon_socialHelp" class="form-text text-muted">Ejemplo: auditoria...</small>
+                <small id="razon_socialHelp" class="form-text text-muted">Ejemplo: Banco...</small>
                 <div class="mensaje"></div>
               </div>
             </form>
