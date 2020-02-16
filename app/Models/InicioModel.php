@@ -62,7 +62,10 @@ class InicioModel extends Model
                          AND m.id_estatus = 1');
 
       if(empty($sql)){
-        return array();
+
+        $menu->submenu = [];
+        return $menu;
+        
       }else{
 
         if(!property_exists($menu, "submenu")){

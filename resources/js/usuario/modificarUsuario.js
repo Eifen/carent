@@ -701,9 +701,6 @@ var app = new Vue({
         self.actualizar();
       }
 
-    },
-    refreshView: function(){
-      window.location.href = "/formNuevoUsuario";
     }
 
   }// Fin methods
