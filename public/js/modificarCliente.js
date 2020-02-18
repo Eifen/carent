@@ -41021,6 +41021,7 @@ var datosIniciales = function datosIniciales() {
         resolve({
           infoClie: response.data.info,
           detalleUsuario: response.data.info,
+          detalleUsuarioG: response.data.info,
           estadosfi: response.data.estadosfi,
           municipiosfi: response.data.municipiosfi,
           parroquiasfi: response.data.parroquiasfi,
@@ -41198,11 +41199,33 @@ var app = new Vue({
         value: ""
       }
     },
+    formSearchG: {
+      submitG: {
+        disabled: true,
+        html: "BuscaRr"
+      },
+      inputSearchG: {
+        disabled: true,
+        value: ""
+      },
+      selectG: {
+        disabled: false,
+        value: ""
+      }
+    },
     usuarios: {
       mostrar: false,
       registros: []
     },
     detalleUsuario: {
+      error: false,
+      data: []
+    },
+    usuariosG: {
+      mostrar: false,
+      registros: []
+    },
+    detalleUsuarioG: {
       error: false,
       data: []
     },
@@ -41233,10 +41256,11 @@ var app = new Vue({
                 self.idCliente = dataInit.infoClie.id;
                 self.detalleUsuario.data.id = dataInit.infoClie.id_usuario;
                 self.detalleUsuario.data.codigo = dataInit.infoClie.codigoU;
-                self.detalleUsuario.data.nombre_1 = dataInit.infoClie.nombre_1;
-                self.detalleUsuario.data.nombre_2 = dataInit.infoClie.nombre_2;
-                self.detalleUsuario.data.apellido_1 = dataInit.infoClie.apellido_1;
+                self.detalleUsuario.data.nombre = dataInit.infoClie.nombre;
+                self.detalleUsuarioG.data.codigo = dataInit.infoClie.codigoG;
+                self.detalleUsuarioG.data.nombre = dataInit.infoClie.nombreG;
                 self.formSearch.inputSearch.value = dataInit.infoClie.codigoU;
+                self.formSearchG.inputSearchG.value = dataInit.infoClie.codigoG;
                 self.form.codigoCliente.value = dataInit.infoClie.codigo;
                 self.form.rif.value = dataInit.infoClie.rif;
                 self.form.nit.value = dataInit.infoClie.nit;
@@ -41437,6 +41461,51 @@ var app = new Vue({
         zenscroll.toY($(".inputSearch").offset().top - 100);
       }
     },
+    buscarG: function buscarG(e) {
+      self.alert.mostrar = false;
+
+      if (self.formSearchG.inputSearchG.value.trim() !== "") {
+        self.formSearchG.submitG.html = '<i class="fas fa-cog fa-spin"></i>';
+        self.formSearchG.submitG.disabled = true;
+        var parametros = {
+          buscarPor: self.formSearchG.selectG.value,
+          dato: self.formSearchG.inputSearchG.value
+        };
+        axios.get('/buscarUsuariosG', {
+          params: parametros
+        }).then(function (response) {
+          self.formSearchG.submitG.html = 'Buscar';
+          self.formSearchG.submitG.disabled = false;
+
+          if (response.status === 200 && response.data.response === true) {
+            self.usuariosG.mostrar = true;
+            self.usuariosG.registros = response.data.usuariosG;
+            $('#modal-detalle-usuarioG').modal("show");
+            $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
+          } else {
+            throw response.data;
+          }
+        })["catch"](function (error) {
+          self.formSearchG.submitG.html = 'Buscar';
+          self.formSearchG.submitG.disabled = false;
+          self.alert.mostrar = true;
+          self.usuariosG.registros = [];
+          self.usuariosG.mostrar = false;
+
+          if (error.response) {
+            var message = "Existe un error!, consulte con el administrador del sistema.";
+          } else {
+            var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+          }
+
+          self.alert.message = message;
+        });
+      } else {
+        $(".inputSearchG").parent().find(".mensaje").html("Campo requerido").addClass("invalid-feedback");
+        $(".inputSearchG").addClass("error");
+        zenscroll.toY($(".inputSearchG").offset().top - 100);
+      }
+    },
     tipoFiltro: function tipoFiltro(e) {
       var opcion = parseInt(e.target.value);
       var valoresPermitidos = [1, 2, 3, 4];
@@ -41451,6 +41520,20 @@ var app = new Vue({
         self.formSearch.submit.disabled = true;
       }
     },
+    tipoFiltroG: function tipoFiltroG(e) {
+      var opcion = parseInt(e.target.value);
+      var valoresPermitidos = [1, 2, 3, 4];
+      self.usuariosG.mostrar = false;
+      self.usuariosG.registros = [];
+
+      if (valoresPermitidos.includes(opcion)) {
+        self.formSearchG.inputSearchG.disabled = false;
+        self.formSearchG.submitG.disabled = false;
+      } else {
+        self.formSearchG.inputSearchG.disabled = true;
+        self.formSearchG.submitG.disabled = true;
+      }
+    },
     evaluarCampo: function evaluarCampo(id, e) {
       if (e.target.type === 'text') {
         self.formSearch[id].value = e.target.value.trim() === "" ? "" : $(e.target).val();
@@ -41459,6 +41542,18 @@ var app = new Vue({
       if (id === "inputSearch" && self.formSearch["inputSearch"].value.trim() === "") {
         self.usuarios.registros = [];
         self.usuarios.mostrar = false;
+      }
+
+      self.limpiarMensajeError(e);
+    },
+    evaluarCampoG: function evaluarCampoG(id, e) {
+      if (e.target.type === 'text') {
+        self.formSearchG[id].value = e.target.value.trim() === "" ? "" : $(e.target).val();
+      }
+
+      if (id === "inputSearchG" && self.formSearchG["inputSearchG"].value.trim() === "") {
+        self.usuariosG.registros = [];
+        self.usuariosG.mostrar = false;
       }
 
       self.limpiarMensajeError(e);
@@ -41480,6 +41575,26 @@ var app = new Vue({
       })["catch"](function (error) {
         self.detalleUsuario.error = true;
         $('#modal-detalle-usuario').modal("show");
+        $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
+      });
+    },
+    SelecionarUsuarioG: function SelecionarUsuarioG(idUsuario, e) {
+      self.detalleUsuarioG.error = false;
+      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
+      var parametros = {
+        idUsuario: idUsuario
+      };
+      axios.get('/detalleUsuario', {
+        params: parametros
+      }).then(function (response) {
+        if (response.status === 200 && response.data.response === true) {
+          self.detalleUsuarioG.data = response.data.info;
+        } else {
+          throw response.data;
+        }
+      })["catch"](function (error) {
+        self.detalleUsuarioG.error = true;
+        $('#modal-detalle-usuarioG').modal("show");
         $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
       });
     },
@@ -41673,6 +41788,7 @@ var app = new Vue({
         var parametros = {
           idCliente: self.idCliente,
           idUsuario: self.detalleUsuario.data.id,
+          idUsuario2: self.detalleUsuarioG.data.id,
           codigoCliente: AutoNumeric.getAutoNumericElement("#codigoCliente").getNumber(),
           rif: AutoNumeric.getAutoNumericElement("#rif").getNumber(),
           nit: AutoNumeric.getAutoNumericElement("#nit").getNumber(),

@@ -170,11 +170,33 @@ var app = new Vue({
         value: ""
       }
     },
+    formSearchG: {
+      submitG: {
+        disabled: true,
+        html: "BuscaRr"
+      },
+      inputSearchG: {
+        disabled: true,
+        value: ""
+      },
+      selectG: {
+        disabled:false,
+        value: ""
+      }
+    },
     usuarios: {
       mostrar: false,
       registros: []
     },
     detalleUsuario: {
+      error: false,
+      data: []
+    },
+    usuariosG: {
+      mostrar: false,
+      registros: []
+    },
+    detalleUsuarioG: {
       error: false,
       data: []
     },
@@ -332,6 +354,74 @@ var app = new Vue({
       }
 
     },
+    buscarG: function(e){
+
+      self.alert.mostrar = false;
+
+      if(self.formSearchG.inputSearchG.value.trim() !== ""){
+
+        self.formSearchG.submitG.html = '<i class="fas fa-cog fa-spin"></i>';
+        self.formSearchG.submitG.disabled = true;
+
+        let parametros = {
+          buscarPor: self.formSearchG.selectG.value,
+          dato: self.formSearchG.inputSearchG.value
+        };
+
+        axios.get('/buscarUsuariosG', {params: parametros})
+        .then(function (response) {
+
+          self.formSearchG.submitG.html = 'Buscar';
+          self.formSearchG.submitG.disabled = false;
+
+          if(response.status === 200 && response.data.response === true){
+
+            self.usuariosG.mostrar = true;
+            self.usuariosG.registros = response.data.usuariosG;
+            $('#modal-detalle-usuarioG').modal("show");
+            $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
+
+
+          }else{
+
+            throw response.data;
+
+          }
+
+        })
+        .catch(error => {
+
+          self.formSearchG.submitG.html = 'Buscar';
+          self.formSearchG.submitG.disabled = false;
+
+          self.alert.mostrar = true;
+
+          self.usuariosG.registros = [];
+          self.usuariosG.mostrar = false;
+
+          if(error.response){
+
+            var message = "Existe un error!, consulte con el administrador del sistema.";
+
+          }else{
+
+            var message = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+
+          }
+
+          self.alert.message = message;
+
+        });
+
+      }else{
+
+        $(".inputSearchG").parent().find(".mensaje").html("Campo requerido").addClass("invalid-feedback");
+        $(".inputSearchG").addClass("error");
+        zenscroll.toY($(".inputSearchG").offset().top - 100);
+
+      }
+
+    },
     tipoFiltro: function(e){
 
       let opcion = parseInt(e.target.value);
@@ -349,6 +439,23 @@ var app = new Vue({
       }
 
     },
+    tipoFiltroG: function(e){
+
+      let opcion = parseInt(e.target.value);
+      let valoresPermitidos = [1,2,3,4];
+
+      self.usuariosG.mostrar = false;
+      self.usuariosG.registros = [];
+
+      if(valoresPermitidos.includes(opcion)){
+        self.formSearchG.inputSearchG.disabled = false;
+        self.formSearchG.submitG.disabled = false;
+      }else{
+        self.formSearchG.inputSearchG.disabled = true;
+        self.formSearchG.submitG.disabled = true;
+      }
+
+    },
     evaluarCampo: function(id, e){
 
       if(e.target.type === 'text'){
@@ -358,6 +465,20 @@ var app = new Vue({
       if(id === "inputSearch" && self.formSearch["inputSearch"].value.trim() === ""){
         self.usuarios.registros = [];
         self.usuarios.mostrar = false;
+      }
+
+      self.limpiarMensajeError(e);
+
+    },
+    evaluarCampoG: function(id, e){
+
+      if(e.target.type === 'text'){
+        self.formSearchG[id].value = (e.target.value.trim() === "") ? "" : $(e.target).val();
+      }
+
+      if(id === "inputSearchG" && self.formSearchG["inputSearchG"].value.trim() === ""){
+        self.usuariosG.registros = [];
+        self.usuariosG.mostrar = false;
       }
 
       self.limpiarMensajeError(e);
@@ -391,6 +512,38 @@ var app = new Vue({
 
         self.detalleUsuario.error = true;
         $('#modal-detalle-usuario').modal("show");
+        $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
+
+      });
+
+    },
+    SelecionarUsuarioG: function(idUsuario,e){
+
+      self.detalleUsuarioG.error = false;
+      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
+
+      let parametros = {
+        idUsuario: idUsuario
+      };
+
+      axios.get('/detalleUsuario', {params: parametros})
+      .then(function (response) {
+
+        if(response.status === 200 && response.data.response === true){
+
+          self.detalleUsuarioG.data = response.data.info;
+
+        }else{
+
+          throw response.data;
+
+        }
+
+      })
+      .catch(error => {
+
+        self.detalleUsuarioG.error = true;
+        $('#modal-detalle-usuarioG').modal("show");
         $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
 
       });
@@ -756,6 +909,7 @@ var app = new Vue({
         //Obtenemos valores
         let parametros = {
           idUsuario: self.detalleUsuario.data.id,
+          idUsuario2: self.detalleUsuarioG.data.id,
           codigoCliente: AutoNumeric.getAutoNumericElement("#codigoCliente").getNumber(),
           rif: AutoNumeric.getAutoNumericElement("#rif").getNumber(),
           nit: AutoNumeric.getAutoNumericElement("#nit").getNumber(),
@@ -812,7 +966,7 @@ var app = new Vue({
         })
         .catch(error => {
 
-          var indices = ["idUsuario","codigoCliente","rif","nit","razon_social","ciudad_fiscal","avenida_calle_fiscal","edificio_quinta_fiscal","piso_fiscal","numero_fiscal","telefono_fiscal","fax_fiscal","email_fiscal","descripcion_factura","parroquia_factura","ciudad_factura","avenida_calle_factura","edificio_quinta_factura","piso_factura","numero_factura","telefono_factura","fax_factura","correo_factura"];
+          var indices = ["idUsuario","idUsuario2","codigoCliente","rif","nit","razon_social","ciudad_fiscal","avenida_calle_fiscal","edificio_quinta_fiscal","piso_fiscal","numero_fiscal","telefono_fiscal","fax_fiscal","email_fiscal","descripcion_factura","parroquia_factura","ciudad_factura","avenida_calle_factura","edificio_quinta_factura","piso_factura","numero_factura","telefono_factura","fax_factura","correo_factura"];
   
           if(self.form.empleado.checked){
             indices.push("estadofi","municipiofi","parroquiafi","estadofa","municipiofa","parroquiafa");

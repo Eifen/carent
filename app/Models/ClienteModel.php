@@ -49,6 +49,48 @@ class ClienteModel extends Model
       return array();
     }
   }
+  function buscarUsuariosG($opcionBusqueda, $dato, $cargo){
+
+    switch ((int) $opcionBusqueda) {
+      case 1:
+        $condicion = "WHERE u.codigo LIKE '%".$dato."%'";
+      break;
+      case 2:
+        $condicion = "WHERE u.cedula LIKE '%".$dato."%'";
+      break;
+      case 3:
+        $condicion = "WHERE (u.nombre_1 LIKE '%".$dato."%' OR u.nombre_2 LIKE '%".$dato."%')";
+      break;
+      case 4:
+        $condicion = "WHERE (u.apellido_1 LIKE '%".$dato."%' OR u.apellido_2 LIKE '%".$dato."%')";
+      break;
+      default:
+        $condicion = "WHERE u.codigo LIKE %'".$dato."'%";
+      break;
+    }
+    $usuariosG = DB::select('SELECT u.id,
+                                   u.codigo,
+                                   u.avatar,
+                                   u.cedula,
+                                   u.id_cargo,
+                                   (SELECT ce.descripcion FROM tbl_cargo_empleado ce WHERE ce.id = u.id_cargo) cargo,
+                                   CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS nombre,
+                                   e.descripcion AS estatus,
+                                   cu.correo_principal
+                            FROM tbl_usuario u,
+                                 tbl_estatus e,
+                                 tbl_contacto_usuario cu
+                            '.$condicion.'
+                            AND u.id_cargo > '.$cargo.'
+                            AND e.tabla = "tbl_usuario"
+                            AND e.valor = u.id_estatus
+                            AND u.id = cu.id_usuario');
+    if(count($usuariosG) > 0){
+      return $usuariosG;
+    }else{
+      return array();
+    }
+  }
 
   function detalleUsuario($id_usuario){
 
@@ -56,10 +98,7 @@ class ClienteModel extends Model
                                u.codigo,
                                u.avatar,
                                u.cedula,
-                               u.nombre_1,
-                               u.nombre_2,
-                               u.apellido_1,
-                               u.apellido_2,
+                               CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS nombre,
                                u.fecha_nacimiento,
                                e.descripcion AS estatus,
                                cu.correo_principal,
@@ -157,6 +196,7 @@ class ClienteModel extends Model
 
     DB::beginTransaction();
     $data = array("id_usuario" => $parametros["idUsuario"],
+                  "id_usuario2" => $parametros["idUsuario2"],
                   "codigo" => $parametros["codigoCliente"],
                   "rif" => $parametros["rif"],
                   "nit" => $parametros["nit"],
@@ -223,10 +263,11 @@ class ClienteModel extends Model
 
     $info = DB::select('SELECT id,
                                 id_usuario,
+                                id_usuario2,
                                 (SELECT codigo FROM tbl_usuario WHERE id_usuario = id) codigoU,
-                                (SELECT nombre_1 FROM tbl_usuario WHERE id_usuario = id) nombre_1,
-                                (SELECT nombre_2 FROM tbl_usuario WHERE id_usuario = id) nombre_2,
-                                (SELECT apellido_1 FROM tbl_usuario WHERE id_usuario = id) apellido_1,
+                                (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE id_usuario = id) nombre,
+                                (SELECT codigo FROM tbl_usuario WHERE id_usuario2 = id) codigoG,
+                                (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE id_usuario2 = id) nombreG,
                                 codigo,
                                 rif,
                                 nit,
@@ -282,10 +323,11 @@ class ClienteModel extends Model
 
     $info = DB::select('SELECT id,
                                  id_usuario,
+                                 id_usuario2,
                                  (SELECT codigo FROM tbl_usuario WHERE id_usuario = id) codigoU,
-                                 (SELECT nombre_1 FROM tbl_usuario WHERE id_usuario = id) nombre_1,
-                                 (SELECT nombre_2 FROM tbl_usuario WHERE id_usuario = id) nombre_2,
-                                 (SELECT apellido_1 FROM tbl_usuario WHERE id_usuario = id) apellido_1,
+                                (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE id_usuario = id) nombre,
+                                (SELECT codigo FROM tbl_usuario WHERE id_usuario2 = id) codigoG,
+                                (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE id_usuario2 = id) nombreG,
                                  codigo,
                                  rif,
                                  nit,
@@ -342,6 +384,7 @@ class ClienteModel extends Model
     try {
       $data = array(
                     "id_usuario" => $parametros["idUsuario"],
+                    "id_usuario2" => $parametros["idUsuario2"],
                     "rif" => $parametros["rif"],
                     "nit" => $parametros["nit"],
                     "razon_social" => $parametros["razon_social"],

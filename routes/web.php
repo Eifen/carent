@@ -46,6 +46,8 @@ Route::get('/formBuscarCliente', function() {return view('cliente/buscarCliente'
 Route::get('/buscarClientes', 'ClienteController@buscarClientes');
 Route::get('/detalleCliente', 'ClienteController@detalleCliente');
 Route::get('/buscarUsuarios', 'ClienteController@buscarUsuarios');
+Route::get('/buscarUsuarios', 'ClienteController@buscarUsuarios');
+Route::get('/buscarUsuariosG', 'ClienteController@buscarUsuariosG');
 Route::get('/detalleUsuario', 'ClienteController@detalleUsuario');
 Route::get('/formModificarCliente/{idCliente}', 'ClienteController@formModificarCliente')->where('idCliente', '[0-9]+');//Validamos que solo pase números*/
 Route::get('/detalleClienteModificar', 'ClienteController@detalleClienteModificar');

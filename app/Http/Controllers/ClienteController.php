@@ -47,6 +47,20 @@ class ClienteController extends Controller
     }
     return $response;
   }
+  function buscarUsuariosG(Request $request){
+
+    $modelo = new ClienteModel();
+    $cargo = 11;
+    $buscarPor = (int) $request->input("buscarPor");
+    $dato = strtolower($request->input("dato"));
+    $usuariosG = $modelo->buscarUsuariosG($buscarPor, $dato, $cargo);     
+    if(!empty($usuariosG)){
+      $response = array("response" => true, "usuariosG" => $usuariosG);
+    }else{
+      $response = array("response" => false, "message" => "No se encontraron resultados");
+    }
+    return $response;
+  }
 
   function detalleUsuario(Request $request){
 
@@ -71,6 +85,7 @@ class ClienteController extends Controller
       if(!$email["response"]){
         $parametros = array(
           "idUsuario" => (int) $request->input("idUsuario"),
+          "idUsuario2" => (int) $request->input("idUsuario2"),
           "codigoCliente" => $request->input("codigoCliente"),
           "rif" => $request->input("rif"),
           "nit" => $request->input("nit"),
@@ -180,6 +195,7 @@ class ClienteController extends Controller
     $parametros = array(
       "idCliente" => $request->input("idCliente"),
       "idUsuario" => (int) $request->input("idUsuario"),
+      "idUsuario2" => (int) $request->input("idUsuario2"),
       "rif" => $request->input("rif"),
       "nit" => $request->input("nit"),
       "razon_social" => mb_strtoupper ($request->input("razon_social")),

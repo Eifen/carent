@@ -30,15 +30,6 @@ html {
 #modificarUsuario .wrapper-forms form:hover {
   box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
 }
-#modificarUsuario .wrapper-forms form > div.logo {
-  margin-bottom: 40px;
-  margin-top: 30px;
-  text-align: center;
-}
-#modificarUsuario .wrapper-forms form > div.logo img {
-  height: 90px;
-  width: auto;
-}
 #modificarUsuario .wrapper-forms form > div.wrapper-required-legend {
   margin-bottom: 20px;
 }

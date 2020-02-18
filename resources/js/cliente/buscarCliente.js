@@ -127,7 +127,7 @@ var app = new Vue({
     tipoFiltro: function(e){
 
       let opcion = parseInt(e.target.value);
-      let valoresPermitidos = [1,2,3];
+      let valoresPermitidos = [1,2,3,4];
 
       self.clientes.mostrar = false;
       self.clientes.registros = [];
