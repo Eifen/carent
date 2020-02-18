@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.1
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 24-01-2020 a las 16:26:12
--- Versión del servidor: 5.7.22
--- Versión de PHP: 7.1.18
+-- Tiempo de generación: 18-02-2020 a las 11:51:13
+-- Versión del servidor: 8.0.18
+-- Versión de PHP: 7.3.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -582,6 +582,7 @@ INSERT INTO `tbl_ciudades` (`id_ciudad`, `id_estado`, `ciudad`, `capital`) VALUE
 CREATE TABLE `tbl_cliente` (
   `id` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
+  `id_usuario2` int(11) NOT NULL,
   `codigo` int(11) NOT NULL,
   `rif` varchar(15) NOT NULL,
   `nit` int(11) NOT NULL,
@@ -592,7 +593,7 @@ CREATE TABLE `tbl_cliente` (
   `piso_fiscal` varchar(3) NOT NULL,
   `numero_fiscal` varchar(5) NOT NULL,
   `ciudad_fiscal` varchar(50) NOT NULL,
-  `telefono_fiscal` varchar(11) NOT NULL,
+  `telefono_fiscal` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `fax_fiscal` varchar(11) NOT NULL,
   `email_fiscal` varchar(100) NOT NULL,
   `descripcion_factura` varchar(500) NOT NULL,
@@ -602,10 +603,17 @@ CREATE TABLE `tbl_cliente` (
   `piso_factura` varchar(3) NOT NULL,
   `numero_factura` varchar(5) NOT NULL,
   `ciudad_factura` varchar(50) NOT NULL,
-  `telefono_factura` varchar(11) NOT NULL,
+  `telefono_factura` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `fax_factura` varchar(11) NOT NULL,
   `correo_factura` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `tbl_cliente`
+--
+
+INSERT INTO `tbl_cliente` (`id`, `id_usuario`, `id_usuario2`, `codigo`, `rif`, `nit`, `razon_social`, `id_parroquia_fiscal`, `avenida_calle_fiscal`, `edificio_quinta_fiscal`, `piso_fiscal`, `numero_fiscal`, `ciudad_fiscal`, `telefono_fiscal`, `fax_fiscal`, `email_fiscal`, `descripcion_factura`, `id_parroquia_factura`, `avenida_calle_factura`, `edificio_quinta_factura`, `piso_factura`, `numero_factura`, `ciudad_factura`, `telefono_factura`, `fax_factura`, `correo_factura`) VALUES
+(1, 1, 1, 111, '234', 122, 'BANCOS..', 1, 'D', 'DD', '2', '2', 'FD', '(2222) - 222 2222', '22', 'fj@gmail.com', 'INVENTARIO', 8, 'DFDS', 'DF', '2', '1', 'DFAS', '(1111) - 111 1111', '111', 'ko@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -650,7 +658,8 @@ CREATE TABLE `tbl_contacto_usuario` (
 INSERT INTO `tbl_contacto_usuario` (`id`, `id_usuario`, `correo_principal`, `correo_secundario`, `telefono_principal`, `telefono_secundario`) VALUES
 (1, 1, 'dmolina101@gmail.com', '', '(0000) - 000 0000', '(0000) - 000 0002'),
 (2, 2, 'josearturo0706@gmail.com', '', '', ''),
-(3, 3, 'ana.blandin@crowe.com.ve', '', '', '');
+(3, 3, 'ana.blandin@crowe.com.ve', '', '', ''),
+(4, 4, 'josemadriz0706@gmail.com', '', '(0412) - 825 9076', NULL);
 
 -- --------------------------------------------------------
 
@@ -819,7 +828,10 @@ CREATE TABLE `tbl_menu_usuario` (
 INSERT INTO `tbl_menu_usuario` (`id`, `id_usuario`, `id_menu`) VALUES
 (1, 1, 3),
 (2, 1, 2),
-(3, 1, 5);
+(3, 1, 5),
+(4, 5, 3),
+(5, 5, 2),
+(6, 5, 5);
 
 -- --------------------------------------------------------
 
@@ -2392,7 +2404,9 @@ CREATE TABLE `tbl_usuario` (
 INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `cedula`, `nombre_1`, `nombre_2`, `apellido_1`, `apellido_2`, `fecha_nacimiento`, `id_cargo`, `id_division`, `id_parroquia`, `avatar`, `id_estatus`) VALUES
 (1, '0001', 'eyJpdiI6IkMwNDJraDByc2V2WFU2MVZjWEtSVUE9PSIsInZhbHVlIjoiRHV3bGwreDdaXC9qeFNqMndXdFZMQXc9PSIsIm1hYyI6ImJmYzczMGMyODY2NjQyNzk0MGM3YThmN2IwMzg0OWRlZmQzMTgwNGViOTcxYmJkZTk2MTEyODVhN2ExNmY2MWQifQ==', 17671370, 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '01/01/1980', 16, 3, 1131, '', 1),
 (2, '11525', 'eyJpdiI6IkVjZ2oySWtNK3N3ckp0SGJLVGZxMGc9PSIsInZhbHVlIjoick52NFY1bWNFUUloQXo2cXNDallPUT09IiwibWFjIjoiYjVmNTlmZWQyZGVhYjEyNmI5YjcxZmM4ZDY2NGI3ZmU1OTQ3YTEyZjBlYzU0YmJiYWY0YmVmMDk3ZjA2OTgwMiJ9', 0, '', NULL, '', NULL, NULL, NULL, NULL, NULL, '', 1),
-(3, '11450', 'eyJpdiI6Im5MWkhxSEVKV2N3ZkhJZ01XZTU2eFE9PSIsInZhbHVlIjoiZ2N3a2l2Nm1DNHFKMGtPYkp4ZmdzQT09IiwibWFjIjoiMTNmNTllMGNjNTc0MjNlMWMwYzkwYTA0NGYyNzQ5ZmU5YTg4M2YzMDIzZGMyNzVhNjllNmRhNDYzOWQ3Yzc1NyJ9', 0, '', NULL, '', NULL, NULL, NULL, NULL, NULL, '', 1);
+(3, '11450', 'eyJpdiI6Im5MWkhxSEVKV2N3ZkhJZ01XZTU2eFE9PSIsInZhbHVlIjoiZ2N3a2l2Nm1DNHFKMGtPYkp4ZmdzQT09IiwibWFjIjoiMTNmNTllMGNjNTc0MjNlMWMwYzkwYTA0NGYyNzQ5ZmU5YTg4M2YzMDIzZGMyNzVhNjllNmRhNDYzOWQ3Yzc1NyJ9', 0, '', NULL, '', NULL, NULL, NULL, NULL, NULL, '', 1),
+(4, '22522', 'eyJpdiI6InhUdW90cklRZnVNaXdXenorMU1TclE9PSIsInZhbHVlIjoidktwMTl1SkZMNURscXBzRTVNS2FSUT09IiwibWFjIjoiOWQyYjczN2ZlNDE0YWUwMGQ1ZGUzZmQ3ZjM5YWY1OWM4ZDMyNTRjNGM4MjhmZDUwYWFlNTEwY2NjZjVjMzRiZiJ9', 25209317, 'JOSE', 'ARTURO', 'MADRIZ', 'MALAVE', '07/06/1196', 16, 3, 1133, '', 1),
+(5, '12345', 'eyJpdiI6IjQ1NFBGbjFaVXRcL24wVkthVUtnUzFRPT0iLCJ2YWx1ZSI6IitrS0JBWGtcL0UwbWhINWtPaEJaRlVnPT0iLCJtYWMiOiI3YjFlYTk3YzhlNWRmYTkyZmVlNWIzMDhiNjM5ZjY2NjRjZmExZGU2MjA0MjQ3YmQ4YTk3MTk5OGVhYTc4NDA5In0=', 25209316, 'JOSE', '', 'MALAVE', '', '11/11/1999', 16, 3, 116, NULL, 1);
 
 --
 -- Índices para tablas volcadas
@@ -2517,7 +2531,7 @@ ALTER TABLE `tbl_ciudades`
 -- AUTO_INCREMENT de la tabla `tbl_cliente`
 --
 ALTER TABLE `tbl_cliente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_configuracion`
@@ -2529,7 +2543,7 @@ ALTER TABLE `tbl_configuracion`
 -- AUTO_INCREMENT de la tabla `tbl_contacto_usuario`
 --
 ALTER TABLE `tbl_contacto_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_division`
@@ -2559,7 +2573,7 @@ ALTER TABLE `tbl_menu`
 -- AUTO_INCREMENT de la tabla `tbl_menu_usuario`
 --
 ALTER TABLE `tbl_menu_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_municipios`
@@ -2589,7 +2603,7 @@ ALTER TABLE `tbl_tipo_contacto`
 -- AUTO_INCREMENT de la tabla `tbl_usuario`
 --
 ALTER TABLE `tbl_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Restricciones para tablas volcadas
