@@ -41426,7 +41426,7 @@ var app = new Vue({
           buscarPor: self.formSearch.select.value,
           dato: self.formSearch.inputSearch.value
         };
-        axios.get('/buscarUsuarios', {
+        axios.get('/buscarUsuariosS', {
           params: parametros
         }).then(function (response) {
           self.formSearch.submit.html = 'Buscar';
@@ -41564,7 +41564,7 @@ var app = new Vue({
       var parametros = {
         idUsuario: idUsuario
       };
-      axios.get('/detalleUsuario', {
+      axios.get('/detalleUsuarios', {
         params: parametros
       }).then(function (response) {
         if (response.status === 200 && response.data.response === true) {
@@ -41584,7 +41584,7 @@ var app = new Vue({
       var parametros = {
         idUsuario: idUsuario
       };
-      axios.get('/detalleUsuario', {
+      axios.get('/detalleUsuarios', {
         params: parametros
       }).then(function (response) {
         if (response.status === 200 && response.data.response === true) {

@@ -300,7 +300,7 @@ var app = new Vue({
           dato: self.formSearch.inputSearch.value
         };
 
-        axios.get('/buscarUsuarios', {params: parametros})
+        axios.get('/buscarUsuariosS', {params: parametros})
         .then(function (response) {
 
           self.formSearch.submit.html = 'Buscar';
@@ -494,7 +494,7 @@ var app = new Vue({
         idUsuario: idUsuario
       };
 
-      axios.get('/detalleUsuario', {params: parametros})
+      axios.get('/detalleUsuarios', {params: parametros})
       .then(function (response) {
 
         if(response.status === 200 && response.data.response === true){
@@ -526,7 +526,7 @@ var app = new Vue({
         idUsuario: idUsuario
       };
 
-      axios.get('/detalleUsuario', {params: parametros})
+      axios.get('/detalleUsuarios', {params: parametros})
       .then(function (response) {
 
         if(response.status === 200 && response.data.response === true){
