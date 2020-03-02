@@ -1,0 +1,135 @@
+/*@font-face {
+  font-family: "Rawline";
+  src: url("../../fonts/rawline/rawline-600.ttf");
+}*/
+html {
+  overflow-x: hidden;
+}
+#nuevoUsuario {
+  background-color: #E9ECEF;
+}
+#nuevoUsuario .wrapper-forms {
+  padding-bottom: 50px;
+  padding-top: 100px;
+}
+@media (max-width: 575px) {
+  #nuevoUsuario .wrapper-forms {
+    padding-bottom: 0px;
+    padding-top: 50px;
+  }
+}
+#nuevoUsuario .wrapper-forms form {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.13);
+  border-radius: 3px;
+  margin-bottom: 50px;
+  padding: 15px;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+#nuevoUsuario .wrapper-forms form:hover {
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+}
+#nuevoUsuario .wrapper-forms form > div.logo {
+  margin-bottom: 40px;
+  margin-top: 30px;
+  text-align: center;
+}
+#nuevoUsuario .wrapper-forms form > div.logo img {
+  height: 90px;
+  width: auto;
+}
+#nuevoUsuario .wrapper-forms form > div.wrapper-required-legend {
+  margin-bottom: 20px;
+}
+#nuevoUsuario .wrapper-forms form > div.wrapper-required-legend .campo-obligatorio {
+  color: #cc0000;
+}
+#nuevoUsuario .wrapper-forms form > div.form-group .campo-obligatorio {
+  color: #cc0000;
+}
+#nuevoUsuario .wrapper-forms form > div.form-group label {
+  color: #091F40;
+}
+#nuevoUsuario .wrapper-forms form > div.form-group label.label-warning {
+  color: #cc0000;
+}
+#nuevoUsuario .wrapper-forms form > div.form-group .invalid-feedback {
+  display: block !important;
+}
+#nuevoUsuario .wrapper-forms form > div.form-group .form-control {
+  border-radius: 2px;
+}
+#nuevoUsuario .wrapper-forms form > div.form-group .form-control.error {
+  border-color: #dc3545;
+}
+#nuevoUsuario .wrapper-forms form > div.form-group .form-control:disabled {
+  cursor: not-allowed;
+}
+#nuevoUsuario .wrapper-forms form > div.wrapper-recovery-pass {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+#nuevoUsuario .wrapper-forms form > div.wrapper-recovery-pass .recuperarClave {
+  color: #007BFF;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+#nuevoUsuario .wrapper-forms form > div.wrapper-recovery-pass .recuperarClave:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+#nuevoUsuario .wrapper-forms .wrapper-subtmit > div {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+#nuevoUsuario .wrapper-forms .wrapper-subtmit > div .btn {
+  background-color: #091F40;
+  border: 2px solid #091F40;
+  border-radius: 2px;
+  color: #ffffff;
+  font-weight: 600;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  width: 100%;
+}
+#nuevoUsuario .wrapper-forms .wrapper-subtmit > div .btn:hover {
+  background-color: #F6A81C;
+  color: #091F40;
+}
+#nuevoUsuario .wrapper-forms .wrapper-subtmit > div .btn:disabled {
+  cursor: not-allowed;
+}
+#nuevoUsuario .wrapper-forms .wrapper-refrescar > div {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+#nuevoUsuario .wrapper-forms .wrapper-refrescar > div .btn {
+  background-color: #091F40;
+  border: 2px solid #091F40;
+  border-radius: 2px;
+  color: #ffffff;
+  font-weight: 600;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  width: 100%;
+}
+#nuevoUsuario .wrapper-forms .wrapper-refrescar > div .btn:hover {
+  background-color: #F6A81C;
+  color: #091F40;
+}
+#nuevoUsuario .wrapper-forms .wrapper-refrescar > div .btn:disabled {
+  cursor: not-allowed;
+}
+#nuevoUsuario .wrapper-forms .wrapper-alert {
+  margin-top: 15px;
+}
+#nuevoUsuario .wrapper-forms .wrapper-alert > div {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+#nuevoUsuario .wrapper-forms .wrapper-alert > div .alert {
+  margin-bottom: 0px;
+  text-align: center;
+  width: 100%;
+}

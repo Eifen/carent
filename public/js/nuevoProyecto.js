@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 10);
+/******/ 	return __webpack_require__(__webpack_require__.s = 12);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -40305,10 +40305,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/crea/nuevoCargo.js":
-/*!*****************************************!*\
-  !*** ./resources/js/crea/nuevoCargo.js ***!
-  \*****************************************/
+/***/ "./resources/js/proyecto/nuevoProyecto.js":
+/*!************************************************!*\
+  !*** ./resources/js/proyecto/nuevoProyecto.js ***!
+  \************************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -40332,33 +40332,301 @@ var self;
 Vue.use(vue_the_mask__WEBPACK_IMPORTED_MODULE_0___default.a);
 Vue.component('menu-principal', __webpack_require__(/*! ../components/menuPrincipal.vue */ "./resources/js/components/menuPrincipal.vue")["default"]);
 var app = new Vue({
-  el: '#nuevoCargo',
+  el: '#nuevoUsuario',
   data: {
     alertForm: {
       "class": "",
       message: "",
       show: false
     },
+    comboEstados: [],
+    comboMunicipios: [],
+    comboParroquias: [],
+    comboDivisiones: [],
+    comboCargos: [],
     refreshForm: false,
     form: {
-      nuevoCargo: {
+      nombre1: {
         disabled: false,
         value: ""
+      },
+      nombre2: {
+        disabled: false,
+        value: ""
+      },
+      apellido1: {
+        disabled: false,
+        value: ""
+      },
+      apellido2: {
+        disabled: false,
+        value: ""
+      },
+      fechaNacimiento: {
+        disabled: false,
+        value: ""
+      },
+      codigoUsuario: {
+        disabled: false,
+        value: ""
+      },
+      cedula: {
+        disabled: false,
+        value: ""
+      },
+      estado: {
+        disabled: true,
+        validar: false,
+        value: ""
+      },
+      municipio: {
+        disabled: true,
+        help: "Municipio de la oficina en donde se desempeña",
+        validar: false,
+        value: ""
+      },
+      parroquia: {
+        disabled: true,
+        help: "Parroquia de la oficina en donde se desempeña",
+        validar: false,
+        value: ""
+      },
+      division: {
+        disabled: true,
+        validar: false,
+        value: ""
+      },
+      cargo: {
+        disabled: true,
+        validar: false,
+        value: ""
+      },
+      correoPrincipal: {
+        disabled: false,
+        value: ""
+      },
+      correoSecundario: {
+        disabled: false,
+        validar: false,
+        value: ""
+      },
+      telefono1: {
+        disabled: false,
+        value: ""
+      },
+      telefono2: {
+        disabled: false,
+        value: ""
+      },
+      empleado: {
+        checked: false
       }
     },
     submitCrear: {
-      content: "Crear Cargo",
+      content: "Crear nuevo Usuario",
       disabled: false,
       show: true
-    }
+    },
+    key: null,
+    iv: null
   },
   beforeCreate: function beforeCreate() {
     self = this;
+    axios.get('/encryptConfig').then(function (response) {
+      if (response.status === 200 && response.data.key && response.data.iv) {
+        self.key = response.data.key;
+        self.iv = response.data.iv;
+      } else {
+        throw "error";
+      }
+    })["catch"](function (error) {
+      Object.keys(self.form).forEach(function (indiceObjecto, indice) {
+        self.form[indiceObjecto].disabled = true;
+      });
+      self.submitCrear.disabled = true;
+      self.alertForm = {
+        "class": "alert alert-warning",
+        message: "Existe un error!, consulte con el administrador del sistema.",
+        show: true
+      };
+    });
   },
-  created: function created() {},
-  mounted: function mounted() {},
+  created: function created() {
+    self.cargos();
+    self.divisiones();
+    self.estados();
+  },
+  mounted: function mounted() {
+    new AutoNumeric('#codigoUsuario', {
+      decimalPlaces: 0,
+      decimalCharacter: ',',
+      digitGroupSeparator: '',
+      leadingZero: 'keep'
+    });
+    new AutoNumeric('#cedula', {
+      decimalPlaces: 0,
+      decimalCharacter: ',',
+      digitGroupSeparator: '.'
+    });
+  },
   updated: function updated() {},
   methods: {
+    cargos: function cargos() {
+      axios.get('/cargos').then(function (response) {
+        if (response.status === 200 && response.data.length > 0) {
+          self.comboCargos = response.data;
+        } else {
+          throw "error";
+        }
+      })["catch"](function (error) {
+        Object.keys(self.form).forEach(function (indiceObjecto, indice) {
+          self.form[indiceObjecto].disabled = true;
+        });
+        self.submitCrear.disabled = true;
+        self.alertForm = {
+          "class": "alert alert-warning",
+          message: "Existe un error!, consulte con el administrador del sistema.",
+          show: true
+        };
+      });
+    },
+    divisiones: function divisiones() {
+      axios.get('/divisiones').then(function (response) {
+        if (response.status === 200 && response.data.length > 0) {
+          self.comboDivisiones = response.data;
+        } else {
+          throw "error";
+        }
+      })["catch"](function (error) {
+        Object.keys(self.form).forEach(function (indiceObjecto, indice) {
+          self.form[indiceObjecto].disabled = true;
+        });
+        self.submitCrear.disabled = true;
+        self.alertForm = {
+          "class": "alert alert-warning",
+          message: "Existe un error!, consulte con el administrador del sistema.",
+          show: true
+        };
+      });
+    },
+    estados: function estados() {
+      self.form.municipio.help = '<i class="fas fa-cog fa-spin"></i> buscando';
+      axios.get('/estados').then(function (response) {
+        if (response.status === 200 && response.data.length > 0) {
+          self.form.municipio.help = 'Municipio de la oficina en donde se desempeña';
+          self.comboEstados = response.data;
+        } else {
+          throw "error";
+        }
+      })["catch"](function (error) {
+        self.form.municipio.help = 'Municipio de la oficina en donde se desempeña';
+        Object.keys(self.form).forEach(function (indiceObjecto, indice) {
+          self.form[indiceObjecto].disabled = true;
+        });
+        self.submitCrear.disabled = true;
+        self.alertForm = {
+          "class": "alert alert-warning",
+          message: "Existe un error!, consulte con el administrador del sistema.",
+          show: true
+        };
+      });
+    },
+    municipios: function municipios() {
+      self.form.municipio.value = "";
+      self.form.municipio.disabled = true;
+      self.form.parroquia.value = "";
+      self.form.parroquia.disabled = true;
+      self.form.parroquia.help = '<i class="fas fa-cog fa-spin"></i> buscando';
+      axios.get('/municipios', {
+        params: {
+          id_estado: self.form.estado.value
+        }
+      }).then(function (response) {
+        if (response.status === 200 && response.data.length > 0) {
+          self.form.parroquia.help = 'Parroquia de la oficina en donde se desempeña';
+          self.comboMunicipios = response.data;
+          self.form.municipio.disabled = false;
+        } else {
+          throw "error";
+        }
+      })["catch"](function (error) {
+        self.form.parroquia.help = 'Parroquia de la oficina en donde se desempeña';
+        Object.keys(self.form).forEach(function (indiceObjecto, indice) {
+          self.form[indiceObjecto].disabled = true;
+        });
+        self.submitCrear.disabled = true;
+        self.alertForm = {
+          "class": "alert alert-warning",
+          message: "Existe un error!, consulte con el administrador del sistema.",
+          show: true
+        };
+      });
+    },
+    parroquias: function parroquias() {
+      self.form.parroquia.disabled = true;
+      axios.get('/parroquias', {
+        params: {
+          id_municipio: self.form.municipio.value
+        }
+      }).then(function (response) {
+        if (response.status === 200 && response.data.length > 0) {
+          self.comboParroquias = response.data;
+          self.form.parroquia.disabled = false;
+        } else {
+          throw "error";
+        }
+      })["catch"](function (error) {
+        Object.keys(self.form).forEach(function (indiceObjecto, indice) {
+          self.form[indiceObjecto].disabled = true;
+        });
+        self.submitCrear.disabled = true;
+        self.alertForm = {
+          "class": "alert alert-warning",
+          message: "Existe un error!, consulte con el administrador del sistema.",
+          show: true
+        };
+      });
+    },
+    esEmpleado: function esEmpleado(e) {
+      if (self.form.empleado.checked) {
+        self.form.estado.disabled = false;
+        self.form.division.disabled = false;
+        self.form.cargo.disabled = false;
+        self.form.estado.validar = true;
+        self.form.municipio.validar = true;
+        self.form.parroquia.validar = true;
+        self.form.division.validar = true;
+        self.form.cargo.validar = true;
+        self.form.estado.value = "";
+      } else {
+        $(e.target).parents("form").find(".form-group .mensaje").html("").removeClass("invalid-feedback");
+        $(e.target).parents("form").find(".form-group .form-control").removeClass("error");
+        self.form.estado.disabled = true;
+        self.form.municipio.disabled = true;
+        self.form.parroquia.disabled = true;
+        self.form.division.disabled = true;
+        self.form.cargo.disabled = true;
+        self.form.estado.validar = false;
+        self.form.municipio.validar = false;
+        self.form.parroquia.validar = false;
+        self.form.division.validar = false;
+        self.form.cargo.validar = false;
+        self.form.estado.value = "";
+        self.form.municipio.value = "";
+        self.form.parroquia.value = "";
+        self.form.division.value = "";
+        self.form.cargo.value = "";
+      }
+    },
+    encriptar: function encriptar(valor) {
+      var key = CryptoJS.enc.Hex.parse(self.key);
+      var iv = CryptoJS.enc.Hex.parse(self.iv);
+      var encrypted = CryptoJS.AES.encrypt(valor, key, {
+        iv: iv,
+        padding: CryptoJS.pad.ZeroPadding
+      });
+      return encrypted.toString();
+    },
     valuesForm: function valuesForm(e) {
       if (e.target.type === 'text' || e.target.type === 'textarea' || e.target.type === 'email') {
         self.form[e.target.id].value = e.target.value.trim() === "" ? "" : $(e.target).val();
@@ -40400,14 +40668,29 @@ var app = new Vue({
         }; //Obtenemos valores
 
         var parametros = {
-          nuevoCargo: self.form.nuevoCargo.value
+          nombre1: self.form.nombre1.value,
+          nombre2: self.form.nombre2.value,
+          apellido1: self.form.apellido1.value,
+          apellido2: self.form.apellido2.value,
+          fechaNacimiento: self.form.fechaNacimiento.value,
+          codigoUsuario: self.encriptar(self.form.codigoUsuario.value),
+          cedula: AutoNumeric.getAutoNumericElement("#cedula").getNumber(),
+          clave: self.encriptar(self.form.cedula.value),
+          parroquia: self.form.parroquia.value,
+          division: self.form.division.value,
+          cargo: self.form.cargo.value,
+          correoPrincipal: self.form.correoPrincipal.value,
+          correoSecundario: self.form.correoSecundario.value,
+          telefono1: self.form.telefono1.value,
+          telefono2: self.form.telefono2.value,
+          empleado: self.form.empleado.checked
         };
         self.submitCrear.content = '<i class="fas fa-cog fa-spin"></i>';
         self.submitCrear.disabled = true;
         Object.keys(self.form).forEach(function (indiceObjecto, indice) {
           self.form[indiceObjecto].disabled = true;
         });
-        axios.post('/crearCargo', parametros).then(function (response) {
+        axios.post('/crearUsuario', parametros).then(function (response) {
           if (response.status === 200 && response.data.response === true) {
             self.submitCrear.show = false;
             self.refreshForm = true;
@@ -40420,11 +40703,16 @@ var app = new Vue({
             throw response.data;
           }
         })["catch"](function (error) {
-          var indices = ["nuevoCargo"];
+          var indices = ["nombre1", "nombre2", "apellido1", "apellido2", "fechaNacimiento", "codigoUsuario", "cedula", "correoPrincipal", "correoSecundario", "telefono1", "telefono2"];
+
+          if (self.form.empleado.checked) {
+            indices.push("estado", "municipio", "parroquia", "division", "cargo");
+          }
+
           indices.forEach(function (indiceObjecto, indice) {
             self.form[indiceObjecto].disabled = false;
           });
-          self.submitCrear.content = 'Crear nuevo Cargo';
+          self.submitCrear.content = 'Crear nuevo Usuario';
           self.submitCrear.disabled = false;
 
           if (error.response) {
@@ -40523,7 +40811,7 @@ var app = new Vue({
       }
     },
     refreshView: function refreshView() {
-      window.location.href = "/formNuevoCargo";
+      window.location.href = "/formNuevoUsuario";
     }
   } // Fin methods
 
@@ -40531,14 +40819,14 @@ var app = new Vue({
 
 /***/ }),
 
-/***/ 10:
-/*!***********************************************!*\
-  !*** multi ./resources/js/crea/nuevoCargo.js ***!
-  \***********************************************/
+/***/ 12:
+/*!******************************************************!*\
+  !*** multi ./resources/js/proyecto/nuevoProyecto.js ***!
+  \******************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.1.18-1\apache2\htdocs\sofguar\carent\resources\js\crea\nuevoCargo.js */"./resources/js/crea/nuevoCargo.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.1.18-1\apache2\htdocs\sofguar\carent\resources\js\proyecto\nuevoProyecto.js */"./resources/js/proyecto/nuevoProyecto.js");
 
 
 /***/ })
