@@ -41254,10 +41254,10 @@ var app = new Vue({
 
               if (dataInit.response) {
                 self.idCliente = dataInit.infoClie.id;
-                self.detalleUsuario.data.id = dataInit.infoClie.id_usuario;
+                self.detalleUsuario.data.id = dataInit.infoClie.id_usuario_socio;
                 self.detalleUsuario.data.codigo = dataInit.infoClie.codigoU;
                 self.detalleUsuario.data.nombre = dataInit.infoClie.nombre;
-                self.detalleUsuarioG.data.id = dataInit.infoClie.id_usuario2;
+                self.detalleUsuarioG.data.id = dataInit.infoClie.id_usuario_gerente;
                 self.detalleUsuarioG.data.codigo = dataInit.infoClie.codigoG;
                 self.detalleUsuarioG.data.nombre = dataInit.infoClie.nombreG;
                 self.formSearch.inputSearch.value = dataInit.infoClie.codigoU;
