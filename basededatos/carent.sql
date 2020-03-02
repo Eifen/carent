@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 18-02-2020 a las 11:51:13
+-- Tiempo de generación: 02-03-2020 a las 11:02:44
 -- Versión del servidor: 8.0.18
 -- Versión de PHP: 7.3.12
 
@@ -581,8 +581,8 @@ INSERT INTO `tbl_ciudades` (`id_ciudad`, `id_estado`, `ciudad`, `capital`) VALUE
 
 CREATE TABLE `tbl_cliente` (
   `id` int(11) NOT NULL,
-  `id_usuario` int(11) NOT NULL,
-  `id_usuario2` int(11) NOT NULL,
+  `id_usuario_socio` int(11) NOT NULL,
+  `id_usuario_gerente` int(11) NOT NULL,
   `codigo` int(11) NOT NULL,
   `rif` varchar(15) NOT NULL,
   `nit` int(11) NOT NULL,
@@ -612,8 +612,8 @@ CREATE TABLE `tbl_cliente` (
 -- Volcado de datos para la tabla `tbl_cliente`
 --
 
-INSERT INTO `tbl_cliente` (`id`, `id_usuario`, `id_usuario2`, `codigo`, `rif`, `nit`, `razon_social`, `id_parroquia_fiscal`, `avenida_calle_fiscal`, `edificio_quinta_fiscal`, `piso_fiscal`, `numero_fiscal`, `ciudad_fiscal`, `telefono_fiscal`, `fax_fiscal`, `email_fiscal`, `descripcion_factura`, `id_parroquia_factura`, `avenida_calle_factura`, `edificio_quinta_factura`, `piso_factura`, `numero_factura`, `ciudad_factura`, `telefono_factura`, `fax_factura`, `correo_factura`) VALUES
-(1, 1, 1, 111, '234', 122, 'BANCOS..', 1, 'D', 'DD', '2', '2', 'FD', '(2222) - 222 2222', '22', 'fj@gmail.com', 'INVENTARIO', 8, 'DFDS', 'DF', '2', '1', 'DFAS', '(1111) - 111 1111', '111', 'ko@gmail.com');
+INSERT INTO `tbl_cliente` (`id`, `id_usuario_socio`, `id_usuario_gerente`, `codigo`, `rif`, `nit`, `razon_social`, `id_parroquia_fiscal`, `avenida_calle_fiscal`, `edificio_quinta_fiscal`, `piso_fiscal`, `numero_fiscal`, `ciudad_fiscal`, `telefono_fiscal`, `fax_fiscal`, `email_fiscal`, `descripcion_factura`, `id_parroquia_factura`, `avenida_calle_factura`, `edificio_quinta_factura`, `piso_factura`, `numero_factura`, `ciudad_factura`, `telefono_factura`, `fax_factura`, `correo_factura`) VALUES
+(1, 1, 4, 111, '234', 122, 'BANCOS. C', 1, 'D', 'DD', '2', '2', 'FD', '(2222) - 222 2222', '22', 'fj@gmail.com', 'INVENTARIO', 8, 'DFDS', 'DF', '2', '8', 'DFAS', '(1111) - 111 1111', '11', 'ko@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -678,7 +678,7 @@ CREATE TABLE `tbl_division` (
 --
 
 INSERT INTO `tbl_division` (`id`, `descripcion`, `id_estatus`) VALUES
-(1, 'Sin Division Asignada', 1),
+(1, 'Sin División Asignada ', 1),
 (2, 'Financiera', 1),
 (3, 'Tecnología', 1),
 (4, 'Método y Proceso', 1),
@@ -803,10 +803,10 @@ CREATE TABLE `tbl_menu` (
 --
 
 INSERT INTO `tbl_menu` (`id`, `id_menu_padre`, `descripcion`, `url`, `orden`, `id_estatus`) VALUES
-(1, 0, 'Usuario', '', 0, 1),
+(1, 0, 'RRHH', '', 0, 1),
 (2, 1, 'Crear Usuario', '/formNuevoUsuario', 0, 1),
 (3, 1, 'Consultar Usuario', '/formBuscarUsuario', 1, 1),
-(4, 0, 'Clientes', '', 0, 1),
+(4, 0, 'Contraloria', '', 0, 1),
 (5, 4, 'Crear Cliente', '/formNuevoCliente', 0, 1);
 
 -- --------------------------------------------------------
@@ -829,9 +829,9 @@ INSERT INTO `tbl_menu_usuario` (`id`, `id_usuario`, `id_menu`) VALUES
 (1, 1, 3),
 (2, 1, 2),
 (3, 1, 5),
-(4, 5, 3),
-(5, 5, 2),
-(6, 5, 5);
+(4, 4, 3),
+(5, 4, 2),
+(6, 4, 5);
 
 -- --------------------------------------------------------
 
@@ -2405,8 +2405,7 @@ INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `cedula`, `nombre_1`, `nombr
 (1, '0001', 'eyJpdiI6IkMwNDJraDByc2V2WFU2MVZjWEtSVUE9PSIsInZhbHVlIjoiRHV3bGwreDdaXC9qeFNqMndXdFZMQXc9PSIsIm1hYyI6ImJmYzczMGMyODY2NjQyNzk0MGM3YThmN2IwMzg0OWRlZmQzMTgwNGViOTcxYmJkZTk2MTEyODVhN2ExNmY2MWQifQ==', 17671370, 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '01/01/1980', 16, 3, 1131, '', 1),
 (2, '11525', 'eyJpdiI6IkVjZ2oySWtNK3N3ckp0SGJLVGZxMGc9PSIsInZhbHVlIjoick52NFY1bWNFUUloQXo2cXNDallPUT09IiwibWFjIjoiYjVmNTlmZWQyZGVhYjEyNmI5YjcxZmM4ZDY2NGI3ZmU1OTQ3YTEyZjBlYzU0YmJiYWY0YmVmMDk3ZjA2OTgwMiJ9', 0, '', NULL, '', NULL, NULL, NULL, NULL, NULL, '', 1),
 (3, '11450', 'eyJpdiI6Im5MWkhxSEVKV2N3ZkhJZ01XZTU2eFE9PSIsInZhbHVlIjoiZ2N3a2l2Nm1DNHFKMGtPYkp4ZmdzQT09IiwibWFjIjoiMTNmNTllMGNjNTc0MjNlMWMwYzkwYTA0NGYyNzQ5ZmU5YTg4M2YzMDIzZGMyNzVhNjllNmRhNDYzOWQ3Yzc1NyJ9', 0, '', NULL, '', NULL, NULL, NULL, NULL, NULL, '', 1),
-(4, '22522', 'eyJpdiI6InhUdW90cklRZnVNaXdXenorMU1TclE9PSIsInZhbHVlIjoidktwMTl1SkZMNURscXBzRTVNS2FSUT09IiwibWFjIjoiOWQyYjczN2ZlNDE0YWUwMGQ1ZGUzZmQ3ZjM5YWY1OWM4ZDMyNTRjNGM4MjhmZDUwYWFlNTEwY2NjZjVjMzRiZiJ9', 25209317, 'JOSE', 'ARTURO', 'MADRIZ', 'MALAVE', '07/06/1196', 16, 3, 1133, '', 1),
-(5, '12345', 'eyJpdiI6IjQ1NFBGbjFaVXRcL24wVkthVUtnUzFRPT0iLCJ2YWx1ZSI6IitrS0JBWGtcL0UwbWhINWtPaEJaRlVnPT0iLCJtYWMiOiI3YjFlYTk3YzhlNWRmYTkyZmVlNWIzMDhiNjM5ZjY2NjRjZmExZGU2MjA0MjQ3YmQ4YTk3MTk5OGVhYTc4NDA5In0=', 25209316, 'JOSE', '', 'MALAVE', '', '11/11/1999', 16, 3, 116, NULL, 1);
+(4, '22522', 'eyJpdiI6InhUdW90cklRZnVNaXdXenorMU1TclE9PSIsInZhbHVlIjoidktwMTl1SkZMNURscXBzRTVNS2FSUT09IiwibWFjIjoiOWQyYjczN2ZlNDE0YWUwMGQ1ZGUzZmQ3ZjM5YWY1OWM4ZDMyNTRjNGM4MjhmZDUwYWFlNTEwY2NjZjVjMzRiZiJ9', 25209317, 'JOSE', 'ARTURO', 'MADRIZ', 'MALAVE', '07/06/1196', 16, 3, 1133, '', 1);
 
 --
 -- Índices para tablas volcadas
@@ -2603,7 +2602,7 @@ ALTER TABLE `tbl_tipo_contacto`
 -- AUTO_INCREMENT de la tabla `tbl_usuario`
 --
 ALTER TABLE `tbl_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Restricciones para tablas volcadas
