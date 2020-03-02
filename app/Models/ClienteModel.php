@@ -195,8 +195,8 @@ class ClienteModel extends Model
   function crearCliente($parametros){
 
     DB::beginTransaction();
-    $data = array("id_usuario" => $parametros["idUsuario"],
-                  "id_usuario2" => $parametros["idUsuario2"],
+    $data = array("id_usuario_socio" => $parametros["idUsuario"],
+                  "id_usuario_gerente" => $parametros["idUsuario2"],
                   "codigo" => $parametros["codigoCliente"],
                   "rif" => $parametros["rif"],
                   "nit" => $parametros["nit"],
@@ -262,12 +262,12 @@ class ClienteModel extends Model
   function detalleCliente($id_cliente){
 
     $info = DB::select('SELECT id,
-                                id_usuario,
-                                id_usuario2,
-                                (SELECT codigo FROM tbl_usuario WHERE id_usuario = id) codigoU,
-                                (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE id_usuario = id) nombre,
-                                (SELECT codigo FROM tbl_usuario WHERE id_usuario2 = id) codigoG,
-                                (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE id_usuario2 = id) nombreG,
+                                id_usuario_socio,
+                                id_usuario_gerente,
+                                (SELECT codigo FROM tbl_usuario WHERE id_usuario_socio = id) codigoU,
+                                (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE id_usuario_socio = id) nombre,
+                                (SELECT codigo FROM tbl_usuario WHERE id_usuario_gerente = id) codigoG,
+                                (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE id_usuario_gerente = id) nombreG,
                                 codigo,
                                 rif,
                                 nit,
@@ -322,12 +322,12 @@ class ClienteModel extends Model
   function detalleClienteModificar($id_cliente){
 
     $info = DB::select('SELECT id,
-                                 id_usuario,
-                                 id_usuario2,
-                                 (SELECT codigo FROM tbl_usuario WHERE id_usuario = id) codigoU,
-                                (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE id_usuario = id) nombre,
-                                (SELECT codigo FROM tbl_usuario WHERE id_usuario2 = id) codigoG,
-                                (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE id_usuario2 = id) nombreG,
+                                 id_usuario_socio,
+                                 id_usuario_gerente,
+                                 (SELECT codigo FROM tbl_usuario WHERE id_usuario_socio = id) codigoU,
+                                (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE id_usuario_socio = id) nombre,
+                                (SELECT codigo FROM tbl_usuario WHERE id_usuario_gerente = id) codigoG,
+                                (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE id_usuario_gerente = id) nombreG,
                                  codigo,
                                  rif,
                                  nit,
@@ -383,8 +383,8 @@ class ClienteModel extends Model
 
     try {
       $data = array(
-                    "id_usuario" => $parametros["idUsuario"],
-                    "id_usuario2" => $parametros["idUsuario2"],
+                    "id_usuario_socio" => $parametros["idUsuario"],
+                    "id_usuario_gerente" => $parametros["idUsuario2"],
                     "rif" => $parametros["rif"],
                     "nit" => $parametros["nit"],
                     "razon_social" => $parametros["razon_social"],

@@ -41202,7 +41202,7 @@ var app = new Vue({
     formSearchG: {
       submitG: {
         disabled: true,
-        html: "BuscaRr"
+        html: "Buscar"
       },
       inputSearchG: {
         disabled: true,
@@ -41257,6 +41257,7 @@ var app = new Vue({
                 self.detalleUsuario.data.id = dataInit.infoClie.id_usuario;
                 self.detalleUsuario.data.codigo = dataInit.infoClie.codigoU;
                 self.detalleUsuario.data.nombre = dataInit.infoClie.nombre;
+                self.detalleUsuarioG.data.id = dataInit.infoClie.id_usuario2;
                 self.detalleUsuarioG.data.codigo = dataInit.infoClie.codigoG;
                 self.detalleUsuarioG.data.nombre = dataInit.infoClie.nombreG;
                 self.formSearch.inputSearch.value = dataInit.infoClie.codigoU;
