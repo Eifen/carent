@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 9);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -33614,10 +33614,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/usuario/buscarUsuario.js":
-/*!***********************************************!*\
-  !*** ./resources/js/usuario/buscarUsuario.js ***!
-  \***********************************************/
+/***/ "./resources/js/crea/buscarRegistro.js":
+/*!*********************************************!*\
+  !*** ./resources/js/crea/buscarRegistro.js ***!
+  \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -33631,7 +33631,7 @@ window.$ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.
 var self;
 Vue.component('menu-principal', __webpack_require__(/*! ../components/menuPrincipal.vue */ "./resources/js/components/menuPrincipal.vue")["default"]);
 var app = new Vue({
-  el: '#buscarUsuario',
+  el: '#buscarRegistro',
   data: {
     alert: {
       message: "",
@@ -33644,55 +33644,52 @@ var app = new Vue({
       },
       inputSearch: {
         disabled: true,
-        value: ""
+        value: "l"
       },
       select: {
         disabled: false,
         value: ""
       }
     },
-    usuarios: {
+    registros: {
       mostrar: false,
       registros: []
     },
-    detalleUsuario: {
+    detalleRegistro: {
       error: false,
       data: []
-    },
-    permisoActualizar: false
+    }
   },
   beforeCreate: function beforeCreate() {
     self = this;
   },
   created: function created() {},
   mounted: function mounted() {
-    $('#modal-detalle-usuario').on('hidden.bs.modal', function () {
-      self.detalleUsuario.data = [];
-      self.detalleUsuario.error = false;
+    $('#modal-detalle-registro').on('hidden.bs.modal', function () {
+      self.detalleRegistro.data = [];
+      self.detalleRegistro.error = false;
     });
   },
   updated: function updated() {},
   methods: {
-    buscar: function buscar(e) {
+    Crear: function Crear(e) {
       self.alert.mostrar = false;
 
       if (self.formSearch.inputSearch.value.trim() !== "") {
         self.formSearch.submit.html = '<i class="fas fa-cog fa-spin"></i>';
         self.formSearch.submit.disabled = true;
         var parametros = {
-          buscarPor: self.formSearch.select.value,
-          dato: self.formSearch.inputSearch.value
+          buscarPor: self.formSearch.select.value
         };
-        axios.get('/buscarUsuarios', {
+        axios.get('/buscarRegistro', {
           params: parametros
         }).then(function (response) {
           self.formSearch.submit.html = 'Consultar';
           self.formSearch.submit.disabled = false;
 
           if (response.status === 200 && response.data.response === true) {
-            self.usuarios.mostrar = true;
-            self.usuarios.registros = response.data.usuarios;
-            self.permisoActualizar = response.data.permisoActualizar;
+            self.registros.mostrar = true;
+            self.registros.registros = response.data.registros;
           } else {
             throw response.data;
           }
@@ -33700,8 +33697,8 @@ var app = new Vue({
           self.formSearch.submit.html = 'Consultar';
           self.formSearch.submit.disabled = false;
           self.alert.mostrar = true;
-          self.usuarios.registros = [];
-          self.usuarios.mostrar = false;
+          self.registros.registros = [];
+          self.registros.mostrar = false;
 
           if (error.response) {
             var message = "Existe un error!, consulte con el administrador del sistema.";
@@ -33719,9 +33716,9 @@ var app = new Vue({
     },
     tipoFiltro: function tipoFiltro(e) {
       var opcion = parseInt(e.target.value);
-      var valoresPermitidos = [1, 2, 3, 4, 5];
-      self.usuarios.mostrar = false;
-      self.usuarios.registros = [];
+      var valoresPermitidos = [1, 2];
+      self.registros.mostrar = false;
+      self.registros.registros = [];
 
       if (valoresPermitidos.includes(opcion)) {
         self.formSearch.inputSearch.disabled = false;
@@ -33737,8 +33734,8 @@ var app = new Vue({
       }
 
       if (id === "inputSearch" && self.formSearch["inputSearch"].value.trim() === "") {
-        self.usuarios.registros = [];
-        self.usuarios.mostrar = false;
+        self.registros.registros = [];
+        self.registros.mostrar = false;
       }
 
       self.limpiarMensajeError(e);
@@ -33747,25 +33744,26 @@ var app = new Vue({
       $(e.target).removeClass("error");
       $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
     },
-    mostrarDetalleUsuario: function mostrarDetalleUsuario(idUsuario, e) {
-      self.detalleUsuario.error = false;
+    mostrardetalleRegistro: function mostrardetalleRegistro(idRegistro, e) {
+      self.detalleRegistro.error = false;
       $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
       var parametros = {
-        idUsuario: idUsuario
+        buscarPor: self.formSearch.select.value,
+        idRegistro: idRegistro
       };
-      axios.get('/detalleUsuario', {
+      axios.get('/detalleRegistro', {
         params: parametros
       }).then(function (response) {
         if (response.status === 200 && response.data.response === true) {
-          self.detalleUsuario.data = response.data.info;
-          $('#modal-detalle-usuario').modal("show");
+          self.detalleRegistro.data = response.data.info;
+          $('#modal-detalle-registro').modal("show");
           $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
         } else {
           throw response.data;
         }
       })["catch"](function (error) {
-        self.detalleUsuario.error = true;
-        $('#modal-detalle-usuario').modal("show");
+        self.detalleRegistro.error = true;
+        $('#modal-detalle-registro').modal("show");
         $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
       });
     }
@@ -33775,14 +33773,14 @@ var app = new Vue({
 
 /***/ }),
 
-/***/ 4:
-/*!*****************************************************!*\
-  !*** multi ./resources/js/usuario/buscarUsuario.js ***!
-  \*****************************************************/
+/***/ 9:
+/*!***************************************************!*\
+  !*** multi ./resources/js/crea/buscarRegistro.js ***!
+  \***************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\usuario\buscarUsuario.js */"./resources/js/usuario/buscarUsuario.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\crea\buscarRegistro.js */"./resources/js/crea/buscarRegistro.js");
 
 
 /***/ })

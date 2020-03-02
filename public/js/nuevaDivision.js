@@ -81,22 +81,10 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
 /******/ })
 /************************************************************************/
 /******/ ({
-
-/***/ "./node_modules/@babel/runtime/regenerator/index.js":
-/*!**********************************************************!*\
-  !*** ./node_modules/@babel/runtime/regenerator/index.js ***!
-  \**********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(/*! regenerator-runtime */ "./node_modules/regenerator-runtime/runtime.js");
-
-
-/***/ }),
 
 /***/ "./node_modules/autonumeric/dist/autoNumeric.min.js":
 /*!**********************************************************!*\
@@ -26791,743 +26779,6 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
-/***/ "./node_modules/regenerator-runtime/runtime.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/regenerator-runtime/runtime.js ***!
-  \*****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * Copyright (c) 2014-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
-var runtime = (function (exports) {
-  "use strict";
-
-  var Op = Object.prototype;
-  var hasOwn = Op.hasOwnProperty;
-  var undefined; // More compressible than void 0.
-  var $Symbol = typeof Symbol === "function" ? Symbol : {};
-  var iteratorSymbol = $Symbol.iterator || "@@iterator";
-  var asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator";
-  var toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
-
-  function wrap(innerFn, outerFn, self, tryLocsList) {
-    // If outerFn provided and outerFn.prototype is a Generator, then outerFn.prototype instanceof Generator.
-    var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator;
-    var generator = Object.create(protoGenerator.prototype);
-    var context = new Context(tryLocsList || []);
-
-    // The ._invoke method unifies the implementations of the .next,
-    // .throw, and .return methods.
-    generator._invoke = makeInvokeMethod(innerFn, self, context);
-
-    return generator;
-  }
-  exports.wrap = wrap;
-
-  // Try/catch helper to minimize deoptimizations. Returns a completion
-  // record like context.tryEntries[i].completion. This interface could
-  // have been (and was previously) designed to take a closure to be
-  // invoked without arguments, but in all the cases we care about we
-  // already have an existing method we want to call, so there's no need
-  // to create a new function object. We can even get away with assuming
-  // the method takes exactly one argument, since that happens to be true
-  // in every case, so we don't have to touch the arguments object. The
-  // only additional allocation required is the completion record, which
-  // has a stable shape and so hopefully should be cheap to allocate.
-  function tryCatch(fn, obj, arg) {
-    try {
-      return { type: "normal", arg: fn.call(obj, arg) };
-    } catch (err) {
-      return { type: "throw", arg: err };
-    }
-  }
-
-  var GenStateSuspendedStart = "suspendedStart";
-  var GenStateSuspendedYield = "suspendedYield";
-  var GenStateExecuting = "executing";
-  var GenStateCompleted = "completed";
-
-  // Returning this object from the innerFn has the same effect as
-  // breaking out of the dispatch switch statement.
-  var ContinueSentinel = {};
-
-  // Dummy constructor functions that we use as the .constructor and
-  // .constructor.prototype properties for functions that return Generator
-  // objects. For full spec compliance, you may wish to configure your
-  // minifier not to mangle the names of these two functions.
-  function Generator() {}
-  function GeneratorFunction() {}
-  function GeneratorFunctionPrototype() {}
-
-  // This is a polyfill for %IteratorPrototype% for environments that
-  // don't natively support it.
-  var IteratorPrototype = {};
-  IteratorPrototype[iteratorSymbol] = function () {
-    return this;
-  };
-
-  var getProto = Object.getPrototypeOf;
-  var NativeIteratorPrototype = getProto && getProto(getProto(values([])));
-  if (NativeIteratorPrototype &&
-      NativeIteratorPrototype !== Op &&
-      hasOwn.call(NativeIteratorPrototype, iteratorSymbol)) {
-    // This environment has a native %IteratorPrototype%; use it instead
-    // of the polyfill.
-    IteratorPrototype = NativeIteratorPrototype;
-  }
-
-  var Gp = GeneratorFunctionPrototype.prototype =
-    Generator.prototype = Object.create(IteratorPrototype);
-  GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
-  GeneratorFunctionPrototype.constructor = GeneratorFunction;
-  GeneratorFunctionPrototype[toStringTagSymbol] =
-    GeneratorFunction.displayName = "GeneratorFunction";
-
-  // Helper for defining the .next, .throw, and .return methods of the
-  // Iterator interface in terms of a single ._invoke method.
-  function defineIteratorMethods(prototype) {
-    ["next", "throw", "return"].forEach(function(method) {
-      prototype[method] = function(arg) {
-        return this._invoke(method, arg);
-      };
-    });
-  }
-
-  exports.isGeneratorFunction = function(genFun) {
-    var ctor = typeof genFun === "function" && genFun.constructor;
-    return ctor
-      ? ctor === GeneratorFunction ||
-        // For the native GeneratorFunction constructor, the best we can
-        // do is to check its .name property.
-        (ctor.displayName || ctor.name) === "GeneratorFunction"
-      : false;
-  };
-
-  exports.mark = function(genFun) {
-    if (Object.setPrototypeOf) {
-      Object.setPrototypeOf(genFun, GeneratorFunctionPrototype);
-    } else {
-      genFun.__proto__ = GeneratorFunctionPrototype;
-      if (!(toStringTagSymbol in genFun)) {
-        genFun[toStringTagSymbol] = "GeneratorFunction";
-      }
-    }
-    genFun.prototype = Object.create(Gp);
-    return genFun;
-  };
-
-  // Within the body of any async function, `await x` is transformed to
-  // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
-  // `hasOwn.call(value, "__await")` to determine if the yielded value is
-  // meant to be awaited.
-  exports.awrap = function(arg) {
-    return { __await: arg };
-  };
-
-  function AsyncIterator(generator) {
-    function invoke(method, arg, resolve, reject) {
-      var record = tryCatch(generator[method], generator, arg);
-      if (record.type === "throw") {
-        reject(record.arg);
-      } else {
-        var result = record.arg;
-        var value = result.value;
-        if (value &&
-            typeof value === "object" &&
-            hasOwn.call(value, "__await")) {
-          return Promise.resolve(value.__await).then(function(value) {
-            invoke("next", value, resolve, reject);
-          }, function(err) {
-            invoke("throw", err, resolve, reject);
-          });
-        }
-
-        return Promise.resolve(value).then(function(unwrapped) {
-          // When a yielded Promise is resolved, its final value becomes
-          // the .value of the Promise<{value,done}> result for the
-          // current iteration.
-          result.value = unwrapped;
-          resolve(result);
-        }, function(error) {
-          // If a rejected Promise was yielded, throw the rejection back
-          // into the async generator function so it can be handled there.
-          return invoke("throw", error, resolve, reject);
-        });
-      }
-    }
-
-    var previousPromise;
-
-    function enqueue(method, arg) {
-      function callInvokeWithMethodAndArg() {
-        return new Promise(function(resolve, reject) {
-          invoke(method, arg, resolve, reject);
-        });
-      }
-
-      return previousPromise =
-        // If enqueue has been called before, then we want to wait until
-        // all previous Promises have been resolved before calling invoke,
-        // so that results are always delivered in the correct order. If
-        // enqueue has not been called before, then it is important to
-        // call invoke immediately, without waiting on a callback to fire,
-        // so that the async generator function has the opportunity to do
-        // any necessary setup in a predictable way. This predictability
-        // is why the Promise constructor synchronously invokes its
-        // executor callback, and why async functions synchronously
-        // execute code before the first await. Since we implement simple
-        // async functions in terms of async generators, it is especially
-        // important to get this right, even though it requires care.
-        previousPromise ? previousPromise.then(
-          callInvokeWithMethodAndArg,
-          // Avoid propagating failures to Promises returned by later
-          // invocations of the iterator.
-          callInvokeWithMethodAndArg
-        ) : callInvokeWithMethodAndArg();
-    }
-
-    // Define the unified helper method that is used to implement .next,
-    // .throw, and .return (see defineIteratorMethods).
-    this._invoke = enqueue;
-  }
-
-  defineIteratorMethods(AsyncIterator.prototype);
-  AsyncIterator.prototype[asyncIteratorSymbol] = function () {
-    return this;
-  };
-  exports.AsyncIterator = AsyncIterator;
-
-  // Note that simple async functions are implemented on top of
-  // AsyncIterator objects; they just return a Promise for the value of
-  // the final result produced by the iterator.
-  exports.async = function(innerFn, outerFn, self, tryLocsList) {
-    var iter = new AsyncIterator(
-      wrap(innerFn, outerFn, self, tryLocsList)
-    );
-
-    return exports.isGeneratorFunction(outerFn)
-      ? iter // If outerFn is a generator, return the full iterator.
-      : iter.next().then(function(result) {
-          return result.done ? result.value : iter.next();
-        });
-  };
-
-  function makeInvokeMethod(innerFn, self, context) {
-    var state = GenStateSuspendedStart;
-
-    return function invoke(method, arg) {
-      if (state === GenStateExecuting) {
-        throw new Error("Generator is already running");
-      }
-
-      if (state === GenStateCompleted) {
-        if (method === "throw") {
-          throw arg;
-        }
-
-        // Be forgiving, per 25.3.3.3.3 of the spec:
-        // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-generatorresume
-        return doneResult();
-      }
-
-      context.method = method;
-      context.arg = arg;
-
-      while (true) {
-        var delegate = context.delegate;
-        if (delegate) {
-          var delegateResult = maybeInvokeDelegate(delegate, context);
-          if (delegateResult) {
-            if (delegateResult === ContinueSentinel) continue;
-            return delegateResult;
-          }
-        }
-
-        if (context.method === "next") {
-          // Setting context._sent for legacy support of Babel's
-          // function.sent implementation.
-          context.sent = context._sent = context.arg;
-
-        } else if (context.method === "throw") {
-          if (state === GenStateSuspendedStart) {
-            state = GenStateCompleted;
-            throw context.arg;
-          }
-
-          context.dispatchException(context.arg);
-
-        } else if (context.method === "return") {
-          context.abrupt("return", context.arg);
-        }
-
-        state = GenStateExecuting;
-
-        var record = tryCatch(innerFn, self, context);
-        if (record.type === "normal") {
-          // If an exception is thrown from innerFn, we leave state ===
-          // GenStateExecuting and loop back for another invocation.
-          state = context.done
-            ? GenStateCompleted
-            : GenStateSuspendedYield;
-
-          if (record.arg === ContinueSentinel) {
-            continue;
-          }
-
-          return {
-            value: record.arg,
-            done: context.done
-          };
-
-        } else if (record.type === "throw") {
-          state = GenStateCompleted;
-          // Dispatch the exception by looping back around to the
-          // context.dispatchException(context.arg) call above.
-          context.method = "throw";
-          context.arg = record.arg;
-        }
-      }
-    };
-  }
-
-  // Call delegate.iterator[context.method](context.arg) and handle the
-  // result, either by returning a { value, done } result from the
-  // delegate iterator, or by modifying context.method and context.arg,
-  // setting context.delegate to null, and returning the ContinueSentinel.
-  function maybeInvokeDelegate(delegate, context) {
-    var method = delegate.iterator[context.method];
-    if (method === undefined) {
-      // A .throw or .return when the delegate iterator has no .throw
-      // method always terminates the yield* loop.
-      context.delegate = null;
-
-      if (context.method === "throw") {
-        // Note: ["return"] must be used for ES3 parsing compatibility.
-        if (delegate.iterator["return"]) {
-          // If the delegate iterator has a return method, give it a
-          // chance to clean up.
-          context.method = "return";
-          context.arg = undefined;
-          maybeInvokeDelegate(delegate, context);
-
-          if (context.method === "throw") {
-            // If maybeInvokeDelegate(context) changed context.method from
-            // "return" to "throw", let that override the TypeError below.
-            return ContinueSentinel;
-          }
-        }
-
-        context.method = "throw";
-        context.arg = new TypeError(
-          "The iterator does not provide a 'throw' method");
-      }
-
-      return ContinueSentinel;
-    }
-
-    var record = tryCatch(method, delegate.iterator, context.arg);
-
-    if (record.type === "throw") {
-      context.method = "throw";
-      context.arg = record.arg;
-      context.delegate = null;
-      return ContinueSentinel;
-    }
-
-    var info = record.arg;
-
-    if (! info) {
-      context.method = "throw";
-      context.arg = new TypeError("iterator result is not an object");
-      context.delegate = null;
-      return ContinueSentinel;
-    }
-
-    if (info.done) {
-      // Assign the result of the finished delegate to the temporary
-      // variable specified by delegate.resultName (see delegateYield).
-      context[delegate.resultName] = info.value;
-
-      // Resume execution at the desired location (see delegateYield).
-      context.next = delegate.nextLoc;
-
-      // If context.method was "throw" but the delegate handled the
-      // exception, let the outer generator proceed normally. If
-      // context.method was "next", forget context.arg since it has been
-      // "consumed" by the delegate iterator. If context.method was
-      // "return", allow the original .return call to continue in the
-      // outer generator.
-      if (context.method !== "return") {
-        context.method = "next";
-        context.arg = undefined;
-      }
-
-    } else {
-      // Re-yield the result returned by the delegate method.
-      return info;
-    }
-
-    // The delegate iterator is finished, so forget it and continue with
-    // the outer generator.
-    context.delegate = null;
-    return ContinueSentinel;
-  }
-
-  // Define Generator.prototype.{next,throw,return} in terms of the
-  // unified ._invoke helper method.
-  defineIteratorMethods(Gp);
-
-  Gp[toStringTagSymbol] = "Generator";
-
-  // A Generator should always return itself as the iterator object when the
-  // @@iterator function is called on it. Some browsers' implementations of the
-  // iterator prototype chain incorrectly implement this, causing the Generator
-  // object to not be returned from this call. This ensures that doesn't happen.
-  // See https://github.com/facebook/regenerator/issues/274 for more details.
-  Gp[iteratorSymbol] = function() {
-    return this;
-  };
-
-  Gp.toString = function() {
-    return "[object Generator]";
-  };
-
-  function pushTryEntry(locs) {
-    var entry = { tryLoc: locs[0] };
-
-    if (1 in locs) {
-      entry.catchLoc = locs[1];
-    }
-
-    if (2 in locs) {
-      entry.finallyLoc = locs[2];
-      entry.afterLoc = locs[3];
-    }
-
-    this.tryEntries.push(entry);
-  }
-
-  function resetTryEntry(entry) {
-    var record = entry.completion || {};
-    record.type = "normal";
-    delete record.arg;
-    entry.completion = record;
-  }
-
-  function Context(tryLocsList) {
-    // The root entry object (effectively a try statement without a catch
-    // or a finally block) gives us a place to store values thrown from
-    // locations where there is no enclosing try statement.
-    this.tryEntries = [{ tryLoc: "root" }];
-    tryLocsList.forEach(pushTryEntry, this);
-    this.reset(true);
-  }
-
-  exports.keys = function(object) {
-    var keys = [];
-    for (var key in object) {
-      keys.push(key);
-    }
-    keys.reverse();
-
-    // Rather than returning an object with a next method, we keep
-    // things simple and return the next function itself.
-    return function next() {
-      while (keys.length) {
-        var key = keys.pop();
-        if (key in object) {
-          next.value = key;
-          next.done = false;
-          return next;
-        }
-      }
-
-      // To avoid creating an additional object, we just hang the .value
-      // and .done properties off the next function object itself. This
-      // also ensures that the minifier will not anonymize the function.
-      next.done = true;
-      return next;
-    };
-  };
-
-  function values(iterable) {
-    if (iterable) {
-      var iteratorMethod = iterable[iteratorSymbol];
-      if (iteratorMethod) {
-        return iteratorMethod.call(iterable);
-      }
-
-      if (typeof iterable.next === "function") {
-        return iterable;
-      }
-
-      if (!isNaN(iterable.length)) {
-        var i = -1, next = function next() {
-          while (++i < iterable.length) {
-            if (hasOwn.call(iterable, i)) {
-              next.value = iterable[i];
-              next.done = false;
-              return next;
-            }
-          }
-
-          next.value = undefined;
-          next.done = true;
-
-          return next;
-        };
-
-        return next.next = next;
-      }
-    }
-
-    // Return an iterator with no values.
-    return { next: doneResult };
-  }
-  exports.values = values;
-
-  function doneResult() {
-    return { value: undefined, done: true };
-  }
-
-  Context.prototype = {
-    constructor: Context,
-
-    reset: function(skipTempReset) {
-      this.prev = 0;
-      this.next = 0;
-      // Resetting context._sent for legacy support of Babel's
-      // function.sent implementation.
-      this.sent = this._sent = undefined;
-      this.done = false;
-      this.delegate = null;
-
-      this.method = "next";
-      this.arg = undefined;
-
-      this.tryEntries.forEach(resetTryEntry);
-
-      if (!skipTempReset) {
-        for (var name in this) {
-          // Not sure about the optimal order of these conditions:
-          if (name.charAt(0) === "t" &&
-              hasOwn.call(this, name) &&
-              !isNaN(+name.slice(1))) {
-            this[name] = undefined;
-          }
-        }
-      }
-    },
-
-    stop: function() {
-      this.done = true;
-
-      var rootEntry = this.tryEntries[0];
-      var rootRecord = rootEntry.completion;
-      if (rootRecord.type === "throw") {
-        throw rootRecord.arg;
-      }
-
-      return this.rval;
-    },
-
-    dispatchException: function(exception) {
-      if (this.done) {
-        throw exception;
-      }
-
-      var context = this;
-      function handle(loc, caught) {
-        record.type = "throw";
-        record.arg = exception;
-        context.next = loc;
-
-        if (caught) {
-          // If the dispatched exception was caught by a catch block,
-          // then let that catch block handle the exception normally.
-          context.method = "next";
-          context.arg = undefined;
-        }
-
-        return !! caught;
-      }
-
-      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-        var entry = this.tryEntries[i];
-        var record = entry.completion;
-
-        if (entry.tryLoc === "root") {
-          // Exception thrown outside of any try block that could handle
-          // it, so set the completion value of the entire function to
-          // throw the exception.
-          return handle("end");
-        }
-
-        if (entry.tryLoc <= this.prev) {
-          var hasCatch = hasOwn.call(entry, "catchLoc");
-          var hasFinally = hasOwn.call(entry, "finallyLoc");
-
-          if (hasCatch && hasFinally) {
-            if (this.prev < entry.catchLoc) {
-              return handle(entry.catchLoc, true);
-            } else if (this.prev < entry.finallyLoc) {
-              return handle(entry.finallyLoc);
-            }
-
-          } else if (hasCatch) {
-            if (this.prev < entry.catchLoc) {
-              return handle(entry.catchLoc, true);
-            }
-
-          } else if (hasFinally) {
-            if (this.prev < entry.finallyLoc) {
-              return handle(entry.finallyLoc);
-            }
-
-          } else {
-            throw new Error("try statement without catch or finally");
-          }
-        }
-      }
-    },
-
-    abrupt: function(type, arg) {
-      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-        var entry = this.tryEntries[i];
-        if (entry.tryLoc <= this.prev &&
-            hasOwn.call(entry, "finallyLoc") &&
-            this.prev < entry.finallyLoc) {
-          var finallyEntry = entry;
-          break;
-        }
-      }
-
-      if (finallyEntry &&
-          (type === "break" ||
-           type === "continue") &&
-          finallyEntry.tryLoc <= arg &&
-          arg <= finallyEntry.finallyLoc) {
-        // Ignore the finally entry if control is not jumping to a
-        // location outside the try/catch block.
-        finallyEntry = null;
-      }
-
-      var record = finallyEntry ? finallyEntry.completion : {};
-      record.type = type;
-      record.arg = arg;
-
-      if (finallyEntry) {
-        this.method = "next";
-        this.next = finallyEntry.finallyLoc;
-        return ContinueSentinel;
-      }
-
-      return this.complete(record);
-    },
-
-    complete: function(record, afterLoc) {
-      if (record.type === "throw") {
-        throw record.arg;
-      }
-
-      if (record.type === "break" ||
-          record.type === "continue") {
-        this.next = record.arg;
-      } else if (record.type === "return") {
-        this.rval = this.arg = record.arg;
-        this.method = "return";
-        this.next = "end";
-      } else if (record.type === "normal" && afterLoc) {
-        this.next = afterLoc;
-      }
-
-      return ContinueSentinel;
-    },
-
-    finish: function(finallyLoc) {
-      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-        var entry = this.tryEntries[i];
-        if (entry.finallyLoc === finallyLoc) {
-          this.complete(entry.completion, entry.afterLoc);
-          resetTryEntry(entry);
-          return ContinueSentinel;
-        }
-      }
-    },
-
-    "catch": function(tryLoc) {
-      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-        var entry = this.tryEntries[i];
-        if (entry.tryLoc === tryLoc) {
-          var record = entry.completion;
-          if (record.type === "throw") {
-            var thrown = record.arg;
-            resetTryEntry(entry);
-          }
-          return thrown;
-        }
-      }
-
-      // The context.catch method must only be called with a location
-      // argument that corresponds to a known catch block.
-      throw new Error("illegal catch attempt");
-    },
-
-    delegateYield: function(iterable, resultName, nextLoc) {
-      this.delegate = {
-        iterator: values(iterable),
-        resultName: resultName,
-        nextLoc: nextLoc
-      };
-
-      if (this.method === "next") {
-        // Deliberately forget the last sent value so that we don't
-        // accidentally pass it on to the delegate.
-        this.arg = undefined;
-      }
-
-      return ContinueSentinel;
-    }
-  };
-
-  // Regardless of whether this script is executing as a CommonJS module
-  // or not, return the runtime object so that we can declare the variable
-  // regeneratorRuntime in the outer scope, which allows this module to be
-  // injected easily by `bin/regenerator --include-runtime script.js`.
-  return exports;
-
-}(
-  // If this script is executing as a CommonJS module, use module.exports
-  // as the regeneratorRuntime namespace. Otherwise create a new empty
-  // object. Either way, the resulting object will be used to initialize
-  // the regeneratorRuntime variable at the top of this file.
-   true ? module.exports : undefined
-));
-
-try {
-  regeneratorRuntime = runtime;
-} catch (accidentalStrictMode) {
-  // This module should not be running in strict mode, so the above
-  // assignment should always work unless something is misconfigured. Just
-  // in case runtime.js accidentally runs in strict mode, we can escape
-  // strict mode using a global Function call. This could conceivably fail
-  // if a Content Security Policy forbids using Function, but in that case
-  // the proper solution is to fix the accidental strict mode problem. If
-  // you've misconfigured your bundler to force strict mode and applied a
-  // CSP to forbid Function, and you're not willing to fix either of those
-  // problems, please detail your unique predicament in a GitHub issue.
-  Function("r", "regeneratorRuntime = r")(runtime);
-}
-
-
-/***/ }),
-
 /***/ "./node_modules/setimmediate/setImmediate.js":
 /*!***************************************************!*\
   !*** ./node_modules/setimmediate/setImmediate.js ***!
@@ -40967,25 +40218,104 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 
-/***/ "./resources/js/cliente/modificarCliente.js":
-/*!**************************************************!*\
-  !*** ./resources/js/cliente/modificarCliente.js ***!
-  \**************************************************/
+/***/ "./resources/js/components/menuPrincipal.vue":
+/*!***************************************************!*\
+  !*** ./resources/js/components/menuPrincipal.vue ***!
+  \***************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./menuPrincipal.vue?vue&type=template&id=15fedc58& */ "./resources/js/components/menuPrincipal.vue?vue&type=template&id=15fedc58&");
+/* harmony import */ var _menuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./menuPrincipal.vue?vue&type=script&lang=js& */ "./resources/js/components/menuPrincipal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./menuPrincipal.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _menuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/menuPrincipal.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/menuPrincipal.vue?vue&type=script&lang=js&":
+/*!****************************************************************************!*\
+  !*** ./resources/js/components/menuPrincipal.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./menuPrincipal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/menuPrincipal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=css&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=css& ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_17_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_17_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--17-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--17-2!../../../node_modules/vue-loader/lib??vue-loader-options!./menuPrincipal.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_17_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_17_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_17_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_17_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_17_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_17_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_17_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_17_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_17_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_17_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/menuPrincipal.vue?vue&type=template&id=15fedc58&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/components/menuPrincipal.vue?vue&type=template&id=15fedc58& ***!
+  \**********************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./menuPrincipal.vue?vue&type=template&id=15fedc58& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/menuPrincipal.vue?vue&type=template&id=15fedc58&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/crea/nuevaDivision.js":
+/*!********************************************!*\
+  !*** ./resources/js/crea/nuevaDivision.js ***!
+  \********************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var vue_the_mask__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-the-mask */ "./node_modules/vue-the-mask/dist/vue-the-mask.js");
-/* harmony import */ var vue_the_mask__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_the_mask__WEBPACK_IMPORTED_MODULE_1__);
-
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
+/* harmony import */ var vue_the_mask__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-the-mask */ "./node_modules/vue-the-mask/dist/vue-the-mask.js");
+/* harmony import */ var vue_the_mask__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_the_mask__WEBPACK_IMPORTED_MODULE_0__);
 __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.js");
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
@@ -40999,752 +40329,36 @@ var CryptoJS = __webpack_require__(/*! crypto-js */ "./node_modules/crypto-js/in
 var AES = __webpack_require__(/*! crypto-js/aes */ "./node_modules/crypto-js/aes.js");
 
 var self;
-Vue.use(vue_the_mask__WEBPACK_IMPORTED_MODULE_1___default.a);
+Vue.use(vue_the_mask__WEBPACK_IMPORTED_MODULE_0___default.a);
 Vue.component('menu-principal', __webpack_require__(/*! ../components/menuPrincipal.vue */ "./resources/js/components/menuPrincipal.vue")["default"]);
-
-var errorInit = function errorInit() {
-  Object.keys(self.form).forEach(function (indiceObjecto, indice) {
-    self.form[indiceObjecto].disabled = true;
-  });
-  self.submitActualizar.disabled = true;
-  self.alertForm = {
-    "class": "alert alert-warning",
-    message: "Existe un error!, consulte con el administrador del sistema.",
-    show: true
-  };
-};
-
-var datosIniciales = function datosIniciales() {
-  return new Promise(function (resolve, reject) {
-    axios.get('/detalleClienteModificar').then(function (response) {
-      if (response.status === 200 && response.data.response === true) {
-        resolve({
-          infoClie: response.data.info,
-          detalleUsuario: response.data.info,
-          detalleUsuarioG: response.data.info,
-          estadosfi: response.data.estadosfi,
-          municipiosfi: response.data.municipiosfi,
-          parroquiasfi: response.data.parroquiasfi,
-          estadosfa: response.data.estadosfa,
-          municipiosfa: response.data.municipiosfa,
-          parroquiasfa: response.data.parroquiasfa,
-          response: true
-        });
-      } else {
-        throw "error";
-      }
-    })["catch"](function (error) {
-      resolve({
-        response: false,
-        message: "Error al obtener la información del usuario"
-      });
-    });
-  });
-};
-
 var app = new Vue({
-  el: '#modificarCliente',
+  el: '#nuevaDivision',
   data: {
-    idCliente: null,
     alertForm: {
       "class": "",
       message: "",
       show: false
     },
-    comboEstadosfi: [],
-    comboMunicipiosfi: [],
-    comboParroquiasfi: [],
-    comboEstadosfa: [],
-    comboMunicipiosfa: [],
-    comboParroquiasfa: [],
     refreshForm: false,
     form: {
-      codigoCliente: {
-        disabled: false,
-        value: ""
-      },
-      rif: {
-        disabled: false,
-        value: ""
-      },
-      nit: {
-        disabled: false,
-        value: ""
-      },
-      razon_social: {
-        disabled: false,
-        value: ""
-      },
-      estadofi: {
-        disabled: true,
-        validar: false,
-        value: ""
-      },
-      municipiofi: {
-        disabled: true,
-        help: "Municipio de la oficina fiscal",
-        validar: false,
-        value: ""
-      },
-      parroquiafi: {
-        disabled: true,
-        help: "Parroquia de la oficina fiscal",
-        validar: false,
-        value: ""
-      },
-      ciudad_fiscal: {
-        disabled: false,
-        value: ""
-      },
-      avenida_calle_fiscal: {
-        disabled: false,
-        value: ""
-      },
-      edificio_quinta_fiscal: {
-        disabled: false,
-        value: ""
-      },
-      piso_fiscal: {
-        disabled: false,
-        value: ""
-      },
-      numero_fiscal: {
-        disabled: false,
-        value: ""
-      },
-      telefono_fiscal: {
-        disabled: false,
-        value: ""
-      },
-      fax_fiscal: {
-        disabled: false,
-        value: ""
-      },
-      email_fiscal: {
-        disabled: false,
-        value: ""
-      },
-      descripcion_factura: {
-        disabled: false,
-        value: ""
-      },
-      estadofa: {
-        disabled: true,
-        validar: false,
-        value: ""
-      },
-      municipiofa: {
-        disabled: true,
-        help: "Municipio de la oficina fiscal",
-        validar: false,
-        value: ""
-      },
-      parroquiafa: {
-        disabled: true,
-        help: "Parroquia de la oficina fiscal",
-        validar: false,
-        value: ""
-      },
-      ciudad_factura: {
-        disabled: false,
-        value: ""
-      },
-      avenida_calle_factura: {
-        disabled: false,
-        value: ""
-      },
-      edificio_quinta_factura: {
-        disabled: false,
-        value: ""
-      },
-      piso_factura: {
-        disabled: false,
-        value: ""
-      },
-      numero_factura: {
-        disabled: false,
-        value: ""
-      },
-      telefono_factura: {
-        disabled: false,
-        value: ""
-      },
-      fax_factura: {
-        disabled: false,
-        value: ""
-      },
-      correo_factura: {
-        disabled: false,
-        value: ""
-      },
-      empleado: {
-        checked: true
-      }
-    },
-    alert: {
-      message: "",
-      mostrar: false
-    },
-    formSearch: {
-      submit: {
-        disabled: true,
-        html: "Buscar"
-      },
-      inputSearch: {
-        disabled: true,
-        value: ""
-      },
-      select: {
+      nuevaDivision: {
         disabled: false,
         value: ""
       }
     },
-    formSearchG: {
-      submitG: {
-        disabled: true,
-        html: "BuscaRr"
-      },
-      inputSearchG: {
-        disabled: true,
-        value: ""
-      },
-      selectG: {
-        disabled: false,
-        value: ""
-      }
-    },
-    usuarios: {
-      mostrar: false,
-      registros: []
-    },
-    detalleUsuario: {
-      error: false,
-      data: []
-    },
-    usuariosG: {
-      mostrar: false,
-      registros: []
-    },
-    detalleUsuarioG: {
-      error: false,
-      data: []
-    },
-    submitActualizar: {
-      content: "Actualizar Datos",
+    submitCrear: {
+      content: "Crear Division",
       disabled: false,
       show: true
-    },
-    dataInicial: false
+    }
   },
-  beforeCreate: function () {
-    var _beforeCreate = _asyncToGenerator(
-    /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-      var dataInit;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              self = this;
-              _context.next = 3;
-              return datosIniciales();
-
-            case 3:
-              dataInit = _context.sent;
-
-              if (dataInit.response) {
-                self.idCliente = dataInit.infoClie.id;
-                self.detalleUsuario.data.id = dataInit.infoClie.id_usuario;
-                self.detalleUsuario.data.codigo = dataInit.infoClie.codigoU;
-                self.detalleUsuario.data.nombre = dataInit.infoClie.nombre;
-                self.detalleUsuarioG.data.codigo = dataInit.infoClie.codigoG;
-                self.detalleUsuarioG.data.nombre = dataInit.infoClie.nombreG;
-                self.formSearch.inputSearch.value = dataInit.infoClie.codigoU;
-                self.formSearchG.inputSearchG.value = dataInit.infoClie.codigoG;
-                self.form.codigoCliente.value = dataInit.infoClie.codigo;
-                self.form.rif.value = dataInit.infoClie.rif;
-                self.form.nit.value = dataInit.infoClie.nit;
-                self.form.razon_social.value = dataInit.infoClie.razon_social;
-                self.form.ciudad_fiscal.value = dataInit.infoClie.ciudad_fiscal;
-                self.form.avenida_calle_fiscal.value = dataInit.infoClie.avenida_calle_fiscal;
-                self.form.edificio_quinta_fiscal.value = dataInit.infoClie.edificio_quinta_fiscal;
-                self.form.piso_fiscal.value = dataInit.infoClie.piso_fiscal;
-                self.form.numero_fiscal.value = dataInit.infoClie.numero_fiscal;
-                self.form.telefono_fiscal.value = dataInit.infoClie.telefono_fiscal;
-                self.form.fax_fiscal.value = dataInit.infoClie.fax_fiscal;
-                self.form.email_fiscal.value = dataInit.infoClie.email_fiscal;
-                self.form.descripcion_factura.value = dataInit.infoClie.descripcion_factura;
-                self.form.ciudad_factura.value = dataInit.infoClie.ciudad_factura;
-                self.form.avenida_calle_factura.value = dataInit.infoClie.avenida_calle_factura;
-                self.form.edificio_quinta_factura.value = dataInit.infoClie.edificio_quinta_factura;
-                self.form.piso_factura.value = dataInit.infoClie.piso_factura;
-                self.form.numero_factura.value = dataInit.infoClie.numero_factura;
-                self.form.telefono_factura.value = dataInit.infoClie.telefono_factura;
-                self.form.fax_factura.value = dataInit.infoClie.fax_factura;
-                self.form.correo_factura.value = dataInit.infoClie.correo_factura;
-                self.comboEstadosfi = dataInit.estadosfi;
-                self.comboMunicipiosfi = dataInit.municipiosfi;
-                self.comboParroquiasfi = dataInit.parroquiasfi;
-                self.form.estadofi.disabled = false;
-                self.form.municipiofi.disabled = false;
-                self.form.parroquiafi.disabled = false;
-                self.form.estadofi.validar = true;
-                self.form.municipiofi.validar = true;
-                self.form.parroquiafi.validar = true;
-                self.form.estadofi.value = dataInit.infoClie.id_estado_fiscal;
-                self.form.municipiofi.value = dataInit.infoClie.id_municipio_fiscal;
-                self.form.parroquiafi.value = dataInit.infoClie.id_parroquia_fiscal;
-                self.comboEstadosfa = dataInit.estadosfa;
-                self.comboMunicipiosfa = dataInit.municipiosfa;
-                self.comboParroquiasfa = dataInit.parroquiasfa;
-                self.form.estadofa.disabled = false;
-                self.form.municipiofa.disabled = false;
-                self.form.parroquiafa.disabled = false;
-                self.form.estadofa.validar = true;
-                self.form.municipiofa.validar = true;
-                self.form.parroquiafa.validar = true;
-                self.form.estadofa.value = dataInit.infoClie.id_estado_factura;
-                self.form.municipiofa.value = dataInit.infoClie.id_municipio_factura;
-                self.form.parroquiafa.value = dataInit.infoClie.id_parroquia_factura;
-              } else {
-                errorInit();
-              }
-
-            case 5:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee, this);
-    }));
-
-    function beforeCreate() {
-      return _beforeCreate.apply(this, arguments);
-    }
-
-    return beforeCreate;
-  }(),
-  created: function () {
-    var _created = _asyncToGenerator(
-    /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-      var checkDataInitReady;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              checkDataInitReady = setInterval(function () {
-                if (self.form.codigoCliente.value !== '') {
-                  clearInterval(checkDataInitReady);
-                  new AutoNumeric('#codigoCliente', {
-                    decimalPlaces: 0,
-                    decimalCharacter: ',',
-                    digitGroupSeparator: '',
-                    leadingZero: 'keep',
-                    modifyValueOnWheel: false
-                  });
-                  AutoNumeric.getAutoNumericElement("#codigoCliente").set(self.form.codigoCliente.value);
-                  new AutoNumeric('#rif', {
-                    decimalPlaces: 0,
-                    decimalCharacter: ',',
-                    digitGroupSeparator: '.',
-                    modifyValueOnWheel: false
-                  });
-                  AutoNumeric.getAutoNumericElement("#rif").set(self.form.rif.value);
-                  new AutoNumeric('#nit', {
-                    decimalPlaces: 0,
-                    decimalCharacter: ',',
-                    digitGroupSeparator: '.',
-                    modifyValueOnWheel: false
-                  });
-                  AutoNumeric.getAutoNumericElement("#nit").set(self.form.nit.value);
-                  new AutoNumeric('#numero_fiscal', {
-                    decimalPlaces: 0,
-                    decimalCharacter: ',',
-                    digitGroupSeparator: '.',
-                    modifyValueOnWheel: false
-                  });
-                  AutoNumeric.getAutoNumericElement("#numero_fiscal").set(self.form.numero_fiscal.value);
-                  new AutoNumeric('#numero_factura', {
-                    decimalPlaces: 0,
-                    decimalCharacter: ',',
-                    digitGroupSeparator: '.',
-                    modifyValueOnWheel: false
-                  });
-                  AutoNumeric.getAutoNumericElement("#numero_factura").set(self.form.numero_factura.value);
-                  var indices = ["rif", "nit", "razon_social", "ciudad_fiscal", "avenida_calle_fiscal", "edificio_quinta_fiscal", "piso_fiscal", "numero_fiscal", "telefono_fiscal", "fax_fiscal", "email_fiscal", "descripcion_factura", "ciudad_factura", "avenida_calle_factura", "edificio_quinta_factura", "piso_factura", "numero_factura", "telefono_factura", "fax_factura", "correo_factura"];
-                  indices.forEach(function (indiceObjecto, indice) {
-                    self.form[indiceObjecto].disabled = false;
-                  });
-                }
-              }, 1000);
-
-            case 1:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2);
-    }));
-
-    function created() {
-      return _created.apply(this, arguments);
-    }
-
-    return created;
-  }(),
-  mounted: function () {
-    var _mounted = _asyncToGenerator(
-    /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3);
-    }));
-
-    function mounted() {
-      return _mounted.apply(this, arguments);
-    }
-
-    return mounted;
-  }(),
+  beforeCreate: function beforeCreate() {
+    self = this;
+  },
+  created: function created() {},
+  mounted: function mounted() {},
   updated: function updated() {},
   methods: {
-    buscar: function buscar(e) {
-      self.alert.mostrar = false;
-
-      if (self.formSearch.inputSearch.value.trim() !== "") {
-        self.formSearch.submit.html = '<i class="fas fa-cog fa-spin"></i>';
-        self.formSearch.submit.disabled = true;
-        var parametros = {
-          buscarPor: self.formSearch.select.value,
-          dato: self.formSearch.inputSearch.value
-        };
-        axios.get('/buscarUsuariosS', {
-          params: parametros
-        }).then(function (response) {
-          self.formSearch.submit.html = 'Buscar';
-          self.formSearch.submit.disabled = false;
-
-          if (response.status === 200 && response.data.response === true) {
-            self.usuarios.mostrar = true;
-            self.usuarios.registros = response.data.usuarios;
-            $('#modal-detalle-usuario').modal("show");
-            $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
-          } else {
-            throw response.data;
-          }
-        })["catch"](function (error) {
-          self.formSearch.submit.html = 'Buscar';
-          self.formSearch.submit.disabled = false;
-          self.alert.mostrar = true;
-          self.usuarios.registros = [];
-          self.usuarios.mostrar = false;
-
-          if (error.response) {
-            var message = "Existe un error!, consulte con el administrador del sistema.";
-          } else {
-            var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
-          }
-
-          self.alert.message = message;
-        });
-      } else {
-        $(".inputSearch").parent().find(".mensaje").html("Campo requerido").addClass("invalid-feedback");
-        $(".inputSearch").addClass("error");
-        zenscroll.toY($(".inputSearch").offset().top - 100);
-      }
-    },
-    buscarG: function buscarG(e) {
-      self.alert.mostrar = false;
-
-      if (self.formSearchG.inputSearchG.value.trim() !== "") {
-        self.formSearchG.submitG.html = '<i class="fas fa-cog fa-spin"></i>';
-        self.formSearchG.submitG.disabled = true;
-        var parametros = {
-          buscarPor: self.formSearchG.selectG.value,
-          dato: self.formSearchG.inputSearchG.value
-        };
-        axios.get('/buscarUsuariosG', {
-          params: parametros
-        }).then(function (response) {
-          self.formSearchG.submitG.html = 'Buscar';
-          self.formSearchG.submitG.disabled = false;
-
-          if (response.status === 200 && response.data.response === true) {
-            self.usuariosG.mostrar = true;
-            self.usuariosG.registros = response.data.usuariosG;
-            $('#modal-detalle-usuarioG').modal("show");
-            $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
-          } else {
-            throw response.data;
-          }
-        })["catch"](function (error) {
-          self.formSearchG.submitG.html = 'Buscar';
-          self.formSearchG.submitG.disabled = false;
-          self.alert.mostrar = true;
-          self.usuariosG.registros = [];
-          self.usuariosG.mostrar = false;
-
-          if (error.response) {
-            var message = "Existe un error!, consulte con el administrador del sistema.";
-          } else {
-            var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
-          }
-
-          self.alert.message = message;
-        });
-      } else {
-        $(".inputSearchG").parent().find(".mensaje").html("Campo requerido").addClass("invalid-feedback");
-        $(".inputSearchG").addClass("error");
-        zenscroll.toY($(".inputSearchG").offset().top - 100);
-      }
-    },
-    tipoFiltro: function tipoFiltro(e) {
-      var opcion = parseInt(e.target.value);
-      var valoresPermitidos = [1, 2, 3, 4];
-      self.usuarios.mostrar = false;
-      self.usuarios.registros = [];
-
-      if (valoresPermitidos.includes(opcion)) {
-        self.formSearch.inputSearch.disabled = false;
-        self.formSearch.submit.disabled = false;
-      } else {
-        self.formSearch.inputSearch.disabled = true;
-        self.formSearch.submit.disabled = true;
-      }
-    },
-    tipoFiltroG: function tipoFiltroG(e) {
-      var opcion = parseInt(e.target.value);
-      var valoresPermitidos = [1, 2, 3, 4];
-      self.usuariosG.mostrar = false;
-      self.usuariosG.registros = [];
-
-      if (valoresPermitidos.includes(opcion)) {
-        self.formSearchG.inputSearchG.disabled = false;
-        self.formSearchG.submitG.disabled = false;
-      } else {
-        self.formSearchG.inputSearchG.disabled = true;
-        self.formSearchG.submitG.disabled = true;
-      }
-    },
-    evaluarCampo: function evaluarCampo(id, e) {
-      if (e.target.type === 'text') {
-        self.formSearch[id].value = e.target.value.trim() === "" ? "" : $(e.target).val();
-      }
-
-      if (id === "inputSearch" && self.formSearch["inputSearch"].value.trim() === "") {
-        self.usuarios.registros = [];
-        self.usuarios.mostrar = false;
-      }
-
-      self.limpiarMensajeError(e);
-    },
-    evaluarCampoG: function evaluarCampoG(id, e) {
-      if (e.target.type === 'text') {
-        self.formSearchG[id].value = e.target.value.trim() === "" ? "" : $(e.target).val();
-      }
-
-      if (id === "inputSearchG" && self.formSearchG["inputSearchG"].value.trim() === "") {
-        self.usuariosG.registros = [];
-        self.usuariosG.mostrar = false;
-      }
-
-      self.limpiarMensajeError(e);
-    },
-    SelecionarUsuario: function SelecionarUsuario(idUsuario, e) {
-      self.detalleUsuario.error = false;
-      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
-      var parametros = {
-        idUsuario: idUsuario
-      };
-      axios.get('/detalleUsuarios', {
-        params: parametros
-      }).then(function (response) {
-        if (response.status === 200 && response.data.response === true) {
-          self.detalleUsuario.data = response.data.info;
-        } else {
-          throw response.data;
-        }
-      })["catch"](function (error) {
-        self.detalleUsuario.error = true;
-        $('#modal-detalle-usuario').modal("show");
-        $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
-      });
-    },
-    SelecionarUsuarioG: function SelecionarUsuarioG(idUsuario, e) {
-      self.detalleUsuarioG.error = false;
-      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
-      var parametros = {
-        idUsuario: idUsuario
-      };
-      axios.get('/detalleUsuarios', {
-        params: parametros
-      }).then(function (response) {
-        if (response.status === 200 && response.data.response === true) {
-          self.detalleUsuarioG.data = response.data.info;
-        } else {
-          throw response.data;
-        }
-      })["catch"](function (error) {
-        self.detalleUsuarioG.error = true;
-        $('#modal-detalle-usuarioG').modal("show");
-        $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
-      });
-    },
-    municipiosfi: function municipiosfi() {
-      self.form.municipiofi.value = "";
-      self.form.municipiofi.disabled = true;
-      self.form.parroquiafi.value = "";
-      self.form.parroquiafi.disabled = true;
-      self.form.parroquiafi.help = '<i class="fas fa-cog fa-spin"></i> buscando';
-      axios.get('/municipios', {
-        params: {
-          id_estado: self.form.estadofi.value
-        }
-      }).then(function (response) {
-        if (response.status === 200 && response.data.length > 0) {
-          self.form.parroquiafi.help = 'Parroquia de la oficina en donde se desempeña';
-          self.comboMunicipiosfi = response.data;
-          self.form.municipiofi.disabled = false;
-        } else {
-          throw "error";
-        }
-      })["catch"](function (error) {
-        self.form.parroquiafi.help = 'Parroquia de la oficina en donde se desempeña';
-        Object.keys(self.form).forEach(function (indiceObjecto, indice) {
-          self.form[indiceObjecto].disabled = true;
-        });
-        self.submitCrear.disabled = true;
-        self.alertForm = {
-          "class": "alert alert-warning",
-          message: "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-      });
-    },
-    parroquiasfi: function parroquiasfi() {
-      self.form.parroquiafi.disabled = true;
-      axios.get('/parroquias', {
-        params: {
-          id_municipio: self.form.municipiofi.value
-        }
-      }).then(function (response) {
-        if (response.status === 200 && response.data.length > 0) {
-          self.comboParroquiasfi = response.data;
-          self.form.parroquiafi.disabled = false;
-        } else {
-          throw "error";
-        }
-      })["catch"](function (error) {
-        Object.keys(self.form).forEach(function (indiceObjecto, indice) {
-          self.form[indiceObjecto].disabled = true;
-        });
-        self.submitCrear.disabled = true;
-        self.alertForm = {
-          "class": "alert alert-warning",
-          message: "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-      });
-    },
-    municipiosfa: function municipiosfa() {
-      self.form.municipiofa.value = "";
-      self.form.municipiofa.disabled = true;
-      self.form.parroquiafa.value = "";
-      self.form.parroquiafa.disabled = true;
-      self.form.parroquiafa.help = '<i class="fas fa-cog fa-spin"></i> buscando';
-      axios.get('/municipios', {
-        params: {
-          id_estado: self.form.estadofa.value
-        }
-      }).then(function (response) {
-        if (response.status === 200 && response.data.length > 0) {
-          self.form.parroquiafa.help = 'Parroquia de la oficina en donde se desempeña';
-          self.comboMunicipiosfa = response.data;
-          self.form.municipiofa.disabled = false;
-        } else {
-          throw "error";
-        }
-      })["catch"](function (error) {
-        self.form.parroquiafa.help = 'Parroquia de la oficina en donde se desempeña';
-        Object.keys(self.form).forEach(function (indiceObjecto, indice) {
-          self.form[indiceObjecto].disabled = true;
-        });
-        self.submitCrear.disabled = true;
-        self.alertForm = {
-          "class": "alert alert-warning",
-          message: "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-      });
-    },
-    parroquiasfa: function parroquiasfa() {
-      self.form.parroquiafa.disabled = true;
-      axios.get('/parroquias', {
-        params: {
-          id_municipio: self.form.municipiofa.value
-        }
-      }).then(function (response) {
-        if (response.status === 200 && response.data.length > 0) {
-          self.comboParroquiasfa = response.data;
-          self.form.parroquiafa.disabled = false;
-        } else {
-          throw "error";
-        }
-      })["catch"](function (error) {
-        Object.keys(self.form).forEach(function (indiceObjecto, indice) {
-          self.form[indiceObjecto].disabled = true;
-        });
-        self.submitCrear.disabled = true;
-        self.alertForm = {
-          "class": "alert alert-warning",
-          message: "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-      });
-    },
-    esEmpleado: function esEmpleado(e) {
-      if (self.form.empleado.checked) {
-        self.form.estadofi.disabled = false;
-        self.form.estadofa.disabled = false;
-        self.form.estadofi.validar = true;
-        self.form.municipiofi.validar = true;
-        self.form.parroquiafi.validar = true;
-        self.form.estadofa.validar = true;
-        self.form.municipiofa.validar = true;
-        self.form.parroquiafa.validar = true;
-        self.form.estadofi.value = "";
-        self.form.estadofa.value = "";
-      } else {
-        $(e.target).parents("form").find(".form-group .mensaje").html("").removeClass("invalid-feedback");
-        $(e.target).parents("form").find(".form-group .form-control").removeClass("error");
-        self.form.estadofi.disabled = true;
-        self.form.municipiofi.disabled = true;
-        self.form.parroquiafi.disabled = true;
-        self.form.estadofa.disabled = true;
-        self.form.municipiofa.disabled = true;
-        self.form.parroquiafa.disabled = true;
-        self.form.estadofi.validar = false;
-        self.form.municipiofi.validar = false;
-        self.form.parroquiafi.validar = false;
-        self.form.estadofa.validar = false;
-        self.form.municipiofa.validar = false;
-        self.form.parroquiafa.validar = false;
-        self.form.estadofi.value = "";
-        self.form.municipiofi.value = "";
-        self.form.parroquiafi.value = "";
-        self.form.estadofa.value = "";
-        self.form.municipiofa.value = "";
-        self.form.parroquiafa.value = "";
-      }
-    },
     valuesForm: function valuesForm(e) {
       if (e.target.type === 'text' || e.target.type === 'textarea' || e.target.type === 'email') {
         self.form[e.target.id].value = e.target.value.trim() === "" ? "" : $(e.target).val();
@@ -41760,7 +40374,7 @@ var app = new Vue({
       self.valuesForm(e);
       self.form[e.target.id].validar = self.form[e.target.id].value.length > 0 && self.form[e.target.id].validar === false ? true : false;
     },
-    actualizar: function actualizar() {
+    crear: function crear() {
       var formValido = true;
       $("form .form-group .mensaje").html("").removeClass("invalid-feedback");
       $("form .form-group .form-control").removeClass("error");
@@ -41786,52 +40400,17 @@ var app = new Vue({
         }; //Obtenemos valores
 
         var parametros = {
-          idCliente: self.idCliente,
-          idUsuario: self.detalleUsuario.data.id,
-          idUsuario2: self.detalleUsuarioG.data.id,
-          codigoCliente: AutoNumeric.getAutoNumericElement("#codigoCliente").getNumber(),
-          rif: AutoNumeric.getAutoNumericElement("#rif").getNumber(),
-          nit: AutoNumeric.getAutoNumericElement("#nit").getNumber(),
-          razon_social: self.form.razon_social.value,
-          parroquiafi: self.form.parroquiafi.value,
-          ciudad_fiscal: self.form.ciudad_fiscal.value,
-          avenida_calle_fiscal: self.form.avenida_calle_fiscal.value,
-          edificio_quinta_fiscal: self.form.edificio_quinta_fiscal.value,
-          piso_fiscal: self.form.piso_fiscal.value,
-          numero_fiscal: AutoNumeric.getAutoNumericElement("#numero_fiscal").getNumber(),
-          telefono_fiscal: self.form.telefono_fiscal.value,
-          fax_fiscal: self.form.fax_fiscal.value,
-          email_fiscal: self.form.email_fiscal.value,
-          descripcion_factura: self.form.descripcion_factura.value,
-          parroquiafa: self.form.parroquiafa.value,
-          ciudad_factura: self.form.ciudad_factura.value,
-          avenida_calle_factura: self.form.avenida_calle_factura.value,
-          edificio_quinta_factura: self.form.edificio_quinta_factura.value,
-          piso_factura: self.form.piso_factura.value,
-          numero_factura: AutoNumeric.getAutoNumericElement("#numero_factura").getNumber(),
-          telefono_factura: self.form.telefono_factura.value,
-          fax_factura: self.form.fax_factura.value,
-          correo_factura: self.form.correo_factura.value
+          nuevaDivision: self.form.nuevaDivision.value
         };
-        self.submitActualizar.content = '<i class="fas fa-cog fa-spin"></i>';
-        self.submitActualizar.disabled = true;
+        self.submitCrear.content = '<i class="fas fa-cog fa-spin"></i>';
+        self.submitCrear.disabled = true;
         Object.keys(self.form).forEach(function (indiceObjecto, indice) {
           self.form[indiceObjecto].disabled = true;
         });
-        axios.post('/modificarCliente', parametros).then(function (response) {
+        axios.post('/crearDivision', parametros).then(function (response) {
           if (response.status === 200 && response.data.response === true) {
-            var indices = ["rif", "nit", "razon_social", "ciudad_fiscal", "avenida_calle_fiscal", "edificio_quinta_fiscal", "piso_fiscal", "numero_fiscal", "telefono_fiscal", "fax_fiscal", "email_fiscal", "descripcion_factura", "ciudad_factura", "avenida_calle_factura", "edificio_quinta_factura", "piso_factura", "numero_factura", "telefono_factura", "fax_factura", "correo_factura"];
-
-            if (self.form.empleado.checked) {
-              indices.push("estadofi", "municipiofi", "parroquiafi", "estadofa", "municipiofa", "parroquiafa");
-            }
-
-            indices.forEach(function (indiceObjecto, indice) {
-              self.form[indiceObjecto].disabled = false;
-            });
-            self.submitActualizar.content = 'Actualizar Datos';
-            self.submitActualizar.disabled = false;
-            self.submitActualizar.show = true;
+            self.submitCrear.show = false;
+            self.refreshForm = true;
             self.alertForm = {
               "class": "alert alert-success",
               message: response.data.message,
@@ -41841,17 +40420,12 @@ var app = new Vue({
             throw response.data;
           }
         })["catch"](function (error) {
-          var indices = ["rif", "nit", "razon_social", "ciudad_fiscal", "avenida_calle_fiscal", "edificio_quinta_fiscal", "piso_fiscal", "numero_fiscal", "telefono_fiscal", "fax_fiscal", "email_fiscal", "descripcion_factura", "ciudad_factura", "avenida_calle_factura", "edificio_quinta_factura", "piso_factura", "numero_factura", "telefono_factura", "fax_factura", "correo_factura"];
-
-          if (self.form.empleado.checked) {
-            indices.push("estadofi", "municipiofi", "parroquiafi", "estadofa", "municipiofa", "parroquiafa");
-          }
-
+          var indices = ["nuevaDivision"];
           indices.forEach(function (indiceObjecto, indice) {
             self.form[indiceObjecto].disabled = false;
           });
-          self.submitActualizar.content = 'Actualizar Datos';
-          self.submitActualizar.disabled = false;
+          self.submitCrear.content = 'Crear nuevo Cargo';
+          self.submitCrear.disabled = false;
 
           if (error.response) {
             var message = "Existe un error!, consulte con el administrador del sistema.";
@@ -41945,11 +40519,11 @@ var app = new Vue({
     },
     keyboard: function keyboard(e) {
       if (e.keyCode === 13) {
-        self.actualizar();
+        self.crear();
       }
     },
     refreshView: function refreshView() {
-      window.location.href = "/formBuscarCliente";
+      window.location.href = "/formNuevaDivision";
     }
   } // Fin methods
 
@@ -41957,101 +40531,14 @@ var app = new Vue({
 
 /***/ }),
 
-/***/ "./resources/js/components/menuPrincipal.vue":
-/*!***************************************************!*\
-  !*** ./resources/js/components/menuPrincipal.vue ***!
-  \***************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./menuPrincipal.vue?vue&type=template&id=15fedc58& */ "./resources/js/components/menuPrincipal.vue?vue&type=template&id=15fedc58&");
-/* harmony import */ var _menuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./menuPrincipal.vue?vue&type=script&lang=js& */ "./resources/js/components/menuPrincipal.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./menuPrincipal.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=css&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-
-/* normalize component */
-
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
-  _menuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "resources/js/components/menuPrincipal.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./resources/js/components/menuPrincipal.vue?vue&type=script&lang=js&":
-/*!****************************************************************************!*\
-  !*** ./resources/js/components/menuPrincipal.vue?vue&type=script&lang=js& ***!
-  \****************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./menuPrincipal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/menuPrincipal.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=css&":
-/*!************************************************************************************!*\
-  !*** ./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=css& ***!
-  \************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_17_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_17_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--17-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--17-2!../../../node_modules/vue-loader/lib??vue-loader-options!./menuPrincipal.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=css&");
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_17_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_17_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_17_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_17_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_17_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_17_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_17_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_17_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
- /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_17_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_17_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
-
-/***/ }),
-
-/***/ "./resources/js/components/menuPrincipal.vue?vue&type=template&id=15fedc58&":
-/*!**********************************************************************************!*\
-  !*** ./resources/js/components/menuPrincipal.vue?vue&type=template&id=15fedc58& ***!
-  \**********************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./menuPrincipal.vue?vue&type=template&id=15fedc58& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/menuPrincipal.vue?vue&type=template&id=15fedc58&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
-
-
-
-/***/ }),
-
-/***/ 8:
-/*!********************************************************!*\
-  !*** multi ./resources/js/cliente/modificarCliente.js ***!
-  \********************************************************/
+/***/ 11:
+/*!**************************************************!*\
+  !*** multi ./resources/js/crea/nuevaDivision.js ***!
+  \**************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\cliente\modificarCliente.js */"./resources/js/cliente/modificarCliente.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\crea\nuevaDivision.js */"./resources/js/crea/nuevaDivision.js");
 
 
 /***/ })

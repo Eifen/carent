@@ -27,7 +27,7 @@
                         v-bind:disabled="formSearch.select.disabled"
                         v-model="formSearch.select.value"
                         v-on:change="tipoFiltro">
-                  <option value="" selected disabled>Buscar Socio por</option>
+                  <option value="" selected disabled>Agregar Socio encargado por</option>
                   <option value="1">Código de usuario</option>
                   <option value="2">Cédula</option>
                   <option value="4">Primer o segundo nombre</option>
@@ -83,18 +83,80 @@
                     <input class="form-control" type="text" disabled v-bind:value="detalleUsuario.data.codigo">
                   </div>
                   <div class="form-group col-12 col-sm-6">
-                    <label>Primer Nombre</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleUsuario.data.nombre_1">
-                  </div>
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Segundo Nombre</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleUsuario.data.nombre_2">
-                  </div>
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Primer Apellido</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleUsuario.data.apellido_1">
+                    <label>Nombre</label>
+                    <input class="form-control" type="text" disabled v-bind:value="detalleUsuario.data.nombre">
                   </div>
             </form>
+          </form>
+          <form class="row">
+              <div class="form-group col-12 col-md-4">
+                <select class="form-control"
+                        v-bind:disabled="formSearchG.selectG.disabled"
+                        v-model="formSearchG.selectG.value"
+                        v-on:change="tipoFiltroG">
+                  <option value="" selected disabled>Agregar Gerente encargado por</option>
+                  <option value="1">Código de usuario</option>
+                  <option value="2">Cédula</option>
+                  <option value="4">Primer o segundo nombre</option>
+                  <option value="5">Primer o segundo apellido</option>
+                </select>
+              </div>
+              <div class="form-group col-12 col-md-6">
+                <input class="form-control inputSearch"
+                       ref="inputSearchG"
+                       type="text"
+                       v-bind:disabled="formSearchG.inputSearchG.disabled"
+                       v-on:keyup="evaluarCampoG('inputSearchG', $event)"
+                       v-model="formSearchG.inputSearchG.value">
+                <div class="mensaje"></div>
+              </div>
+              <div class="form-group col-12 col-md-2">
+                <button class="btn btn-primary"
+                        type="button"
+                        v-bind:disabled="formSearchG.submitG.disabled"
+                        v-html="formSearchG.submitG.html"
+                        v-on:click="buscarG">                          
+                </button>
+              </div>
+              <div id="modal-detalle-usuarioG" class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                  <div class="modal-content">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th scope="col">Código</th>
+                          <th scope="col">Cédula</th>
+                          <th scope="col">Nombre</th>
+                          <th scope="col">Cargo</th>
+                          <th scope="col"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="usuario in usuariosG.registros">
+                          <th scope="row">@{{ usuario.codigo }}</th>
+                          <td>@{{ usuario.cedula }}</td>
+                          <td>@{{ usuario.nombre }}</td>
+                          <td>@{{ usuario.cargo }}</td>
+                          <td>
+                            <i class="fas fa-check-square" data-dismiss="modal" v-on:click="SelecionarUsuarioG(usuario.id, $event)"></i>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            <form class="row" v-if="!detalleUsuarioG.error">
+                  <div class="form-group col-12 col-sm-6">
+                    <label>Codigo</label>
+                    <input class="form-control" type="text" disabled v-bind:value="detalleUsuarioG.data.codigo">
+                  </div>
+                  <div class="form-group col-12 col-sm-6">
+                    <label>Nombre</label>
+                    <input class="form-control" type="text" disabled v-bind:value="detalleUsuarioG.data.nombre">
+                  </div>
+            </form>
+          </form>
             <form class="row">
               <div class="col-12 wrapper-required-legend">
                 <b>Campos obligatorios (<span class="campo-obligatorio">*</span>)</b>
@@ -160,7 +222,7 @@
                        v-model="form.razon_social.value"
                        v-on:keyup="valuesForm"
                        type="text">
-                <small id="razon_socialHelp" class="form-text text-muted">Ejemplo: auditoria...</small>
+                <small id="razon_socialHelp" class="form-text text-muted">Ejemplo: Banco...</small>
                 <div class="mensaje"></div>
               </div>
             </form>

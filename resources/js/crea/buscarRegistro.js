@@ -10,7 +10,7 @@ Vue.component('menu-principal', require('../components/menuPrincipal.vue').defau
 
 var app = new Vue({
 
-  el: '#buscarCliente',
+  el: '#buscarRegistro',
   data: {
     alert:{
       message: "",
@@ -23,18 +23,18 @@ var app = new Vue({
       },
       inputSearch: {
         disabled: true,
-        value: ""
+        value: "l"
       },
       select: {
         disabled:false,
         value: ""
       }
     },
-    clientes: {
+    registros: {
       mostrar: false,
       registros: []
     },
-    detalleCliente: {
+    detalleRegistro: {
       error: false,
       data: []
     }
@@ -49,17 +49,17 @@ var app = new Vue({
   },
   mounted: function () {
 
-    $('#modal-detalle-cliente').on('hidden.bs.modal', function () {
+    $('#modal-detalle-registro').on('hidden.bs.modal', function () {
 
-      self.detalleCliente.data = [];
-      self.detalleCliente.error = false;
+      self.detalleRegistro.data = [];
+      self.detalleRegistro.error = false;
 
     });
 
   },
   updated: function () {},
   methods:{
-    buscar: function(e){
+    Crear: function(e){
 
       self.alert.mostrar = false;
 
@@ -70,10 +70,9 @@ var app = new Vue({
 
         let parametros = {
           buscarPor: self.formSearch.select.value,
-          dato: self.formSearch.inputSearch.value
         };
 
-        axios.get('/buscarClientes', {params: parametros})
+        axios.get('/buscarRegistro', {params: parametros})
         .then(function (response) {
 
           self.formSearch.submit.html = 'Consultar';
@@ -81,8 +80,8 @@ var app = new Vue({
 
           if(response.status === 200 && response.data.response === true){
 
-            self.clientes.mostrar = true;
-            self.clientes.registros = response.data.clientes;
+            self.registros.mostrar = true;
+            self.registros.registros = response.data.registros;
 
           }else{
 
@@ -98,8 +97,8 @@ var app = new Vue({
 
           self.alert.mostrar = true;
 
-          self.clientes.registros = [];
-          self.clientes.mostrar = false;
+          self.registros.registros = [];
+          self.registros.mostrar = false;
 
           if(error.response){
 
@@ -127,10 +126,10 @@ var app = new Vue({
     tipoFiltro: function(e){
 
       let opcion = parseInt(e.target.value);
-      let valoresPermitidos = [1,2,3,4];
+      let valoresPermitidos = [1,2];
 
-      self.clientes.mostrar = false;
-      self.clientes.registros = [];
+      self.registros.mostrar = false;
+      self.registros.registros = [];
 
       if(valoresPermitidos.includes(opcion)){
         self.formSearch.inputSearch.disabled = false;
@@ -148,8 +147,8 @@ var app = new Vue({
       }
 
       if(id === "inputSearch" && self.formSearch["inputSearch"].value.trim() === ""){
-        self.clientes.registros = [];
-        self.clientes.mostrar = false;
+        self.registros.registros = [];
+        self.registros.mostrar = false;
       }
 
       self.limpiarMensajeError(e);
@@ -159,23 +158,24 @@ var app = new Vue({
       $(e.target).removeClass("error");
       $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
     },
-    mostrarDetalleCliente: function(idCliente,e){
+    mostrardetalleRegistro: function(idRegistro,e){
 
-      self.detalleCliente.error = false;
+      self.detalleRegistro.error = false;
       $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
 
       let parametros = {
-        idCliente: idCliente
+        buscarPor: self.formSearch.select.value,
+        idRegistro: idRegistro
       };
 
-      axios.get('/detalleCliente', {params: parametros})
+      axios.get('/detalleRegistro', {params: parametros})
       .then(function (response) {
 
         if(response.status === 200 && response.data.response === true){
 
-          self.detalleCliente.data = response.data.info;
+          self.detalleRegistro.data = response.data.info;
 
-          $('#modal-detalle-cliente').modal("show");
+          $('#modal-detalle-registro').modal("show");
           $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
 
         }else{
@@ -187,13 +187,12 @@ var app = new Vue({
       })
       .catch(error => {
 
-        self.detalleCliente.error = true;
-        $('#modal-detalle-cliente').modal("show");
+        self.detalleRegistro.error = true;
+        $('#modal-detalle-registro').modal("show");
         $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
 
       });
 
-    }
+    },
   }// Fin methods
-
 });

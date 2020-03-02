@@ -45,9 +45,16 @@ Route::post('/crearCliente', 'ClienteController@crearCliente');
 Route::get('/formBuscarCliente', function() {return view('cliente/buscarCliente');});
 Route::get('/buscarClientes', 'ClienteController@buscarClientes');
 Route::get('/detalleCliente', 'ClienteController@detalleCliente');
-Route::get('/buscarUsuarios', 'ClienteController@buscarUsuarios');
-Route::get('/detalleUsuario', 'ClienteController@detalleUsuario');
-
+Route::get('/buscarUsuariosS', 'ClienteController@buscarUsuarios');
+Route::get('/buscarUsuariosG', 'ClienteController@buscarUsuariosG');
+Route::get('/detalleUsuarios', 'ClienteController@detalleUsuario');
 Route::get('/formModificarCliente/{idCliente}', 'ClienteController@formModificarCliente')->where('idCliente', '[0-9]+');//Validamos que solo pase números*/
 Route::get('/detalleClienteModificar', 'ClienteController@detalleClienteModificar');
 Route::post('/modificarCliente', 'ClienteController@modificarCliente');
+Route::get('/formBuscarRegistro', function() {return view('crea/buscarRegistro');});
+Route::get('/buscarRegistro', 'CreaController@buscarRegistro');
+Route::get('/detalleRegistro', 'CreaController@detalleRegistro');
+Route::get('/formNuevoCargo', function() {return view('crea/nuevoCargo');});
+Route::post('/crearCargo', 'CreaController@crearCargo');
+Route::get('/formNuevaDivision', function() {return view('crea/nuevaDivision');});
+Route::post('/crearDivision', 'CreaController@crearDivision');

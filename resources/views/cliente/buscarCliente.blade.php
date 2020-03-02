@@ -97,23 +97,26 @@
                 <div v-if="detalleCliente.error" class="alert alert-warning">
                   Ocurrio un error al intentar mostrar el detalle del cliente, por favor intente nuevamente o comuníquese con el administrador del sistema!
                 </div>
-                <h5 v-if="!detalleCliente.error">Encargado</h5>
+                <h5 v-if="!detalleCliente.error">Socio Encargado</h5>
                 <form class="row" v-if="!detalleCliente.error">
                   <div class="form-group col-12 col-sm-6">
-                    <label>Código del socio encargado</label>
+                    <label>Código</label>
                     <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.codigoU">
                   </div>
                   <div class="form-group col-12 col-sm-6">
-                    <label>Primer Nombre</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.nombre_1">
+                    <label>Nombre</label>
+                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.nombre">
+                  </div>
+                </form>
+                <h5 v-if="!detalleCliente.error">Gerente Encargado</h5>
+                <form class="row" v-if="!detalleCliente.error">
+                  <div class="form-group col-12 col-sm-6">
+                    <label>Código</label>
+                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.codigoG">
                   </div>
                   <div class="form-group col-12 col-sm-6">
-                    <label>Segundo Nombre</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.nombre_2">
-                  </div>
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Primer Apellido</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.apellido_1">
+                    <label>Nombre</label>
+                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.nombreG">
                   </div>
                 </form>
                 <h5 v-if="!detalleCliente.error">Datos del Cliente</h5>
