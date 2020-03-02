@@ -33630,7 +33630,7 @@ var app = new Vue({
     },
     tipoFiltro: function tipoFiltro(e) {
       var opcion = parseInt(e.target.value);
-      var valoresPermitidos = [1, 2, 3];
+      var valoresPermitidos = [1, 2, 3, 4];
       self.clientes.mostrar = false;
       self.clientes.registros = [];
 
