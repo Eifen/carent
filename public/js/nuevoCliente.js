@@ -40403,7 +40403,7 @@ var app = new Vue({
     formSearchG: {
       submitG: {
         disabled: true,
-        html: "BuscaRr"
+        html: "Buscar"
       },
       inputSearchG: {
         disabled: true,
