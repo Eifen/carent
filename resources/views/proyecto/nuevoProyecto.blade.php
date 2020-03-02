@@ -11,12 +11,12 @@
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
         <link href="{{ mix('/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ mix('/css/fontawesome-free-5.12.0.css') }}" rel="stylesheet" type="text/css">
-        <link href="{{ mix('/css/nuevoUsuario.css') }}" rel="stylesheet" type="text/css">
+        <link href="{{ mix('/css/nuevoProyecto.css') }}" rel="stylesheet" type="text/css">
 
     </head>
     <body>
 
-      <div id="nuevoUsuario" class="container-fluid" v-on:keypress="keyboard">
+      <div id="app" class="container-fluid" v-on:keypress="keyboard">
         <menu-principal></menu-principal>
 
         <div class="row align-items-center justify-content-center wrapper-forms">
@@ -300,7 +300,7 @@
 
       </div>
 
-      <script src="{{ mix('/js/nuevoUsuario.js') }}"></script>
+      <script src="{{ mix('/js/nuevoProyecto.js') }}"></script>
 
     </body>
 </html>

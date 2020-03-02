@@ -40332,7 +40332,7 @@ var self;
 Vue.use(vue_the_mask__WEBPACK_IMPORTED_MODULE_0___default.a);
 Vue.component('menu-principal', __webpack_require__(/*! ../components/menuPrincipal.vue */ "./resources/js/components/menuPrincipal.vue")["default"]);
 var app = new Vue({
-  el: '#nuevoUsuario',
+  el: '#app',
   data: {
     alertForm: {
       "class": "",

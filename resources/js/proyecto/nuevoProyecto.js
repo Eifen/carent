@@ -13,7 +13,7 @@ Vue.component('menu-principal', require('../components/menuPrincipal.vue').defau
 
 var app = new Vue({
 
-  el: '#nuevoUsuario',
+  el: '#app',
   data: {
     alertForm: {
       class: "",
