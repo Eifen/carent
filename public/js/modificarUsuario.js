@@ -41704,9 +41704,6 @@ var app = new Vue({
       if (e.keyCode === 13) {
         self.actualizar();
       }
-    },
-    refreshView: function refreshView() {
-      window.location.href = "/formNuevoUsuario";
     }
   } // Fin methods
 
