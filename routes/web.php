@@ -59,3 +59,5 @@ Route::post('/crearCargo', 'CreaController@crearCargo');
 Route::get('/formNuevaDivision', function() {return view('crea/nuevaDivision');});
 Route::post('/crearDivision', 'CreaController@crearDivision');
 Route::get('/formNuevoProyecto', function() {return view('proyecto/nuevoProyecto');});
+Route::get('/dataInicialNuevoProyecto', 'ProyectoController@dataInicialNuevoProyecto');
+Route::post('/crearProyecto', 'ProyectoController@crearProyecto');

@@ -4,11 +4,12 @@ window.zenscroll = require('zenscroll');
 window.axios = require('axios');
 window.AutoNumeric = require('autonumeric');
 import VueTheMask from 'vue-the-mask';
-const CryptoJS = require("crypto-js");
-const AES = require("crypto-js/aes");
+import Multiselect from 'vue-multiselect';
+import 'vue-multiselect/dist/vue-multiselect.min.css';
 var self;
 
 Vue.use(VueTheMask);
+Vue.component('multiselect', Multiselect);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
 
 var app = new Vue({
@@ -20,108 +21,63 @@ var app = new Vue({
       message: "",
       show: false
     },
-    comboEstados: [],
-    comboMunicipios: [],
-    comboParroquias: [],
+    comboClientes: [],
+    comboEstatus: [],
     comboDivisiones: [],
-    comboCargos: [],
     refreshForm: false,
     form: {
-      nombre1:{
-        disabled: false,
+      descripcion:{
+        disabled: true,
         value: ""
       },
-      nombre2:{
-        disabled: false,
+      cliente:{
+        disabled: true,
         value: ""
       },
-      apellido1:{
-        disabled: false,
+      horas:{
+        disabled: true,
+        value: 1
+      },
+      fechaContratacion:{
+        disabled: true,
         value: ""
       },
-      apellido2:{
-        disabled: false,
+      estatus: {
+        disabled: true,
         value: ""
       },
-      fechaNacimiento: {
-        disabled: false,
-        value: ""
-      },
-      codigoUsuario: {
-        disabled: false,
-        value: ""
-      },
-      cedula: {
-        disabled: false,
-        value: ""
-      },
-      estado: {
+      divisiones: {
         disabled: true,
         validar: false,
         value: ""
       },
-      municipio: {
-        disabled: true,
-        help: "Municipio de la oficina en donde se desempeña",
-        validar: false,
-        value: ""
-      },
-      parroquia: {
-        disabled: true,
-        help: "Parroquia de la oficina en donde se desempeña",
-        validar: false,
-        value: ""
-      },
-      division: {
-        disabled: true,
-        validar: false,
-        value: ""
-      },
-      cargo: {
-        disabled: true,
-        validar: false,
-        value: ""
-      },
-      correoPrincipal: {
-        disabled: false,
-        value: ""
-      },
-      correoSecundario: {
-        disabled: false,
-        validar: false,
-        value: ""
-      },
-      telefono1: {
-        disabled: false,
-        value: ""
-      },
-      telefono2: {
-        disabled: false,
-        value: ""
-      },
-      empleado: {
-        checked:false
-      }
+      mostrar: false
     },
     submitCrear: {
-      content: "Crear nuevo Usuario",
+      content: "Crear nuevo Proyecto",
       disabled: false,
       show:true
-    },
-    key: null,
-    iv: null
+    }
   },
   beforeCreate: function(){
 
     self = this;
 
-    axios.get('/encryptConfig')
+    axios.get('/dataInicialNuevoProyecto')
     .then(function (response) {
 
-      if(response.status === 200 && response.data.key && response.data.iv){
+      if(response.status === 200){
 
-        self.key = response.data.key;
-        self.iv = response.data.iv;
+        self.comboClientes = response.data.clientes;
+        self.comboEstatus = response.data.estatus;
+        self.comboDivisiones = response.data.divisiones;
+        self.form.descripcion.disabled = false;
+        self.form.cliente.disabled = false;
+        self.form.horas.disabled = false;
+        self.form.fechaContratacion.disabled = false;
+        self.form.estatus.disabled = false;
+        self.form.divisiones.disabled = false;
+        self.form.mostrar = true;
 
       }else{
 
@@ -132,14 +88,6 @@ var app = new Vue({
     })
     .catch(error => {
 
-      Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-
-        self.form[indiceObjecto].disabled = true;
-
-      });
-
-      self.submitCrear.disabled = true;
-
       self.alertForm = {
         class : "alert alert-warning",
         message : "Existe un error!, consulte con el administrador del sistema.",
@@ -149,283 +97,31 @@ var app = new Vue({
     });
 
   },
-  created: function () {
-
-    self.cargos();
-    self.divisiones();
-    self.estados();
-
-  },
+  created: function () {},
   mounted: function () {
 
-    new AutoNumeric('#codigoUsuario', {
-      decimalPlaces: 0,
-      decimalCharacter: ',',
-      digitGroupSeparator: '',
-      leadingZero: 'keep'
-    });
+    let checkDataInitReady = setInterval(() => {
 
-    new AutoNumeric('#cedula', {
-      decimalPlaces: 0,
-      decimalCharacter: ',',
-      digitGroupSeparator: '.'
-    });
+      if (self.form.mostrar) {
+
+        clearInterval(checkDataInitReady);
+        new AutoNumeric('#horas', {
+          decimalPlaces: 0,
+          decimalCharacter: ',',
+          digitGroupSeparator: '',
+          emptyInputBehavior: 1,
+          minimumValue: 1,
+          modifyValueOnWheel: false
+        });
+
+      }
+
+    }, 1000);
 
   },
   updated: function () {},
   methods:{
-    cargos: function(){
 
-      axios.get('/cargos')
-      .then(function (response) {
-
-        if(response.status === 200 && response.data.length > 0){
-
-          self.comboCargos = response.data;
-
-        }else{
-
-          throw "error";
-
-        }
-
-      })
-      .catch(error => {
-
-        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-
-          self.form[indiceObjecto].disabled = true;
-
-        });
-
-        self.submitCrear.disabled = true;
-
-        self.alertForm = {
-          class : "alert alert-warning",
-          message : "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-
-      });
-
-    },
-    divisiones: function(){
-
-      axios.get('/divisiones')
-      .then(function (response) {
-
-        if(response.status === 200 && response.data.length > 0){
-
-          self.comboDivisiones = response.data;
-
-        }else{
-
-          throw "error";
-
-        }
-
-      })
-      .catch(error => {
-
-        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-
-          self.form[indiceObjecto].disabled = true;
-
-        });
-
-        self.submitCrear.disabled = true;
-
-        self.alertForm = {
-          class : "alert alert-warning",
-          message : "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-
-      });
-
-    },
-    estados: function(){
-
-      self.form.municipio.help = '<i class="fas fa-cog fa-spin"></i> buscando';
-
-      axios.get('/estados')
-      .then(function (response) {
-
-        if(response.status === 200 && response.data.length > 0){
-
-          self.form.municipio.help = 'Municipio de la oficina en donde se desempeña';
-          self.comboEstados = response.data;
-
-        }else{
-
-          throw "error";
-
-        }
-
-      })
-      .catch(error => {
-
-        self.form.municipio.help = 'Municipio de la oficina en donde se desempeña';
-
-        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-
-          self.form[indiceObjecto].disabled = true;
-
-        });
-
-        self.submitCrear.disabled = true;
-
-        self.alertForm = {
-          class : "alert alert-warning",
-          message : "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-
-      });
-
-    },
-    municipios: function(){
-
-      self.form.municipio.value = ""
-      self.form.municipio.disabled = true;
-      self.form.parroquia.value = ""
-      self.form.parroquia.disabled = true;
-      self.form.parroquia.help = '<i class="fas fa-cog fa-spin"></i> buscando';
-
-      axios.get('/municipios', { params: {
-         id_estado: self.form.estado.value
-      }})
-      .then(function (response) {
-
-        if(response.status === 200 && response.data.length > 0){
-
-          self.form.parroquia.help = 'Parroquia de la oficina en donde se desempeña';
-          self.comboMunicipios = response.data;
-          self.form.municipio.disabled = false;
-
-        }else{
-
-          throw "error";
-
-        }
-
-      })
-      .catch(error => {
-
-        self.form.parroquia.help = 'Parroquia de la oficina en donde se desempeña';
-
-        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-
-          self.form[indiceObjecto].disabled = true;
-
-        });
-
-        self.submitCrear.disabled = true;
-
-        self.alertForm = {
-          class : "alert alert-warning",
-          message : "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-
-      });
-
-    },
-    parroquias: function(){
-
-      self.form.parroquia.disabled = true;
-
-      axios.get('/parroquias', {params: {
-         id_municipio: self.form.municipio.value
-      }})
-      .then(function (response) {
-
-        if(response.status === 200 && response.data.length > 0){
-
-          self.comboParroquias = response.data;
-          self.form.parroquia.disabled = false;
-
-        }else{
-
-          throw "error";
-
-        }
-
-      })
-      .catch(error => {
-
-        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-
-          self.form[indiceObjecto].disabled = true;
-
-        });
-
-        self.submitCrear.disabled = true;
-
-        self.alertForm = {
-          class : "alert alert-warning",
-          message : "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-
-      });
-
-    },
-    esEmpleado: function(e){
-
-      if(self.form.empleado.checked){
-
-        self.form.estado.disabled = false;
-        self.form.division.disabled = false;
-        self.form.cargo.disabled = false;
-
-        self.form.estado.validar = true;
-        self.form.municipio.validar = true;
-        self.form.parroquia.validar = true;
-        self.form.division.validar = true;
-        self.form.cargo.validar = true;
-
-        self.form.estado.value = "";
-
-      }else{
-
-        $(e.target).parents("form").find(".form-group .mensaje").html("").removeClass("invalid-feedback");
-        $(e.target).parents("form").find(".form-group .form-control").removeClass("error");
-
-        self.form.estado.disabled = true;
-        self.form.municipio.disabled = true;
-        self.form.parroquia.disabled = true;
-        self.form.division.disabled = true;
-        self.form.cargo.disabled = true;
-
-        self.form.estado.validar = false;
-        self.form.municipio.validar = false;
-        self.form.parroquia.validar = false;
-        self.form.division.validar = false;
-        self.form.cargo.validar = false;
-
-        self.form.estado.value = "";
-        self.form.municipio.value = "";
-        self.form.parroquia.value = "";
-        self.form.division.value = "";
-        self.form.cargo.value = "";
-
-      }
-
-    },
-    encriptar: function(valor){
-
-      let key = CryptoJS.enc.Hex.parse(self.key);
-      let iv = CryptoJS.enc.Hex.parse(self.iv);
-
-      var encrypted = CryptoJS.AES.encrypt(valor, key, {
-          iv,
-          padding: CryptoJS.pad.ZeroPadding,
-      });
-
-      return encrypted.toString();
-
-    },
     valuesForm: function(e){
 
       if(e.target.type === 'text' || e.target.type === 'textarea' || e.target.type === 'email'){
@@ -434,6 +130,10 @@ var app = new Vue({
 
       self.limpiarMensajeError(e);
 
+    },
+    limpiarMensajeErrorMultiselect: function(){
+      $(".multiselect").parent().find(".mensaje").html("").removeClass("invalid-feedback");
+      $(".multiselect").removeClass("error");
     },
     limpiarMensajeError: function(e){
       $(e.target).removeClass("error");
@@ -472,40 +172,48 @@ var app = new Vue({
 
       if(formValido){
 
+        if(self.form.divisiones.value.length === 0){
+          formValido = false;
+          $(".multiselect").parent().find(".mensaje").html("Seleccione una opción").addClass("invalid-feedback");
+          $(".multiselect").addClass("error");
+          zenscroll.toY($("#divisiones").offset().top - 100);
+        }
+
+      }
+
+      if(formValido){
+
         self.alertForm = {
           class : "",
           message : "",
           show: false
         };
 
+        const divisiones = [];
+        self.form.divisiones.value.forEach((item, i) => {
+          divisiones.push(item.id);
+        });
+
         //Obtenemos valores
         let parametros = {
-          nombre1:  self.form.nombre1.value,
-          nombre2: self.form.nombre2.value,
-          apellido1: self.form.apellido1.value,
-          apellido2: self.form.apellido2.value,
-          fechaNacimiento: self.form.fechaNacimiento.value,
-          codigoUsuario: self.encriptar(self.form.codigoUsuario.value),
-          cedula: AutoNumeric.getAutoNumericElement("#cedula").getNumber(),
-          clave: self.encriptar(self.form.cedula.value),
-          parroquia: self.form.parroquia.value,
-          division: self.form.division.value,
-          cargo: self.form.cargo.value,
-          correoPrincipal: self.form.correoPrincipal.value,
-          correoSecundario: self.form.correoSecundario.value,
-          telefono1: self.form.telefono1.value,
-          telefono2: self.form.telefono2.value,
-          empleado: self.form.empleado.checked,
+          descripcion:  self.form.descripcion.value,
+          cliente: self.form.cliente.value,
+          horas: self.form.horas.value,
+          fechaContratacion: self.form.fechaContratacion.value,
+          divisiones: divisiones,
+          estatus: self.form.estatus.value
         }
 
         self.submitCrear.content = '<i class="fas fa-cog fa-spin"></i>';
         self.submitCrear.disabled = true;
 
         Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-          self.form[indiceObjecto].disabled = true;
+          if(self.form[indiceObjecto].hasOwnProperty('disabled')){
+            self.form[indiceObjecto].disabled = true;
+          }
         });
 
-        axios.post('/crearUsuario', parametros)
+        axios.post('/crearProyecto', parametros)
         .then(function (response) {
 
           if(response.status === 200 && response.data.response === true){
@@ -570,33 +278,9 @@ var app = new Vue({
 
         if(input.getAttribute("data-validar") === "true"){
 
-          if(input.type === 'email'){
+          if(input.type === 'text'){
 
-            let regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            respuesta      = regexEmail.test(input.value);
-
-            if(!respuesta){
-              zenscroll.toY($(input).offset().top - 100);
-              mensaje        = "Correo inválido";
-            }
-
-          }else if(input.type === 'text' || input.type === 'textarea'){
-
-            if(input.getAttribute("data-min") && !input.getAttribute("data-name-lastname")){
-
-              let minChar = (Number(input.getAttribute("data-min")) === 0) ? 1 : input.getAttribute("data-min");
-              let numChar = input.value.length
-              let regexName = /^[a-zA-Z ']+$/;
-
-              if(numChar < minChar){
-
-                respuesta = false;
-                mensaje   = "El campo debe contener al menos "+minChar+" caracteres!";
-                zenscroll.toY($(input).offset().top - 100);
-
-              }
-
-            }else if(input.getAttribute("data-min") && input.getAttribute("data-name-lastname")){
+            if(input.getAttribute("data-min")){
 
               let minChar = input.getAttribute("data-min");
               let numChar = input.value.length
@@ -616,29 +300,13 @@ var app = new Vue({
 
               }
 
-            }else if(input.getAttribute("data-name-lastname")){
+            }else if(input.getAttribute("data-date")){
 
-              if(input.value.length > 0){
+              let numChar = input.value.length
 
-                let regexName = /^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/;
-                respuesta = regexName.test(input.value);
-
-                if(!respuesta){
-                  mensaje = "Solo se permiten letras y este caracter (')!";
-                  zenscroll.toY($(input).offset().top - 100);
-                }
-
-              }
-
-            }else if(input.getAttribute("data-only-number")){
-
-              var valor = (input.getAttribute("data-formated-number")) ? AutoNumeric.getAutoNumericElement("#"+input.id).getNumber() : input.value;
-
-              let regexNumber = /^\d+$/;
-              respuesta = regexNumber.test(valor);
-
-              if(!respuesta){
-                mensaje = "Solo números";
+              if(numChar < 10){
+                respuesta = false;
+                mensaje   = "Fecha incorrecta!";
                 zenscroll.toY($(input).offset().top - 100);
               }
 

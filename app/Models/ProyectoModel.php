@@ -8,40 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class ProyectoModel extends Model
 {
 
-    function estados(){
+    function estatusProyectos(){
 
-      $estados = DB::select('SELECT e.id,
-                                    e.estado
-                             FROM tbl_estados e
-                             ORDER BY e.estado ASC');
+      $estatus = DB::select('SELECT e.valor AS id,
+                                    e.descripcion
+                             FROM tbl_estatus e
+                             WHERE tabla = "tbl_proyecto"
+                             ORDER BY e.descripcion ASC');
 
-      return $estados;
+      return $estatus;
 
-    }// Fin estados
-
-    function municipios($id_estado){
-
-      $municipios = DB::select('SELECT m.id,
-                                       m.municipio
-                             FROM tbl_municipios m
-                             WHERE m.id_estado = '.$id_estado.'
-                             ORDER BY m.municipio ASC');
-
-      return $municipios;
-
-    }// Fin municipios
-
-    function parroquias($id_municipio){
-
-      $parroquias = DB::select('SELECT p.id,
-                                       p.parroquia
-                             FROM tbl_parroquias p
-                             WHERE p.id_municipio = '.$id_municipio.'
-                             ORDER BY p.parroquia ASC');
-
-      return $parroquias;
-
-    }// Fin parroquias
+    }// Fin estatusProyectos
 
     function divisiones(){
 
@@ -54,6 +31,24 @@ class ProyectoModel extends Model
       return $divisiones;
 
     }// Fin divisiones
+
+    function clientes(){
+
+      $clientes = DB::select('SELECT c.id,
+                                     c.razon_social
+                              FROM tbl_cliente c
+                              WHERE c.id_estatus = 1
+                              ORDER BY c.razon_social ASC');
+
+      return $clientes;
+
+    }// Fin clientes
+
+    function crearProyecto($descripcion,$cliente,$horas,$fechaContratacion,$divisiones,$estatus){
+
+    }
+
+
 
     function cargos(){
 
