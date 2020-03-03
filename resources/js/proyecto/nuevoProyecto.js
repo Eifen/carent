@@ -236,16 +236,13 @@ var app = new Vue({
         })
         .catch(error => {
 
-          var indices = ["nombre1","nombre2","apellido1","apellido2","fechaNacimiento","codigoUsuario","cedula","correoPrincipal","correoSecundario","telefono1","telefono2"];
-
-          if(self.form.empleado.checked){
-            indices.push("estado","municipio","parroquia","division","cargo");
-          }
-
-          indices.forEach(function(indiceObjecto, indice) {
-            self.form[indiceObjecto].disabled = false;
+          Object.keys(self.form).forEach(function(indiceObjecto, indice) {
+            if(self.form[indiceObjecto].hasOwnProperty('disabled')){
+              self.form[indiceObjecto].disabled = false;
+            }
           });
-          self.submitCrear.content = 'Crear nuevo Usuario';
+
+          self.submitCrear.content = 'Crear nuevo Proyecto';
           self.submitCrear.disabled = false;
 
           if(error.response){
@@ -337,7 +334,7 @@ var app = new Vue({
 
     },
     refreshView: function(){
-      window.location.href = "/formNuevoUsuario";
+      window.location.href = "/formNuevoProyecto";
     }
 
   }// Fin methods

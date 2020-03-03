@@ -33,6 +33,7 @@
                        data-min="3"
                        data-validar="true"
                        id="descripcion"
+                       maxlength="250"
                        v-bind:disabled="form.descripcion.disabled"
                        v-model.trim="form.descripcion.value"
                        type="text">
@@ -129,12 +130,6 @@
                 <button class="btn"
                         type="button"
                         v-on:click="refreshView">Crear un nuevo proyecto</button>
-              </div>
-            </div>
-
-            <div class="row wrapper-alert">
-              <div class="col-12">
-                <div v-bind:class="alertForm.class" role="alert" v-if="alertForm.show" v-html="alertForm.message"></div>
               </div>
             </div>
 

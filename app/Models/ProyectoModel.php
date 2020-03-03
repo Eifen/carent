@@ -46,6 +46,42 @@ class ProyectoModel extends Model
 
     function crearProyecto($descripcion,$cliente,$horas,$fechaContratacion,$divisiones,$estatus){
 
+      DB::beginTransaction();
+
+      $data = array("descripcion" => $descripcion,
+                    "id_cliente" => $cliente,
+                    "horas_contratadas" => $horas,
+                    "fecha_contratacion" => $fechaContratacion,
+                    "id_estatus" => $estatus);
+
+      $idProyecto = DB::table('tbl_proyecto')->insertGetId($data);
+
+      $divisionCreada = true;
+
+      for($i = 0; $i < count($divisiones); $i++){
+
+        $data = array("id_proyecto" => $idProyecto,
+                      "id_division" => $divisiones[$i]);
+
+        if(!DB::table('tbl_proyecto_divisiones')->insert($data)){
+          $divisionCreada = false;
+          break;
+        }
+
+      }
+
+      if($divisionCreada){
+
+        DB::commit();
+        return array("response" => true, "message" => "Proyecto creado con éxito.");
+
+      }else{
+
+        DB::rollBack();
+        return array("response" => false, "message" => "Error al tratar de crear el proyecto.");
+
+      }
+
     }
 
 
