@@ -34278,23 +34278,26 @@ var app = new Vue({
       axios.get('/buscarProyectos', {
         params: parametros
       }).then(function (response) {
-        self.formFiltro.submit.disabled = false;
-        self.formFiltro.submit.html = self.formFiltro.submit.htmlInit;
-        self.formFiltro.reset.disabled = false;
-        self.formFiltro.reset.html = self.formFiltro.reset.htmlInit;
-        self.formFiltro.concepto.disabled = false;
+        self.formFiltro.descripcion.disabled = false;
+        self.formFiltro.cliente.disabled = false;
+        self.formFiltro.divisiones.disabled = false;
         self.formFiltro.estatus.disabled = false;
-        self.tabla.registros = self.registroTabla(response.data.conceptos);
+        self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
+        self.formFiltro.btn.filtrar.disabled = false;
+        self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
+        self.formFiltro.btn.limpiarFiltro.disabled = false;
+        self.proyectos = response.data.proyectos;
         self.paginador.numPaginas = response.data.paginas;
         self.paginador.max = parseInt(response.data.paginas);
       })["catch"](function (error) {
-        console.log("error filtro");
-        self.formFiltro.submit.disabled = false;
-        self.formFiltro.submit.html = self.formFiltro.submit.htmlInit;
-        self.formFiltro.reset.disabled = false;
-        self.formFiltro.reset.html = self.formFiltro.reset.htmlInit;
-        self.formFiltro.concepto.disabled = false;
+        self.formFiltro.descripcion.disabled = false;
+        self.formFiltro.cliente.disabled = false;
+        self.formFiltro.divisiones.disabled = false;
         self.formFiltro.estatus.disabled = false;
+        self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
+        self.formFiltro.btn.filtrar.disabled = false;
+        self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
+        self.formFiltro.btn.limpiarFiltro.disabled = false;
       });
     },
     paginaAnterior: function paginaAnterior() {
