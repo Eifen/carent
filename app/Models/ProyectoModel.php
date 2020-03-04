@@ -112,7 +112,12 @@ class ProyectoModel extends Model
                                    FROM tbl_proyecto_divisiones pd
                                    WHERE pd.id_division IN('.$idsDivisiones.')');
 
-        $ids = implode(",", $idProyectos);
+        $arrayIds = [];
+        foreach($idProyectos as $id){
+          $arrayIds[] = $id->id;
+        }
+
+        $ids = implode(",", $arrayIds);
 
         $sql_division = 'AND p.id IN ('.$ids.')';
 
@@ -209,7 +214,12 @@ class ProyectoModel extends Model
                                    FROM tbl_proyecto_divisiones pd
                                    WHERE pd.id_division IN('.$idsDivisiones.')');
 
-        $ids = implode(",", $idProyectos);
+        $arrayIds = [];
+        foreach($idProyectos as $id){
+          $arrayIds[] = $id->id;
+        }
+
+       $ids = implode(",", $arrayIds);
 
         $sql_division = 'AND p.id IN ('.$ids.')';
 
