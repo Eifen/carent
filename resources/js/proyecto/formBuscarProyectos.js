@@ -28,11 +28,15 @@ var app = new Vue({
       btn: {
         filtrar: {
           disabled: false,
-          text: "Aplicar Filtro"
+          html: "",
+          htmlInit: "Aplicar Filtro",
+          htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
         },
         limpiarFiltro: {
           disabled: false,
-          text: "Limpiar Filtro"
+          html: "",
+          htmlInit: "Limpiar Filtro",
+          htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
         }
       },
       cliente:{
@@ -78,6 +82,8 @@ var app = new Vue({
         self.formFiltro.estatus.disabled = false;
         self.formFiltro.divisiones.disabled = false;
         self.formFiltro.mostrar = true;
+        self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
+        self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
 
         self.proyectos = response.data.proyectos;
         self.permisoActualizar = response.data.permisoActualizar;
@@ -132,189 +138,6 @@ var app = new Vue({
       self.form[e.target.id].validar = (self.form[e.target.id].value.length > 0 && self.form[e.target.id].validar === false) ? true : false;
 
     },
-    filtrar: function(){
-
-      var formValido = true;
-
-      $("form .form-group .mensaje").html("").removeClass("invalid-feedback");
-      $("form .form-group .form-control").removeClass("error");
-
-      $("form .form-group").each(function(index, elemento) {
-
-        if($(elemento).find(".form-control").length > 0){
-
-          var input = $(elemento).find(".form-control")[0];
-          var valido = self.validarValor(input);
-
-          if(!valido.respuesta){
-            $(elemento).find(".mensaje").html(valido.mensaje).addClass("invalid-feedback");
-            $(elemento).find(".form-control").addClass("error");
-            formValido = valido.respuesta;
-            return false;
-          }
-
-        }
-
-      });
-
-      if(formValido){
-
-        if(self.form.divisiones.value.length === 0){
-          formValido = false;
-          $(".multiselect").parent().find(".mensaje").html("Seleccione una opción").addClass("invalid-feedback");
-          $(".multiselect").addClass("error");
-          zenscroll.toY($("#divisiones").offset().top - 100);
-        }
-
-      }
-
-      if(formValido){
-
-        self.alertForm = {
-          class : "",
-          message : "",
-          show: false
-        };
-
-        const divisiones = [];
-        self.form.divisiones.value.forEach((item, i) => {
-          divisiones.push(item.id);
-        });
-
-        //Obtenemos valores
-        let parametros = {
-          descripcion:  self.form.descripcion.value,
-          cliente: self.form.cliente.value,
-          horas: self.form.horas.value,
-          fechaContratacion: self.form.fechaContratacion.value,
-          divisiones: divisiones,
-          estatus: self.form.estatus.value
-        }
-
-        self.submitCrear.content = '<i class="fas fa-cog fa-spin"></i>';
-        self.submitCrear.disabled = true;
-
-        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-          if(self.form[indiceObjecto].hasOwnProperty('disabled')){
-            self.form[indiceObjecto].disabled = true;
-          }
-        });
-
-        axios.post('/crearProyecto', parametros)
-        .then(function (response) {
-
-          if(response.status === 200 && response.data.response === true){
-
-            self.submitCrear.show = false;
-
-            self.alertForm = {
-              class : "alert alert-success",
-              message : response.data.message,
-              show: true
-            };
-
-          }else{
-
-            throw response.data;
-
-          }
-
-        })
-        .catch(error => {
-
-          Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-            if(self.form[indiceObjecto].hasOwnProperty('disabled')){
-              self.form[indiceObjecto].disabled = false;
-            }
-          });
-
-          self.submitCrear.content = 'Crear nuevo Proyecto';
-          self.submitCrear.disabled = false;
-
-          if(error.response){
-
-            var message = "Existe un error!, consulte con el administrador del sistema.";
-
-          }else{
-
-            var message = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema.";
-
-          }
-
-          self.alertForm = {
-            class : "alert alert-warning",
-            message : message,
-            show: true
-          };
-
-        });
-
-      }// Fin if
-
-    },
-    limpiarFiltro: function(){
-
-    },
-    validarValor: function(input) {
-
-      var respuesta = true;
-      var mensaje   = '';
-
-      if(input.hasAttribute("data-validar")){
-
-        if(input.getAttribute("data-validar") === "true"){
-
-          if(input.type === 'text'){
-
-            if(input.getAttribute("data-min")){
-
-              let minChar = input.getAttribute("data-min");
-              let numChar = input.value.length
-              let regexName = /^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/;
-
-              if(numChar < minChar){
-
-                respuesta = false;
-                mensaje   = "El campo debe contener al menos "+minChar+" caracteres!";
-                zenscroll.toY($(input).offset().top - 100);
-
-              }else if(!regexName.test(input.value)){
-
-                respuesta = false;
-                mensaje = "Solo se permiten letras y este caracter (',´)!";
-                zenscroll.toY($(input).offset().top - 100);
-
-              }
-
-            }else if(input.getAttribute("data-date")){
-
-              let numChar = input.value.length
-
-              if(numChar < 10){
-                respuesta = false;
-                mensaje   = "Fecha incorrecta!";
-                zenscroll.toY($(input).offset().top - 100);
-              }
-
-            }
-
-          }else if(input.type === "select-one"){
-
-            if(input.value === ""){
-              respuesta = false;
-              mensaje = "Debe seleccionar una opción!";
-              zenscroll.toY($(input).offset().top - 100);
-            }
-
-          }
-
-        }
-
-      }
-
-      return {respuesta: respuesta, mensaje: mensaje};
-
-    },
     keyboard: function(e){
 
       if (e.keyCode === 13){
@@ -325,31 +148,37 @@ var app = new Vue({
     refreshView: function(){
       window.location.href = "/formNuevoProyecto";
     },
-    LimpiarFiltro: function(){
+    limpiarFiltro: function(){
 
-      self.formFiltro.concepto.value = "";
+      self.formFiltro.descripcion.value = "";
+      self.formFiltro.cliente.value = "";
+      self.formFiltro.divisiones.value = "";
       self.formFiltro.estatus.value = "";
       self.buscar();
 
     },
     buscar: function(){
 
-      self.formFiltro.concepto.disabled = true;
+      self.formFiltro.descripcion.disabled = true;
+      self.formFiltro.cliente.disabled = true;
+      self.formFiltro.divisiones.disabled = true;
       self.formFiltro.estatus.disabled = true;
-      self.formFiltro.submit.html = self.formFiltro.submit.htmlLoading;
-      self.formFiltro.submit.disabled = true;
-      self.formFiltro.reset.html = self.formFiltro.reset.htmlLoading;
-      self.formFiltro.reset.disabled = true;
+      self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
+      self.formFiltro.btn.filtrar.disabled = true;
+      self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlLoading;
+      self.formFiltro.btn.limpiarFiltro.disabled = true;
 
       let desde = (self.paginador.pagina - 1) * self.paginador.paginar;
-      let concepto = self.formFiltro.concepto.value;
-      let estatus = self.formFiltro.estatus.value;
       let parametros = {
-        concepto: concepto,
+        cliente: self.formFiltro.cliente.value,
+        divisiones: self.formFiltro.divisiones.value,
+        proyecto: self.formFiltro.descripcion.value,
         desde: desde,
-        estatus: estatus,
+        estatus: self.formFiltro.estatus.value,
         paginar: self.paginador.paginar
       };
+      console.log(parametros);
+      return;
 
       axios.get('/buscarConceptos', {params: parametros})
       .then(function (response) {

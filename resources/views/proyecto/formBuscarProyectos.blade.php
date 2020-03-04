@@ -56,7 +56,7 @@
                         v-bind:disabled="formFiltro.estatus.disabled"
                         v-model="formFiltro.estatus.value"
                         v-on:click="limpiarMensajeError">
-                  <option value="" disabled selected>Seleccione...</option>
+                  <option value="" selected>Seleccione...</option>
                   <option v-bind:value="estatus.id" v-for="estatus in comboEstatus">@{{ estatus.descripcion }}</option>
                 </select>
                 <div class="mensaje"></div>
@@ -83,9 +83,9 @@
                 <label>&nbsp;</label>
                 <button class="btn filtrar"
                         type="button"
-                        v-on:click="filtrar"
+                        v-on:click="buscar"
                         v-bind:disabled="formFiltro.btn.filtrar.disabled"
-                        v-html="formFiltro.btn.filtrar.text"></button>
+                        v-html="formFiltro.btn.filtrar.html"></button>
               </div>
               <div class="form-group col-12 col-sm-3">
                 <label>&nbsp;</label>
@@ -93,7 +93,7 @@
                         type="button"limpiarFiltro
                         v-on:click="limpiarFiltro"
                         v-bind:disabled="formFiltro.btn.limpiarFiltro.disabled"
-                        v-html="formFiltro.btn.limpiarFiltro.text"></button>
+                        v-html="formFiltro.btn.limpiarFiltro.html"></button>
               </div>
             </form>
 
