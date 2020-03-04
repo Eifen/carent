@@ -61,3 +61,6 @@ Route::post('/crearDivision', 'CreaController@crearDivision');
 Route::get('/formNuevoProyecto', function() {return view('proyecto/nuevoProyecto');});
 Route::get('/dataInicialNuevoProyecto', 'ProyectoController@dataInicialNuevoProyecto');
 Route::post('/crearProyecto', 'ProyectoController@crearProyecto');
+Route::get('/proyectos', function() {return view('proyecto/formBuscarProyectos');});
+Route::get('/dataInicialListadoProyectos', 'ProyectoController@dataInicialListadoProyectos');
+Route::get('/formModificarProyecto', 'ProyectoController@formModificarProyecto')->where('idProyecto', '[0-9]+');

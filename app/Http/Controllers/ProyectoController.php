@@ -41,55 +41,24 @@ class ProyectoController extends Controller
 
     }
 
+    function dataInicialListadoProyectos(){
 
+      $modelo = new ProyectoModel();
+      $paginar = 10;
+      $permisoActualizar = $modelo->permisoActualizar(session("usuario_id"), 8);
+      $proyectos = $modelo->proyectos(session("division_id"), $paginar);
+      $divisiones = $modelo->divisiones();
+      $estatus = $modelo->estatusProyectos();
+      $cantidadPaginas = $modelo->cantidadPaginas($paginar);
 
-
-    function crearUsuario(Request $request){
-
-      $modelo = new UsuarioModel();
-
-      $codigoUsuario = $this->desencriptarCryptoJS($request->input("codigoUsuario"));
-      $usuario = $modelo->buscarUsuario($codigoUsuario);
-
-      if(empty($usuario)){
-
-        $correos = $modelo->buscarCorreos($request->input("correoPrincipal"), $request->input("correoSecundario"));
-
-        if(!$correos["response"]){
-
-            $parametros = array(
-              "nombre1" => mb_strtoupper ($request->input("nombre1")),
-              "nombre2" => mb_strtoupper ($request->input("nombre2")),
-              "apellido1" => mb_strtoupper($request->input("apellido1")),
-              "apellido2" => mb_strtoupper($request->input("apellido2")),
-              "cedula" => $request->input("cedula"),
-              "fechaNacimiento" => $request->input("fechaNacimiento"),
-              "codigoUsuario" => $codigoUsuario,
-              "clave" => $this->encriptarLaravel($request->input("cedula")),
-              "correoPrincipal" => strtolower($request->input("correoPrincipal")),
-              "correoSecundario" => strtolower($request->input("correoSecundario")),
-              "telefono1" => $request->input("telefono1"),
-              "telefono2" => $request->input("telefono2"),
-              "parroquia" => $request->input("parroquia"),
-              "division" => $request->input("division"),
-              "cargo" => $request->input("cargo")
-            );
-
-            $response = $modelo->crearUsuario($parametros);
-
-        }else{
-
-          $response = array("response" => false, "message" => "El correo principal o secundario ya se encuentra asociado a otro usuario");
-
-        }
-
-      }else{
-
-        $response = array("response" => false, "message" => "Ya existe un usuario con ese código de usuario");
-
-      }
-
-      return $response;
+      return [
+        "divisiones" => $divisiones,
+        "estatus" => $estatus,
+        "numero_paginas" => $cantidadPaginas,
+        "paginar" => $paginar,
+        "permisoActualizar" => $permisoActualizar,
+        "proyectos" => $proyectos
+      ];
 
     }
 

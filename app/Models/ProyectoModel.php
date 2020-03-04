@@ -84,171 +84,81 @@ class ProyectoModel extends Model
 
     }
 
+    function proyectos($id_division, $paginar, $desde = 0, $proyecto = "", $cliente = "", $divisiones = [], $estatus = null){
 
+      if(trim($proyecto) != ""){
+        $sql_proyecto = 'AND LOWER(p.descripcion) LIKE "%'.strtolower($proyecto).'%"';
+      }else{
+        $sql_proyecto = "";
+      }
 
-    function cargos(){
+      if($estatus != null){
+        $sql_estatus = 'AND p.id_estatus = '.$estatus;
+      }else{
+        $sql_estatus = "";
+      }
 
-      $cargos = DB::select('SELECT c.id,
-                                   c.descripcion
-                             FROM tbl_cargo_empleado c
-                             WHERE c.id_estatus = 1
-                             ORDER BY c.descripcion ASC');
+      if($cliente != null){
+        $sql_cliente = 'AND LOWER(c.razon_social) LIKE "%'.strtolower($cliente).'%"';
+      }else{
+        $sql_cliente = "";
+      }
 
-      return $cargos;
+      if(count($divisiones) > 0){
 
-    }// Fin cargos
+        $idsDivisiones = implode(",", $divisiones);
 
-    function buscarUsuario($codigo){
+        $idProyectos = DB::select('SELECT id
+                                   FROM tbl_proyecto_divisiones pd
+                                   WHERE pd.id_division IN('.$idsDivisiones.')');
 
-      $usuario = DB::select('SELECT u.id,
-                                    u.clave,
-                                    u.avatar,
-                                    u.id_estatus,
-                                    e.descripcion AS estatus,
-                                    cu.correo_principal,
-                                    cu.correo_secundario,
-                                    cu.telefono_principal,
-                                    cu.telefono_secundario
-                             FROM tbl_usuario u,
-                                  tbl_estatus e,
-                                  tbl_contacto_usuario cu
-                             WHERE codigo = "'.$codigo.'"
-                             AND e.tabla = "tbl_usuario"
-                             AND e.valor = u.id_estatus
-                             AND u.id = cu.id_usuario');
+        $ids = implode(",", $idProyectos);
 
-      if(count($usuario) > 0){
-
-        return $usuario[0];
+        $sql_division = 'AND p.id IN ('.$ids.')';
 
       }else{
-
-        return array();
-
+        $sql_division = "";
       }
 
-    }// Fin buscarUsuario
+      $proyectos = DB::select('SELECT p.id,
+                                      p.descripcion,
+                                      p.horas_contratadas,
+                                      p.fecha_contratacion,
+                                      e.descripcion AS estatus,
+                                      c.razon_social as cliente
+                               FROM tbl_proyecto p,
+                                    tbl_estatus e,
+                                    tbl_cliente c
+                               WHERE p.id_estatus = e.valor
+                               AND e.tabla = "tbl_proyecto"
+                               AND p.id_cliente = c.id
+                               '.$sql_proyecto.'
+                               '.$sql_estatus.'
+                               '.$sql_cliente.'
+                               '.$sql_division.'
+                               ORDER BY p.id DESC
+                               LIMIT '.$desde.', '.$paginar);
 
-    function buscarCorreos($correoPrincipal, $correoSecundario){
-
-      if($correoSecundario === "" or $correoSecundario === NULL){
-        $parametros = '"'.$correoPrincipal.'"';
-      }else{
-        $parametros = '"'.$correoPrincipal.'","'.$correoSecundario.'"';
+      foreach ($proyectos as $key => $value) {
+        $proyectos[$key]->divisiones = $this->proyectoDivisiones($proyectos[$key]->id);
       }
 
-      $correos = DB::select('SELECT
-                              (SELECT COUNT(*)
-                               FROM tbl_contacto_usuario cu
-                               WHERE cu.correo_principal IN('.$parametros.')) correo_principal,
-                              (SELECT COUNT(*)
-                               FROM tbl_contacto_usuario cu
-                               WHERE cu.correo_secundario IN('.$parametros.')) correo_secundario');
-
-      if((int) $correos[0]->correo_principal === 0 && (int) $correos[0]->correo_secundario === 0){
-
-        return array("response" => false, "message" => "No se encontraron coincidencias");
-
-      }else{
-
-        return array("response" => true, "message" => "Ya se encuentran registrados los correos");
-
-      }
-
-    }// Fin buscarCorreos
-
-    function crearUsuario($parametros){
-
-      DB::beginTransaction();
-
-      $data = array("codigo" => $parametros["codigoUsuario"],
-                    "nombre_1" => $parametros["nombre1"],
-                    "nombre_2" => $parametros["nombre2"],
-                    "apellido_1" => $parametros["apellido1"],
-                    "apellido_2" => $parametros["apellido2"],
-                    "fecha_nacimiento" => $parametros["fechaNacimiento"],
-                    "id_cargo" => $parametros["cargo"],
-                    "id_division" => $parametros["division"],
-                    "id_parroquia" => $parametros["parroquia"],
-                    "id_estatus" => 1,
-                    "clave" => $parametros["clave"],
-                    "cedula" => $parametros["cedula"]);
-
-      $idUsuario = DB::table('tbl_usuario')->insertGetId($data);
-
-      $data = array("id_usuario" => $idUsuario,
-                    "correo_principal" => $parametros["correoPrincipal"],
-                    "correo_secundario" => $parametros["correoSecundario"],
-                    "telefono_principal" => $parametros["telefono1"],
-                    "telefono_secundario" => $parametros["telefono2"]);
-
-      $contacto = DB::table('tbl_contacto_usuario')->insert($data);
-
-      if($contacto){
-
-        DB::commit();
-        return array("response" => true, "message" => "Usuario Creado con Éxito; la contraseña es la misma cédula, se recomienda cambiarla al inicio de sesión.");
-
-      }else{
-
-        DB::rollBack();
-        return array("response" => false, "message" => "Error al tratar de crear el usuario.");
-
-      }
-
-    }// Fin crearUsuario
-
-    function buscarUsuarios($opcionBusqueda, $dato){
-
-      switch ((int) $opcionBusqueda) {
-        case 1:
-          $condicion = "WHERE u.codigo LIKE '%".$dato."%'";
-          break;
-        case 2:
-            $condicion = "WHERE u.cedula LIKE '%".$dato."%'";
-            break;
-        case 3:
-            $condicion = "WHERE cu.correo_principal LIKE '%".$dato."%'";
-            break;
-        case 4:
-            $condicion = "WHERE (u.nombre_1 LIKE '%".$dato."%' OR u.nombre_2 LIKE '%".$dato."%')";
-            break;
-        case 5:
-            $condicion = "WHERE (u.apellido_1 LIKE '%".$dato."%' OR u.apellido_2 LIKE '%".$dato."%')";
-            break;
-        default:
-          $condicion = "WHERE u.codigo LIKE %'".$dato."'%";
-          break;
-      }
-
-      $usuarios = DB::select('SELECT u.id,
-                                     u.codigo,
-                                     u.avatar,
-                                     u.cedula,
-                                     CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS nombre,
-                                     e.descripcion AS estatus,
-                                     cu.correo_principal
-                             FROM tbl_usuario u,
-                                  tbl_estatus e,
-                                  tbl_contacto_usuario cu
-                             '.$condicion.'
-                             AND e.tabla = "tbl_usuario"
-                             AND e.valor = u.id_estatus
-                             AND u.id = cu.id_usuario');
-
-      if(count($usuarios) > 0){
-
-        return $usuarios;
-
-      }else{
-
-        return array();
-
-      }
+      return $proyectos;
 
     }
 
-    function permisoActualizarUsuario($id_usuario){
+    function proyectoDivisiones($id_proyecto){
+
+      $divisiones = DB::select('SELECT d.id,
+                                       d.descripcion
+                                FROM tbl_division d
+                                ORDER BY d.descripcion ASC');
+
+      return $divisiones;
+
+    }
+
+    function permisoActualizar($id_usuario, $id_menu){
 
       $permiso = DB::select('SELECT CASE mu.U
                                       WHEN 1 THEN "true"
@@ -256,7 +166,8 @@ class ProyectoModel extends Model
                                     END AS permiso
                              FROM tbl_menu_usuario mu
                              WHERE mu.id_usuario = '.$id_usuario.'
-                             AND mu.U = 1');
+                             AND mu.U = 1
+                             AND mu.id_menu = '. $id_menu);
 
       if(count($permiso) > 0){
 
@@ -270,150 +181,53 @@ class ProyectoModel extends Model
 
     }
 
-    function detalleUsuario($id_usuario){
+    function cantidadPaginas($paginar, $proyecto = "", $cliente = "", $divisiones = [], $estatus = null){
 
-      $info = DB::select('SELECT u.id,
-                                 u.codigo,
-                                 u.avatar,
-                                 u.cedula,
-                                 u.nombre_1,
-                                 u.nombre_2,
-                                 u.apellido_1,
-                                 u.apellido_2,
-                                 u.fecha_nacimiento,
-                                 e.descripcion AS estatus,
-                                 cu.correo_principal,
-                                 cu.correo_secundario,
-                                 cu.telefono_principal,
-                                 cu.telefono_secundario,
-                                 (SELECT d.descripcion FROM tbl_division d WHERE d.id = u.id_division) division,
-                                 (SELECT ce.descripcion FROM tbl_cargo_empleado ce WHERE ce.id = u.id_cargo) cargo,
-                                 (SELECT p.parroquia FROM tbl_parroquias p WHERE p.id = u.id_parroquia) parroquia,
-                                 (SELECT m.municipio
-                                  FROM tbl_municipios m
-                                  WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = u.id_parroquia)) municipio,
-                                 (SELECT e.estado
-                                  FROM tbl_estados e
-                                  WHERE e.id = (SELECT m.id_estado
-                                                FROM tbl_municipios m
-                                                WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = u.id_parroquia))) estado
-                          FROM tbl_usuario u,
-                               tbl_estatus e,
-                               tbl_contacto_usuario cu
-                          WHERE u.id = '.$id_usuario.'
-                          AND e.tabla = "tbl_usuario"
-                          AND e.valor = u.id_estatus
-                          AND u.id = cu.id_usuario');
+      if(trim($proyecto) != ""){
+        $sql_proyecto = 'AND LOWER(p.descripcion) LIKE "%'.strtolower($proyecto).'%"';
+      }else{
+        $sql_proyecto = "";
+      }
 
-      if(count($info) > 0){
+      if($estatus != null){
+        $sql_estatus = 'AND p.id_estatus = '.$estatus;
+      }else{
+        $sql_estatus = "";
+      }
 
-        return $info[0];
+      if($cliente != null){
+        $sql_cliente = 'AND LOWER(c.razon_social) LIKE "%'.strtolower($cliente).'%"';
+      }else{
+        $sql_cliente = "";
+      }
+
+      if(count($divisiones) > 0){
+
+        $idsDivisiones = implode(",", $divisiones);
+
+        $idProyectos = DB::select('SELECT id
+                                   FROM tbl_proyecto_divisiones pd
+                                   WHERE pd.id_division IN('.$idsDivisiones.')');
+
+        $ids = implode(",", $idProyectos);
+
+        $sql_division = 'AND p.id IN ('.$ids.')';
 
       }else{
-
-        return array();
-
+        $sql_division = "";
       }
 
-    }
+      $numConceptos = DB::select('SELECT CEILING( COUNT(1) / '.$paginar.') paginas
+                                  FROM tbl_proyecto p,
+                                       tbl_cliente c
+                                  WHERE p.id_cliente = c.id
+                                  '.$sql_proyecto.'
+                                  '.$sql_estatus.'
+                                  '.$sql_cliente.'
+                                  '.$sql_division);
 
-    function detalleUsuarioModificar($id_usuario){
-
-      $info = DB::select('SELECT u.id,
-                                 u.codigo,
-                                 u.avatar,
-                                 u.cedula,
-                                 u.nombre_1,
-                                 u.nombre_2,
-                                 u.apellido_1,
-                                 u.apellido_2,
-                                 u.fecha_nacimiento,
-                                 u.id_estatus,
-                                 cu.correo_principal,
-                                 cu.correo_secundario,
-                                 cu.telefono_principal,
-                                 cu.telefono_secundario,
-                                 (SELECT d.id FROM tbl_division d WHERE d.id = u.id_division) id_division,
-                                 (SELECT ce.id FROM tbl_cargo_empleado ce WHERE ce.id = u.id_cargo) id_cargo,
-                                 u.id_parroquia,
-                                 (SELECT m.id
-                                  FROM tbl_municipios m
-                                  WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = u.id_parroquia)) id_municipio,
-                                 (SELECT e.id
-                                  FROM tbl_estados e
-                                  WHERE e.id = (SELECT m.id_estado
-                                                FROM tbl_municipios m
-                                                WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = u.id_parroquia))) id_estado
-                          FROM tbl_usuario u,
-                               tbl_estatus e,
-                               tbl_contacto_usuario cu
-                          WHERE u.id = '.$id_usuario.'
-                          AND e.tabla = "tbl_usuario"
-                          AND e.valor = u.id_estatus
-                          AND u.id = cu.id_usuario');
-
-      if(count($info) > 0){
-
-        return $info[0];
-
-      }else{
-
-        return array();
-
-      }
+      return $numConceptos[0]->paginas;
 
     }
-
-    function estatusUsuario(){
-
-      $estatus = DB::select('SELECT e.valor AS id,
-                                    e.descripcion
-                             FROM tbl_estatus e
-                             WHERE e.tabla = "tbl_usuario"
-                             ORDER BY descripcion ASC');
-
-      return $estatus;
-
-    }
-
-    function modificarUsuario($parametros){
-
-      DB::beginTransaction();
-
-      try {
-
-        $data = array("nombre_1" => $parametros["nombre1"],
-                      "nombre_2" => $parametros["nombre2"],
-                      "apellido_1" => $parametros["apellido1"],
-                      "apellido_2" => $parametros["apellido2"],
-                      "fecha_nacimiento" => $parametros["fechaNacimiento"],
-                      "id_cargo" => $parametros["cargo"],
-                      "id_division" => $parametros["division"],
-                      "id_parroquia" => $parametros["parroquia"],
-                      "id_estatus" => $parametros["estatus"],
-                      "cedula" => $parametros["cedula"]);
-
-        $update = DB::table('tbl_usuario')->where("id",$parametros["idUsuario"])->update($data);
-
-
-
-        $data = array("correo_principal" => $parametros["correoPrincipal"],
-                      "correo_secundario" => $parametros["correoSecundario"],
-                      "telefono_principal" => $parametros["telefono1"],
-                      "telefono_secundario" => $parametros["telefono2"]);
-
-        $contacto = DB::table('tbl_contacto_usuario')->where("id_usuario",$parametros["idUsuario"])->update($data);
-
-        DB::commit();
-        return array("response" => true, "message" => "Usuario actualizado con Éxito!.");
-
-      } catch(\Illuminate\Database\QueryException $ex){
-
-        DB::rollBack();
-        return array("response" => false, "message" => "Error al tratar de actualizar la información del usuario.");
-
-      }
-
-    }// Fin crearUsuario
 
 }
