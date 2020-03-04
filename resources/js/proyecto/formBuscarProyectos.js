@@ -168,10 +168,16 @@ var app = new Vue({
       self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlLoading;
       self.formFiltro.btn.limpiarFiltro.disabled = true;
 
+      let idsDivisiones = [];
+      self.formFiltro.divisiones.value.forEach((item, i) => {
+        idsDivisiones.push(item.id);
+      });
+
+
       let desde = (self.paginador.pagina - 1) * self.paginador.paginar;
       let parametros = {
         cliente: self.formFiltro.cliente.value,
-        divisiones: self.formFiltro.divisiones.value,
+        divisiones: idsDivisiones,
         proyecto: self.formFiltro.descripcion.value,
         desde: desde,
         estatus: self.formFiltro.estatus.value,
