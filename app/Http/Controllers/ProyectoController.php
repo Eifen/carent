@@ -62,4 +62,20 @@ class ProyectoController extends Controller
 
     }
 
+    function buscarProyectos(Request $request){
+
+      $modelo = new ProyectoModel();
+      $paginar = $request->input("paginar");
+      $desde = $request->input("desde");
+      $cliente = $request->input("cliente");
+      $divisiones = $request->input("divisiones");
+      $proyecto = $request->input("proyecto");
+      $estatus = $request->input("estatus");
+      $proyectos = $modelo->proyectos(session("division_id"), $paginar, $desde, $proyecto, $cliente, $divisiones, $estatus);
+      $cantidadPaginas = $modelo->cantidadPaginas($paginar, $proyecto, $cliente, $divisiones, $estatus);
+
+      return array("proyectos" => $proyectos, "paginas" => $cantidadPaginas);
+
+    }
+
 }

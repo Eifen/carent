@@ -34275,9 +34275,7 @@ var app = new Vue({
         estatus: self.formFiltro.estatus.value,
         paginar: self.paginador.paginar
       };
-      console.log(parametros);
-      return;
-      axios.get('/buscarConceptos', {
+      axios.get('/buscarProyectos', {
         params: parametros
       }).then(function (response) {
         self.formFiltro.submit.disabled = false;
