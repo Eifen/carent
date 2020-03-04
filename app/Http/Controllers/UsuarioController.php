@@ -109,7 +109,7 @@ class UsuarioController extends Controller
       $buscarPor = (int) $request->input("buscarPor");
       $dato = strtolower($request->input("dato"));
       $usuarios = $modelo->buscarUsuarios($buscarPor, $dato);
-      $permisoActualizar = $modelo->permisoActualizarUsuario(session("usuario_id"));
+      $permisoActualizar = $modelo->permisoActualizar(session("usuario_id"), 3);
 
       if(!empty($usuarios)){
 
