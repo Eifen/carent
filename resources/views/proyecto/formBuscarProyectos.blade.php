@@ -112,7 +112,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="proyecto in proyectos">
+                <tr v-for="proyecto in proyectos" v-if="proyectos.length > 0">
                   <th scope="row">@{{ proyecto.descripcion }}</th>
                   <td>@{{ proyecto.horas_contratadas }}</td>
                   <td>@{{ proyecto.fecha_contratacion }}</td>
@@ -124,8 +124,15 @@
                     </a>
                   </td>
                 </tr>
+                <tr v-if="proyectos.length < 1">
+                  <td colspan="6">
+                    <div class="alert alert-warning text-center" role="alert">
+                      La busqueda no arrojó resultado!
+                    </div>
+                  </td>
+                </tr>
               </tbody>
-              <tfoot>
+              <tfoot v-if="proyectos.length > 0">
                 <tr>
                   <td colspan="6">
                     <div>
