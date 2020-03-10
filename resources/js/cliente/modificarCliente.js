@@ -45,9 +45,6 @@ const datosIniciales = () => {
                  estadosfi: response.data.estadosfi,
                  municipiosfi: response.data.municipiosfi,
                  parroquiasfi: response.data.parroquiasfi,
-                 estadosfa: response.data.estadosfa,
-                 municipiosfa: response.data.municipiosfa,
-                 parroquiasfa: response.data.parroquiasfa,
                  response: true
                });
 
@@ -151,59 +148,6 @@ var app = new Vue({
         disabled: false,
         value: ""
       },
-      descripcion_factura:{
-        disabled: false,
-        value: ""
-      },
-      estadofa: {
-        disabled: true,
-        validar: false,
-        value: ""
-      },
-      municipiofa: {
-        disabled: true,
-        help: "Municipio de la oficina fiscal",
-        validar: false,
-        value: ""
-      },
-      parroquiafa: {
-        disabled: true,
-        help: "Parroquia de la oficina fiscal",
-        validar: false,
-        value: ""
-      },
-      ciudad_factura: {
-        disabled: false,
-        value: ""
-      },
-      avenida_calle_factura: {
-        disabled: false,
-        value: ""
-      },
-      edificio_quinta_factura: {
-        disabled: false,
-        value: ""
-      },
-      piso_factura: {
-        disabled: false,
-        value: ""
-      },
-      numero_factura: {
-        disabled: false,
-        value: ""
-      },
-      telefono_factura: {
-        disabled: false,
-        value: ""
-      },
-      fax_factura: {
-        disabled: false,
-        value: ""
-      },
-      correo_factura: {
-        disabled: false,
-        value: ""
-      },
       empleado: {
         checked: true
       }
@@ -292,16 +236,7 @@ var app = new Vue({
         self.form.numero_fiscal.value = dataInit.infoClie.numero_fiscal;
         self.form.telefono_fiscal.value = dataInit.infoClie.telefono_fiscal;
         self.form.fax_fiscal.value = dataInit.infoClie.fax_fiscal;
-        self.form.email_fiscal.value = dataInit.infoClie.email_fiscal;
-        self.form.descripcion_factura.value = dataInit.infoClie.descripcion_factura;
-        self.form.ciudad_factura.value = dataInit.infoClie.ciudad_factura;
-        self.form.avenida_calle_factura.value = dataInit.infoClie.avenida_calle_factura;
-        self.form.edificio_quinta_factura.value = dataInit.infoClie.edificio_quinta_factura;        
-        self.form.piso_factura.value = dataInit.infoClie.piso_factura;
-        self.form.numero_factura.value = dataInit.infoClie.numero_factura;
-        self.form.telefono_factura.value = dataInit.infoClie.telefono_factura;
-        self.form.fax_factura.value = dataInit.infoClie.fax_factura;
-        self.form.correo_factura.value = dataInit.infoClie.correo_factura;
+        self.form.email_fiscal.value = dataInit.infoClie.email_fiscal
 
         self.comboEstadosfi = dataInit.estadosfi;
 
@@ -319,23 +254,6 @@ var app = new Vue({
           self.form.estadofi.value = dataInit.infoClie.id_estado_fiscal;
           self.form.municipiofi.value = dataInit.infoClie.id_municipio_fiscal;
           self.form.parroquiafi.value = dataInit.infoClie.id_parroquia_fiscal;
-
-        self.comboEstadosfa = dataInit.estadosfa;
-
-          self.comboMunicipiosfa = dataInit.municipiosfa;
-          self.comboParroquiasfa = dataInit.parroquiasfa;
-
-          self.form.estadofa.disabled = false;
-          self.form.municipiofa.disabled = false;
-          self.form.parroquiafa.disabled = false;
-
-          self.form.estadofa.validar = true;
-          self.form.municipiofa.validar = true;
-          self.form.parroquiafa.validar = true;
-
-          self.form.estadofa.value = dataInit.infoClie.id_estado_factura;
-          self.form.municipiofa.value = dataInit.infoClie.id_municipio_factura;
-          self.form.parroquiafa.value = dataInit.infoClie.id_parroquia_factura;
 
       }else{
         errorInit();
@@ -385,16 +303,8 @@ var app = new Vue({
 
         AutoNumeric.getAutoNumericElement("#numero_fiscal").set(self.form.numero_fiscal.value);
 
-        new AutoNumeric('#numero_factura', {
-          decimalPlaces: 0,
-          decimalCharacter: ',',
-          digitGroupSeparator: '.',
-          modifyValueOnWheel: false
-        });
 
-        AutoNumeric.getAutoNumericElement("#numero_factura").set(self.form.numero_factura.value);
-
-        var indices = ["rif","nit","razon_social","ciudad_fiscal","avenida_calle_fiscal","edificio_quinta_fiscal","piso_fiscal","numero_fiscal","telefono_fiscal","fax_fiscal","email_fiscal","descripcion_factura","ciudad_factura","avenida_calle_factura","edificio_quinta_factura","piso_factura","numero_factura","telefono_factura","fax_factura","correo_factura"];
+        var indices = ["rif","nit","razon_social","ciudad_fiscal","avenida_calle_fiscal","edificio_quinta_fiscal","piso_fiscal","numero_fiscal","telefono_fiscal","fax_fiscal","email_fiscal"];
   
         indices.forEach(function(indiceObjecto, indice) {
           self.form[indiceObjecto].disabled = false;
@@ -762,94 +672,6 @@ var app = new Vue({
 
     },
 
-    municipiosfa: function(){
-
-      self.form.municipiofa.value = ""
-      self.form.municipiofa.disabled = true;
-      self.form.parroquiafa.value = ""
-      self.form.parroquiafa.disabled = true;
-      self.form.parroquiafa.help = '<i class="fas fa-cog fa-spin"></i> buscando';
-
-      axios.get('/municipios', { params: {
-         id_estado: self.form.estadofa.value
-      }})
-      .then(function (response) {
-
-        if(response.status === 200 && response.data.length > 0){
-
-          self.form.parroquiafa.help = 'Parroquia de la oficina en donde se desempeña';
-          self.comboMunicipiosfa = response.data;
-          self.form.municipiofa.disabled = false;
-
-        }else{
-
-          throw "error";
-
-        }
-
-      })
-      .catch(error => {
-
-        self.form.parroquiafa.help = 'Parroquia de la oficina en donde se desempeña';
-
-        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-
-          self.form[indiceObjecto].disabled = true;
-
-        });
-
-        self.submitCrear.disabled = true;
-
-        self.alertForm = {
-          class : "alert alert-warning",
-          message : "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-
-      });
-
-    },
-    parroquiasfa: function(){
-
-      self.form.parroquiafa.disabled = true;
-
-      axios.get('/parroquias', {params: {
-         id_municipio: self.form.municipiofa.value
-      }})
-      .then(function (response) {
-
-        if(response.status === 200 && response.data.length > 0){
-
-          self.comboParroquiasfa = response.data;
-          self.form.parroquiafa.disabled = false;
-
-        }else{
-
-          throw "error";
-
-        }
-
-      })
-      .catch(error => {
-
-        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-
-          self.form[indiceObjecto].disabled = true;
-
-        });
-
-        self.submitCrear.disabled = true;
-
-        self.alertForm = {
-          class : "alert alert-warning",
-          message : "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-
-      });
-
-    },
-
     esEmpleado: function(e){
 
       if(self.form.empleado.checked){
@@ -860,12 +682,8 @@ var app = new Vue({
         self.form.estadofi.validar = true;
         self.form.municipiofi.validar = true;
         self.form.parroquiafi.validar = true;
-        self.form.estadofa.validar = true;
-        self.form.municipiofa.validar = true;
-        self.form.parroquiafa.validar = true;
 
         self.form.estadofi.value = "";
-        self.form.estadofa.value = "";
 
       }else{
 
@@ -875,23 +693,14 @@ var app = new Vue({
         self.form.estadofi.disabled = true;
         self.form.municipiofi.disabled = true;
         self.form.parroquiafi.disabled = true;
-        self.form.estadofa.disabled = true;
-        self.form.municipiofa.disabled = true;
-        self.form.parroquiafa.disabled = true;
 
         self.form.estadofi.validar = false;
         self.form.municipiofi.validar = false;
         self.form.parroquiafi.validar = false;
-        self.form.estadofa.validar = false;
-        self.form.municipiofa.validar = false;
-        self.form.parroquiafa.validar = false;
 
         self.form.estadofi.value = "";
         self.form.municipiofi.value = "";
         self.form.parroquiafi.value = "";
-        self.form.estadofa.value = "";
-        self.form.municipiofa.value = "";
-        self.form.parroquiafa.value = "";
       }
 
     },
@@ -965,17 +774,7 @@ var app = new Vue({
           numero_fiscal: AutoNumeric.getAutoNumericElement("#numero_fiscal").getNumber(),
           telefono_fiscal: self.form.telefono_fiscal.value,
           fax_fiscal: self.form.fax_fiscal.value,
-          email_fiscal: self.form.email_fiscal.value,
-          descripcion_factura: self.form.descripcion_factura.value,
-          parroquiafa: self.form.parroquiafa.value,
-          ciudad_factura: self.form.ciudad_factura.value,
-          avenida_calle_factura: self.form.avenida_calle_factura.value,
-          edificio_quinta_factura: self.form.edificio_quinta_factura.value,
-          piso_factura: self.form.piso_factura.value,
-          numero_factura: AutoNumeric.getAutoNumericElement("#numero_factura").getNumber(),
-          telefono_factura: self.form.telefono_factura.value,
-          fax_factura: self.form.fax_factura.value,
-          correo_factura: self.form.correo_factura.value
+          email_fiscal: self.form.email_fiscal.value
         }
 
         self.submitActualizar.content = '<i class="fas fa-cog fa-spin"></i>';
@@ -990,10 +789,10 @@ var app = new Vue({
 
           if(response.status === 200 && response.data.response === true){
 
-            var indices = ["rif","nit","razon_social","ciudad_fiscal","avenida_calle_fiscal","edificio_quinta_fiscal","piso_fiscal","numero_fiscal","telefono_fiscal","fax_fiscal","email_fiscal","descripcion_factura","ciudad_factura","avenida_calle_factura","edificio_quinta_factura","piso_factura","numero_factura","telefono_factura","fax_factura","correo_factura"];
+            var indices = ["rif","nit","razon_social","ciudad_fiscal","avenida_calle_fiscal","edificio_quinta_fiscal","piso_fiscal","numero_fiscal","telefono_fiscal","fax_fiscal","email_fiscal"];
   
             if(self.form.empleado.checked){
-            indices.push("estadofi","municipiofi","parroquiafi","estadofa","municipiofa","parroquiafa");
+            indices.push("estadofi","municipiofi","parroquiafi");
           }
             indices.forEach(function(indiceObjecto, indice) {
               self.form[indiceObjecto].disabled = false;
@@ -1018,10 +817,10 @@ var app = new Vue({
         })
         .catch(error => {
 
-          var indices = ["rif","nit","razon_social","ciudad_fiscal","avenida_calle_fiscal","edificio_quinta_fiscal","piso_fiscal","numero_fiscal","telefono_fiscal","fax_fiscal","email_fiscal","descripcion_factura","ciudad_factura","avenida_calle_factura","edificio_quinta_factura","piso_factura","numero_factura","telefono_factura","fax_factura","correo_factura"];
+          var indices = ["rif","nit","razon_social","ciudad_fiscal","avenida_calle_fiscal","edificio_quinta_fiscal","piso_fiscal","numero_fiscal","telefono_fiscal","fax_fiscal","email_fiscal"];
   
            if(self.form.empleado.checked){
-            indices.push("estadofi","municipiofi","parroquiafi","estadofa","municipiofa","parroquiafa");
+            indices.push("estadofi","municipiofi","parroquiafi");
           }
           indices.forEach(function(indiceObjecto, indice) {
             self.form[indiceObjecto].disabled = false;

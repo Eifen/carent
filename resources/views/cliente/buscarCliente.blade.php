@@ -58,20 +58,20 @@
                 <tr>
                   <th scope="col">Código</th>
                   <th scope="col">Razon social</th>
-                  <th scope="col">Descripcion</th>
+                  <th scope="col">Correo Electronico</th>
                   <th scope="col"></th>
-                  <th scope="col"></th>
+                  <th scope="col" v-if="permisoActualizar"></th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="cliente in clientes.registros">
                   <th scope="row">@{{ cliente.codigo }}</th>
                   <td>@{{ cliente.razon_social }}</td>
-                  <td>@{{ cliente.descripcion_factura }}</td>
+                  <td>@{{ cliente.email_fiscal }}</td>
                   <td>
                     <i class="fas fa-search-plus" v-on:click="mostrarDetalleCliente(cliente.id, $event)"></i>
                   </td>
-                  <td>
+                  <td v-if="permisoActualizar">
                     <a v-bind:href="'/formModificarCliente/'+cliente.id" target="_self">
                        <i class="far fa-edit"></i>
                     </a>
@@ -183,60 +183,6 @@
                   <div class="form-group col-12 col-sm-6">
                     <label>Email Cliente</label>
                     <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.email_fiscal">
-                  </div>
-                </form>
-                <h5 v-if="!detalleCliente.error">Descripción para entrega de facturas</h5>
-                <form class="row" v-if="!detalleCliente.error">
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Descripcion del trabajo</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.descripcion_factura">
-                  </div>
-                </form>
-                <h5 v-if="!detalleCliente.error">Dirección para entrega de facturas</h5>
-                <form class="row" v-if="!detalleCliente.error">
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Estado</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.estadofa">
-                  </div>
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Municipio</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.municipiofa">
-                  </div>
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Parroquia</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.parroquiafa">
-                  </div>
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Ciudad</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.ciudad_factura">
-                  </div>
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Avenida o Calle</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.avenida_calle_factura">
-                  </div>
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Quinta o Edificio</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.edificio_quinta_factura">
-                  </div>
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Piso</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.piso_factura">
-                  </div>
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Numero</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.numero_factura">
-                  </div>
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Nº de Teléfono Principal</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.telefono_factura">
-                  </div>
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Nº de Fax</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.fax_factura">
-                  </div>
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Email Cliente</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.correo_factura">
                   </div>
                 </form>
               </div>

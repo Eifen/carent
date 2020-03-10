@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.1
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 04-03-2020 a las 10:24:48
--- Versión del servidor: 5.7.22
--- Versión de PHP: 7.1.18
+-- Tiempo de generación: 10-03-2020 a las 07:10:29
+-- Versión del servidor: 8.0.18
+-- Versión de PHP: 7.3.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -596,16 +596,6 @@ CREATE TABLE `tbl_cliente` (
   `telefono_fiscal` varchar(20) NOT NULL,
   `fax_fiscal` varchar(11) NOT NULL,
   `email_fiscal` varchar(100) NOT NULL,
-  `descripcion_factura` varchar(500) NOT NULL,
-  `id_parroquia_factura` int(11) NOT NULL,
-  `avenida_calle_factura` varchar(250) NOT NULL,
-  `edificio_quinta_factura` varchar(25) NOT NULL,
-  `piso_factura` varchar(3) NOT NULL,
-  `numero_factura` varchar(5) NOT NULL,
-  `ciudad_factura` varchar(50) NOT NULL,
-  `telefono_factura` varchar(20) NOT NULL,
-  `fax_factura` varchar(11) NOT NULL,
-  `correo_factura` varchar(100) NOT NULL,
   `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -613,8 +603,39 @@ CREATE TABLE `tbl_cliente` (
 -- Volcado de datos para la tabla `tbl_cliente`
 --
 
-INSERT INTO `tbl_cliente` (`id`, `id_usuario_socio`, `id_usuario_gerente`, `codigo`, `rif`, `nit`, `razon_social`, `id_parroquia_fiscal`, `avenida_calle_fiscal`, `edificio_quinta_fiscal`, `piso_fiscal`, `numero_fiscal`, `ciudad_fiscal`, `telefono_fiscal`, `fax_fiscal`, `email_fiscal`, `descripcion_factura`, `id_parroquia_factura`, `avenida_calle_factura`, `edificio_quinta_factura`, `piso_factura`, `numero_factura`, `ciudad_factura`, `telefono_factura`, `fax_factura`, `correo_factura`, `id_estatus`) VALUES
-(1, 1, 4, 111, '234', 122, 'BANCOS. C', 1, 'D', 'DD', '2', '2', 'FD', '(2222) - 222 2222', '22', 'fj@gmail.com', 'INVENTARIO', 8, 'DFDS', 'DF', '2', '8', 'DFAS', '(1111) - 111 1111', '11', 'ko@gmail.com', 1);
+INSERT INTO `tbl_cliente` (`id`, `id_usuario_socio`, `id_usuario_gerente`, `codigo`, `rif`, `nit`, `razon_social`, `id_parroquia_fiscal`, `avenida_calle_fiscal`, `edificio_quinta_fiscal`, `piso_fiscal`, `numero_fiscal`, `ciudad_fiscal`, `telefono_fiscal`, `fax_fiscal`, `email_fiscal`, `id_estatus`) VALUES
+(1, 1, 4, 111, '234', 122, 'BANCOS. C', 1, 'D', 'DD', '2', '2', 'FD', '(2222) - 222 2222', '22', 'fj@gmail.com', 1),
+(2, 1, 1, 112, '335', 22, 'BANCO H', 1, 'AVENIDA', 'QUINTA', '2', '2', 'CIUDAD', '(2222) - 222 2222', '222', 'kose@gmail.com', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_cliente_facturacion`
+--
+
+CREATE TABLE `tbl_cliente_facturacion` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `id_cliente` int(11) DEFAULT NULL,
+  `id_proyecto` int(11) DEFAULT NULL,
+  `id_parroquia_factura` int(11) DEFAULT NULL,
+  `avenida_calle_factura` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `edificio_quinta_factura` varchar(25) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `piso_factura` varchar(3) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `numero_factura` varchar(5) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ciudad_factura` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `telefono_factura` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `fax_factura` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email_factura` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id_estatus` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `tbl_cliente_facturacion`
+--
+
+INSERT INTO `tbl_cliente_facturacion` (`id`, `id_cliente`, `id_proyecto`, `id_parroquia_factura`, `avenida_calle_factura`, `edificio_quinta_factura`, `piso_factura`, `numero_factura`, `ciudad_factura`, `telefono_factura`, `fax_factura`, `email_factura`, `id_estatus`) VALUES
+(1, 1, 1, 226, 'ALA', 'QUINTA', '33', '33', 'BACA', '(5654) - 020 2020', '32', 'vjd5@gmail.com', 1),
+(2, 1, 2, 259, 'AVENIDA', 'QUINTA', '21', '2', 'CIUDAD', '(0202) - 020 2020', '20', 'preubas@gmail.com', 1);
 
 -- --------------------------------------------------------
 
@@ -798,7 +819,7 @@ CREATE TABLE `tbl_menu` (
   `id` int(11) NOT NULL,
   `id_menu_padre` int(11) NOT NULL,
   `descripcion` varchar(50) NOT NULL,
-  `url` varchar(20) NOT NULL,
+  `url` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `orden` int(11) NOT NULL,
   `id_estatus` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -813,9 +834,11 @@ INSERT INTO `tbl_menu` (`id`, `id_menu_padre`, `descripcion`, `url`, `orden`, `i
 (3, 1, 'Consultar Usuario', '/formBuscarUsuario', 1, 1),
 (4, 0, 'Clientes', '', 0, 1),
 (5, 4, 'Crear Cliente', '/formNuevoCliente', 0, 1),
-(6, 0, 'Proyectos', '', 0, 1),
-(7, 6, 'Crear Proyecto', '/formNuevoProyecto', 1, 1),
-(8, 6, 'Lista de Proyectos', '/proyectos', 1, 1);
+(6, 4, 'Consultar Cliente', '/formBuscarCliente', 1, 1),
+(7, 4, 'Detalle Facturacion', '/formDetalleFactCliente', 1, 1),
+(8, 0, 'Proyectos', '', 0, 1),
+(9, 8, 'Crear Proyecto', '/formNuevoProyecto', 0, 1),
+(10, 8, 'Lista de Proyectos', '/proyectos', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -838,11 +861,13 @@ CREATE TABLE `tbl_menu_usuario` (
 --
 
 INSERT INTO `tbl_menu_usuario` (`id`, `id_usuario`, `id_menu`, `C`, `R`, `U`, `D`) VALUES
-(1, 1, 3, 0, 1, 1, 0),
-(2, 1, 2, 0, 0, 0, 0),
+(1, 1, 2, 0, 0, 0, 0),
+(2, 1, 3, 0, 1, 1, 0),
 (3, 1, 5, 0, 0, 0, 0),
-(4, 1, 7, 1, 1, 0, 0),
-(5, 1, 8, 0, 1, 1, 0);
+(4, 1, 6, 0, 1, 1, 0),
+(5, 1, 7, 0, 1, 1, 0),
+(6, 1, 9, 1, 1, 0, 0),
+(7, 1, 10, 0, 1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -2376,7 +2401,8 @@ INSERT INTO `tbl_proyecto` (`id`, `descripcion`, `id_cliente`, `horas_contratada
 (1, 'Auditoría Banco I', 1, 95, '03/03/2020', 1),
 (2, 'Auditoría Banco II', 1, 25, '04/03/2020', 1),
 (3, 'Certificación de Cursos', 1, 90, '05/03/2020', 1),
-(4, 'Proyecto I', 1, 1, '10/03/2020', 1);
+(4, 'Proyecto I', 1, 1, '10/03/2020', 1),
+(5, 'inventario IV', 2, 23, '22/02/2020', 1);
 
 -- --------------------------------------------------------
 
@@ -2403,7 +2429,8 @@ INSERT INTO `tbl_proyecto_divisiones` (`id`, `id_division`, `id_proyecto`) VALUE
 (6, 9, 4),
 (7, 5, 4),
 (8, 7, 4),
-(9, 11, 4);
+(9, 11, 4),
+(10, 5, 5);
 
 -- --------------------------------------------------------
 
@@ -2492,6 +2519,13 @@ ALTER TABLE `tbl_ciudades`
 --
 ALTER TABLE `tbl_cliente`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `tbl_cliente_facturacion`
+--
+ALTER TABLE `tbl_cliente_facturacion`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`);
 
 --
 -- Indices de la tabla `tbl_configuracion`
@@ -2607,7 +2641,13 @@ ALTER TABLE `tbl_ciudades`
 -- AUTO_INCREMENT de la tabla `tbl_cliente`
 --
 ALTER TABLE `tbl_cliente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT de la tabla `tbl_cliente_facturacion`
+--
+ALTER TABLE `tbl_cliente_facturacion`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_configuracion`
@@ -2643,13 +2683,13 @@ ALTER TABLE `tbl_estatus`
 -- AUTO_INCREMENT de la tabla `tbl_menu`
 --
 ALTER TABLE `tbl_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_menu_usuario`
 --
 ALTER TABLE `tbl_menu_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_municipios`
@@ -2667,13 +2707,13 @@ ALTER TABLE `tbl_parroquias`
 -- AUTO_INCREMENT de la tabla `tbl_proyecto`
 --
 ALTER TABLE `tbl_proyecto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_proyecto_divisiones`
 --
 ALTER TABLE `tbl_proyecto_divisiones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_telefono`

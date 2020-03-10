@@ -47,6 +47,40 @@ class ClienteController extends Controller
     }
     return $response;
   }
+
+  function buscarCliente(Request $request){
+
+    $modelo = new ClienteModel();
+    $buscarPor = (int) $request->input("buscarPor");
+    $dato = strtolower($request->input("dato"));
+    $clientes = $modelo->buscarClientes($buscarPor, $dato);
+    if(!empty($clientes)){
+      $response = array("response" => true, "clientes" => $clientes);
+    }else{
+      $response = array("response" => false, "message" => "No se encontraron resultadoos");
+    }
+    return $response;
+  }
+
+  function buscarClieProyec(Request $request){
+
+    $modelo = new ClienteModel();
+    $idCliente = (int) $request->input("idCliente");
+    $permisoCrear = $modelo->permisoCrear(session("usuario_id"), 7);
+    if ($permisoCrear === 'true') {
+      $clienteProy = $modelo->buscarClieProyec($idCliente);
+    }else{
+      $clienteProy = $modelo->buscarClieProyect($idCliente);
+    }
+    if(!empty($clienteProy)){
+      $response = array("response" => true, "clienteProy" => $clienteProy, "permisoCrear" => $permisoCrear);
+    }else{
+      $response = array("response" => false, "message" => "No se encontraron resultados");
+    }
+    return $response;
+  }
+
+
   function buscarUsuariosG(Request $request){
 
     $modelo = new ClienteModel();
@@ -78,15 +112,15 @@ class ClienteController extends Controller
   function crearCliente(Request $request){
 
     $modelo = new ClienteModel();
-    $codigoCliente = $request->input("codigoCliente");
-    $cliente = $modelo->buscarCliente($codigoCliente);
-    if(empty($cliente)){
+    $codigo = $modelo->agregarCodigoCliente();
+    if(!empty($codigo)){
+      $codigoCliente = $codigo->codigo + 1;
       $email = $modelo->buscarEmail($request->input("email_fiscal"));
       if(!$email["response"]){
         $parametros = array(
           "idUsuario" => (int) $request->input("idUsuario"),
           "idUsuario2" => (int) $request->input("idUsuario2"),
-          "codigoCliente" => $request->input("codigoCliente"),
+          "codigoCliente" => $codigoCliente,
           "rif" => $request->input("rif"),
           "nit" => $request->input("nit"),
           "razon_social" => mb_strtoupper ($request->input("razon_social")),
@@ -98,24 +132,32 @@ class ClienteController extends Controller
           "numero_fiscal" => $request->input("numero_fiscal"),
           "telefono_fiscal" => $request->input("telefono_fiscal"),
           "fax_fiscal" => $request->input("fax_fiscal"),
-          "email_fiscal" => strtolower($request->input("email_fiscal")),
-          "descripcion_factura" => mb_strtoupper($request->input("descripcion_factura")),
-          "parroquiafa" => $request->input("parroquiafa"),
-          "ciudad_factura" => mb_strtoupper($request->input("ciudad_factura")),
-          "avenida_calle_factura" => mb_strtoupper($request->input("avenida_calle_factura")),
-          "edificio_quinta_factura" => mb_strtoupper($request->input("edificio_quinta_factura")),
-          "piso_factura" => mb_strtoupper($request->input("piso_factura")),
-          "numero_factura" => $request->input("numero_factura"),
-          "telefono_factura" => $request->input("telefono_factura"),
-          "fax_factura" => $request->input("fax_factura"),
-          "correo_factura" => strtolower($request->input("correo_factura"))
+          "email_fiscal" => strtolower($request->input("email_fiscal"))
         );
          $response = $modelo->crearCliente($parametros);
       }else{
         $response = array("response" => false, "message" => "El correo ya se encuentra asociado a otro usuario");
       }
     }else{
-      $response = array("response" => false, "message" => "Ya existe un cliente con ese código de usuario");
+      $codigoCliente = 1000;
+        $parametros = array(
+          "idUsuario" => (int) $request->input("idUsuario"),
+          "idUsuario2" => (int) $request->input("idUsuario2"),
+          "codigoCliente" => $codigoCliente,
+          "rif" => $request->input("rif"),
+          "nit" => $request->input("nit"),
+          "razon_social" => mb_strtoupper ($request->input("razon_social")),
+          "parroquiafi" => $request->input("parroquiafi"),
+          "ciudad_fiscal" => mb_strtoupper($request->input("ciudad_fiscal")),
+          "avenida_calle_fiscal" => mb_strtoupper($request->input("avenida_calle_fiscal")),
+          "edificio_quinta_fiscal" => mb_strtoupper($request->input("edificio_quinta_fiscal")),
+          "piso_fiscal" => mb_strtoupper($request->input("piso_fiscal")),
+          "numero_fiscal" => $request->input("numero_fiscal"),
+          "telefono_fiscal" => $request->input("telefono_fiscal"),
+          "fax_fiscal" => $request->input("fax_fiscal"),
+          "email_fiscal" => strtolower($request->input("email_fiscal"))
+        );
+         $response = $modelo->crearCliente($parametros);
     }
       return $response;
   }
@@ -125,9 +167,10 @@ class ClienteController extends Controller
     $modelo = new ClienteModel();
     $buscarPor = (int) $request->input("buscarPor");
     $dato = strtolower($request->input("dato"));
+    $permisoActualizar = $modelo->permisoActualizar(session("usuario_id"), 6);
     $clientes = $modelo->buscarClientes($buscarPor, $dato);
     if(!empty($clientes)){
-      $response = array("response" => true, "clientes" => $clientes);
+      $response = array("response" => true, "clientes" => $clientes, "permisoActualizar" => $permisoActualizar);
     }else{
       $response = array("response" => false, "message" => "No se encontraron resultadoos");
     }
@@ -141,6 +184,40 @@ class ClienteController extends Controller
     $infoCliente = $modelo->detalleCliente($id_cliente);
     if(!empty($infoCliente)){
       $response = array("response" => true, "info" => $infoCliente);
+    }else{
+      $response = array("response" => false, "message" => "No se encontraron resultados");
+    }
+    return $response;
+  }
+
+  function detalleClienteProy(Request $request){
+
+    $modelo = new ClienteModel();
+    $permisoActualizar = $modelo->permisoActualizar(session("usuario_id"), 7);
+    $permisoCrear = $modelo->permisoCrear(session("usuario_id"), 7);
+    $idclienteProy = (int) $request->input("idclienteProy");
+    $infoClienteProy = $modelo->detalleClienteProy($idclienteProy);
+    $infoFactCliente = $modelo->detalleFactCliente($infoClienteProy->id, $infoClienteProy->id_cliente);
+    $estados_factura = $modelo->estados();
+    if (!empty($infoFactCliente)) {    
+      if($infoFactCliente->id_estado_factura !== NULL){
+        $municipios_factura = $modelo->municipios($infoFactCliente->id_estado_factura);
+        $parroquias_factura = $modelo->parroquias($infoFactCliente->id_municipio_factura);
+      }
+    }else{
+      $municipios_factura = array();
+      $parroquias_factura = array();
+    }
+
+    if(!empty($infoClienteProy)){
+      $response = array("response" => true, 
+                        "infoproy" => $infoClienteProy, 
+                        "infoFactCliente" => $infoFactCliente, 
+                        "estadosfa" => $estados_factura,
+                        "municipiosfa" => $municipios_factura, 
+                        "parroquiasfa" => $parroquias_factura,
+                        "permisoActualizar" => $permisoActualizar,
+                        "permisoCrear" => $permisoCrear);
     }else{
       $response = array("response" => false, "message" => "No se encontraron resultados");
     }
@@ -166,27 +243,55 @@ class ClienteController extends Controller
       $municipios_fiscal = array();
       $parroquias_fiscal = array();
     }
-    $estados_factura = $modelo->estados();
-    if($infoCliente->id_estado_factura !== NULL){
-      $municipios_factura = $modelo->municipios($infoCliente->id_estado_factura);
-      $parroquias_factura = $modelo->parroquias($infoCliente->id_municipio_factura);
-    }else{
-      $municipios_factura = array();
-      $parroquias_factura = array();
-    }
     if(!empty($infoCliente)){
       $response = array("response" => true,
                         "info" => $infoCliente,
                         "estadosfi" => $estados_fiscal,
                         "municipiosfi" => $municipios_fiscal,
-                        "parroquiasfi" => $parroquias_fiscal,
-                        "estadosfa" => $estados_factura,
-                        "municipiosfa" => $municipios_factura,
-                        "parroquiasfa" => $parroquias_factura);
+                        "parroquiasfi" => $parroquias_fiscal);
     }else{
       $response = array("response" => false, "message" => "No se encontraron resultados");
     }
     return $response;
+  }
+
+  function crearFactCliente(Request $request){
+
+    $modelo = new ClienteModel();
+      $parametros = array(
+        "id_cliente" => (int) $request->input("id_cliente"),
+        "id_proyecto" => (int) $request->input("id_proyecto"),
+        "parroquiafa" => $request->input("parroquiafa"),
+        "ciudad_factura" => mb_strtoupper($request->input("ciudad_factura")),
+        "avenida_calle_factura" => mb_strtoupper($request->input("avenida_calle_factura")),
+        "edificio_quinta_factura" => mb_strtoupper($request->input("edificio_quinta_factura")),
+        "piso_factura" => mb_strtoupper($request->input("piso_factura")),
+        "numero_factura" => $request->input("numero_factura"),
+        "telefono_factura" => $request->input("telefono_factura"),
+        "fax_factura" => $request->input("fax_factura"),
+        "correo_factura" => strtolower($request->input("correo_factura"))
+      );
+      $response = $modelo->CrearFactCliente($parametros);
+      return $response;    
+  }
+
+  function actualizarFactCliente(Request $request){
+
+    $modelo = new ClienteModel();
+      $parametros = array(
+        "id_fact_cliente" => (int) $request->input("id_fact_cliente"),
+        "parroquiafa" => $request->input("parroquiafa"),
+        "ciudad_factura" => mb_strtoupper($request->input("ciudad_factura")),
+        "avenida_calle_factura" => mb_strtoupper($request->input("avenida_calle_factura")),
+        "edificio_quinta_factura" => mb_strtoupper($request->input("edificio_quinta_factura")),
+        "piso_factura" => mb_strtoupper($request->input("piso_factura")),
+        "numero_factura" => $request->input("numero_factura"),
+        "telefono_factura" => $request->input("telefono_factura"),
+        "fax_factura" => $request->input("fax_factura"),
+        "correo_factura" => strtolower($request->input("correo_factura"))
+      );
+      $response = $modelo->actualizarFactCliente($parametros);
+      return $response;
   }
 
     function modificarCliente(Request $request){
@@ -207,17 +312,7 @@ class ClienteController extends Controller
       "numero_fiscal" => $request->input("numero_fiscal"),
       "telefono_fiscal" => $request->input("telefono_fiscal"),
       "fax_fiscal" => $request->input("fax_fiscal"),
-      "email_fiscal" => strtolower($request->input("email_fiscal")),
-      "descripcion_factura" => mb_strtoupper($request->input("descripcion_factura")),
-      "parroquiafa" => $request->input("parroquiafa"),
-      "ciudad_factura" => mb_strtoupper($request->input("ciudad_factura")),
-      "avenida_calle_factura" => mb_strtoupper($request->input("avenida_calle_factura")),
-      "edificio_quinta_factura" => mb_strtoupper($request->input("edificio_quinta_factura")),
-      "piso_factura" => mb_strtoupper($request->input("piso_factura")),
-      "numero_factura" => $request->input("numero_factura"),
-      "telefono_factura" => $request->input("telefono_factura"),
-      "fax_factura" => $request->input("fax_factura"),
-      "correo_factura" => strtolower($request->input("correo_factura"))
+      "email_fiscal" => strtolower($request->input("email_fiscal"))
     );
     $response = $modelo->modificarCliente($parametros);
     return $response;
