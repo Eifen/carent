@@ -160,6 +160,19 @@ class ClienteModel extends Model
     return $parroquias;
   }// Fin parroquias
 
+  function agregarCodigoCliente(){
+
+    $cliente = DB::select('SELECT
+                                codigo
+                           FROM tbl_cliente
+                           ORDER BY codigo DESC');
+    if(count($cliente) > 0){
+      return $cliente[0];
+    }else{
+      return array();
+    }
+  }// Fin buscarCliente
+
   function buscarCliente($codigo){
 
     $cliente = DB::select('SELECT id,
@@ -210,16 +223,7 @@ class ClienteModel extends Model
                   "telefono_fiscal" => $parametros["telefono_fiscal"],
                   "fax_fiscal" => $parametros["fax_fiscal"],
                   "email_fiscal" => $parametros["email_fiscal"],
-                  "descripcion_factura" => $parametros["descripcion_factura"],
-                  "id_parroquia_factura" => $parametros["parroquiafa"],
-                  "ciudad_factura" => $parametros["ciudad_factura"],
-                  "avenida_calle_factura" => $parametros["avenida_calle_factura"],
-                  "edificio_quinta_factura" => $parametros["edificio_quinta_factura"],
-                  "piso_factura" => $parametros["piso_factura"],
-                  "numero_factura" => $parametros["numero_factura"],
-                  "telefono_factura" => $parametros["telefono_factura"],
-                  "fax_factura" => $parametros["fax_factura"],
-                  "correo_factura" => $parametros["correo_factura"]);
+                  "id_estatus" => 1);
     $contacto = DB::table('tbl_cliente')->insert($data);
     if($contacto){
       DB::commit();
@@ -229,6 +233,52 @@ class ClienteModel extends Model
       return array("response" => false, "message" => "Error al tratar de crear el cliente.");
     }
   }// Fin crearCliente
+
+  function permisoActualizar($id_usuario, $id_menu){
+
+      $permiso = DB::select('SELECT CASE mu.U
+                                      WHEN 1 THEN "true"
+                                      ELSE "false"
+                                    END AS permiso
+                             FROM tbl_menu_usuario mu
+                             WHERE mu.id_usuario = '.$id_usuario.'
+                             AND mu.U = 1
+                             AND mu.id_menu = '. $id_menu);
+
+      if(count($permiso) > 0){
+
+        return $permiso[0]->permiso;
+
+      }else{
+
+        return false;
+
+      }
+
+    }
+
+    function permisoCrear($id_usuario, $id_menu){
+
+      $permiso = DB::select('SELECT CASE mu.C
+                                      WHEN 1 THEN "true"
+                                      ELSE "false"
+                                    END AS permiso
+                             FROM tbl_menu_usuario mu
+                             WHERE mu.id_usuario = '.$id_usuario.'
+                             AND mu.C = 1
+                             AND mu.id_menu = '. $id_menu);
+
+      if(count($permiso) > 0){
+
+        return $permiso[0]->permiso;
+
+      }else{
+
+        return false;
+
+      }
+
+    }
 
   function buscarClientes($buscarPor, $dato){
 
@@ -249,7 +299,7 @@ class ClienteModel extends Model
     $clientes = DB::select('SELECT c.id,
                                    c.codigo,
                                    c.razon_social,                    
-                                   c.descripcion_factura
+                                   c.email_fiscal
                             FROM tbl_cliente c
                             '.$condicion.'
                          ');
@@ -258,7 +308,37 @@ class ClienteModel extends Model
     }else{
       return array();
     }
+  }
+
+  function buscarClieProyec($idCliente){
+
+    $clientes = DB::select('SELECT *
+                            FROM tbl_proyecto
+                            WHERE id_cliente = '.$idCliente.'
+                            ORDER BY fecha_contratacion DESC');
+    if(count($clientes) > 0){
+      return $clientes;
+    }else{
+      return array();
     }
+    }
+
+    function buscarClieProyect($idCliente){
+
+    $clientes = DB::select('SELECT p.*
+                            FROM tbl_proyecto p
+                            LEFT JOIN tbl_cliente_facturacion f
+                              ON f.id_proyecto = p.id
+                            WHERE p.id_cliente = '.$idCliente.'
+                              AND f.id_proyecto is not null
+                             ORDER BY fecha_contratacion DESC');
+    if(count($clientes) > 0){
+      return $clientes;
+    }else{
+      return array();
+    }
+    }
+
   function detalleCliente($id_cliente){
 
     $info = DB::select('SELECT id,
@@ -280,16 +360,6 @@ class ClienteModel extends Model
                                 telefono_fiscal,
                                 fax_fiscal,
                                 email_fiscal,
-                                descripcion_factura,
-                                id_parroquia_factura,
-                                ciudad_factura,
-                                avenida_calle_factura,
-                                edificio_quinta_factura,
-                                piso_factura,
-                                numero_factura,
-                                telefono_factura,
-                                fax_factura,
-                                correo_factura,
                                 (SELECT p.parroquia FROM tbl_parroquias p WHERE p.id = id_parroquia_fiscal) parroquiafi,
                                 (SELECT m.municipio
                                  FROM tbl_municipios m
@@ -298,21 +368,57 @@ class ClienteModel extends Model
                                  FROM tbl_estados e
                                  WHERE e.id = (SELECT m.id_estado
                                                FROM tbl_municipios m
-                                               WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = id_parroquia_fiscal))) estadofi,
-                                 (SELECT p.parroquia FROM tbl_parroquias p WHERE p.id = id_parroquia_factura) parroquiafa,
-                                (SELECT m.municipio
-                                 FROM tbl_municipios m
-                                 WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = id_parroquia_factura)) municipiofa,
-                                (SELECT e.estado
-                                 FROM tbl_estados e
-                                 WHERE e.id = (SELECT m.id_estado
-                                               FROM tbl_municipios m
-                                               WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = id_parroquia_factura))) estadofa
+                                               WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = id_parroquia_fiscal))) estadofi
                           FROM tbl_cliente 
                           WHERE id = '.$id_cliente.'
                         ');
     if(count($info) > 0)
     {
+      return $info[0];
+    }else{
+      return array();
+    }
+  }
+
+  function detalleClienteProy($idclienteProy){
+
+    $info = DB::select('SELECT *
+                          FROM tbl_proyecto 
+                          WHERE id = '.$idclienteProy.'
+                        ');
+    if(count($info) > 0)
+    {
+      return $info[0];
+    }else{
+      return array();
+    }
+  }
+
+  function detalleFactCliente($id_proyecto, $id_cliente){
+
+    $info = DB::select('SELECT  id,
+                                ciudad_factura,
+                                avenida_calle_factura,
+                                edificio_quinta_factura,
+                                piso_factura,
+                                numero_factura,
+                                telefono_factura,
+                                fax_factura,
+                                email_factura,
+                                id_parroquia_factura,
+                                 (SELECT id
+                                  FROM tbl_municipios 
+                                  WHERE id = (SELECT id_municipio FROM tbl_parroquias WHERE id =id_parroquia_factura)) id_municipio_factura,
+                                 (SELECT id
+                                  FROM tbl_estados
+                                  WHERE id = (SELECT id_estado
+                                                FROM tbl_municipios 
+                                                WHERE id = (SELECT id_municipio FROM tbl_parroquias WHERE id = id_parroquia_factura))) id_estado_factura
+                          FROM tbl_cliente_facturacion
+                          WHERE id_cliente = '.$id_cliente.'
+                          AND id_proyecto = '.$id_proyecto.'');
+
+    if(count($info) > 0){
       return $info[0];
     }else{
       return array();
@@ -340,15 +446,6 @@ class ClienteModel extends Model
                                  telefono_fiscal,
                                  fax_fiscal,
                                  email_fiscal,
-                                 descripcion_factura,
-                                 ciudad_factura,
-                                 avenida_calle_factura,
-                                 edificio_quinta_factura,
-                                 piso_factura,
-                                 numero_factura,
-                                 telefono_factura,
-                                 fax_factura,
-                                 correo_factura,
                                  id_parroquia_fiscal,
                                  (SELECT id
                                   FROM tbl_municipios 
@@ -357,16 +454,7 @@ class ClienteModel extends Model
                                   FROM tbl_estados
                                   WHERE id = (SELECT id_estado
                                                 FROM tbl_municipios 
-                                                WHERE id = (SELECT id_municipio FROM tbl_parroquias WHERE id = id_parroquia_fiscal))) id_estado_fiscal,
-                                  id_parroquia_factura,
-                                 (SELECT id
-                                  FROM tbl_municipios 
-                                  WHERE id = (SELECT id_municipio FROM tbl_parroquias WHERE id =id_parroquia_factura)) id_municipio_factura,
-                                 (SELECT id
-                                  FROM tbl_estados
-                                  WHERE id = (SELECT id_estado
-                                                FROM tbl_municipios 
-                                                WHERE id = (SELECT id_municipio FROM tbl_parroquias WHERE id = id_parroquia_factura))) id_estado_factura
+                                                WHERE id = (SELECT id_municipio FROM tbl_parroquias WHERE id = id_parroquia_fiscal))) id_estado_fiscal
                           FROM tbl_cliente
                           WHERE id = '.$id_cliente.'');
 
@@ -376,6 +464,55 @@ class ClienteModel extends Model
       return array();
     }
   }
+
+  function CrearFactCliente($parametros){
+
+    DB::beginTransaction();
+    $data = array(  "id_cliente" => $parametros["id_cliente"],
+                    "id_proyecto" => $parametros["id_proyecto"],
+                    "id_parroquia_factura" => $parametros["parroquiafa"],
+                    "ciudad_factura" => $parametros["ciudad_factura"],
+                    "avenida_calle_factura" => $parametros["avenida_calle_factura"],
+                    "edificio_quinta_factura" => $parametros["edificio_quinta_factura"],
+                    "piso_factura" => $parametros["piso_factura"],
+                    "numero_factura" => $parametros["numero_factura"],
+                    "telefono_factura" => $parametros["telefono_factura"],
+                    "fax_factura" => $parametros["fax_factura"],
+                    "email_factura" => $parametros["correo_factura"],
+                    "id_estatus" => 1);
+    $contacto = DB::table('tbl_cliente_facturacion')->insert($data);
+    if($contacto){
+      DB::commit();
+      return array("response" => true, "message" => "Detalle de Facturacion del Cliente Creada con Éxito.");
+    }else{
+      DB::rollBack();
+      return array("response" => false, "message" => "Error al tratar de crear el cliente.");
+    }
+  }// Fin crearCliente
+
+  function actualizarFactCliente($parametros){
+
+    DB::beginTransaction();
+
+    try {
+      $data = array(
+                    "id_parroquia_factura" => $parametros["parroquiafa"],
+                    "ciudad_factura" => $parametros["ciudad_factura"],
+                    "avenida_calle_factura" => $parametros["avenida_calle_factura"],
+                    "edificio_quinta_factura" => $parametros["edificio_quinta_factura"],
+                    "piso_factura" => $parametros["piso_factura"],
+                    "numero_factura" => $parametros["numero_factura"],
+                    "telefono_factura" => $parametros["telefono_factura"],
+                    "fax_factura" => $parametros["fax_factura"],
+                    "email_factura" => $parametros["correo_factura"]);      
+        $contacto = DB::table('tbl_cliente_facturacion')->where("id", $parametros["id_fact_cliente"])->update($data);
+        DB::commit();
+        return array("response" => true, "message" => "Factura Cliente actualizada con Éxito!.");
+    } catch(\Illuminate\Database\QueryException $ex){
+      DB::rollBack();
+      return array("response" => false, "message" => "Error al tratar de actualizar la información la factura del cliente.");
+    }
+  }// Fin crearUsuario
   
   function modificarCliente($parametros){
 
@@ -396,17 +533,7 @@ class ClienteModel extends Model
                     "numero_fiscal" => $parametros["numero_fiscal"],
                     "telefono_fiscal" => $parametros["telefono_fiscal"],
                     "fax_fiscal" => $parametros["fax_fiscal"],
-                    "email_fiscal" => $parametros["email_fiscal"],
-                    "descripcion_factura" => $parametros["descripcion_factura"],
-                    "id_parroquia_factura" => $parametros["parroquiafa"],
-                    "ciudad_factura" => $parametros["ciudad_factura"],
-                    "avenida_calle_factura" => $parametros["avenida_calle_factura"],
-                    "edificio_quinta_factura" => $parametros["edificio_quinta_factura"],
-                    "piso_factura" => $parametros["piso_factura"],
-                    "numero_factura" => $parametros["numero_factura"],
-                    "telefono_factura" => $parametros["telefono_factura"],
-                    "fax_factura" => $parametros["fax_factura"],
-                    "correo_factura" => $parametros["correo_factura"]);      
+                    "email_fiscal" => $parametros["email_fiscal"]);      
         $contacto = DB::table('tbl_cliente')->where("id",$parametros["idCliente"])->update($data);
         DB::commit();
         return array("response" => true, "message" => "Cliente actualizado con Éxito!.");
@@ -414,5 +541,5 @@ class ClienteModel extends Model
       DB::rollBack();
       return array("response" => false, "message" => "Error al tratar de actualizar la información del usuario.");
     }
-  }// Fin crearUsuario
+  }// Fin modificarUsuario
 }
