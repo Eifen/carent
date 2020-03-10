@@ -37,7 +37,8 @@ var app = new Vue({
     detalleCliente: {
       error: false,
       data: []
-    }
+    },
+    permisoActualizar: false
   },
   beforeCreate: function(){
 
@@ -83,6 +84,7 @@ var app = new Vue({
 
             self.clientes.mostrar = true;
             self.clientes.registros = response.data.clientes;
+            self.permisoActualizar = response.data.permisoActualizar;
 
           }else{
 

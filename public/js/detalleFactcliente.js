@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 9);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -40218,97 +40218,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 /***/ }),
 
-/***/ "./resources/js/components/menuPrincipal.vue":
-/*!***************************************************!*\
-  !*** ./resources/js/components/menuPrincipal.vue ***!
-  \***************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./menuPrincipal.vue?vue&type=template&id=15fedc58& */ "./resources/js/components/menuPrincipal.vue?vue&type=template&id=15fedc58&");
-/* harmony import */ var _menuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./menuPrincipal.vue?vue&type=script&lang=js& */ "./resources/js/components/menuPrincipal.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./menuPrincipal.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=css&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-
-/* normalize component */
-
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
-  _menuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "resources/js/components/menuPrincipal.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./resources/js/components/menuPrincipal.vue?vue&type=script&lang=js&":
-/*!****************************************************************************!*\
-  !*** ./resources/js/components/menuPrincipal.vue?vue&type=script&lang=js& ***!
-  \****************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./menuPrincipal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/menuPrincipal.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=css&":
-/*!************************************************************************************!*\
-  !*** ./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=css& ***!
-  \************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_20_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_20_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--20-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--20-2!../../../node_modules/vue-loader/lib??vue-loader-options!./menuPrincipal.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=css&");
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_20_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_20_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_20_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_20_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_20_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_20_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_20_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_20_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
- /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_20_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_20_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
-
-/***/ }),
-
-/***/ "./resources/js/components/menuPrincipal.vue?vue&type=template&id=15fedc58&":
-/*!**********************************************************************************!*\
-  !*** ./resources/js/components/menuPrincipal.vue?vue&type=template&id=15fedc58& ***!
-  \**********************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./menuPrincipal.vue?vue&type=template&id=15fedc58& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/menuPrincipal.vue?vue&type=template&id=15fedc58&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
-
-
-
-/***/ }),
-
-/***/ "./resources/js/usuario/nuevoUsuario.js":
-/*!**********************************************!*\
-  !*** ./resources/js/usuario/nuevoUsuario.js ***!
-  \**********************************************/
+/***/ "./resources/js/cliente/detalleFactcliente.js":
+/*!****************************************************!*\
+  !*** ./resources/js/cliente/detalleFactcliente.js ***!
+  \****************************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -40332,89 +40245,64 @@ var self;
 Vue.use(vue_the_mask__WEBPACK_IMPORTED_MODULE_0___default.a);
 Vue.component('menu-principal', __webpack_require__(/*! ../components/menuPrincipal.vue */ "./resources/js/components/menuPrincipal.vue")["default"]);
 var app = new Vue({
-  el: '#nuevoUsuario',
+  el: '#detalleFactcliente',
   data: {
     alertForm: {
       "class": "",
       message: "",
       show: false
     },
-    comboEstados: [],
-    comboMunicipios: [],
-    comboParroquias: [],
-    comboDivisiones: [],
-    comboCargos: [],
+    comboEstadosfa: [],
+    comboMunicipiosfa: [],
+    comboParroquiasfa: [],
     refreshForm: false,
     form: {
-      nombre1: {
-        disabled: false,
-        value: ""
-      },
-      nombre2: {
-        disabled: false,
-        value: ""
-      },
-      apellido1: {
-        disabled: false,
-        value: ""
-      },
-      apellido2: {
-        disabled: false,
-        value: ""
-      },
-      fechaNacimiento: {
-        disabled: false,
-        value: ""
-      },
-      codigoUsuario: {
-        disabled: false,
-        value: ""
-      },
-      cedula: {
-        disabled: false,
-        value: ""
-      },
-      estado: {
+      estadofa: {
         disabled: true,
         validar: false,
         value: ""
       },
-      municipio: {
+      municipiofa: {
         disabled: true,
-        help: "Municipio de la oficina en donde se desempeña",
+        help: "Municipio de la oficina fiscal",
         validar: false,
         value: ""
       },
-      parroquia: {
+      parroquiafa: {
         disabled: true,
-        help: "Parroquia de la oficina en donde se desempeña",
+        help: "Parroquia de la oficina fiscal",
         validar: false,
         value: ""
       },
-      division: {
-        disabled: true,
-        validar: false,
-        value: ""
-      },
-      cargo: {
-        disabled: true,
-        validar: false,
-        value: ""
-      },
-      correoPrincipal: {
+      ciudad_factura: {
         disabled: false,
         value: ""
       },
-      correoSecundario: {
-        disabled: false,
-        validar: false,
-        value: ""
-      },
-      telefono1: {
+      avenida_calle_factura: {
         disabled: false,
         value: ""
       },
-      telefono2: {
+      edificio_quinta_factura: {
+        disabled: false,
+        value: ""
+      },
+      piso_factura: {
+        disabled: false,
+        value: ""
+      },
+      numero_factura: {
+        disabled: false,
+        value: ""
+      },
+      telefono_factura: {
+        disabled: false,
+        value: ""
+      },
+      fax_factura: {
+        disabled: false,
+        value: ""
+      },
+      correo_factura: {
         disabled: false,
         value: ""
       },
@@ -40422,210 +40310,161 @@ var app = new Vue({
         checked: false
       }
     },
-    submitCrear: {
-      content: "Crear nuevo Usuario",
+    alert: {
+      message: "",
+      mostrar: false
+    },
+    formSearch: {
+      submit: {
+        disabled: true,
+        html: "Buscar"
+      },
+      inputSearch: {
+        disabled: true,
+        value: ""
+      },
+      select: {
+        disabled: false,
+        value: ""
+      }
+    },
+    formSearchP: {
+      submit: {
+        disabled: true,
+        html: "Selecionar Proyecto"
+      }
+    },
+    clientes: {
+      mostrar: false,
+      registros: []
+    },
+    detalleCliente: {
+      error: false,
+      data: []
+    },
+    clienteProy: {
+      mostrar: false,
+      registros: []
+    },
+    detalleClienteProy: {
+      error: false,
+      data: []
+    },
+    detalleFactcliente: {
+      error: false,
+      data: []
+    },
+    submitActualizar: {
+      content: "Actualizar Datos",
       disabled: false,
       show: true
     },
-    key: null,
-    iv: null
+    submitCrear: {
+      content: "Crear Detalle de Factura",
+      disabled: false,
+      show: true
+    },
+    permisoActualizar: false,
+    permisoCrear: false
   },
   beforeCreate: function beforeCreate() {
     self = this;
-    axios.get('/encryptConfig').then(function (response) {
-      if (response.status === 200 && response.data.key && response.data.iv) {
-        self.key = response.data.key;
-        self.iv = response.data.iv;
-      } else {
-        throw "error";
-      }
-    })["catch"](function (error) {
-      Object.keys(self.form).forEach(function (indiceObjecto, indice) {
-        self.form[indiceObjecto].disabled = true;
-      });
-      self.submitCrear.disabled = true;
-      self.alertForm = {
-        "class": "alert alert-warning",
-        message: "Existe un error!, consulte con el administrador del sistema.",
-        show: true
-      };
-    });
   },
-  created: function created() {
-    self.cargos();
-    self.divisiones();
-    self.estados();
-  },
-  mounted: function mounted() {
-    new AutoNumeric('#codigoUsuario', {
-      decimalPlaces: 0,
-      decimalCharacter: ',',
-      digitGroupSeparator: '',
-      leadingZero: 'keep'
-    });
-    new AutoNumeric('#cedula', {
-      decimalPlaces: 0,
-      decimalCharacter: ',',
-      digitGroupSeparator: '.'
-    });
-  },
+  created: function created() {},
+  mounted: function mounted() {},
   updated: function updated() {},
   methods: {
-    cargos: function cargos() {
-      axios.get('/cargos').then(function (response) {
-        if (response.status === 200 && response.data.length > 0) {
-          self.comboCargos = response.data;
-        } else {
-          throw "error";
-        }
-      })["catch"](function (error) {
-        Object.keys(self.form).forEach(function (indiceObjecto, indice) {
-          self.form[indiceObjecto].disabled = true;
-        });
-        self.submitCrear.disabled = true;
-        self.alertForm = {
-          "class": "alert alert-warning",
-          message: "Existe un error!, consulte con el administrador del sistema.",
-          show: true
+    buscar: function buscar(e) {
+      self.alert.mostrar = false;
+
+      if (self.formSearch.inputSearch.value.trim() !== "") {
+        self.formSearch.submit.html = '<i class="fas fa-cog fa-spin"></i>';
+        self.formSearch.submit.disabled = true;
+        var parametros = {
+          buscarPor: self.formSearch.select.value,
+          dato: self.formSearch.inputSearch.value
         };
-      });
-    },
-    divisiones: function divisiones() {
-      axios.get('/divisiones').then(function (response) {
-        if (response.status === 200 && response.data.length > 0) {
-          self.comboDivisiones = response.data;
-        } else {
-          throw "error";
-        }
-      })["catch"](function (error) {
-        Object.keys(self.form).forEach(function (indiceObjecto, indice) {
-          self.form[indiceObjecto].disabled = true;
+        axios.get('/buscarCliente', {
+          params: parametros
+        }).then(function (response) {
+          self.formSearch.submit.html = 'Buscar';
+          self.formSearch.submit.disabled = false;
+
+          if (response.status === 200 && response.data.response === true) {
+            self.clientes.mostrar = true;
+            self.clientes.registros = response.data.clientes;
+            $('#modal-detalle-cliente').modal("show");
+            $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
+          } else {
+            throw response.data;
+          }
+        })["catch"](function (error) {
+          self.formSearch.submit.html = 'Buscar';
+          self.formSearch.submit.disabled = false;
+          self.alert.mostrar = true;
+          self.clientes.registros = [];
+          self.clientes.mostrar = false;
+
+          if (error.response) {
+            var message = "Existe un error!, consulte con el administrador del sistema.";
+          } else {
+            var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+          }
+
+          self.alert.message = message;
         });
-        self.submitCrear.disabled = true;
-        self.alertForm = {
-          "class": "alert alert-warning",
-          message: "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-      });
-    },
-    estados: function estados() {
-      self.form.municipio.help = '<i class="fas fa-cog fa-spin"></i> buscando';
-      axios.get('/estados').then(function (response) {
-        if (response.status === 200 && response.data.length > 0) {
-          self.form.municipio.help = 'Municipio de la oficina en donde se desempeña';
-          self.comboEstados = response.data;
-        } else {
-          throw "error";
-        }
-      })["catch"](function (error) {
-        self.form.municipio.help = 'Municipio de la oficina en donde se desempeña';
-        Object.keys(self.form).forEach(function (indiceObjecto, indice) {
-          self.form[indiceObjecto].disabled = true;
-        });
-        self.submitCrear.disabled = true;
-        self.alertForm = {
-          "class": "alert alert-warning",
-          message: "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-      });
-    },
-    municipios: function municipios() {
-      self.form.municipio.value = "";
-      self.form.municipio.disabled = true;
-      self.form.parroquia.value = "";
-      self.form.parroquia.disabled = true;
-      self.form.parroquia.help = '<i class="fas fa-cog fa-spin"></i> buscando';
-      axios.get('/municipios', {
-        params: {
-          id_estado: self.form.estado.value
-        }
-      }).then(function (response) {
-        if (response.status === 200 && response.data.length > 0) {
-          self.form.parroquia.help = 'Parroquia de la oficina en donde se desempeña';
-          self.comboMunicipios = response.data;
-          self.form.municipio.disabled = false;
-        } else {
-          throw "error";
-        }
-      })["catch"](function (error) {
-        self.form.parroquia.help = 'Parroquia de la oficina en donde se desempeña';
-        Object.keys(self.form).forEach(function (indiceObjecto, indice) {
-          self.form[indiceObjecto].disabled = true;
-        });
-        self.submitCrear.disabled = true;
-        self.alertForm = {
-          "class": "alert alert-warning",
-          message: "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-      });
-    },
-    parroquias: function parroquias() {
-      self.form.parroquia.disabled = true;
-      axios.get('/parroquias', {
-        params: {
-          id_municipio: self.form.municipio.value
-        }
-      }).then(function (response) {
-        if (response.status === 200 && response.data.length > 0) {
-          self.comboParroquias = response.data;
-          self.form.parroquia.disabled = false;
-        } else {
-          throw "error";
-        }
-      })["catch"](function (error) {
-        Object.keys(self.form).forEach(function (indiceObjecto, indice) {
-          self.form[indiceObjecto].disabled = true;
-        });
-        self.submitCrear.disabled = true;
-        self.alertForm = {
-          "class": "alert alert-warning",
-          message: "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-      });
-    },
-    esEmpleado: function esEmpleado(e) {
-      if (self.form.empleado.checked) {
-        self.form.estado.disabled = false;
-        self.form.division.disabled = false;
-        self.form.cargo.disabled = false;
-        self.form.estado.validar = true;
-        self.form.municipio.validar = true;
-        self.form.parroquia.validar = true;
-        self.form.division.validar = true;
-        self.form.cargo.validar = true;
-        self.form.estado.value = "";
       } else {
-        $(e.target).parents("form").find(".form-group .mensaje").html("").removeClass("invalid-feedback");
-        $(e.target).parents("form").find(".form-group .form-control").removeClass("error");
-        self.form.estado.disabled = true;
-        self.form.municipio.disabled = true;
-        self.form.parroquia.disabled = true;
-        self.form.division.disabled = true;
-        self.form.cargo.disabled = true;
-        self.form.estado.validar = false;
-        self.form.municipio.validar = false;
-        self.form.parroquia.validar = false;
-        self.form.division.validar = false;
-        self.form.cargo.validar = false;
-        self.form.estado.value = "";
-        self.form.municipio.value = "";
-        self.form.parroquia.value = "";
-        self.form.division.value = "";
-        self.form.cargo.value = "";
+        $(".inputSearch").parent().find(".mensaje").html("Campo requerido").addClass("invalid-feedback");
+        $(".inputSearch").addClass("error");
+        zenscroll.toY($(".inputSearch").offset().top - 100);
       }
     },
-    encriptar: function encriptar(valor) {
-      var key = CryptoJS.enc.Hex.parse(self.key);
-      var iv = CryptoJS.enc.Hex.parse(self.iv);
-      var encrypted = CryptoJS.AES.encrypt(valor, key, {
-        iv: iv,
-        padding: CryptoJS.pad.ZeroPadding
+    tipoFiltro: function tipoFiltro(e) {
+      var opcion = parseInt(e.target.value);
+      var valoresPermitidos = [1, 2, 3, 4];
+      self.clientes.mostrar = false;
+      self.clientes.registros = [];
+
+      if (valoresPermitidos.includes(opcion)) {
+        self.formSearch.inputSearch.disabled = false;
+        self.formSearch.submit.disabled = false;
+      } else {
+        self.formSearch.inputSearch.disabled = true;
+        self.formSearch.submit.disabled = true;
+      }
+    },
+    evaluarCampo: function evaluarCampo(id, e) {
+      if (e.target.type === 'text') {
+        self.formSearch[id].value = e.target.value.trim() === "" ? "" : $(e.target).val();
+      }
+
+      if (id === "inputSearch" && self.formSearch["inputSearch"].value.trim() === "") {
+        self.clientes.registros = [];
+        self.clientes.mostrar = false;
+      }
+
+      self.limpiarMensajeError(e);
+    },
+    SelecionarCliente: function SelecionarCliente(idCliente, e) {
+      self.detalleCliente.error = false;
+      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
+      var parametros = {
+        idCliente: idCliente
+      };
+      axios.get('/detalleCliente', {
+        params: parametros
+      }).then(function (response) {
+        if (response.status === 200 && response.data.response === true) {
+          self.detalleCliente.data = response.data.info;
+          self.formSearchP.submit.disabled = false;
+        } else {
+          throw response.data;
+        }
+      })["catch"](function (error) {
+        self.detalleCliente.error = true;
+        $('#modal-detalle-cliente').modal("show");
+        $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
       });
-      return encrypted.toString();
     },
     valuesForm: function valuesForm(e) {
       if (e.target.type === 'text' || e.target.type === 'textarea' || e.target.type === 'email') {
@@ -40641,6 +40480,271 @@ var app = new Vue({
     campoOpcionalARequerido: function campoOpcionalARequerido(e) {
       self.valuesForm(e);
       self.form[e.target.id].validar = self.form[e.target.id].value.length > 0 && self.form[e.target.id].validar === false ? true : false;
+    },
+    Selecionar: function Selecionar(e) {
+      self.alert.mostrar = false;
+      self.formSearchP.submit.html = '<i class="fas fa-cog fa-spin"></i>';
+      self.formSearchP.submit.disabled = true;
+      var parametros = {
+        idCliente: self.detalleCliente.data.id
+      };
+      axios.get('/buscarClieProyec', {
+        params: parametros
+      }).then(function (response) {
+        self.formSearchP.submit.html = 'Selecionar Proyecto';
+        self.formSearchP.submit.disabled = false;
+
+        if (response.status === 200 && response.data.response === true) {
+          self.clienteProy.mostrar = true;
+          self.clienteProy.registros = response.data.clienteProy;
+          $('#modal-detalle-clienteProy').modal("show");
+          $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
+        } else {
+          throw response.data;
+        }
+      })["catch"](function (error) {
+        self.formSearchP.submit.html = 'Selecionar Proyecto';
+        self.formSearchP.submit.disabled = false;
+        self.alert.mostrar = true;
+        self.clienteProy.registros = [];
+        self.clienteProy.mostrar = false;
+
+        if (error.response) {
+          var message = "Existe un error!, consulte con el administrador del sistema.";
+        } else {
+          var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+        }
+
+        self.alert.message = message;
+      });
+    },
+    SelecionarClienteProy: function SelecionarClienteProy(clienteProy, e) {
+      self.detalleClienteProy.error = false;
+      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
+      var parametros = {
+        idclienteProy: clienteProy
+      };
+      axios.get('/detalleClienteProy', {
+        params: parametros
+      }).then(function (response) {
+        if (response.status === 200 && response.data.response === true) {
+          self.permisoCrear = response.data.permisoCrear;
+          self.detalleClienteProy.data = response.data.infoproy;
+          self.detalleFactcliente.data = response.data.infoFactCliente;
+          self.form.ciudad_factura.value = self.detalleFactcliente.data.ciudad_factura;
+          self.form.avenida_calle_factura.value = self.detalleFactcliente.data.avenida_calle_factura;
+          self.form.edificio_quinta_factura.value = self.detalleFactcliente.data.edificio_quinta_factura;
+          self.form.piso_factura.value = self.detalleFactcliente.data.piso_factura;
+          self.form.numero_factura.value = self.detalleFactcliente.data.numero_factura;
+          self.form.telefono_factura.value = self.detalleFactcliente.data.telefono_factura;
+          self.form.fax_factura.value = self.detalleFactcliente.data.fax_factura;
+          self.form.correo_factura.value = self.detalleFactcliente.data.email_factura;
+          self.comboEstadosfa = response.data.estadosfa;
+          self.comboMunicipiosfa = response.data.municipiosfa;
+          self.comboParroquiasfa = response.data.parroquiasfa;
+          self.form.estadofa.disabled = false;
+          self.form.municipiofa.disabled = false;
+          self.form.parroquiafa.disabled = false;
+          self.form.estadofa.validar = true;
+          self.form.municipiofa.validar = true;
+          self.form.parroquiafa.validar = true;
+
+          if (self.detalleFactcliente.data.length !== 0) {
+            self.form.estadofa.value = self.detalleFactcliente.data.id_estado_factura;
+            self.form.municipiofa.value = self.detalleFactcliente.data.id_municipio_factura;
+            self.form.parroquiafa.value = self.detalleFactcliente.data.id_parroquia_factura;
+            self.permisoActualizar = response.data.permisoActualizar;
+            self.permisoCrear = false;
+          }
+
+          if (respose.data.permisoCrear) {
+            var message = "No Puedes Crear Detalles de Facturacions";
+          }
+        } else {
+          throw response.data;
+        }
+      })["catch"](function (error) {
+        self.actualizar.mostrar = false;
+        self.detalleClienteProy.error = true;
+        $('#modal-detalle-clienteProy').modal("show");
+        $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
+      });
+    },
+    municipiosfa: function municipiosfa() {
+      if (self.form.estadofa.value !== null) {
+        self.form.municipiofa.value = "";
+        self.form.municipiofa.disabled = true;
+        self.form.parroquiafa.value = "";
+        self.form.parroquiafa.disabled = true;
+        self.form.parroquiafa.help = '<i class="fas fa-cog fa-spin"></i> buscando';
+        var parametros = {
+          id_estado: self.form.estadofa.value
+        };
+        axios.get('/municipios', {
+          params: parametros
+        }).then(function (response) {
+          if (response.status === 200 && response.data.length > 0) {
+            self.form.parroquiafa.help = 'Parroquia de la oficina en donde se desempeña';
+            self.comboMunicipiosfa = response.data;
+            self.form.municipiofa.disabled = false;
+          } else {
+            throw "error";
+          }
+        })["catch"](function (error) {
+          self.form.parroquiafa.help = 'Parroquia de la oficina en donde se desempeña';
+          Object.keys(self.form).forEach(function (indiceObjecto, indice) {
+            self.form[indiceObjecto].disabled = true;
+          });
+          self.submitActualizar.disabled = true;
+          self.alertForm = {
+            "class": "alert alert-warning",
+            message: "Existe un error!, consulte con el administrador del sistema.",
+            show: true
+          };
+        });
+      }
+    },
+    parroquiasfa: function parroquiasfa() {
+      self.form.parroquiafa.disabled = true;
+      axios.get('/parroquias', {
+        params: {
+          id_municipio: self.form.municipiofa.value
+        }
+      }).then(function (response) {
+        if (response.status === 200 && response.data.length > 0) {
+          self.comboParroquiasfa = response.data;
+          self.form.parroquiafa.disabled = false;
+        } else {
+          throw "error";
+        }
+      })["catch"](function (error) {
+        Object.keys(self.form).forEach(function (indiceObjecto, indice) {
+          self.form[indiceObjecto].disabled = true;
+        });
+        self.submitActualizar.disabled = true;
+        self.alertForm = {
+          "class": "alert alert-warning",
+          message: "Existe un error!, consulte con el administrador del sistema.",
+          show: true
+        };
+      });
+    },
+    esEmpleado: function esEmpleado(e) {
+      if (self.form.empleado.checked) {
+        self.form.estadofa.disabled = false;
+        self.form.estadofa.validar = true;
+        self.form.municipiofa.validar = true;
+        self.form.parroquiafa.validar = true;
+        self.form.estadofa.value = "";
+      } else {
+        $(e.target).parents("form").find(".form-group .mensaje").html("").removeClass("invalid-feedback");
+        $(e.target).parents("form").find(".form-group .form-control").removeClass("error");
+        self.form.estadofa.disabled = true;
+        self.form.municipiofa.disabled = true;
+        self.form.parroquiafa.disabled = true;
+        self.form.estadofa.validar = false;
+        self.form.municipiofa.validar = false;
+        self.form.parroquiafa.validar = false;
+        self.form.estadofa.value = "";
+        self.form.municipiofa.value = "";
+        self.form.parroquiafa.value = "";
+      }
+    },
+    actualizar: function actualizar() {
+      var formValido = true;
+      $("form .form-group .mensaje").html("").removeClass("invalid-feedback");
+      $("form .form-group .form-control").removeClass("error");
+      $("form .form-group").each(function (index, elemento) {
+        if ($(elemento).find(".form-control").length > 0) {
+          var input = $(elemento).find(".form-control")[0];
+          var valido = self.validarValor(input);
+
+          if (!valido.respuesta) {
+            $(elemento).find(".mensaje").html(valido.mensaje).addClass("invalid-feedback");
+            $(elemento).find(".form-control").addClass("error");
+            formValido = valido.respuesta;
+            return false;
+          }
+        }
+      });
+
+      if (formValido) {
+        self.alertForm = {
+          "class": "",
+          message: "",
+          show: false
+        }; //Obtenemos valores
+
+        var parametros = {
+          id_cliente: self.detalleClienteProy.data.id_cliente,
+          id_proyecto: self.detalleClienteProy.data.id,
+          id_fact_cliente: self.detalleFactcliente.data.id,
+          parroquiafa: self.form.parroquiafa.value,
+          ciudad_factura: self.form.ciudad_factura.value,
+          avenida_calle_factura: self.form.avenida_calle_factura.value,
+          edificio_quinta_factura: self.form.edificio_quinta_factura.value,
+          piso_factura: self.form.piso_factura.value,
+          numero_factura: self.form.numero_factura.value,
+          telefono_factura: self.form.telefono_factura.value,
+          fax_factura: self.form.fax_factura.value,
+          correo_factura: self.form.correo_factura.value
+        };
+        self.submitActualizar.content = '<i class="fas fa-cog fa-spin"></i>';
+        self.submitActualizar.disabled = true;
+        Object.keys(self.form).forEach(function (indiceObjecto, indice) {
+          self.form[indiceObjecto].disabled = true;
+        });
+        axios.post('/actualizarFactCliente', parametros).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.refreshForm = true;
+            self.permisoActualizar = false;
+            var indices = ["ciudad_factura", "avenida_calle_factura", "edificio_quinta_factura", "piso_factura", "numero_factura", "telefono_factura", "fax_factura", "correo_factura"];
+
+            if (self.form.empleado.checked) {
+              indices.push("estadofa", "municipiofa", "parroquiafa");
+            }
+
+            indices.forEach(function (indiceObjecto, indice) {
+              self.form[indiceObjecto].disabled = false;
+            });
+            self.submitActualizar.content = 'Actualizar Datos';
+            self.submitActualizar.disabled = false;
+            self.submitActualizar.show = true;
+            self.alertForm = {
+              "class": "alert alert-success",
+              message: response.data.message,
+              show: true
+            };
+          } else {
+            throw response.data;
+          }
+        })["catch"](function (error) {
+          var indices = ["ciudad_factura", "avenida_calle_factura", "edificio_quinta_factura", "piso_factura", "numero_factura", "telefono_factura", "fax_factura", "correo_factura"];
+
+          if (self.form.empleado.checked) {
+            indices.push("estadofa", "municipiofa", "parroquiafa");
+          }
+
+          indices.forEach(function (indiceObjecto, indice) {
+            self.form[indiceObjecto].disabled = false;
+          });
+          self.submitActualizar.content = 'Actualizar Datos';
+          self.submitActualizar.disabled = false;
+
+          if (error.response) {
+            var message = "Existe un error!, consulte con el administrador del sistema.";
+          } else {
+            var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+          }
+
+          self.alertForm = {
+            "class": "alert alert-warning",
+            message: message,
+            show: true
+          };
+        });
+      } // Fin if
+
     },
     crear: function crear() {
       var formValido = true;
@@ -40668,29 +40772,25 @@ var app = new Vue({
         }; //Obtenemos valores
 
         var parametros = {
-          nombre1: self.form.nombre1.value,
-          nombre2: self.form.nombre2.value,
-          apellido1: self.form.apellido1.value,
-          apellido2: self.form.apellido2.value,
-          fechaNacimiento: self.form.fechaNacimiento.value,
-          codigoUsuario: self.encriptar(self.form.codigoUsuario.value),
-          cedula: AutoNumeric.getAutoNumericElement("#cedula").getNumber(),
-          clave: self.encriptar(self.form.cedula.value),
-          parroquia: self.form.parroquia.value,
-          division: self.form.division.value,
-          cargo: self.form.cargo.value,
-          correoPrincipal: self.form.correoPrincipal.value,
-          correoSecundario: self.form.correoSecundario.value,
-          telefono1: self.form.telefono1.value,
-          telefono2: self.form.telefono2.value,
-          empleado: self.form.empleado.checked
+          id_cliente: self.detalleClienteProy.data.id_cliente,
+          id_proyecto: self.detalleClienteProy.data.id,
+          id_fact_cliente: self.detalleFactcliente.data.id,
+          parroquiafa: self.form.parroquiafa.value,
+          ciudad_factura: self.form.ciudad_factura.value,
+          avenida_calle_factura: self.form.avenida_calle_factura.value,
+          edificio_quinta_factura: self.form.edificio_quinta_factura.value,
+          piso_factura: self.form.piso_factura.value,
+          numero_factura: self.form.numero_factura.value,
+          telefono_factura: self.form.telefono_factura.value,
+          fax_factura: self.form.fax_factura.value,
+          correo_factura: self.form.correo_factura.value
         };
         self.submitCrear.content = '<i class="fas fa-cog fa-spin"></i>';
         self.submitCrear.disabled = true;
         Object.keys(self.form).forEach(function (indiceObjecto, indice) {
           self.form[indiceObjecto].disabled = true;
         });
-        axios.post('/crearUsuario', parametros).then(function (response) {
+        axios.post('/crearFactCliente', parametros).then(function (response) {
           if (response.status === 200 && response.data.response === true) {
             self.submitCrear.show = false;
             self.refreshForm = true;
@@ -40703,16 +40803,16 @@ var app = new Vue({
             throw response.data;
           }
         })["catch"](function (error) {
-          var indices = ["nombre1", "nombre2", "apellido1", "apellido2", "fechaNacimiento", "codigoUsuario", "cedula", "correoPrincipal", "correoSecundario", "telefono1", "telefono2"];
+          var indices = ["ciudad_factura", "avenida_calle_factura", "edificio_quinta_factura", "piso_factura", "numero_factura", "telefono_factura", "fax_factura", "correo_factura"];
 
           if (self.form.empleado.checked) {
-            indices.push("estado", "municipio", "parroquia", "division", "cargo");
+            indices.push("estadofa", "municipiofa", "parroquiafa");
           }
 
           indices.forEach(function (indiceObjecto, indice) {
             self.form[indiceObjecto].disabled = false;
           });
-          self.submitCrear.content = 'Crear nuevo Usuario';
+          self.submitCrear.content = 'Crear Detalle de Factura';
           self.submitCrear.disabled = false;
 
           if (error.response) {
@@ -40811,7 +40911,7 @@ var app = new Vue({
       }
     },
     refreshView: function refreshView() {
-      window.location.href = "/formNuevoUsuario";
+      window.location.href = "/formDetalleFactCliente";
     }
   } // Fin methods
 
@@ -40819,14 +40919,101 @@ var app = new Vue({
 
 /***/ }),
 
-/***/ 3:
-/*!****************************************************!*\
-  !*** multi ./resources/js/usuario/nuevoUsuario.js ***!
-  \****************************************************/
+/***/ "./resources/js/components/menuPrincipal.vue":
+/*!***************************************************!*\
+  !*** ./resources/js/components/menuPrincipal.vue ***!
+  \***************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./menuPrincipal.vue?vue&type=template&id=15fedc58& */ "./resources/js/components/menuPrincipal.vue?vue&type=template&id=15fedc58&");
+/* harmony import */ var _menuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./menuPrincipal.vue?vue&type=script&lang=js& */ "./resources/js/components/menuPrincipal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./menuPrincipal.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _menuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/menuPrincipal.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/menuPrincipal.vue?vue&type=script&lang=js&":
+/*!****************************************************************************!*\
+  !*** ./resources/js/components/menuPrincipal.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./menuPrincipal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/menuPrincipal.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=css&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=css& ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_20_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_20_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader??ref--20-1!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--20-2!../../../node_modules/vue-loader/lib??vue-loader-options!./menuPrincipal.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_20_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_20_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_20_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_20_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_20_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_20_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_20_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_20_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_20_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_20_2_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./resources/js/components/menuPrincipal.vue?vue&type=template&id=15fedc58&":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/components/menuPrincipal.vue?vue&type=template&id=15fedc58& ***!
+  \**********************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./menuPrincipal.vue?vue&type=template&id=15fedc58& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/menuPrincipal.vue?vue&type=template&id=15fedc58&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ 9:
+/*!**********************************************************!*\
+  !*** multi ./resources/js/cliente/detalleFactcliente.js ***!
+  \**********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\usuario\nuevoUsuario.js */"./resources/js/usuario/nuevoUsuario.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\cliente\detalleFactcliente.js */"./resources/js/cliente/detalleFactcliente.js");
 
 
 /***/ })

@@ -78,11 +78,11 @@
                 </div>
               </div>
             <form class="row" v-if="!detalleUsuario.error">
-                  <div class="form-group col-12 col-sm-6">
+                  <div class="form-group col-12 col-sm-6" v-show="usuarios.mostrar">
                     <label>Codigo</label>
                     <input class="form-control" type="text" disabled v-bind:value="detalleUsuario.data.codigo">
                   </div>
-                  <div class="form-group col-12 col-sm-6">
+                  <div class="form-group col-12 col-sm-6" v-show="usuarios.mostrar">
                     <label>Nombre</label>
                     <input class="form-control" type="text" disabled v-bind:value="detalleUsuario.data.nombre">
                   </div>
@@ -147,11 +147,11 @@
                 </div>
               </div>
             <form class="row" v-if="!detalleUsuarioG.error">
-                  <div class="form-group col-12 col-sm-6">
+                  <div class="form-group col-12 col-sm-6" v-show="usuariosG.mostrar">
                     <label>Codigo</label>
                     <input class="form-control" type="text" disabled v-bind:value="detalleUsuarioG.data.codigo">
                   </div>
-                  <div class="form-group col-12 col-sm-6">
+                  <div class="form-group col-12 col-sm-6" v-show="usuariosG.mostrar">
                     <label>Nombre</label>
                     <input class="form-control" type="text" disabled v-bind:value="detalleUsuarioG.data.nombre">
                   </div>
@@ -168,20 +168,6 @@
                        v-model="form.empleado.checked"
                        v-on:change="esEmpleado">
                 <label class="form-check-label label-warning" for="empleado">Crear Nuevo Cliente</label>
-              </div>
-              <div class="form-group col-12 col-sm-6">
-                <label for="codigoCliente">Código del Cliente <span class="campo-obligatorio">*</span></label>
-                <input aria-describedby="codigoClienteHelp"
-                       class="form-control"
-                       data-validar="true"
-                       data-only-number="true"
-                       id="codigoCliente"
-                       v-bind:disabled="form.codigoCliente.disabled"
-                       v-model="form.codigoCliente.value"
-                       v-on:keyup="valuesForm"
-                       type="text">
-                <small id="codigoClienteHelp" class="form-text">Ejemplo: 2209</small>
-                <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
                 <label for="rif">Rif<span class="campo-obligatorio">*</span> </label>
@@ -391,188 +377,6 @@
                 <small id="email_fiscalHelp" class="form-text text-muted">Ejemplo: correo@dominio.com</small>
                 <div class="mensaje"></div>
               </div>            
-            </form>
-            <h5>Descripción para entrega de facturas</h5>
-            <form class="row">
-              <div class="form-group col-12 col-sm-6">
-                <label for="descripcion_factura">Descripcion del trabajo <span class="campo-obligatorio">*</span></label>
-                <input aria-describedby="descripcion_facturaHelp"
-                       class="form-control text-lowercase"
-                       data-min="3"
-                       data-validar="true"
-                       id="descripcion_factura"
-                       v-bind:disabled="form.descripcion_factura.disabled"
-                       v-model="form.descripcion_factura.value"
-                       v-on:keyup="valuesForm"
-                       type="text">
-                <small id="descripcion_facturaHelp" class="form-text text-muted">Ejemplo: Inventario en la empresa...</small>
-                <div class="mensaje"></div>
-              </div>
-            </form>
-            <h5>Dirección para entrega de facturas</h5>
-            <form class="row">
-              <div class="form-group col-12 col-sm-6">
-                <label for="estadofa">Estado <span class="campo-obligatorio">*</span></label>
-                <select aria-describedby="estadoHelp"
-                        class="form-control"
-                        id="estadofa"
-                        v-bind:data-validar="form.estadofa.validar"
-                        v-bind:disabled="form.estadofa.disabled"
-                        v-model="form.estadofa.value"
-                        v-on:change="municipiosfa"
-                        v-on:click="limpiarMensajeError"
-                        type="text">
-                  <option value="" disabled selected>Seleccione...</option>
-                  <option v-bind:value="estadofa.id" v-for="estadofa in comboEstadosfa">@{{ estadofa.estado }}</option>
-                </select>
-                <small id="estadofaHelp" class="form-text text-muted">Estado de la oficina en donde se desempeña</small>
-                <div class="mensaje"></div>
-              </div>
-              <div class="form-group col-12 col-sm-6">
-                <label for="estadofa">Municipio <span  class="campo-obligatorio">*</span></label>
-                <select aria-describedby="municipiofaHelp"
-                        class="form-control"
-                        id="municipiofa"
-                        v-bind:data-validar="form.municipiofa.validar"
-                        v-bind:disabled="form.municipiofa.disabled"
-                        v-model="form.municipiofa.value"
-                        v-on:change="parroquiasfa"
-                        v-on:click="limpiarMensajeError"
-                        type="text">
-                  <option value="" disabled selected>Seleccione...</option>
-                  <option v-bind:value="municipiofa.id" v-for="municipiofa in comboMunicipiosfa">@{{ municipiofa.municipio }}</option>
-                </select>
-                <small id="estadofaHelp" class="form-text text-muted" v-html="form.municipiofa.help"></small>
-                <div class="mensaje"></div>
-              </div>
-              <div class="form-group col-12 col-sm-6">
-                <label for="estadofa">Parroquia <span class="campo-obligatorio">*</span></label>
-                <select aria-describedby="parroquiafaHelp"
-                        class="form-control"
-                        id="parroquiafa"
-                        v-bind:data-validar="form.parroquiafa.validar"
-                        v-bind:disabled="form.parroquiafa.disabled"
-                        v-model="form.parroquiafa.value"
-                        v-on:click="limpiarMensajeError"
-                        type="text">
-                  <option value="" disabled selected>Seleccione...</option>
-                  <option v-bind:value="parroquiafa.id" v-for="parroquiafa in comboParroquiasfa">@{{ parroquiafa.parroquia }}</option>
-                </select>
-                <small id="estadofaHelp" class="form-text text-muted" v-html="form.parroquiafa.help"></small>
-                <div class="mensaje"></div>
-              </div>
-            <div class="form-group col-12 col-sm-6">
-                <label for="ciudad_factura">Ciudad <span class="campo-obligatorio">*</span></label>
-                <input aria-describedby="ciudad_facturaHelp"
-                       class="form-control text-lowercase"
-                       data-validar="true"
-                       id="ciudad_factura"
-                       v-bind:disabled="form.ciudad_factura.disabled"
-                       v-model="form.ciudad_factura.value"
-                       v-on:keyup="valuesForm"
-                       type="text">
-                <small id="ciudad_factura" class="form-text text-muted">Ejemplo: Caracas</small>
-                <div class="mensaje"></div>
-              </div>
-              <div class="form-group col-12 col-sm-6">
-                <label for="avenida_calle_factura">Avenida o Calle <span class="campo-obligatorio">*</span></label>
-                <input aria-describedby="avenida_calle_facturaHelp"
-                       class="form-control text-lowercase"
-                       data-validar="true"
-                       id="avenida_calle_factura"
-                       v-bind:disabled="form.avenida_calle_factura.disabled"
-                       v-model="form.avenida_calle_factura.value"
-                       v-on:keyup="valuesForm"
-                       type="text">
-                <small id="avenida_calle_facturaHelp" class="form-text text-muted"></small>
-                <div class="mensaje"></div>
-              </div>
-
-              <div class="form-group col-12 col-sm-6">
-                <label for="edificio_quinta_factura">Quinta o Edificio<span class="campo-obligatorio">*</span></label>
-                <input aria-describedby="edificio_quinta_facturaHelp"
-                       class="form-control text-lowercase"
-                       data-validar="true"
-                       id="edificio_quinta_factura"
-                       v-bind:disabled="form.edificio_quinta_factura.disabled"
-                       v-model="form.edificio_quinta_factura.value"
-                       v-on:keyup="valuesForm"
-                       type="text">
-                <small id="edificio_quinta_facturaHelp" class="form-text text-muted"></small>
-                <div class="mensaje"></div>
-              </div>
-
-
-              <div class="form-group col-12 col-sm-6">
-                <label for="piso_factura">Piso<span class="campo-obligatorio">*</span></label>
-                <input aria-describedby="piso_facturaHelp"
-                       class="form-control text-lowercase"
-                       data-validar="true"
-                       id="piso_factura"
-                       v-bind:disabled="form.piso_factura.disabled"
-                       v-model="form.piso_factura.value"
-                       v-on:keyup="valuesForm"
-                       type="text">
-                <small id="piso_facturaHelp" class="form-text text-muted">ejemplo: 24E</small>
-                <div class="mensaje"></div>
-              </div>
-
-              <div class="form-group col-12 col-sm-6">
-                <label for="numero_factura">Numero</label>
-                <input aria-describedby="numero_factura"
-                       class="form-control text-lowercase"
-                       data-formated-number="true"
-                       data-only-number="true"
-                       data-validar="true"
-                       id="numero_factura"
-                       v-bind:disabled="form.numero_factura.disabled"
-                       v-model="form.numero_factura.value"
-                       v-on:keyup="valuesForm"
-                       type="text">
-                <small id="numero_factura" class="form-text text-muted"></small>
-                <div class="mensaje"></div>
-              </div>
-
-              <div class="form-group col-12 col-sm-6">
-                <label for="telefono_factura">Nº de Teléfono de Facturacion Principal</label>
-                <input aria-describedby="telefono_facturaHelp"
-                       class="form-control"
-                       id="telefono_factura"
-                       v-bind:disabled="form.telefono_factura.disabled"
-                       v-mask="'(####) - ### ####'"
-                       v-model="form.telefono_factura.value"
-                       v-on:keyup="valuesForm"
-                       type="text">
-                <small id="telefono_facturaHelp" class="form-text text-muted">Ejemplo: 0424-1234567</small>
-                <div class="mensaje"></div>
-              </div>
-                        
-              <div class="form-group col-12 col-sm-6">
-                <label for="fax_factura">Nº de Fax</label>
-                <input aria-describedby="fax_facturaHelp"
-                       class="form-control"
-                       id="fax_factura"
-                       v-bind:disabled="form.fax_factura.disabled"
-                       v-model="form.fax_factura.value"
-                       v-on:keyup="valuesForm"
-                       type="text">
-                <small id="fax_facturaHelp" class="form-text text-muted"></small>
-                <div class="mensaje"></div>
-              </div>
-
-               <div class="form-group col-12 col-sm-6">
-                <label for="correo_factura">Email De Facturaa <span class="campo-obligatorio">*</span></label>
-                <input aria-describedby="correo_facturaHelp"
-                       class="form-control text-lowercase"
-                       data-validar="true"
-                       id="correo_factura"
-                       v-bind:disabled="form.correo_factura.disabled"
-                       v-model="form.correo_factura.value"
-                       v-on:keyup="valuesForm"
-                       type="email">
-                <small id="correo_facturaHelp" class="form-text text-muted">Ejemplo: correo@dominio.com</small>
-                <div class="mensaje"></div>
-              </div>
             </form>
             <div class="row justify-content-center wrapper-subtmit">
               <div class="col-12 col-md-6 col-lg-4">
