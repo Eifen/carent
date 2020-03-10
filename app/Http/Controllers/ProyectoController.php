@@ -45,7 +45,7 @@ class ProyectoController extends Controller
 
       $modelo = new ProyectoModel();
       $paginar = 10;
-      $permisoActualizar = $modelo->permisoActualizar(session("usuario_id"), 8);
+      $permisoActualizar = $modelo->permisoActualizar(session("usuario_id"), 10);
       $proyectos = $modelo->proyectos(session("division_id"), $paginar);
       $divisiones = $modelo->divisiones();
       $estatus = $modelo->estatusProyectos();
