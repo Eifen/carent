@@ -240,4 +240,94 @@ class ProyectoModel extends Model
 
     }
 
+    function detalleProyectoModificar($id_proyecto){
+
+      $info = DB::select('SELECT *
+                          FROM tbl_proyecto                              
+                          WHERE id = '.$id_proyecto.'');
+
+      if(count($info) > 0){
+
+        return $info[0];
+
+      }else{
+
+        return array();
+
+      }
+
+    }
+
+    function detalleDivisionProyecto($id_proyecto){
+
+      $info = DB::select('SELECT id_division
+                          FROM tbl_proyecto_divisiones                              
+                          WHERE id_proyecto = '.$id_proyecto.'');
+      if(count($info) > 0){
+
+        return $info;
+
+      }else{
+
+        return array();
+      }
+    }
+
+    function modificarProyecto($descripcion,$cliente,$horas,$fechaContratacion,$divisiones,$estatus,$idProyecto,$divisiones_v){
+
+      DB::beginTransaction();
+
+      try{
+
+      $data = array("descripcion" => $descripcion,
+                    "id_cliente" => $cliente,
+                    "horas_contratadas" => $horas,
+                    "fecha_contratacion" => $fechaContratacion,
+                    "id_estatus" => $estatus);
+
+      $update = DB::table('tbl_proyecto')->where("id",$idProyecto)->update($data);
+
+      $divisionCreada = true;
+
+      for($i = 0; $i < count($divisiones); $i++){
+        $si = 0;
+        for($j = 0; $j < count($divisiones_v); $j++){
+          if ($divisiones[$i] === $divisiones_v[$j]->id_division) {
+            $si=1;
+          }
+        }
+        if ($si === 0) {
+          
+          $data = array("id_proyecto" => $idProyecto,
+                      "id_division" => $divisiones[$i]);
+          $div = DB::table('tbl_proyecto_divisiones')->insert($data);
+           $divisionCreada = false;
+          }
+        
+      }
+
+      for($i = 0; $i < count($divisiones_v); $i++){
+        $no = 0;
+        for($j = 0; $j < count($divisiones); $j++){
+          if ($divisiones_v[$i]->id_division === $divisiones[$j]) {
+            $no=1;
+          }
+        }
+        if ($no === 0) {
+          $delete = DB::table('tbl_proyecto_divisiones')->where([['id_proyecto', '=', $idProyecto],['id_division', '=', $divisiones_v[$i]->id_division]])->delete();
+          }
+        
+      }
+        DB::commit();
+        return array("response" => true, "message" => "Proyecto actualizado con éxito.");
+
+      } catch(\Illuminate\Database\QueryException $ex){
+
+        DB::rollBack();
+        return array("response" => false, "message" => "Error al tratar de actualizar la información del proyecto.");
+
+      }
+
+    }
+
 }

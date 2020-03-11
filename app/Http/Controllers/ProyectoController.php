@@ -78,4 +78,58 @@ class ProyectoController extends Controller
 
     }
 
+    function formModificarProyecto($idProyecto, Request $request){
+
+      $request->session()->put('id_proyecto_mod', $idProyecto);
+      return view('proyecto/modificarProyecto');
+
+    }
+
+    function detalleProyectoModificar(Request $request){
+
+      $modelo = new ProyectoModel();
+      $id_proyecto = (int) session("id_proyecto_mod");
+
+      $infoProyecto = $modelo->detalleProyectoModificar($id_proyecto);
+      $infoDivProyecto = $modelo->detalleDivisionProyecto($id_proyecto);
+      $clientes = $modelo->clientes();
+      $divisiones = $modelo->divisiones();
+      $estatus = $modelo->estatusProyectos();
+
+      if(!empty($infoProyecto)){
+
+        $response = array("response" => true,
+                          "info" => $infoProyecto,
+                          "infodivi" => $infoDivProyecto,
+                          'clientes' => $clientes,
+                          'divisiones' => $divisiones,
+                          "estatus" => $estatus);
+      }else{
+
+        $response = array("response" => false, "message" => "No se encontraron resultados");
+
+      }
+
+      return $response;
+
+    }
+
+    function modificarProyecto(Request $request){
+
+      $modelo = new ProyectoModel();
+      $id_proyecto = (int) session("id_proyecto_mod");
+      $idProyecto = $request->input("idProyecto");
+      $descripcion = $request->input("descripcion");
+      $cliente = $request->input("cliente");
+      $horas = $request->input("horas");
+      $fechaContratacion = $request->input("fechaContratacion");
+      $divisiones = $request->input("divisiones");
+      $divisiones_v =  $modelo->detalleDivisionProyecto($id_proyecto);
+      $estatus = $request->input("estatus");
+
+      $response = $modelo->modificarProyecto($descripcion,$cliente,$horas,$fechaContratacion,$divisiones,$estatus,$idProyecto,$divisiones_v);
+      return $response;
+
+    }
+
 }
