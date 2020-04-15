@@ -68,5 +68,7 @@ Route::get('/dataInicialNuevoProyecto', 'ProyectoController@dataInicialNuevoProy
 Route::post('/crearProyecto', 'ProyectoController@crearProyecto');
 Route::get('/proyectos', function() {return view('proyecto/formBuscarProyectos');});
 Route::get('/dataInicialListadoProyectos', 'ProyectoController@dataInicialListadoProyectos');
-Route::get('/formModificarProyecto', 'ProyectoController@formModificarProyecto')->where('idProyecto', '[0-9]+');
 Route::get('/buscarProyectos', 'ProyectoController@buscarProyectos');
+Route::get('/formModificarProyecto/{idProyecto}', 'ProyectoController@formModificarProyecto')->where('idProyecto', '[0-9]+');//Validamos que solo pase números*/
+Route::get('/detalleProyectoModificar', 'ProyectoController@detalleProyectoModificar');
+Route::post('/modificarProyecto', 'ProyectoController@modificarProyecto');
