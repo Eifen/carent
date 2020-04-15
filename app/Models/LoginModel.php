@@ -18,7 +18,8 @@ class LoginModel extends Model
                                     cu.correo_principal,
                                     cu.correo_secundario,
                                     cu.telefono_principal,
-                                    cu.telefono_secundario
+                                    cu.telefono_secundario,
+                                    u.id_division
                              FROM tbl_usuario u,
                                   tbl_estatus e,
                                   tbl_contacto_usuario cu
