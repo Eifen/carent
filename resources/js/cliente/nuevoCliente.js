@@ -15,6 +15,16 @@ var app = new Vue({
 
   el: '#nuevoCliente',
   data: {
+    hexTokens: {
+      F: {
+        pattern: /[cegjpvCEGJPV]/,
+        transform: v => v.toLocaleUpperCase()
+      },
+      N:{
+        pattern: /[0-9]/,
+        transform: v => v.toLocaleUpperCase()
+      }
+    },
     alertForm: {
       class: "",
       message: "",
@@ -190,12 +200,6 @@ var app = new Vue({
 
   },
    mounted: function () {
-
-    new AutoNumeric('#rif', {
-      decimalPlaces: 0,
-      decimalCharacter: ',',
-      digitGroupSeparator: '.'
-    });
 
     new AutoNumeric('#nit', {
       decimalPlaces: 0,
@@ -694,7 +698,7 @@ var app = new Vue({
         let parametros = {
           idUsuario: self.detalleUsuario.data.id,
           idUsuario2: self.detalleUsuarioG.data.id,
-          rif: AutoNumeric.getAutoNumericElement("#rif").getNumber(),
+          rif: self.form.rif.value,
           nit: AutoNumeric.getAutoNumericElement("#nit").getNumber(),
           razon_social:  self.form.razon_social.value,
           parroquiafi: self.form.parroquiafi.value,
