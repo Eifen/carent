@@ -1,0 +1,146 @@
+html {
+  overflow-x: hidden;
+}
+#asignarAnalista {
+  background-color: #E9ECEF;
+}
+#asignarAnalista .wrapper-forms {
+  min-height: calc(100vh - 62px);
+  padding-bottom: 50px;
+  padding-top: 100px;
+}
+@media (max-width: 575px) {
+  #asignarAnalista .wrapper-forms {
+    padding-bottom: 0px;
+    padding-top: 50px;
+  }
+}
+#asignarAnalista .wrapper-forms form {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.13);
+  border-radius: 3px;
+  margin-bottom: 50px;
+  padding: 15px;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+#asignarAnalista .wrapper-forms form:hover {
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+}
+#asignarAnalista .wrapper-forms form > div.logo {
+  margin-bottom: 40px;
+  margin-top: 30px;
+  text-align: center;
+}
+#asignarAnalista .wrapper-forms form > div.logo img {
+  height: 90px;
+  width: auto;
+}
+#asignarAnalista .wrapper-forms form > div.form-group label {
+  color: #091F40;
+}
+#asignarAnalista .wrapper-forms form > div.form-group .invalid-feedback {
+  display: block !important;
+}
+#asignarAnalista .wrapper-forms form > div.form-group .form-control {
+  border-radius: 2px;
+}
+#asignarAnalista .wrapper-forms form > div.form-group .form-control.error {
+  border-color: #dc3545;
+}
+#asignarAnalista .wrapper-forms form > div.form-group .form-control:disabled {
+  cursor: not-allowed;
+}
+#asignarAnalista .wrapper-forms .table {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.13);
+  border-radius: 3px;
+  margin-bottom: 50px;
+  padding: 15px;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+#asignarAnalista .wrapper-forms .table:hover {
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+}
+#asignarAnalista .wrapper-forms .table thead tr th {
+  background-color: #091F40;
+  color: white;
+  text-align: center;
+}
+#asignarAnalista .wrapper-forms .table tbody tr {
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+#asignarAnalista .wrapper-forms .table tbody tr:hover {
+  background-color: rgba(246, 168, 28, 0.5);
+}
+#asignarAnalista .wrapper-forms .table tbody tr th {
+  text-align: center;
+}
+#asignarAnalista .wrapper-forms .table tbody tr td {
+  text-align: center;
+}
+#asignarAnalista .wrapper-forms .table tbody tr td a {
+  color: #212529 !important;
+}
+#asignarAnalista .wrapper-forms .table tbody tr td .fas:hover,
+#asignarAnalista .wrapper-forms .table tbody tr td .far:hover {
+  cursor: pointer;
+}
+#asignarAnalista .wrapper-forms .table tfoot tr td > div {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+}
+#asignarAnalista .wrapper-forms .table tfoot tr td > div > div {
+  display: table-cell;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: middle;
+}
+#asignarAnalista .wrapper-forms .table tfoot tr td > div > div .form-control {
+  max-width: 70px;
+}
+#asignarAnalista .wrapper-forms .table tfoot tr td > div > div .icono {
+  color: #091F40;
+  font-size: 1.5rem;
+}
+#asignarAnalista .wrapper-forms .table tfoot tr td > div > div .icono:hover {
+  color: #000000;
+  cursor: pointer;
+}
+#asignarAnalista .wrapper-forms .btn {
+  border: 2px solid #091F40;
+  border-radius: 2px;
+  font-weight: 600;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  width: 100%;
+}
+#asignarAnalista .wrapper-forms .btn:hover {
+  background-color: #F6A81C !important;
+  color: #091F40 !important;
+}
+#asignarAnalista .wrapper-forms .btn:disabled {
+  cursor: not-allowed;
+}
+#asignarAnalista .wrapper-forms .btn.filtrar {
+  background-color: #091F40;
+  color: #ffffff;
+}
+#asignarAnalista .wrapper-forms .btn.limpiar_filtro {
+  color: #091F40;
+}
+#asignarAnalista .wrapper-forms .wrapper-alert {
+  margin-top: 15px;
+}
+#asignarAnalista .wrapper-forms .wrapper-alert > div {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+#asignarAnalista .wrapper-forms .wrapper-alert > div .alert {
+  margin-bottom: 0px;
+  text-align: center;
+  width: 100%;
+}

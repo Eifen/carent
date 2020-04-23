@@ -28,7 +28,7 @@
                   <option value="" selected disabled>Buscar Clientes por</option>
                   <option value="1">Codigo del cliente</option>
                   <option value="2">Nombre o Razon Social</option>
-                  <option value="3">Descripcion</option>
+                  <option value="3">rif</option>
                 </select>
               </div>
               <div class="form-group col-12 col-md-6">
@@ -54,7 +54,8 @@
                     <table class="table">
                       <thead>
                         <tr>
-                          <th scope="col">Código</th>
+                          <th scope="col">Código Cliente</th>
+                          <th scope="col">RIF</th>
                           <th scope="col">Razon social</th>
                           <th scope="col">Correo Electronico</th>
                           <th scope="col"></th>
@@ -63,6 +64,7 @@
                       <tbody>
                         <tr v-for="cliente in clientes.registros">
                           <th scope="row">@{{ cliente.codigo  }}</th>
+                          <td>@{{ cliente.rif }}</td>
                           <td>@{{ cliente.razon_social }}</td>
                           <td>@{{ cliente.email_fiscal }}</td>
                           <td>
@@ -87,7 +89,7 @@
           </form>
 
           <form class="row">
-            <div class="form-group col-12 col-md-2">
+            <div class="form-group col-12 col-md-6">
               <button class="btn btn-primary"
                 type="button"
                 v-bind:disabled="formSearchP.submit.disabled"

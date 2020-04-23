@@ -45,6 +45,7 @@ const datosIniciales = () => {
                  estadosfi: response.data.estadosfi,
                  municipiosfi: response.data.municipiosfi,
                  parroquiasfi: response.data.parroquiasfi,
+                 estatus: response.data.estatus,
                  response: true
                });
 
@@ -68,18 +69,29 @@ var app = new Vue({
 
   el: '#modificarCliente',
   data: {
+    hexTokens: {
+      F: {
+        pattern: /[cegjpvCEGJPV]/,
+        transform: v => v.toLocaleUpperCase()
+      },
+      N:{
+        pattern: /[0-9]/,
+        transform: v => v.toLocaleUpperCase()
+      }
+    },
     idCliente: null,
     alertForm: {
       class: "",
       message: "",
       show: false
     },
-     comboEstadosfi: [],
+    comboEstadosfi: [],
     comboMunicipiosfi: [],
     comboParroquiasfi: [],
     comboEstadosfa: [],
     comboMunicipiosfa: [],
     comboParroquiasfa: [],
+    comboEstatus: [],
 
     refreshForm: false,
     form: {
@@ -150,6 +162,10 @@ var app = new Vue({
       },
       empleado: {
         checked: true
+      },
+      estatus:{
+        disabled: true,
+        value: ""
       }
     },
       alert:{
@@ -236,7 +252,9 @@ var app = new Vue({
         self.form.numero_fiscal.value = dataInit.infoClie.numero_fiscal;
         self.form.telefono_fiscal.value = dataInit.infoClie.telefono_fiscal;
         self.form.fax_fiscal.value = dataInit.infoClie.fax_fiscal;
-        self.form.email_fiscal.value = dataInit.infoClie.email_fiscal
+        self.form.email_fiscal.value = dataInit.infoClie.email_fiscal;
+        self.form.estatus.value = dataInit.infoClie.id_estatus;
+        self.comboEstatus = dataInit.estatus;
 
         self.comboEstadosfi = dataInit.estadosfi;
 
@@ -276,15 +294,6 @@ var app = new Vue({
 
         AutoNumeric.getAutoNumericElement("#codigoCliente").set(self.form.codigoCliente.value);
 
-        new AutoNumeric('#rif', {
-          decimalPlaces: 0,
-          decimalCharacter: ',',
-          digitGroupSeparator: '.',
-          modifyValueOnWheel: false
-        });
-
-        AutoNumeric.getAutoNumericElement("#rif").set(self.form.rif.value);
-
         new AutoNumeric('#nit', {
           decimalPlaces: 0,
           decimalCharacter: ',',
@@ -304,7 +313,7 @@ var app = new Vue({
         AutoNumeric.getAutoNumericElement("#numero_fiscal").set(self.form.numero_fiscal.value);
 
 
-        var indices = ["rif","nit","razon_social","ciudad_fiscal","avenida_calle_fiscal","edificio_quinta_fiscal","piso_fiscal","numero_fiscal","telefono_fiscal","fax_fiscal","email_fiscal"];
+        var indices = ["rif","nit","razon_social","ciudad_fiscal","avenida_calle_fiscal","edificio_quinta_fiscal","piso_fiscal","numero_fiscal","telefono_fiscal","fax_fiscal","email_fiscal","estatus"];
   
         indices.forEach(function(indiceObjecto, indice) {
           self.form[indiceObjecto].disabled = false;
@@ -679,6 +688,7 @@ var app = new Vue({
         self.form.estadofi.disabled = false;
         self.form.estadofa.disabled = false;
 
+
         self.form.estadofi.validar = true;
         self.form.municipiofi.validar = true;
         self.form.parroquiafi.validar = true;
@@ -763,7 +773,7 @@ var app = new Vue({
           idUsuario: self.detalleUsuario.data.id,
           idUsuario2: self.detalleUsuarioG.data.id,
           codigoCliente: AutoNumeric.getAutoNumericElement("#codigoCliente").getNumber(),
-          rif: AutoNumeric.getAutoNumericElement("#rif").getNumber(),
+          rif: self.form.rif.value,
           nit: AutoNumeric.getAutoNumericElement("#nit").getNumber(),
           razon_social:  self.form.razon_social.value,
           parroquiafi: self.form.parroquiafi.value,
@@ -774,7 +784,8 @@ var app = new Vue({
           numero_fiscal: AutoNumeric.getAutoNumericElement("#numero_fiscal").getNumber(),
           telefono_fiscal: self.form.telefono_fiscal.value,
           fax_fiscal: self.form.fax_fiscal.value,
-          email_fiscal: self.form.email_fiscal.value
+          email_fiscal: self.form.email_fiscal.value,
+          estatus: self.form.estatus.value
         }
 
         self.submitActualizar.content = '<i class="fas fa-cog fa-spin"></i>';

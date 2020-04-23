@@ -113,11 +113,16 @@ class ClienteController extends Controller
 
     $modelo = new ClienteModel();
     $codigo = $modelo->agregarCodigoCliente();
+    $nomusuario_id = $modelo->buscarUsuari($request->session()->get('usuario_id'));
     if(!empty($codigo)){
       $codigoCliente = $codigo->codigo + 1;
       $email = $modelo->buscarEmail($request->input("email_fiscal"));
       if(!$email["response"]){
         $parametros = array(
+          "usuario_id" => $request->session()->get('usuario_id'),
+          "nomusuario_id" => $nomusuario_id->nombre,
+          "fecha_reg" => date('Y-m-d'),
+          "hora_reg" => date("H:i:s"),
           "idUsuario" => (int) $request->input("idUsuario"),
           "idUsuario2" => (int) $request->input("idUsuario2"),
           "codigoCliente" => $codigoCliente,
@@ -235,6 +240,7 @@ class ClienteController extends Controller
     $modelo = new ClienteModel();
     $id_cliente = (int) session("id_cliente_mod");
     $infoCliente = $modelo->detalleClienteModificar($id_cliente);
+    $estatus = $modelo->estatusCliente();
     $estados_fiscal = $modelo->estados();
     if($infoCliente->id_estado_fiscal !== NULL){
       $municipios_fiscal = $modelo->municipios($infoCliente->id_estado_fiscal);
@@ -248,7 +254,8 @@ class ClienteController extends Controller
                         "info" => $infoCliente,
                         "estadosfi" => $estados_fiscal,
                         "municipiosfi" => $municipios_fiscal,
-                        "parroquiasfi" => $parroquias_fiscal);
+                        "parroquiasfi" => $parroquias_fiscal,
+                        "estatus" => $estatus);
     }else{
       $response = array("response" => false, "message" => "No se encontraron resultados");
     }
@@ -297,7 +304,11 @@ class ClienteController extends Controller
     function modificarCliente(Request $request){
 
     $modelo = new ClienteModel();
+    $nomusuario_id = $modelo->buscarUsuari($request->session()->get('usuario_id'));
     $parametros = array(
+            "nomusuario_id" => $nomusuario_id->nombre,
+            "fecha_reg" => date("Y-m-d"),
+            "hora_reg" => date("H:i:s"),
       "idCliente" => $request->input("idCliente"),
       "idUsuario" => (int) $request->input("idUsuario"),
       "idUsuario2" => (int) $request->input("idUsuario2"),
@@ -312,7 +323,8 @@ class ClienteController extends Controller
       "numero_fiscal" => $request->input("numero_fiscal"),
       "telefono_fiscal" => $request->input("telefono_fiscal"),
       "fax_fiscal" => $request->input("fax_fiscal"),
-      "email_fiscal" => strtolower($request->input("email_fiscal"))
+      "email_fiscal" => strtolower($request->input("email_fiscal")),
+      "estatus" => $request->input("estatus")
     );
     $response = $modelo->modificarCliente($parametros);
     return $response;
