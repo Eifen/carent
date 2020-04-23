@@ -1,4 +1,5 @@
 {
+    "/js/asignarAnalista.js": "/js/asignarAnalista.js",
     "/js/buscarCliente.js": "/js/buscarCliente.js",
     "/js/buscarRegistro.js": "/js/buscarRegistro.js",
     "/js/buscarUsuario.js": "/js/buscarUsuario.js",
@@ -22,13 +23,18 @@
     "/css/nuevaDivision.css": "/css/nuevaDivision.css",
     "/css/nuevoProyecto.css": "/css/nuevoProyecto.css",
     "/css/formBuscarProyectos.css": "/css/formBuscarProyectos.css",
+    "/css/modificarProyecto.css": "/css/modificarProyecto.css",
+    "/css/proyectoDivision.css": "/css/proyectoDivision.css",
+    "/css/asignarAnalista.css": "/css/asignarAnalista.css",
     "/js/modificarCliente.js": "/js/modificarCliente.js",
+    "/js/modificarProyecto.js": "/js/modificarProyecto.js",
     "/js/modificarUsuario.js": "/js/modificarUsuario.js",
     "/js/nuevaDivision.js": "/js/nuevaDivision.js",
     "/js/nuevoCargo.js": "/js/nuevoCargo.js",
     "/js/nuevoCliente.js": "/js/nuevoCliente.js",
     "/js/nuevoProyecto.js": "/js/nuevoProyecto.js",
     "/js/nuevoUsuario.js": "/js/nuevoUsuario.js",
+    "/js/proyectoDivision.js": "/js/proyectoDivision.js",
     "/css/bootstrap.min.css": "/css/bootstrap.min.css",
     "/css/fontawesome-free-5.12.0.css": "/css/fontawesome-free-5.12.0.css"
 }

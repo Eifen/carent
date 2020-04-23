@@ -197,16 +197,14 @@
               </div>
               <div class="form-group col-12 col-sm-6">
                 <label for="rif">Rif<span class="campo-obligatorio">*</span> </label>
-                <input class="form-control"
-                       data-formated-number="true"
-                       data-only-number="true"
-                       data-validar="true"  
-                       id="rif"
-                       v-bind:disabled="form.rif.disabled"
-                       v-model="form.rif.value"
-                       v-on:keyup="valuesForm"
-                       type="text">
-                <small id="rifHelp" class="form-text">Ejemplo: 123456789</small>
+                <the-mask mask="F- NNNNNNNNNN" :tokens="hexTokens" 
+                          class="form-control"
+                          id="rif"
+                          v-bind:disabled="form.rif.disabled"
+                          v-model="form.rif.value"
+                          v-on:keyup="valuesForm"
+                          type="text"></the-mask>
+                <small id="rifHelp" class="form-text">V:, E:, P:, G:, J:, C:</small>
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
@@ -235,6 +233,20 @@
                        v-on:keyup="valuesForm"
                        type="text">
                 <small id="razon_socialHelp" class="form-text text-muted">Ejemplo: auditoria...</small>
+                <div class="mensaje"></div>
+              </div>
+              <div class="form-group col-12 col-sm-6">
+                <label for="estatus">Estatus <span class="campo-obligatorio">*</span></label>
+                <select aria-describedby="estatusHelp"
+                        class="form-control"
+                        id="estatus"
+                        v-bind:data-validar="form.estatus.validar"
+                        v-bind:disabled="form.estatus.disabled"
+                        v-model="form.estatus.value"
+                        v-on:click="limpiarMensajeError">
+                  <option v-bind:value="estatus.id" v-for="estatus in comboEstatus">@{{ estatus.descripcion }}</option>
+                </select>
+                <small id="estadoHelp" class="form-text text-muted">Estatus del usuario</small>
                 <div class="mensaje"></div>
               </div>
             </form>

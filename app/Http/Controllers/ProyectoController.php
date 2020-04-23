@@ -45,7 +45,7 @@ class ProyectoController extends Controller
 
       $modelo = new ProyectoModel();
       $paginar = 10;
-      $permisoActualizar = $modelo->permisoActualizar(session("usuario_id"), 8);
+      $permisoActualizar = $modelo->permisoActualizar(session("usuario_id"), 10);
       $proyectos = $modelo->proyectos(session("division_id"), $paginar);
       $divisiones = $modelo->divisiones();
       $estatus = $modelo->estatusProyectos();
@@ -75,6 +75,179 @@ class ProyectoController extends Controller
       $cantidadPaginas = $modelo->cantidadPaginas($paginar, $proyecto, $cliente, $divisiones, $estatus);
 
       return array("proyectos" => $proyectos, "paginas" => $cantidadPaginas);
+
+    }
+
+    function formModificarProyecto($idProyecto, Request $request){
+
+      $request->session()->put('id_proyecto_mod', $idProyecto);
+      return view('proyecto/modificarProyecto');
+
+    }
+
+    function detalleProyectoModificar(Request $request){
+
+      $modelo = new ProyectoModel();
+      $id_proyecto = (int) session("id_proyecto_mod");
+
+      $infoProyecto = $modelo->detalleProyectoModificar($id_proyecto);
+      $infoDivProyecto = $modelo->detalleDivisionProyecto($id_proyecto);
+      $clientes = $modelo->clientes();
+      $divisiones = $modelo->divisiones();
+      $estatus = $modelo->estatusProyectos();
+
+      if(!empty($infoProyecto)){
+
+        $response = array("response" => true,
+                          "info" => $infoProyecto,
+                          "infodivi" => $infoDivProyecto,
+                          'clientes' => $clientes,
+                          'divisiones' => $divisiones,
+                          "estatus" => $estatus);
+      }else{
+
+        $response = array("response" => false, "message" => "No se encontraron resultados");
+
+      }
+
+      return $response;
+
+    }
+
+    function modificarProyecto(Request $request){
+
+      $modelo = new ProyectoModel();
+      $id_proyecto = (int) session("id_proyecto_mod");
+      $idProyecto = $request->input("idProyecto");
+      $descripcion = $request->input("descripcion");
+      $cliente = $request->input("cliente");
+      $horas = $request->input("horas");
+      $fechaContratacion = $request->input("fechaContratacion");
+      $divisiones = $request->input("divisiones");
+      $divisiones_v =  $modelo->detalleDivisionProyecto($id_proyecto);
+      $estatus = $request->input("estatus");
+
+      $response = $modelo->modificarProyecto($descripcion,$cliente,$horas,$fechaContratacion,$divisiones,$estatus,$idProyecto,$divisiones_v);
+      return $response;
+
+    }
+
+    function asignarProyectos(Request $request){
+
+      $modelo = new ProyectoModel();
+      $permisoActualizar = $modelo->permisoActualizar(session("usuario_id"), 11);
+      $id_usuario = $request->session()->get('usuario_id');
+      $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
+      if ($infoUsuario->id_cargo === 16) {
+        $infoProyectos = $modelo->proyectoSDivision();
+      }
+      if ($infoUsuario->id_cargo === 15) {
+        $infoProyectos = $modelo->proyectoDDivision($infoUsuario->id_division);
+      }
+      if ($infoUsuario->id_cargo < 15) {
+        $infoProyectos = $modelo->proyectoUDivision($infoUsuario->id);
+      }
+      $estatus = $modelo->estatusProyectos();
+      return [
+        "estatus" => $estatus,
+        "proyectos" => $infoProyectos,
+        "permisoActualizar" => $permisoActualizar
+      ];
+    }
+
+    function buscardiviProyectos(Request $request){
+
+      $modelo = new ProyectoModel();
+      $id_usuario = $request->session()->get('usuario_id');
+      $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
+      $permisoActualizar = $modelo->permisoActualizar(session("usuario_id"), 11);
+      $cliente = $request->input("cliente");
+      $proyecto = $request->input("proyecto");
+      $estatus = $request->input("estatus");
+      if ($infoUsuario->id_cargo === 16) {
+        $proyectos = $modelo->proyectosSdivi($proyecto, $cliente, $estatus);
+        if ($estatus === "1" || empty($estatus)) {
+          return array("proyectos" => $proyectos, "permisoActualizar" => $permisoActualizar);
+        }
+        return array("proyectos" => $proyectos);
+      }
+      if ($infoUsuario->id_cargo === 15 || $permisoActualizar === "true") {
+        $proyectos = $modelo->proyectosDdivi($infoUsuario->id_division,$proyecto, $cliente, $estatus);
+        if ($estatus === "1" || empty($estatus)) {
+          return array("proyectos" => $proyectos, "permisoActualizar" => $permisoActualizar, "estatus" => $estatus);
+        }
+        return array("proyectos" => $proyectos);
+      }
+      if ($infoUsuario->id_cargo < 15) {
+        $proyectos = $modelo->proyectosUdivi($infoUsuario->id,$proyecto, $cliente, $estatus);
+          if ($estatus === "1" || empty($estatus)) {
+          return array("proyectos" => $proyectos, "permisoActualizar" => $permisoActualizar);
+        }
+        return array("proyectos" => $proyectos);
+      }      
+    }
+
+    function DetalleDivProyecto(Request $request){
+
+    $modelo = new ProyectoModel();
+    $idDproyecto = (int) $request->input("idDproyecto");
+    $infoDproyecto = $modelo->DetalleDivProyecto($idDproyecto);
+    $infoAproyecto = $modelo->DetalleAnaProyecto($idDproyecto);
+    if(!empty($infoDproyecto)){
+      $response = array("response" => true, "infoDproyecto" => $infoDproyecto, "infoAproyecto" => $infoAproyecto);
+    }else{
+      $response = array("response" => false, "message" => "No se encontraron resultados");
+    }
+    return $response;
+  }
+
+    function asignarAnalista($idProyecto, Request $request){
+
+      $request->session()->put('id_proyecto_mod', $idProyecto);
+      return view('proyecto/asignarAnalista');
+
+    }
+
+    function detalleAnalistaProyecto(Request $request){
+
+      $modelo = new ProyectoModel();
+      $id_proyecto = (int) session("id_proyecto_mod");
+      $id_usuario = $request->session()->get('usuario_id');
+      $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
+      $datosProyecto = $modelo->datosProyecto($id_proyecto);
+      $analistas = $modelo->analistasProyecto($id_proyecto,$infoUsuario->id_division);
+      return array("analistas" => $analistas, "proyecto" => $datosProyecto); 
+
+    }
+
+    function agregarAnalistaProy(Request $request){
+
+      $modelo = new ProyectoModel();
+      $estado = $request->input("estado");
+      $idUsuario = $request->input("idUsuario");
+      $idProyecto = $request->input("proyecto");
+
+      $analis = $modelo->agregarAnalistaProy($estado,$idUsuario,$idProyecto);
+
+      $response = array("response" => true);
+      return $response;
+
+    }
+
+    function modAnalistaProy(Request $request){
+
+      $modelo = new ProyectoModel();
+      $idAnaProy = $request->input("idAnaProy");
+      $estatus = $modelo->estatusAnalistaProy($idAnaProy);
+      if ($estatus->id_estatus === 1) {
+        $estado = 0;
+      }
+      if($estatus->id_estatus === 0) {
+        $estado = 1;
+      }
+      $analis = $modelo->modAnalistaProy($estado,$idAnaProy);
+
+      return $analis;
 
     }
 

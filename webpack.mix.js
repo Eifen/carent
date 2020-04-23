@@ -26,6 +26,9 @@ const mix = require('laravel-mix');
     .js('resources/js/crea/nuevaDivision.js', 'public/js/nuevaDivision.js')
     .js('resources/js/proyecto/nuevoProyecto.js', 'public/js/nuevoProyecto.js')
     .js('resources/js/proyecto/formBuscarProyectos.js', 'public/js/formBuscarProyectos.js')
+    .js('resources/js/proyecto/modificarProyecto.js', 'public/js/modificarProyecto.js')
+    .js('resources/js/proyecto/proyectoDivision.js', 'public/js/proyectoDivision.js')
+    .js('resources/js/proyecto/asignarAnalista.js', 'public/js/asignarAnalista.js')
     .less('resources/less/login.less', 'public/css/login.css')
     .less('resources/less/inicio.less', 'public/css/inicio.css')
     .less('resources/less/cambiarClave.less', 'public/css/cambiarClave.css')
@@ -41,5 +44,12 @@ const mix = require('laravel-mix');
     .less('resources/less/crea/nuevaDivision.less', 'public/css/nuevaDivision.css')
     .less('resources/less/proyecto/nuevoProyecto.less', 'public/css/nuevoProyecto.css')
     .less('resources/less/proyecto/formBuscarProyectos.less', 'public/css/formBuscarProyectos.css')
+    .less('resources/less/proyecto/modificarProyecto.less', 'public/css/modificarProyecto.css')
+    .less('resources/less/proyecto/proyectoDivision.less', 'public/css/proyectoDivision.css')
+    .less('resources/less/proyecto/asignarAnalista.less', 'public/css/asignarAnalista.css')
     .styles('resources/css/bootstrap-4.4.1/bootstrap.min.css','public/css/bootstrap.min.css')
     .styles('resources/css/fontawesome-free-5.12.0/all.min.css','public/css/fontawesome-free-5.12.0.css');
+
+
+
+            

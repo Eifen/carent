@@ -225,6 +225,11 @@ class ClienteModel extends Model
                   "email_fiscal" => $parametros["email_fiscal"],
                   "id_estatus" => 1);
     $contacto = DB::table('tbl_cliente')->insert($data);
+    $data = array("usuario_id" => $parametros["nomusuario_id"],
+                    "fecha_reg" => $parametros["fecha_reg"],
+                    "hora_reg" => $parametros["hora_reg"],
+                    "accion" => 'Creacion de Cliente: '.$parametros["razon_social"].'');
+      $bit = DB::table('tbl_bitacora')->insertGetId($data);
     if($contacto){
       DB::commit();
       return array("response" => true, "message" => "Cliente Creado con Éxito.");
@@ -290,7 +295,7 @@ class ClienteModel extends Model
         $condicion = "WHERE c.razon_social LIKE '%".$dato."%'";
         break;
       case 3:
-        $condicion = "WHERE c.descripcion_factura LIKE '%".$dato."%'";
+        $condicion = "WHERE c.rif LIKE '%".$dato."%'";
       break;
       default:
         $condicion = "WHERE c.codigo LIKE %'".$dato."'%";
@@ -299,7 +304,8 @@ class ClienteModel extends Model
     $clientes = DB::select('SELECT c.id,
                                    c.codigo,
                                    c.razon_social,                    
-                                   c.email_fiscal
+                                   c.email_fiscal,
+                                   c.rif
                             FROM tbl_cliente c
                             '.$condicion.'
                          ');
@@ -424,6 +430,18 @@ class ClienteModel extends Model
       return array();
     }
   }
+
+  function estatusCliente(){
+
+      $estatus = DB::select('SELECT e.valor AS id,
+                                    e.descripcion
+                             FROM tbl_estatus e
+                             WHERE e.tabla = "tbl_cliente"
+                             ORDER BY descripcion ASC');
+
+      return $estatus;
+
+    }
   
   function detalleClienteModificar($id_cliente){
 
@@ -446,6 +464,7 @@ class ClienteModel extends Model
                                  telefono_fiscal,
                                  fax_fiscal,
                                  email_fiscal,
+                                 id_estatus,
                                  id_parroquia_fiscal,
                                  (SELECT id
                                   FROM tbl_municipios 
@@ -533,8 +552,14 @@ class ClienteModel extends Model
                     "numero_fiscal" => $parametros["numero_fiscal"],
                     "telefono_fiscal" => $parametros["telefono_fiscal"],
                     "fax_fiscal" => $parametros["fax_fiscal"],
-                    "email_fiscal" => $parametros["email_fiscal"]);      
+                    "email_fiscal" => $parametros["email_fiscal"],
+                    "id_estatus" => $parametros["estatus"],);      
         $contacto = DB::table('tbl_cliente')->where("id",$parametros["idCliente"])->update($data);
+        $data = array("usuario_id" => $parametros["nomusuario_id"],
+                      "fecha_reg" => $parametros["fecha_reg"],
+                      "hora_reg" => $parametros["hora_reg"],
+                      "accion" => 'Modificacion de Cliente: '.$parametros["razon_social"].'');
+        $bit = DB::table('tbl_bitacora')->insertGetId($data);
         DB::commit();
         return array("response" => true, "message" => "Cliente actualizado con Éxito!.");
     } catch(\Illuminate\Database\QueryException $ex){
@@ -542,4 +567,22 @@ class ClienteModel extends Model
       return array("response" => false, "message" => "Error al tratar de actualizar la información del usuario.");
     }
   }// Fin modificarUsuario
+
+    function buscarUsuari($codigo){
+
+      $usuario = DB::select('SELECT CONCAT(nombre_1," ",apellido_1) AS nombre
+                             FROM tbl_usuario 
+                             WHERE id = "'.$codigo.'"');
+
+      if(count($usuario) > 0){
+
+        return $usuario[0];
+
+      }else{
+
+        return array();
+
+      }
+
+}
 }

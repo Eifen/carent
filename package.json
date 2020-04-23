@@ -27,6 +27,7 @@
     },
     "dependencies": {
         "autonumeric": "^4.5.10",
+        "bootstrap4-toggle": "^3.6.1",
         "crypto-js": "^3.1.9-1",
         "vue-multiselect": "^2.1.6",
         "vue-numeric": "^2.3.0",
