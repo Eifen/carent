@@ -84,7 +84,6 @@
                 <label for="divisiones">Divisiones <span class="campo-obligatorio">*</span></label>
                 <multiselect @Open="limpiarMensajeErrorMultiselect"
                              :clear-on-select="false"
-                             :close-on-select="false"
                              :disabled="form.divisiones.disabled"
                              :multiple="true"
                              :options="comboDivisiones"
