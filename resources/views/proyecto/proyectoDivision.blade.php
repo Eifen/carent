@@ -99,9 +99,7 @@
                     <i class="fas fa-search-plus" v-on:click="mostrarDetalleDivProyecto(proyecto.id_proyecto, $event)"></i>
                   </td>
                   <td v-if="permisoActualizar">
-                    <a v-bind:href="'/asignarAnalista/'+proyecto.id_proyecto" target="_self">
-                       <i class="far fa-edit"></i>
-                    </a>
+                       <i class="far fa-edit" v-on:click="asignarAnalistaProyecto(proyecto.id_proyecto, $event)"></i>
                   </td>
                 </tr>
               </tbody>
@@ -111,11 +109,22 @@
             <div class="alert alert-warning text-center" v-html="alert.message"></div>
           </div>
         </div>
+
+
+
+
+
+
+
+
+
+
+
         <div id="modal-detalle-Dproyecto" class="modal fade" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h4>Detalle del proyecto de la division</h4>
+                <h4>Detalle del proyecto</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -135,7 +144,7 @@
                   </div>
                 </form>
                 <h5>Empleados Asigandos</h5>
-                <table class="table">
+                <table class="table" >
               <thead>
                 <tr>
                   <th scope="col">Empleado</th>
@@ -148,6 +157,59 @@
                   <th scope="row">@{{ Aproyecto.nombre }}</th>                  
                   <td>@{{ Aproyecto.division }}</td>
                   <td>@{{ Aproyecto.cargo }}</td>
+                </tr>
+              </tbody>
+            </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+
+
+
+
+        <div id="modal-asignar-Aproyecto" class="modal fade" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4>Asignacion de Personal al Proyecto</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div v-if="detalleAsigproyecto.error" class="alert alert-warning">
+                  Ocurrio un error al intentar mostrar el detalle del cliente, por favor intente nuevamente o comuníquese con el administrador del sistema!
+                </div>
+                <form class="row" v-for="Asigproyecto in detalleAsigproyecto.data">
+                  <div class="form-group col-12 col-sm-6">
+                    <label>Cliente</label>
+                    <input class="form-control" type="text" disabled v-bind:value="Asigproyecto.cliente">
+                  </div>
+                  <div class="form-group col-12 col-sm-6">
+                    <label>Proyecto</label>
+                    <input class="form-control" type="text" disabled v-bind:value="Asigproyecto.proyecto">
+                  </div>
+                </form>
+                <h5>Asignar</h5>
+                <table class="table" v-for="proyecto in detalleAsigproyecto.data">
+              <thead>
+                <tr>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Cargo</th>
+                  <th scope="col">Estatus</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="analista in detalleAnalista.data">
+                  <th scope="row">@{{ analista.nombre }}</th>
+                  <td>@{{ analista.cargo }}</td>
+                  <td><input type="checkbox" v-on:change="estados(analista.id,analista.idAnaProy,proyecto.id, $event)" v-model="analista.estatus" ></td>
                 </tr>
               </tbody>
             </table>

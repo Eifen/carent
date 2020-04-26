@@ -75,7 +75,6 @@ Route::post('/modificarProyecto', 'ProyectoController@modificarProyecto');
 Route::get('/proyectoDivision', function() {return view('proyecto/proyectoDivision');});
 Route::get('/asignarProyectos', 'ProyectoController@asignarProyectos');
 Route::get('/buscardiviProyectos', 'ProyectoController@buscardiviProyectos');
-Route::get('/asignarAnalista/{idProyecto}', 'ProyectoController@asignarAnalista')->where('idProyecto', '[0-9]+');//Validamos que solo pase números*/
 Route::get('/detalleAnalistaProyecto', 'ProyectoController@detalleAnalistaProyecto');
 Route::get('/agregarAnalistaProy', 'ProyectoController@agregarAnalistaProy');
 Route::get('/DetalleDivProyecto', 'ProyectoController@DetalleDivProyecto');

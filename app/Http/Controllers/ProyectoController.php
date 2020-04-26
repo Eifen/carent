@@ -138,21 +138,33 @@ class ProyectoController extends Controller
       $permisoActualizar = $modelo->permisoActualizar(session("usuario_id"), 11);
       $id_usuario = $request->session()->get('usuario_id');
       $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
+      $estatus = $modelo->estatusProyectos();
       if ($infoUsuario->id_cargo === 16) {
         $infoProyectos = $modelo->proyectoSDivision();
-      }
-      if ($infoUsuario->id_cargo === 15) {
-        $infoProyectos = $modelo->proyectoDDivision($infoUsuario->id_division);
-      }
-      if ($infoUsuario->id_cargo < 15) {
-        $infoProyectos = $modelo->proyectoUDivision($infoUsuario->id);
-      }
-      $estatus = $modelo->estatusProyectos();
-      return [
+        return [
         "estatus" => $estatus,
         "proyectos" => $infoProyectos,
         "permisoActualizar" => $permisoActualizar
       ];
+      }
+      if ($infoUsuario->id_cargo === 15 || $permisoActualizar === "true") {
+        $infoProyectos = $modelo->proyectoDDivision($infoUsuario->id_division);
+        return [
+        "estatus" => $estatus,
+        "proyectos" => $infoProyectos,
+        "permisoActualizar" => $permisoActualizar
+      ];
+      }
+      if ($infoUsuario->id_cargo < 15 ) {
+        $infoProyectos = $modelo->proyectoUDivision($infoUsuario->id);
+        return [
+        "estatus" => $estatus,
+        "proyectos" => $infoProyectos,
+        "permisoActualizar" => $permisoActualizar
+      ];
+      }
+      
+      
     }
 
     function buscardiviProyectos(Request $request){
@@ -201,23 +213,20 @@ class ProyectoController extends Controller
     return $response;
   }
 
-    function asignarAnalista($idProyecto, Request $request){
-
-      $request->session()->put('id_proyecto_mod', $idProyecto);
-      return view('proyecto/asignarAnalista');
-
-    }
-
     function detalleAnalistaProyecto(Request $request){
 
       $modelo = new ProyectoModel();
-      $id_proyecto = (int) session("id_proyecto_mod");
+      $id_proyecto = (int) $request->input("idDproyecto");
       $id_usuario = $request->session()->get('usuario_id');
       $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
       $datosProyecto = $modelo->datosProyecto($id_proyecto);
       $analistas = $modelo->analistasProyecto($id_proyecto,$infoUsuario->id_division);
-      return array("analistas" => $analistas, "proyecto" => $datosProyecto); 
-
+      if(!empty($datosProyecto)){
+      return array("response" => true,"analistas" => $analistas, "proyecto" => $datosProyecto);
+      }else{
+        $response = array("response" => false, "message" => "No se encontraron resultados");
+      }
+      return $response;
     }
 
     function agregarAnalistaProy(Request $request){
@@ -225,11 +234,14 @@ class ProyectoController extends Controller
       $modelo = new ProyectoModel();
       $estado = $request->input("estado");
       $idUsuario = $request->input("idUsuario");
-      $idProyecto = $request->input("proyecto");
-
+      $idProyecto = $request->input("idDproyecto");
       $analis = $modelo->agregarAnalistaProy($estado,$idUsuario,$idProyecto);
+      $id_usuario = $request->session()->get('usuario_id');
+      $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
+      $datosProyecto = $modelo->datosProyecto($idProyecto);
+      $analistas = $modelo->analistasProyecto($idProyecto,$infoUsuario->id_division);
 
-      $response = array("response" => true);
+      $response = array("response" => true, "analis" => $analis,"analistas" => $analistas, "proyecto" => $datosProyecto);
       return $response;
 
     }
@@ -247,7 +259,8 @@ class ProyectoController extends Controller
       }
       $analis = $modelo->modAnalistaProy($estado,$idAnaProy);
 
-      return $analis;
+      $response = array("response" => true, "analis" => $analis);
+      return $response;
 
     }
 
