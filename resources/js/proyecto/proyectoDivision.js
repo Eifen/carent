@@ -58,6 +58,14 @@ var app = new Vue({
       error: false,
       data: []
     },
+    detalleAsigproyecto: {
+      error: false,
+      data: []
+    },
+    detalleAnalista: {
+      error: false,
+      data: []
+    },
     permisoActualizar: false,
     proyectos: []
   },
@@ -106,6 +114,15 @@ var app = new Vue({
       self.detalleDproyecto.error = false;
       self.detalleAproyecto.data = [];
       self.detalleAproyecto.error = false;
+
+    });
+    $('#modal-asignar-Aproyecto').on('hidden.bs.modal', function () {
+
+      self.detalleAsigproyecto.data = [];
+      self.detalleAsigproyecto.error = false;
+      self.detalleAnalista.data = [];
+      self.detalleAnalista.error = false;
+
 
     });
   },
@@ -229,6 +246,78 @@ var app = new Vue({
 
       });
 
+    },
+
+    asignarAnalistaProyecto: function(idDproyecto,e){
+
+      self.detalleAsigproyecto.error = false;
+      $(e.target).removeClass("far fa-edit").addClass("fa-cog fa-spin");
+
+      let parametros = {
+        idDproyecto: idDproyecto
+      };
+
+      axios.get('/detalleAnalistaProyecto', {params: parametros})
+      .then(function (response) {
+
+        if(response.status === 200 && response.data.response === true){
+
+          self.detalleAnalista.data = response.data.analistas;
+          self.detalleAsigproyecto.data = response.data.proyecto;
+
+          $('#modal-asignar-Aproyecto').modal("show");
+          $(e.target).removeClass("fa-cog fa-spin").addClass("far fa-edit");
+
+        }else{
+
+          throw response.data;
+
+        }
+
+      })
+      .catch(error => {
+
+        self.detalleAsigproyecto.error = true;
+        $('#modal-asignar-Aproyecto').modal("show");
+        $(e.target).removeClass("fa-cog fa-spin").addClass("far fa-edit");
+
+      });
+
+    },
+
+    estados: function(analista,idAnaProy,idDproyecto,e){
+
+      if(idAnaProy == null){
+      
+        let parametros = {
+          estado: 1,
+          idDproyecto: idDproyecto,
+          idUsuario: analista
+        };
+
+        axios.get('/agregarAnalistaProy', {params: parametros})
+        .then(function (response) {
+          if(response.status === 200 && response.data.response === true){
+            self.detalleAnalista.data = response.data.analistas;
+            self.detalleAsigproyecto.data = response.data.proyecto;
+          }
+        })
+
+      }else{
+        let parametros = {
+          idAnaProy: idAnaProy,
+        };
+
+        axios.get('/modAnalistaProy', {params: parametros})
+        .then(function (response) {
+          if(response.status === 200 && response.data.response === true){
+
+      }else{
+        throw response.data;
+      }
+    })
+      }
+      
     }
 
   }// Fin methods
