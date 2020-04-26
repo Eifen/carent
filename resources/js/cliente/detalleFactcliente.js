@@ -43,35 +43,35 @@ var app = new Vue({
         value: ""
       },
       ciudad_factura: {
-        disabled: false,
+        disabled: true,
         value: ""
       },
       avenida_calle_factura: {
-        disabled: false,
+        disabled: true,
         value: ""
       },
       edificio_quinta_factura: {
-        disabled: false,
+        disabled: true,
         value: ""
       },
       piso_factura: {
-        disabled: false,
+        disabled: true,
         value: ""
       },
       numero_factura: {
-        disabled: false,
+        disabled: true,
         value: ""
       },
       telefono_factura: {
-        disabled: false,
+        disabled: true,
         value: ""
       },
       fax_factura: {
-        disabled: false,
+        disabled: true,
         value: ""
       },
       correo_factura: {
-        disabled: false,
+        disabled: true,
         value: ""
       },
       empleado: {
@@ -222,7 +222,7 @@ var app = new Vue({
     tipoFiltro: function(e){
 
       let opcion = parseInt(e.target.value);
-      let valoresPermitidos = [1,2,3,4];
+      let valoresPermitidos = [1,2,3];
 
       self.clientes.mostrar = false;
       self.clientes.registros = [];
@@ -390,6 +390,15 @@ var app = new Vue({
           self.comboEstadosfa = response.data.estadosfa;
           self.comboMunicipiosfa = response.data.municipiosfa;
           self.comboParroquiasfa = response.data.parroquiasfa;
+
+          self.form.ciudad_factura.disabled = false;
+          self.form.avenida_calle_factura.disabled = false;
+          self.form.edificio_quinta_factura.disabled = false;
+          self.form.piso_factura.disabled = false;
+          self.form.numero_factura.disabled = false;
+          self.form.telefono_factura.disabled = false;
+          self.form.fax_factura.disabled = false;
+          self.form.correo_factura.disabled = false;
 
           self.form.estadofa.disabled = false;
           self.form.municipiofa.disabled = false;

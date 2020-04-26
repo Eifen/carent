@@ -39603,6 +39603,17 @@ var app = new Vue({
 
 /***/ }),
 
+/***/ "./resources/less/proyecto/asignarAnalista.less":
+/*!******************************************************!*\
+  !*** ./resources/less/proyecto/asignarAnalista.less ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ "./resources/less/proyecto/formBuscarProyectos.less":
 /*!**********************************************************!*\
   !*** ./resources/less/proyecto/formBuscarProyectos.less ***!
@@ -39614,10 +39625,32 @@ var app = new Vue({
 
 /***/ }),
 
+/***/ "./resources/less/proyecto/modificarProyecto.less":
+/*!********************************************************!*\
+  !*** ./resources/less/proyecto/modificarProyecto.less ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ "./resources/less/proyecto/nuevoProyecto.less":
 /*!****************************************************!*\
   !*** ./resources/less/proyecto/nuevoProyecto.less ***!
   \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ "./resources/less/proyecto/proyectoDivision.less":
+/*!*******************************************************!*\
+  !*** ./resources/less/proyecto/proyectoDivision.less ***!
+  \*******************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -39659,9 +39692,9 @@ var app = new Vue({
 /***/ }),
 
 /***/ 0:
-/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** multi ./resources/js/login.js ./resources/less/login.less ./resources/less/inicio.less ./resources/less/cambiarClave.less ./resources/less/usuario/nuevoUsuario.less ./resources/less/usuario/buscarUsuario.less ./resources/less/usuario/modificarUsuario.less ./resources/less/cliente/nuevoCliente.less ./resources/less/cliente/buscarCliente.less ./resources/less/cliente/modificarCliente.less ./resources/less/cliente/detalleFactcliente.less ./resources/less/crea/buscarRegistro.less ./resources/less/crea/nuevoCargo.less ./resources/less/crea/nuevaDivision.less ./resources/less/proyecto/nuevoProyecto.less ./resources/less/proyecto/formBuscarProyectos.less ***!
-  \***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** multi ./resources/js/login.js ./resources/less/login.less ./resources/less/inicio.less ./resources/less/cambiarClave.less ./resources/less/usuario/nuevoUsuario.less ./resources/less/usuario/buscarUsuario.less ./resources/less/usuario/modificarUsuario.less ./resources/less/cliente/nuevoCliente.less ./resources/less/cliente/buscarCliente.less ./resources/less/cliente/modificarCliente.less ./resources/less/cliente/detalleFactcliente.less ./resources/less/crea/buscarRegistro.less ./resources/less/crea/nuevoCargo.less ./resources/less/crea/nuevaDivision.less ./resources/less/proyecto/nuevoProyecto.less ./resources/less/proyecto/formBuscarProyectos.less ./resources/less/proyecto/modificarProyecto.less ./resources/less/proyecto/proyectoDivision.less ./resources/less/proyecto/asignarAnalista.less ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -39680,7 +39713,10 @@ __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\car
 __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\crea\nuevoCargo.less */"./resources/less/crea/nuevoCargo.less");
 __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\crea\nuevaDivision.less */"./resources/less/crea/nuevaDivision.less");
 __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\proyecto\nuevoProyecto.less */"./resources/less/proyecto/nuevoProyecto.less");
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\proyecto\formBuscarProyectos.less */"./resources/less/proyecto/formBuscarProyectos.less");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\proyecto\formBuscarProyectos.less */"./resources/less/proyecto/formBuscarProyectos.less");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\proyecto\modificarProyecto.less */"./resources/less/proyecto/modificarProyecto.less");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\proyecto\proyectoDivision.less */"./resources/less/proyecto/proyectoDivision.less");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\proyecto\asignarAnalista.less */"./resources/less/proyecto/asignarAnalista.less");
 
 
 /***/ })

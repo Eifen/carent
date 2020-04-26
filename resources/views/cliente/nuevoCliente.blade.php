@@ -171,16 +171,14 @@
               </div>
               <div class="form-group col-12 col-sm-6">
                 <label for="rif">Rif<span class="campo-obligatorio">*</span> </label>
-                <input class="form-control"
-                       data-formated-number="true"
-                       data-only-number="true"
-                       data-validar="true"  
-                       id="rif"
-                       v-bind:disabled="form.rif.disabled"
-                       v-model="form.rif.value"
-                       v-on:keyup="valuesForm"
-                       type="text">
-                <small id="rifHelp" class="form-text">Ejemplo: 123456789</small>
+                <the-mask mask="F- NNNNNNNNNN" :tokens="hexTokens" 
+                          class="form-control"
+                          id="rif"
+                          v-bind:disabled="form.rif.disabled"
+                          v-model="form.rif.value"
+                          v-on:keyup="valuesForm"
+                          type="text"></the-mask>
+                <small id="rifHelp" class="form-text">V:, E:, P:, G:, J:, C:</small>
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">

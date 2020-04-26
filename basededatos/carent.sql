@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 10-03-2020 a las 07:10:29
+-- Tiempo de generación: 23-04-2020 a las 18:26:18
 -- Versión del servidor: 8.0.18
 -- Versión de PHP: 7.3.12
 
@@ -594,7 +594,7 @@ CREATE TABLE `tbl_cliente` (
   `numero_fiscal` varchar(5) NOT NULL,
   `ciudad_fiscal` varchar(50) NOT NULL,
   `telefono_fiscal` varchar(20) NOT NULL,
-  `fax_fiscal` varchar(11) NOT NULL,
+  `fax_fiscal` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `email_fiscal` varchar(100) NOT NULL,
   `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -604,8 +604,10 @@ CREATE TABLE `tbl_cliente` (
 --
 
 INSERT INTO `tbl_cliente` (`id`, `id_usuario_socio`, `id_usuario_gerente`, `codigo`, `rif`, `nit`, `razon_social`, `id_parroquia_fiscal`, `avenida_calle_fiscal`, `edificio_quinta_fiscal`, `piso_fiscal`, `numero_fiscal`, `ciudad_fiscal`, `telefono_fiscal`, `fax_fiscal`, `email_fiscal`, `id_estatus`) VALUES
-(1, 1, 4, 111, '234', 122, 'BANCOS. C', 1, 'D', 'DD', '2', '2', 'FD', '(2222) - 222 2222', '22', 'fj@gmail.com', 1),
-(2, 1, 1, 112, '335', 22, 'BANCO H', 1, 'AVENIDA', 'QUINTA', '2', '2', 'CIUDAD', '(2222) - 222 2222', '222', 'kose@gmail.com', 1);
+(1, 1, 4, 111, '234', 1221, 'BANCOS. C', 1, 'D', 'DD', '2', '2', 'FD', '(2222) - 222 2222', '2', 'fj@gmail.com', 1),
+(2, 1, 1, 112, '335', 22, 'BANCO H', 1, 'AVENIDA', 'QUINTA', '2', '2', 'CIUDAD', '(2222) - 222 2222', '222', 'kose@gmail.com', 1),
+(3, 1, 1, 113, '9212', 2, 'BANCO I', 26, 'AVENIDA', 'QUINTA', '21', '11', 'CIUDAD', '(0202) - 020 2020', '20020', 'bancoi@gmail.com', 1),
+(4, 1, 1, 114, 'V12', 1, 'BANCO J', 28, 'AVENIDAD', 'QUINTA', '1', '1', 'CIUDAD', '(2002) - 022 0020', NULL, 'bancoj@gmail.com', 1);
 
 -- --------------------------------------------------------
 
@@ -679,9 +681,10 @@ CREATE TABLE `tbl_contacto_usuario` (
 
 INSERT INTO `tbl_contacto_usuario` (`id`, `id_usuario`, `correo_principal`, `correo_secundario`, `telefono_principal`, `telefono_secundario`) VALUES
 (1, 1, 'dmolina101@gmail.com', '', '(0000) - 000 0000', '(0000) - 000 0002'),
-(2, 2, 'josearturo0706@gmail.com', '', '', ''),
-(3, 3, 'ana.blandin@crowe.com.ve', '', '', ''),
-(4, 4, 'dq@l.com', '', NULL, NULL);
+(2, 2, 'josearturo0706@gmail.com', '', '(0202) - 020 2020', NULL),
+(3, 3, 'ana.blandin@crowe.com.ve', '', '(2020) - 020 2020', NULL),
+(4, 4, 'dq@l.com', '', NULL, NULL),
+(5, 5, 'prueba@gmail.com', '', '(0202) - 020 2020', NULL);
 
 -- --------------------------------------------------------
 
@@ -838,7 +841,8 @@ INSERT INTO `tbl_menu` (`id`, `id_menu_padre`, `descripcion`, `url`, `orden`, `i
 (7, 4, 'Detalle Facturacion', '/formDetalleFactCliente', 1, 1),
 (8, 0, 'Proyectos', '', 0, 1),
 (9, 8, 'Crear Proyecto', '/formNuevoProyecto', 0, 1),
-(10, 8, 'Lista de Proyectos', '/proyectos', 1, 1);
+(10, 8, 'Lista de Proyectos', '/proyectos', 1, 1),
+(11, 8, 'Asignados/ar Proyectos ', '/proyectoDivision', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -865,9 +869,10 @@ INSERT INTO `tbl_menu_usuario` (`id`, `id_usuario`, `id_menu`, `C`, `R`, `U`, `D
 (2, 1, 3, 0, 1, 1, 0),
 (3, 1, 5, 0, 0, 0, 0),
 (4, 1, 6, 0, 1, 1, 0),
-(5, 1, 7, 0, 1, 1, 0),
+(5, 1, 7, 1, 1, 1, 0),
 (6, 1, 9, 1, 1, 0, 0),
-(7, 1, 10, 0, 1, 1, 0);
+(7, 1, 10, 1, 1, 1, 0),
+(8, 1, 11, 1, 1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -2398,11 +2403,31 @@ CREATE TABLE `tbl_proyecto` (
 --
 
 INSERT INTO `tbl_proyecto` (`id`, `descripcion`, `id_cliente`, `horas_contratadas`, `fecha_contratacion`, `id_estatus`) VALUES
-(1, 'Auditoría Banco I', 1, 95, '03/03/2020', 1),
-(2, 'Auditoría Banco II', 1, 25, '04/03/2020', 1),
+(1, 'Auditoría Banco I', 1, 95, '03/03/2020', 2),
+(2, 'Auditoría Banco II', 1, 20, '04/03/2020', 1),
 (3, 'Certificación de Cursos', 1, 90, '05/03/2020', 1),
-(4, 'Proyecto I', 1, 1, '10/03/2020', 1),
+(4, 'Proyecto I', 1, 1, '10/03/2020', 0),
 (5, 'inventario IV', 2, 23, '22/02/2020', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_proyecto_analista`
+--
+
+CREATE TABLE `tbl_proyecto_analista` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `id_proyecto` int(11) NOT NULL,
+  `id_analista` int(11) NOT NULL,
+  `id_estatus` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `tbl_proyecto_analista`
+--
+
+INSERT INTO `tbl_proyecto_analista` (`id`, `id_proyecto`, `id_analista`, `id_estatus`) VALUES
+(1, 5, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -2430,7 +2455,9 @@ INSERT INTO `tbl_proyecto_divisiones` (`id`, `id_division`, `id_proyecto`) VALUE
 (7, 5, 4),
 (8, 7, 4),
 (9, 11, 4),
-(10, 5, 5);
+(10, 5, 5),
+(13, 3, 5),
+(14, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -2492,10 +2519,11 @@ CREATE TABLE `tbl_usuario` (
 --
 
 INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `cedula`, `nombre_1`, `nombre_2`, `apellido_1`, `apellido_2`, `fecha_nacimiento`, `id_cargo`, `id_division`, `id_parroquia`, `avatar`, `id_estatus`) VALUES
-(1, '0001', 'eyJpdiI6IjB5dnJXUUswTEdZenNcLzRHbTRWXC9HUT09IiwidmFsdWUiOiJwbUpkdURFdGhoc3FOSFpGQU1yaU5RPT0iLCJtYWMiOiI2ZDY1NTVlMTBkYmQ4NGNiNWM0MWRkMTllMjcxZjkxOTM5MmFhZmMxYTIwNmFiMzM4MjRmYTgwYjEwYTQ0NTY0In0=', 17671370, 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '01/01/1980', 16, 3, 1131, '', 1),
-(2, '11525', 'eyJpdiI6IjkwZkVzUVRiMXVZcXZlZDMwM2dXdHc9PSIsInZhbHVlIjoiZFAxQjFLMVZZT2VsVDBNSkJIN0JJZz09IiwibWFjIjoiMWNhNWYxMGM4MDdhOWNjZTM1N2MxZmMyNjE3MDJlYTM1YTMwZDU4NDU0ZTNhYmQzZWUxZTViNTQxNTM0YmZiZCJ9', 0, '', NULL, '', NULL, NULL, NULL, NULL, NULL, '', 1),
-(3, '11450', 'eyJpdiI6Im5MWkhxSEVKV2N3ZkhJZ01XZTU2eFE9PSIsInZhbHVlIjoiZ2N3a2l2Nm1DNHFKMGtPYkp4ZmdzQT09IiwibWFjIjoiMTNmNTllMGNjNTc0MjNlMWMwYzkwYTA0NGYyNzQ5ZmU5YTg4M2YzMDIzZGMyNzVhNjllNmRhNDYzOWQ3Yzc1NyJ9', 0, '', NULL, '', NULL, NULL, NULL, NULL, NULL, '', 1),
-(4, '2209', 'eyJpdiI6IiswWVJuYXJsbVwvRkg0OGdxdGI4dW1RPT0iLCJ2YWx1ZSI6ImdFbWJYZGRWVEtNWFZcL3ZUdlNHY0JnPT0iLCJtYWMiOiI1NTUyMDg1Y2RkMWE4MTViYWM5MWM4YjAyOGJiZTAwYWQ0ZTc1NGE5Zjg4ZDlhNmRjYWU3OTZmNTU4YTIxMDZkIn0=', 13900761, 'CAROLINA', '', 'CORONEL', '', NULL, NULL, NULL, NULL, NULL, 1);
+(1, '0001', 'eyJpdiI6IjB5dnJXUUswTEdZenNcLzRHbTRWXC9HUT09IiwidmFsdWUiOiJwbUpkdURFdGhoc3FOSFpGQU1yaU5RPT0iLCJtYWMiOiI2ZDY1NTVlMTBkYmQ4NGNiNWM0MWRkMTllMjcxZjkxOTM5MmFhZmMxYTIwNmFiMzM4MjRmYTgwYjEwYTQ0NTY0In0=', 17671370, 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '01/01/1980', 15, 3, 1131, '', 1),
+(2, '11525', 'eyJpdiI6IjkwZkVzUVRiMXVZcXZlZDMwM2dXdHc9PSIsInZhbHVlIjoiZFAxQjFLMVZZT2VsVDBNSkJIN0JJZz09IiwibWFjIjoiMWNhNWYxMGM4MDdhOWNjZTM1N2MxZmMyNjE3MDJlYTM1YTMwZDU4NDU0ZTNhYmQzZWUxZTViNTQxNTM0YmZiZCJ9', 27279090, 'JOSE', 'ARTURO', 'MADRIZ', 'MALAVE', '07/06/1996', 13, 3, 1123, '', 1),
+(3, '11450', 'eyJpdiI6Im5MWkhxSEVKV2N3ZkhJZ01XZTU2eFE9PSIsInZhbHVlIjoiZ2N3a2l2Nm1DNHFKMGtPYkp4ZmdzQT09IiwibWFjIjoiMTNmNTllMGNjNTc0MjNlMWMwYzkwYTA0NGYyNzQ5ZmU5YTg4M2YzMDIzZGMyNzVhNjllNmRhNDYzOWQ3Yzc1NyJ9', 14245244, 'ANA', '', 'BLANDIN', '', '09/05/1986', 13, 3, 26, '', 1),
+(4, '2209', 'eyJpdiI6IiswWVJuYXJsbVwvRkg0OGdxdGI4dW1RPT0iLCJ2YWx1ZSI6ImdFbWJYZGRWVEtNWFZcL3ZUdlNHY0JnPT0iLCJtYWMiOiI1NTUyMDg1Y2RkMWE4MTViYWM5MWM4YjAyOGJiZTAwYWQ0ZTc1NGE5Zjg4ZDlhNmRjYWU3OTZmNTU4YTIxMDZkIn0=', 13900761, 'CAROLINA', '', 'CORONEL', '', NULL, NULL, NULL, NULL, NULL, 1),
+(5, '22522', 'eyJpdiI6InlXdnhIMkZHYnBrczRGQTlRdGVIeUE9PSIsInZhbHVlIjoiWmJqNFd4c09Fd05JRGxZdTBmenUyQT09IiwibWFjIjoiOTYwNTVmNWJiMDFhOWU0ZDE2NTJiZWMwY2Y2OGY1YzllZjY5NTg0OGU4NzQzNWU1ZGFjZTdiYTg1NTQwM2RmYSJ9', 22522626, 'PRUEBA', '', 'PROGRAMA', '', '07/06/1996', 15, 8, 233, NULL, 1);
 
 --
 -- Índices para tablas volcadas
@@ -2593,6 +2621,13 @@ ALTER TABLE `tbl_proyecto`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `tbl_proyecto_analista`
+--
+ALTER TABLE `tbl_proyecto_analista`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`);
+
+--
 -- Indices de la tabla `tbl_proyecto_divisiones`
 --
 ALTER TABLE `tbl_proyecto_divisiones`
@@ -2641,7 +2676,7 @@ ALTER TABLE `tbl_ciudades`
 -- AUTO_INCREMENT de la tabla `tbl_cliente`
 --
 ALTER TABLE `tbl_cliente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cliente_facturacion`
@@ -2659,7 +2694,7 @@ ALTER TABLE `tbl_configuracion`
 -- AUTO_INCREMENT de la tabla `tbl_contacto_usuario`
 --
 ALTER TABLE `tbl_contacto_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_division`
@@ -2683,13 +2718,13 @@ ALTER TABLE `tbl_estatus`
 -- AUTO_INCREMENT de la tabla `tbl_menu`
 --
 ALTER TABLE `tbl_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_menu_usuario`
 --
 ALTER TABLE `tbl_menu_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_municipios`
@@ -2710,10 +2745,16 @@ ALTER TABLE `tbl_proyecto`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT de la tabla `tbl_proyecto_analista`
+--
+ALTER TABLE `tbl_proyecto_analista`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT de la tabla `tbl_proyecto_divisiones`
 --
 ALTER TABLE `tbl_proyecto_divisiones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_telefono`
@@ -2731,7 +2772,7 @@ ALTER TABLE `tbl_tipo_contacto`
 -- AUTO_INCREMENT de la tabla `tbl_usuario`
 --
 ALTER TABLE `tbl_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Restricciones para tablas volcadas
