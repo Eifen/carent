@@ -141,10 +141,11 @@ class ProyectoController extends Controller
       $estatus = $modelo->estatusProyectos();
       if ($infoUsuario->id_cargo === 16) {
         $infoProyectos = $modelo->proyectoSDivision();
+        $permisoVer = $modelo->permisoVer(session("usuario_id"), 11);
         return [
         "estatus" => $estatus,
         "proyectos" => $infoProyectos,
-        "permisoActualizar" => $permisoActualizar
+        "permisoVer" => $permisoVer
       ];
       }
       if ($infoUsuario->id_cargo === 15 || $permisoActualizar === "true") {
@@ -160,7 +161,6 @@ class ProyectoController extends Controller
         return [
         "estatus" => $estatus,
         "proyectos" => $infoProyectos,
-        "permisoActualizar" => $permisoActualizar
       ];
       }
       

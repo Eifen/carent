@@ -345,6 +345,29 @@ class ProyectoModel extends Model
     }
   }
 
+  function permisoVer($id_usuario, $id_menu){
+
+      $permiso = DB::select('SELECT CASE mu.R
+                                      WHEN 1 THEN "true"
+                                      ELSE "false"
+                                    END AS permiso
+                             FROM tbl_menu_usuario mu
+                             WHERE mu.id_usuario = '.$id_usuario.'
+                             AND mu.R = 1
+                             AND mu.id_menu = '. $id_menu);
+
+      if(count($permiso) > 0){
+
+        return $permiso[0]->permiso;
+
+      }else{
+
+        return false;
+
+      }
+
+    }
+
   function proyectoSDivision(){
 
     $info = DB::select('SELECT p.id AS id_proyecto,

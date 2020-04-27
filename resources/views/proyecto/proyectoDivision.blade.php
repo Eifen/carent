@@ -86,8 +86,8 @@
                   <th scope="col">Clientes</th>
                   <th scope="col">Proyecto</th>
                   <th scope="col">Estatus</th>
-                  <th scope="col">Ver Empleados</th>
-                  <th scope="col" v-if="permisoActualizar"></th>
+                  <th scope="col"v-if="permisoVer">Ver Empleados</th>
+                  <th scope="col" v-if="permisoActualizar">Asiganar</th>
                 </tr>
               </thead>
               <tbody>
@@ -95,7 +95,7 @@
                   <th scope="row">@{{ proyecto.cliente }}</th>
                   <td>@{{ proyecto.proyecto }}</td>
                   <td>@{{ proyecto.estatus }}</td>
-                  <td>
+                  <td v-if="permisoVer">
                     <i class="fas fa-search-plus" v-on:click="mostrarDetalleDivProyecto(proyecto.id_proyecto, $event)"></i>
                   </td>
                   <td v-if="permisoActualizar">
