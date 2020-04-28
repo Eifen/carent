@@ -39603,17 +39603,6 @@ var app = new Vue({
 
 /***/ }),
 
-/***/ "./resources/less/proyecto/asignarAnalista.less":
-/*!******************************************************!*\
-  !*** ./resources/less/proyecto/asignarAnalista.less ***!
-  \******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-throw new Error("Module build failed (from ./node_modules/css-loader/index.js):\nModuleBuildError: Module build failed (from ./node_modules/less-loader/dist/cjs.js):\nError: ENOENT: no such file or directory, open 'C:\\Bitnami\\wampstack-7.3.12-0\\apache2\\htdocs\\carent\\resources\\less\\proyecto\\asignarAnalista.less'\n    at C:\\Bitnami\\wampstack-7.3.12-0\\apache2\\htdocs\\carent\\node_modules\\webpack\\lib\\NormalModule.js:316:20\n    at C:\\Bitnami\\wampstack-7.3.12-0\\apache2\\htdocs\\carent\\node_modules\\loader-runner\\lib\\LoaderRunner.js:367:11\n    at C:\\Bitnami\\wampstack-7.3.12-0\\apache2\\htdocs\\carent\\node_modules\\loader-runner\\lib\\LoaderRunner.js:203:19\n    at C:\\Bitnami\\wampstack-7.3.12-0\\apache2\\htdocs\\carent\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:85:15\n    at processTicksAndRejections (internal/process/task_queues.js:75:11)");
-
-/***/ }),
-
 /***/ "./resources/less/proyecto/formBuscarProyectos.less":
 /*!**********************************************************!*\
   !*** ./resources/less/proyecto/formBuscarProyectos.less ***!
@@ -39692,9 +39681,9 @@ throw new Error("Module build failed (from ./node_modules/css-loader/index.js):\
 /***/ }),
 
 /***/ 0:
-/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** multi ./resources/js/login.js ./resources/less/login.less ./resources/less/inicio.less ./resources/less/cambiarClave.less ./resources/less/usuario/nuevoUsuario.less ./resources/less/usuario/buscarUsuario.less ./resources/less/usuario/modificarUsuario.less ./resources/less/cliente/nuevoCliente.less ./resources/less/cliente/buscarCliente.less ./resources/less/cliente/modificarCliente.less ./resources/less/cliente/detalleFactcliente.less ./resources/less/crea/buscarRegistro.less ./resources/less/crea/nuevoCargo.less ./resources/less/crea/nuevaDivision.less ./resources/less/proyecto/nuevoProyecto.less ./resources/less/proyecto/formBuscarProyectos.less ./resources/less/proyecto/modificarProyecto.less ./resources/less/proyecto/proyectoDivision.less ./resources/less/proyecto/asignarAnalista.less ***!
-  \***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** multi ./resources/js/login.js ./resources/less/login.less ./resources/less/inicio.less ./resources/less/cambiarClave.less ./resources/less/usuario/nuevoUsuario.less ./resources/less/usuario/buscarUsuario.less ./resources/less/usuario/modificarUsuario.less ./resources/less/cliente/nuevoCliente.less ./resources/less/cliente/buscarCliente.less ./resources/less/cliente/modificarCliente.less ./resources/less/cliente/detalleFactcliente.less ./resources/less/crea/buscarRegistro.less ./resources/less/crea/nuevoCargo.less ./resources/less/crea/nuevaDivision.less ./resources/less/proyecto/nuevoProyecto.less ./resources/less/proyecto/formBuscarProyectos.less ./resources/less/proyecto/modificarProyecto.less ./resources/less/proyecto/proyectoDivision.less ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -39715,8 +39704,7 @@ __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\car
 __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\proyecto\nuevoProyecto.less */"./resources/less/proyecto/nuevoProyecto.less");
 __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\proyecto\formBuscarProyectos.less */"./resources/less/proyecto/formBuscarProyectos.less");
 __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\proyecto\modificarProyecto.less */"./resources/less/proyecto/modificarProyecto.less");
-__webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\proyecto\proyectoDivision.less */"./resources/less/proyecto/proyectoDivision.less");
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\proyecto\asignarAnalista.less */"./resources/less/proyecto/asignarAnalista.less");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\proyecto\proyectoDivision.less */"./resources/less/proyecto/proyectoDivision.less");
 
 
 /***/ })
