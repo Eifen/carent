@@ -34205,6 +34205,7 @@ var app = new Vue({
         self.form.btn.filtrar.html = self.form.btn.filtrar.htmlInit;
         self.proyectos = response.data.proyectos;
         self.permisoActualizar = response.data.permisoActualizar;
+        self.permisoVer = response.data.permisoVer;
       } else {
         throw "error";
       }

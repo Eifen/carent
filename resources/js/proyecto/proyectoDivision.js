@@ -87,6 +87,7 @@ var app = new Vue({
 
         self.proyectos = response.data.proyectos;
         self.permisoActualizar = response.data.permisoActualizar;
+        self.permisoVer = response.data.permisoVer;
 
       }else{
 
