@@ -421,4 +421,202 @@ html{
 
   }// Fin #modal-detalle-Dproyecto
 
+  #modal-asignar-Aproyecto{
+
+    .table{
+      background-color: white;
+      border:1px solid rgba(0,0,0,0.13);
+      border-radius: 3px;
+      margin-bottom: 50px;
+      padding: 15px;
+      transition: all .3s;
+
+      &:hover{
+        box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+      }
+
+      thead{
+
+        tr{
+
+          th{
+            background-color: #091F40;
+            color:white;
+            text-align: center;
+          }
+
+        }
+
+      }// Fin thead
+
+      tbody{
+
+        tr{
+          transition: all .3s;
+
+          &:hover{
+            background-color: rgba(246,168,28,.5);
+          }
+
+          th{
+            text-align: center;
+          }
+
+          td{
+            text-align: center;
+
+            a{
+              color: #212529 !important;
+            }
+
+            .fas,
+            .far{
+
+              &:hover{
+                cursor: pointer;
+              }
+
+            }
+
+          }// Fin td
+
+        }// Fin tr
+
+      }// Fin tbody
+
+      tfoot{
+
+        tr{
+
+          td{
+
+            > div{
+              display: table;
+              margin-left: auto;
+              margin-right: auto;
+
+              > div{
+                display: table-cell;
+                padding-left: 5px;
+                padding-right: 5px;
+                vertical-align: middle;
+
+                .form-control{
+                  max-width: 70px;
+                }
+
+                .icono{
+                  color: #091F40;
+                  font-size: 1.5rem;
+
+                  &:hover{
+                    color: #000000;
+                    cursor: pointer;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }// Fin tfoot
+
+    }// Fin table
+    .modal-dialog{
+
+      .modal-content{
+        background-color: #ffffff;
+        border-radius: 2px !important;
+
+        .modal-header{
+          border-bottom: 0px;
+          color: #022C43;
+          padding: .5rem .5rem;
+
+          .close{
+            color: #022C43;
+            font-size: 2rem;
+            opacity: 1;
+            text-shadow: 0 1px 0 #FED600;
+            transition: all .3s;
+
+            &:hover{
+              color: #cc0000;
+            }
+
+          }
+
+        }
+
+        .modal-body{
+          //font-family: "Brandon Grotesque";
+          padding: .5rem;
+
+          h5{
+            text-decoration: underline;
+          }
+
+          form{
+            margin-bottom: 20px;
+            margin-top: 10px;
+
+            .form-group{
+
+              .invalid-feedback{
+                display: block !important;
+              }
+
+              label{
+                color:#091F40;
+              }
+
+              .form-control{
+                border-radius: 2px;
+
+                &:disabled{
+                  background-color: white;
+                  cursor: not-allowed;
+                }
+
+              }// Fin .form-control
+
+            }// Fin .form-group
+
+          }// Fin form
+
+        }// Fin .modal-body
+
+        .modal-footer{
+          border-top: 0px;
+          padding: .3rem;
+
+          .btn{
+            background-color: #091F40;
+            border: 2px solid #091F40;
+            border-radius: 2px;
+            color: rgba(255,255,255,1);
+            font-weight: 600;
+            padding: .375rem .75rem;
+            transition: all .3s;
+
+            &:hover{
+              background-color: #F6A81C;
+              color: #091F40;
+            }
+
+          }
+
+        }
+
+      }// Fin modal-content
+
+    }// Fin .modal-dialog
+
+  }// Fin #modal-asignar-Aproyecto
+
 }// Fin #proyectoDivision
