@@ -88,6 +88,7 @@
                   <th scope="col">Estatus</th>
                   <th scope="col"v-if="permisoVer">Ver Empleados</th>
                   <th scope="col" v-if="permisoActualizar">Asiganar</th>
+                  <th scope="col" v-if="permisoCrear">Cargar Horas</th>
                 </tr>
               </thead>
               <tbody>
@@ -100,6 +101,10 @@
                   </td>
                   <td v-if="permisoActualizar">
                        <i class="far fa-edit" v-on:click="asignarAnalistaProyecto(proyecto.id_proyecto, $event)"></i>
+                  </td>
+                  <td v-if= "permisoCrear">
+                    <a v-bind:href="'/formCargarHoras/'+proyecto.id_proy_analista" target="_self">
+                    <i class="fas fa-user-edit" v-if= "proyecto.permisoCrear"></i>
                   </td>
                 </tr>
               </tbody>
@@ -150,6 +155,7 @@
                   <th scope="col">Empleado</th>
                   <th scope="col">Divison</th>
                   <th scope="col">Cargo</th>
+                  <th scope="col">Horas Cargadas</th>
                 </tr>
               </thead>
               <tbody>
@@ -157,6 +163,7 @@
                   <th scope="row">@{{ Aproyecto.nombre }}</th>                  
                   <td>@{{ Aproyecto.division }}</td>
                   <td>@{{ Aproyecto.cargo }}</td>
+                  <td>@{{ Aproyecto.suma }}</td>
                 </tr>
               </tbody>
             </table>
@@ -203,13 +210,20 @@
                   <th scope="col">Nombre</th>
                   <th scope="col">Cargo</th>
                   <th scope="col">Estatus</th>
+                  <th scope="col">Horas Cargadas</th>
+                  <th scope="col">Ver Horas Cargadas</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="analista in detalleAnalista.data">
                   <th scope="row">@{{ analista.nombre }}</th>
                   <td>@{{ analista.cargo }}</td>
-                  <td><input type="checkbox" v-on:change="estados(analista.id,analista.idAnaProy,proyecto.id, $event)" v-model="analista.estatus" ></td>
+                  <td><input type="checkbox" v-on:change="estados(analista.id,analista.idAnaProy,proyecto.id,proyecto.id_proyecto_division, $event)" v-model="analista.estatus" ></td>
+                  <td>@{{ analista.suma }}</td>
+                  <td>
+                    <a v-bind:href="'/formCargarHoras/'+analista.idAnaProy" target="_self">
+                    <i class="fas fa-user-edit" v-if= "analista.permisoCrear"></i>
+                  </td>
                 </tr>
               </tbody>
             </table>

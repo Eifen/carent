@@ -81,10 +81,27 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 17);
 /******/ })
 /************************************************************************/
 /******/ ({
+
+/***/ "./node_modules/autonumeric/dist/autoNumeric.min.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/autonumeric/dist/autoNumeric.min.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * AutoNumeric.js v4.5.9
+ * © 2009-2019 Robert J. Knothe, Alexandre Bonneau
+ * Released under the MIT License.
+ */
+!function(e,t){ true?module.exports=t():undefined}(this,function(){return(n={},a.m=i=[function(e,t,i){"use strict";i.r(t);var n={allowedTagList:["b","caption","cite","code","const","dd","del","div","dfn","dt","em","h1","h2","h3","h4","h5","h6","input","ins","kdb","label","li","option","output","p","q","s","sample","span","strong","td","th","u"]};Object.freeze(n.allowedTagList),Object.defineProperty(n,"allowedTagList",{configurable:!1,writable:!1}),n.keyCode={Backspace:8,Tab:9,Enter:13,Shift:16,Ctrl:17,Alt:18,Pause:19,CapsLock:20,Esc:27,Space:32,PageUp:33,PageDown:34,End:35,Home:36,LeftArrow:37,UpArrow:38,RightArrow:39,DownArrow:40,Insert:45,Delete:46,num0:48,num1:49,num2:50,num3:51,num4:52,num5:53,num6:54,num7:55,num8:56,num9:57,a:65,b:66,c:67,d:68,e:69,f:70,g:71,h:72,i:73,j:74,k:75,l:76,m:77,n:78,o:79,p:80,q:81,r:82,s:83,t:84,u:85,v:86,w:87,x:88,y:89,z:90,OSLeft:91,OSRight:92,ContextMenu:93,numpad0:96,numpad1:97,numpad2:98,numpad3:99,numpad4:100,numpad5:101,numpad6:102,numpad7:103,numpad8:104,numpad9:105,MultiplyNumpad:106,PlusNumpad:107,MinusNumpad:109,DotNumpad:110,SlashNumpad:111,F1:112,F2:113,F3:114,F4:115,F5:116,F6:117,F7:118,F8:119,F9:120,F10:121,F11:122,F12:123,NumLock:144,ScrollLock:145,HyphenFirefox:173,MyComputer:182,MyCalculator:183,Semicolon:186,Equal:187,Comma:188,Hyphen:189,Dot:190,Slash:191,Backquote:192,LeftBracket:219,Backslash:220,RightBracket:221,Quote:222,Command:224,AltGraph:225,AndroidDefault:229},Object.freeze(n.keyCode),Object.defineProperty(n,"keyCode",{configurable:!1,writable:!1}),n.fromCharCodeKeyCode={0:"LaunchCalculator",8:"Backspace",9:"Tab",13:"Enter",16:"Shift",17:"Ctrl",18:"Alt",19:"Pause",20:"CapsLock",27:"Escape",32:" ",33:"PageUp",34:"PageDown",35:"End",36:"Home",37:"ArrowLeft",38:"ArrowUp",39:"ArrowRight",40:"ArrowDown",45:"Insert",46:"Delete",48:"0",49:"1",50:"2",51:"3",52:"4",53:"5",54:"6",55:"7",56:"8",57:"9",91:"OS",92:"OSRight",93:"ContextMenu",96:"0",97:"1",98:"2",99:"3",100:"4",101:"5",102:"6",103:"7",104:"8",105:"9",106:"*",107:"+",109:"-",110:".",111:"/",112:"F1",113:"F2",114:"F3",115:"F4",116:"F5",117:"F6",118:"F7",119:"F8",120:"F9",121:"F10",122:"F11",123:"F12",144:"NumLock",145:"ScrollLock",173:"-",182:"MyComputer",183:"MyCalculator",186:";",187:"=",188:",",189:"-",190:".",191:"/",192:"`",219:"[",220:"\\",221:"]",222:"'",224:"Meta",225:"AltGraph"},Object.freeze(n.fromCharCodeKeyCode),Object.defineProperty(n,"fromCharCodeKeyCode",{configurable:!1,writable:!1}),n.keyName={Unidentified:"Unidentified",AndroidDefault:"AndroidDefault",Alt:"Alt",AltGr:"AltGraph",CapsLock:"CapsLock",Ctrl:"Control",Fn:"Fn",FnLock:"FnLock",Hyper:"Hyper",Meta:"Meta",OSLeft:"OS",OSRight:"OS",Command:"OS",NumLock:"NumLock",ScrollLock:"ScrollLock",Shift:"Shift",Super:"Super",Symbol:"Symbol",SymbolLock:"SymbolLock",Enter:"Enter",Tab:"Tab",Space:" ",LeftArrow:"ArrowLeft",UpArrow:"ArrowUp",RightArrow:"ArrowRight",DownArrow:"ArrowDown",End:"End",Home:"Home",PageUp:"PageUp",PageDown:"PageDown",Backspace:"Backspace",Clear:"Clear",Copy:"Copy",CrSel:"CrSel",Cut:"Cut",Delete:"Delete",EraseEof:"EraseEof",ExSel:"ExSel",Insert:"Insert",Paste:"Paste",Redo:"Redo",Undo:"Undo",Accept:"Accept",Again:"Again",Attn:"Attn",Cancel:"Cancel",ContextMenu:"ContextMenu",Esc:"Escape",Execute:"Execute",Find:"Find",Finish:"Finish",Help:"Help",Pause:"Pause",Play:"Play",Props:"Props",Select:"Select",ZoomIn:"ZoomIn",ZoomOut:"ZoomOut",BrightnessDown:"BrightnessDown",BrightnessUp:"BrightnessUp",Eject:"Eject",LogOff:"LogOff",Power:"Power",PowerOff:"PowerOff",PrintScreen:"PrintScreen",Hibernate:"Hibernate",Standby:"Standby",WakeUp:"WakeUp",Compose:"Compose",Dead:"Dead",F1:"F1",F2:"F2",F3:"F3",F4:"F4",F5:"F5",F6:"F6",F7:"F7",F8:"F8",F9:"F9",F10:"F10",F11:"F11",F12:"F12",Print:"Print",num0:"0",num1:"1",num2:"2",num3:"3",num4:"4",num5:"5",num6:"6",num7:"7",num8:"8",num9:"9",a:"a",b:"b",c:"c",d:"d",e:"e",f:"f",g:"g",h:"h",i:"i",j:"j",k:"k",l:"l",m:"m",n:"n",o:"o",p:"p",q:"q",r:"r",s:"s",t:"t",u:"u",v:"v",w:"w",x:"x",y:"y",z:"z",A:"A",B:"B",C:"C",D:"D",E:"E",F:"F",G:"G",H:"H",I:"I",J:"J",K:"K",L:"L",M:"M",N:"N",O:"O",P:"P",Q:"Q",R:"R",S:"S",T:"T",U:"U",V:"V",W:"W",X:"X",Y:"Y",Z:"Z",Semicolon:";",Equal:"=",Comma:",",Hyphen:"-",Minus:"-",Plus:"+",Dot:".",Slash:"/",Backquote:"`",LeftParenthesis:"(",RightParenthesis:")",LeftBracket:"[",RightBracket:"]",Backslash:"\\",Quote:"'",numpad0:"0",numpad1:"1",numpad2:"2",numpad3:"3",numpad4:"4",numpad5:"5",numpad6:"6",numpad7:"7",numpad8:"8",numpad9:"9",NumpadDot:".",NumpadDotAlt:",",NumpadMultiply:"*",NumpadPlus:"+",NumpadMinus:"-",NumpadSubtract:"-",NumpadSlash:"/",NumpadDotObsoleteBrowsers:"Decimal",NumpadMultiplyObsoleteBrowsers:"Multiply",NumpadPlusObsoleteBrowsers:"Add",NumpadMinusObsoleteBrowsers:"Subtract",NumpadSlashObsoleteBrowsers:"Divide",_allFnKeys:["F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","F11","F12"],_someNonPrintableKeys:["Tab","Enter","Shift","ShiftLeft","ShiftRight","Control","ControlLeft","ControlRight","Alt","AltLeft","AltRight","Pause","CapsLock","Escape"],_directionKeys:["PageUp","PageDown","End","Home","ArrowDown","ArrowLeft","ArrowRight","ArrowUp"]},Object.freeze(n.keyName._allFnKeys),Object.freeze(n.keyName._someNonPrintableKeys),Object.freeze(n.keyName._directionKeys),Object.freeze(n.keyName),Object.defineProperty(n,"keyName",{configurable:!1,writable:!1}),Object.freeze(n);var d=n;function a(e){return function(e){if(Array.isArray(e)){for(var t=0,i=new Array(e.length);t<e.length;t++)i[t]=e[t];return i}}(e)||function(e){if(Symbol.iterator in Object(e)||"[object Arguments]"===Object.prototype.toString.call(e))return Array.from(e)}(e)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance")}()}function r(){return(r=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var i=arguments[t];for(var n in i)Object.prototype.hasOwnProperty.call(i,n)&&(e[n]=i[n])}return e}).apply(this,arguments)}function h(e,t){return function(e){if(Array.isArray(e))return e}(e)||function(e,t){if(Symbol.iterator in Object(e)||"[object Arguments]"===Object.prototype.toString.call(e)){var i=[],n=!0,a=!1,r=void 0;try{for(var s,o=e[Symbol.iterator]();!(n=(s=o.next()).done)&&(i.push(s.value),!t||i.length!==t);n=!0);}catch(e){a=!0,r=e}finally{try{n||null==o.return||o.return()}finally{if(a)throw r}}return i}}(e,t)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance")}()}function o(e){return(o="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}var D=function(){function s(){!function(e){if(!(e instanceof s))throw new TypeError("Cannot call a class as a function")}(this)}return function(e,t){for(var i=0;i<t.length;i++){var n=t[i];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}(s,[{key:"isNull",value:function(e){return null===e}},{key:"isUndefined",value:function(e){return void 0===e}},{key:"isUndefinedOrNullOrEmpty",value:function(e){return null==e||""===e}},{key:"isString",value:function(e){return"string"==typeof e||e instanceof String}},{key:"isEmptyString",value:function(e){return""===e}},{key:"isBoolean",value:function(e){return"boolean"==typeof e}},{key:"isTrueOrFalseString",value:function(e){var t=String(e).toLowerCase();return"true"===t||"false"===t}},{key:"isObject",value:function(e){return"object"===o(e)&&null!==e&&!Array.isArray(e)}},{key:"isEmptyObj",value:function(e){for(var t in e)if(Object.prototype.hasOwnProperty.call(e,t))return!1;return!0}},{key:"isNumberStrict",value:function(e){return"number"==typeof e}},{key:"isNumber",value:function(e){return!this.isArray(e)&&!isNaN(parseFloat(e))&&isFinite(e)}},{key:"isDigit",value:function(e){return/\d/.test(e)}},{key:"isNumberOrArabic",value:function(e){var t=this.arabicToLatinNumbers(e,!1,!0,!0);return this.isNumber(t)}},{key:"isInt",value:function(e){return"number"==typeof e&&parseFloat(e)===parseInt(e,10)&&!isNaN(e)}},{key:"isFunction",value:function(e){return"function"==typeof e}},{key:"isIE11",value:function(){return"undefined"!=typeof window&&!!window.MSInputMethodContext&&!!document.documentMode}},{key:"contains",value:function(e,t){return!(!this.isString(e)||!this.isString(t)||""===e||""===t)&&-1!==e.indexOf(t)}},{key:"isInArray",value:function(e,t){return!(!this.isArray(t)||t===[]||this.isUndefined(e))&&-1!==t.indexOf(e)}},{key:"isArray",value:function(e){if("[object Array]"===Object.prototype.toString.call([]))return Array.isArray(e)||"object"===o(e)&&"[object Array]"===Object.prototype.toString.call(e);throw new Error("toString message changed for Object Array")}},{key:"isElement",value:function(e){return"undefined"!=typeof Element&&e instanceof Element}},{key:"isInputElement",value:function(e){return this.isElement(e)&&"input"===e.tagName.toLowerCase()}},{key:"decimalPlaces",value:function(e){var t=h(e.split("."),2)[1];return this.isUndefined(t)?0:t.length}},{key:"indexFirstNonZeroDecimalPlace",value:function(e){var t=h(String(Math.abs(e)).split("."),2)[1];if(this.isUndefined(t))return 0;var i=t.lastIndexOf("0");return-1===i?i=0:i+=2,i}},{key:"keyCodeNumber",value:function(e){return void 0===e.which?e.keyCode:e.which}},{key:"character",value:function(e){var t;if("Unidentified"===e.key||void 0===e.key||this.isSeleniumBot()){var i=this.keyCodeNumber(e);if(i===d.keyCode.AndroidDefault)return d.keyName.AndroidDefault;var n=d.fromCharCodeKeyCode[i];t=s.isUndefinedOrNullOrEmpty(n)?String.fromCharCode(i):n}else{var a;switch(e.key){case"Add":t=d.keyName.NumpadPlus;break;case"Apps":t=d.keyName.ContextMenu;break;case"Crsel":t=d.keyName.CrSel;break;case"Decimal":t=e.char?e.char:d.keyName.NumpadDot;break;case"Del":t="firefox"===(a=this.browser()).name&&a.version<=36||"ie"===a.name&&a.version<=9?d.keyName.Dot:d.keyName.Delete;break;case"Divide":t=d.keyName.NumpadSlash;break;case"Down":t=d.keyName.DownArrow;break;case"Esc":t=d.keyName.Esc;break;case"Exsel":t=d.keyName.ExSel;break;case"Left":t=d.keyName.LeftArrow;break;case"Meta":case"Super":t=d.keyName.OSLeft;break;case"Multiply":t=d.keyName.NumpadMultiply;break;case"Right":t=d.keyName.RightArrow;break;case"Spacebar":t=d.keyName.Space;break;case"Subtract":t=d.keyName.NumpadMinus;break;case"Up":t=d.keyName.UpArrow;break;default:t=e.key}}return t}},{key:"browser",value:function(){var e,t=navigator.userAgent,i=t.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i)||[];return/trident/i.test(i[1])?{name:"ie",version:(e=/\brv[ :]+(\d+)/g.exec(t)||[])[1]||""}:"Chrome"===i[1]&&null!==(e=t.match(/\b(OPR|Edge)\/(\d+)/))?{name:e[1].replace("OPR","opera"),version:e[2]}:(i=i[2]?[i[1],i[2]]:[navigator.appName,navigator.appVersion,"-?"],null!==(e=t.match(/version\/(\d+)/i))&&i.splice(1,1,e[1]),{name:i[0].toLowerCase(),version:i[1]})}},{key:"isSeleniumBot",value:function(){return!0===window.navigator.webdriver}},{key:"isNegative",value:function(e,t,i){var n=1<arguments.length&&void 0!==t?t:"-",a=!(2<arguments.length&&void 0!==i)||i;return e===n||""!==e&&(s.isNumber(e)?e<0:a?this.contains(e,n):this.isNegativeStrict(e,n))}},{key:"isNegativeStrict",value:function(e,t){var i=1<arguments.length&&void 0!==t?t:"-";return e.charAt(0)===i}},{key:"isNegativeWithBrackets",value:function(e,t,i){return e.charAt(0)===t&&this.contains(e,i)}},{key:"isZeroOrHasNoValue",value:function(e){return!/[1-9]/g.test(e)}},{key:"setRawNegativeSign",value:function(e){return this.isNegativeStrict(e,"-")?e:"-".concat(e)}},{key:"replaceCharAt",value:function(e,t,i){return"".concat(e.substr(0,t)).concat(i).concat(e.substr(t+i.length))}},{key:"clampToRangeLimits",value:function(e,t){return Math.max(t.minimumValue,Math.min(t.maximumValue,e))}},{key:"countNumberCharactersOnTheCaretLeftSide",value:function(e,t,i){for(var n=new RegExp("[0-9".concat(i,"-]")),a=0,r=0;r<t;r++)n.test(e[r])&&a++;return a}},{key:"findCaretPositionInFormattedNumber",value:function(e,t,i,n){var a,r=i.length,s=e.length,o=0;for(a=0;a<r&&o<s&&o<t;a++)(e[o]===i[a]||"."===e[o]&&i[a]===n)&&o++;return a}},{key:"countCharInText",value:function(e,t){for(var i=0,n=0;n<t.length;n++)t[n]===e&&i++;return i}},{key:"convertCharacterCountToIndexPosition",value:function(e){return Math.max(e,e-1)}},{key:"getElementSelection",value:function(e){var t,i={};try{t=this.isUndefined(e.selectionStart)}catch(e){t=!1}try{if(t){var n=window.getSelection().getRangeAt(0);i.start=n.startOffset,i.end=n.endOffset,i.length=i.end-i.start}else i.start=e.selectionStart,i.end=e.selectionEnd,i.length=i.end-i.start}catch(e){i.start=0,i.end=0,i.length=0}return i}},{key:"setElementSelection",value:function(e,t,i){var n=2<arguments.length&&void 0!==i?i:null;if(this.isUndefinedOrNullOrEmpty(n)&&(n=t),this.isInputElement(e))e.setSelectionRange(t,n);else if(!s.isNull(e.firstChild)){var a=document.createRange();a.setStart(e.firstChild,t),a.setEnd(e.firstChild,n);var r=window.getSelection();r.removeAllRanges(),r.addRange(a)}}},{key:"throwError",value:function(e){throw new Error(e)}},{key:"warning",value:function(e,t){1<arguments.length&&void 0!==t&&!t||console.warn("Warning: ".concat(e))}},{key:"isWheelUpEvent",value:function(e){return e.deltaY||this.throwError("The event passed as a parameter is not a valid wheel event, '".concat(e.type,"' given.")),e.deltaY<0}},{key:"isWheelDownEvent",value:function(e){return e.deltaY||this.throwError("The event passed as a parameter is not a valid wheel event, '".concat(e.type,"' given.")),0<e.deltaY}},{key:"forceDecimalPlaces",value:function(e,t){var i=h(String(e).split("."),2),n=i[0],a=i[1];return a?"".concat(n,".").concat(a.substr(0,t)):e}},{key:"roundToNearest",value:function(e,t){var i=1<arguments.length&&void 0!==t?t:1e3;return 0===e?0:(0===i&&this.throwError("The `stepPlace` used to round is equal to `0`. This value must not be equal to zero."),Math.round(e/i)*i)}},{key:"modifyAndRoundToNearestAuto",value:function(e,t,i){e=Number(this.forceDecimalPlaces(e,i));var n=Math.abs(e);if(0<=n&&n<1){var a,r=Math.pow(10,-i);if(0===e)return t?r:-r;var s,o=i,l=this.indexFirstNonZeroDecimalPlace(e);return a=o-1<=l?r:Math.pow(10,-(l+1)),s=t?e+a:e-a,this.roundToNearest(s,a)}e=parseInt(e,10);var c,u=Math.abs(e).toString().length;switch(u){case 1:c=0;break;case 2:case 3:c=1;break;case 4:case 5:c=2;break;default:c=u-3}var h,m=Math.pow(10,c);return(h=t?e+m:e-m)<=10&&-10<=h?h:this.roundToNearest(h,m)}},{key:"addAndRoundToNearestAuto",value:function(e,t){return this.modifyAndRoundToNearestAuto(e,!0,t)}},{key:"subtractAndRoundToNearestAuto",value:function(e,t){return this.modifyAndRoundToNearestAuto(e,!1,t)}},{key:"arabicToLatinNumbers",value:function(e,t,i,n){var a=!(1<arguments.length&&void 0!==t)||t,r=2<arguments.length&&void 0!==i&&i,s=3<arguments.length&&void 0!==n&&n;if(this.isNull(e))return e;var o=e.toString();if(""===o)return e;if(null===o.match(/[٠١٢٣٤٥٦٧٨٩۴۵۶]/g))return a&&(o=Number(o)),o;r&&(o=o.replace(/٫/,".")),s&&(o=o.replace(/٬/g,"")),o=o.replace(/[٠١٢٣٤٥٦٧٨٩]/g,function(e){return e.charCodeAt(0)-1632}).replace(/[۰۱۲۳۴۵۶۷۸۹]/g,function(e){return e.charCodeAt(0)-1776});var l=Number(o);return isNaN(l)?l:(a&&(o=l),o)}},{key:"triggerEvent",value:function(e,t,i,n,a){var r,s=1<arguments.length&&void 0!==t?t:document,o=2<arguments.length&&void 0!==i?i:null,l=!(3<arguments.length&&void 0!==n)||n,c=!(4<arguments.length&&void 0!==a)||a;window.CustomEvent?r=new CustomEvent(e,{detail:o,bubbles:l,cancelable:c}):(r=document.createEvent("CustomEvent")).initCustomEvent(e,l,c,{detail:o}),s.dispatchEvent(r)}},{key:"parseStr",value:function(e){var t,i,n,a,r={};if(0===e&&1/e<0&&(e="-0"),e=e.toString(),this.isNegativeStrict(e,"-")?(e=e.slice(1),r.s=-1):r.s=1,-1<(t=e.indexOf("."))&&(e=e.replace(".","")),t<0&&(t=e.length),(i=-1===e.search(/[1-9]/i)?e.length:e.search(/[1-9]/i))===(n=e.length))r.e=0,r.c=[0];else{for(a=n-1;"0"===e.charAt(a);a-=1)n-=1;for(n-=1,r.e=t-i-1,r.c=[],t=0;i<=n;i+=1)r.c[t]=+e.charAt(i),t+=1}return r}},{key:"testMinMax",value:function(e,t){var i=t.c,n=e.c,a=t.s,r=e.s,s=t.e,o=e.e;if(!i[0]||!n[0])return i[0]?a:n[0]?-r:0;if(a!==r)return a;var l=a<0;if(s!==o)return o<s^l?1:-1;for(a=-1,r=(s=i.length)<(o=n.length)?s:o,a+=1;a<r;a+=1)if(i[a]!==n[a])return i[a]>n[a]^l?1:-1;return s===o?0:o<s^l?1:-1}},{key:"randomString",value:function(e){var t=0<arguments.length&&void 0!==e?e:5;return Math.random().toString(36).substr(2,t)}},{key:"domElement",value:function(e){return s.isString(e)?document.querySelector(e):e}},{key:"getElementValue",value:function(e){return"input"===e.tagName.toLowerCase()?e.value:this.text(e)}},{key:"setElementValue",value:function(e,t){var i=1<arguments.length&&void 0!==t?t:null;"input"===e.tagName.toLowerCase()?e.value=i:e.textContent=i}},{key:"cloneObject",value:function(e){return r({},e)}},{key:"camelize",value:function(e,t,i,n){var a=1<arguments.length&&void 0!==t?t:"-",r=!(2<arguments.length&&void 0!==i)||i,s=!(3<arguments.length&&void 0!==n)||n;if(this.isNull(e))return null;r&&(e=e.replace(/^data-/,""));var o=e.split(a).map(function(e){return"".concat(e.charAt(0).toUpperCase()).concat(e.slice(1))});return o=o.join(""),s&&(o="".concat(o.charAt(0).toLowerCase()).concat(o.slice(1))),o}},{key:"text",value:function(e){var t=e.nodeType;return t===Node.ELEMENT_NODE||t===Node.DOCUMENT_NODE||t===Node.DOCUMENT_FRAGMENT_NODE?e.textContent:t===Node.TEXT_NODE?e.nodeValue:""}},{key:"setText",value:function(e,t){var i=e.nodeType;i!==Node.ELEMENT_NODE&&i!==Node.DOCUMENT_NODE&&i!==Node.DOCUMENT_FRAGMENT_NODE||(e.textContent=t)}},{key:"filterOut",value:function(e,t){var i=this;return e.filter(function(e){return!i.isInArray(e,t)})}},{key:"trimPaddedZerosFromDecimalPlaces",value:function(e){if(""===(e=String(e)))return"";var t=h(e.split("."),2),i=t[0],n=t[1];if(this.isUndefinedOrNullOrEmpty(n))return i;var a=n.replace(/0+$/g,"");return""===a?i:"".concat(i,".").concat(a)}},{key:"getHoveredElement",value:function(){var e=a(document.querySelectorAll(":hover"));return e[e.length-1]}},{key:"arrayTrim",value:function(e,t){var i=e.length;return 0===i||i<t?e:t<0?[]:(e.length=parseInt(t,10),e)}},{key:"arrayUnique",value:function(){var e;return a(new Set((e=[]).concat.apply(e,arguments)))}},{key:"mergeMaps",value:function(){for(var e=arguments.length,t=new Array(e),i=0;i<e;i++)t[i]=arguments[i];return new Map(t.reduce(function(e,t){return e.concat(a(t))},[]))}},{key:"objectKeyLookup",value:function(e,t){var i=Object.entries(e).find(function(e){return e[1]===t}),n=null;return void 0!==i&&(n=i[0]),n}},{key:"insertAt",value:function(e,t,i){if(i>(e=String(e)).length)throw new Error("The given index is out of the string range.");if(1!==t.length)throw new Error("The given string `char` should be only one character long.");return""===e&&0===i?t:"".concat(e.slice(0,i)).concat(t).concat(e.slice(i))}},{key:"scientificToDecimal",value:function(e){var t=Number(e);if(isNaN(t))return NaN;if(e=String(e),!this.contains(e,"e")&&!this.contains(e,"E"))return e;var i=h(e.split(/e/i),2),n=i[0],a=i[1],r=n<0;r&&(n=n.replace("-",""));var s=+a<0;s&&(a=a.replace("-",""));var o,l=h(n.split(/\./),2),c=l[0],u=l[1];return o=s?(o=c.length>a?this.insertAt(c,".",c.length-a):"0.".concat("0".repeat(a-c.length)).concat(c),"".concat(o).concat(u||"")):u?(n="".concat(c).concat(u),a<u.length?this.insertAt(n,".",+a+c.length):"".concat(n).concat("0".repeat(a-u.length))):(n=n.replace(".",""),"".concat(n).concat("0".repeat(Number(a)))),r&&(o="-".concat(o)),o}}]),s}(),s=function(){function t(e){if(function(e){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this),null===e)throw new Error("Invalid AST")}return function(e,t){for(var i=0;i<t.length;i++){var n=t[i];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}(t.prototype,[{key:"evaluate",value:function(e){if(null==e)throw new Error("Invalid AST sub-tree");if("number"===e.type)return e.value;if("unaryMinus"===e.type)return-this.evaluate(e.left);var t=this.evaluate(e.left),i=this.evaluate(e.right);switch(e.type){case"op_+":return Number(t)+Number(i);case"op_-":return t-i;case"op_*":return t*i;case"op_/":return t/i;default:throw new Error("Invalid operator '".concat(e.type,"'"))}}}]),t}(),l=function(){function a(){!function(e){if(!(e instanceof a))throw new TypeError("Cannot call a class as a function")}(this)}return function(e,t){for(var i=0;i<t.length;i++){var n=t[i];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}(a,[{key:"createNode",value:function(e,t,i){var n=new a;return n.type=e,n.left=t,n.right=i,n}},{key:"createUnaryNode",value:function(e){var t=new a;return t.type="unaryMinus",t.left=e,t.right=null,t}},{key:"createLeaf",value:function(e){var t=new a;return t.type="number",t.value=e,t}}]),a}();function c(e,t,i){!function(e){if(!(e instanceof c))throw new TypeError("Cannot call a class as a function")}(this),this.type=e,this.value=t,this.symbol=i}var u=function(){function t(e){!function(e){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this),this.text=e,this.textLength=e.length,this.index=0,this.token=new c("Error",0,0)}return function(e,t){for(var i=0;i<t.length;i++){var n=t[i];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}(t.prototype,[{key:"_skipSpaces",value:function(){for(;" "===this.text[this.index]&&this.index<=this.textLength;)this.index++}},{key:"getIndex",value:function(){return this.index}},{key:"getNextToken",value:function(e){var t=0<arguments.length&&void 0!==e?e:".";if(this._skipSpaces(),this.textLength===this.index)return this.token.type="EOT",this.token;if(D.isDigit(this.text[this.index]))return this.token.type="num",this.token.value=this._getNumber(t),this.token;switch(this.token.type="Error",this.text[this.index]){case"+":this.token.type="+";break;case"-":this.token.type="-";break;case"*":this.token.type="*";break;case"/":this.token.type="/";break;case"(":this.token.type="(";break;case")":this.token.type=")"}if("Error"===this.token.type)throw new Error("Unexpected token '".concat(this.token.symbol,"' at position '").concat(this.token.index,"' in the token function"));return this.token.symbol=this.text[this.index],this.index++,this.token}},{key:"_getNumber",value:function(e){this._skipSpaces();for(var t=this.index;this.index<=this.textLength&&D.isDigit(this.text[this.index]);)this.index++;for(this.text[this.index]===e&&this.index++;this.index<=this.textLength&&D.isDigit(this.text[this.index]);)this.index++;if(this.index===t)throw new Error("No number has been found while it was expected");return this.text.substring(t,this.index).replace(e,".")}}]),t}(),m=function(){function i(e){var t=1<arguments.length&&void 0!==arguments[1]?arguments[1]:".";return function(e){if(!(e instanceof i))throw new TypeError("Cannot call a class as a function")}(this),this.text=e,this.decimalCharacter=t,this.lexer=new u(e),this.token=this.lexer.getNextToken(this.decimalCharacter),this._exp()}return function(e,t){for(var i=0;i<t.length;i++){var n=t[i];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}(i.prototype,[{key:"_exp",value:function(){var e=this._term(),t=this._moreExp();return l.createNode("op_+",e,t)}},{key:"_moreExp",value:function(){var e,t;switch(this.token.type){case"+":return this.token=this.lexer.getNextToken(this.decimalCharacter),e=this._term(),t=this._moreExp(),l.createNode("op_+",t,e);case"-":return this.token=this.lexer.getNextToken(this.decimalCharacter),e=this._term(),t=this._moreExp(),l.createNode("op_-",t,e)}return l.createLeaf(0)}},{key:"_term",value:function(){var e=this._factor(),t=this._moreTerms();return l.createNode("op_*",e,t)}},{key:"_moreTerms",value:function(){var e,t;switch(this.token.type){case"*":return this.token=this.lexer.getNextToken(this.decimalCharacter),e=this._factor(),t=this._moreTerms(),l.createNode("op_*",t,e);case"/":return this.token=this.lexer.getNextToken(this.decimalCharacter),e=this._factor(),t=this._moreTerms(),l.createNode("op_/",t,e)}return l.createLeaf(1)}},{key:"_factor",value:function(){var e,t,i;switch(this.token.type){case"num":return i=this.token.value,this.token=this.lexer.getNextToken(this.decimalCharacter),l.createLeaf(i);case"-":return this.token=this.lexer.getNextToken(this.decimalCharacter),t=this._factor(),l.createUnaryNode(t);case"(":return this.token=this.lexer.getNextToken(this.decimalCharacter),e=this._exp(),this._match(")"),e;default:throw new Error("Unexpected token '".concat(this.token.symbol,"' with type '").concat(this.token.type,"' at position '").concat(this.token.index,"' in the factor function"))}}},{key:"_match",value:function(e){var t=this.lexer.getIndex()-1;if(this.text[t]!==e)throw new Error("Unexpected token '".concat(this.token.symbol,"' at position '").concat(t,"' in the match function"));this.token=this.lexer.getNextToken(this.decimalCharacter)}}]),i}();function v(e){return function(e){if(Array.isArray(e)){for(var t=0,i=new Array(e.length);t<e.length;t++)i[t]=e[t];return i}}(e)||function(e){if(Symbol.iterator in Object(e)||"[object Arguments]"===Object.prototype.toString.call(e))return Array.from(e)}(e)||function(){throw new TypeError("Invalid attempt to spread non-iterable instance")}()}function S(e,t){return function(e){if(Array.isArray(e))return e}(e)||function(e,t){if(Symbol.iterator in Object(e)||"[object Arguments]"===Object.prototype.toString.call(e)){var i=[],n=!0,a=!1,r=void 0;try{for(var s,o=e[Symbol.iterator]();!(n=(s=o.next()).done)&&(i.push(s.value),!t||i.length!==t);n=!0);}catch(e){a=!0,r=e}finally{try{n||null==o.return||o.return()}finally{if(a)throw r}}return i}}(e,t)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance")}()}function y(){return(y=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var i=arguments[t];for(var n in i)Object.prototype.hasOwnProperty.call(i,n)&&(e[n]=i[n])}return e}).apply(this,arguments)}function b(e){return(b="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}function g(e,t){for(var i=0;i<t.length;i++){var n=t[i];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}var p,f=function(){function I(){var s=this,e=0<arguments.length&&void 0!==arguments[0]?arguments[0]:null,t=1<arguments.length&&void 0!==arguments[1]?arguments[1]:null,i=2<arguments.length&&void 0!==arguments[2]?arguments[2]:null;!function(e){if(!(e instanceof I))throw new TypeError("Cannot call a class as a function")}(this);var n=I._setArgumentsValues(e,t,i),a=n.domElement,r=n.initialValue,o=n.userOptions;if(this.domElement=a,this.defaultRawValue="",this._setSettings(o,!1),this._checkElement(),this.savedCancellableValue=null,this.historyTable=[],this.historyTableIndex=-1,this.onGoingRedo=!1,this.parentForm=this._getParentForm(),!this.runOnce&&this.settings.formatOnPageLoad)this._formatDefaultValueOnPageLoad(r);else{var l;if(D.isNull(r))switch(this.settings.emptyInputBehavior){case I.options.emptyInputBehavior.min:l=this.settings.minimumValue;break;case I.options.emptyInputBehavior.max:l=this.settings.maximumValue;break;case I.options.emptyInputBehavior.zero:l="0";break;case I.options.emptyInputBehavior.focus:case I.options.emptyInputBehavior.press:case I.options.emptyInputBehavior.always:case I.options.emptyInputBehavior.null:l="";break;default:l=this.settings.emptyInputBehavior}else l=r;this._setElementAndRawValue(l)}this.runOnce=!0,this.hasEventListeners=!1,(this.isInputElement||this.isContentEditable)&&(this.settings.noEventListeners||this._createEventListeners(),this._setWritePermissions(!0)),this._saveInitialValues(r),this.sessionStorageAvailable=this.constructor._storageTest(),this.storageNamePrefix="AUTO_",this._setPersistentStorageName(),this.isFocused=!1,this.isWheelEvent=!1,this.isDropEvent=!1,this.isEditing=!1,this.rawValueOnFocus=void 0,this.internalModification=!1,this.attributeToWatch=this._getAttributeToWatch(),this.getterSetter=Object.getOwnPropertyDescriptor(this.domElement.__proto__,this.attributeToWatch),this._addWatcher(),this.settings.createLocalList&&this._createLocalList(),this.constructor._addToGlobalList(this),this.global={set:function(t,e){var i=1<arguments.length&&void 0!==e?e:null;s.autoNumericLocalList.forEach(function(e){e.set(t,i)})},setUnformatted:function(t,e){var i=1<arguments.length&&void 0!==e?e:null;s.autoNumericLocalList.forEach(function(e){e.setUnformatted(t,i)})},get:function(e){var t=0<arguments.length&&void 0!==e?e:null,i=[];return s.autoNumericLocalList.forEach(function(e){i.push(e.get())}),s._executeCallback(i,t),i},getNumericString:function(e){var t=0<arguments.length&&void 0!==e?e:null,i=[];return s.autoNumericLocalList.forEach(function(e){i.push(e.getNumericString())}),s._executeCallback(i,t),i},getFormatted:function(e){var t=0<arguments.length&&void 0!==e?e:null,i=[];return s.autoNumericLocalList.forEach(function(e){i.push(e.getFormatted())}),s._executeCallback(i,t),i},getNumber:function(e){var t=0<arguments.length&&void 0!==e?e:null,i=[];return s.autoNumericLocalList.forEach(function(e){i.push(e.getNumber())}),s._executeCallback(i,t),i},getLocalized:function(e){var t=0<arguments.length&&void 0!==e?e:null,i=[];return s.autoNumericLocalList.forEach(function(e){i.push(e.getLocalized())}),s._executeCallback(i,t),i},reformat:function(){s.autoNumericLocalList.forEach(function(e){e.reformat()})},unformat:function(){s.autoNumericLocalList.forEach(function(e){e.unformat()})},unformatLocalized:function(e){var t=0<arguments.length&&void 0!==e?e:null;s.autoNumericLocalList.forEach(function(e){e.unformatLocalized(t)})},update:function(){for(var e=arguments.length,t=new Array(e),i=0;i<e;i++)t[i]=arguments[i];s.autoNumericLocalList.forEach(function(e){e.update.apply(e,t)})},isPristine:function(){var t=!(0<arguments.length&&void 0!==arguments[0])||arguments[0],i=!0;return s.autoNumericLocalList.forEach(function(e){i&&!e.isPristine(t)&&(i=!1)}),i},clear:function(e){var t=0<arguments.length&&void 0!==e&&e;s.autoNumericLocalList.forEach(function(e){e.clear(t)})},remove:function(){s.autoNumericLocalList.forEach(function(e){e.remove()})},wipe:function(){s.autoNumericLocalList.forEach(function(e){e.wipe()})},nuke:function(){s.autoNumericLocalList.forEach(function(e){e.nuke()})},has:function(e){return e instanceof I?s.autoNumericLocalList.has(e.node()):s.autoNumericLocalList.has(e)},addObject:function(e){var t,i;i=e instanceof I?(t=e.node(),e):I.getAutoNumericElement(t=e),s._hasLocalList()||s._createLocalList();var n,a=i._getLocalList();0===a.size&&(i._createLocalList(),a=i._getLocalList()),(n=a instanceof Map?D.mergeMaps(s._getLocalList(),a):(s._addToLocalList(t,i),s._getLocalList())).forEach(function(e){e._setLocalList(n)})},removeObject:function(e,t){var i,n,a=1<arguments.length&&void 0!==t&&t;n=e instanceof I?(i=e.node(),e):I.getAutoNumericElement(i=e);var r=s.autoNumericLocalList;s.autoNumericLocalList.delete(i),r.forEach(function(e){e._setLocalList(s.autoNumericLocalList)}),a||i!==s.node()?n._createLocalList():n._setLocalList(new Map)},empty:function(e){var t=0<arguments.length&&void 0!==e&&e;s.autoNumericLocalList.forEach(function(e){t?e._createLocalList():e._setLocalList(new Map)})},elements:function(){var t=[];return s.autoNumericLocalList.forEach(function(e){t.push(e.node())}),t},getList:function(){return s.autoNumericLocalList},size:function(){return s.autoNumericLocalList.size}},this.options={reset:function(){return s.settings={rawValue:s.defaultRawValue},s.update(I.defaultSettings),s},allowDecimalPadding:function(e){return s.update({allowDecimalPadding:e}),s},alwaysAllowDecimalCharacter:function(e){return s.update({alwaysAllowDecimalCharacter:e}),s},caretPositionOnFocus:function(e){return s.settings.caretPositionOnFocus=e,s},createLocalList:function(e){return s.settings.createLocalList=e,s.settings.createLocalList?s._hasLocalList()||s._createLocalList():s._deleteLocalList(),s},currencySymbol:function(e){return s.update({currencySymbol:e}),s},currencySymbolPlacement:function(e){return s.update({currencySymbolPlacement:e}),s},decimalCharacter:function(e){return s.update({decimalCharacter:e}),s},decimalCharacterAlternative:function(e){return s.settings.decimalCharacterAlternative=e,s},decimalPlaces:function(e){return D.warning("Using `options.decimalPlaces()` instead of calling the specific `options.decimalPlacesRawValue()`, `options.decimalPlacesShownOnFocus()` and `options.decimalPlacesShownOnBlur()` methods will reset those options.\nPlease call the specific methods if you do not want to reset those.",s.settings.showWarnings),s.update({decimalPlaces:e}),s},decimalPlacesRawValue:function(e){return s.update({decimalPlacesRawValue:e}),s},decimalPlacesShownOnBlur:function(e){return s.update({decimalPlacesShownOnBlur:e}),s},decimalPlacesShownOnFocus:function(e){return s.update({decimalPlacesShownOnFocus:e}),s},defaultValueOverride:function(e){return s.update({defaultValueOverride:e}),s},digitalGroupSpacing:function(e){return s.update({digitalGroupSpacing:e}),s},digitGroupSeparator:function(e){return s.update({digitGroupSeparator:e}),s},divisorWhenUnfocused:function(e){return s.update({divisorWhenUnfocused:e}),s},emptyInputBehavior:function(e){return null===s.rawValue&&e!==I.options.emptyInputBehavior.null&&(D.warning("You are trying to modify the `emptyInputBehavior` option to something different than `'null'` (".concat(e,"), but the element raw value is currently set to `null`. This would result in an invalid `rawValue`. In order to fix that, the element value has been changed to the empty string `''`."),s.settings.showWarnings),s.rawValue=""),s.update({emptyInputBehavior:e}),s},eventBubbles:function(e){return s.settings.eventBubbles=e,s},eventIsCancelable:function(e){return s.settings.eventIsCancelable=e,s},failOnUnknownOption:function(e){return s.settings.failOnUnknownOption=e,s},formatOnPageLoad:function(e){return s.settings.formatOnPageLoad=e,s},formulaMode:function(e){return s.settings.formulaMode=e,s},historySize:function(e){return s.settings.historySize=e,s},isCancellable:function(e){return s.settings.isCancellable=e,s},leadingZero:function(e){return s.update({leadingZero:e}),s},maximumValue:function(e){return s.update({maximumValue:e}),s},minimumValue:function(e){return s.update({minimumValue:e}),s},modifyValueOnWheel:function(e){return s.settings.modifyValueOnWheel=e,s},negativeBracketsTypeOnBlur:function(e){return s.update({negativeBracketsTypeOnBlur:e}),s},negativePositiveSignPlacement:function(e){return s.update({negativePositiveSignPlacement:e}),s},negativeSignCharacter:function(e){return s.update({negativeSignCharacter:e}),s},noEventListeners:function(e){return e===I.options.noEventListeners.noEvents&&s.settings.noEventListeners===I.options.noEventListeners.addEvents&&s._removeEventListeners(),s.update({noEventListeners:e}),s},onInvalidPaste:function(e){return s.settings.onInvalidPaste=e,s},outputFormat:function(e){return s.settings.outputFormat=e,s},overrideMinMaxLimits:function(e){return s.update({overrideMinMaxLimits:e}),s},positiveSignCharacter:function(e){return s.update({positiveSignCharacter:e}),s},rawValueDivisor:function(e){return s.update({rawValueDivisor:e}),s},readOnly:function(e){return s.settings.readOnly=e,s._setWritePermissions(),s},roundingMethod:function(e){return s.update({roundingMethod:e}),s},saveValueToSessionStorage:function(e){return s.update({saveValueToSessionStorage:e}),s},symbolWhenUnfocused:function(e){return s.update({symbolWhenUnfocused:e}),s},selectNumberOnly:function(e){return s.settings.selectNumberOnly=e,s},selectOnFocus:function(e){return s.settings.selectOnFocus=e,s},serializeSpaces:function(e){return s.settings.serializeSpaces=e,s},showOnlyNumbersOnFocus:function(e){return s.update({showOnlyNumbersOnFocus:e}),s},showPositiveSign:function(e){return s.update({showPositiveSign:e}),s},showWarnings:function(e){return s.settings.showWarnings=e,s},styleRules:function(e){return s.update({styleRules:e}),s},suffixText:function(e){return s.update({suffixText:e}),s},unformatOnHover:function(e){return s.settings.unformatOnHover=e,s},unformatOnSubmit:function(e){return s.settings.unformatOnSubmit=e,s},valuesToStrings:function(e){return s.update({valuesToStrings:e}),s},watchExternalChanges:function(e){return s.update({watchExternalChanges:e}),s},wheelOn:function(e){return s.settings.wheelOn=e,s},wheelStep:function(e){return s.settings.wheelStep=e,s}},this._triggerEvent(I.events.initialized,this.domElement,{newValue:D.getElementValue(this.domElement),newRawValue:this.rawValue,error:null,aNElement:this})}return t=[{key:"version",value:function(){return"4.5.9"}},{key:"_setArgumentsValues",value:function(e,t,i){D.isNull(e)&&D.throwError("At least one valid parameter is needed in order to initialize an AutoNumeric object");var n,a,r,s=D.isElement(e),o=D.isString(e),l=D.isObject(t),c=Array.isArray(t)&&0<t.length,u=D.isNumberOrArabic(t)||""===t,h=this._isPreDefinedOptionValid(t),m=D.isNull(t),g=D.isEmptyString(t),d=D.isObject(i),v=Array.isArray(i)&&0<i.length,p=D.isNull(i),f=this._isPreDefinedOptionValid(i);return s&&m&&p?(n=e,a=r=null):s&&u&&p?(n=e,r=t,a=null):s&&l&&p?(n=e,r=null,a=t):s&&h&&p?(n=e,r=null,a=this._getOptionObject(t)):s&&c&&p?(n=e,r=null,a=this.mergeOptions(t)):s&&(m||g)&&d?(n=e,r=null,a=i):s&&(m||g)&&v?(n=e,r=null,a=this.mergeOptions(i)):o&&m&&p?(n=document.querySelector(e),a=r=null):o&&l&&p?(n=document.querySelector(e),r=null,a=t):o&&h&&p?(n=document.querySelector(e),r=null,a=this._getOptionObject(t)):o&&c&&p?(n=document.querySelector(e),r=null,a=this.mergeOptions(t)):o&&(m||g)&&d?(n=document.querySelector(e),r=null,a=i):o&&(m||g)&&v?(n=document.querySelector(e),r=null,a=this.mergeOptions(i)):o&&u&&p?(n=document.querySelector(e),r=t,a=null):o&&u&&d?(n=document.querySelector(e),r=t,a=i):o&&u&&f?(n=document.querySelector(e),r=t,a=this._getOptionObject(i)):o&&u&&v?(n=document.querySelector(e),r=t,a=this.mergeOptions(i)):s&&u&&d?(n=e,r=t,a=i):s&&u&&f?(n=e,r=t,a=this._getOptionObject(i)):s&&u&&v?(n=e,r=t,a=this.mergeOptions(i)):D.throwError("The parameters given to the AutoNumeric object are not valid, '".concat(e,"', '").concat(t,"' and '").concat(i,"' given.")),D.isNull(n)&&D.throwError("The selector '".concat(e,"' did not select any valid DOM element. Please check on which element you called AutoNumeric.")),{domElement:n,initialValue:r,userOptions:a}}},{key:"mergeOptions",value:function(e){var t=this,i={};return e.forEach(function(e){y(i,t._getOptionObject(e))}),i}},{key:"_isPreDefinedOptionValid",value:function(e){return Object.prototype.hasOwnProperty.call(I.predefinedOptions,e)}},{key:"_getOptionObject",value:function(e){var t;return D.isString(e)?null==(t=I.getPredefinedOptions()[e])&&D.warning("The given pre-defined option [".concat(e,"] is not recognized by autoNumeric. Please check that pre-defined option name."),!0):t=e,t}},{key:"_doesFormHandlerListExists",value:function(){var e=b(window.aNFormHandlerMap);return"undefined"!==e&&"object"===e}},{key:"_createFormHandlerList",value:function(){window.aNFormHandlerMap=new Map}},{key:"_checkValuesToStringsArray",value:function(e,t){return D.isInArray(String(e),t)}},{key:"_checkValuesToStringsSettings",value:function(e,t){return this._checkValuesToStringsArray(e,Object.keys(t.valuesToStrings))}},{key:"_checkStringsToValuesSettings",value:function(e,t){return this._checkValuesToStringsArray(e,Object.values(t.valuesToStrings))}},{key:"_unformatAltHovered",value:function(e){e.hoveredWithAlt=!0,e.unformat()}},{key:"_reformatAltHovered",value:function(e){e.hoveredWithAlt=!1,e.reformat()}},{key:"_getChildANInputElement",value:function(e){var t=this,i=e.getElementsByTagName("input"),n=[];return Array.prototype.slice.call(i,0).forEach(function(e){t.test(e)&&n.push(e)}),n}},{key:"test",value:function(e){return this._isInGlobalList(D.domElement(e))}},{key:"_createWeakMap",value:function(e){window[e]=new WeakMap}},{key:"_createGlobalList",value:function(){this.autoNumericGlobalListName="autoNumericGlobalList",this._createWeakMap(this.autoNumericGlobalListName)}},{key:"_doesGlobalListExists",value:function(){var e=b(window[this.autoNumericGlobalListName]);return"undefined"!==e&&"object"===e}},{key:"_addToGlobalList",value:function(e){this._doesGlobalListExists()||this._createGlobalList();var t=e.node();if(this._isInGlobalList(t)){if(this._getFromGlobalList(t)===this)return;D.warning("A reference to the DOM element you just initialized already exists in the global AutoNumeric element list. Please make sure to not initialize the same DOM element multiple times.",e.getSettings().showWarnings)}window[this.autoNumericGlobalListName].set(t,e)}},{key:"_removeFromGlobalList",value:function(e){this._doesGlobalListExists()&&window[this.autoNumericGlobalListName].delete(e.node())}},{key:"_getFromGlobalList",value:function(e){return this._doesGlobalListExists()?window[this.autoNumericGlobalListName].get(e):null}},{key:"_isInGlobalList",value:function(e){return!!this._doesGlobalListExists()&&window[this.autoNumericGlobalListName].has(e)}},{key:"validate",value:function(e,t,i){var n=!(1<arguments.length&&void 0!==t)||t,a=2<arguments.length&&void 0!==i?i:null;!D.isUndefinedOrNullOrEmpty(e)&&D.isObject(e)||D.throwError("The userOptions are invalid ; it should be a valid object, [".concat(e,"] given."));var r,s=D.isObject(a);s||D.isNull(a)||D.throwError("The 'originalOptions' parameter is invalid ; it should either be a valid option object or `null`, [".concat(e,"] given.")),D.isNull(e)||this._convertOldOptionsToNewOnes(e),r=n?y({},this.getDefaultConfig(),e):e,D.isTrueOrFalseString(r.showWarnings)||D.isBoolean(r.showWarnings)||D.throwError("The debug option 'showWarnings' is invalid ; it should be either 'true' or 'false', [".concat(r.showWarnings,"] given."));var o,l=/^[0-9]+$/,c=/[0-9]+/,u=/^-?[0-9]+(\.?[0-9]+)?$/,h=/^[0-9]+(\.?[0-9]+)?$/;D.isTrueOrFalseString(r.allowDecimalPadding)||D.isBoolean(r.allowDecimalPadding)||r.allowDecimalPadding===I.options.allowDecimalPadding.floats||D.throwError("The decimal padding option 'allowDecimalPadding' is invalid ; it should either be `false`, `true` or `'floats'`, [".concat(r.allowDecimalPadding,"] given.")),r.allowDecimalPadding!==I.options.allowDecimalPadding.never&&"false"!==r.allowDecimalPadding||r.decimalPlaces===I.options.decimalPlaces.none&&r.decimalPlacesShownOnBlur===I.options.decimalPlacesShownOnBlur.none&&r.decimalPlacesShownOnFocus===I.options.decimalPlacesShownOnFocus.none||D.warning("Setting 'allowDecimalPadding' to [".concat(r.allowDecimalPadding,"] will override the current 'decimalPlaces*' settings [").concat(r.decimalPlaces,", ").concat(r.decimalPlacesShownOnBlur," and ").concat(r.decimalPlacesShownOnFocus,"]."),r.showWarnings),D.isTrueOrFalseString(r.alwaysAllowDecimalCharacter)||D.isBoolean(r.alwaysAllowDecimalCharacter)||D.throwError("The option 'alwaysAllowDecimalCharacter' is invalid ; it should either be `true` or `false`, [".concat(r.alwaysAllowDecimalCharacter,"] given.")),D.isNull(r.caretPositionOnFocus)||D.isInArray(r.caretPositionOnFocus,[I.options.caretPositionOnFocus.start,I.options.caretPositionOnFocus.end,I.options.caretPositionOnFocus.decimalLeft,I.options.caretPositionOnFocus.decimalRight])||D.throwError("The display on empty string option 'caretPositionOnFocus' is invalid ; it should either be `null`, 'focus', 'press', 'always' or 'zero', [".concat(r.caretPositionOnFocus,"] given.")),o=s?a:this._correctCaretPositionOnFocusAndSelectOnFocusOptions(e),D.isNull(o)||o.caretPositionOnFocus===I.options.caretPositionOnFocus.doNoForceCaretPosition||o.selectOnFocus!==I.options.selectOnFocus.select||D.warning("The 'selectOnFocus' option is set to 'select', which is in conflict with the 'caretPositionOnFocus' which is set to '".concat(o.caretPositionOnFocus,"'. As a result, if this has been called when instantiating an AutoNumeric object, the 'selectOnFocus' option is forced to 'doNotSelect'."),r.showWarnings),D.isInArray(r.digitGroupSeparator,[I.options.digitGroupSeparator.comma,I.options.digitGroupSeparator.dot,I.options.digitGroupSeparator.normalSpace,I.options.digitGroupSeparator.thinSpace,I.options.digitGroupSeparator.narrowNoBreakSpace,I.options.digitGroupSeparator.noBreakSpace,I.options.digitGroupSeparator.noSeparator,I.options.digitGroupSeparator.apostrophe,I.options.digitGroupSeparator.arabicThousandsSeparator,I.options.digitGroupSeparator.dotAbove,I.options.digitGroupSeparator.privateUseTwo])||D.throwError("The thousand separator character option 'digitGroupSeparator' is invalid ; it should be ',', '.', '٬', '˙', \"'\", '', ' ', ' ', ' ', ' ' or empty (''), [".concat(r.digitGroupSeparator,"] given.")),D.isTrueOrFalseString(r.showOnlyNumbersOnFocus)||D.isBoolean(r.showOnlyNumbersOnFocus)||D.throwError("The 'showOnlyNumbersOnFocus' option is invalid ; it should be either 'true' or 'false', [".concat(r.showOnlyNumbersOnFocus,"] given.")),D.isInArray(r.digitalGroupSpacing,[I.options.digitalGroupSpacing.two,I.options.digitalGroupSpacing.twoScaled,I.options.digitalGroupSpacing.three,I.options.digitalGroupSpacing.four])||2<=r.digitalGroupSpacing&&r.digitalGroupSpacing<=4||D.throwError("The grouping separator option for thousands 'digitalGroupSpacing' is invalid ; it should be '2', '2s', '3', or '4', [".concat(r.digitalGroupSpacing,"] given.")),D.isInArray(r.decimalCharacter,[I.options.decimalCharacter.comma,I.options.decimalCharacter.dot,I.options.decimalCharacter.middleDot,I.options.decimalCharacter.arabicDecimalSeparator,I.options.decimalCharacter.decimalSeparatorKeySymbol])||D.throwError("The decimal separator character option 'decimalCharacter' is invalid ; it should be '.', ',', '·', '⎖' or '٫', [".concat(r.decimalCharacter,"] given.")),r.decimalCharacter===r.digitGroupSeparator&&D.throwError("autoNumeric will not function properly when the decimal character 'decimalCharacter' [".concat(r.decimalCharacter,"] and the thousand separator 'digitGroupSeparator' [").concat(r.digitGroupSeparator,"] are the same character.")),D.isNull(r.decimalCharacterAlternative)||D.isString(r.decimalCharacterAlternative)||D.throwError("The alternate decimal separator character option 'decimalCharacterAlternative' is invalid ; it should be a string, [".concat(r.decimalCharacterAlternative,"] given.")),""===r.currencySymbol||D.isString(r.currencySymbol)||D.throwError("The currency symbol option 'currencySymbol' is invalid ; it should be a string, [".concat(r.currencySymbol,"] given.")),D.isInArray(r.currencySymbolPlacement,[I.options.currencySymbolPlacement.prefix,I.options.currencySymbolPlacement.suffix])||D.throwError("The placement of the currency sign option 'currencySymbolPlacement' is invalid ; it should either be 'p' (prefix) or 's' (suffix), [".concat(r.currencySymbolPlacement,"] given.")),D.isInArray(r.negativePositiveSignPlacement,[I.options.negativePositiveSignPlacement.prefix,I.options.negativePositiveSignPlacement.suffix,I.options.negativePositiveSignPlacement.left,I.options.negativePositiveSignPlacement.right,I.options.negativePositiveSignPlacement.none])||D.throwError("The placement of the negative sign option 'negativePositiveSignPlacement' is invalid ; it should either be 'p' (prefix), 's' (suffix), 'l' (left), 'r' (right) or 'null', [".concat(r.negativePositiveSignPlacement,"] given.")),D.isTrueOrFalseString(r.showPositiveSign)||D.isBoolean(r.showPositiveSign)||D.throwError("The show positive sign option 'showPositiveSign' is invalid ; it should be either 'true' or 'false', [".concat(r.showPositiveSign,"] given.")),D.isString(r.suffixText)&&(""===r.suffixText||!D.isNegative(r.suffixText,r.negativeSignCharacter)&&!c.test(r.suffixText))||D.throwError("The additional suffix option 'suffixText' is invalid ; it should not contains the negative sign '".concat(r.negativeSignCharacter,"' nor any numerical characters, [").concat(r.suffixText,"] given.")),D.isString(r.negativeSignCharacter)&&1===r.negativeSignCharacter.length&&!D.isUndefinedOrNullOrEmpty(r.negativeSignCharacter)&&!c.test(r.negativeSignCharacter)||D.throwError("The negative sign character option 'negativeSignCharacter' is invalid ; it should be a single character, and cannot be any numerical characters, [".concat(r.negativeSignCharacter,"] given.")),D.isString(r.positiveSignCharacter)&&1===r.positiveSignCharacter.length&&!D.isUndefinedOrNullOrEmpty(r.positiveSignCharacter)&&!c.test(r.positiveSignCharacter)||D.throwError("The positive sign character option 'positiveSignCharacter' is invalid ; it should be a single character, and cannot be any numerical characters, [".concat(r.positiveSignCharacter,"] given.\nIf you want to hide the positive sign character, you need to set the `showPositiveSign` option to `true`.")),r.negativeSignCharacter===r.positiveSignCharacter&&D.throwError("The positive 'positiveSignCharacter' and negative 'negativeSignCharacter' sign characters cannot be identical ; [".concat(r.negativeSignCharacter,"] given."));var m=S(D.isNull(r.negativeBracketsTypeOnBlur)?["",""]:r.negativeBracketsTypeOnBlur.split(","),2),g=m[0],d=m[1];if((D.contains(r.digitGroupSeparator,r.negativeSignCharacter)||D.contains(r.decimalCharacter,r.negativeSignCharacter)||D.contains(r.decimalCharacterAlternative,r.negativeSignCharacter)||D.contains(g,r.negativeSignCharacter)||D.contains(d,r.negativeSignCharacter)||D.contains(r.suffixText,r.negativeSignCharacter))&&D.throwError("The negative sign character option 'negativeSignCharacter' is invalid ; it should not be equal or a part of the digit separator, the decimal character, the decimal character alternative, the negative brackets or the suffix text, [".concat(r.negativeSignCharacter,"] given.")),(D.contains(r.digitGroupSeparator,r.positiveSignCharacter)||D.contains(r.decimalCharacter,r.positiveSignCharacter)||D.contains(r.decimalCharacterAlternative,r.positiveSignCharacter)||D.contains(g,r.positiveSignCharacter)||D.contains(d,r.positiveSignCharacter)||D.contains(r.suffixText,r.positiveSignCharacter))&&D.throwError("The positive sign character option 'positiveSignCharacter' is invalid ; it should not be equal or a part of the digit separator, the decimal character, the decimal character alternative, the negative brackets or the suffix text, [".concat(r.positiveSignCharacter,"] given.")),D.isNull(r.overrideMinMaxLimits)||D.isInArray(r.overrideMinMaxLimits,[I.options.overrideMinMaxLimits.ceiling,I.options.overrideMinMaxLimits.floor,I.options.overrideMinMaxLimits.ignore])||D.throwError("The override min & max limits option 'overrideMinMaxLimits' is invalid ; it should either be 'ceiling', 'floor' or 'ignore', [".concat(r.overrideMinMaxLimits,"] given.")),D.isString(r.maximumValue)&&u.test(r.maximumValue)||D.throwError("The maximum possible value option 'maximumValue' is invalid ; it should be a string that represents a positive or negative number, [".concat(r.maximumValue,"] given.")),D.isString(r.minimumValue)&&u.test(r.minimumValue)||D.throwError("The minimum possible value option 'minimumValue' is invalid ; it should be a string that represents a positive or negative number, [".concat(r.minimumValue,"] given.")),parseFloat(r.minimumValue)>parseFloat(r.maximumValue)&&D.throwError("The minimum possible value option is greater than the maximum possible value option ; 'minimumValue' [".concat(r.minimumValue,"] should be smaller than 'maximumValue' [").concat(r.maximumValue,"].")),D.isInt(r.decimalPlaces)&&0<=r.decimalPlaces||D.isString(r.decimalPlaces)&&l.test(r.decimalPlaces)||D.throwError("The number of decimal places option 'decimalPlaces' is invalid ; it should be a positive integer, [".concat(r.decimalPlaces,"] given.")),D.isNull(r.decimalPlacesRawValue)||D.isInt(r.decimalPlacesRawValue)&&0<=r.decimalPlacesRawValue||D.isString(r.decimalPlacesRawValue)&&l.test(r.decimalPlacesRawValue)||D.throwError("The number of decimal places for the raw value option 'decimalPlacesRawValue' is invalid ; it should be a positive integer or `null`, [".concat(r.decimalPlacesRawValue,"] given.")),this._validateDecimalPlacesRawValue(r),D.isNull(r.decimalPlacesShownOnFocus)||l.test(String(r.decimalPlacesShownOnFocus))||D.throwError("The number of expanded decimal places option 'decimalPlacesShownOnFocus' is invalid ; it should be a positive integer or `null`, [".concat(r.decimalPlacesShownOnFocus,"] given.")),!D.isNull(r.decimalPlacesShownOnFocus)&&Number(r.decimalPlaces)>Number(r.decimalPlacesShownOnFocus)&&D.warning("The extended decimal places 'decimalPlacesShownOnFocus' [".concat(r.decimalPlacesShownOnFocus,"] should be greater than the 'decimalPlaces' [").concat(r.decimalPlaces,"] value. Currently, this will limit the ability of your user to manually change some of the decimal places. Do you really want to do that?"),r.showWarnings),(D.isNull(r.divisorWhenUnfocused)||h.test(r.divisorWhenUnfocused))&&0!==r.divisorWhenUnfocused&&"0"!==r.divisorWhenUnfocused&&1!==r.divisorWhenUnfocused&&"1"!==r.divisorWhenUnfocused||D.throwError("The divisor option 'divisorWhenUnfocused' is invalid ; it should be a positive number higher than one, preferably an integer, [".concat(r.divisorWhenUnfocused,"] given.")),D.isNull(r.decimalPlacesShownOnBlur)||l.test(r.decimalPlacesShownOnBlur)||D.throwError("The number of decimals shown when unfocused option 'decimalPlacesShownOnBlur' is invalid ; it should be a positive integer or `null`, [".concat(r.decimalPlacesShownOnBlur,"] given.")),D.isNull(r.symbolWhenUnfocused)||D.isString(r.symbolWhenUnfocused)||D.throwError("The symbol to show when unfocused option 'symbolWhenUnfocused' is invalid ; it should be a string, [".concat(r.symbolWhenUnfocused,"] given.")),D.isTrueOrFalseString(r.saveValueToSessionStorage)||D.isBoolean(r.saveValueToSessionStorage)||D.throwError("The save to session storage option 'saveValueToSessionStorage' is invalid ; it should be either 'true' or 'false', [".concat(r.saveValueToSessionStorage,"] given.")),D.isInArray(r.onInvalidPaste,[I.options.onInvalidPaste.error,I.options.onInvalidPaste.ignore,I.options.onInvalidPaste.clamp,I.options.onInvalidPaste.truncate,I.options.onInvalidPaste.replace])||D.throwError("The paste behavior option 'onInvalidPaste' is invalid ; it should either be 'error', 'ignore', 'clamp', 'truncate' or 'replace' (cf. documentation), [".concat(r.onInvalidPaste,"] given.")),D.isInArray(r.roundingMethod,[I.options.roundingMethod.halfUpSymmetric,I.options.roundingMethod.halfUpAsymmetric,I.options.roundingMethod.halfDownSymmetric,I.options.roundingMethod.halfDownAsymmetric,I.options.roundingMethod.halfEvenBankersRounding,I.options.roundingMethod.upRoundAwayFromZero,I.options.roundingMethod.downRoundTowardZero,I.options.roundingMethod.toCeilingTowardPositiveInfinity,I.options.roundingMethod.toFloorTowardNegativeInfinity,I.options.roundingMethod.toNearest05,I.options.roundingMethod.toNearest05Alt,I.options.roundingMethod.upToNext05,I.options.roundingMethod.downToNext05])||D.throwError("The rounding method option 'roundingMethod' is invalid ; it should either be 'S', 'A', 's', 'a', 'B', 'U', 'D', 'C', 'F', 'N05', 'CHF', 'U05' or 'D05' (cf. documentation), [".concat(r.roundingMethod,"] given.")),D.isNull(r.negativeBracketsTypeOnBlur)||D.isInArray(r.negativeBracketsTypeOnBlur,[I.options.negativeBracketsTypeOnBlur.parentheses,I.options.negativeBracketsTypeOnBlur.brackets,I.options.negativeBracketsTypeOnBlur.chevrons,I.options.negativeBracketsTypeOnBlur.curlyBraces,I.options.negativeBracketsTypeOnBlur.angleBrackets,I.options.negativeBracketsTypeOnBlur.japaneseQuotationMarks,I.options.negativeBracketsTypeOnBlur.halfBrackets,I.options.negativeBracketsTypeOnBlur.whiteSquareBrackets,I.options.negativeBracketsTypeOnBlur.quotationMarks,I.options.negativeBracketsTypeOnBlur.guillemets])||D.throwError("The brackets for negative values option 'negativeBracketsTypeOnBlur' is invalid ; it should either be '(,)', '[,]', '<,>', '{,}', '〈,〉', '｢,｣', '⸤,⸥', '⟦,⟧', '‹,›' or '«,»', [".concat(r.negativeBracketsTypeOnBlur,"] given.")),(D.isString(r.emptyInputBehavior)||D.isNumber(r.emptyInputBehavior))&&(D.isInArray(r.emptyInputBehavior,[I.options.emptyInputBehavior.focus,I.options.emptyInputBehavior.press,I.options.emptyInputBehavior.always,I.options.emptyInputBehavior.min,I.options.emptyInputBehavior.max,I.options.emptyInputBehavior.zero,I.options.emptyInputBehavior.null])||u.test(r.emptyInputBehavior))||D.throwError("The display on empty string option 'emptyInputBehavior' is invalid ; it should either be 'focus', 'press', 'always', 'min', 'max', 'zero', 'null', a number, or a string that represents a number, [".concat(r.emptyInputBehavior,"] given.")),r.emptyInputBehavior===I.options.emptyInputBehavior.zero&&(0<r.minimumValue||r.maximumValue<0)&&D.throwError("The 'emptyInputBehavior' option is set to 'zero', but this value is outside of the range defined by 'minimumValue' and 'maximumValue' [".concat(r.minimumValue,", ").concat(r.maximumValue,"].")),u.test(String(r.emptyInputBehavior))){var v=S(this._checkIfInRangeWithOverrideOption(r.emptyInputBehavior,r),2),p=v[0],f=v[1];p&&f||D.throwError("The 'emptyInputBehavior' option is set to a number or a string that represents a number, but its value [".concat(r.emptyInputBehavior,"] is outside of the range defined by the 'minimumValue' and 'maximumValue' options [").concat(r.minimumValue,", ").concat(r.maximumValue,"]."))}D.isTrueOrFalseString(r.eventBubbles)||D.isBoolean(r.eventBubbles)||D.throwError("The event bubbles option 'eventBubbles' is invalid ; it should be either 'true' or 'false', [".concat(r.eventBubbles,"] given.")),D.isTrueOrFalseString(r.eventIsCancelable)||D.isBoolean(r.eventIsCancelable)||D.throwError("The event is cancelable option 'eventIsCancelable' is invalid ; it should be either 'true' or 'false', [".concat(r.eventIsCancelable,"] given.")),D.isInArray(r.leadingZero,[I.options.leadingZero.allow,I.options.leadingZero.deny,I.options.leadingZero.keep])||D.throwError("The leading zero behavior option 'leadingZero' is invalid ; it should either be 'allow', 'deny' or 'keep', [".concat(r.leadingZero,"] given.")),D.isTrueOrFalseString(r.formatOnPageLoad)||D.isBoolean(r.formatOnPageLoad)||D.throwError("The format on initialization option 'formatOnPageLoad' is invalid ; it should be either 'true' or 'false', [".concat(r.formatOnPageLoad,"] given.")),D.isTrueOrFalseString(r.formulaMode)||D.isBoolean(r.formulaMode)||D.throwError("The formula mode option 'formulaMode' is invalid ; it should be either 'true' or 'false', [".concat(r.formulaMode,"] given.")),l.test(r.historySize)&&0!==r.historySize||D.throwError("The history size option 'historySize' is invalid ; it should be a positive integer, [".concat(r.historySize,"] given.")),D.isTrueOrFalseString(r.selectNumberOnly)||D.isBoolean(r.selectNumberOnly)||D.throwError("The select number only option 'selectNumberOnly' is invalid ; it should be either 'true' or 'false', [".concat(r.selectNumberOnly,"] given.")),D.isTrueOrFalseString(r.selectOnFocus)||D.isBoolean(r.selectOnFocus)||D.throwError("The select on focus option 'selectOnFocus' is invalid ; it should be either 'true' or 'false', [".concat(r.selectOnFocus,"] given.")),D.isNull(r.defaultValueOverride)||""===r.defaultValueOverride||u.test(r.defaultValueOverride)||D.throwError("The unformatted default value option 'defaultValueOverride' is invalid ; it should be a string that represents a positive or negative number, [".concat(r.defaultValueOverride,"] given.")),D.isTrueOrFalseString(r.unformatOnSubmit)||D.isBoolean(r.unformatOnSubmit)||D.throwError("The remove formatting on submit option 'unformatOnSubmit' is invalid ; it should be either 'true' or 'false', [".concat(r.unformatOnSubmit,"] given.")),D.isNull(r.valuesToStrings)||D.isObject(r.valuesToStrings)||D.throwError("The option 'valuesToStrings' is invalid ; it should be an object, ideally with 'key -> value' entries, [".concat(r.valuesToStrings,"] given.")),D.isNull(r.outputFormat)||D.isInArray(r.outputFormat,[I.options.outputFormat.string,I.options.outputFormat.number,I.options.outputFormat.dot,I.options.outputFormat.negativeDot,I.options.outputFormat.comma,I.options.outputFormat.negativeComma,I.options.outputFormat.dotNegative,I.options.outputFormat.commaNegative])||D.throwError("The custom locale format option 'outputFormat' is invalid ; it should either be null, 'string', 'number', '.', '-.', ',', '-,', '.-' or ',-', [".concat(r.outputFormat,"] given.")),D.isTrueOrFalseString(r.isCancellable)||D.isBoolean(r.isCancellable)||D.throwError("The cancellable behavior option 'isCancellable' is invalid ; it should be either 'true' or 'false', [".concat(r.isCancellable,"] given.")),D.isTrueOrFalseString(r.modifyValueOnWheel)||D.isBoolean(r.modifyValueOnWheel)||D.throwError("The increment/decrement on mouse wheel option 'modifyValueOnWheel' is invalid ; it should be either 'true' or 'false', [".concat(r.modifyValueOnWheel,"] given.")),D.isTrueOrFalseString(r.watchExternalChanges)||D.isBoolean(r.watchExternalChanges)||D.throwError("The option 'watchExternalChanges' is invalid ; it should be either 'true' or 'false', [".concat(r.watchExternalChanges,"] given.")),D.isInArray(r.wheelOn,[I.options.wheelOn.focus,I.options.wheelOn.hover])||D.throwError("The wheel behavior option 'wheelOn' is invalid ; it should either be 'focus' or 'hover', [".concat(r.wheelOn,"] given.")),(D.isString(r.wheelStep)||D.isNumber(r.wheelStep))&&("progressive"===r.wheelStep||h.test(r.wheelStep))&&0!==Number(r.wheelStep)||D.throwError("The wheel step value option 'wheelStep' is invalid ; it should either be the string 'progressive', or a number or a string that represents a positive number (excluding zero), [".concat(r.wheelStep,"] given.")),D.isInArray(r.serializeSpaces,[I.options.serializeSpaces.plus,I.options.serializeSpaces.percent])||D.throwError("The space replacement character option 'serializeSpaces' is invalid ; it should either be '+' or '%20', [".concat(r.serializeSpaces,"] given.")),D.isTrueOrFalseString(r.noEventListeners)||D.isBoolean(r.noEventListeners)||D.throwError("The option 'noEventListeners' that prevent the creation of event listeners is invalid ; it should be either 'true' or 'false', [".concat(r.noEventListeners,"] given.")),D.isNull(r.styleRules)||D.isObject(r.styleRules)&&(Object.prototype.hasOwnProperty.call(r.styleRules,"positive")||Object.prototype.hasOwnProperty.call(r.styleRules,"negative")||Object.prototype.hasOwnProperty.call(r.styleRules,"ranges")||Object.prototype.hasOwnProperty.call(r.styleRules,"userDefined"))||D.throwError("The option 'styleRules' is invalid ; it should be a correctly structured object, with one or more 'positive', 'negative', 'ranges' or 'userDefined' attributes, [".concat(r.styleRules,"] given.")),D.isNull(r.styleRules)||!Object.prototype.hasOwnProperty.call(r.styleRules,"userDefined")||D.isNull(r.styleRules.userDefined)||r.styleRules.userDefined.forEach(function(e){Object.prototype.hasOwnProperty.call(e,"callback")&&!D.isFunction(e.callback)&&D.throwError("The callback defined in the `userDefined` attribute is not a function, ".concat(b(e.callback)," given."))}),(D.isNull(r.rawValueDivisor)||h.test(r.rawValueDivisor))&&0!==r.rawValueDivisor&&"0"!==r.rawValueDivisor&&1!==r.rawValueDivisor&&"1"!==r.rawValueDivisor||D.throwError("The raw value divisor option 'rawValueDivisor' is invalid ; it should be a positive number higher than one, preferably an integer, [".concat(r.rawValueDivisor,"] given.")),D.isTrueOrFalseString(r.readOnly)||D.isBoolean(r.readOnly)||D.throwError("The option 'readOnly' is invalid ; it should be either 'true' or 'false', [".concat(r.readOnly,"] given.")),D.isTrueOrFalseString(r.unformatOnHover)||D.isBoolean(r.unformatOnHover)||D.throwError("The option 'unformatOnHover' is invalid ; it should be either 'true' or 'false', [".concat(r.unformatOnHover,"] given.")),D.isTrueOrFalseString(r.failOnUnknownOption)||D.isBoolean(r.failOnUnknownOption)||D.throwError("The debug option 'failOnUnknownOption' is invalid ; it should be either 'true' or 'false', [".concat(r.failOnUnknownOption,"] given.")),D.isTrueOrFalseString(r.createLocalList)||D.isBoolean(r.createLocalList)||D.throwError("The debug option 'createLocalList' is invalid ; it should be either 'true' or 'false', [".concat(r.createLocalList,"] given."))}},{key:"_validateDecimalPlacesRawValue",value:function(e){D.isNull(e.decimalPlacesRawValue)||(e.decimalPlacesRawValue<e.decimalPlaces&&D.warning("The number of decimal places to store in the raw value [".concat(e.decimalPlacesRawValue,"] is lower than the ones to display [").concat(e.decimalPlaces,"]. This will likely confuse your users.\nTo solve that, you'd need to either set `decimalPlacesRawValue` to `null`, or set a number of decimal places for the raw value equal of bigger than `decimalPlaces`."),e.showWarnings),e.decimalPlacesRawValue<e.decimalPlacesShownOnFocus&&D.warning("The number of decimal places to store in the raw value [".concat(e.decimalPlacesRawValue,"] is lower than the ones shown on focus [").concat(e.decimalPlacesShownOnFocus,"]. This will likely confuse your users.\nTo solve that, you'd need to either set `decimalPlacesRawValue` to `null`, or set a number of decimal places for the raw value equal of bigger than `decimalPlacesShownOnFocus`."),e.showWarnings),e.decimalPlacesRawValue<e.decimalPlacesShownOnBlur&&D.warning("The number of decimal places to store in the raw value [".concat(e.decimalPlacesRawValue,"] is lower than the ones shown when unfocused [").concat(e.decimalPlacesShownOnBlur,"]. This will likely confuse your users.\nTo solve that, you'd need to either set `decimalPlacesRawValue` to `null`, or set a number of decimal places for the raw value equal of bigger than `decimalPlacesShownOnBlur`."),e.showWarnings))}},{key:"areSettingsValid",value:function(e){var t=!0;try{this.validate(e,!0)}catch(e){t=!1}return t}},{key:"getDefaultConfig",value:function(){return I.defaultSettings}},{key:"getPredefinedOptions",value:function(){return I.predefinedOptions}},{key:"_generateOptionsObjectFromOptionsArray",value:function(e){var t,i=this;return D.isUndefinedOrNullOrEmpty(e)||0===e.length?t=null:(t={},1===e.length&&Array.isArray(e[0])?e[0].forEach(function(e){y(t,i._getOptionObject(e))}):1<=e.length&&e.forEach(function(e){y(t,i._getOptionObject(e))})),t}},{key:"format",value:function(e){if(D.isUndefined(e)||null===e)return null;var t;t=D.isElement(e)?D.getElementValue(e):e,D.isString(t)||D.isNumber(t)||D.throwError('The value "'.concat(t,'" being "set" is not numeric and therefore cannot be used appropriately.'));for(var i=arguments.length,n=new Array(1<i?i-1:0),a=1;a<i;a++)n[a-1]=arguments[a];var r=this._generateOptionsObjectFromOptionsArray(n),s=y({},this.getDefaultConfig(),r);s.isNegativeSignAllowed=t<0,s.isPositiveSignAllowed=0<=t,this._setBrackets(s),this._cachesUsualRegularExpressions(s,{});var o=this._toNumericValue(t,s);isNaN(Number(o))&&D.throwError("The value [".concat(o,"] that you are trying to format is not a recognized number."));var l=S(this._checkIfInRangeWithOverrideOption(o,s),2),c=l[0],u=l[1];return c&&u||(D.triggerEvent(I.events.formatted,document,{oldValue:null,newValue:null,oldRawValue:null,newRawValue:null,isPristine:null,error:"Range test failed",aNElement:null},!0,!0),D.throwError("The value [".concat(o,"] being set falls outside of the minimumValue [").concat(s.minimumValue,"] and maximumValue [").concat(s.maximumValue,"] range set for this element"))),s.valuesToStrings&&this._checkValuesToStringsSettings(t,s)?s.valuesToStrings[t]:(this._correctNegativePositiveSignPlacementOption(s),this._calculateDecimalPlacesOnInit(s),D.isUndefinedOrNullOrEmpty(s.rawValueDivisor)||0===s.rawValueDivisor||""===o||null===o||(o*=s.rawValueDivisor),o=this._roundFormattedValueShownOnFocus(o,s),o=this._modifyNegativeSignAndDecimalCharacterForFormattedValue(o,s),o=this._addGroupSeparators(o,s,!1,o))}},{key:"formatAndSet",value:function(e,t){var i=1<arguments.length&&void 0!==t?t:null,n=this.format(e,i);return D.setElementValue(e,n),n}},{key:"unformat",value:function(e){if(D.isNumberStrict(e))return e;var t;if(""===(t=D.isElement(e)?D.getElementValue(e):e))return"";if(D.isUndefined(t)||null===t)return null;(D.isArray(t)||D.isObject(t))&&D.throwError("A number or a string representing a number is needed to be able to unformat it, [".concat(t,"] given."));for(var i=arguments.length,n=new Array(1<i?i-1:0),a=1;a<i;a++)n[a-1]=arguments[a];var r=this._generateOptionsObjectFromOptionsArray(n),s=y({},this.getDefaultConfig(),r);if(s.isNegativeSignAllowed=!1,s.isPositiveSignAllowed=!0,t=t.toString(),s.valuesToStrings&&this._checkStringsToValuesSettings(t,s))return D.objectKeyLookup(s.valuesToStrings,t);if(D.isNegative(t,s.negativeSignCharacter))s.isNegativeSignAllowed=!0,s.isPositiveSignAllowed=!1;else if(!D.isNull(s.negativeBracketsTypeOnBlur)){var o=S(s.negativeBracketsTypeOnBlur.split(","),2);s.firstBracket=o[0],s.lastBracket=o[1],t.charAt(0)===s.firstBracket&&t.charAt(t.length-1)===s.lastBracket&&(s.isNegativeSignAllowed=!0,s.isPositiveSignAllowed=!1,t=this._removeBrackets(t,s,!1))}return t=this._convertToNumericString(t,s),new RegExp("[^+-0123456789.]","gi").test(t)?NaN:(this._correctNegativePositiveSignPlacementOption(s),s.decimalPlacesRawValue?s.originalDecimalPlacesRawValue=s.decimalPlacesRawValue:s.originalDecimalPlacesRawValue=s.decimalPlaces,this._calculateDecimalPlacesOnInit(s),D.isUndefinedOrNullOrEmpty(s.rawValueDivisor)||0===s.rawValueDivisor||""===t||null===t||(t/=s.rawValueDivisor),t=(t=this._roundRawValue(t,s)).replace(s.decimalCharacter,"."),t=this._toLocale(t,s.outputFormat,s))}},{key:"unformatAndSet",value:function(e,t){var i=1<arguments.length&&void 0!==t?t:null,n=this.unformat(e,i);return D.setElementValue(e,n),n}},{key:"localize",value:function(e,t){var i,n,a=1<arguments.length&&void 0!==t?t:null;return""===(i=D.isElement(e)?D.getElementValue(e):e)?"":(D.isNull(a)&&(a=I.defaultSettings),i=this.unformat(i,a),0===Number(i)&&a.leadingZero!==I.options.leadingZero.keep&&(i="0"),n=D.isNull(a)?a.outputFormat:I.defaultSettings.outputFormat,this._toLocale(i,n,a))}},{key:"localizeAndSet",value:function(e,t){var i=1<arguments.length&&void 0!==t?t:null,n=this.localize(e,i);return D.setElementValue(e,n),n}},{key:"isManagedByAutoNumeric",value:function(e){return this._isInGlobalList(D.domElement(e))}},{key:"getAutoNumericElement",value:function(e){var t=D.domElement(e);return this.isManagedByAutoNumeric(t)?this._getFromGlobalList(t):null}},{key:"set",value:function(e,t,i,n){var a,r=2<arguments.length&&void 0!==i?i:null,s=!(3<arguments.length&&void 0!==n)||n,o=D.domElement(e);return this.isManagedByAutoNumeric(o)?this.getAutoNumericElement(o).set(t,r,s):(a=!(!D.isNull(r)&&Object.prototype.hasOwnProperty.call(r,"showWarnings"))||r.showWarnings,D.warning("Impossible to find an AutoNumeric object for the given DOM element or selector.",a),null)}},{key:"getNumericString",value:function(e,t){var i=1<arguments.length&&void 0!==t?t:null;return this._get(e,"getNumericString",i)}},{key:"getFormatted",value:function(e,t){var i=1<arguments.length&&void 0!==t?t:null;return this._get(e,"getFormatted",i)}},{key:"getNumber",value:function(e,t){var i=1<arguments.length&&void 0!==t?t:null;return this._get(e,"getNumber",i)}},{key:"_get",value:function(e,t,i){var n=2<arguments.length&&void 0!==i?i:null,a=D.domElement(e);return this.isManagedByAutoNumeric(a)||D.throwError("Impossible to find an AutoNumeric object for the given DOM element or selector."),this.getAutoNumericElement(a)[t](n)}},{key:"getLocalized",value:function(e,t,i){var n=1<arguments.length&&void 0!==t?t:null,a=2<arguments.length&&void 0!==i?i:null,r=D.domElement(e);return this.isManagedByAutoNumeric(r)||D.throwError("Impossible to find an AutoNumeric object for the given DOM element or selector."),this.getAutoNumericElement(r).getLocalized(n,a)}},{key:"_stripAllNonNumberCharacters",value:function(e,t,i,n){return this._stripAllNonNumberCharactersExceptCustomDecimalChar(e,t,i,n).replace(t.decimalCharacter,".")}},{key:"_stripAllNonNumberCharactersExceptCustomDecimalChar",value:function(e,t,i,n){var a=(e=(e=this._normalizeCurrencySuffixAndNegativeSignCharacters(e,t)).replace(t.allowedAutoStrip,"")).match(t.numRegAutoStrip);if(e=a?[a[1],a[2],a[3]].join(""):"",t.leadingZero===I.options.leadingZero.allow||t.leadingZero===I.options.leadingZero.keep){var r="",s=S(e.split(t.decimalCharacter),2),o=s[0],l=s[1],c=o;D.contains(c,t.negativeSignCharacter)&&(r=t.negativeSignCharacter,c=c.replace(t.negativeSignCharacter,"")),""===r&&c.length>t.mIntPos&&"0"===c.charAt(0)&&(c=c.slice(1)),""!==r&&c.length>t.mIntNeg&&"0"===c.charAt(0)&&(c=c.slice(1)),e="".concat(r).concat(c).concat(D.isUndefined(l)?"":t.decimalCharacter+l)}return(i&&t.leadingZero===I.options.leadingZero.deny||!n&&t.leadingZero===I.options.leadingZero.allow)&&(e=e.replace(t.stripReg,"$1$2")),e}},{key:"_toggleNegativeBracket",value:function(e,t,i){return i?this._removeBrackets(e,t):this._addBrackets(e,t)}},{key:"_addBrackets",value:function(e,t){return D.isNull(t.negativeBracketsTypeOnBlur)?e:"".concat(t.firstBracket).concat(e.replace(t.negativeSignCharacter,"")).concat(t.lastBracket)}},{key:"_removeBrackets",value:function(e,t,i){var n,a=!(2<arguments.length&&void 0!==i)||i;return D.isNull(t.negativeBracketsTypeOnBlur)||e.charAt(0)!==t.firstBracket?e:(n=(n=e.replace(t.firstBracket,"")).replace(t.lastBracket,""),a?(n=n.replace(t.currencySymbol,""),this._mergeCurrencySignNegativePositiveSignAndValue(n,t,!0,!1)):"".concat(t.negativeSignCharacter).concat(n))}},{key:"_setBrackets",value:function(e){if(D.isNull(e.negativeBracketsTypeOnBlur))e.firstBracket="",e.lastBracket="";else{var t=S(e.negativeBracketsTypeOnBlur.split(","),2),i=t[0],n=t[1];e.firstBracket=i,e.lastBracket=n}}},{key:"_convertToNumericString",value:function(e,t){e=this._removeBrackets(e,t,!1),e=(e=this._normalizeCurrencySuffixAndNegativeSignCharacters(e,t)).replace(new RegExp("[".concat(t.digitGroupSeparator,"]"),"g"),""),"."!==t.decimalCharacter&&(e=e.replace(t.decimalCharacter,".")),D.isNegative(e)&&e.lastIndexOf("-")===e.length-1&&(e=e.replace("-",""),e="-".concat(e)),t.showPositiveSign&&(e=e.replace(t.positiveSignCharacter,""));var i=t.leadingZero!==I.options.leadingZero.keep,n=D.arabicToLatinNumbers(e,i,!1,!1);return isNaN(n)||(e=n.toString()),e}},{key:"_normalizeCurrencySuffixAndNegativeSignCharacters",value:function(e,t){return e=String(e),t.currencySymbol!==I.options.currencySymbol.none&&(e=e.replace(t.currencySymbol,"")),t.suffixText!==I.options.suffixText.none&&(e=e.replace(t.suffixText,"")),t.negativeSignCharacter!==I.options.negativeSignCharacter.hyphen&&(e=e.replace(t.negativeSignCharacter,"-")),e}},{key:"_toLocale",value:function(e,t,i){if(D.isNull(t)||t===I.options.outputFormat.string)return e;var n;switch(t){case I.options.outputFormat.number:n=Number(e);break;case I.options.outputFormat.dotNegative:n=D.isNegative(e)?e.replace("-","")+"-":e;break;case I.options.outputFormat.comma:case I.options.outputFormat.negativeComma:n=e.replace(".",",");break;case I.options.outputFormat.commaNegative:n=e.replace(".",","),n=D.isNegative(n)?n.replace("-","")+"-":n;break;case I.options.outputFormat.dot:case I.options.outputFormat.negativeDot:n=e;break;default:D.throwError("The given outputFormat [".concat(t,"] option is not recognized."))}return t!==I.options.outputFormat.number&&"-"!==i.negativeSignCharacter&&(n=n.replace("-",i.negativeSignCharacter)),n}},{key:"_modifyNegativeSignAndDecimalCharacterForFormattedValue",value:function(e,t){return"-"!==t.negativeSignCharacter&&(e=e.replace("-",t.negativeSignCharacter)),"."!==t.decimalCharacter&&(e=e.replace(".",t.decimalCharacter)),e}},{key:"_isElementValueEmptyOrOnlyTheNegativeSign",value:function(e,t){return""===e||e===t.negativeSignCharacter}},{key:"_orderValueCurrencySymbolAndSuffixText",value:function(e,t,i){var n;if(t.emptyInputBehavior===I.options.emptyInputBehavior.always||i)switch(t.negativePositiveSignPlacement){case I.options.negativePositiveSignPlacement.left:case I.options.negativePositiveSignPlacement.prefix:case I.options.negativePositiveSignPlacement.none:n=e+t.currencySymbol+t.suffixText;break;default:n=t.currencySymbol+e+t.suffixText}else n=e;return n}},{key:"_addGroupSeparators",value:function(e,t,i,n,a){var r,s=4<arguments.length&&void 0!==a?a:null;if(r=D.isNull(s)?D.isNegative(e,t.negativeSignCharacter)||D.isNegativeWithBrackets(e,t.firstBracket,t.lastBracket):s<0,e=this._stripAllNonNumberCharactersExceptCustomDecimalChar(e,t,!1,i),this._isElementValueEmptyOrOnlyTheNegativeSign(e,t))return this._orderValueCurrencySymbolAndSuffixText(e,t,!0);var o,l=D.isZeroOrHasNoValue(e);switch(r&&(e=e.replace("-","")),t.digitalGroupSpacing=t.digitalGroupSpacing.toString(),t.digitalGroupSpacing){case I.options.digitalGroupSpacing.two:o=/(\d)((\d)(\d{2}?)+)$/;break;case I.options.digitalGroupSpacing.twoScaled:o=/(\d)((?:\d{2}){0,2}\d{3}(?:(?:\d{2}){2}\d{3})*?)$/;break;case I.options.digitalGroupSpacing.four:o=/(\d)((\d{4}?)+)$/;break;case I.options.digitalGroupSpacing.three:default:o=/(\d)((\d{3}?)+)$/}var c,u=S(e.split(t.decimalCharacter),2),h=u[0],m=u[1];if(t.decimalCharacterAlternative&&D.isUndefined(m)){var g=S(e.split(t.decimalCharacterAlternative),2);h=g[0],m=g[1]}if(""!==t.digitGroupSeparator)for(;o.test(h);)h=h.replace(o,"$1".concat(t.digitGroupSeparator,"$2"));return e=0===(c=i?t.decimalPlacesShownOnFocus:t.decimalPlacesShownOnBlur)||D.isUndefined(m)?h:(m.length>c&&(m=m.substring(0,c)),"".concat(h).concat(t.decimalCharacter).concat(m)),e=I._mergeCurrencySignNegativePositiveSignAndValue(e,t,r,l),D.isNull(s)&&(s=n),null!==t.negativeBracketsTypeOnBlur&&(s<0||D.isNegativeStrict(e,t.negativeSignCharacter))&&(e=this._toggleNegativeBracket(e,t,i)),t.suffixText?"".concat(e).concat(t.suffixText):e}},{key:"_mergeCurrencySignNegativePositiveSignAndValue",value:function(e,t,i,n){var a,r="";if(i?r=t.negativeSignCharacter:t.showPositiveSign&&!n&&(r=t.positiveSignCharacter),t.currencySymbolPlacement===I.options.currencySymbolPlacement.prefix)if(t.negativePositiveSignPlacement!==I.options.negativePositiveSignPlacement.none&&(i||!i&&t.showPositiveSign&&!n))switch(t.negativePositiveSignPlacement){case I.options.negativePositiveSignPlacement.prefix:case I.options.negativePositiveSignPlacement.left:a="".concat(r).concat(t.currencySymbol).concat(e);break;case I.options.negativePositiveSignPlacement.right:a="".concat(t.currencySymbol).concat(r).concat(e);break;case I.options.negativePositiveSignPlacement.suffix:a="".concat(t.currencySymbol).concat(e).concat(r)}else a=t.currencySymbol+e;else if(t.currencySymbolPlacement===I.options.currencySymbolPlacement.suffix)if(t.negativePositiveSignPlacement!==I.options.negativePositiveSignPlacement.none&&(i||!i&&t.showPositiveSign&&!n))switch(t.negativePositiveSignPlacement){case I.options.negativePositiveSignPlacement.suffix:case I.options.negativePositiveSignPlacement.right:a="".concat(e).concat(t.currencySymbol).concat(r);break;case I.options.negativePositiveSignPlacement.left:a="".concat(e).concat(r).concat(t.currencySymbol);break;case I.options.negativePositiveSignPlacement.prefix:a="".concat(r).concat(e).concat(t.currencySymbol)}else a=e+t.currencySymbol;return a}},{key:"_truncateZeros",value:function(e,t){var i;switch(t){case 0:i=/(\.(?:\d*[1-9])?)0*$/;break;case 1:i=/(\.\d(?:\d*[1-9])?)0*$/;break;default:i=new RegExp("(\\.\\d{".concat(t,"}(?:\\d*[1-9])?)0*"))}return e=e.replace(i,"$1"),0===t&&(e=e.replace(/\.$/,"")),e}},{key:"_roundRawValue",value:function(e,t){return this._roundValue(e,t,t.decimalPlacesRawValue)}},{key:"_roundFormattedValueShownOnFocus",value:function(e,t){return this._roundValue(e,t,Number(t.decimalPlacesShownOnFocus))}},{key:"_roundFormattedValueShownOnBlur",value:function(e,t){return this._roundValue(e,t,Number(t.decimalPlacesShownOnBlur))}},{key:"_roundFormattedValueShownOnFocusOrBlur",value:function(e,t,i){return i?this._roundFormattedValueShownOnFocus(e,t):this._roundFormattedValueShownOnBlur(e,t)}},{key:"_roundValue",value:function(e,t,i){if(D.isNull(e))return e;if(e=""===e?"0":e.toString(),t.roundingMethod===I.options.roundingMethod.toNearest05||t.roundingMethod===I.options.roundingMethod.toNearest05Alt||t.roundingMethod===I.options.roundingMethod.upToNext05||t.roundingMethod===I.options.roundingMethod.downToNext05)return this._roundCloseTo05(e,t);var n,a=S(I._prepareValueForRounding(e,t),2),r=a[0],s=(e=a[1]).lastIndexOf("."),o=-1===s,l=S(e.split("."),2),c=l[0];if(!(0<l[1]||t.allowDecimalPadding!==I.options.allowDecimalPadding.never&&t.allowDecimalPadding!==I.options.allowDecimalPadding.floats))return 0===Number(e)?c:"".concat(r).concat(c);n=t.allowDecimalPadding===I.options.allowDecimalPadding.always||t.allowDecimalPadding===I.options.allowDecimalPadding.floats?i:0;var u,h=o?e.length-1:s,m=e.length-1-h,g="";if(m<=i){if(g=e,m<n){o&&(g="".concat(g).concat(t.decimalCharacter));for(var d="000000";m<n;)g+=d=d.substring(0,n-m),m+=d.length}else n<m?g=this._truncateZeros(g,n):0===m&&0===n&&(g=g.replace(/\.$/,""));return 0===Number(g)?g:"".concat(r).concat(g)}u=o?i-1:Number(i)+Number(s);var v,p=Number(e.charAt(u+1)),f=e.substring(0,u+1).split("");if(v="."===e.charAt(u)?e.charAt(u-1)%2:e.charAt(u)%2,this._shouldRoundUp(p,t,r,v))for(var y=f.length-1;0<=y;y-=1)if("."!==f[y]){if(f[y]=+f[y]+1,f[y]<10)break;0<y&&(f[y]="0")}return f=f.slice(0,u+1),g=this._truncateZeros(f.join(""),n),0===Number(g)?g:"".concat(r).concat(g)}},{key:"_roundCloseTo05",value:function(e,t){switch(t.roundingMethod){case I.options.roundingMethod.toNearest05:case I.options.roundingMethod.toNearest05Alt:e=(Math.round(20*e)/20).toString();break;case I.options.roundingMethod.upToNext05:e=(Math.ceil(20*e)/20).toString();break;default:e=(Math.floor(20*e)/20).toString()}return D.contains(e,".")?e.length-e.indexOf(".")<3?e+"0":e:e+".00"}},{key:"_prepareValueForRounding",value:function(e,t){var i="";return D.isNegativeStrict(e,"-")&&(i="-",e=e.replace("-","")),e.match(/^\d/)||(e="0".concat(e)),0===Number(e)&&(i=""),(0<Number(e)&&t.leadingZero!==I.options.leadingZero.keep||0<e.length&&t.leadingZero===I.options.leadingZero.allow)&&(e=e.replace(/^0*(\d)/,"$1")),[i,e]}},{key:"_shouldRoundUp",value:function(e,t,i,n){return 4<e&&t.roundingMethod===I.options.roundingMethod.halfUpSymmetric||4<e&&t.roundingMethod===I.options.roundingMethod.halfUpAsymmetric&&""===i||5<e&&t.roundingMethod===I.options.roundingMethod.halfUpAsymmetric&&"-"===i||5<e&&t.roundingMethod===I.options.roundingMethod.halfDownSymmetric||5<e&&t.roundingMethod===I.options.roundingMethod.halfDownAsymmetric&&""===i||4<e&&t.roundingMethod===I.options.roundingMethod.halfDownAsymmetric&&"-"===i||5<e&&t.roundingMethod===I.options.roundingMethod.halfEvenBankersRounding||5===e&&t.roundingMethod===I.options.roundingMethod.halfEvenBankersRounding&&1===n||0<e&&t.roundingMethod===I.options.roundingMethod.toCeilingTowardPositiveInfinity&&""===i||0<e&&t.roundingMethod===I.options.roundingMethod.toFloorTowardNegativeInfinity&&"-"===i||0<e&&t.roundingMethod===I.options.roundingMethod.upRoundAwayFromZero}},{key:"_truncateDecimalPlaces",value:function(e,t,i,n){i&&(e=this._roundFormattedValueShownOnFocus(e,t));var a=S(e.split(t.decimalCharacter),2),r=a[0],s=a[1];if(s&&s.length>n)if(0<n){var o=s.substring(0,n);e="".concat(r).concat(t.decimalCharacter).concat(o)}else e=r;return e}},{key:"_checkIfInRangeWithOverrideOption",value:function(e,t){if(D.isNull(e)&&t.emptyInputBehavior===I.options.emptyInputBehavior.null)return[!0,!0];e=(e=e.toString()).replace(",",".");var i,n=D.parseStr(t.minimumValue),a=D.parseStr(t.maximumValue),r=D.parseStr(e);switch(t.overrideMinMaxLimits){case I.options.overrideMinMaxLimits.floor:i=[-1<D.testMinMax(n,r),!0];break;case I.options.overrideMinMaxLimits.ceiling:i=[!0,D.testMinMax(a,r)<1];break;case I.options.overrideMinMaxLimits.ignore:i=[!0,!0];break;default:i=[-1<D.testMinMax(n,r),D.testMinMax(a,r)<1]}return i}},{key:"_readCookie",value:function(e){for(var t=e+"=",i=document.cookie.split(";"),n="",a=0;a<i.length;a+=1){for(n=i[a];" "===n.charAt(0);)n=n.substring(1,n.length);if(0===n.indexOf(t))return n.substring(t.length,n.length)}return null}},{key:"_storageTest",value:function(){var e="modernizr";try{return sessionStorage.setItem(e,e),sessionStorage.removeItem(e),!0}catch(e){return!1}}},{key:"_correctNegativePositiveSignPlacementOption",value:function(e){if(D.isNull(e.negativePositiveSignPlacement))if(D.isUndefined(e)||!D.isUndefinedOrNullOrEmpty(e.negativePositiveSignPlacement)||D.isUndefinedOrNullOrEmpty(e.currencySymbol))e.negativePositiveSignPlacement=I.options.negativePositiveSignPlacement.left;else switch(e.currencySymbolPlacement){case I.options.currencySymbolPlacement.suffix:e.negativePositiveSignPlacement=I.options.negativePositiveSignPlacement.prefix;break;case I.options.currencySymbolPlacement.prefix:e.negativePositiveSignPlacement=I.options.negativePositiveSignPlacement.left}}},{key:"_correctCaretPositionOnFocusAndSelectOnFocusOptions",value:function(e){return D.isNull(e)?null:(!D.isUndefinedOrNullOrEmpty(e.caretPositionOnFocus)&&D.isUndefinedOrNullOrEmpty(e.selectOnFocus)&&(e.selectOnFocus=I.options.selectOnFocus.doNotSelect),D.isUndefinedOrNullOrEmpty(e.caretPositionOnFocus)&&!D.isUndefinedOrNullOrEmpty(e.selectOnFocus)&&e.selectOnFocus===I.options.selectOnFocus.select&&(e.caretPositionOnFocus=I.options.caretPositionOnFocus.doNoForceCaretPosition),e)}},{key:"_calculateDecimalPlacesOnInit",value:function(e){this._validateDecimalPlacesRawValue(e),e.decimalPlacesShownOnFocus===I.options.decimalPlacesShownOnFocus.useDefault&&(e.decimalPlacesShownOnFocus=e.decimalPlaces),e.decimalPlacesShownOnBlur===I.options.decimalPlacesShownOnBlur.useDefault&&(e.decimalPlacesShownOnBlur=e.decimalPlaces),e.decimalPlacesRawValue===I.options.decimalPlacesRawValue.useDefault&&(e.decimalPlacesRawValue=e.decimalPlaces);var t=0;e.rawValueDivisor&&e.rawValueDivisor!==I.options.rawValueDivisor.none&&(t=String(e.rawValueDivisor).length-1)<0&&(t=0),e.decimalPlacesRawValue=Math.max(Math.max(e.decimalPlacesShownOnBlur,e.decimalPlacesShownOnFocus)+t,Number(e.originalDecimalPlacesRawValue)+t)}},{key:"_calculateDecimalPlacesOnUpdate",value:function(e,t){var i=1<arguments.length&&void 0!==t?t:null;this._validateDecimalPlacesRawValue(e),D.isNull(i)&&D.throwError("When updating the settings, the previous ones should be passed as an argument.");var n="decimalPlaces"in e;if(n||"decimalPlacesRawValue"in e||"decimalPlacesShownOnFocus"in e||"decimalPlacesShownOnBlur"in e||"rawValueDivisor"in e){n?("decimalPlacesShownOnFocus"in e&&e.decimalPlacesShownOnFocus!==I.options.decimalPlacesShownOnFocus.useDefault||(e.decimalPlacesShownOnFocus=e.decimalPlaces),"decimalPlacesShownOnBlur"in e&&e.decimalPlacesShownOnBlur!==I.options.decimalPlacesShownOnBlur.useDefault||(e.decimalPlacesShownOnBlur=e.decimalPlaces),"decimalPlacesRawValue"in e&&e.decimalPlacesRawValue!==I.options.decimalPlacesRawValue.useDefault||(e.decimalPlacesRawValue=e.decimalPlaces)):(D.isUndefined(e.decimalPlacesShownOnFocus)&&(e.decimalPlacesShownOnFocus=i.decimalPlacesShownOnFocus),D.isUndefined(e.decimalPlacesShownOnBlur)&&(e.decimalPlacesShownOnBlur=i.decimalPlacesShownOnBlur));var a=0;e.rawValueDivisor&&e.rawValueDivisor!==I.options.rawValueDivisor.none&&(a=String(e.rawValueDivisor).length-1)<0&&(a=0),e.decimalPlaces||e.decimalPlacesRawValue?e.decimalPlacesRawValue=Math.max(Math.max(e.decimalPlacesShownOnBlur,e.decimalPlacesShownOnFocus)+a,Number(e.decimalPlacesRawValue)+a):e.decimalPlacesRawValue=Math.max(Math.max(e.decimalPlacesShownOnBlur,e.decimalPlacesShownOnFocus)+a,Number(i.originalDecimalPlacesRawValue)+a)}}},{key:"_cachesUsualRegularExpressions",value:function(e,t){var i;i=e.negativeSignCharacter!==I.options.negativeSignCharacter.hyphen?"([-\\".concat(e.negativeSignCharacter,"]?)"):"(-?)",t.aNegRegAutoStrip=i,e.allowedAutoStrip=new RegExp("[^-0123456789\\".concat(e.decimalCharacter,"]"),"g"),e.numRegAutoStrip=new RegExp("".concat(i,"(?:\\").concat(e.decimalCharacter,"?([0-9]+\\").concat(e.decimalCharacter,"[0-9]+)|([0-9]*(?:\\").concat(e.decimalCharacter,"[0-9]*)?))")),e.stripReg=new RegExp("^".concat(t.aNegRegAutoStrip,"0*([0-9])")),e.formulaChars=new RegExp("[0-9".concat(e.decimalCharacter,"+\\-*/() ]"))}},{key:"_convertOldOptionsToNewOnes",value:function(e){var t={aSep:"digitGroupSeparator",nSep:"showOnlyNumbersOnFocus",dGroup:"digitalGroupSpacing",aDec:"decimalCharacter",altDec:"decimalCharacterAlternative",aSign:"currencySymbol",pSign:"currencySymbolPlacement",pNeg:"negativePositiveSignPlacement",aSuffix:"suffixText",oLimits:"overrideMinMaxLimits",vMax:"maximumValue",vMin:"minimumValue",mDec:"decimalPlacesOverride",eDec:"decimalPlacesShownOnFocus",scaleDecimal:"decimalPlacesShownOnBlur",aStor:"saveValueToSessionStorage",mRound:"roundingMethod",aPad:"allowDecimalPadding",nBracket:"negativeBracketsTypeOnBlur",wEmpty:"emptyInputBehavior",lZero:"leadingZero",aForm:"formatOnPageLoad",sNumber:"selectNumberOnly",anDefault:"defaultValueOverride",unSetOnSubmit:"unformatOnSubmit",outputType:"outputFormat",debug:"showWarnings",allowDecimalPadding:!0,alwaysAllowDecimalCharacter:!0,caretPositionOnFocus:!0,createLocalList:!0,currencySymbol:!0,currencySymbolPlacement:!0,decimalCharacter:!0,decimalCharacterAlternative:!0,decimalPlaces:!0,decimalPlacesRawValue:!0,decimalPlacesShownOnBlur:!0,decimalPlacesShownOnFocus:!0,defaultValueOverride:!0,digitalGroupSpacing:!0,digitGroupSeparator:!0,divisorWhenUnfocused:!0,emptyInputBehavior:!0,eventBubbles:!0,eventIsCancelable:!0,failOnUnknownOption:!0,formatOnPageLoad:!0,formulaMode:!0,historySize:!0,isCancellable:!0,leadingZero:!0,maximumValue:!0,minimumValue:!0,modifyValueOnWheel:!0,negativeBracketsTypeOnBlur:!0,negativePositiveSignPlacement:!0,negativeSignCharacter:!0,noEventListeners:!0,onInvalidPaste:!0,outputFormat:!0,overrideMinMaxLimits:!0,positiveSignCharacter:!0,rawValueDivisor:!0,readOnly:!0,roundingMethod:!0,saveValueToSessionStorage:!0,selectNumberOnly:!0,selectOnFocus:!0,serializeSpaces:!0,showOnlyNumbersOnFocus:!0,showPositiveSign:!0,showWarnings:!0,styleRules:!0,suffixText:!0,symbolWhenUnfocused:!0,unformatOnHover:!0,unformatOnSubmit:!0,valuesToStrings:!0,watchExternalChanges:!0,wheelOn:!0,wheelStep:!0,allowedAutoStrip:!0,formulaChars:!0,isNegativeSignAllowed:!0,isPositiveSignAllowed:!0,mIntNeg:!0,mIntPos:!0,numRegAutoStrip:!0,originalDecimalPlaces:!0,originalDecimalPlacesRawValue:!0,stripReg:!0};for(var i in e)if(Object.prototype.hasOwnProperty.call(e,i)){if(!0===t[i])continue;Object.prototype.hasOwnProperty.call(t,i)?(D.warning("You are using the deprecated option name '".concat(i,"'. Please use '").concat(t[i],"' instead from now on. The old option name will be dropped very soon™."),!0),e[t[i]]=e[i],delete e[i]):e.failOnUnknownOption&&D.throwError("Option name '".concat(i,"' is unknown. Please fix the options passed to autoNumeric"))}"mDec"in e&&D.warning("The old `mDec` option has been deprecated in favor of more accurate options ; `decimalPlaces`, `decimalPlacesRawValue`, `decimalPlacesShownOnFocus` and `decimalPlacesShownOnBlur`.",!0)}},{key:"_setNegativePositiveSignPermissions",value:function(e){e.isNegativeSignAllowed=e.minimumValue<0,e.isPositiveSignAllowed=0<=e.maximumValue}},{key:"_toNumericValue",value:function(e,t){var i;return D.isNumber(Number(e))?i=D.scientificToDecimal(e):(i=this._convertToNumericString(e.toString(),t),D.isNumber(Number(i))||(D.warning('The given value "'.concat(e,'" cannot be converted to a numeric one and therefore cannot be used appropriately.'),t.showWarnings),i=NaN)),i}},{key:"_checkIfInRange",value:function(e,t,i){var n=D.parseStr(e);return-1<D.testMinMax(t,n)&&D.testMinMax(i,n)<1}},{key:"_shouldSkipEventKey",value:function(e){var t=D.isInArray(e,d.keyName._allFnKeys),i=e===d.keyName.OSLeft||e===d.keyName.OSRight,n=e===d.keyName.ContextMenu,a=D.isInArray(e,d.keyName._someNonPrintableKeys),r=e===d.keyName.NumLock||e===d.keyName.ScrollLock||e===d.keyName.Insert||e===d.keyName.Command,s=e===d.keyName.Unidentified;return t||i||n||a||s||r}},{key:"_serialize",value:function(e,t,i,n,a){var r,s=this,o=1<arguments.length&&void 0!==t&&t,l=2<arguments.length&&void 0!==i?i:"unformatted",c=3<arguments.length&&void 0!==n?n:"+",u=4<arguments.length&&void 0!==a?a:null,h=[];return"object"===b(e)&&"form"===e.nodeName.toLowerCase()&&Array.prototype.slice.call(e.elements).forEach(function(t){if(t.name&&!t.disabled&&-1===["file","reset","submit","button"].indexOf(t.type))if("select-multiple"===t.type)Array.prototype.slice.call(t.options).forEach(function(e){e.selected&&(o?h.push({name:t.name,value:e.value}):h.push("".concat(encodeURIComponent(t.name),"=").concat(encodeURIComponent(e.value))))});else if(-1===["checkbox","radio"].indexOf(t.type)||t.checked){var e,i;if(s.isManagedByAutoNumeric(t))switch(l){case"unformatted":i=s.getAutoNumericElement(t),D.isNull(i)||(e=s.unformat(t,i.getSettings()));break;case"localized":if(i=s.getAutoNumericElement(t),!D.isNull(i)){var n=D.cloneObject(i.getSettings());D.isNull(u)||(n.outputFormat=u),e=s.localize(t,n)}break;case"formatted":default:e=t.value}else e=t.value;D.isUndefined(e)&&D.throwError("This error should never be hit. If it has, something really wrong happened!"),o?h.push({name:t.name,value:e}):h.push("".concat(encodeURIComponent(t.name),"=").concat(encodeURIComponent(e)))}}),o?r=h:(r=h.join("&"),"+"===c&&(r=r.replace(/%20/g,"+"))),r}},{key:"_serializeNumericString",value:function(e,t){var i=1<arguments.length&&void 0!==t?t:"+";return this._serialize(e,!1,"unformatted",i)}},{key:"_serializeFormatted",value:function(e,t){var i=1<arguments.length&&void 0!==t?t:"+";return this._serialize(e,!1,"formatted",i)}},{key:"_serializeLocalized",value:function(e,t,i){var n=1<arguments.length&&void 0!==t?t:"+",a=2<arguments.length&&void 0!==i?i:null;return this._serialize(e,!1,"localized",n,a)}},{key:"_serializeNumericStringArray",value:function(e,t){var i=1<arguments.length&&void 0!==t?t:"+";return this._serialize(e,!0,"unformatted",i)}},{key:"_serializeFormattedArray",value:function(e,t){var i=1<arguments.length&&void 0!==t?t:"+";return this._serialize(e,!0,"formatted",i)}},{key:"_serializeLocalizedArray",value:function(e,t,i){var n=1<arguments.length&&void 0!==t?t:"+",a=2<arguments.length&&void 0!==i?i:null;return this._serialize(e,!0,"localized",n,a)}}],g((e=I).prototype,[{key:"_saveInitialValues",value:function(e){this.initialValueHtmlAttribute=D.scientificToDecimal(this.domElement.getAttribute("value")),D.isNull(this.initialValueHtmlAttribute)&&(this.initialValueHtmlAttribute=""),this.initialValue=e,D.isNull(this.initialValue)&&(this.initialValue="")}},{key:"_createEventListeners",value:function(){var t=this;this.formulaMode=!1,this._onFocusInFunc=function(e){t._onFocusIn(e)},this._onFocusInAndMouseEnterFunc=function(e){t._onFocusInAndMouseEnter(e)},this._onFocusFunc=function(){t._onFocus()},this._onKeydownFunc=function(e){t._onKeydown(e)},this._onKeypressFunc=function(e){t._onKeypress(e)},this._onKeyupFunc=function(e){t._onKeyup(e)},this._onFocusOutAndMouseLeaveFunc=function(e){t._onFocusOutAndMouseLeave(e)},this._onPasteFunc=function(e){t._onPaste(e)},this._onWheelFunc=function(e){t._onWheel(e)},this._onDropFunc=function(e){t._onDrop(e)},this._onKeydownGlobalFunc=function(e){t._onKeydownGlobal(e)},this._onKeyupGlobalFunc=function(e){t._onKeyupGlobal(e)},this.domElement.addEventListener("focusin",this._onFocusInFunc,!1),this.domElement.addEventListener("focus",this._onFocusInAndMouseEnterFunc,!1),this.domElement.addEventListener("focus",this._onFocusFunc,!1),this.domElement.addEventListener("mouseenter",this._onFocusInAndMouseEnterFunc,!1),this.domElement.addEventListener("keydown",this._onKeydownFunc,!1),this.domElement.addEventListener("keypress",this._onKeypressFunc,!1),this.domElement.addEventListener("keyup",this._onKeyupFunc,!1),this.domElement.addEventListener("blur",this._onFocusOutAndMouseLeaveFunc,!1),this.domElement.addEventListener("mouseleave",this._onFocusOutAndMouseLeaveFunc,!1),this.domElement.addEventListener("paste",this._onPasteFunc,!1),this.domElement.addEventListener("wheel",this._onWheelFunc,!1),this.domElement.addEventListener("drop",this._onDropFunc,!1),this._setupFormListener(),this.hasEventListeners=!0,I._doesGlobalListExists()||(document.addEventListener("keydown",this._onKeydownGlobalFunc,!1),document.addEventListener("keyup",this._onKeyupGlobalFunc,!1))}},{key:"_removeEventListeners",value:function(){this.domElement.removeEventListener("focusin",this._onFocusInFunc,!1),this.domElement.removeEventListener("focus",this._onFocusInAndMouseEnterFunc,!1),this.domElement.removeEventListener("focus",this._onFocusFunc,!1),this.domElement.removeEventListener("mouseenter",this._onFocusInAndMouseEnterFunc,!1),this.domElement.removeEventListener("blur",this._onFocusOutAndMouseLeaveFunc,!1),this.domElement.removeEventListener("mouseleave",this._onFocusOutAndMouseLeaveFunc,!1),this.domElement.removeEventListener("keydown",this._onKeydownFunc,!1),this.domElement.removeEventListener("keypress",this._onKeypressFunc,!1),this.domElement.removeEventListener("keyup",this._onKeyupFunc,!1),this.domElement.removeEventListener("paste",this._onPasteFunc,!1),this.domElement.removeEventListener("wheel",this._onWheelFunc,!1),this.domElement.removeEventListener("drop",this._onDropFunc,!1),this._removeFormListener(),this.hasEventListeners=!1,document.removeEventListener("keydown",this._onKeydownGlobalFunc,!1),document.removeEventListener("keyup",this._onKeyupGlobalFunc,!1)}},{key:"_updateEventListeners",value:function(){this.settings.noEventListeners||this.hasEventListeners||this._createEventListeners(),this.settings.noEventListeners&&this.hasEventListeners&&this._removeEventListeners()}},{key:"_setupFormListener",value:function(){var e=this;D.isNull(this.parentForm)||(this._onFormSubmitFunc=function(){e._onFormSubmit()},this._onFormResetFunc=function(){e._onFormReset()},this._hasParentFormCounter()?this._incrementParentFormCounter():(this._initializeFormCounterToOne(),this.parentForm.addEventListener("submit",this._onFormSubmitFunc,!1),this.parentForm.addEventListener("reset",this._onFormResetFunc,!1),this._storeFormHandlerFunction()))}},{key:"_removeFormListener",value:function(){if(!D.isNull(this.parentForm)){var e=this._getParentFormCounter();1===e?(this.parentForm.removeEventListener("submit",this._getFormHandlerFunction().submitFn,!1),this.parentForm.removeEventListener("reset",this._getFormHandlerFunction().resetFn,!1),this._removeFormDataSetInfo()):1<e?this._decrementParentFormCounter():D.throwError("The AutoNumeric object count on the form is incoherent.")}}},{key:"_hasParentFormCounter",value:function(){return"anCount"in this.parentForm.dataset}},{key:"_getParentFormCounter",value:function(){return Number(this.parentForm.dataset.anCount)}},{key:"_initializeFormCounterToOne",value:function(e){var t=0<arguments.length&&void 0!==e?e:null;this._getFormElement(t).dataset.anCount=1}},{key:"_incrementParentFormCounter",value:function(e){var t=0<arguments.length&&void 0!==e?e:null;this._getFormElement(t).dataset.anCount++}},{key:"_decrementParentFormCounter",value:function(){this.parentForm.dataset.anCount--}},{key:"_hasFormHandlerFunction",value:function(e){var t=0<arguments.length&&void 0!==e?e:null;return"anFormHandler"in this._getFormElement(t).dataset}},{key:"_getFormElement",value:function(e){var t=0<arguments.length&&void 0!==e?e:null;return D.isNull(t)?this.parentForm:t}},{key:"_storeFormHandlerFunction",value:function(e){var t=0<arguments.length&&void 0!==e?e:null;this.constructor._doesFormHandlerListExists()||this.constructor._createFormHandlerList();var i=D.randomString();this._getFormElement(t).dataset.anFormHandler=i,window.aNFormHandlerMap.set(i,{submitFn:this._onFormSubmitFunc,resetFn:this._onFormResetFunc})}},{key:"_getFormHandlerKey",value:function(){this._hasFormHandlerFunction()||D.throwError("Unable to retrieve the form handler name");var e=this.parentForm.dataset.anFormHandler;return""===e&&D.throwError("The form handler name is invalid"),e}},{key:"_getFormHandlerFunction",value:function(){var e=this._getFormHandlerKey();return window.aNFormHandlerMap.get(e)}},{key:"_removeFormDataSetInfo",value:function(){this._decrementParentFormCounter(),window.aNFormHandlerMap.delete(this._getFormHandlerKey()),this.parentForm.removeAttribute("data-an-count"),this.parentForm.removeAttribute("data-an-form-handler")}},{key:"_setWritePermissions",value:function(e){0<arguments.length&&void 0!==e&&e&&this.domElement.readOnly||this.settings.readOnly?this._setReadOnly():this._setReadWrite()}},{key:"_setReadOnly",value:function(){this.isInputElement?this.domElement.readOnly=!0:this.domElement.setAttribute("contenteditable",!1)}},{key:"_setReadWrite",value:function(){this.isInputElement?this.domElement.readOnly=!1:this.domElement.setAttribute("contenteditable",!0)}},{key:"_addWatcher",value:function(){var t=this;if(!D.isUndefined(this.getterSetter)){var e=this.getterSetter,i=e.set,n=e.get;Object.defineProperty(this.domElement,this.attributeToWatch,{configurable:!0,get:function(){return n.call(t.domElement)},set:function(e){i.call(t.domElement,e),t.settings.watchExternalChanges&&!t.internalModification&&t.set(e)}})}}},{key:"_removeWatcher",value:function(){var t=this;if(!D.isUndefined(this.getterSetter)){var e=this.getterSetter,i=e.set,n=e.get;Object.defineProperty(this.domElement,this.attributeToWatch,{configurable:!0,get:function(){return n.call(t.domElement)},set:function(e){i.call(t.domElement,e)}})}}},{key:"_getAttributeToWatch",value:function(){var e;if(this.isInputElement)e="value";else{var t=this.domElement.nodeType;t===Node.ELEMENT_NODE||t===Node.DOCUMENT_NODE||t===Node.DOCUMENT_FRAGMENT_NODE?e="textContent":t===Node.TEXT_NODE&&(e="nodeValue")}return e}},{key:"_historyTableAdd",value:function(){var e=0===this.historyTable.length;if(e||this.rawValue!==this._historyTableCurrentValueUsed()){var t=!0;if(!e){var i=this.historyTableIndex+1;i<this.historyTable.length&&this.rawValue===this.historyTable[i].value?t=!1:D.arrayTrim(this.historyTable,this.historyTableIndex+1)}if(this.historyTableIndex++,t){var n=D.getElementSelection(this.domElement);this.selectionStart=n.start,this.selectionEnd=n.end,this.historyTable.push({value:this.rawValue,start:this.selectionStart+1,end:this.selectionEnd+1}),1<this.historyTable.length&&(this.historyTable[this.historyTableIndex-1].start=this.selectionStart,this.historyTable[this.historyTableIndex-1].end=this.selectionEnd)}this.historyTable.length>this.settings.historySize&&this._historyTableForget()}}},{key:"_historyTableUndoOrRedo",value:function(e){var t;if(0<arguments.length&&void 0!==e&&!e?(t=this.historyTableIndex+1<this.historyTable.length)&&this.historyTableIndex++:(t=0<this.historyTableIndex)&&this.historyTableIndex--,t){var i=this.historyTable[this.historyTableIndex];this.set(i.value,null,!1),D.setElementSelection(this.domElement,i.start,i.end)}}},{key:"_historyTableUndo",value:function(){this._historyTableUndoOrRedo(!0)}},{key:"_historyTableRedo",value:function(){this._historyTableUndoOrRedo(!1)}},{key:"_historyTableForget",value:function(e){for(var t=0<arguments.length&&void 0!==e?e:1,i=[],n=0;n<t;n++)i.push(this.historyTable.shift()),this.historyTableIndex--,this.historyTableIndex<0&&(this.historyTableIndex=0);return 1===i.length?i[0]:i}},{key:"_historyTableCurrentValueUsed",value:function(){var e=this.historyTableIndex;return e<0&&(e=0),D.isUndefinedOrNullOrEmpty(this.historyTable[e])?"":this.historyTable[e].value}},{key:"_parseStyleRules",value:function(){var n=this;D.isUndefinedOrNullOrEmpty(this.settings.styleRules)||""===this.rawValue||(D.isUndefinedOrNullOrEmpty(this.settings.styleRules.positive)||(0<=this.rawValue?this._addCSSClass(this.settings.styleRules.positive):this._removeCSSClass(this.settings.styleRules.positive)),D.isUndefinedOrNullOrEmpty(this.settings.styleRules.negative)||(this.rawValue<0?this._addCSSClass(this.settings.styleRules.negative):this._removeCSSClass(this.settings.styleRules.negative)),D.isUndefinedOrNullOrEmpty(this.settings.styleRules.ranges)||0===this.settings.styleRules.ranges.length||this.settings.styleRules.ranges.forEach(function(e){n.rawValue>=e.min&&n.rawValue<e.max?n._addCSSClass(e.class):n._removeCSSClass(e.class)}),D.isUndefinedOrNullOrEmpty(this.settings.styleRules.userDefined)||0===this.settings.styleRules.userDefined.length||this.settings.styleRules.userDefined.forEach(function(e){if(D.isFunction(e.callback))if(D.isString(e.classes))e.callback(n.rawValue)?n._addCSSClass(e.classes):n._removeCSSClass(e.classes);else if(D.isArray(e.classes))if(2===e.classes.length)e.callback(n.rawValue)?(n._addCSSClass(e.classes[0]),n._removeCSSClass(e.classes[1])):(n._removeCSSClass(e.classes[0]),n._addCSSClass(e.classes[1]));else if(2<e.classes.length){var i=e.callback(n.rawValue);D.isArray(i)?e.classes.forEach(function(e,t){D.isInArray(t,i)?n._addCSSClass(e):n._removeCSSClass(e)}):D.isInt(i)?e.classes.forEach(function(e,t){t===i?n._addCSSClass(e):n._removeCSSClass(e)}):D.isNull(i)?e.classes.forEach(function(e){n._removeCSSClass(e)}):D.throwError("The callback result is not an array nor a valid array index, ".concat(b(i)," given."))}else D.throwError("The classes attribute is not valid for the `styleRules` option.");else D.isUndefinedOrNullOrEmpty(e.classes)?e.callback(n):D.throwError("The callback/classes structure is not valid for the `styleRules` option.");else D.warning("The given `styleRules` callback is not a function, ".concat("undefined"==typeof callback?"undefined":b(callback)," given."),n.settings.showWarnings)}))}},{key:"_addCSSClass",value:function(e){this.domElement.classList.add(e)}},{key:"_removeCSSClass",value:function(e){this.domElement.classList.remove(e)}},{key:"update",value:function(){for(var t=this,e=arguments.length,i=new Array(e),n=0;n<e;n++)i[n]=arguments[n];Array.isArray(i)&&Array.isArray(i[0])&&(i=i[0]);var a=D.cloneObject(this.settings),r=this.rawValue,s={};D.isUndefinedOrNullOrEmpty(i)||0===i.length?s=null:1<=i.length&&i.forEach(function(e){t.constructor._isPreDefinedOptionValid(e)&&(e=t.constructor._getOptionObject(e)),y(s,e)});try{this._setSettings(s,!0),this._setWritePermissions(),this._updateEventListeners(),this.set(r)}catch(e){return this._setSettings(a,!0),D.throwError("Unable to update the settings, those are invalid: [".concat(e,"]")),this}return this}},{key:"getSettings",value:function(){return this.settings}},{key:"set",value:function(e,t,i){var n,a=1<arguments.length&&void 0!==t?t:null,r=!(2<arguments.length&&void 0!==i)||i;if(D.isUndefined(e))return D.warning("You are trying to set an 'undefined' value ; an error could have occurred.",this.settings.showWarnings),this;if(D.isNull(a)||this._setSettings(a,!0),null===e&&this.settings.emptyInputBehavior!==I.options.emptyInputBehavior.null)return D.warning("You are trying to set the `null` value while the `emptyInputBehavior` option is set to ".concat(this.settings.emptyInputBehavior,". If you want to be able to set the `null` value, you need to change the 'emptyInputBehavior' option to `'null'`."),this.settings.showWarnings),this;if(null===e)return this._setElementAndRawValue(null,null,r),this._saveValueToPersistentStorage(),this;if(n=this.constructor._toNumericValue(e,this.settings),isNaN(Number(n)))return D.warning("The value you are trying to set results in `NaN`. The element value is set to the empty string instead.",this.settings.showWarnings),this.setValue("",r),this;if(""===n)switch(this.settings.emptyInputBehavior){case I.options.emptyInputBehavior.zero:n=0;break;case I.options.emptyInputBehavior.min:n=this.settings.minimumValue;break;case I.options.emptyInputBehavior.max:n=this.settings.maximumValue;break;default:D.isNumber(this.settings.emptyInputBehavior)&&(n=Number(this.settings.emptyInputBehavior))}if(""===n)return s=this.settings.emptyInputBehavior===I.options.emptyInputBehavior.always?this.settings.currencySymbol:"",this._setElementAndRawValue(s,"",r),this;var s,o=S(this.constructor._checkIfInRangeWithOverrideOption(n,this.settings),2),l=o[0],c=o[1];if(l&&c&&this.settings.valuesToStrings&&this._checkValuesToStrings(n))return this._setElementAndRawValue(this.settings.valuesToStrings[n],n,r),this._saveValueToPersistentStorage(),this;if(D.isZeroOrHasNoValue(n)&&(n="0"),l&&c){var u=this.constructor._roundRawValue(n,this.settings);return u=this._trimLeadingAndTrailingZeros(u.replace(this.settings.decimalCharacter,".")),n=this._getRawValueToFormat(n),n=this.isFocused?this.constructor._roundFormattedValueShownOnFocus(n,this.settings):(this.settings.divisorWhenUnfocused&&(n=(n/=this.settings.divisorWhenUnfocused).toString()),this.constructor._roundFormattedValueShownOnBlur(n,this.settings)),n=this.constructor._modifyNegativeSignAndDecimalCharacterForFormattedValue(n,this.settings),n=this.constructor._addGroupSeparators(n,this.settings,this.isFocused,this.rawValue,u),!this.isFocused&&this.settings.symbolWhenUnfocused&&(n="".concat(n).concat(this.settings.symbolWhenUnfocused)),(this.settings.decimalPlacesShownOnFocus||this.settings.divisorWhenUnfocused)&&this._saveValueToPersistentStorage(),this._setElementAndRawValue(n,u,r),this}return l||this._triggerEvent(I.events.minRangeExceeded,this.domElement),c||this._triggerEvent(I.events.maxRangeExceeded,this.domElement),D.throwError("The value [".concat(n,"] being set falls outside of the minimumValue [").concat(this.settings.minimumValue,"] and maximumValue [").concat(this.settings.maximumValue,"] range set for this element")),this._removeValueFromPersistentStorage(),this.setValue("",r),this}},{key:"setUnformatted",value:function(e,t){var i=1<arguments.length&&void 0!==t?t:null;if(null===e||D.isUndefined(e))return this;D.isNull(i)||this._setSettings(i,!0);var n=this.constructor._removeBrackets(e,this.settings),a=this.constructor._stripAllNonNumberCharacters(n,this.settings,!0,this.isFocused);D.isNumber(a)||D.throwError("The value is not a valid one, it's not a numeric string nor a recognized currency.");var r=S(this.constructor._checkIfInRangeWithOverrideOption(a,this.settings),2),s=r[0],o=r[1];return s&&o?this.setValue(e):D.throwError("The value is out of the range limits [".concat(this.settings.minimumValue,", ").concat(this.settings.maximumValue,"].")),this}},{key:"setValue",value:function(e,t){var i=!(1<arguments.length&&void 0!==t)||t;return this._setElementAndRawValue(e,i),this}},{key:"_setRawValue",value:function(e,t){var i=!(1<arguments.length&&void 0!==t)||t;if(this.rawValue!==e){var n=this.rawValue;this.rawValue=e,!D.isNull(this.settings.rawValueDivisor)&&0!==this.settings.rawValueDivisor&&""!==e&&null!==e&&this._isUserManuallyEditingTheValue()&&(this.rawValue/=this.settings.rawValueDivisor),this._triggerEvent(I.events.rawValueModified,this.domElement,{oldRawValue:n,newRawValue:this.rawValue,isPristine:this.isPristine(!0),error:null,aNElement:this}),this._parseStyleRules(),i&&this._historyTableAdd()}}},{key:"_setElementValue",value:function(e,t){var i=!(1<arguments.length&&void 0!==t)||t,n=D.getElementValue(this.domElement);return e!==n&&(this.internalModification=!0,D.setElementValue(this.domElement,e),this.internalModification=!1,i&&this._triggerEvent(I.events.formatted,this.domElement,{oldValue:n,newValue:e,oldRawValue:this.rawValue,newRawValue:this.rawValue,isPristine:this.isPristine(!1),error:null,aNElement:this})),this}},{key:"_setElementAndRawValue",value:function(e,t,i){var n=1<arguments.length&&void 0!==t?t:null,a=!(2<arguments.length&&void 0!==i)||i;return D.isNull(n)?n=e:D.isBoolean(n)&&(a=n,n=e),this._setElementValue(e),this._setRawValue(n,a),this}},{key:"_getRawValueToFormat",value:function(e){return D.isNull(this.settings.rawValueDivisor)||0===this.settings.rawValueDivisor||""===e||null===e?e:e*this.settings.rawValueDivisor}},{key:"_checkValuesToStrings",value:function(e){return this.constructor._checkValuesToStringsArray(e,this.valuesToStringsKeys)}},{key:"_isUserManuallyEditingTheValue",value:function(){return this.isFocused&&this.isEditing||this.isDropEvent}},{key:"_executeCallback",value:function(e,t){!D.isNull(t)&&D.isFunction(t)&&t(e,this)}},{key:"_triggerEvent",value:function(e,t,i){var n=1<arguments.length&&void 0!==t?t:document,a=2<arguments.length&&void 0!==i?i:null;D.triggerEvent(e,n,a,this.settings.eventBubbles,this.settings.eventIsCancelable)}},{key:"get",value:function(e){var t=0<arguments.length&&void 0!==e?e:null;return this.getNumericString(t)}},{key:"getNumericString",value:function(e){var t,i=0<arguments.length&&void 0!==e?e:null;return t=D.isNull(this.rawValue)?null:D.trimPaddedZerosFromDecimalPlaces(this.rawValue),this._executeCallback(t,i),t}},{key:"getFormatted",value:function(e){var t=0<arguments.length&&void 0!==e?e:null;"value"in this.domElement||"textContent"in this.domElement||D.throwError("Unable to get the formatted string from the element.");var i=D.getElementValue(this.domElement);return this._executeCallback(i,t),i}},{key:"getNumber",value:function(e){var t,i=0<arguments.length&&void 0!==e?e:null;return t=null===this.rawValue?null:this.constructor._toLocale(this.getNumericString(),"number",this.settings),this._executeCallback(t,i),t}},{key:"getLocalized",value:function(e,t){var i,n,a=0<arguments.length&&void 0!==e?e:null,r=1<arguments.length&&void 0!==t?t:null;D.isFunction(a)&&D.isNull(r)&&(r=a,a=null),""!=(i=D.isEmptyString(this.rawValue)?"":""+Number(this.rawValue))&&0===Number(i)&&this.settings.leadingZero!==I.options.leadingZero.keep&&(i="0"),n=D.isNull(a)?this.settings.outputFormat:a;var s=this.constructor._toLocale(i,n,this.settings);return this._executeCallback(s,r),s}},{key:"reformat",value:function(){return this.set(this.rawValue),this}},{key:"unformat",value:function(){return this._setElementValue(this.getNumericString()),this}},{key:"unformatLocalized",value:function(e){var t=0<arguments.length&&void 0!==e?e:null;return this._setElementValue(this.getLocalized(t)),this}},{key:"isPristine",value:function(e){return 0<arguments.length&&void 0!==e&&!e?this.initialValueHtmlAttribute===this.getFormatted():this.initialValue===this.getNumericString()}},{key:"select",value:function(){return this.settings.selectNumberOnly?this.selectNumber():this._defaultSelectAll(),this}},{key:"_defaultSelectAll",value:function(){D.setElementSelection(this.domElement,0,D.getElementValue(this.domElement).length)}},{key:"selectNumber",value:function(){var e,t,i=D.getElementValue(this.domElement),n=i.length,a=this.settings.currencySymbol.length,r=this.settings.currencySymbolPlacement,s=D.isNegative(i,this.settings.negativeSignCharacter)?1:0,o=this.settings.suffixText.length;if(e=r===I.options.currencySymbolPlacement.suffix?0:this.settings.negativePositiveSignPlacement===I.options.negativePositiveSignPlacement.left&&1==s&&0<a?a+1:a,r===I.options.currencySymbolPlacement.prefix)t=n-o;else switch(this.settings.negativePositiveSignPlacement){case I.options.negativePositiveSignPlacement.left:t=n-(o+a);break;case I.options.negativePositiveSignPlacement.right:t=0<a?n-(a+s+o):n-(a+o);break;default:t=n-(a+o)}return D.setElementSelection(this.domElement,e,t),this}},{key:"selectInteger",value:function(){var e=0,t=0<=this.rawValue;this.settings.currencySymbolPlacement!==I.options.currencySymbolPlacement.prefix&&(this.settings.currencySymbolPlacement!==I.options.currencySymbolPlacement.suffix||this.settings.negativePositiveSignPlacement!==I.options.negativePositiveSignPlacement.prefix&&this.settings.negativePositiveSignPlacement!==I.options.negativePositiveSignPlacement.none)||(this.settings.showPositiveSign&&t||!t&&this.settings.currencySymbolPlacement===I.options.currencySymbolPlacement.prefix&&this.settings.negativePositiveSignPlacement===I.options.negativePositiveSignPlacement.left)&&(e+=1),this.settings.currencySymbolPlacement===I.options.currencySymbolPlacement.prefix&&(e+=this.settings.currencySymbol.length);var i=D.getElementValue(this.domElement),n=i.indexOf(this.settings.decimalCharacter);return-1===n&&(n=this.settings.currencySymbolPlacement===I.options.currencySymbolPlacement.suffix?i.length-this.settings.currencySymbol.length:i.length,t||this.settings.negativePositiveSignPlacement!==I.options.negativePositiveSignPlacement.suffix&&this.settings.currencySymbolPlacement!==I.options.currencySymbolPlacement.suffix||(n-=1),n-=this.settings.suffixText.length),D.setElementSelection(this.domElement,e,n),this}},{key:"selectDecimal",value:function(){var e,t,i=D.getElementValue(this.domElement).indexOf(this.settings.decimalCharacter);return e=-1===i?i=0:(i+=1,t=this.isFocused?this.settings.decimalPlacesShownOnFocus:this.settings.decimalPlacesShownOnBlur,i+Number(t)),D.setElementSelection(this.domElement,i,e),this}},{key:"node",value:function(){return this.domElement}},{key:"parent",value:function(){return this.domElement.parentNode}},{key:"detach",value:function(e){var t,i=0<arguments.length&&void 0!==e?e:null;return t=D.isNull(i)?this.domElement:i.node(),this._removeFromLocalList(t),this}},{key:"attach",value:function(e,t){var i=!(1<arguments.length&&void 0!==t)||t;return this._addToLocalList(e.node()),i&&e.update(this.settings),this}},{key:"formatOther",value:function(e,t){var i=1<arguments.length&&void 0!==t?t:null;return this._formatOrUnformatOther(!0,e,i)}},{key:"unformatOther",value:function(e,t){var i=1<arguments.length&&void 0!==t?t:null;return this._formatOrUnformatOther(!1,e,i)}},{key:"_formatOrUnformatOther",value:function(e,t,i){var n,a,r=2<arguments.length&&void 0!==i?i:null;if(n=D.isNull(r)?this.settings:this._cloneAndMergeSettings(r),D.isElement(t)){var s=D.getElementValue(t);return a=e?I.format(s,n):I.unformat(s,n),D.setElementValue(t,a),null}return e?I.format(t,n):I.unformat(t,n)}},{key:"init",value:function(e,t){var n=this,a=!(1<arguments.length&&void 0!==t)||t,i=!1,r=[];if(D.isString(e)?r=v(document.querySelectorAll(e)):D.isElement(e)?(r.push(e),i=!0):D.isArray(e)?r=e:D.throwError("The given parameters to the 'init' function are invalid."),0===r.length)return D.warning("No valid DOM elements were given hence no AutoNumeric object were instantiated.",!0),[];var s=this._getLocalList(),o=[];return r.forEach(function(e){var t=n.settings.createLocalList;a&&(n.settings.createLocalList=!1);var i=new I(e,D.getElementValue(e),n.settings);a&&(i._setLocalList(s),n._addToLocalList(e,i),n.settings.createLocalList=t),o.push(i)}),i?o[0]:o}},{key:"clear",value:function(e){if(0<arguments.length&&void 0!==e&&e){var t={emptyInputBehavior:I.options.emptyInputBehavior.focus};this.set("",t)}else this.set("");return this}},{key:"remove",value:function(){this._removeValueFromPersistentStorage(),this._removeEventListeners(),this._removeWatcher(),this._removeFromLocalList(this.domElement),this.constructor._removeFromGlobalList(this)}},{key:"wipe",value:function(){this._setElementValue("",!1),this.remove()}},{key:"nuke",value:function(){this.remove(),this.domElement.parentNode.removeChild(this.domElement)}},{key:"form",value:function(e){if(0<arguments.length&&void 0!==e&&e||D.isUndefinedOrNullOrEmpty(this.parentForm)){var t=this._getParentForm();if(!D.isNull(t)&&t!==this.parentForm){var i=this._getFormAutoNumericChildren(this.parentForm);this.parentForm.dataset.anCount=i.length,this._hasFormHandlerFunction(t)?this._incrementParentFormCounter(t):(this._storeFormHandlerFunction(t),this._initializeFormCounterToOne(t))}this.parentForm=t}return this.parentForm}},{key:"_getFormAutoNumericChildren",value:function(e){var t=this;return v(e.querySelectorAll("input")).filter(function(e){return t.constructor.isManagedByAutoNumeric(e)})}},{key:"_getParentForm",value:function(){if("body"===this.domElement.tagName.toLowerCase())return null;var e,t=this.domElement;do{if(t=t.parentNode,D.isNull(t))return null;if("body"===(e=t.tagName?t.tagName.toLowerCase():""))break}while("form"!==e);return"form"===e?t:null}},{key:"formNumericString",value:function(){return this.constructor._serializeNumericString(this.form(),this.settings.serializeSpaces)}},{key:"formFormatted",value:function(){return this.constructor._serializeFormatted(this.form(),this.settings.serializeSpaces)}},{key:"formLocalized",value:function(e){var t,i=0<arguments.length&&void 0!==e?e:null;return t=D.isNull(i)?this.settings.outputFormat:i,this.constructor._serializeLocalized(this.form(),this.settings.serializeSpaces,t)}},{key:"formArrayNumericString",value:function(){return this.constructor._serializeNumericStringArray(this.form(),this.settings.serializeSpaces)}},{key:"formArrayFormatted",value:function(){return this.constructor._serializeFormattedArray(this.form(),this.settings.serializeSpaces)}},{key:"formArrayLocalized",value:function(e){var t,i=0<arguments.length&&void 0!==e?e:null;return t=D.isNull(i)?this.settings.outputFormat:i,this.constructor._serializeLocalizedArray(this.form(),this.settings.serializeSpaces,t)}},{key:"formJsonNumericString",value:function(){return JSON.stringify(this.formArrayNumericString())}},{key:"formJsonFormatted",value:function(){return JSON.stringify(this.formArrayFormatted())}},{key:"formJsonLocalized",value:function(e){var t=0<arguments.length&&void 0!==e?e:null;return JSON.stringify(this.formArrayLocalized(t))}},{key:"formUnformat",value:function(){return this.constructor._getChildANInputElement(this.form()).forEach(function(e){I.getAutoNumericElement(e).unformat()}),this}},{key:"formUnformatLocalized",value:function(){return this.constructor._getChildANInputElement(this.form()).forEach(function(e){I.getAutoNumericElement(e).unformatLocalized()}),this}},{key:"formReformat",value:function(){return this.constructor._getChildANInputElement(this.form()).forEach(function(e){I.getAutoNumericElement(e).reformat()}),this}},{key:"formSubmitNumericString",value:function(e){var t=0<arguments.length&&void 0!==e?e:null;return D.isNull(t)?(this.formUnformat(),this.form().submit(),this.formReformat()):D.isFunction(t)?t(this.formNumericString()):D.throwError("The given callback is not a function."),this}},{key:"formSubmitFormatted",value:function(e){var t=0<arguments.length&&void 0!==e?e:null;return D.isNull(t)?this.form().submit():D.isFunction(t)?t(this.formFormatted()):D.throwError("The given callback is not a function."),this}},{key:"formSubmitLocalized",value:function(e,t){var i=0<arguments.length&&void 0!==e?e:null,n=1<arguments.length&&void 0!==t?t:null;return D.isNull(n)?(this.formUnformatLocalized(),this.form().submit(),this.formReformat()):D.isFunction(n)?n(this.formLocalized(i)):D.throwError("The given callback is not a function."),this}},{key:"formSubmitArrayNumericString",value:function(e){return D.isFunction(e)?e(this.formArrayNumericString()):D.throwError("The given callback is not a function."),this}},{key:"formSubmitArrayFormatted",value:function(e){return D.isFunction(e)?e(this.formArrayFormatted()):D.throwError("The given callback is not a function."),this}},{key:"formSubmitArrayLocalized",value:function(e,t){var i=1<arguments.length&&void 0!==t?t:null;return D.isFunction(e)?e(this.formArrayLocalized(i)):D.throwError("The given callback is not a function."),this}},{key:"formSubmitJsonNumericString",value:function(e){return D.isFunction(e)?e(this.formJsonNumericString()):D.throwError("The given callback is not a function."),this}},{key:"formSubmitJsonFormatted",value:function(e){return D.isFunction(e)?e(this.formJsonFormatted()):D.throwError("The given callback is not a function."),this}},{key:"formSubmitJsonLocalized",value:function(e,t){var i=1<arguments.length&&void 0!==t?t:null;return D.isFunction(e)?e(this.formJsonLocalized(i)):D.throwError("The given callback is not a function."),this}},{key:"_createLocalList",value:function(){this.autoNumericLocalList=new Map,this._addToLocalList(this.domElement)}},{key:"_deleteLocalList",value:function(){delete this.autoNumericLocalList}},{key:"_setLocalList",value:function(e){this.autoNumericLocalList=e}},{key:"_getLocalList",value:function(){return this.autoNumericLocalList}},{key:"_hasLocalList",value:function(){return this.autoNumericLocalList instanceof Map&&0!==this.autoNumericLocalList.size}},{key:"_addToLocalList",value:function(e,t){var i=1<arguments.length&&void 0!==t?t:null;D.isNull(i)&&(i=this),D.isUndefined(this.autoNumericLocalList)?D.throwError("The local list provided does not exists when trying to add an element. [".concat(this.autoNumericLocalList,"] given.")):this.autoNumericLocalList.set(e,i)}},{key:"_removeFromLocalList",value:function(e){D.isUndefined(this.autoNumericLocalList)?this.settings.createLocalList&&D.throwError("The local list provided does not exists when trying to remove an element. [".concat(this.autoNumericLocalList,"] given.")):this.autoNumericLocalList.delete(e)}},{key:"_mergeSettings",value:function(){for(var e=arguments.length,t=new Array(e),i=0;i<e;i++)t[i]=arguments[i];y.apply(void 0,[this.settings].concat(t))}},{key:"_cloneAndMergeSettings",value:function(){for(var e={},t=arguments.length,i=new Array(t),n=0;n<t;n++)i[n]=arguments[n];return y.apply(void 0,[e,this.settings].concat(i)),e}},{key:"_updatePredefinedOptions",value:function(e,t){var i=1<arguments.length&&void 0!==t?t:null;return D.isNull(i)?this.update(e):(this._mergeSettings(e,i),this.update(this.settings)),this}},{key:"french",value:function(e){var t=0<arguments.length&&void 0!==e?e:null;return this._updatePredefinedOptions(I.getPredefinedOptions().French,t),this}},{key:"northAmerican",value:function(e){var t=0<arguments.length&&void 0!==e?e:null;return this._updatePredefinedOptions(I.getPredefinedOptions().NorthAmerican,t),this}},{key:"british",value:function(e){var t=0<arguments.length&&void 0!==e?e:null;return this._updatePredefinedOptions(I.getPredefinedOptions().British,t),this}},{key:"swiss",value:function(e){var t=0<arguments.length&&void 0!==e?e:null;return this._updatePredefinedOptions(I.getPredefinedOptions().Swiss,t),this}},{key:"japanese",value:function(e){var t=0<arguments.length&&void 0!==e?e:null;return this._updatePredefinedOptions(I.getPredefinedOptions().Japanese,t),this}},{key:"spanish",value:function(e){var t=0<arguments.length&&void 0!==e?e:null;return this._updatePredefinedOptions(I.getPredefinedOptions().Spanish,t),this}},{key:"chinese",value:function(e){var t=0<arguments.length&&void 0!==e?e:null;return this._updatePredefinedOptions(I.getPredefinedOptions().Chinese,t),this}},{key:"brazilian",value:function(e){var t=0<arguments.length&&void 0!==e?e:null;return this._updatePredefinedOptions(I.getPredefinedOptions().Brazilian,t),this}},{key:"_runCallbacksFoundInTheSettingsObject",value:function(){for(var e in this.settings)if(Object.prototype.hasOwnProperty.call(this.settings,e)){var t=this.settings[e];if("function"==typeof t)this.settings[e]=t(this,e);else{var i=this.domElement.getAttribute(e);i=D.camelize(i),"function"==typeof this.settings[i]&&(this.settings[e]=i(this,e))}}}},{key:"_setTrailingNegativeSignInfo",value:function(){this.isTrailingNegative=this.settings.currencySymbolPlacement===I.options.currencySymbolPlacement.prefix&&this.settings.negativePositiveSignPlacement===I.options.negativePositiveSignPlacement.suffix||this.settings.currencySymbolPlacement===I.options.currencySymbolPlacement.suffix&&(this.settings.negativePositiveSignPlacement===I.options.negativePositiveSignPlacement.left||this.settings.negativePositiveSignPlacement===I.options.negativePositiveSignPlacement.right)}},{key:"_modifyNegativeSignAndDecimalCharacterForRawValue",value:function(e){return"."!==this.settings.decimalCharacter&&(e=e.replace(this.settings.decimalCharacter,".")),"-"!==this.settings.negativeSignCharacter&&this.settings.isNegativeSignAllowed&&(e=e.replace(this.settings.negativeSignCharacter,"-")),e.match(/\d/)||(e+="0"),e}},{key:"_initialCaretPosition",value:function(e){D.isNull(this.settings.caretPositionOnFocus)&&this.settings.selectOnFocus===I.options.selectOnFocus.doNotSelect&&D.throwError("`_initialCaretPosition()` should never be called when the `caretPositionOnFocus` option is `null`.");var t=this.rawValue<0,i=D.isZeroOrHasNoValue(e),n=e.length,a=0,r=0,s=!1,o=0;this.settings.caretPositionOnFocus!==I.options.caretPositionOnFocus.start&&(a=(e=(e=(e=e.replace(this.settings.negativeSignCharacter,"")).replace(this.settings.positiveSignCharacter,"")).replace(this.settings.currencySymbol,"")).length,s=D.contains(e,this.settings.decimalCharacter),this.settings.caretPositionOnFocus!==I.options.caretPositionOnFocus.decimalLeft&&this.settings.caretPositionOnFocus!==I.options.caretPositionOnFocus.decimalRight||(o=s?(r=e.indexOf(this.settings.decimalCharacter),this.settings.decimalCharacter.length):(r=a,0)));var l="";t?l=this.settings.negativeSignCharacter:this.settings.showPositiveSign&&!i&&(l=this.settings.positiveSignCharacter);var c,u=l.length,h=this.settings.currencySymbol.length;if(this.settings.currencySymbolPlacement===I.options.currencySymbolPlacement.prefix){if(this.settings.caretPositionOnFocus===I.options.caretPositionOnFocus.start)if(this.settings.negativePositiveSignPlacement!==I.options.negativePositiveSignPlacement.none&&(t||!t&&this.settings.showPositiveSign&&!i))switch(this.settings.negativePositiveSignPlacement){case I.options.negativePositiveSignPlacement.prefix:case I.options.negativePositiveSignPlacement.left:case I.options.negativePositiveSignPlacement.right:c=u+h;break;case I.options.negativePositiveSignPlacement.suffix:c=h}else c=h;else if(this.settings.caretPositionOnFocus===I.options.caretPositionOnFocus.end)if(this.settings.negativePositiveSignPlacement!==I.options.negativePositiveSignPlacement.none&&(t||!t&&this.settings.showPositiveSign&&!i))switch(this.settings.negativePositiveSignPlacement){case I.options.negativePositiveSignPlacement.prefix:case I.options.negativePositiveSignPlacement.left:case I.options.negativePositiveSignPlacement.right:c=n;break;case I.options.negativePositiveSignPlacement.suffix:c=h+a}else c=n;else if(this.settings.caretPositionOnFocus===I.options.caretPositionOnFocus.decimalLeft)if(this.settings.negativePositiveSignPlacement!==I.options.negativePositiveSignPlacement.none&&(t||!t&&this.settings.showPositiveSign&&!i))switch(this.settings.negativePositiveSignPlacement){case I.options.negativePositiveSignPlacement.prefix:case I.options.negativePositiveSignPlacement.left:case I.options.negativePositiveSignPlacement.right:c=u+h+r;break;case I.options.negativePositiveSignPlacement.suffix:c=h+r}else c=h+r;else if(this.settings.caretPositionOnFocus===I.options.caretPositionOnFocus.decimalRight)if(this.settings.negativePositiveSignPlacement!==I.options.negativePositiveSignPlacement.none&&(t||!t&&this.settings.showPositiveSign&&!i))switch(this.settings.negativePositiveSignPlacement){case I.options.negativePositiveSignPlacement.prefix:case I.options.negativePositiveSignPlacement.left:case I.options.negativePositiveSignPlacement.right:c=u+h+r+o;break;case I.options.negativePositiveSignPlacement.suffix:c=h+r+o}else c=h+r+o}else if(this.settings.currencySymbolPlacement===I.options.currencySymbolPlacement.suffix)if(this.settings.caretPositionOnFocus===I.options.caretPositionOnFocus.start)if(this.settings.negativePositiveSignPlacement!==I.options.negativePositiveSignPlacement.none&&(t||!t&&this.settings.showPositiveSign&&!i))switch(this.settings.negativePositiveSignPlacement){case I.options.negativePositiveSignPlacement.suffix:case I.options.negativePositiveSignPlacement.right:case I.options.negativePositiveSignPlacement.left:c=0;break;case I.options.negativePositiveSignPlacement.prefix:c=u}else c=0;else if(this.settings.caretPositionOnFocus===I.options.caretPositionOnFocus.end)if(this.settings.negativePositiveSignPlacement!==I.options.negativePositiveSignPlacement.none&&(t||!t&&this.settings.showPositiveSign&&!i))switch(this.settings.negativePositiveSignPlacement){case I.options.negativePositiveSignPlacement.suffix:case I.options.negativePositiveSignPlacement.right:case I.options.negativePositiveSignPlacement.left:c=a;break;case I.options.negativePositiveSignPlacement.prefix:c=u+a}else c=a;else if(this.settings.caretPositionOnFocus===I.options.caretPositionOnFocus.decimalLeft)if(this.settings.negativePositiveSignPlacement!==I.options.negativePositiveSignPlacement.none&&(t||!t&&this.settings.showPositiveSign&&!i))switch(this.settings.negativePositiveSignPlacement){case I.options.negativePositiveSignPlacement.suffix:case I.options.negativePositiveSignPlacement.right:case I.options.negativePositiveSignPlacement.left:c=r;break;case I.options.negativePositiveSignPlacement.prefix:c=u+r}else c=r;else if(this.settings.caretPositionOnFocus===I.options.caretPositionOnFocus.decimalRight)if(this.settings.negativePositiveSignPlacement!==I.options.negativePositiveSignPlacement.none&&(t||!t&&this.settings.showPositiveSign&&!i))switch(this.settings.negativePositiveSignPlacement){case I.options.negativePositiveSignPlacement.suffix:case I.options.negativePositiveSignPlacement.right:case I.options.negativePositiveSignPlacement.left:c=r+o;break;case I.options.negativePositiveSignPlacement.prefix:c=u+r+o}else c=r+o;return c}},{key:"_keepAnOriginalSettingsCopy",value:function(){this.originalDigitGroupSeparator=this.settings.digitGroupSeparator,this.originalCurrencySymbol=this.settings.currencySymbol,this.originalSuffixText=this.settings.suffixText}},{key:"_trimLeadingAndTrailingZeros",value:function(e){if(""===e||null===e)return e;if(this.settings.leadingZero!==I.options.leadingZero.keep){if(0===Number(e))return"0";e=e.replace(/^(-)?0+(?=\d)/g,"$1")}return D.contains(e,".")&&(e=e.replace(/(\.[0-9]*?)0+$/,"$1")),e.replace(/\.$/,"")}},{key:"_setPersistentStorageName",value:function(){this.settings.saveValueToSessionStorage&&(""===this.domElement.name||D.isUndefined(this.domElement.name)?this.rawValueStorageName="".concat(this.storageNamePrefix).concat(this.domElement.id):this.rawValueStorageName="".concat(this.storageNamePrefix).concat(decodeURIComponent(this.domElement.name)))}},{key:"_saveValueToPersistentStorage",value:function(){this.settings.saveValueToSessionStorage&&(this.sessionStorageAvailable?sessionStorage.setItem(this.rawValueStorageName,this.rawValue):document.cookie="".concat(this.rawValueStorageName,"=").concat(this.rawValue,"; expires= ; path=/"))}},{key:"_getValueFromPersistentStorage",value:function(){return this.settings.saveValueToSessionStorage?this.sessionStorageAvailable?sessionStorage.getItem(this.rawValueStorageName):this.constructor._readCookie(this.rawValueStorageName):(D.warning("`_getValueFromPersistentStorage()` is called but `settings.saveValueToSessionStorage` is false. There must be an error that needs fixing.",this.settings.showWarnings),null)}},{key:"_removeValueFromPersistentStorage",value:function(){if(this.settings.saveValueToSessionStorage)if(this.sessionStorageAvailable)sessionStorage.removeItem(this.rawValueStorageName);else{var e=new Date;e.setTime(e.getTime()-864e5);var t="; expires=".concat(e.toUTCString());document.cookie="".concat(this.rawValueStorageName,"='' ;").concat(t,"; path=/")}}},{key:"_getDefaultValue",value:function(e){var t=e.getAttribute("value");return D.isNull(t)?"":t}},{key:"_onFocusInAndMouseEnter",value:function(e){if(this.isEditing=!1,!this.formulaMode&&this.settings.unformatOnHover&&"mouseenter"===e.type&&e.altKey)this.constructor._unformatAltHovered(this);else if("focus"===e.type&&(this.isFocused=!0,this.rawValueOnFocus=this.rawValue),"focus"===e.type&&this.settings.unformatOnHover&&this.hoveredWithAlt&&this.constructor._reformatAltHovered(this),"focus"===e.type||"mouseenter"===e.type&&!this.isFocused){var t=null;this.settings.emptyInputBehavior===I.options.emptyInputBehavior.focus&&this.rawValue<0&&null!==this.settings.negativeBracketsTypeOnBlur&&this.settings.isNegativeSignAllowed&&(t=this.constructor._removeBrackets(D.getElementValue(this.domElement),this.settings));var i=this._getRawValueToFormat(this.rawValue);if(""!==i){var n=this.constructor._roundFormattedValueShownOnFocusOrBlur(i,this.settings,this.isFocused);t=this.settings.showOnlyNumbersOnFocus===I.options.showOnlyNumbersOnFocus.onlyNumbers?(this.settings.digitGroupSeparator="",this.settings.currencySymbol="",this.settings.suffixText="",n.replace(".",this.settings.decimalCharacter)):D.isNull(n)?"":this.constructor._addGroupSeparators(n.replace(".",this.settings.decimalCharacter),this.settings,this.isFocused,i)}D.isNull(t)?this.valueOnFocus="":this.valueOnFocus=t,this.lastVal=this.valueOnFocus;var a=this.constructor._isElementValueEmptyOrOnlyTheNegativeSign(this.valueOnFocus,this.settings),r=this.constructor._orderValueCurrencySymbolAndSuffixText(this.valueOnFocus,this.settings,!0),s=a&&""!==r&&this.settings.emptyInputBehavior===I.options.emptyInputBehavior.focus;s&&(t=r),D.isNull(t)||this._setElementValue(t),s&&r===this.settings.currencySymbol&&this.settings.currencySymbolPlacement===I.options.currencySymbolPlacement.suffix&&D.setElementSelection(e.target,0)}}},{key:"_onFocus",value:function(){this.settings.isCancellable&&this._saveCancellableValue()}},{key:"_onFocusIn",value:function(e){this.settings.selectOnFocus?this.select():D.isNull(this.settings.caretPositionOnFocus)||D.setElementSelection(e.target,this._initialCaretPosition(D.getElementValue(this.domElement)))}},{key:"_enterFormulaMode",value:function(){this.settings.formulaMode&&(this.formulaMode=!0,D.setElementValue(this.domElement,"="),D.setElementSelection(this.domElement,1))}},{key:"_exitFormulaMode",value:function(){var e,t=D.getElementValue(this.domElement);t=t.replace(/^\s*=/,"");try{var i=new m(t,this.settings.decimalCharacter);e=(new s).evaluate(i)}catch(e){return this._triggerEvent(I.events.invalidFormula,this.domElement,{formula:t,aNElement:this}),this.reformat(),void(this.formulaMode=!1)}this._triggerEvent(I.events.validFormula,this.domElement,{formula:t,result:e,aNElement:this}),this.set(e),this.formulaMode=!1}},{key:"_acceptNonPrintableKeysInFormulaMode",value:function(){return this.eventKey===d.keyName.Backspace||this.eventKey===d.keyName.Delete||this.eventKey===d.keyName.LeftArrow||this.eventKey===d.keyName.RightArrow||this.eventKey===d.keyName.Home||this.eventKey===d.keyName.End}},{key:"_onKeydown",value:function(e){if(this.formatted=!1,this.isEditing=!0,this.formulaMode||this.isFocused||!this.settings.unformatOnHover||!e.altKey||this.domElement!==D.getHoveredElement()){if(this._updateEventKeyInfo(e),this.keydownEventCounter+=1,1===this.keydownEventCounter&&(this.initialValueOnFirstKeydown=D.getElementValue(e.target),this.initialRawValueOnFirstKeydown=this.rawValue),this.formulaMode){if(this.eventKey===d.keyName.Esc)return this.formulaMode=!1,void this.reformat();if(this.eventKey===d.keyName.Enter)return void this._exitFormulaMode();if(this._acceptNonPrintableKeysInFormulaMode())return}else if(this.eventKey===d.keyName.Equal)return void this._enterFormulaMode();if(this.domElement.readOnly||this.settings.readOnly||this.domElement.disabled)this.processed=!0;else{this.eventKey===d.keyName.Esc&&(e.preventDefault(),this.settings.isCancellable&&this.rawValue!==this.savedCancellableValue&&(this.set(this.savedCancellableValue),this._triggerEvent(I.events.native.input,e.target)),this.select());var t=D.getElementValue(e.target);this.eventKey===d.keyName.Enter&&this.rawValue!==this.rawValueOnFocus&&(this._triggerEvent(I.events.native.change,e.target),this.valueOnFocus=t,this.rawValueOnFocus=this.rawValue,this.settings.isCancellable&&this._saveCancellableValue()),this._updateInternalProperties(e),this._processNonPrintableKeysAndShortcuts(e)?this.processed=!0:this.eventKey!==d.keyName.Backspace&&this.eventKey!==d.keyName.Delete||(this._processCharacterDeletion(),this.processed=!0,this._formatValue(e),(t=D.getElementValue(e.target))!==this.lastVal&&this.throwInput&&(this._triggerEvent(I.events.native.input,e.target),e.preventDefault()),this.lastVal=t,this.throwInput=!0)}}else this.constructor._unformatAltHovered(this)}},{key:"_onKeypress",value:function(e){if(this.formulaMode){if(this._acceptNonPrintableKeysInFormulaMode())return;if(this.settings.formulaChars.test(this.eventKey))return;e.preventDefault()}else if(this.eventKey!==d.keyName.Insert){var t=this.processed;if(this._updateInternalProperties(e),!this._processNonPrintableKeysAndShortcuts(e))if(t)e.preventDefault();else{if(this._processCharacterInsertion()){this._formatValue(e);var i=D.getElementValue(e.target);if(i!==this.lastVal&&this.throwInput)this._triggerEvent(I.events.native.input,e.target),e.preventDefault();else{if((this.eventKey===this.settings.decimalCharacter||this.eventKey===this.settings.decimalCharacterAlternative)&&D.getElementSelection(e.target).start===D.getElementSelection(e.target).end&&D.getElementSelection(e.target).start===i.indexOf(this.settings.decimalCharacter)){var n=D.getElementSelection(e.target).start+1;D.setElementSelection(e.target,n)}e.preventDefault()}return this.lastVal=D.getElementValue(e.target),void(this.throwInput=!0)}e.preventDefault()}}}},{key:"_onKeyup",value:function(e){if(this.isEditing=!1,this.keydownEventCounter=0,!this.formulaMode)if(this.settings.isCancellable&&this.eventKey===d.keyName.Esc)e.preventDefault();else{if(this.eventKey===d.keyName.Z||this.eventKey===d.keyName.z){if(e.ctrlKey&&e.shiftKey)return e.preventDefault(),this._historyTableRedo(),void(this.onGoingRedo=!0);if(e.ctrlKey&&!e.shiftKey){if(!this.onGoingRedo)return e.preventDefault(),void this._historyTableUndo();this.onGoingRedo=!1}}if(this.onGoingRedo&&(e.ctrlKey||e.shiftKey)&&(this.onGoingRedo=!1),(e.ctrlKey||e.metaKey)&&this.eventKey===d.keyName.x){var t=D.getElementSelection(this.domElement).start,i=this.constructor._toNumericValue(D.getElementValue(e.target),this.settings);this.set(i),this._setCaretPosition(t)}if(this.eventKey===d.keyName.Alt&&this.settings.unformatOnHover&&this.hoveredWithAlt)this.constructor._reformatAltHovered(this);else if(!e.ctrlKey&&!e.metaKey||this.eventKey!==d.keyName.Backspace&&this.eventKey!==d.keyName.Delete){this._updateInternalProperties(e);var n=this._processNonPrintableKeysAndShortcuts(e);delete this.valuePartsBeforePaste;var a=D.getElementValue(e.target);if(!(n||""===a&&""===this.initialValueOnFirstKeydown)&&(a===this.settings.currencySymbol?this.settings.currencySymbolPlacement===I.options.currencySymbolPlacement.suffix?D.setElementSelection(e.target,0):D.setElementSelection(e.target,this.settings.currencySymbol.length):this.eventKey===d.keyName.Tab&&D.setElementSelection(e.target,0,a.length),(a===this.settings.suffixText||""===this.rawValue&&""!==this.settings.currencySymbol&&""!==this.settings.suffixText)&&D.setElementSelection(e.target,0),null!==this.settings.decimalPlacesShownOnFocus&&this._saveValueToPersistentStorage(),this.formatted||this._formatValue(e),this._saveRawValueForAndroid(),a!==this.initialValueOnFirstKeydown&&this._triggerEvent(I.events.formatted,e.target,{oldValue:this.initialValueOnFirstKeydown,newValue:a,oldRawValue:this.initialRawValueOnFirstKeydown,newRawValue:this.rawValue,isPristine:this.isPristine(!1),error:null,aNElement:this}),1<this.historyTable.length)){var r=D.getElementSelection(this.domElement);this.selectionStart=r.start,this.selectionEnd=r.end,this.historyTable[this.historyTableIndex].start=this.selectionStart,this.historyTable[this.historyTableIndex].end=this.selectionEnd}}else{var s=D.getElementValue(e.target);this._setRawValue(this._formatOrUnformatOther(!1,s))}}}},{key:"_saveRawValueForAndroid",value:function(){if(this.eventKey===d.keyName.AndroidDefault){var e=this.constructor._stripAllNonNumberCharactersExceptCustomDecimalChar(this.getFormatted(),this.settings,!0,this.isFocused);e=this.constructor._convertToNumericString(e,this.settings),this._setRawValue(e)}}},{key:"_onFocusOutAndMouseLeave",value:function(e){if(this.isEditing=!1,"mouseleave"!==e.type||!this.formulaMode)if(this.settings.unformatOnHover&&"mouseleave"===e.type&&this.hoveredWithAlt)this.constructor._reformatAltHovered(this);else if("mouseleave"===e.type&&!this.isFocused||"blur"===e.type){"blur"===e.type&&this.formulaMode&&this._exitFormulaMode(),this._saveValueToPersistentStorage(),this.settings.showOnlyNumbersOnFocus===I.options.showOnlyNumbersOnFocus.onlyNumbers&&(this.settings.digitGroupSeparator=this.originalDigitGroupSeparator,this.settings.currencySymbol=this.originalCurrencySymbol,this.settings.suffixText=this.originalSuffixText);var t=this._getRawValueToFormat(this.rawValue),i=D.isNull(t),n=S(this.constructor._checkIfInRangeWithOverrideOption(t,this.settings),2),a=n[0],r=n[1],s=!1;if(""===t||i||(a||this._triggerEvent(I.events.minRangeExceeded,this.domElement),r||this._triggerEvent(I.events.maxRangeExceeded,this.domElement),this.settings.valuesToStrings&&this._checkValuesToStrings(t)&&(this._setElementValue(this.settings.valuesToStrings[t]),s=!0)),!s){var o;if(o=i||""===t?t:String(t),""===t||i){if(""===t)switch(this.settings.emptyInputBehavior){case I.options.emptyInputBehavior.zero:this._setRawValue("0"),o=this.constructor._roundValue("0",this.settings,0);break;case I.options.emptyInputBehavior.min:this._setRawValue(this.settings.minimumValue),o=this.constructor._roundFormattedValueShownOnFocusOrBlur(this.settings.minimumValue,this.settings,this.isFocused);break;case I.options.emptyInputBehavior.max:this._setRawValue(this.settings.maximumValue),o=this.constructor._roundFormattedValueShownOnFocusOrBlur(this.settings.maximumValue,this.settings,this.isFocused);break;default:D.isNumber(this.settings.emptyInputBehavior)&&(this._setRawValue(this.settings.emptyInputBehavior),o=this.constructor._roundFormattedValueShownOnFocusOrBlur(this.settings.emptyInputBehavior,this.settings,this.isFocused))}}else a&&r&&!this.constructor._isElementValueEmptyOrOnlyTheNegativeSign(t,this.settings)?(o=this._modifyNegativeSignAndDecimalCharacterForRawValue(o),this.settings.divisorWhenUnfocused&&!D.isNull(o)&&(o=(o/=this.settings.divisorWhenUnfocused).toString()),o=this.constructor._roundFormattedValueShownOnBlur(o,this.settings),o=this.constructor._modifyNegativeSignAndDecimalCharacterForFormattedValue(o,this.settings)):(a||this._triggerEvent(I.events.minRangeExceeded,this.domElement),r||this._triggerEvent(I.events.maxRangeExceeded,this.domElement));var l=this.constructor._orderValueCurrencySymbolAndSuffixText(o,this.settings,!1);this.constructor._isElementValueEmptyOrOnlyTheNegativeSign(o,this.settings)||i&&this.settings.emptyInputBehavior===I.options.emptyInputBehavior.null||(l=this.constructor._addGroupSeparators(o,this.settings,!1,t)),l===t&&""!==t&&this.settings.allowDecimalPadding!==I.options.allowDecimalPadding.never&&this.settings.allowDecimalPadding!==I.options.allowDecimalPadding.floats||(this.settings.symbolWhenUnfocused&&""!==t&&null!==t&&(l="".concat(l).concat(this.settings.symbolWhenUnfocused)),this._setElementValue(l))}"blur"===e.type&&this._onBlur(e)}}},{key:"_onPaste",value:function(e){if(e.preventDefault(),!(this.settings.readOnly||this.domElement.readOnly||this.domElement.disabled)){var t,i;window.clipboardData&&window.clipboardData.getData?t=window.clipboardData.getData("Text"):e.clipboardData&&e.clipboardData.getData?t=e.clipboardData.getData("text/plain"):D.throwError("Unable to retrieve the pasted value. Please use a modern browser (ie. Firefox or Chromium)."),i=e.target.tagName?e.target:e.explicitOriginalTarget;var n=D.getElementValue(i),a=i.selectionStart||0,r=i.selectionEnd||0,s=r-a;if(s===n.length){var o=this._preparePastedText(t),l=D.arabicToLatinNumbers(o,!1,!1,!1);return"."===l||""===l||"."!==l&&!D.isNumber(l)?(this.formatted=!0,void(this.settings.onInvalidPaste===I.options.onInvalidPaste.error&&D.throwError("The pasted value '".concat(t,"' is not a valid paste content.")))):(this.set(l),this.formatted=!0,void this._triggerEvent(I.events.native.input,i))}var c=D.isNegativeStrict(t,this.settings.negativeSignCharacter);c&&(t=t.slice(1,t.length));var u,h,m=this._preparePastedText(t);if("."!==(u="."===m?".":D.arabicToLatinNumbers(m,!1,!1,!1))&&(!D.isNumber(u)||""===u))return this.formatted=!0,void(this.settings.onInvalidPaste===I.options.onInvalidPaste.error&&D.throwError("The pasted value '".concat(t,"' is not a valid paste content.")));var g,d,v=D.isNegativeStrict(this.getNumericString(),this.settings.negativeSignCharacter);g=!(!c||v)&&(v=!0);var p=n.slice(0,a),f=n.slice(r,n.length);d=a!==r?this._preparePastedText(p+f):this._preparePastedText(n),v&&(d=D.setRawNegativeSign(d)),h=D.convertCharacterCountToIndexPosition(D.countNumberCharactersOnTheCaretLeftSide(n,a,this.settings.decimalCharacter)),g&&h++;var y=d.slice(0,h),S=d.slice(h,d.length),b=!1;"."===u&&(D.contains(y,".")&&(b=!0,y=y.replace(".","")),S=S.replace(".",""));var w=!1;switch(""===y&&"-"===S&&(y="-",w=!(S="")),this.settings.onInvalidPaste){case I.options.onInvalidPaste.truncate:case I.options.onInvalidPaste.replace:for(var P=D.parseStr(this.settings.minimumValue),O=D.parseStr(this.settings.maximumValue),k=d,N=0,E=y;N<u.length&&(d=(E+=u[N])+S,this.constructor._checkIfInRange(d,P,O));)k=d,N++;if(h+=N,w&&h++,this.settings.onInvalidPaste===I.options.onInvalidPaste.truncate){d=k,b&&h--;break}for(var _=h,C=k.length;N<u.length&&_<C;)if("."!==k[_]){if(d=D.replaceCharAt(k,_,u[N]),!this.constructor._checkIfInRange(d,P,O))break;k=d,N++,_++}else _++;h=_,b&&h--,d=k;break;case I.options.onInvalidPaste.error:case I.options.onInvalidPaste.ignore:case I.options.onInvalidPaste.clamp:default:if(d="".concat(y).concat(u).concat(S),a===r)h=D.convertCharacterCountToIndexPosition(D.countNumberCharactersOnTheCaretLeftSide(n,a,this.settings.decimalCharacter))+u.length;else if(""===S)h=D.convertCharacterCountToIndexPosition(D.countNumberCharactersOnTheCaretLeftSide(n,a,this.settings.decimalCharacter))+u.length,w&&h++;else{var F=D.convertCharacterCountToIndexPosition(D.countNumberCharactersOnTheCaretLeftSide(n,r,this.settings.decimalCharacter)),x=D.getElementValue(i).slice(a,r);h=F-s+D.countCharInText(this.settings.digitGroupSeparator,x)+u.length}g&&h++,b&&h--}if(D.isNumber(d)&&""!==d){var V=!1,T=!1;try{this.set(d),V=!0}catch(e){var A;switch(this.settings.onInvalidPaste){case I.options.onInvalidPaste.clamp:A=D.clampToRangeLimits(d,this.settings);try{this.set(A)}catch(e){D.throwError("Fatal error: Unable to set the clamped value '".concat(A,"'."))}V=T=!0,d=A;break;case I.options.onInvalidPaste.error:case I.options.onInvalidPaste.truncate:case I.options.onInvalidPaste.replace:D.throwError("The pasted value '".concat(t,"' results in a value '").concat(d,"' that is outside of the minimum [").concat(this.settings.minimumValue,"] and maximum [").concat(this.settings.maximumValue,"] value range."));case I.options.onInvalidPaste.ignore:default:return}}var L,B=D.getElementValue(i);if(V)switch(this.settings.onInvalidPaste){case I.options.onInvalidPaste.clamp:if(T){this.settings.currencySymbolPlacement===I.options.currencySymbolPlacement.suffix?D.setElementSelection(i,B.length-this.settings.currencySymbol.length):D.setElementSelection(i,B.length);break}case I.options.onInvalidPaste.error:case I.options.onInvalidPaste.ignore:case I.options.onInvalidPaste.truncate:case I.options.onInvalidPaste.replace:default:L=D.findCaretPositionInFormattedNumber(d,h,B,this.settings.decimalCharacter),D.setElementSelection(i,L)}V&&n!==B&&this._triggerEvent(I.events.native.input,i)}else this.settings.onInvalidPaste===I.options.onInvalidPaste.error&&D.throwError("The pasted value '".concat(t,"' would result into an invalid content '").concat(d,"'."))}}},{key:"_onBlur",value:function(e){this.isFocused=!1,this.isEditing=!1,this.rawValue!==this.rawValueOnFocus&&this._triggerEvent(I.events.native.change,e.target),this.rawValueOnFocus=void 0}},{key:"_onWheel",value:function(e){this.formulaMode||this.settings.readOnly||this.domElement.readOnly||this.domElement.disabled||this.settings.modifyValueOnWheel&&(this.settings.wheelOn===I.options.wheelOn.focus?this.isFocused?e.shiftKey||this.wheelAction(e):e.shiftKey&&this.wheelAction(e):this.settings.wheelOn===I.options.wheelOn.hover?e.shiftKey?(e.preventDefault(),window.scrollBy(0,D.isNegativeStrict(String(e.deltaY))?-50:50)):this.wheelAction(e):D.throwError("Unknown `wheelOn` option."))}},{key:"wheelAction",value:function(e){this.isWheelEvent=!0;var t,i=e.target.selectionStart||0,n=e.target.selectionEnd||0,a=this.rawValue;if(D.isUndefinedOrNullOrEmpty(a)?0<this.settings.minimumValue||this.settings.maximumValue<0?D.isWheelUpEvent(e)?t=this.settings.minimumValue:D.isWheelDownEvent(e)?t=this.settings.maximumValue:D.throwError("The event is not a 'wheel' event."):t=0:t=a,t=+t,D.isNumber(this.settings.wheelStep)){var r=+this.settings.wheelStep;D.isWheelUpEvent(e)?t+=r:D.isWheelDownEvent(e)&&(t-=r)}else D.isWheelUpEvent(e)?t=D.addAndRoundToNearestAuto(t,this.settings.decimalPlacesRawValue):D.isWheelDownEvent(e)&&(t=D.subtractAndRoundToNearestAuto(t,this.settings.decimalPlacesRawValue));(t=D.clampToRangeLimits(t,this.settings))!==+a&&(this.set(t),this._triggerEvent(I.events.native.input,e.target)),e.preventDefault(),this._setSelection(i,n),this.isWheelEvent=!1}},{key:"_onDrop",value:function(e){if(!this.formulaMode){var t;this.isDropEvent=!0,e.preventDefault(),t=D.isIE11()?"text":"text/plain";var i=e.dataTransfer.getData(t),n=this.unformatOther(i);this.set(n),this.isDropEvent=!1}}},{key:"_onFormSubmit",value:function(){var t=this;return this._getFormAutoNumericChildren(this.parentForm).map(function(e){return t.constructor.getAutoNumericElement(e)}).forEach(function(e){return e._unformatOnSubmit()}),!0}},{key:"_onFormReset",value:function(){var i=this;this._getFormAutoNumericChildren(this.parentForm).map(function(e){return i.constructor.getAutoNumericElement(e)}).forEach(function(e){var t=i._getDefaultValue(e.node());setTimeout(function(){return e.set(t)},0)})}},{key:"_unformatOnSubmit",value:function(){this.settings.unformatOnSubmit&&this._setElementValue(this.rawValue)}},{key:"_onKeydownGlobal",value:function(e){if(D.character(e)===d.keyName.Alt){var t=D.getHoveredElement();if(I.isManagedByAutoNumeric(t)){var i=I.getAutoNumericElement(t);!i.formulaMode&&i.settings.unformatOnHover&&this.constructor._unformatAltHovered(i)}}}},{key:"_onKeyupGlobal",value:function(e){if(D.character(e)===d.keyName.Alt){var t=D.getHoveredElement();if(I.isManagedByAutoNumeric(t)){var i=I.getAutoNumericElement(t);if(i.formulaMode||!i.settings.unformatOnHover)return;this.constructor._reformatAltHovered(i)}}}},{key:"_isElementTagSupported",value:function(){return D.isElement(this.domElement)||D.throwError("The DOM element is not valid, ".concat(this.domElement," given.")),D.isInArray(this.domElement.tagName.toLowerCase(),this.allowedTagList)}},{key:"_isInputElement",value:function(){return"input"===this.domElement.tagName.toLowerCase()}},{key:"_isInputTypeSupported",value:function(){return"text"===this.domElement.type||"hidden"===this.domElement.type||"tel"===this.domElement.type||D.isUndefinedOrNullOrEmpty(this.domElement.type)}},{key:"_checkElement",value:function(){var e=this.domElement.tagName.toLowerCase();this._isElementTagSupported()||D.throwError("The <".concat(e,"> tag is not supported by autoNumeric")),this._isInputElement()?(this._isInputTypeSupported()||D.throwError('The input type "'.concat(this.domElement.type,'" is not supported by autoNumeric')),this.isInputElement=!0):(this.isInputElement=!1,this.isContentEditable=this.domElement.hasAttribute("contenteditable")&&"true"===this.domElement.getAttribute("contenteditable"))}},{key:"_formatDefaultValueOnPageLoad",value:function(e){var t,i=0<arguments.length&&void 0!==e?e:null,n=!0;if(D.isNull(i)?(t=D.getElementValue(this.domElement).trim(),this.domElement.setAttribute("value",t)):t=i,this.isInputElement||this.isContentEditable){var a=this.constructor._toNumericValue(t,this.settings);if(this.domElement.hasAttribute("value")&&""!==this.domElement.getAttribute("value")){if(null!==this.settings.defaultValueOverride&&this.settings.defaultValueOverride.toString()!==t||null===this.settings.defaultValueOverride&&""!==t&&t!==this.domElement.getAttribute("value")||""!==t&&"hidden"===this.domElement.getAttribute("type")&&!D.isNumber(a)){if(this.settings.saveValueToSessionStorage&&(null!==this.settings.decimalPlacesShownOnFocus||this.settings.divisorWhenUnfocused)&&this._setRawValue(this._getValueFromPersistentStorage()),!this.settings.saveValueToSessionStorage){var r=this.constructor._removeBrackets(t,this.settings);(this.settings.negativePositiveSignPlacement===I.options.negativePositiveSignPlacement.suffix||this.settings.negativePositiveSignPlacement!==I.options.negativePositiveSignPlacement.prefix&&this.settings.currencySymbolPlacement===I.options.currencySymbolPlacement.suffix)&&""!==this.settings.negativeSignCharacter&&D.isNegative(t,this.settings.negativeSignCharacter)?this._setRawValue("-".concat(this.constructor._stripAllNonNumberCharacters(r,this.settings,!0,this.isFocused))):this._setRawValue(this.constructor._stripAllNonNumberCharacters(r,this.settings,!0,this.isFocused))}n=!1}}else isNaN(Number(a))||1/0===a?D.throwError("The value [".concat(t,"] used in the input is not a valid value autoNumeric can work with.")):(this.set(a),n=!1);if(""===t)switch(this.settings.emptyInputBehavior){case I.options.emptyInputBehavior.focus:case I.options.emptyInputBehavior.null:case I.options.emptyInputBehavior.press:break;case I.options.emptyInputBehavior.always:this._setElementValue(this.settings.currencySymbol);break;case I.options.emptyInputBehavior.min:this.set(this.settings.minimumValue);break;case I.options.emptyInputBehavior.max:this.set(this.settings.maximumValue);break;case I.options.emptyInputBehavior.zero:this.set("0");break;default:this.set(this.settings.emptyInputBehavior)}else n&&t===this.domElement.getAttribute("value")&&this.set(t)}else null!==this.settings.defaultValueOverride&&this.settings.defaultValueOverride!==t||this.set(t)}},{key:"_calculateVMinAndVMaxIntegerSizes",value:function(){var e=S(this.settings.maximumValue.toString().split("."),1)[0],t=S(this.settings.minimumValue||0===this.settings.minimumValue?this.settings.minimumValue.toString().split("."):[],1)[0];e=e.replace(this.settings.negativeSignCharacter,""),t=t.replace(this.settings.negativeSignCharacter,""),this.settings.mIntPos=Math.max(e.length,1),this.settings.mIntNeg=Math.max(t.length,1)}},{key:"_calculateValuesToStringsKeys",value:function(){this.settings.valuesToStrings?this.valuesToStringsKeys=Object.keys(this.settings.valuesToStrings):this.valuesToStringsKeys=[]}},{key:"_transformOptionsValuesToDefaultTypes",value:function(){for(var e in this.settings)if(Object.prototype.hasOwnProperty.call(this.settings,e)){var t=this.settings[e];"true"!==t&&"false"!==t||(this.settings[e]="true"===t),"number"==typeof t&&(this.settings[e]=t.toString())}}},{key:"_setSettings",value:function(e,t){var i=1<arguments.length&&void 0!==t&&t;!i&&D.isNull(e)||this.constructor._convertOldOptionsToNewOnes(e),i?("decimalPlacesRawValue"in e&&(this.settings.originalDecimalPlacesRawValue=e.decimalPlacesRawValue),"decimalPlaces"in e&&(this.settings.originalDecimalPlaces=e.decimalPlaces),this.constructor._calculateDecimalPlacesOnUpdate(e,this.settings),this._mergeSettings(e)):(this.settings={},this._mergeSettings(this.constructor.getDefaultConfig(),this.domElement.dataset,e,{rawValue:this.defaultRawValue}),this.caretFix=!1,this.throwInput=!0,this.allowedTagList=d.allowedTagList,this.runOnce=!1,this.hoveredWithAlt=!1),this._transformOptionsValuesToDefaultTypes(),this._runCallbacksFoundInTheSettingsObject(),this.constructor._correctNegativePositiveSignPlacementOption(this.settings),this.constructor._correctCaretPositionOnFocusAndSelectOnFocusOptions(this.settings),this.constructor._setNegativePositiveSignPermissions(this.settings),i||(D.isNull(e)||!e.decimalPlaces?this.settings.originalDecimalPlaces=null:this.settings.originalDecimalPlaces=e.decimalPlaces,this.settings.originalDecimalPlacesRawValue=this.settings.decimalPlacesRawValue,this.constructor._calculateDecimalPlacesOnInit(this.settings)),this._calculateVMinAndVMaxIntegerSizes(),this._setTrailingNegativeSignInfo(),this.regex={},this.constructor._cachesUsualRegularExpressions(this.settings,this.regex),this.constructor._setBrackets(this.settings),this._calculateValuesToStringsKeys(),D.isEmptyObj(this.settings)&&D.throwError("Unable to set the settings, those are invalid ; an empty object was given."),this.constructor.validate(this.settings,!1,e),this._keepAnOriginalSettingsCopy()}},{key:"_preparePastedText",value:function(e){return this.constructor._stripAllNonNumberCharacters(e,this.settings,!0,this.isFocused)}},{key:"_updateInternalProperties",value:function(){this.selection=D.getElementSelection(this.domElement),this.processed=!1}},{key:"_updateEventKeyInfo",value:function(e){this.eventKey=D.character(e)}},{key:"_saveCancellableValue",value:function(){this.savedCancellableValue=this.rawValue}},{key:"_setSelection",value:function(e,t){e=Math.max(e,0),t=Math.min(t,D.getElementValue(this.domElement).length),this.selection={start:e,end:t,length:t-e},D.setElementSelection(this.domElement,e,t)}},{key:"_setCaretPosition",value:function(e){this._setSelection(e,e)}},{key:"_getLeftAndRightPartAroundTheSelection",value:function(){var e=D.getElementValue(this.domElement);return[e.substring(0,this.selection.start),e.substring(this.selection.end,e.length)]}},{key:"_getUnformattedLeftAndRightPartAroundTheSelection",value:function(){var e=S(this._getLeftAndRightPartAroundTheSelection(),2),t=e[0],i=e[1];if(""===t&&""===i)return["",""];var n=!0;return this.eventKey!==d.keyName.Hyphen&&this.eventKey!==d.keyName.Minus||0!==Number(t)||(n=!1),this.isTrailingNegative&&(D.isNegative(i,this.settings.negativeSignCharacter)&&!D.isNegative(t,this.settings.negativeSignCharacter)||""===i&&D.isNegative(t,this.settings.negativeSignCharacter,!0))&&(t=t.replace(this.settings.negativeSignCharacter,""),i=i.replace(this.settings.negativeSignCharacter,""),t=t.replace("-",""),i=i.replace("-",""),t="-".concat(t)),[t=I._stripAllNonNumberCharactersExceptCustomDecimalChar(t,this.settings,n,this.isFocused),i=I._stripAllNonNumberCharactersExceptCustomDecimalChar(i,this.settings,!1,this.isFocused)]}},{key:"_normalizeParts",value:function(e,t){var i=!0;this.eventKey!==d.keyName.Hyphen&&this.eventKey!==d.keyName.Minus||0!==Number(e)||(i=!1),this.isTrailingNegative&&D.isNegative(t,this.settings.negativeSignCharacter)&&!D.isNegative(e,this.settings.negativeSignCharacter)&&(e="-".concat(e),t=t.replace(this.settings.negativeSignCharacter,"")),e=I._stripAllNonNumberCharactersExceptCustomDecimalChar(e,this.settings,i,this.isFocused),t=I._stripAllNonNumberCharactersExceptCustomDecimalChar(t,this.settings,!1,this.isFocused),this.settings.leadingZero!==I.options.leadingZero.deny||this.eventKey!==d.keyName.num0&&this.eventKey!==d.keyName.numpad0||0!==Number(e)||D.contains(e,this.settings.decimalCharacter)||""===t||(e=e.substring(0,e.length-1));var n=e+t;if(this.settings.decimalCharacter){var a=n.match(new RegExp("^".concat(this.regex.aNegRegAutoStrip,"\\").concat(this.settings.decimalCharacter)));a&&(n=(e=e.replace(a[1],a[1]+"0"))+t)}return[e,t,n]}},{key:"_setValueParts",value:function(e,t,i){var n=2<arguments.length&&void 0!==i&&i,a=S(this._normalizeParts(e,t),3),r=a[0],s=a[1],o=a[2],l=S(I._checkIfInRangeWithOverrideOption(o,this.settings),2),c=l[0],u=l[1];if(c&&u){var h=I._truncateDecimalPlaces(o,this.settings,n,this.settings.decimalPlacesRawValue).replace(this.settings.decimalCharacter,".");if(""===h||h===this.settings.negativeSignCharacter){var m;switch(this.settings.emptyInputBehavior){case I.options.emptyInputBehavior.focus:case I.options.emptyInputBehavior.press:case I.options.emptyInputBehavior.always:m="";break;case I.options.emptyInputBehavior.min:m=this.settings.minimumValue;break;case I.options.emptyInputBehavior.max:m=this.settings.maximumValue;break;case I.options.emptyInputBehavior.zero:m="0";break;case I.options.emptyInputBehavior.null:m=null;break;default:m=this.settings.emptyInputBehavior}this._setRawValue(m)}else this._setRawValue(this._trimLeadingAndTrailingZeros(h));var g=I._truncateDecimalPlaces(o,this.settings,n,this.settings.decimalPlacesShownOnFocus),d=r.length;return d>g.length&&(d=g.length),1===d&&"0"===r&&this.settings.leadingZero===I.options.leadingZero.deny&&(d=""===s||"0"===r&&""!==s?1:0),this._setElementValue(g,!1),this._setCaretPosition(d),!0}return c?u||this._triggerEvent(I.events.maxRangeExceeded,this.domElement):this._triggerEvent(I.events.minRangeExceeded,this.domElement),!1}},{key:"_getSignPosition",value:function(){var e;if(this.settings.currencySymbol){var t=this.settings.currencySymbol.length,i=D.getElementValue(this.domElement);if(this.settings.currencySymbolPlacement===I.options.currencySymbolPlacement.prefix)e=this.settings.negativeSignCharacter&&i&&i.charAt(0)===this.settings.negativeSignCharacter?[1,t+1]:[0,t];else{var n=i.length;e=[n-t,n]}}else e=[1e3,-1];return e}},{key:"_expandSelectionOnSign",value:function(){var e=S(this._getSignPosition(),2),t=e[0],i=e[1],n=this.selection;n.start<i&&n.end>t&&((n.start<t||n.end>i)&&D.getElementValue(this.domElement).substring(Math.max(n.start,t),Math.min(n.end,i)).match(/^\s*$/)?n.start<t?this._setSelection(n.start,t):this._setSelection(i,n.end):this._setSelection(Math.min(n.start,t),Math.max(n.end,i)))}},{key:"_checkPaste",value:function(){if(!this.formatted&&!D.isUndefined(this.valuePartsBeforePaste)){var e=this.valuePartsBeforePaste,t=S(this._getLeftAndRightPartAroundTheSelection(),2),i=t[0],n=t[1];delete this.valuePartsBeforePaste;var a=i.substr(0,e[0].length)+I._stripAllNonNumberCharactersExceptCustomDecimalChar(i.substr(e[0].length),this.settings,!0,this.isFocused);this._setValueParts(a,n,!0)||(this._setElementValue(e.join(""),!1),this._setCaretPosition(e[0].length))}}},{key:"_processNonPrintableKeysAndShortcuts",value:function(e){if((e.ctrlKey||e.metaKey)&&"keyup"===e.type&&!D.isUndefined(this.valuePartsBeforePaste)||e.shiftKey&&this.eventKey===d.keyName.Insert)return this._checkPaste(),!1;if(this.constructor._shouldSkipEventKey(this.eventKey))return!0;if((e.ctrlKey||e.metaKey)&&this.eventKey===d.keyName.a)return this.settings.selectNumberOnly&&(e.preventDefault(),this.selectNumber()),!0;if((e.ctrlKey||e.metaKey)&&(this.eventKey===d.keyName.c||this.eventKey===d.keyName.v||this.eventKey===d.keyName.x))return"keydown"===e.type&&this._expandSelectionOnSign(),this.eventKey!==d.keyName.v&&this.eventKey!==d.keyName.Insert||("keydown"===e.type||"keypress"===e.type?D.isUndefined(this.valuePartsBeforePaste)&&(this.valuePartsBeforePaste=this._getLeftAndRightPartAroundTheSelection()):this._checkPaste()),"keydown"===e.type||"keypress"===e.type||this.eventKey===d.keyName.c;if(e.ctrlKey||e.metaKey)return!(this.eventKey===d.keyName.Z||this.eventKey===d.keyName.z);if(this.eventKey!==d.keyName.LeftArrow&&this.eventKey!==d.keyName.RightArrow)return D.isInArray(this.eventKey,d.keyName._directionKeys);if("keydown"===e.type&&!e.shiftKey){var t=D.getElementValue(this.domElement);this.eventKey!==d.keyName.LeftArrow||t.charAt(this.selection.start-2)!==this.settings.digitGroupSeparator&&t.charAt(this.selection.start-2)!==this.settings.decimalCharacter?this.eventKey!==d.keyName.RightArrow||t.charAt(this.selection.start+1)!==this.settings.digitGroupSeparator&&t.charAt(this.selection.start+1)!==this.settings.decimalCharacter||this._setCaretPosition(this.selection.start+1):this._setCaretPosition(this.selection.start-1)}return!0}},{key:"_processCharacterDeletionIfTrailingNegativeSign",value:function(e){var t=S(e,2),i=t[0],n=t[1],a=D.getElementValue(this.domElement),r=D.isNegative(a,this.settings.negativeSignCharacter);if(this.settings.currencySymbolPlacement===I.options.currencySymbolPlacement.prefix&&this.settings.negativePositiveSignPlacement===I.options.negativePositiveSignPlacement.suffix&&(this.eventKey===d.keyName.Backspace?(this.caretFix=this.selection.start>=a.indexOf(this.settings.suffixText)&&""!==this.settings.suffixText,"-"===a.charAt(this.selection.start-1)?i=i.substring(1):this.selection.start<=a.length-this.settings.suffixText.length&&(i=i.substring(0,i.length-1))):(this.caretFix=this.selection.start>=a.indexOf(this.settings.suffixText)&&""!==this.settings.suffixText,this.selection.start>=a.indexOf(this.settings.currencySymbol)+this.settings.currencySymbol.length&&(n=n.substring(1,n.length)),D.isNegative(i,this.settings.negativeSignCharacter)&&"-"===a.charAt(this.selection.start)&&(i=i.substring(1)))),this.settings.currencySymbolPlacement===I.options.currencySymbolPlacement.suffix)switch(this.settings.negativePositiveSignPlacement){case I.options.negativePositiveSignPlacement.left:this.caretFix=this.selection.start>=a.indexOf(this.settings.negativeSignCharacter)+this.settings.negativeSignCharacter.length,this.eventKey===d.keyName.Backspace?this.selection.start===a.indexOf(this.settings.negativeSignCharacter)+this.settings.negativeSignCharacter.length&&r?i=i.substring(1):"-"!==i&&(this.selection.start<=a.indexOf(this.settings.negativeSignCharacter)||!r)&&(i=i.substring(0,i.length-1)):("-"===i[0]&&(n=n.substring(1)),this.selection.start===a.indexOf(this.settings.negativeSignCharacter)&&r&&(i=i.substring(1)));break;case I.options.negativePositiveSignPlacement.right:this.caretFix=this.selection.start>=a.indexOf(this.settings.negativeSignCharacter)+this.settings.negativeSignCharacter.length,this.eventKey===d.keyName.Backspace?this.selection.start===a.indexOf(this.settings.negativeSignCharacter)+this.settings.negativeSignCharacter.length?i=i.substring(1):"-"!==i&&this.selection.start<=a.indexOf(this.settings.negativeSignCharacter)-this.settings.currencySymbol.length?i=i.substring(0,i.length-1):""===i||r||(i=i.substring(0,i.length-1)):(this.caretFix=this.selection.start>=a.indexOf(this.settings.currencySymbol)&&""!==this.settings.currencySymbol,this.selection.start===a.indexOf(this.settings.negativeSignCharacter)&&(i=i.substring(1)),n=n.substring(1))}return[i,n]}},{key:"_processCharacterDeletion",value:function(){var e,t;if(this.selection.length){this._expandSelectionOnSign();var i=S(this._getUnformattedLeftAndRightPartAroundTheSelection(),2);e=i[0],t=i[1]}else{var n=S(this._getUnformattedLeftAndRightPartAroundTheSelection(),2);if(e=n[0],t=n[1],""===e&&""===t&&(this.throwInput=!1),this.isTrailingNegative&&D.isNegative(D.getElementValue(this.domElement),this.settings.negativeSignCharacter)){var a=S(this._processCharacterDeletionIfTrailingNegativeSign([e,t]),2);e=a[0],t=a[1]}else this.eventKey===d.keyName.Backspace?e=e.substring(0,e.length-1):t=t.substring(1,t.length)}this._setValueParts(e,t)}},{key:"_isDecimalCharacterInsertionAllowed",value:function(){return String(this.settings.decimalPlacesShownOnFocus)!==String(I.options.decimalPlacesShownOnFocus.none)&&String(this.settings.decimalPlaces)!==String(I.options.decimalPlaces.none)}},{key:"_processCharacterInsertion",value:function(){var e=S(this._getUnformattedLeftAndRightPartAroundTheSelection(),2),t=e[0],i=e[1];if(this.eventKey!==d.keyName.AndroidDefault&&(this.throwInput=!0),this.eventKey===this.settings.decimalCharacter||this.settings.decimalCharacterAlternative&&this.eventKey===this.settings.decimalCharacterAlternative){if(!this._isDecimalCharacterInsertionAllowed()||!this.settings.decimalCharacter)return!1;if(this.settings.alwaysAllowDecimalCharacter)t=t.replace(this.settings.decimalCharacter,""),i=i.replace(this.settings.decimalCharacter,"");else{if(D.contains(t,this.settings.decimalCharacter))return!0;if(0<i.indexOf(this.settings.decimalCharacter))return!0;0===i.indexOf(this.settings.decimalCharacter)&&(i=i.substr(1))}return this.settings.negativeSignCharacter&&D.contains(i,this.settings.negativeSignCharacter)&&(t="".concat(this.settings.negativeSignCharacter).concat(t),i=i.replace(this.settings.negativeSignCharacter,"")),this._setValueParts(t+this.settings.decimalCharacter,i),!0}if(("-"===this.eventKey||"+"===this.eventKey)&&this.settings.isNegativeSignAllowed)return""===t&&D.contains(i,"-")?i=i.replace("-",""):t=D.isNegativeStrict(t,"-")?t.replace("-",""):"".concat(this.settings.negativeSignCharacter).concat(t),this._setValueParts(t,i),!0;var n=Number(this.eventKey);return 0<=n&&n<=9?(this.settings.isNegativeSignAllowed&&""===t&&D.contains(i,"-")&&(t="-",i=i.substring(1,i.length)),this.settings.maximumValue<=0&&this.settings.minimumValue<this.settings.maximumValue&&!D.contains(D.getElementValue(this.domElement),this.settings.negativeSignCharacter)&&"0"!==this.eventKey&&(t="-".concat(t)),this._setValueParts("".concat(t).concat(this.eventKey),i),!0):this.throwInput=!1}},{key:"_formatValue",value:function(e){var t=D.getElementValue(this.domElement),i=S(this._getUnformattedLeftAndRightPartAroundTheSelection(),1)[0];if((""===this.settings.digitGroupSeparator||""!==this.settings.digitGroupSeparator&&!D.contains(t,this.settings.digitGroupSeparator))&&(""===this.settings.currencySymbol||""!==this.settings.currencySymbol&&!D.contains(t,this.settings.currencySymbol))){var n=S(t.split(this.settings.decimalCharacter),1)[0],a="";D.isNegative(n,this.settings.negativeSignCharacter)&&(a=this.settings.negativeSignCharacter,n=n.replace(this.settings.negativeSignCharacter,""),i=i.replace("-","")),""===a&&n.length>this.settings.mIntPos&&"0"===i.charAt(0)&&(i=i.slice(1)),a===this.settings.negativeSignCharacter&&n.length>this.settings.mIntNeg&&"0"===i.charAt(0)&&(i=i.slice(1)),this.isTrailingNegative||(i="".concat(a).concat(i))}var r=this.constructor._addGroupSeparators(t,this.settings,this.isFocused,this.rawValue),s=r.length;if(r){var o,l=i.split("");if((this.settings.negativePositiveSignPlacement===I.options.negativePositiveSignPlacement.suffix||this.settings.negativePositiveSignPlacement!==I.options.negativePositiveSignPlacement.prefix&&this.settings.currencySymbolPlacement===I.options.currencySymbolPlacement.suffix)&&l[0]===this.settings.negativeSignCharacter&&!this.settings.isNegativeSignAllowed&&(l.shift(),(this.eventKey===d.keyName.Backspace||this.eventKey===d.keyName.Delete)&&this.caretFix&&((this.settings.currencySymbolPlacement===I.options.currencySymbolPlacement.suffix&&this.settings.negativePositiveSignPlacement===I.options.negativePositiveSignPlacement.left||this.settings.currencySymbolPlacement===I.options.currencySymbolPlacement.prefix&&this.settings.negativePositiveSignPlacement===I.options.negativePositiveSignPlacement.suffix)&&(l.push(this.settings.negativeSignCharacter),this.caretFix="keydown"===e.type),this.settings.currencySymbolPlacement===I.options.currencySymbolPlacement.suffix&&this.settings.negativePositiveSignPlacement===I.options.negativePositiveSignPlacement.right))){var c=this.settings.currencySymbol.split(""),u=["\\","^","$",".","|","?","*","+","(",")","["],h=[];c.forEach(function(e,t){t=c[e],D.isInArray(t,u)?h.push("\\"+t):h.push(t)}),this.eventKey===d.keyName.Backspace&&"-"===this.settings.negativeSignCharacter&&h.push("-"),l.push(h.join("")),this.caretFix="keydown"===e.type}for(var m=0;m<l.length;m++)l[m].match("\\d")||(l[m]="\\"+l[m]);o=this.settings.currencySymbolPlacement===I.options.currencySymbolPlacement.suffix?new RegExp("^.*?".concat(l.join(".*?"))):new RegExp("^.*".concat(this.settings.currencySymbol,".*").concat(l.join(".*?")));var g=r.match(o);g?(s=g[0].length,this.settings.showPositiveSign&&(0===s&&g.input.charAt(0)===this.settings.positiveSignCharacter&&(s=1===g.input.indexOf(this.settings.currencySymbol)?this.settings.currencySymbol.length+1:1),0===s&&g.input.charAt(this.settings.currencySymbol.length)===this.settings.positiveSignCharacter&&(s=this.settings.currencySymbol.length+1)),(0===s&&r.charAt(0)!==this.settings.negativeSignCharacter||1===s&&r.charAt(0)===this.settings.negativeSignCharacter)&&this.settings.currencySymbol&&this.settings.currencySymbolPlacement===I.options.currencySymbolPlacement.prefix&&(s=this.settings.currencySymbol.length+(D.isNegativeStrict(r,this.settings.negativeSignCharacter)?1:0))):(this.settings.currencySymbol&&this.settings.currencySymbolPlacement===I.options.currencySymbolPlacement.suffix&&(s-=this.settings.currencySymbol.length),this.settings.suffixText&&(s-=this.settings.suffixText.length))}r!==t&&(this._setElementValue(r,!1),this._setCaretPosition(s)),this.formatted=!0}}]),g(e,t),I;var e,t}();function w(e,t){t=t||{bubbles:!1,cancelable:!1,detail:void 0};var i=document.createEvent("CustomEvent");return i.initCustomEvent(e,t.bubbles,t.cancelable,t.detail),i}f.multiple=function(e){var i=1<arguments.length&&void 0!==arguments[1]?arguments[1]:null,t=2<arguments.length&&void 0!==arguments[2]?arguments[2]:null,n=[];if(D.isObject(i)&&(t=i,i=null),D.isString(e))e=v(document.querySelectorAll(e));else if(D.isObject(e)){Object.prototype.hasOwnProperty.call(e,"rootElement")||D.throwError("The object passed to the 'multiple' function is invalid ; no 'rootElement' attribute found.");var a=v(e.rootElement.querySelectorAll("input"));e=Object.prototype.hasOwnProperty.call(e,"exclude")?(Array.isArray(e.exclude)||D.throwError("The 'exclude' array passed to the 'multiple' function is invalid."),D.filterOut(a,e.exclude)):a}else D.isArray(e)||D.throwError("The given parameters to the 'multiple' function are invalid.");if(0===e.length){var r=!0;return!D.isNull(t)&&D.isBoolean(t.showWarnings)&&(r=t.showWarnings),D.warning("No valid DOM elements were given hence no AutoNumeric objects were instantiated.",r),[]}var s=D.isArray(i)&&1<=i.length,o=!1,l=!1;if(s){var c=b(Number(i[0]));(o="number"===c&&!isNaN(Number(i[0])))||"string"!==c&&!isNaN(c)&&"object"!==c||(l=!0)}var u,h=!1;if(D.isArray(t)&&1<=t.length){var m=b(t[0]);"string"!==m&&"object"!==m||(h=!0)}u=l?f.mergeOptions(i):h?f.mergeOptions(t):t;var g,d=D.isNumber(i);return o&&(g=i.length),e.forEach(function(e,t){d?n.push(new f(e,i,u)):o&&t<=g?n.push(new f(e,i[t],u)):n.push(new f(e,null,u))}),n},Array.from||(Array.from=function(e){return[].slice.call(e)}),"undefined"!=typeof window&&"function"!=typeof window.CustomEvent&&(w.prototype=window.Event.prototype,window.CustomEvent=w),f.events={initialized:"autoNumeric:initialized",invalidFormula:"autoNumeric:invalidFormula",formatted:"autoNumeric:formatted",rawValueModified:"autoNumeric:rawValueModified",minRangeExceeded:"autoNumeric:minExceeded",maxRangeExceeded:"autoNumeric:maxExceeded",native:{input:"input",change:"change"},validFormula:"autoNumeric:validFormula"},Object.freeze(f.events.native),Object.freeze(f.events),Object.defineProperty(f,"events",{configurable:!1,writable:!1}),f.options={allowDecimalPadding:{always:!0,never:!1,floats:"floats"},alwaysAllowDecimalCharacter:{alwaysAllow:!0,doNotAllow:!1},caretPositionOnFocus:{start:"start",end:"end",decimalLeft:"decimalLeft",decimalRight:"decimalRight",doNoForceCaretPosition:null},createLocalList:{createList:!0,doNotCreateList:!1},currencySymbol:{none:"",currencySign:"¤",austral:"₳",australCentavo:"¢",baht:"฿",cedi:"₵",cent:"¢",colon:"₡",cruzeiro:"₢",dollar:"$",dong:"₫",drachma:"₯",dram:"​֏",european:"₠",euro:"€",florin:"ƒ",franc:"₣",guarani:"₲",hryvnia:"₴",kip:"₭",att:"ອັດ",lepton:"Λ.",lira:"₺",liraOld:"₤",lari:"₾",mark:"ℳ",mill:"₥",naira:"₦",peseta:"₧",peso:"₱",pfennig:"₰",pound:"£",real:"R$",riel:"៛",ruble:"₽",rupee:"₹",rupeeOld:"₨",shekel:"₪",shekelAlt:"ש״ח‎‎",taka:"৳",tenge:"₸",togrog:"₮",won:"₩",yen:"¥"},currencySymbolPlacement:{prefix:"p",suffix:"s"},decimalCharacter:{comma:",",dot:".",middleDot:"·",arabicDecimalSeparator:"٫",decimalSeparatorKeySymbol:"⎖"},decimalCharacterAlternative:{none:null,comma:",",dot:"."},decimalPlaces:{none:0,one:1,two:2,three:3,four:4,five:5,six:6},decimalPlacesRawValue:{useDefault:null,none:0,one:1,two:2,three:3,four:4,five:5,six:6},decimalPlacesShownOnBlur:{useDefault:null,none:0,one:1,two:2,three:3,four:4,five:5,six:6},decimalPlacesShownOnFocus:{useDefault:null,none:0,one:1,two:2,three:3,four:4,five:5,six:6},defaultValueOverride:{doNotOverride:null},digitalGroupSpacing:{two:"2",twoScaled:"2s",three:"3",four:"4"},digitGroupSeparator:{comma:",",dot:".",normalSpace:" ",thinSpace:" ",narrowNoBreakSpace:" ",noBreakSpace:" ",noSeparator:"",apostrophe:"'",arabicThousandsSeparator:"٬",dotAbove:"˙",privateUseTwo:"’"},divisorWhenUnfocused:{none:null,percentage:100,permille:1e3,basisPoint:1e4},emptyInputBehavior:{focus:"focus",press:"press",always:"always",zero:"zero",min:"min",max:"max",null:"null"},eventBubbles:{bubbles:!0,doesNotBubble:!1},eventIsCancelable:{isCancelable:!0,isNotCancelable:!1},failOnUnknownOption:{fail:!0,ignore:!1},formatOnPageLoad:{format:!0,doNotFormat:!1},formulaMode:{enabled:!0,disabled:!1},historySize:{verySmall:5,small:10,medium:20,large:50,veryLarge:100,insane:Number.MAX_SAFE_INTEGER},isCancellable:{cancellable:!0,notCancellable:!1},leadingZero:{allow:"allow",deny:"deny",keep:"keep"},maximumValue:{tenTrillions:"10000000000000",oneBillion:"1000000000",zero:"0"},minimumValue:{tenTrillions:"-10000000000000",oneBillion:"-1000000000",zero:"0"},modifyValueOnWheel:{modifyValue:!0,doNothing:!1},negativeBracketsTypeOnBlur:{parentheses:"(,)",brackets:"[,]",chevrons:"<,>",curlyBraces:"{,}",angleBrackets:"〈,〉",japaneseQuotationMarks:"｢,｣",halfBrackets:"⸤,⸥",whiteSquareBrackets:"⟦,⟧",quotationMarks:"‹,›",guillemets:"«,»",none:null},negativePositiveSignPlacement:{prefix:"p",suffix:"s",left:"l",right:"r",none:null},negativeSignCharacter:{hyphen:"-",minus:"−",heavyMinus:"➖",fullWidthHyphen:"－",circledMinus:"⊖",squaredMinus:"⊟",triangleMinus:"⨺",plusMinus:"±",minusPlus:"∓",dotMinus:"∸",minusTilde:"≂",not:"¬"},noEventListeners:{noEvents:!0,addEvents:!1},onInvalidPaste:{error:"error",ignore:"ignore",clamp:"clamp",truncate:"truncate",replace:"replace"},outputFormat:{string:"string",number:"number",dot:".",negativeDot:"-.",comma:",",negativeComma:"-,",dotNegative:".-",commaNegative:",-",none:null},overrideMinMaxLimits:{ceiling:"ceiling",floor:"floor",ignore:"ignore",doNotOverride:null},positiveSignCharacter:{plus:"+",fullWidthPlus:"＋",heavyPlus:"➕",doublePlus:"⧺",triplePlus:"⧻",circledPlus:"⊕",squaredPlus:"⊞",trianglePlus:"⨹",plusMinus:"±",minusPlus:"∓",dotPlus:"∔",altHebrewPlus:"﬩",normalSpace:" ",thinSpace:" ",narrowNoBreakSpace:" ",noBreakSpace:" "},rawValueDivisor:{none:null,percentage:100,permille:1e3,basisPoint:1e4},readOnly:{readOnly:!0,readWrite:!1},roundingMethod:{halfUpSymmetric:"S",halfUpAsymmetric:"A",halfDownSymmetric:"s",halfDownAsymmetric:"a",halfEvenBankersRounding:"B",upRoundAwayFromZero:"U",downRoundTowardZero:"D",toCeilingTowardPositiveInfinity:"C",toFloorTowardNegativeInfinity:"F",toNearest05:"N05",toNearest05Alt:"CHF",upToNext05:"U05",downToNext05:"D05"},saveValueToSessionStorage:{save:!0,doNotSave:!1},selectNumberOnly:{selectNumbersOnly:!0,selectAll:!1},selectOnFocus:{select:!0,doNotSelect:!1},serializeSpaces:{plus:"+",percent:"%20"},showOnlyNumbersOnFocus:{onlyNumbers:!0,showAll:!1},showPositiveSign:{show:!0,hide:!1},showWarnings:{show:!0,hide:!1},styleRules:{none:null,positiveNegative:{positive:"autoNumeric-positive",negative:"autoNumeric-negative"},range0To100With4Steps:{ranges:[{min:0,max:25,class:"autoNumeric-red"},{min:25,max:50,class:"autoNumeric-orange"},{min:50,max:75,class:"autoNumeric-yellow"},{min:75,max:100,class:"autoNumeric-green"}]},evenOdd:{userDefined:[{callback:function(e){return e%2==0},classes:["autoNumeric-even","autoNumeric-odd"]}]},rangeSmallAndZero:{userDefined:[{callback:function(e){return-1<=e&&e<0?0:0===Number(e)?1:0<e&&e<=1?2:null},classes:["autoNumeric-small-negative","autoNumeric-zero","autoNumeric-small-positive"]}]}},suffixText:{none:"",percentage:"%",permille:"‰",basisPoint:"‱"},symbolWhenUnfocused:{none:null,percentage:"%",permille:"‰",basisPoint:"‱"},unformatOnHover:{unformat:!0,doNotUnformat:!1},unformatOnSubmit:{unformat:!0,keepCurrentValue:!1},valuesToStrings:{none:null,zeroDash:{0:"-"},oneAroundZero:{"-1":"Min",1:"Max"}},watchExternalChanges:{watch:!0,doNotWatch:!1},wheelOn:{focus:"focus",hover:"hover"},wheelStep:{progressive:"progressive"}},p=f.options,Object.getOwnPropertyNames(p).forEach(function(e){"valuesToStrings"===e?Object.getOwnPropertyNames(p.valuesToStrings).forEach(function(e){D.isIE11()||null===p.valuesToStrings[e]||Object.freeze(p.valuesToStrings[e])}):"styleRules"!==e&&(D.isIE11()||null===p[e]||Object.freeze(p[e]))}),Object.freeze(p),Object.defineProperty(f,"options",{configurable:!1,writable:!1}),f.defaultSettings={allowDecimalPadding:f.options.allowDecimalPadding.always,alwaysAllowDecimalCharacter:f.options.alwaysAllowDecimalCharacter.doNotAllow,caretPositionOnFocus:f.options.caretPositionOnFocus.doNoForceCaretPosition,createLocalList:f.options.createLocalList.createList,currencySymbol:f.options.currencySymbol.none,currencySymbolPlacement:f.options.currencySymbolPlacement.prefix,decimalCharacter:f.options.decimalCharacter.dot,decimalCharacterAlternative:f.options.decimalCharacterAlternative.none,decimalPlaces:f.options.decimalPlaces.two,decimalPlacesRawValue:f.options.decimalPlacesRawValue.useDefault,decimalPlacesShownOnBlur:f.options.decimalPlacesShownOnBlur.useDefault,decimalPlacesShownOnFocus:f.options.decimalPlacesShownOnFocus.useDefault,defaultValueOverride:f.options.defaultValueOverride.doNotOverride,digitalGroupSpacing:f.options.digitalGroupSpacing.three,digitGroupSeparator:f.options.digitGroupSeparator.comma,divisorWhenUnfocused:f.options.divisorWhenUnfocused.none,emptyInputBehavior:f.options.emptyInputBehavior.focus,eventBubbles:f.options.eventBubbles.bubbles,eventIsCancelable:f.options.eventIsCancelable.isCancelable,failOnUnknownOption:f.options.failOnUnknownOption.ignore,formatOnPageLoad:f.options.formatOnPageLoad.format,formulaMode:f.options.formulaMode.disabled,historySize:f.options.historySize.medium,isCancellable:f.options.isCancellable.cancellable,leadingZero:f.options.leadingZero.deny,maximumValue:f.options.maximumValue.tenTrillions,minimumValue:f.options.minimumValue.tenTrillions,modifyValueOnWheel:f.options.modifyValueOnWheel.modifyValue,negativeBracketsTypeOnBlur:f.options.negativeBracketsTypeOnBlur.none,negativePositiveSignPlacement:f.options.negativePositiveSignPlacement.none,negativeSignCharacter:f.options.negativeSignCharacter.hyphen,noEventListeners:f.options.noEventListeners.addEvents,onInvalidPaste:f.options.onInvalidPaste.error,outputFormat:f.options.outputFormat.none,overrideMinMaxLimits:f.options.overrideMinMaxLimits.doNotOverride,positiveSignCharacter:f.options.positiveSignCharacter.plus,rawValueDivisor:f.options.rawValueDivisor.none,readOnly:f.options.readOnly.readWrite,roundingMethod:f.options.roundingMethod.halfUpSymmetric,saveValueToSessionStorage:f.options.saveValueToSessionStorage.doNotSave,selectNumberOnly:f.options.selectNumberOnly.selectNumbersOnly,selectOnFocus:f.options.selectOnFocus.select,serializeSpaces:f.options.serializeSpaces.plus,showOnlyNumbersOnFocus:f.options.showOnlyNumbersOnFocus.showAll,showPositiveSign:f.options.showPositiveSign.hide,showWarnings:f.options.showWarnings.show,styleRules:f.options.styleRules.none,suffixText:f.options.suffixText.none,symbolWhenUnfocused:f.options.symbolWhenUnfocused.none,unformatOnHover:f.options.unformatOnHover.unformat,unformatOnSubmit:f.options.unformatOnSubmit.keepCurrentValue,valuesToStrings:f.options.valuesToStrings.none,watchExternalChanges:f.options.watchExternalChanges.doNotWatch,wheelOn:f.options.wheelOn.focus,wheelStep:f.options.wheelStep.progressive},Object.freeze(f.defaultSettings),Object.defineProperty(f,"defaultSettings",{configurable:!1,writable:!1});var P={digitGroupSeparator:f.options.digitGroupSeparator.dot,decimalCharacter:f.options.decimalCharacter.comma,decimalCharacterAlternative:f.options.decimalCharacterAlternative.dot,currencySymbol:" €",currencySymbolPlacement:f.options.currencySymbolPlacement.suffix,negativePositiveSignPlacement:f.options.negativePositiveSignPlacement.prefix},O={digitGroupSeparator:f.options.digitGroupSeparator.comma,decimalCharacter:f.options.decimalCharacter.dot,currencySymbol:f.options.currencySymbol.dollar,currencySymbolPlacement:f.options.currencySymbolPlacement.prefix,negativePositiveSignPlacement:f.options.negativePositiveSignPlacement.right},k={digitGroupSeparator:f.options.digitGroupSeparator.comma,decimalCharacter:f.options.decimalCharacter.dot,currencySymbol:f.options.currencySymbol.yen,currencySymbolPlacement:f.options.currencySymbolPlacement.prefix,negativePositiveSignPlacement:f.options.negativePositiveSignPlacement.right};D.cloneObject(P).formulaMode=f.options.formulaMode.enabled;var N=D.cloneObject(P);N.minimumValue=0;var E=D.cloneObject(P);E.maximumValue=0,E.negativePositiveSignPlacement=f.options.negativePositiveSignPlacement.prefix;var _=D.cloneObject(P);_.digitGroupSeparator=f.options.digitGroupSeparator.normalSpace;var C=D.cloneObject(_);C.minimumValue=0;var F=D.cloneObject(_);F.maximumValue=0,F.negativePositiveSignPlacement=f.options.negativePositiveSignPlacement.prefix;var x=D.cloneObject(P);x.currencySymbol=f.options.currencySymbol.none,x.suffixText=" ".concat(f.options.suffixText.percentage),x.wheelStep=1e-4,x.rawValueDivisor=f.options.rawValueDivisor.percentage;var V=D.cloneObject(x);V.minimumValue=0;var T=D.cloneObject(x);T.maximumValue=0,T.negativePositiveSignPlacement=f.options.negativePositiveSignPlacement.prefix;var A=D.cloneObject(x);A.decimalPlaces=3;var L=D.cloneObject(V);L.decimalPlaces=3;var B=D.cloneObject(T);B.decimalPlaces=3,D.cloneObject(O).formulaMode=f.options.formulaMode.enabled;var I=D.cloneObject(O);I.minimumValue=0;var M=D.cloneObject(O);M.maximumValue=0,M.negativePositiveSignPlacement=f.options.negativePositiveSignPlacement.prefix;var R=D.cloneObject(M);R.negativeBracketsTypeOnBlur=f.options.negativeBracketsTypeOnBlur.parentheses;var U=D.cloneObject(O);U.currencySymbol=f.options.currencySymbol.none,U.suffixText=f.options.suffixText.percentage,U.wheelStep=1e-4,U.rawValueDivisor=f.options.rawValueDivisor.percentage;var j=D.cloneObject(U);j.minimumValue=0;var z=D.cloneObject(U);z.maximumValue=0,z.negativePositiveSignPlacement=f.options.negativePositiveSignPlacement.prefix;var K=D.cloneObject(U);K.decimalPlaces=3;var G=D.cloneObject(j);G.decimalPlaces=3;var W=D.cloneObject(z);W.decimalPlaces=3;var H=D.cloneObject(P);H.currencySymbol=f.options.currencySymbol.lira,f.predefinedOptions={euro:P,euroPos:N,euroNeg:E,euroSpace:_,euroSpacePos:C,euroSpaceNeg:F,percentageEU2dec:x,percentageEU2decPos:V,percentageEU2decNeg:T,percentageEU3dec:A,percentageEU3decPos:L,percentageEU3decNeg:B,dollar:O,dollarPos:I,dollarNeg:M,dollarNegBrackets:R,percentageUS2dec:U,percentageUS2decPos:j,percentageUS2decNeg:z,percentageUS3dec:K,percentageUS3decPos:G,percentageUS3decNeg:W,French:P,Spanish:P,NorthAmerican:O,British:{digitGroupSeparator:f.options.digitGroupSeparator.comma,decimalCharacter:f.options.decimalCharacter.dot,currencySymbol:f.options.currencySymbol.pound,currencySymbolPlacement:f.options.currencySymbolPlacement.prefix,negativePositiveSignPlacement:f.options.negativePositiveSignPlacement.right},Swiss:{digitGroupSeparator:f.options.digitGroupSeparator.apostrophe,decimalCharacter:f.options.decimalCharacter.dot,currencySymbol:" CHF",currencySymbolPlacement:f.options.currencySymbolPlacement.suffix,negativePositiveSignPlacement:f.options.negativePositiveSignPlacement.prefix},Japanese:k,Chinese:k,Brazilian:{digitGroupSeparator:f.options.digitGroupSeparator.dot,decimalCharacter:f.options.decimalCharacter.comma,currencySymbol:f.options.currencySymbol.real,currencySymbolPlacement:f.options.currencySymbolPlacement.prefix,negativePositiveSignPlacement:f.options.negativePositiveSignPlacement.right},Turkish:H,dotDecimalCharCommaSeparator:{digitGroupSeparator:f.options.digitGroupSeparator.comma,decimalCharacter:f.options.decimalCharacter.dot},commaDecimalCharDotSeparator:{digitGroupSeparator:f.options.digitGroupSeparator.dot,decimalCharacter:f.options.decimalCharacter.comma,decimalCharacterAlternative:f.options.decimalCharacterAlternative.dot},integer:{decimalPlaces:0},integerPos:{minimumValue:f.options.minimumValue.zero,decimalPlaces:0},integerNeg:{maximumValue:f.options.maximumValue.zero,decimalPlaces:0},float:{allowDecimalPadding:f.options.allowDecimalPadding.never},floatPos:{allowDecimalPadding:f.options.allowDecimalPadding.never,minimumValue:f.options.minimumValue.zero,maximumValue:f.options.maximumValue.tenTrillions},floatNeg:{allowDecimalPadding:f.options.allowDecimalPadding.never,minimumValue:f.options.minimumValue.tenTrillions,maximumValue:f.options.maximumValue.zero},numeric:{digitGroupSeparator:f.options.digitGroupSeparator.noSeparator,decimalCharacter:f.options.decimalCharacter.dot,currencySymbol:f.options.currencySymbol.none},numericPos:{digitGroupSeparator:f.options.digitGroupSeparator.noSeparator,decimalCharacter:f.options.decimalCharacter.dot,currencySymbol:f.options.currencySymbol.none,minimumValue:f.options.minimumValue.zero,maximumValue:f.options.maximumValue.tenTrillions},numericNeg:{digitGroupSeparator:f.options.digitGroupSeparator.noSeparator,decimalCharacter:f.options.decimalCharacter.dot,currencySymbol:f.options.currencySymbol.none,minimumValue:f.options.minimumValue.tenTrillions,maximumValue:f.options.maximumValue.zero}},Object.getOwnPropertyNames(f.predefinedOptions).forEach(function(e){Object.freeze(f.predefinedOptions[e])}),Object.freeze(f.predefinedOptions),Object.defineProperty(f,"predefinedOptions",{configurable:!1,writable:!1}),t.default=f}],a.c=n,a.d=function(e,t,i){a.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:i})},a.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},a.t=function(t,e){if(1&e&&(t=a(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var i=Object.create(null);if(a.r(i),Object.defineProperty(i,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var n in t)a.d(i,n,function(e){return t[e]}.bind(null,n));return i},a.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return a.d(t,"a",t),t},a.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},a.p="",a(a.s=0)).default;function a(e){if(n[e])return n[e].exports;var t=n[e]={i:e,l:!1,exports:{}};return i[e].call(t.exports,t,t.exports,a),t.l=!0,t.exports}var i,n});
+//# sourceMappingURL=autoNumeric.min.js.map
+
+/***/ }),
 
 /***/ "./node_modules/axios/index.js":
 /*!*************************************!*\
@@ -21134,6 +21151,17 @@ function normalizeComponent (
 
 /***/ }),
 
+/***/ "./node_modules/vue-the-mask/dist/vue-the-mask.js":
+/*!********************************************************!*\
+  !*** ./node_modules/vue-the-mask/dist/vue-the-mask.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+(function(e,t){ true?module.exports=t():undefined})(this,function(){return function(e){function t(r){if(n[r])return n[r].exports;var a=n[r]={i:r,l:!1,exports:{}};return e[r].call(a.exports,a,a.exports,t),a.l=!0,a.exports}var n={};return t.m=e,t.c=n,t.i=function(e){return e},t.d=function(e,n,r){t.o(e,n)||Object.defineProperty(e,n,{configurable:!1,enumerable:!0,get:r})},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p=".",t(t.s=10)}([function(e,t){e.exports={"#":{pattern:/\d/},X:{pattern:/[0-9a-zA-Z]/},S:{pattern:/[a-zA-Z]/},A:{pattern:/[a-zA-Z]/,transform:function(e){return e.toLocaleUpperCase()}},a:{pattern:/[a-zA-Z]/,transform:function(e){return e.toLocaleLowerCase()}},"!":{escape:!0}}},function(e,t,n){"use strict";function r(e){var t=document.createEvent("Event");return t.initEvent(e,!0,!0),t}var a=n(2),o=n(0),i=n.n(o);t.a=function(e,t){var o=t.value;if((Array.isArray(o)||"string"==typeof o)&&(o={mask:o,tokens:i.a}),"INPUT"!==e.tagName.toLocaleUpperCase()){var u=e.getElementsByTagName("input");if(1!==u.length)throw new Error("v-mask directive requires 1 input, found "+u.length);e=u[0]}e.oninput=function(t){if(t.isTrusted){var i=e.selectionEnd,u=e.value[i-1];for(e.value=n.i(a.a)(e.value,o.mask,!0,o.tokens);i<e.value.length&&e.value.charAt(i-1)!==u;)i++;e===document.activeElement&&(e.setSelectionRange(i,i),setTimeout(function(){e.setSelectionRange(i,i)},0)),e.dispatchEvent(r("input"))}};var s=n.i(a.a)(e.value,o.mask,!0,o.tokens);s!==e.value&&(e.value=s,e.dispatchEvent(r("input")))}},function(e,t,n){"use strict";var r=n(6),a=n(5);t.a=function(e,t){var o=!(arguments.length>2&&void 0!==arguments[2])||arguments[2],i=arguments[3];return Array.isArray(t)?n.i(a.a)(r.a,t,i)(e,t,o,i):n.i(r.a)(e,t,o,i)}},function(e,t,n){"use strict";function r(e){e.component(s.a.name,s.a),e.directive("mask",i.a)}Object.defineProperty(t,"__esModule",{value:!0});var a=n(0),o=n.n(a),i=n(1),u=n(7),s=n.n(u);n.d(t,"TheMask",function(){return s.a}),n.d(t,"mask",function(){return i.a}),n.d(t,"tokens",function(){return o.a}),n.d(t,"version",function(){return c});var c="0.11.1";t.default=r,"undefined"!=typeof window&&window.Vue&&window.Vue.use(r)},function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var r=n(1),a=n(0),o=n.n(a),i=n(2);t.default={name:"TheMask",props:{value:[String,Number],mask:{type:[String,Array],required:!0},masked:{type:Boolean,default:!1},tokens:{type:Object,default:function(){return o.a}}},directives:{mask:r.a},data:function(){return{lastValue:null,display:this.value}},watch:{value:function(e){e!==this.lastValue&&(this.display=e)},masked:function(){this.refresh(this.display)}},computed:{config:function(){return{mask:this.mask,tokens:this.tokens,masked:this.masked}}},methods:{onInput:function(e){e.isTrusted||this.refresh(e.target.value)},refresh:function(e){this.display=e;var e=n.i(i.a)(e,this.mask,this.masked,this.tokens);e!==this.lastValue&&(this.lastValue=e,this.$emit("input",e))}}}},function(e,t,n){"use strict";function r(e,t,n){return t=t.sort(function(e,t){return e.length-t.length}),function(r,a){for(var o=!(arguments.length>2&&void 0!==arguments[2])||arguments[2],i=0;i<t.length;){var u=t[i];i++;var s=t[i];if(!(s&&e(r,s,!0,n).length>u.length))return e(r,u,o,n)}return""}}t.a=r},function(e,t,n){"use strict";function r(e,t){var n=!(arguments.length>2&&void 0!==arguments[2])||arguments[2],r=arguments[3];e=e||"",t=t||"";for(var a=0,o=0,i="";a<t.length&&o<e.length;){var u=t[a],s=r[u],c=e[o];s&&!s.escape?(s.pattern.test(c)&&(i+=s.transform?s.transform(c):c,a++),o++):(s&&s.escape&&(a++,u=t[a]),n&&(i+=u),c===u&&o++,a++)}for(var f="";a<t.length&&n;){var u=t[a];if(r[u]){f="";break}f+=u,a++}return i+f}t.a=r},function(e,t,n){var r=n(8)(n(4),n(9),null,null);e.exports=r.exports},function(e,t){e.exports=function(e,t,n,r){var a,o=e=e||{},i=typeof e.default;"object"!==i&&"function"!==i||(a=e,o=e.default);var u="function"==typeof o?o.options:o;if(t&&(u.render=t.render,u.staticRenderFns=t.staticRenderFns),n&&(u._scopeId=n),r){var s=u.computed||(u.computed={});Object.keys(r).forEach(function(e){var t=r[e];s[e]=function(){return t}})}return{esModule:a,exports:o,options:u}}},function(e,t){e.exports={render:function(){var e=this,t=e.$createElement;return(e._self._c||t)("input",{directives:[{name:"mask",rawName:"v-mask",value:e.config,expression:"config"}],attrs:{type:"text"},domProps:{value:e.display},on:{input:e.onInput}})},staticRenderFns:[]}},function(e,t,n){e.exports=n(3)}])});
+
+/***/ }),
+
 /***/ "./node_modules/vue/dist/vue.common.dev.js":
 /*!*************************************************!*\
   !*** ./node_modules/vue/dist/vue.common.dev.js ***!
@@ -33120,6 +33148,2468 @@ if (false) {} else {
 
 /***/ }),
 
+/***/ "./node_modules/vuejs-datepicker/dist/locale/index.js":
+/*!************************************************************!*\
+  !*** ./node_modules/vuejs-datepicker/dist/locale/index.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+!function(e,r){ true?r(exports):undefined}(this,function(e){"use strict";function r(e,r){for(var a=0;a<r.length;a++){var n=r[a];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,n.key,n)}}var a=function(){function e(r,a,n,u){!function(e,r){if(!(e instanceof r))throw new TypeError("Cannot call a class as a function")}(this,e),this.language=r,this.months=a,this.monthsAbbr=n,this.days=u,this.rtl=!1,this.ymd=!1,this.yearSuffix=""}var a,n,u;return a=e,(n=[{key:"language",get:function(){return this._language},set:function(e){if("string"!=typeof e)throw new TypeError("Language must be a string");this._language=e}},{key:"months",get:function(){return this._months},set:function(e){if(12!==e.length)throw new RangeError("There must be 12 months for ".concat(this.language," language"));this._months=e}},{key:"monthsAbbr",get:function(){return this._monthsAbbr},set:function(e){if(12!==e.length)throw new RangeError("There must be 12 abbreviated months for ".concat(this.language," language"));this._monthsAbbr=e}},{key:"days",get:function(){return this._days},set:function(e){if(7!==e.length)throw new RangeError("There must be 7 days for ".concat(this.language," language"));this._days=e}}])&&r(a.prototype,n),u&&r(a,u),e}(),n=new a("Afrikaans",["Januarie","Februarie","Maart","April","Mei","Junie","Julie","Augustus","September","Oktober","November","Desember"],["Jan","Feb","Mrt","Apr","Mei","Jun","Jul","Aug","Sep","Okt","Nov","Des"],["So.","Ma.","Di.","Wo.","Do.","Vr.","Sa."]),u=new a("Arabic",["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوڤمبر","ديسمبر"],["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوڤمبر","ديسمبر"],["أحد","إثنين","ثلاثاء","أربعاء","خميس","جمعة","سبت"]);u.rtl=!0;var i=new a("Bulgarian",["Януари","Февруари","Март","Април","Май","Юни","Юли","Август","Септември","Октомври","Ноември","Декември"],["Ян","Фев","Мар","Апр","Май","Юни","Юли","Авг","Сеп","Окт","Ное","Дек"],["Нд","Пн","Вт","Ср","Чт","Пт","Сб"]),t=new a("Bosnian",["Januar","Februar","Mart","April","Maj","Juni","Juli","Avgust","Septembar","Oktobar","Novembar","Decembar"],["Jan","Feb","Mar","Apr","Maj","Jun","Jul","Avg","Sep","Okt","Nov","Dec"],["Ned","Pon","Uto","Sri","Čet","Pet","Sub"]),o=new a("Catalan",["Gener","Febrer","Març","Abril","Maig","Juny","Juliol","Agost","Setembre","Octubre","Novembre","Desembre"],["Gen","Feb","Mar","Abr","Mai","Jun","Jul","Ago","Set","Oct","Nov","Des"],["Diu","Dil","Dmr","Dmc","Dij","Div","Dis"]),s=new a("Czech",["leden","únor","březen","duben","květen","červen","červenec","srpen","září","říjen","listopad","prosinec"],["led","úno","bře","dub","kvě","čer","čec","srp","zář","říj","lis","pro"],["ne","po","út","st","čt","pá","so"]),b=new a("Danish",["Januar","Februar","Marts","April","Maj","Juni","Juli","August","September","Oktober","November","December"],["Jan","Feb","Mar","Apr","Maj","Jun","Jul","Aug","Sep","Okt","Nov","Dec"],["Sø","Ma","Ti","On","To","Fr","Lø"]),l=new a("German",["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"],["So.","Mo.","Di.","Mi.","Do.","Fr.","Sa."]),m=new a("Estonian",["Jaanuar","Veebruar","Märts","Aprill","Mai","Juuni","Juuli","August","September","Oktoober","November","Detsember"],["Jaan","Veebr","Märts","Apr","Mai","Juuni","Juuli","Aug","Sept","Okt","Nov","Dets"],["P","E","T","K","N","R","L"]),M=new a("Greek",["Ιανουάριος","Φεβρουάριος","Μάρτιος","Απρίλιος","Μάϊος","Ιούνιος","Ιούλιος","Αύγουστος","Σεπτέμβριος","Οκτώβριος","Νοέμβριος","Δεκέμβριος"],["Ιαν","Φεβ","Μαρ","Απρ","Μαι","Ιουν","Ιουλ","Αυγ","Σεπ","Οκτ","Νοε","Δεκ"],["Κυρ","Δευ","Τρι","Τετ","Πεμ","Παρ","Σαβ"]),p=new a("English",["January","February","March","April","May","June","July","August","September","October","November","December"],["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]),J=new a("Spanish",["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"]),g=new a("Persian",["فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور","مهر","آبان","آذر","دی","بهمن","اسفند"],["فرو","ارد","خرد","تیر","مرد","شهر","مهر","آبا","آذر","دی","بهم","اسف"],["یکشنبه","دوشنبه","سه‌شنبه","چهارشنبه","پنجشنبه","جمعه","شنبه"]),S=new a("Finnish",["tammikuu","helmikuu","maaliskuu","huhtikuu","toukokuu","kesäkuu","heinäkuu","elokuu","syyskuu","lokakuu","marraskuu","joulukuu"],["tammi","helmi","maalis","huhti","touko","kesä","heinä","elo","syys","loka","marras","joulu"],["su","ma","ti","ke","to","pe","la"]),c=new a("Faroese",["Januar","Februar","Mars","Apríl","Mai","Juni","Juli","August","Septembur","Oktobur","Novembur","Desembur"],["Jan","Feb","Mar","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Des"],["Sun","Mán","Týs","Mik","Hós","Frí","Ley"]),A=new a("French",["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"],["Jan","Fév","Mar","Avr","Mai","Juin","Juil","Août","Sep","Oct","Nov","Déc"],["Dim","Lun","Mar","Mer","Jeu","Ven","Sam"]),v=new a("Georgia",["იანვარი","თებერვალი","მარტი","აპრილი","მაისი","ივნისი","ივლისი","აგვისტო","სექტემბერი","ოქტომბერი","ნოემბერი","დეკემბერი"],["იან","თებ","მარ","აპრ","მაი","ივნ","ივლ","აგვ","სექ","ოქტ","ნოე","დეკ"],["კვი","ორშ","სამ","ოთხ","ხუთ","პარ","შაბ"]),h=new a("Galician",["Xaneiro","Febreiro","Marzo","Abril","Maio","Xuño","Xullo","Agosto","Setembro","Outubro","Novembro","Decembro"],["Xan","Feb","Mar","Abr","Mai","Xuñ","Xul","Ago","Set","Out","Nov","Dec"],["Dom","Lun","Mar","Mér","Xov","Ven","Sáb"]),k=new a("Hebrew",["ינואר","פברואר","מרץ","אפריל","מאי","יוני","יולי","אוגוסט","ספטמבר","אוקטובר","נובמבר","דצמבר"],["ינו","פבר","מרץ","אפר","מאי","יונ","יול","אוג","ספט","אוק","נוב","דצמ"],["א","ב","ג","ד","ה","ו","ש"]);k.rtl=!0;var w=new a("Croatian",["Siječanj","Veljača","Ožujak","Travanj","Svibanj","Lipanj","Srpanj","Kolovoz","Rujan","Listopad","Studeni","Prosinac"],["Sij","Velj","Ožu","Tra","Svi","Lip","Srp","Kol","Ruj","Lis","Stu","Pro"],["Ned","Pon","Uto","Sri","Čet","Pet","Sub"]),D=new a("Hungarian",["Január","Február","Március","Április","Május","Június","Július","Augusztus","Szeptember","Október","November","December"],["Jan","Febr","Márc","Ápr","Máj","Jún","Júl","Aug","Szept","Okt","Nov","Dec"],["Vas","Hét","Ke","Sze","Csü","Pén","Szo"]),f=new a("Indonesian",["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"],["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"],["Min","Sen","Sel","Rab","Kam","Jum","Sab"]),N=new a("Icelandic",["Janúar","Febrúar","Mars","Apríl","Maí","Júní","Júlí","Ágúst","September","Október","Nóvember","Desember"],["Jan","Feb","Mars","Apr","Maí","Jún","Júl","Ágú","Sep","Okt","Nóv","Des"],["Sun","Mán","Þri","Mið","Fim","Fös","Lau"]),O=new a("Italian",["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"],["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"],["Dom","Lun","Mar","Mer","Gio","Ven","Sab"]),j=new a("Japanese",["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],["日","月","火","水","木","金","土"]);j.yearSuffix="年",j.ymd=!0;var F=new a("Kazakh",["Қаңтар","Ақпан","Наурыз","Сәуір","Мамыр","Маусым","Шілде","Тамыз","Қыркүйек","Қазан","Қараша","Желтоқсан"],["Қаң","Ақп","Нау","Сәу","Мам","Мау","Шіл","Там","Қыр","Қаз","Қар","Жел"],["Жк","Дй","Сй","Ср","Бй","Жм","Сн"]),d=new a("Korean",["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],["일","월","화","수","목","금","토"]);d.yearSuffix="년",d.ymd=!0;var T=new a("Luxembourgish",["Januar","Februar","Mäerz","Abrëll","Mee","Juni","Juli","August","September","Oktober","November","Dezember"],["Jan","Feb","Mäe","Abr","Mee","Jun","Jul","Aug","Sep","Okt","Nov","Dez"],["So.","Mé.","Dë.","Më.","Do.","Fr.","Sa."]),y=new a("Lithuanian",["Sausis","Vasaris","Kovas","Balandis","Gegužė","Birželis","Liepa","Rugpjūtis","Rugsėjis","Spalis","Lapkritis","Gruodis"],["Sau","Vas","Kov","Bal","Geg","Bir","Lie","Rugp","Rugs","Spa","Lap","Gru"],["Sek","Pir","Ant","Tre","Ket","Pen","Šeš"]);y.ymd=!0;var z=new a("Latvian",["Janvāris","Februāris","Marts","Aprīlis","Maijs","Jūnijs","Jūlijs","Augusts","Septembris","Oktobris","Novembris","Decembris"],["Jan","Feb","Mar","Apr","Mai","Jūn","Jūl","Aug","Sep","Okt","Nov","Dec"],["Sv","Pr","Ot","Tr","Ce","Pk","Se"]),L=new a("Macedonian",["Јануари","Февруари","Март","Април","Мај","Јуни","Јули","Август","Септември","Октомври","Ноември","Декември"],["Јан","Фев","Мар","Апр","Мај","Јун","Јул","Авг","Сеп","Окт","Ное","Дек"],["Нед","Пон","Вто","Сре","Чет","Пет","Саб"]),P=new a("Mongolia",["1 дүгээр сар","2 дугаар сар","3 дугаар сар","4 дүгээр сар","5 дугаар сар","6 дугаар сар","7 дугаар сар","8 дугаар сар","9 дүгээр сар","10 дугаар сар","11 дүгээр сар","12 дугаар сар"],["1-р сар","2-р сар","3-р сар","4-р сар","5-р сар","6-р сар","7-р сар","8-р сар","9-р сар","10-р сар","11-р сар","12-р сар"],["Ня","Да","Мя","Лх","Пү","Ба","Бя"]);P.ymd=!0;var G=new a("Norwegian Bokmål",["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"],["Jan","Feb","Mar","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Des"],["Sø","Ma","Ti","On","To","Fr","Lø"]),C=new a("Dutch",["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"],["jan","feb","mrt","apr","mei","jun","jul","aug","sep","okt","nov","dec"],["zo","ma","di","wo","do","vr","za"]),K=new a("Polish",["Styczeń","Luty","Marzec","Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"],["Sty","Lut","Mar","Kwi","Maj","Cze","Lip","Sie","Wrz","Paź","Lis","Gru"],["Nd","Pn","Wt","Śr","Czw","Pt","Sob"]),R=new a("Brazilian",["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"],["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],["Dom","Seg","Ter","Qua","Qui","Sex","Sab"]),E=new a("Romanian",["Ianuarie","Februarie","Martie","Aprilie","Mai","Iunie","Iulie","August","Septembrie","Octombrie","Noiembrie","Decembrie"],["Ian","Feb","Mar","Apr","Mai","Iun","Iul","Aug","Sep","Oct","Noi","Dec"],["D","L","Ma","Mi","J","V","S"]),V=new a("Russian",["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"],["Янв","Февр","Март","Апр","Май","Июнь","Июль","Авг","Сент","Окт","Нояб","Дек"],["Вс","Пн","Вт","Ср","Чт","Пт","Сб"]),_=new a("Slovakian",["január","február","marec","apríl","máj","jún","júl","august","september","október","november","december"],["jan","feb","mar","apr","máj","jún","júl","aug","sep","okt","nov","dec"],["ne","po","ut","st","št","pi","so"]),x=new a("Sloveian",["Januar","Februar","Marec","April","Maj","Junij","Julij","Avgust","September","Oktober","November","December"],["Jan","Feb","Mar","Apr","Maj","Jun","Jul","Avg","Sep","Okt","Nov","Dec"],["Ned","Pon","Tor","Sre","Čet","Pet","Sob"]),I=new a("Serbian in Cyrillic script",["Јануар","Фебруар","Март","Април","Мај","Јун","Јул","Август","Септембар","Октобар","Новембар","Децембар"],["Јан","Феб","Мар","Апр","Мај","Јун","Јул","Авг","Сеп","Окт","Нов","Дец"],["Нед","Пон","Уто","Сре","Чет","Пет","Суб"]),B=new a("Serbian",["Januar","Februar","Mart","April","Maj","Jun","Jul","Avgust","Septembar","Oktobar","Novembar","Decembar"],["Jan","Feb","Mar","Apr","Maj","Jun","Jul","Avg","Sep","Okt","Nov","Dec"],["Ned","Pon","Uto","Sre","Čet","Pet","Sub"]),H=new a("Swedish",["Januari","Februari","Mars","April","Maj","Juni","Juli","Augusti","September","Oktober","November","December"],["Jan","Feb","Mar","Apr","Maj","Jun","Jul","Aug","Sep","Okt","Nov","Dec"],["Sön","Mån","Tis","Ons","Tor","Fre","Lör"]),X=new a("Thai",["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"],["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."],["อา","จ","อ","พ","พฤ","ศ","ส"]),U=new a("Turkish",["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"],["Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"],["Paz","Pzt","Sal","Çar","Per","Cum","Cmt"]),W=new a("Ukraine",["Січень","Лютий","Березень","Квітень","Травень","Червень","Липень","Серпень","Вересень","Жовтень","Листопад","Грудень"],["Січ","Лют","Бер","Квіт","Трав","Чер","Лип","Серп","Вер","Жовт","Лист","Груд"],["Нд","Пн","Вт","Ср","Чт","Пт","Сб"]),Q=new a("Urdu",["جنوری","فروری","مارچ","اپریل","مئی","جون","جولائی","اگست","سپتمبر","اکتوبر","نومبر","دسمبر"],["جنوری","فروری","مارچ","اپریل","مئی","جون","جولائی","اگست","سپتمبر","اکتوبر","نومبر","دسمبر"],["اتوار","پیر","منگل","بدھ","جمعرات","جمعہ","ہفتہ"]);Q.rtl=!0;var Y=new a("Vietnamese",["Tháng 1","Tháng 2","Tháng 3","Tháng 4","Tháng 5","Tháng 6","Tháng 7","Tháng 8","Tháng 9","Tháng 10","Tháng 11","Tháng 12"],["T 01","T 02","T 03","T 04","T 05","T 06","T 07","T 08","T 09","T 10","T 11","T 12"],["CN","Thứ 2","Thứ 3","Thứ 4","Thứ 5","Thứ 6","Thứ 7"]),q=new a("Chinese",["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],["日","一","二","三","四","五","六"]);q.yearSuffix="年";var Z=new a("Chinese_HK",["壹月","贰月","叁月","肆月","伍月","陆月","柒月","捌月","玖月","拾月","拾壹月","拾贰月"],["壹月","贰月","叁月","肆月","伍月","陆月","柒月","捌月","玖月","拾月","拾壹月","拾贰月"],["日","壹","贰","叁","肆","伍","陆"]);Z.yearSuffix="年",e.af=n,e.ar=u,e.bg=i,e.bs=t,e.ca=o,e.cs=s,e.da=b,e.de=l,e.ee=m,e.el=M,e.en=p,e.es=J,e.fa=g,e.fi=S,e.fo=c,e.fr=A,e.ge=v,e.gl=h,e.he=k,e.hr=w,e.hu=D,e.id=f,e.is=N,e.it=O,e.ja=j,e.kk=F,e.ko=d,e.lb=T,e.lt=y,e.lv=z,e.mk=L,e.mn=P,e.nbNO=G,e.nl=C,e.pl=K,e.ptBR=R,e.ro=E,e.ru=V,e.sk=_,e.slSI=x,e.sr=B,e.srCYRL=I,e.sv=H,e.th=X,e.tr=U,e.uk=W,e.ur=Q,e.vi=Y,e.zh=q,e.zhHK=Z,Object.defineProperty(e,"__esModule",{value:!0})});
+
+
+/***/ }),
+
+/***/ "./node_modules/vuejs-datepicker/dist/vuejs-datepicker.esm.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/vuejs-datepicker/dist/vuejs-datepicker.esm.js ***!
+  \********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _typeof(obj) {
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    _typeof = function (obj) {
+      return typeof obj;
+    };
+  } else {
+    _typeof = function (obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
+
+  return _typeof(obj);
+}
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) descriptor.writable = true;
+    Object.defineProperty(target, descriptor.key, descriptor);
+  }
+}
+
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+  if (staticProps) _defineProperties(Constructor, staticProps);
+  return Constructor;
+}
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+function _objectSpread(target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i] != null ? arguments[i] : {};
+    var ownKeys = Object.keys(source);
+
+    if (typeof Object.getOwnPropertySymbols === 'function') {
+      ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+      }));
+    }
+
+    ownKeys.forEach(function (key) {
+      _defineProperty(target, key, source[key]);
+    });
+  }
+
+  return target;
+}
+
+var Language =
+/*#__PURE__*/
+function () {
+  function Language(language, months, monthsAbbr, days) {
+    _classCallCheck(this, Language);
+
+    this.language = language;
+    this.months = months;
+    this.monthsAbbr = monthsAbbr;
+    this.days = days;
+    this.rtl = false;
+    this.ymd = false;
+    this.yearSuffix = '';
+  }
+
+  _createClass(Language, [{
+    key: "language",
+    get: function get() {
+      return this._language;
+    },
+    set: function set(language) {
+      if (typeof language !== 'string') {
+        throw new TypeError('Language must be a string');
+      }
+
+      this._language = language;
+    }
+  }, {
+    key: "months",
+    get: function get() {
+      return this._months;
+    },
+    set: function set(months) {
+      if (months.length !== 12) {
+        throw new RangeError("There must be 12 months for ".concat(this.language, " language"));
+      }
+
+      this._months = months;
+    }
+  }, {
+    key: "monthsAbbr",
+    get: function get() {
+      return this._monthsAbbr;
+    },
+    set: function set(monthsAbbr) {
+      if (monthsAbbr.length !== 12) {
+        throw new RangeError("There must be 12 abbreviated months for ".concat(this.language, " language"));
+      }
+
+      this._monthsAbbr = monthsAbbr;
+    }
+  }, {
+    key: "days",
+    get: function get() {
+      return this._days;
+    },
+    set: function set(days) {
+      if (days.length !== 7) {
+        throw new RangeError("There must be 7 days for ".concat(this.language, " language"));
+      }
+
+      this._days = days;
+    }
+  }]);
+
+  return Language;
+}(); // eslint-disable-next-line
+
+var en = new Language('English', ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'], ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']) // eslint-disable-next-line
+;
+
+var utils = {
+  /**
+   * @type {Boolean}
+   */
+  useUtc: false,
+
+  /**
+   * Returns the full year, using UTC or not
+   * @param {Date} date
+   */
+  getFullYear: function getFullYear(date) {
+    return this.useUtc ? date.getUTCFullYear() : date.getFullYear();
+  },
+
+  /**
+   * Returns the month, using UTC or not
+   * @param {Date} date
+   */
+  getMonth: function getMonth(date) {
+    return this.useUtc ? date.getUTCMonth() : date.getMonth();
+  },
+
+  /**
+   * Returns the date, using UTC or not
+   * @param {Date} date
+   */
+  getDate: function getDate(date) {
+    return this.useUtc ? date.getUTCDate() : date.getDate();
+  },
+
+  /**
+   * Returns the day, using UTC or not
+   * @param {Date} date
+   */
+  getDay: function getDay(date) {
+    return this.useUtc ? date.getUTCDay() : date.getDay();
+  },
+
+  /**
+   * Returns the hours, using UTC or not
+   * @param {Date} date
+   */
+  getHours: function getHours(date) {
+    return this.useUtc ? date.getUTCHours() : date.getHours();
+  },
+
+  /**
+   * Returns the minutes, using UTC or not
+   * @param {Date} date
+   */
+  getMinutes: function getMinutes(date) {
+    return this.useUtc ? date.getUTCMinutes() : date.getMinutes();
+  },
+
+  /**
+   * Sets the full year, using UTC or not
+   * @param {Date} date
+   */
+  setFullYear: function setFullYear(date, value, useUtc) {
+    return this.useUtc ? date.setUTCFullYear(value) : date.setFullYear(value);
+  },
+
+  /**
+   * Sets the month, using UTC or not
+   * @param {Date} date
+   */
+  setMonth: function setMonth(date, value, useUtc) {
+    return this.useUtc ? date.setUTCMonth(value) : date.setMonth(value);
+  },
+
+  /**
+   * Sets the date, using UTC or not
+   * @param {Date} date
+   * @param {Number} value
+   */
+  setDate: function setDate(date, value, useUtc) {
+    return this.useUtc ? date.setUTCDate(value) : date.setDate(value);
+  },
+
+  /**
+   * Check if date1 is equivalent to date2, without comparing the time
+   * @see https://stackoverflow.com/a/6202196/4455925
+   * @param {Date} date1
+   * @param {Date} date2
+   */
+  compareDates: function compareDates(date1, date2) {
+    var d1 = new Date(date1.getTime());
+    var d2 = new Date(date2.getTime());
+
+    if (this.useUtc) {
+      d1.setUTCHours(0, 0, 0, 0);
+      d2.setUTCHours(0, 0, 0, 0);
+    } else {
+      d1.setHours(0, 0, 0, 0);
+      d2.setHours(0, 0, 0, 0);
+    }
+
+    return d1.getTime() === d2.getTime();
+  },
+
+  /**
+   * Validates a date object
+   * @param {Date} date - an object instantiated with the new Date constructor
+   * @return {Boolean}
+   */
+  isValidDate: function isValidDate(date) {
+    if (Object.prototype.toString.call(date) !== '[object Date]') {
+      return false;
+    }
+
+    return !isNaN(date.getTime());
+  },
+
+  /**
+   * Return abbreviated week day name
+   * @param {Date}
+   * @param {Array}
+   * @return {String}
+   */
+  getDayNameAbbr: function getDayNameAbbr(date, days) {
+    if (_typeof(date) !== 'object') {
+      throw TypeError('Invalid Type');
+    }
+
+    return days[this.getDay(date)];
+  },
+
+  /**
+   * Return name of the month
+   * @param {Number|Date}
+   * @param {Array}
+   * @return {String}
+   */
+  getMonthName: function getMonthName(month, months) {
+    if (!months) {
+      throw Error('missing 2nd parameter Months array');
+    }
+
+    if (_typeof(month) === 'object') {
+      return months[this.getMonth(month)];
+    }
+
+    if (typeof month === 'number') {
+      return months[month];
+    }
+
+    throw TypeError('Invalid type');
+  },
+
+  /**
+   * Return an abbreviated version of the month
+   * @param {Number|Date}
+   * @return {String}
+   */
+  getMonthNameAbbr: function getMonthNameAbbr(month, monthsAbbr) {
+    if (!monthsAbbr) {
+      throw Error('missing 2nd paramter Months array');
+    }
+
+    if (_typeof(month) === 'object') {
+      return monthsAbbr[this.getMonth(month)];
+    }
+
+    if (typeof month === 'number') {
+      return monthsAbbr[month];
+    }
+
+    throw TypeError('Invalid type');
+  },
+
+  /**
+   * Alternative get total number of days in month
+   * @param {Number} year
+   * @param {Number} m
+   * @return {Number}
+   */
+  daysInMonth: function daysInMonth(year, month) {
+    return /8|3|5|10/.test(month) ? 30 : month === 1 ? !(year % 4) && year % 100 || !(year % 400) ? 29 : 28 : 31;
+  },
+
+  /**
+   * Get nth suffix for date
+   * @param {Number} day
+   * @return {String}
+   */
+  getNthSuffix: function getNthSuffix(day) {
+    switch (day) {
+      case 1:
+      case 21:
+      case 31:
+        return 'st';
+
+      case 2:
+      case 22:
+        return 'nd';
+
+      case 3:
+      case 23:
+        return 'rd';
+
+      default:
+        return 'th';
+    }
+  },
+
+  /**
+   * Formats date object
+   * @param {Date}
+   * @param {String}
+   * @param {Object}
+   * @return {String}
+   */
+  formatDate: function formatDate(date, format, translation) {
+    translation = !translation ? en : translation;
+    var year = this.getFullYear(date);
+    var month = this.getMonth(date) + 1;
+    var day = this.getDate(date);
+    var str = format.replace(/dd/, ('0' + day).slice(-2)).replace(/d/, day).replace(/yyyy/, year).replace(/yy/, String(year).slice(2)).replace(/MMMM/, this.getMonthName(this.getMonth(date), translation.months)).replace(/MMM/, this.getMonthNameAbbr(this.getMonth(date), translation.monthsAbbr)).replace(/MM/, ('0' + month).slice(-2)).replace(/M(?!a|ä|e)/, month).replace(/su/, this.getNthSuffix(this.getDate(date))).replace(/D(?!e|é|i)/, this.getDayNameAbbr(date, translation.days));
+    return str;
+  },
+
+  /**
+   * Creates an array of dates for each day in between two dates.
+   * @param {Date} start
+   * @param {Date} end
+   * @return {Array}
+   */
+  createDateArray: function createDateArray(start, end) {
+    var dates = [];
+
+    while (start <= end) {
+      dates.push(new Date(start));
+      start = this.setDate(new Date(start), this.getDate(new Date(start)) + 1);
+    }
+
+    return dates;
+  },
+
+  /**
+   * method used as a prop validator for input values
+   * @param {*} val
+   * @return {Boolean}
+   */
+  validateDateInput: function validateDateInput(val) {
+    return val === null || val instanceof Date || typeof val === 'string' || typeof val === 'number';
+  }
+};
+var makeDateUtils = function makeDateUtils(useUtc) {
+  return _objectSpread({}, utils, {
+    useUtc: useUtc
+  });
+};
+var utils$1 = _objectSpread({}, utils) // eslint-disable-next-line
+;
+
+var script = {
+  props: {
+    selectedDate: Date,
+    resetTypedDate: [Date],
+    format: [String, Function],
+    translation: Object,
+    inline: Boolean,
+    id: String,
+    name: String,
+    refName: String,
+    openDate: Date,
+    placeholder: String,
+    inputClass: [String, Object, Array],
+    clearButton: Boolean,
+    clearButtonIcon: String,
+    calendarButton: Boolean,
+    calendarButtonIcon: String,
+    calendarButtonIconContent: String,
+    disabled: Boolean,
+    required: Boolean,
+    typeable: Boolean,
+    bootstrapStyling: Boolean,
+    useUtc: Boolean
+  },
+  data: function data() {
+    var constructedDateUtils = makeDateUtils(this.useUtc);
+    return {
+      input: null,
+      typedDate: false,
+      utils: constructedDateUtils
+    };
+  },
+  computed: {
+    formattedValue: function formattedValue() {
+      if (!this.selectedDate) {
+        return null;
+      }
+
+      if (this.typedDate) {
+        return this.typedDate;
+      }
+
+      return typeof this.format === 'function' ? this.format(this.selectedDate) : this.utils.formatDate(new Date(this.selectedDate), this.format, this.translation);
+    },
+    computedInputClass: function computedInputClass() {
+      if (this.bootstrapStyling) {
+        if (typeof this.inputClass === 'string') {
+          return [this.inputClass, 'form-control'].join(' ');
+        }
+
+        return _objectSpread({
+          'form-control': true
+        }, this.inputClass);
+      }
+
+      return this.inputClass;
+    }
+  },
+  watch: {
+    resetTypedDate: function resetTypedDate() {
+      this.typedDate = false;
+    }
+  },
+  methods: {
+    showCalendar: function showCalendar() {
+      this.$emit('showCalendar');
+    },
+
+    /**
+     * Attempt to parse a typed date
+     * @param {Event} event
+     */
+    parseTypedDate: function parseTypedDate(event) {
+      // close calendar if escape or enter are pressed
+      if ([27, // escape
+      13 // enter
+      ].includes(event.keyCode)) {
+        this.input.blur();
+      }
+
+      if (this.typeable) {
+        var typedDate = Date.parse(this.input.value);
+
+        if (!isNaN(typedDate)) {
+          this.typedDate = this.input.value;
+          this.$emit('typedDate', new Date(this.typedDate));
+        }
+      }
+    },
+
+    /**
+     * nullify the typed date to defer to regular formatting
+     * called once the input is blurred
+     */
+    inputBlurred: function inputBlurred() {
+      if (this.typeable && isNaN(Date.parse(this.input.value))) {
+        this.clearDate();
+        this.input.value = null;
+        this.typedDate = null;
+      }
+
+      this.$emit('closeCalendar');
+    },
+
+    /**
+     * emit a clearDate event
+     */
+    clearDate: function clearDate() {
+      this.$emit('clearDate');
+    }
+  },
+  mounted: function mounted() {
+    this.input = this.$el.querySelector('input');
+  }
+} // eslint-disable-next-line
+;
+
+function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier
+/* server only */
+, shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
+  if (typeof shadowMode !== 'boolean') {
+    createInjectorSSR = createInjector;
+    createInjector = shadowMode;
+    shadowMode = false;
+  } // Vue.extend constructor export interop.
+
+
+  var options = typeof script === 'function' ? script.options : script; // render functions
+
+  if (template && template.render) {
+    options.render = template.render;
+    options.staticRenderFns = template.staticRenderFns;
+    options._compiled = true; // functional template
+
+    if (isFunctionalTemplate) {
+      options.functional = true;
+    }
+  } // scopedId
+
+
+  if (scopeId) {
+    options._scopeId = scopeId;
+  }
+
+  var hook;
+
+  if (moduleIdentifier) {
+    // server build
+    hook = function hook(context) {
+      // 2.3 injection
+      context = context || // cached call
+      this.$vnode && this.$vnode.ssrContext || // stateful
+      this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext; // functional
+      // 2.2 with runInNewContext: true
+
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__;
+      } // inject component styles
+
+
+      if (style) {
+        style.call(this, createInjectorSSR(context));
+      } // register component module identifier for async chunk inference
+
+
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier);
+      }
+    }; // used by ssr in case component is cached and beforeCreate
+    // never gets called
+
+
+    options._ssrRegister = hook;
+  } else if (style) {
+    hook = shadowMode ? function () {
+      style.call(this, createInjectorShadow(this.$root.$options.shadowRoot));
+    } : function (context) {
+      style.call(this, createInjector(context));
+    };
+  }
+
+  if (hook) {
+    if (options.functional) {
+      // register for functional component in vue file
+      var originalRender = options.render;
+
+      options.render = function renderWithStyleInjection(h, context) {
+        hook.call(context);
+        return originalRender(h, context);
+      };
+    } else {
+      // inject component registration as beforeCreate hook
+      var existing = options.beforeCreate;
+      options.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+    }
+  }
+
+  return script;
+}
+
+var normalizeComponent_1 = normalizeComponent;
+
+/* script */
+const __vue_script__ = script;
+
+/* template */
+var __vue_render__ = function() {
+  var _vm = this;
+  var _h = _vm.$createElement;
+  var _c = _vm._self._c || _h;
+  return _c(
+    "div",
+    { class: { "input-group": _vm.bootstrapStyling } },
+    [
+      _vm.calendarButton
+        ? _c(
+            "span",
+            {
+              staticClass: "vdp-datepicker__calendar-button",
+              class: { "input-group-prepend": _vm.bootstrapStyling },
+              style: { "cursor:not-allowed;": _vm.disabled },
+              on: { click: _vm.showCalendar }
+            },
+            [
+              _c(
+                "span",
+                { class: { "input-group-text": _vm.bootstrapStyling } },
+                [
+                  _c("i", { class: _vm.calendarButtonIcon }, [
+                    _vm._v(
+                      "\n        " +
+                        _vm._s(_vm.calendarButtonIconContent) +
+                        "\n        "
+                    ),
+                    !_vm.calendarButtonIcon
+                      ? _c("span", [_vm._v("…")])
+                      : _vm._e()
+                  ])
+                ]
+              )
+            ]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _c("input", {
+        ref: _vm.refName,
+        class: _vm.computedInputClass,
+        attrs: {
+          type: _vm.inline ? "hidden" : "text",
+          name: _vm.name,
+          id: _vm.id,
+          "open-date": _vm.openDate,
+          placeholder: _vm.placeholder,
+          "clear-button": _vm.clearButton,
+          disabled: _vm.disabled,
+          required: _vm.required,
+          readonly: !_vm.typeable,
+          autocomplete: "off"
+        },
+        domProps: { value: _vm.formattedValue },
+        on: {
+          click: _vm.showCalendar,
+          keyup: _vm.parseTypedDate,
+          blur: _vm.inputBlurred
+        }
+      }),
+      _vm._v(" "),
+      _vm.clearButton && _vm.selectedDate
+        ? _c(
+            "span",
+            {
+              staticClass: "vdp-datepicker__clear-button",
+              class: { "input-group-append": _vm.bootstrapStyling },
+              on: {
+                click: function($event) {
+                  return _vm.clearDate()
+                }
+              }
+            },
+            [
+              _c(
+                "span",
+                { class: { "input-group-text": _vm.bootstrapStyling } },
+                [
+                  _c("i", { class: _vm.clearButtonIcon }, [
+                    !_vm.clearButtonIcon ? _c("span", [_vm._v("×")]) : _vm._e()
+                  ])
+                ]
+              )
+            ]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm._t("afterDateInput")
+    ],
+    2
+  )
+};
+var __vue_staticRenderFns__ = [];
+__vue_render__._withStripped = true;
+
+  /* style */
+  const __vue_inject_styles__ = undefined;
+  /* scoped */
+  const __vue_scope_id__ = undefined;
+  /* module identifier */
+  const __vue_module_identifier__ = undefined;
+  /* functional template */
+  const __vue_is_functional_template__ = false;
+  /* style inject */
+  
+  /* style inject SSR */
+  
+
+  
+  var DateInput = normalizeComponent_1(
+    { render: __vue_render__, staticRenderFns: __vue_staticRenderFns__ },
+    __vue_inject_styles__,
+    __vue_script__,
+    __vue_scope_id__,
+    __vue_is_functional_template__,
+    __vue_module_identifier__,
+    undefined,
+    undefined
+  );
+
+//
+var script$1 = {
+  props: {
+    showDayView: Boolean,
+    selectedDate: Date,
+    pageDate: Date,
+    pageTimestamp: Number,
+    fullMonthName: Boolean,
+    allowedToShowView: Function,
+    dayCellContent: {
+      type: Function,
+      "default": function _default(day) {
+        return day.date;
+      }
+    },
+    disabledDates: Object,
+    highlighted: Object,
+    calendarClass: [String, Object, Array],
+    calendarStyle: Object,
+    translation: Object,
+    isRtl: Boolean,
+    mondayFirst: Boolean,
+    useUtc: Boolean
+  },
+  data: function data() {
+    var constructedDateUtils = makeDateUtils(this.useUtc);
+    return {
+      utils: constructedDateUtils
+    };
+  },
+  computed: {
+    /**
+     * Returns an array of day names
+     * @return {String[]}
+     */
+    daysOfWeek: function daysOfWeek() {
+      if (this.mondayFirst) {
+        var tempDays = this.translation.days.slice();
+        tempDays.push(tempDays.shift());
+        return tempDays;
+      }
+
+      return this.translation.days;
+    },
+
+    /**
+     * Returns the day number of the week less one for the first of the current month
+     * Used to show amount of empty cells before the first in the day calendar layout
+     * @return {Number}
+     */
+    blankDays: function blankDays() {
+      var d = this.pageDate;
+      var dObj = this.useUtc ? new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1)) : new Date(d.getFullYear(), d.getMonth(), 1, d.getHours(), d.getMinutes());
+
+      if (this.mondayFirst) {
+        return this.utils.getDay(dObj) > 0 ? this.utils.getDay(dObj) - 1 : 6;
+      }
+
+      return this.utils.getDay(dObj);
+    },
+
+    /**
+     * @return {Object[]}
+     */
+    days: function days() {
+      var d = this.pageDate;
+      var days = []; // set up a new date object to the beginning of the current 'page'
+
+      var dObj = this.useUtc ? new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1)) : new Date(d.getFullYear(), d.getMonth(), 1, d.getHours(), d.getMinutes());
+      var daysInMonth = this.utils.daysInMonth(this.utils.getFullYear(dObj), this.utils.getMonth(dObj));
+
+      for (var i = 0; i < daysInMonth; i++) {
+        days.push({
+          date: this.utils.getDate(dObj),
+          timestamp: dObj.getTime(),
+          isSelected: this.isSelectedDate(dObj),
+          isDisabled: this.isDisabledDate(dObj),
+          isHighlighted: this.isHighlightedDate(dObj),
+          isHighlightStart: this.isHighlightStart(dObj),
+          isHighlightEnd: this.isHighlightEnd(dObj),
+          isToday: this.utils.compareDates(dObj, new Date()),
+          isWeekend: this.utils.getDay(dObj) === 0 || this.utils.getDay(dObj) === 6,
+          isSaturday: this.utils.getDay(dObj) === 6,
+          isSunday: this.utils.getDay(dObj) === 0
+        });
+        this.utils.setDate(dObj, this.utils.getDate(dObj) + 1);
+      }
+
+      return days;
+    },
+
+    /**
+     * Gets the name of the month the current page is on
+     * @return {String}
+     */
+    currMonthName: function currMonthName() {
+      var monthName = this.fullMonthName ? this.translation.months : this.translation.monthsAbbr;
+      return this.utils.getMonthNameAbbr(this.utils.getMonth(this.pageDate), monthName);
+    },
+
+    /**
+     * Gets the name of the year that current page is on
+     * @return {Number}
+     */
+    currYearName: function currYearName() {
+      var yearSuffix = this.translation.yearSuffix;
+      return "".concat(this.utils.getFullYear(this.pageDate)).concat(yearSuffix);
+    },
+
+    /**
+     * Is this translation using year/month/day format?
+     * @return {Boolean}
+     */
+    isYmd: function isYmd() {
+      return this.translation.ymd && this.translation.ymd === true;
+    },
+
+    /**
+     * Is the left hand navigation button disabled?
+     * @return {Boolean}
+     */
+    isLeftNavDisabled: function isLeftNavDisabled() {
+      return this.isRtl ? this.isNextMonthDisabled(this.pageTimestamp) : this.isPreviousMonthDisabled(this.pageTimestamp);
+    },
+
+    /**
+     * Is the right hand navigation button disabled?
+     * @return {Boolean}
+     */
+    isRightNavDisabled: function isRightNavDisabled() {
+      return this.isRtl ? this.isPreviousMonthDisabled(this.pageTimestamp) : this.isNextMonthDisabled(this.pageTimestamp);
+    }
+  },
+  methods: {
+    selectDate: function selectDate(date) {
+      if (date.isDisabled) {
+        this.$emit('selectedDisabled', date);
+        return false;
+      }
+
+      this.$emit('selectDate', date);
+    },
+
+    /**
+     * @return {Number}
+     */
+    getPageMonth: function getPageMonth() {
+      return this.utils.getMonth(this.pageDate);
+    },
+
+    /**
+     * Emit an event to show the month picker
+     */
+    showMonthCalendar: function showMonthCalendar() {
+      this.$emit('showMonthCalendar');
+    },
+
+    /**
+     * Change the page month
+     * @param {Number} incrementBy
+     */
+    changeMonth: function changeMonth(incrementBy) {
+      var date = this.pageDate;
+      this.utils.setMonth(date, this.utils.getMonth(date) + incrementBy);
+      this.$emit('changedMonth', date);
+    },
+
+    /**
+     * Decrement the page month
+     */
+    previousMonth: function previousMonth() {
+      if (!this.isPreviousMonthDisabled()) {
+        this.changeMonth(-1);
+      }
+    },
+
+    /**
+     * Is the previous month disabled?
+     * @return {Boolean}
+     */
+    isPreviousMonthDisabled: function isPreviousMonthDisabled() {
+      if (!this.disabledDates || !this.disabledDates.to) {
+        return false;
+      }
+
+      var d = this.pageDate;
+      return this.utils.getMonth(this.disabledDates.to) >= this.utils.getMonth(d) && this.utils.getFullYear(this.disabledDates.to) >= this.utils.getFullYear(d);
+    },
+
+    /**
+     * Increment the current page month
+     */
+    nextMonth: function nextMonth() {
+      if (!this.isNextMonthDisabled()) {
+        this.changeMonth(+1);
+      }
+    },
+
+    /**
+     * Is the next month disabled?
+     * @return {Boolean}
+     */
+    isNextMonthDisabled: function isNextMonthDisabled() {
+      if (!this.disabledDates || !this.disabledDates.from) {
+        return false;
+      }
+
+      var d = this.pageDate;
+      return this.utils.getMonth(this.disabledDates.from) <= this.utils.getMonth(d) && this.utils.getFullYear(this.disabledDates.from) <= this.utils.getFullYear(d);
+    },
+
+    /**
+     * Whether a day is selected
+     * @param {Date}
+     * @return {Boolean}
+     */
+    isSelectedDate: function isSelectedDate(dObj) {
+      return this.selectedDate && this.utils.compareDates(this.selectedDate, dObj);
+    },
+
+    /**
+     * Whether a day is disabled
+     * @param {Date}
+     * @return {Boolean}
+     */
+    isDisabledDate: function isDisabledDate(date) {
+      var _this = this;
+
+      var disabledDates = false;
+
+      if (typeof this.disabledDates === 'undefined') {
+        return false;
+      }
+
+      if (typeof this.disabledDates.dates !== 'undefined') {
+        this.disabledDates.dates.forEach(function (d) {
+          if (_this.utils.compareDates(date, d)) {
+            disabledDates = true;
+            return true;
+          }
+        });
+      }
+
+      if (typeof this.disabledDates.to !== 'undefined' && this.disabledDates.to && date < this.disabledDates.to) {
+        disabledDates = true;
+      }
+
+      if (typeof this.disabledDates.from !== 'undefined' && this.disabledDates.from && date > this.disabledDates.from) {
+        disabledDates = true;
+      }
+
+      if (typeof this.disabledDates.ranges !== 'undefined') {
+        this.disabledDates.ranges.forEach(function (range) {
+          if (typeof range.from !== 'undefined' && range.from && typeof range.to !== 'undefined' && range.to) {
+            if (date < range.to && date > range.from) {
+              disabledDates = true;
+              return true;
+            }
+          }
+        });
+      }
+
+      if (typeof this.disabledDates.days !== 'undefined' && this.disabledDates.days.indexOf(this.utils.getDay(date)) !== -1) {
+        disabledDates = true;
+      }
+
+      if (typeof this.disabledDates.daysOfMonth !== 'undefined' && this.disabledDates.daysOfMonth.indexOf(this.utils.getDate(date)) !== -1) {
+        disabledDates = true;
+      }
+
+      if (typeof this.disabledDates.customPredictor === 'function' && this.disabledDates.customPredictor(date)) {
+        disabledDates = true;
+      }
+
+      return disabledDates;
+    },
+
+    /**
+     * Whether a day is highlighted (only if it is not disabled already except when highlighted.includeDisabled is true)
+     * @param {Date}
+     * @return {Boolean}
+     */
+    isHighlightedDate: function isHighlightedDate(date) {
+      var _this2 = this;
+
+      if (!(this.highlighted && this.highlighted.includeDisabled) && this.isDisabledDate(date)) {
+        return false;
+      }
+
+      var highlighted = false;
+
+      if (typeof this.highlighted === 'undefined') {
+        return false;
+      }
+
+      if (typeof this.highlighted.dates !== 'undefined') {
+        this.highlighted.dates.forEach(function (d) {
+          if (_this2.utils.compareDates(date, d)) {
+            highlighted = true;
+            return true;
+          }
+        });
+      }
+
+      if (this.isDefined(this.highlighted.from) && this.isDefined(this.highlighted.to)) {
+        highlighted = date >= this.highlighted.from && date <= this.highlighted.to;
+      }
+
+      if (typeof this.highlighted.days !== 'undefined' && this.highlighted.days.indexOf(this.utils.getDay(date)) !== -1) {
+        highlighted = true;
+      }
+
+      if (typeof this.highlighted.daysOfMonth !== 'undefined' && this.highlighted.daysOfMonth.indexOf(this.utils.getDate(date)) !== -1) {
+        highlighted = true;
+      }
+
+      if (typeof this.highlighted.customPredictor === 'function' && this.highlighted.customPredictor(date)) {
+        highlighted = true;
+      }
+
+      return highlighted;
+    },
+    dayClasses: function dayClasses(day) {
+      return {
+        'selected': day.isSelected,
+        'disabled': day.isDisabled,
+        'highlighted': day.isHighlighted,
+        'today': day.isToday,
+        'weekend': day.isWeekend,
+        'sat': day.isSaturday,
+        'sun': day.isSunday,
+        'highlight-start': day.isHighlightStart,
+        'highlight-end': day.isHighlightEnd
+      };
+    },
+
+    /**
+     * Whether a day is highlighted and it is the first date
+     * in the highlighted range of dates
+     * @param {Date}
+     * @return {Boolean}
+     */
+    isHighlightStart: function isHighlightStart(date) {
+      return this.isHighlightedDate(date) && this.highlighted.from instanceof Date && this.utils.getFullYear(this.highlighted.from) === this.utils.getFullYear(date) && this.utils.getMonth(this.highlighted.from) === this.utils.getMonth(date) && this.utils.getDate(this.highlighted.from) === this.utils.getDate(date);
+    },
+
+    /**
+     * Whether a day is highlighted and it is the first date
+     * in the highlighted range of dates
+     * @param {Date}
+     * @return {Boolean}
+     */
+    isHighlightEnd: function isHighlightEnd(date) {
+      return this.isHighlightedDate(date) && this.highlighted.to instanceof Date && this.utils.getFullYear(this.highlighted.to) === this.utils.getFullYear(date) && this.utils.getMonth(this.highlighted.to) === this.utils.getMonth(date) && this.utils.getDate(this.highlighted.to) === this.utils.getDate(date);
+    },
+
+    /**
+     * Helper
+     * @param  {mixed}  prop
+     * @return {Boolean}
+     */
+    isDefined: function isDefined(prop) {
+      return typeof prop !== 'undefined' && prop;
+    }
+  } // eslint-disable-next-line
+
+};
+
+/* script */
+const __vue_script__$1 = script$1;
+
+/* template */
+var __vue_render__$1 = function() {
+  var _vm = this;
+  var _h = _vm.$createElement;
+  var _c = _vm._self._c || _h;
+  return _c(
+    "div",
+    {
+      directives: [
+        {
+          name: "show",
+          rawName: "v-show",
+          value: _vm.showDayView,
+          expression: "showDayView"
+        }
+      ],
+      class: [_vm.calendarClass, "vdp-datepicker__calendar"],
+      style: _vm.calendarStyle,
+      on: {
+        mousedown: function($event) {
+          $event.preventDefault();
+        }
+      }
+    },
+    [
+      _vm._t("beforeCalendarHeader"),
+      _vm._v(" "),
+      _c("header", [
+        _c(
+          "span",
+          {
+            staticClass: "prev",
+            class: { disabled: _vm.isLeftNavDisabled },
+            on: {
+              click: function($event) {
+                _vm.isRtl ? _vm.nextMonth() : _vm.previousMonth();
+              }
+            }
+          },
+          [_vm._v("<")]
+        ),
+        _vm._v(" "),
+        _c(
+          "span",
+          {
+            staticClass: "day__month_btn",
+            class: _vm.allowedToShowView("month") ? "up" : "",
+            on: { click: _vm.showMonthCalendar }
+          },
+          [
+            _vm._v(
+              _vm._s(_vm.isYmd ? _vm.currYearName : _vm.currMonthName) +
+                " " +
+                _vm._s(_vm.isYmd ? _vm.currMonthName : _vm.currYearName)
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "span",
+          {
+            staticClass: "next",
+            class: { disabled: _vm.isRightNavDisabled },
+            on: {
+              click: function($event) {
+                _vm.isRtl ? _vm.previousMonth() : _vm.nextMonth();
+              }
+            }
+          },
+          [_vm._v(">")]
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { class: _vm.isRtl ? "flex-rtl" : "" },
+        [
+          _vm._l(_vm.daysOfWeek, function(d) {
+            return _c(
+              "span",
+              { key: d.timestamp, staticClass: "cell day-header" },
+              [_vm._v(_vm._s(d))]
+            )
+          }),
+          _vm._v(" "),
+          _vm.blankDays > 0
+            ? _vm._l(_vm.blankDays, function(d) {
+                return _c("span", {
+                  key: d.timestamp,
+                  staticClass: "cell day blank"
+                })
+              })
+            : _vm._e(),
+          _vm._l(_vm.days, function(day) {
+            return _c("span", {
+              key: day.timestamp,
+              staticClass: "cell day",
+              class: _vm.dayClasses(day),
+              domProps: { innerHTML: _vm._s(_vm.dayCellContent(day)) },
+              on: {
+                click: function($event) {
+                  return _vm.selectDate(day)
+                }
+              }
+            })
+          })
+        ],
+        2
+      )
+    ],
+    2
+  )
+};
+var __vue_staticRenderFns__$1 = [];
+__vue_render__$1._withStripped = true;
+
+  /* style */
+  const __vue_inject_styles__$1 = undefined;
+  /* scoped */
+  const __vue_scope_id__$1 = undefined;
+  /* module identifier */
+  const __vue_module_identifier__$1 = undefined;
+  /* functional template */
+  const __vue_is_functional_template__$1 = false;
+  /* style inject */
+  
+  /* style inject SSR */
+  
+
+  
+  var PickerDay = normalizeComponent_1(
+    { render: __vue_render__$1, staticRenderFns: __vue_staticRenderFns__$1 },
+    __vue_inject_styles__$1,
+    __vue_script__$1,
+    __vue_scope_id__$1,
+    __vue_is_functional_template__$1,
+    __vue_module_identifier__$1,
+    undefined,
+    undefined
+  );
+
+//
+var script$2 = {
+  props: {
+    showMonthView: Boolean,
+    selectedDate: Date,
+    pageDate: Date,
+    pageTimestamp: Number,
+    disabledDates: Object,
+    calendarClass: [String, Object, Array],
+    calendarStyle: Object,
+    translation: Object,
+    isRtl: Boolean,
+    allowedToShowView: Function,
+    useUtc: Boolean
+  },
+  data: function data() {
+    var constructedDateUtils = makeDateUtils(this.useUtc);
+    return {
+      utils: constructedDateUtils
+    };
+  },
+  computed: {
+    months: function months() {
+      var d = this.pageDate;
+      var months = []; // set up a new date object to the beginning of the current 'page'
+
+      var dObj = this.useUtc ? new Date(Date.UTC(d.getUTCFullYear(), 0, d.getUTCDate())) : new Date(d.getFullYear(), 0, d.getDate(), d.getHours(), d.getMinutes());
+
+      for (var i = 0; i < 12; i++) {
+        months.push({
+          month: this.utils.getMonthName(i, this.translation.months),
+          timestamp: dObj.getTime(),
+          isSelected: this.isSelectedMonth(dObj),
+          isDisabled: this.isDisabledMonth(dObj)
+        });
+        this.utils.setMonth(dObj, this.utils.getMonth(dObj) + 1);
+      }
+
+      return months;
+    },
+
+    /**
+     * Get year name on current page.
+     * @return {String}
+     */
+    pageYearName: function pageYearName() {
+      var yearSuffix = this.translation.yearSuffix;
+      return "".concat(this.utils.getFullYear(this.pageDate)).concat(yearSuffix);
+    },
+
+    /**
+     * Is the left hand navigation disabled
+     * @return {Boolean}
+     */
+    isLeftNavDisabled: function isLeftNavDisabled() {
+      return this.isRtl ? this.isNextYearDisabled(this.pageTimestamp) : this.isPreviousYearDisabled(this.pageTimestamp);
+    },
+
+    /**
+     * Is the right hand navigation disabled
+     * @return {Boolean}
+     */
+    isRightNavDisabled: function isRightNavDisabled() {
+      return this.isRtl ? this.isPreviousYearDisabled(this.pageTimestamp) : this.isNextYearDisabled(this.pageTimestamp);
+    }
+  },
+  methods: {
+    /**
+     * Emits a selectMonth event
+     * @param {Object} month
+     */
+    selectMonth: function selectMonth(month) {
+      if (month.isDisabled) {
+        return false;
+      }
+
+      this.$emit('selectMonth', month);
+    },
+
+    /**
+     * Changes the year up or down
+     * @param {Number} incrementBy
+     */
+    changeYear: function changeYear(incrementBy) {
+      var date = this.pageDate;
+      this.utils.setFullYear(date, this.utils.getFullYear(date) + incrementBy);
+      this.$emit('changedYear', date);
+    },
+
+    /**
+     * Decrements the year
+     */
+    previousYear: function previousYear() {
+      if (!this.isPreviousYearDisabled()) {
+        this.changeYear(-1);
+      }
+    },
+
+    /**
+     * Checks if the previous year is disabled or not
+     * @return {Boolean}
+     */
+    isPreviousYearDisabled: function isPreviousYearDisabled() {
+      if (!this.disabledDates || !this.disabledDates.to) {
+        return false;
+      }
+
+      return this.utils.getFullYear(this.disabledDates.to) >= this.utils.getFullYear(this.pageDate);
+    },
+
+    /**
+     * Increments the year
+     */
+    nextYear: function nextYear() {
+      if (!this.isNextYearDisabled()) {
+        this.changeYear(1);
+      }
+    },
+
+    /**
+     * Checks if the next year is disabled or not
+     * @return {Boolean}
+     */
+    isNextYearDisabled: function isNextYearDisabled() {
+      if (!this.disabledDates || !this.disabledDates.from) {
+        return false;
+      }
+
+      return this.utils.getFullYear(this.disabledDates.from) <= this.utils.getFullYear(this.pageDate);
+    },
+
+    /**
+     * Emits an event that shows the year calendar
+     */
+    showYearCalendar: function showYearCalendar() {
+      this.$emit('showYearCalendar');
+    },
+
+    /**
+     * Whether the selected date is in this month
+     * @param {Date}
+     * @return {Boolean}
+     */
+    isSelectedMonth: function isSelectedMonth(date) {
+      return this.selectedDate && this.utils.getFullYear(this.selectedDate) === this.utils.getFullYear(date) && this.utils.getMonth(this.selectedDate) === this.utils.getMonth(date);
+    },
+
+    /**
+     * Whether a month is disabled
+     * @param {Date}
+     * @return {Boolean}
+     */
+    isDisabledMonth: function isDisabledMonth(date) {
+      var disabledDates = false;
+
+      if (typeof this.disabledDates === 'undefined') {
+        return false;
+      }
+
+      if (typeof this.disabledDates.to !== 'undefined' && this.disabledDates.to) {
+        if (this.utils.getMonth(date) < this.utils.getMonth(this.disabledDates.to) && this.utils.getFullYear(date) <= this.utils.getFullYear(this.disabledDates.to) || this.utils.getFullYear(date) < this.utils.getFullYear(this.disabledDates.to)) {
+          disabledDates = true;
+        }
+      }
+
+      if (typeof this.disabledDates.from !== 'undefined' && this.disabledDates.from) {
+        if (this.utils.getMonth(date) > this.utils.getMonth(this.disabledDates.from) && this.utils.getFullYear(date) >= this.utils.getFullYear(this.disabledDates.from) || this.utils.getFullYear(date) > this.utils.getFullYear(this.disabledDates.from)) {
+          disabledDates = true;
+        }
+      }
+
+      if (typeof this.disabledDates.customPredictor === 'function' && this.disabledDates.customPredictor(date)) {
+        disabledDates = true;
+      }
+
+      return disabledDates;
+    }
+  } // eslint-disable-next-line
+
+};
+
+/* script */
+const __vue_script__$2 = script$2;
+
+/* template */
+var __vue_render__$2 = function() {
+  var _vm = this;
+  var _h = _vm.$createElement;
+  var _c = _vm._self._c || _h;
+  return _c(
+    "div",
+    {
+      directives: [
+        {
+          name: "show",
+          rawName: "v-show",
+          value: _vm.showMonthView,
+          expression: "showMonthView"
+        }
+      ],
+      class: [_vm.calendarClass, "vdp-datepicker__calendar"],
+      style: _vm.calendarStyle,
+      on: {
+        mousedown: function($event) {
+          $event.preventDefault();
+        }
+      }
+    },
+    [
+      _vm._t("beforeCalendarHeader"),
+      _vm._v(" "),
+      _c("header", [
+        _c(
+          "span",
+          {
+            staticClass: "prev",
+            class: { disabled: _vm.isLeftNavDisabled },
+            on: {
+              click: function($event) {
+                _vm.isRtl ? _vm.nextYear() : _vm.previousYear();
+              }
+            }
+          },
+          [_vm._v("<")]
+        ),
+        _vm._v(" "),
+        _c(
+          "span",
+          {
+            staticClass: "month__year_btn",
+            class: _vm.allowedToShowView("year") ? "up" : "",
+            on: { click: _vm.showYearCalendar }
+          },
+          [_vm._v(_vm._s(_vm.pageYearName))]
+        ),
+        _vm._v(" "),
+        _c(
+          "span",
+          {
+            staticClass: "next",
+            class: { disabled: _vm.isRightNavDisabled },
+            on: {
+              click: function($event) {
+                _vm.isRtl ? _vm.previousYear() : _vm.nextYear();
+              }
+            }
+          },
+          [_vm._v(">")]
+        )
+      ]),
+      _vm._v(" "),
+      _vm._l(_vm.months, function(month) {
+        return _c(
+          "span",
+          {
+            key: month.timestamp,
+            staticClass: "cell month",
+            class: { selected: month.isSelected, disabled: month.isDisabled },
+            on: {
+              click: function($event) {
+                $event.stopPropagation();
+                return _vm.selectMonth(month)
+              }
+            }
+          },
+          [_vm._v(_vm._s(month.month))]
+        )
+      })
+    ],
+    2
+  )
+};
+var __vue_staticRenderFns__$2 = [];
+__vue_render__$2._withStripped = true;
+
+  /* style */
+  const __vue_inject_styles__$2 = undefined;
+  /* scoped */
+  const __vue_scope_id__$2 = undefined;
+  /* module identifier */
+  const __vue_module_identifier__$2 = undefined;
+  /* functional template */
+  const __vue_is_functional_template__$2 = false;
+  /* style inject */
+  
+  /* style inject SSR */
+  
+
+  
+  var PickerMonth = normalizeComponent_1(
+    { render: __vue_render__$2, staticRenderFns: __vue_staticRenderFns__$2 },
+    __vue_inject_styles__$2,
+    __vue_script__$2,
+    __vue_scope_id__$2,
+    __vue_is_functional_template__$2,
+    __vue_module_identifier__$2,
+    undefined,
+    undefined
+  );
+
+//
+var script$3 = {
+  props: {
+    showYearView: Boolean,
+    selectedDate: Date,
+    pageDate: Date,
+    pageTimestamp: Number,
+    disabledDates: Object,
+    highlighted: Object,
+    calendarClass: [String, Object, Array],
+    calendarStyle: Object,
+    translation: Object,
+    isRtl: Boolean,
+    allowedToShowView: Function,
+    useUtc: Boolean
+  },
+  computed: {
+    years: function years() {
+      var d = this.pageDate;
+      var years = []; // set up a new date object to the beginning of the current 'page'7
+
+      var dObj = this.useUtc ? new Date(Date.UTC(Math.floor(d.getUTCFullYear() / 10) * 10, d.getUTCMonth(), d.getUTCDate())) : new Date(Math.floor(d.getFullYear() / 10) * 10, d.getMonth(), d.getDate(), d.getHours(), d.getMinutes());
+
+      for (var i = 0; i < 10; i++) {
+        years.push({
+          year: this.utils.getFullYear(dObj),
+          timestamp: dObj.getTime(),
+          isSelected: this.isSelectedYear(dObj),
+          isDisabled: this.isDisabledYear(dObj)
+        });
+        this.utils.setFullYear(dObj, this.utils.getFullYear(dObj) + 1);
+      }
+
+      return years;
+    },
+
+    /**
+     * @return {String}
+     */
+    getPageDecade: function getPageDecade() {
+      var decadeStart = Math.floor(this.utils.getFullYear(this.pageDate) / 10) * 10;
+      var decadeEnd = decadeStart + 9;
+      var yearSuffix = this.translation.yearSuffix;
+      return "".concat(decadeStart, " - ").concat(decadeEnd).concat(yearSuffix);
+    },
+
+    /**
+     * Is the left hand navigation button disabled?
+     * @return {Boolean}
+     */
+    isLeftNavDisabled: function isLeftNavDisabled() {
+      return this.isRtl ? this.isNextDecadeDisabled(this.pageTimestamp) : this.isPreviousDecadeDisabled(this.pageTimestamp);
+    },
+
+    /**
+     * Is the right hand navigation button disabled?
+     * @return {Boolean}
+     */
+    isRightNavDisabled: function isRightNavDisabled() {
+      return this.isRtl ? this.isPreviousDecadeDisabled(this.pageTimestamp) : this.isNextDecadeDisabled(this.pageTimestamp);
+    }
+  },
+  data: function data() {
+    var constructedDateUtils = makeDateUtils(this.useUtc);
+    return {
+      utils: constructedDateUtils
+    };
+  },
+  methods: {
+    selectYear: function selectYear(year) {
+      if (year.isDisabled) {
+        return false;
+      }
+
+      this.$emit('selectYear', year);
+    },
+    changeYear: function changeYear(incrementBy) {
+      var date = this.pageDate;
+      this.utils.setFullYear(date, this.utils.getFullYear(date) + incrementBy);
+      this.$emit('changedDecade', date);
+    },
+    previousDecade: function previousDecade() {
+      if (this.isPreviousDecadeDisabled()) {
+        return false;
+      }
+
+      this.changeYear(-10);
+    },
+    isPreviousDecadeDisabled: function isPreviousDecadeDisabled() {
+      if (!this.disabledDates || !this.disabledDates.to) {
+        return false;
+      }
+
+      var disabledYear = this.utils.getFullYear(this.disabledDates.to);
+      var lastYearInPreviousPage = Math.floor(this.utils.getFullYear(this.pageDate) / 10) * 10 - 1;
+      return disabledYear > lastYearInPreviousPage;
+    },
+    nextDecade: function nextDecade() {
+      if (this.isNextDecadeDisabled()) {
+        return false;
+      }
+
+      this.changeYear(10);
+    },
+    isNextDecadeDisabled: function isNextDecadeDisabled() {
+      if (!this.disabledDates || !this.disabledDates.from) {
+        return false;
+      }
+
+      var disabledYear = this.utils.getFullYear(this.disabledDates.from);
+      var firstYearInNextPage = Math.ceil(this.utils.getFullYear(this.pageDate) / 10) * 10;
+      return disabledYear < firstYearInNextPage;
+    },
+
+    /**
+     * Whether the selected date is in this year
+     * @param {Date}
+     * @return {Boolean}
+     */
+    isSelectedYear: function isSelectedYear(date) {
+      return this.selectedDate && this.utils.getFullYear(this.selectedDate) === this.utils.getFullYear(date);
+    },
+
+    /**
+     * Whether a year is disabled
+     * @param {Date}
+     * @return {Boolean}
+     */
+    isDisabledYear: function isDisabledYear(date) {
+      var disabledDates = false;
+
+      if (typeof this.disabledDates === 'undefined' || !this.disabledDates) {
+        return false;
+      }
+
+      if (typeof this.disabledDates.to !== 'undefined' && this.disabledDates.to) {
+        if (this.utils.getFullYear(date) < this.utils.getFullYear(this.disabledDates.to)) {
+          disabledDates = true;
+        }
+      }
+
+      if (typeof this.disabledDates.from !== 'undefined' && this.disabledDates.from) {
+        if (this.utils.getFullYear(date) > this.utils.getFullYear(this.disabledDates.from)) {
+          disabledDates = true;
+        }
+      }
+
+      if (typeof this.disabledDates.customPredictor === 'function' && this.disabledDates.customPredictor(date)) {
+        disabledDates = true;
+      }
+
+      return disabledDates;
+    }
+  } // eslint-disable-next-line
+
+};
+
+/* script */
+const __vue_script__$3 = script$3;
+
+/* template */
+var __vue_render__$3 = function() {
+  var _vm = this;
+  var _h = _vm.$createElement;
+  var _c = _vm._self._c || _h;
+  return _c(
+    "div",
+    {
+      directives: [
+        {
+          name: "show",
+          rawName: "v-show",
+          value: _vm.showYearView,
+          expression: "showYearView"
+        }
+      ],
+      class: [_vm.calendarClass, "vdp-datepicker__calendar"],
+      style: _vm.calendarStyle,
+      on: {
+        mousedown: function($event) {
+          $event.preventDefault();
+        }
+      }
+    },
+    [
+      _vm._t("beforeCalendarHeader"),
+      _vm._v(" "),
+      _c("header", [
+        _c(
+          "span",
+          {
+            staticClass: "prev",
+            class: { disabled: _vm.isLeftNavDisabled },
+            on: {
+              click: function($event) {
+                _vm.isRtl ? _vm.nextDecade() : _vm.previousDecade();
+              }
+            }
+          },
+          [_vm._v("<")]
+        ),
+        _vm._v(" "),
+        _c("span", [_vm._v(_vm._s(_vm.getPageDecade))]),
+        _vm._v(" "),
+        _c(
+          "span",
+          {
+            staticClass: "next",
+            class: { disabled: _vm.isRightNavDisabled },
+            on: {
+              click: function($event) {
+                _vm.isRtl ? _vm.previousDecade() : _vm.nextDecade();
+              }
+            }
+          },
+          [_vm._v(">")]
+        )
+      ]),
+      _vm._v(" "),
+      _vm._l(_vm.years, function(year) {
+        return _c(
+          "span",
+          {
+            key: year.timestamp,
+            staticClass: "cell year",
+            class: { selected: year.isSelected, disabled: year.isDisabled },
+            on: {
+              click: function($event) {
+                $event.stopPropagation();
+                return _vm.selectYear(year)
+              }
+            }
+          },
+          [_vm._v(_vm._s(year.year))]
+        )
+      })
+    ],
+    2
+  )
+};
+var __vue_staticRenderFns__$3 = [];
+__vue_render__$3._withStripped = true;
+
+  /* style */
+  const __vue_inject_styles__$3 = undefined;
+  /* scoped */
+  const __vue_scope_id__$3 = undefined;
+  /* module identifier */
+  const __vue_module_identifier__$3 = undefined;
+  /* functional template */
+  const __vue_is_functional_template__$3 = false;
+  /* style inject */
+  
+  /* style inject SSR */
+  
+
+  
+  var PickerYear = normalizeComponent_1(
+    { render: __vue_render__$3, staticRenderFns: __vue_staticRenderFns__$3 },
+    __vue_inject_styles__$3,
+    __vue_script__$3,
+    __vue_scope_id__$3,
+    __vue_is_functional_template__$3,
+    __vue_module_identifier__$3,
+    undefined,
+    undefined
+  );
+
+//
+var script$4 = {
+  components: {
+    DateInput: DateInput,
+    PickerDay: PickerDay,
+    PickerMonth: PickerMonth,
+    PickerYear: PickerYear
+  },
+  props: {
+    value: {
+      validator: function validator(val) {
+        return utils$1.validateDateInput(val);
+      }
+    },
+    name: String,
+    refName: String,
+    id: String,
+    format: {
+      type: [String, Function],
+      "default": 'dd MMM yyyy'
+    },
+    language: {
+      type: Object,
+      "default": function _default() {
+        return en;
+      }
+    },
+    openDate: {
+      validator: function validator(val) {
+        return utils$1.validateDateInput(val);
+      }
+    },
+    dayCellContent: Function,
+    fullMonthName: Boolean,
+    disabledDates: Object,
+    highlighted: Object,
+    placeholder: String,
+    inline: Boolean,
+    calendarClass: [String, Object, Array],
+    inputClass: [String, Object, Array],
+    wrapperClass: [String, Object, Array],
+    mondayFirst: Boolean,
+    clearButton: Boolean,
+    clearButtonIcon: String,
+    calendarButton: Boolean,
+    calendarButtonIcon: String,
+    calendarButtonIconContent: String,
+    bootstrapStyling: Boolean,
+    initialView: String,
+    disabled: Boolean,
+    required: Boolean,
+    typeable: Boolean,
+    useUtc: Boolean,
+    minimumView: {
+      type: String,
+      "default": 'day'
+    },
+    maximumView: {
+      type: String,
+      "default": 'year'
+    }
+  },
+  data: function data() {
+    var startDate = this.openDate ? new Date(this.openDate) : new Date();
+    var constructedDateUtils = makeDateUtils(this.useUtc);
+    var pageTimestamp = constructedDateUtils.setDate(startDate, 1);
+    return {
+      /*
+       * Vue cannot observe changes to a Date Object so date must be stored as a timestamp
+       * This represents the first day of the current viewing month
+       * {Number}
+       */
+      pageTimestamp: pageTimestamp,
+
+      /*
+       * Selected Date
+       * {Date}
+       */
+      selectedDate: null,
+
+      /*
+       * Flags to show calendar views
+       * {Boolean}
+       */
+      showDayView: false,
+      showMonthView: false,
+      showYearView: false,
+
+      /*
+       * Positioning
+       */
+      calendarHeight: 0,
+      resetTypedDate: new Date(),
+      utils: constructedDateUtils
+    };
+  },
+  watch: {
+    value: function value(_value) {
+      this.setValue(_value);
+    },
+    openDate: function openDate() {
+      this.setPageDate();
+    },
+    initialView: function initialView() {
+      this.setInitialView();
+    }
+  },
+  computed: {
+    computedInitialView: function computedInitialView() {
+      if (!this.initialView) {
+        return this.minimumView;
+      }
+
+      return this.initialView;
+    },
+    pageDate: function pageDate() {
+      return new Date(this.pageTimestamp);
+    },
+    translation: function translation() {
+      return this.language;
+    },
+    calendarStyle: function calendarStyle() {
+      return {
+        position: this.isInline ? 'static' : undefined
+      };
+    },
+    isOpen: function isOpen() {
+      return this.showDayView || this.showMonthView || this.showYearView;
+    },
+    isInline: function isInline() {
+      return !!this.inline;
+    },
+    isRtl: function isRtl() {
+      return this.translation.rtl === true;
+    }
+  },
+  methods: {
+    /**
+     * Called in the event that the user navigates to date pages and
+     * closes the picker without selecting a date.
+     */
+    resetDefaultPageDate: function resetDefaultPageDate() {
+      if (this.selectedDate === null) {
+        this.setPageDate();
+        return;
+      }
+
+      this.setPageDate(this.selectedDate);
+    },
+
+    /**
+     * Effectively a toggle to show/hide the calendar
+     * @return {mixed}
+     */
+    showCalendar: function showCalendar() {
+      if (this.disabled || this.isInline) {
+        return false;
+      }
+
+      if (this.isOpen) {
+        return this.close(true);
+      }
+
+      this.setInitialView();
+    },
+
+    /**
+     * Sets the initial picker page view: day, month or year
+     */
+    setInitialView: function setInitialView() {
+      var initialView = this.computedInitialView;
+
+      if (!this.allowedToShowView(initialView)) {
+        throw new Error("initialView '".concat(this.initialView, "' cannot be rendered based on minimum '").concat(this.minimumView, "' and maximum '").concat(this.maximumView, "'"));
+      }
+
+      switch (initialView) {
+        case 'year':
+          this.showYearCalendar();
+          break;
+
+        case 'month':
+          this.showMonthCalendar();
+          break;
+
+        default:
+          this.showDayCalendar();
+          break;
+      }
+    },
+
+    /**
+     * Are we allowed to show a specific picker view?
+     * @param {String} view
+     * @return {Boolean}
+     */
+    allowedToShowView: function allowedToShowView(view) {
+      var views = ['day', 'month', 'year'];
+      var minimumViewIndex = views.indexOf(this.minimumView);
+      var maximumViewIndex = views.indexOf(this.maximumView);
+      var viewIndex = views.indexOf(view);
+      return viewIndex >= minimumViewIndex && viewIndex <= maximumViewIndex;
+    },
+
+    /**
+     * Show the day picker
+     * @return {Boolean}
+     */
+    showDayCalendar: function showDayCalendar() {
+      if (!this.allowedToShowView('day')) {
+        return false;
+      }
+
+      this.close();
+      this.showDayView = true;
+      return true;
+    },
+
+    /**
+     * Show the month picker
+     * @return {Boolean}
+     */
+    showMonthCalendar: function showMonthCalendar() {
+      if (!this.allowedToShowView('month')) {
+        return false;
+      }
+
+      this.close();
+      this.showMonthView = true;
+      return true;
+    },
+
+    /**
+     * Show the year picker
+     * @return {Boolean}
+     */
+    showYearCalendar: function showYearCalendar() {
+      if (!this.allowedToShowView('year')) {
+        return false;
+      }
+
+      this.close();
+      this.showYearView = true;
+      return true;
+    },
+
+    /**
+     * Set the selected date
+     * @param {Number} timestamp
+     */
+    setDate: function setDate(timestamp) {
+      var date = new Date(timestamp);
+      this.selectedDate = date;
+      this.setPageDate(date);
+      this.$emit('selected', date);
+      this.$emit('input', date);
+    },
+
+    /**
+     * Clear the selected date
+     */
+    clearDate: function clearDate() {
+      this.selectedDate = null;
+      this.setPageDate();
+      this.$emit('selected', null);
+      this.$emit('input', null);
+      this.$emit('cleared');
+    },
+
+    /**
+     * @param {Object} date
+     */
+    selectDate: function selectDate(date) {
+      this.setDate(date.timestamp);
+
+      if (!this.isInline) {
+        this.close(true);
+      }
+
+      this.resetTypedDate = new Date();
+    },
+
+    /**
+     * @param {Object} date
+     */
+    selectDisabledDate: function selectDisabledDate(date) {
+      this.$emit('selectedDisabled', date);
+    },
+
+    /**
+     * @param {Object} month
+     */
+    selectMonth: function selectMonth(month) {
+      var date = new Date(month.timestamp);
+
+      if (this.allowedToShowView('day')) {
+        this.setPageDate(date);
+        this.$emit('changedMonth', month);
+        this.showDayCalendar();
+      } else {
+        this.selectDate(month);
+      }
+    },
+
+    /**
+     * @param {Object} year
+     */
+    selectYear: function selectYear(year) {
+      var date = new Date(year.timestamp);
+
+      if (this.allowedToShowView('month')) {
+        this.setPageDate(date);
+        this.$emit('changedYear', year);
+        this.showMonthCalendar();
+      } else {
+        this.selectDate(year);
+      }
+    },
+
+    /**
+     * Set the datepicker value
+     * @param {Date|String|Number|null} date
+     */
+    setValue: function setValue(date) {
+      if (typeof date === 'string' || typeof date === 'number') {
+        var parsed = new Date(date);
+        date = isNaN(parsed.valueOf()) ? null : parsed;
+      }
+
+      if (!date) {
+        this.setPageDate();
+        this.selectedDate = null;
+        return;
+      }
+
+      this.selectedDate = date;
+      this.setPageDate(date);
+    },
+
+    /**
+     * Sets the date that the calendar should open on
+     */
+    setPageDate: function setPageDate(date) {
+      if (!date) {
+        if (this.openDate) {
+          date = new Date(this.openDate);
+        } else {
+          date = new Date();
+        }
+      }
+
+      this.pageTimestamp = this.utils.setDate(new Date(date), 1);
+    },
+
+    /**
+     * Handles a month change from the day picker
+     */
+    handleChangedMonthFromDayPicker: function handleChangedMonthFromDayPicker(date) {
+      this.setPageDate(date);
+      this.$emit('changedMonth', date);
+    },
+
+    /**
+     * Set the date from a typedDate event
+     */
+    setTypedDate: function setTypedDate(date) {
+      this.setDate(date.getTime());
+    },
+
+    /**
+     * Close all calendar layers
+     * @param {Boolean} emitEvent - emit close event
+     */
+    close: function close(emitEvent) {
+      this.showDayView = this.showMonthView = this.showYearView = false;
+
+      if (!this.isInline) {
+        if (emitEvent) {
+          this.$emit('closed');
+        }
+
+        document.removeEventListener('click', this.clickOutside, false);
+      }
+    },
+
+    /**
+     * Initiate the component
+     */
+    init: function init() {
+      if (this.value) {
+        this.setValue(this.value);
+      }
+
+      if (this.isInline) {
+        this.setInitialView();
+      }
+    }
+  },
+  mounted: function mounted() {
+    this.init();
+  }
+} // eslint-disable-next-line
+;
+
+var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\\b/.test(navigator.userAgent.toLowerCase());
+function createInjector(context) {
+  return function (id, style) {
+    return addStyle(id, style);
+  };
+}
+var HEAD = document.head || document.getElementsByTagName('head')[0];
+var styles = {};
+
+function addStyle(id, css) {
+  var group = isOldIE ? css.media || 'default' : id;
+  var style = styles[group] || (styles[group] = {
+    ids: new Set(),
+    styles: []
+  });
+
+  if (!style.ids.has(id)) {
+    style.ids.add(id);
+    var code = css.source;
+
+    if (css.map) {
+      // https://developer.chrome.com/devtools/docs/javascript-debugging
+      // this makes source maps inside style tags work properly in Chrome
+      code += '\n/*# sourceURL=' + css.map.sources[0] + ' */'; // http://stackoverflow.com/a/26603875
+
+      code += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(css.map)))) + ' */';
+    }
+
+    if (!style.element) {
+      style.element = document.createElement('style');
+      style.element.type = 'text/css';
+      if (css.media) style.element.setAttribute('media', css.media);
+      HEAD.appendChild(style.element);
+    }
+
+    if ('styleSheet' in style.element) {
+      style.styles.push(code);
+      style.element.styleSheet.cssText = style.styles.filter(Boolean).join('\n');
+    } else {
+      var index = style.ids.size - 1;
+      var textNode = document.createTextNode(code);
+      var nodes = style.element.childNodes;
+      if (nodes[index]) style.element.removeChild(nodes[index]);
+      if (nodes.length) style.element.insertBefore(textNode, nodes[index]);else style.element.appendChild(textNode);
+    }
+  }
+}
+
+var browser = createInjector;
+
+/* script */
+const __vue_script__$4 = script$4;
+
+/* template */
+var __vue_render__$4 = function() {
+  var _vm = this;
+  var _h = _vm.$createElement;
+  var _c = _vm._self._c || _h;
+  return _c(
+    "div",
+    {
+      staticClass: "vdp-datepicker",
+      class: [_vm.wrapperClass, _vm.isRtl ? "rtl" : ""]
+    },
+    [
+      _c(
+        "date-input",
+        {
+          attrs: {
+            selectedDate: _vm.selectedDate,
+            resetTypedDate: _vm.resetTypedDate,
+            format: _vm.format,
+            translation: _vm.translation,
+            inline: _vm.inline,
+            id: _vm.id,
+            name: _vm.name,
+            refName: _vm.refName,
+            openDate: _vm.openDate,
+            placeholder: _vm.placeholder,
+            inputClass: _vm.inputClass,
+            typeable: _vm.typeable,
+            clearButton: _vm.clearButton,
+            clearButtonIcon: _vm.clearButtonIcon,
+            calendarButton: _vm.calendarButton,
+            calendarButtonIcon: _vm.calendarButtonIcon,
+            calendarButtonIconContent: _vm.calendarButtonIconContent,
+            disabled: _vm.disabled,
+            required: _vm.required,
+            bootstrapStyling: _vm.bootstrapStyling,
+            "use-utc": _vm.useUtc
+          },
+          on: {
+            showCalendar: _vm.showCalendar,
+            closeCalendar: _vm.close,
+            typedDate: _vm.setTypedDate,
+            clearDate: _vm.clearDate
+          }
+        },
+        [_vm._t("afterDateInput", null, { slot: "afterDateInput" })],
+        2
+      ),
+      _vm._v(" "),
+      _vm.allowedToShowView("day")
+        ? _c(
+            "picker-day",
+            {
+              attrs: {
+                pageDate: _vm.pageDate,
+                selectedDate: _vm.selectedDate,
+                showDayView: _vm.showDayView,
+                fullMonthName: _vm.fullMonthName,
+                allowedToShowView: _vm.allowedToShowView,
+                disabledDates: _vm.disabledDates,
+                highlighted: _vm.highlighted,
+                calendarClass: _vm.calendarClass,
+                calendarStyle: _vm.calendarStyle,
+                translation: _vm.translation,
+                pageTimestamp: _vm.pageTimestamp,
+                isRtl: _vm.isRtl,
+                mondayFirst: _vm.mondayFirst,
+                dayCellContent: _vm.dayCellContent,
+                "use-utc": _vm.useUtc
+              },
+              on: {
+                changedMonth: _vm.handleChangedMonthFromDayPicker,
+                selectDate: _vm.selectDate,
+                showMonthCalendar: _vm.showMonthCalendar,
+                selectedDisabled: _vm.selectDisabledDate
+              }
+            },
+            [
+              _vm._t("beforeCalendarHeader", null, {
+                slot: "beforeCalendarHeader"
+              })
+            ],
+            2
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.allowedToShowView("month")
+        ? _c(
+            "picker-month",
+            {
+              attrs: {
+                pageDate: _vm.pageDate,
+                selectedDate: _vm.selectedDate,
+                showMonthView: _vm.showMonthView,
+                allowedToShowView: _vm.allowedToShowView,
+                disabledDates: _vm.disabledDates,
+                calendarClass: _vm.calendarClass,
+                calendarStyle: _vm.calendarStyle,
+                translation: _vm.translation,
+                isRtl: _vm.isRtl,
+                "use-utc": _vm.useUtc
+              },
+              on: {
+                selectMonth: _vm.selectMonth,
+                showYearCalendar: _vm.showYearCalendar,
+                changedYear: _vm.setPageDate
+              }
+            },
+            [
+              _vm._t("beforeCalendarHeader", null, {
+                slot: "beforeCalendarHeader"
+              })
+            ],
+            2
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.allowedToShowView("year")
+        ? _c(
+            "picker-year",
+            {
+              attrs: {
+                pageDate: _vm.pageDate,
+                selectedDate: _vm.selectedDate,
+                showYearView: _vm.showYearView,
+                allowedToShowView: _vm.allowedToShowView,
+                disabledDates: _vm.disabledDates,
+                calendarClass: _vm.calendarClass,
+                calendarStyle: _vm.calendarStyle,
+                translation: _vm.translation,
+                isRtl: _vm.isRtl,
+                "use-utc": _vm.useUtc
+              },
+              on: { selectYear: _vm.selectYear, changedDecade: _vm.setPageDate }
+            },
+            [
+              _vm._t("beforeCalendarHeader", null, {
+                slot: "beforeCalendarHeader"
+              })
+            ],
+            2
+          )
+        : _vm._e()
+    ],
+    1
+  )
+};
+var __vue_staticRenderFns__$4 = [];
+__vue_render__$4._withStripped = true;
+
+  /* style */
+  const __vue_inject_styles__$4 = function (inject) {
+    if (!inject) return
+    inject("data-v-64ca2bb5_0", { source: ".rtl {\n  direction: rtl;\n}\n.vdp-datepicker {\n  position: relative;\n  text-align: left;\n}\n.vdp-datepicker * {\n  box-sizing: border-box;\n}\n.vdp-datepicker__calendar {\n  position: absolute;\n  z-index: 100;\n  background: #fff;\n  width: 300px;\n  border: 1px solid #ccc;\n}\n.vdp-datepicker__calendar header {\n  display: block;\n  line-height: 40px;\n}\n.vdp-datepicker__calendar header span {\n  display: inline-block;\n  text-align: center;\n  width: 71.42857142857143%;\n  float: left;\n}\n.vdp-datepicker__calendar header .prev,\n.vdp-datepicker__calendar header .next {\n  width: 14.285714285714286%;\n  float: left;\n  text-indent: -10000px;\n  position: relative;\n}\n.vdp-datepicker__calendar header .prev:after,\n.vdp-datepicker__calendar header .next:after {\n  content: '';\n  position: absolute;\n  left: 50%;\n  top: 50%;\n  transform: translateX(-50%) translateY(-50%);\n  border: 6px solid transparent;\n}\n.vdp-datepicker__calendar header .prev:after {\n  border-right: 10px solid #000;\n  margin-left: -5px;\n}\n.vdp-datepicker__calendar header .prev.disabled:after {\n  border-right: 10px solid #ddd;\n}\n.vdp-datepicker__calendar header .next:after {\n  border-left: 10px solid #000;\n  margin-left: 5px;\n}\n.vdp-datepicker__calendar header .next.disabled:after {\n  border-left: 10px solid #ddd;\n}\n.vdp-datepicker__calendar header .prev:not(.disabled),\n.vdp-datepicker__calendar header .next:not(.disabled),\n.vdp-datepicker__calendar header .up:not(.disabled) {\n  cursor: pointer;\n}\n.vdp-datepicker__calendar header .prev:not(.disabled):hover,\n.vdp-datepicker__calendar header .next:not(.disabled):hover,\n.vdp-datepicker__calendar header .up:not(.disabled):hover {\n  background: #eee;\n}\n.vdp-datepicker__calendar .disabled {\n  color: #ddd;\n  cursor: default;\n}\n.vdp-datepicker__calendar .flex-rtl {\n  display: flex;\n  width: inherit;\n  flex-wrap: wrap;\n}\n.vdp-datepicker__calendar .cell {\n  display: inline-block;\n  padding: 0 5px;\n  width: 14.285714285714286%;\n  height: 40px;\n  line-height: 40px;\n  text-align: center;\n  vertical-align: middle;\n  border: 1px solid transparent;\n}\n.vdp-datepicker__calendar .cell:not(.blank):not(.disabled).day,\n.vdp-datepicker__calendar .cell:not(.blank):not(.disabled).month,\n.vdp-datepicker__calendar .cell:not(.blank):not(.disabled).year {\n  cursor: pointer;\n}\n.vdp-datepicker__calendar .cell:not(.blank):not(.disabled).day:hover,\n.vdp-datepicker__calendar .cell:not(.blank):not(.disabled).month:hover,\n.vdp-datepicker__calendar .cell:not(.blank):not(.disabled).year:hover {\n  border: 1px solid #4bd;\n}\n.vdp-datepicker__calendar .cell.selected {\n  background: #4bd;\n}\n.vdp-datepicker__calendar .cell.selected:hover {\n  background: #4bd;\n}\n.vdp-datepicker__calendar .cell.selected.highlighted {\n  background: #4bd;\n}\n.vdp-datepicker__calendar .cell.highlighted {\n  background: #cae5ed;\n}\n.vdp-datepicker__calendar .cell.highlighted.disabled {\n  color: #a3a3a3;\n}\n.vdp-datepicker__calendar .cell.grey {\n  color: #888;\n}\n.vdp-datepicker__calendar .cell.grey:hover {\n  background: inherit;\n}\n.vdp-datepicker__calendar .cell.day-header {\n  font-size: 75%;\n  white-space: nowrap;\n  cursor: inherit;\n}\n.vdp-datepicker__calendar .cell.day-header:hover {\n  background: inherit;\n}\n.vdp-datepicker__calendar .month,\n.vdp-datepicker__calendar .year {\n  width: 33.333%;\n}\n.vdp-datepicker__clear-button,\n.vdp-datepicker__calendar-button {\n  cursor: pointer;\n  font-style: normal;\n}\n.vdp-datepicker__clear-button.disabled,\n.vdp-datepicker__calendar-button.disabled {\n  color: #999;\n  cursor: default;\n}\n", map: {"version":3,"sources":["Datepicker.vue"],"names":[],"mappings":"AAAA;EACE,cAAc;AAChB;AACA;EACE,kBAAkB;EAClB,gBAAgB;AAClB;AACA;EACE,sBAAsB;AACxB;AACA;EACE,kBAAkB;EAClB,YAAY;EACZ,gBAAgB;EAChB,YAAY;EACZ,sBAAsB;AACxB;AACA;EACE,cAAc;EACd,iBAAiB;AACnB;AACA;EACE,qBAAqB;EACrB,kBAAkB;EAClB,yBAAyB;EACzB,WAAW;AACb;AACA;;EAEE,0BAA0B;EAC1B,WAAW;EACX,qBAAqB;EACrB,kBAAkB;AACpB;AACA;;EAEE,WAAW;EACX,kBAAkB;EAClB,SAAS;EACT,QAAQ;EACR,4CAA4C;EAC5C,6BAA6B;AAC/B;AACA;EACE,6BAA6B;EAC7B,iBAAiB;AACnB;AACA;EACE,6BAA6B;AAC/B;AACA;EACE,4BAA4B;EAC5B,gBAAgB;AAClB;AACA;EACE,4BAA4B;AAC9B;AACA;;;EAGE,eAAe;AACjB;AACA;;;EAGE,gBAAgB;AAClB;AACA;EACE,WAAW;EACX,eAAe;AACjB;AACA;EACE,aAAa;EACb,cAAc;EACd,eAAe;AACjB;AACA;EACE,qBAAqB;EACrB,cAAc;EACd,0BAA0B;EAC1B,YAAY;EACZ,iBAAiB;EACjB,kBAAkB;EAClB,sBAAsB;EACtB,6BAA6B;AAC/B;AACA;;;EAGE,eAAe;AACjB;AACA;;;EAGE,sBAAsB;AACxB;AACA;EACE,gBAAgB;AAClB;AACA;EACE,gBAAgB;AAClB;AACA;EACE,gBAAgB;AAClB;AACA;EACE,mBAAmB;AACrB;AACA;EACE,cAAc;AAChB;AACA;EACE,WAAW;AACb;AACA;EACE,mBAAmB;AACrB;AACA;EACE,cAAc;EACd,mBAAmB;EACnB,eAAe;AACjB;AACA;EACE,mBAAmB;AACrB;AACA;;EAEE,cAAc;AAChB;AACA;;EAEE,eAAe;EACf,kBAAkB;AACpB;AACA;;EAEE,WAAW;EACX,eAAe;AACjB","file":"Datepicker.vue","sourcesContent":[".rtl {\n  direction: rtl;\n}\n.vdp-datepicker {\n  position: relative;\n  text-align: left;\n}\n.vdp-datepicker * {\n  box-sizing: border-box;\n}\n.vdp-datepicker__calendar {\n  position: absolute;\n  z-index: 100;\n  background: #fff;\n  width: 300px;\n  border: 1px solid #ccc;\n}\n.vdp-datepicker__calendar header {\n  display: block;\n  line-height: 40px;\n}\n.vdp-datepicker__calendar header span {\n  display: inline-block;\n  text-align: center;\n  width: 71.42857142857143%;\n  float: left;\n}\n.vdp-datepicker__calendar header .prev,\n.vdp-datepicker__calendar header .next {\n  width: 14.285714285714286%;\n  float: left;\n  text-indent: -10000px;\n  position: relative;\n}\n.vdp-datepicker__calendar header .prev:after,\n.vdp-datepicker__calendar header .next:after {\n  content: '';\n  position: absolute;\n  left: 50%;\n  top: 50%;\n  transform: translateX(-50%) translateY(-50%);\n  border: 6px solid transparent;\n}\n.vdp-datepicker__calendar header .prev:after {\n  border-right: 10px solid #000;\n  margin-left: -5px;\n}\n.vdp-datepicker__calendar header .prev.disabled:after {\n  border-right: 10px solid #ddd;\n}\n.vdp-datepicker__calendar header .next:after {\n  border-left: 10px solid #000;\n  margin-left: 5px;\n}\n.vdp-datepicker__calendar header .next.disabled:after {\n  border-left: 10px solid #ddd;\n}\n.vdp-datepicker__calendar header .prev:not(.disabled),\n.vdp-datepicker__calendar header .next:not(.disabled),\n.vdp-datepicker__calendar header .up:not(.disabled) {\n  cursor: pointer;\n}\n.vdp-datepicker__calendar header .prev:not(.disabled):hover,\n.vdp-datepicker__calendar header .next:not(.disabled):hover,\n.vdp-datepicker__calendar header .up:not(.disabled):hover {\n  background: #eee;\n}\n.vdp-datepicker__calendar .disabled {\n  color: #ddd;\n  cursor: default;\n}\n.vdp-datepicker__calendar .flex-rtl {\n  display: flex;\n  width: inherit;\n  flex-wrap: wrap;\n}\n.vdp-datepicker__calendar .cell {\n  display: inline-block;\n  padding: 0 5px;\n  width: 14.285714285714286%;\n  height: 40px;\n  line-height: 40px;\n  text-align: center;\n  vertical-align: middle;\n  border: 1px solid transparent;\n}\n.vdp-datepicker__calendar .cell:not(.blank):not(.disabled).day,\n.vdp-datepicker__calendar .cell:not(.blank):not(.disabled).month,\n.vdp-datepicker__calendar .cell:not(.blank):not(.disabled).year {\n  cursor: pointer;\n}\n.vdp-datepicker__calendar .cell:not(.blank):not(.disabled).day:hover,\n.vdp-datepicker__calendar .cell:not(.blank):not(.disabled).month:hover,\n.vdp-datepicker__calendar .cell:not(.blank):not(.disabled).year:hover {\n  border: 1px solid #4bd;\n}\n.vdp-datepicker__calendar .cell.selected {\n  background: #4bd;\n}\n.vdp-datepicker__calendar .cell.selected:hover {\n  background: #4bd;\n}\n.vdp-datepicker__calendar .cell.selected.highlighted {\n  background: #4bd;\n}\n.vdp-datepicker__calendar .cell.highlighted {\n  background: #cae5ed;\n}\n.vdp-datepicker__calendar .cell.highlighted.disabled {\n  color: #a3a3a3;\n}\n.vdp-datepicker__calendar .cell.grey {\n  color: #888;\n}\n.vdp-datepicker__calendar .cell.grey:hover {\n  background: inherit;\n}\n.vdp-datepicker__calendar .cell.day-header {\n  font-size: 75%;\n  white-space: nowrap;\n  cursor: inherit;\n}\n.vdp-datepicker__calendar .cell.day-header:hover {\n  background: inherit;\n}\n.vdp-datepicker__calendar .month,\n.vdp-datepicker__calendar .year {\n  width: 33.333%;\n}\n.vdp-datepicker__clear-button,\n.vdp-datepicker__calendar-button {\n  cursor: pointer;\n  font-style: normal;\n}\n.vdp-datepicker__clear-button.disabled,\n.vdp-datepicker__calendar-button.disabled {\n  color: #999;\n  cursor: default;\n}\n"]}, media: undefined });
+
+  };
+  /* scoped */
+  const __vue_scope_id__$4 = undefined;
+  /* module identifier */
+  const __vue_module_identifier__$4 = undefined;
+  /* functional template */
+  const __vue_is_functional_template__$4 = false;
+  /* style inject SSR */
+  
+
+  
+  var Datepicker = normalizeComponent_1(
+    { render: __vue_render__$4, staticRenderFns: __vue_staticRenderFns__$4 },
+    __vue_inject_styles__$4,
+    __vue_script__$4,
+    __vue_scope_id__$4,
+    __vue_is_functional_template__$4,
+    __vue_module_identifier__$4,
+    browser,
+    undefined
+  );
+
+/* harmony default export */ __webpack_exports__["default"] = (Datepicker);
+
+
+/***/ }),
+
 /***/ "./node_modules/webpack/buildin/global.js":
 /*!***********************************!*\
   !*** (webpack)/buildin/global.js ***!
@@ -33147,6 +35637,365 @@ try {
 // easier to handle this case. if(!global) { ...}
 
 module.exports = g;
+
+
+/***/ }),
+
+/***/ "./node_modules/zenscroll/zenscroll.js":
+/*!*********************************************!*\
+  !*** ./node_modules/zenscroll/zenscroll.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
+ * Zenscroll 4.0.2
+ * https://github.com/zengabor/zenscroll/
+ *
+ * Copyright 2015–2018 Gabor Lenard
+ *
+ * This is free and unencumbered software released into the public domain.
+ * 
+ * Anyone is free to copy, modify, publish, use, compile, sell, or
+ * distribute this software, either in source code form or as a compiled
+ * binary, for any purpose, commercial or non-commercial, and by any
+ * means.
+ * 
+ * In jurisdictions that recognize copyright laws, the author or authors
+ * of this software dedicate any and all copyright interest in the
+ * software to the public domain. We make this dedication for the benefit
+ * of the public at large and to the detriment of our heirs and
+ * successors. We intend this dedication to be an overt act of
+ * relinquishment in perpetuity of all present and future rights to this
+ * software under copyright law.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ * 
+ * For more information, please refer to <http://unlicense.org>
+ * 
+ */
+
+/*jshint devel:true, asi:true */
+
+/*global define, module */
+
+
+(function (root, factory) {
+	if (true) {
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory()),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__))
+	} else {}
+}(this, function () {
+	"use strict"
+
+
+	// Detect if the browser already supports native smooth scrolling (e.g., Firefox 36+ and Chrome 49+) and it is enabled:
+	var isNativeSmoothScrollEnabledOn = function (elem) {
+		return elem && "getComputedStyle" in window &&
+			window.getComputedStyle(elem)["scroll-behavior"] === "smooth"
+	}
+
+
+	// Exit if it’s not a browser environment:
+	if (typeof window === "undefined" || !("document" in window)) {
+		return {}
+	}
+
+
+	var makeScroller = function (container, defaultDuration, edgeOffset) {
+
+		// Use defaults if not provided
+		defaultDuration = defaultDuration || 999 //ms
+		if (!edgeOffset && edgeOffset !== 0) {
+			// When scrolling, this amount of distance is kept from the edges of the container:
+			edgeOffset = 9 //px
+		}
+
+		// Handling the life-cycle of the scroller
+		var scrollTimeoutId
+		var setScrollTimeoutId = function (newValue) {
+			scrollTimeoutId = newValue
+		}
+
+		/**
+		 * Stop the current smooth scroll operation immediately
+		 */
+		var stopScroll = function () {
+			clearTimeout(scrollTimeoutId)
+			setScrollTimeoutId(0)
+		}
+
+		var getTopWithEdgeOffset = function (elem) {
+			return Math.max(0, container.getTopOf(elem) - edgeOffset)
+		}
+
+		/**
+		 * Scrolls to a specific vertical position in the document.
+		 *
+		 * @param {targetY} The vertical position within the document.
+		 * @param {duration} Optionally the duration of the scroll operation.
+		 *        If not provided the default duration is used.
+		 * @param {onDone} An optional callback function to be invoked once the scroll finished.
+		 */
+		var scrollToY = function (targetY, duration, onDone) {
+			stopScroll()
+			if (duration === 0 || (duration && duration < 0) || isNativeSmoothScrollEnabledOn(container.body)) {
+				container.toY(targetY)
+				if (onDone) {
+					onDone()
+				}
+			} else {
+				var startY = container.getY()
+				var distance = Math.max(0, targetY) - startY
+				var startTime = new Date().getTime()
+				duration = duration || Math.min(Math.abs(distance), defaultDuration);
+				(function loopScroll() {
+					setScrollTimeoutId(setTimeout(function () {
+						// Calculate percentage:
+						var p = Math.min(1, (new Date().getTime() - startTime) / duration)
+						// Calculate the absolute vertical position:
+						var y = Math.max(0, Math.floor(startY + distance*(p < 0.5 ? 2*p*p : p*(4 - p*2)-1)))
+						container.toY(y)
+						if (p < 1 && (container.getHeight() + y) < container.body.scrollHeight) {
+							loopScroll()
+						} else {
+							setTimeout(stopScroll, 99) // with cooldown time
+							if (onDone) {
+								onDone()
+							}
+						}
+					}, 9))
+				})()
+			}
+		}
+
+		/**
+		 * Scrolls to the top of a specific element.
+		 *
+		 * @param {elem} The element to scroll to.
+		 * @param {duration} Optionally the duration of the scroll operation.
+		 * @param {onDone} An optional callback function to be invoked once the scroll finished.
+		 */
+		var scrollToElem = function (elem, duration, onDone) {
+			scrollToY(getTopWithEdgeOffset(elem), duration, onDone)
+		}
+
+		/**
+		 * Scrolls an element into view if necessary.
+		 *
+		 * @param {elem} The element.
+		 * @param {duration} Optionally the duration of the scroll operation.
+		 * @param {onDone} An optional callback function to be invoked once the scroll finished.
+		 */
+		var scrollIntoView = function (elem, duration, onDone) {
+			var elemHeight = elem.getBoundingClientRect().height
+			var elemBottom = container.getTopOf(elem) + elemHeight
+			var containerHeight = container.getHeight()
+			var y = container.getY()
+			var containerBottom = y + containerHeight
+			if (getTopWithEdgeOffset(elem) < y || (elemHeight + edgeOffset) > containerHeight) {
+				// Element is clipped at top or is higher than screen.
+				scrollToElem(elem, duration, onDone)
+			} else if ((elemBottom + edgeOffset) > containerBottom) {
+				// Element is clipped at the bottom.
+				scrollToY(elemBottom - containerHeight + edgeOffset, duration, onDone)
+			} else if (onDone) {
+				onDone()
+			}
+		}
+
+		/**
+		 * Scrolls to the center of an element.
+		 *
+		 * @param {elem} The element.
+		 * @param {duration} Optionally the duration of the scroll operation.
+		 * @param {offset} Optionally the offset of the top of the element from the center of the screen.
+		 *        A value of 0 is ignored.
+		 * @param {onDone} An optional callback function to be invoked once the scroll finished.
+		 */
+		var scrollToCenterOf = function (elem, duration, offset, onDone) {
+			scrollToY(Math.max(0, container.getTopOf(elem) - container.getHeight()/2 + (offset || elem.getBoundingClientRect().height/2)), duration, onDone)
+		}
+
+		/**
+		 * Changes default settings for this scroller.
+		 *
+		 * @param {newDefaultDuration} Optionally a new value for default duration, used for each scroll method by default.
+		 *        Ignored if null or undefined.
+		 * @param {newEdgeOffset} Optionally a new value for the edge offset, used by each scroll method by default. Ignored if null or undefined.
+		 * @returns An object with the current values.
+		 */
+		var setup = function (newDefaultDuration, newEdgeOffset) {
+			if (newDefaultDuration === 0 || newDefaultDuration) {
+				defaultDuration = newDefaultDuration
+			}
+			if (newEdgeOffset === 0 || newEdgeOffset) {
+				edgeOffset = newEdgeOffset
+			}
+			return {
+				defaultDuration: defaultDuration,
+				edgeOffset: edgeOffset
+			}
+		}
+
+		return {
+			setup: setup,
+			to: scrollToElem,
+			toY: scrollToY,
+			intoView: scrollIntoView,
+			center: scrollToCenterOf,
+			stop: stopScroll,
+			moving: function () { return !!scrollTimeoutId },
+			getY: container.getY,
+			getTopOf: container.getTopOf
+		}
+
+	}
+
+
+	var docElem = document.documentElement
+	var getDocY = function () { return window.scrollY || docElem.scrollTop }
+
+	// Create a scroller for the document:
+	var zenscroll = makeScroller({
+		body: document.scrollingElement || document.body,
+		toY: function (y) { window.scrollTo(0, y) },
+		getY: getDocY,
+		getHeight: function () { return window.innerHeight || docElem.clientHeight },
+		getTopOf: function (elem) { return elem.getBoundingClientRect().top + getDocY() - docElem.offsetTop }
+	})
+
+
+	/**
+	 * Creates a scroller from the provided container element (e.g., a DIV)
+	 *
+	 * @param {scrollContainer} The vertical position within the document.
+	 * @param {defaultDuration} Optionally a value for default duration, used for each scroll method by default.
+	 *        Ignored if 0 or null or undefined.
+	 * @param {edgeOffset} Optionally a value for the edge offset, used by each scroll method by default. 
+	 *        Ignored if null or undefined.
+	 * @returns A scroller object, similar to `zenscroll` but controlling the provided element.
+	 */
+	zenscroll.createScroller = function (scrollContainer, defaultDuration, edgeOffset) {
+		return makeScroller({
+			body: scrollContainer,
+			toY: function (y) { scrollContainer.scrollTop = y },
+			getY: function () { return scrollContainer.scrollTop },
+			getHeight: function () { return Math.min(scrollContainer.clientHeight, window.innerHeight || docElem.clientHeight) },
+			getTopOf: function (elem) { return elem.offsetTop }
+		}, defaultDuration, edgeOffset)
+	}
+
+
+	// Automatic link-smoothing on achors
+	// Exclude IE8- or when native is enabled or Zenscroll auto- is disabled
+	if ("addEventListener" in window && !window.noZensmooth && !isNativeSmoothScrollEnabledOn(document.body)) {
+
+		var isHistorySupported = "history" in window && "pushState" in history
+		var isScrollRestorationSupported = isHistorySupported && "scrollRestoration" in history
+
+		// On first load & refresh make sure the browser restores the position first
+		if (isScrollRestorationSupported) {
+			history.scrollRestoration = "auto"
+		}
+
+		window.addEventListener("load", function () {
+
+			if (isScrollRestorationSupported) {
+				// Set it to manual
+				setTimeout(function () { history.scrollRestoration = "manual" }, 9)
+				window.addEventListener("popstate", function (event) {
+					if (event.state && "zenscrollY" in event.state) {
+						zenscroll.toY(event.state.zenscrollY)
+					}
+				}, false)
+			}
+
+			// Add edge offset on first load if necessary
+			// This may not work on IE (or older computer?) as it requires more timeout, around 100 ms
+			if (window.location.hash) {
+				setTimeout(function () {
+					// Adjustment is only needed if there is an edge offset:
+					var edgeOffset = zenscroll.setup().edgeOffset
+					if (edgeOffset) {
+						var targetElem = document.getElementById(window.location.href.split("#")[1])
+						if (targetElem) {
+							var targetY = Math.max(0, zenscroll.getTopOf(targetElem) - edgeOffset)
+							var diff = zenscroll.getY() - targetY
+							// Only do the adjustment if the browser is very close to the element:
+							if (0 <= diff && diff < 9 ) {
+								window.scrollTo(0, targetY)
+							}
+						}
+					}
+				}, 9)
+			}
+
+		}, false)
+
+		// Handling clicks on anchors
+		var RE_noZensmooth = new RegExp("(^|\\s)noZensmooth(\\s|$)")
+		window.addEventListener("click", function (event) {
+			var anchor = event.target
+			while (anchor && anchor.tagName !== "A") {
+				anchor = anchor.parentNode
+			}
+			// Let the browser handle the click if it wasn't with the primary button, or with some modifier keys:
+			if (!anchor || event.which !== 1 || event.shiftKey || event.metaKey || event.ctrlKey || event.altKey) {
+				return
+			}
+			// Save the current scrolling position so it can be used for scroll restoration:
+			if (isScrollRestorationSupported) {
+				var historyState = history.state && typeof history.state === "object" ? history.state : {}
+				historyState.zenscrollY = zenscroll.getY()
+				try {
+					history.replaceState(historyState, "")
+				} catch (e) {
+					// Avoid the Chrome Security exception on file protocol, e.g., file://index.html
+				}
+			}
+			// Find the referenced ID:
+			var href = anchor.getAttribute("href") || ""
+			if (href.indexOf("#") === 0 && !RE_noZensmooth.test(anchor.className)) {
+				var targetY = 0
+				var targetElem = document.getElementById(href.substring(1))
+				if (href !== "#") {
+					if (!targetElem) {
+						// Let the browser handle the click if the target ID is not found.
+						return
+					}
+					targetY = zenscroll.getTopOf(targetElem)
+				}
+				event.preventDefault()
+				// By default trigger the browser's `hashchange` event...
+				var onDone = function () { window.location = href }
+				// ...unless there is an edge offset specified
+				var edgeOffset = zenscroll.setup().edgeOffset
+				if (edgeOffset) {
+					targetY = Math.max(0, targetY - edgeOffset)
+					if (isHistorySupported) {
+						onDone = function () { history.pushState({}, "", href) }
+					}
+				}
+				zenscroll.toY(targetY, null, onDone)
+			}
+		}, false)
+
+	}
+
+
+	return zenscroll
+
+
+}));
 
 
 /***/ }),
@@ -33238,40 +36087,413 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/inicio.js":
-/*!********************************!*\
-  !*** ./resources/js/inicio.js ***!
-  \********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ "./resources/js/horasCargables/cargarHoras.js":
+/*!****************************************************!*\
+  !*** ./resources/js/horasCargables/cargarHoras.js ***!
+  \****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue_the_mask__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-the-mask */ "./node_modules/vue-the-mask/dist/vue-the-mask.js");
+/* harmony import */ var vue_the_mask__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_the_mask__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vuejs_datepicker__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuejs-datepicker */ "./node_modules/vuejs-datepicker/dist/vuejs-datepicker.esm.js");
+/* harmony import */ var vuejs_datepicker_dist_locale__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuejs-datepicker/dist/locale */ "./node_modules/vuejs-datepicker/dist/locale/index.js");
+/* harmony import */ var vuejs_datepicker_dist_locale__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vuejs_datepicker_dist_locale__WEBPACK_IMPORTED_MODULE_2__);
 __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.js");
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+window.zenscroll = __webpack_require__(/*! zenscroll */ "./node_modules/zenscroll/zenscroll.js");
+window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+window.AutoNumeric = __webpack_require__(/*! autonumeric */ "./node_modules/autonumeric/dist/autoNumeric.min.js");
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    Datepicker: vuejs_datepicker__WEBPACK_IMPORTED_MODULE_1__["default"]
+  }
+});
 var self;
-Vue.component('menu-principal', __webpack_require__(/*! ./components/menuPrincipal.vue */ "./resources/js/components/menuPrincipal.vue")["default"]);
+Vue.use(vue_the_mask__WEBPACK_IMPORTED_MODULE_0___default.a);
+Vue.component('menu-principal', __webpack_require__(/*! ../components/menuPrincipal.vue */ "./resources/js/components/menuPrincipal.vue")["default"]);
 var app = new Vue({
-  el: '#inicio',
+  el: '#cargarHoras',
+  components: {
+    Datepicker: vuejs_datepicker__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  data: {
+    es: vuejs_datepicker_dist_locale__WEBPACK_IMPORTED_MODULE_2__["es"],
+    alertForm: {
+      "class": "",
+      message: "",
+      show: false
+    },
+    alert: {
+      message: "",
+      mostrar: false
+    },
+    form: {
+      fecha: {
+        disabled: false,
+        value: ""
+      },
+      descripcion: {
+        disabled: false,
+        value: ""
+      },
+      horas_trabajadas: {
+        disabled: false,
+        value: ""
+      },
+      fechaM: {
+        disabled: false,
+        value: ""
+      },
+      descripcionM: {
+        disabled: false,
+        value: ""
+      },
+      horas_trabajadasM: {
+        disabled: false,
+        value: ""
+      },
+      horas_trabajadasA: {
+        disabled: false,
+        value: ""
+      },
+      btn: {
+        Crear: {
+          disabled: false,
+          html: "",
+          htmlInit: "Cargar Horas",
+          htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
+        },
+        Modificar: {
+          disabled: false,
+          html: "",
+          htmlInit: "Modificar Horas Cargadas",
+          htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
+        },
+        Eliminar: {
+          disabled: false,
+          html: "",
+          htmlInit: "Eliminar Horas Cargadas",
+          htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
+        }
+      },
+      mostrar: false
+    },
+    modHorasCargadas: {
+      error: false,
+      data: []
+    },
+    eliHorasCargadas: {
+      error: false
+    },
+    infoProyAnalista: [],
+    infoHorasCargadas: [],
+    infoEliHorasCargadas: [],
+    permisoActualizar: false,
+    horas_cargadas: 0
+  },
   beforeCreate: function beforeCreate() {
     self = this;
+    axios.get('/datosHorasProyecto').then(function (response) {
+      if (response.status === 200) {
+        self.infoProyAnalista = response.data.infoProyAnalista;
+        self.infoHorasCargadas = response.data.infoHorasCargadas;
+        self.form.mostrar = true;
+        self.form.btn.Crear.html = self.form.btn.Crear.htmlInit;
+        self.permisoActualizar = response.data.permisoActualizar;
+        self.permisoEliminar = response.data.permisoEliminar;
+        self.permisoCrear = response.data.permisoCrear;
+
+        for (var i = 0; i < self.infoHorasCargadas.length; i++) {
+          self.horas_cargadas = self.infoHorasCargadas[i].horas_trabajadas + self.horas_cargadas;
+        }
+      } else {
+        throw "error";
+      }
+    })["catch"](function (error) {
+      self.alert.mostrar = true;
+      self.alertForm = {
+        "class": "alert alert-warning",
+        message: "Existe un error!, consulte con el administrador del sistema.",
+        show: true
+      };
+    });
   },
   created: function created() {},
-  mounted: function mounted() {},
+  mounted: function mounted() {
+    new AutoNumeric('#horas_trabajadasM', {
+      decimalPlaces: 0,
+      maximumValue: 23,
+      minimumValue: 1
+    });
+    $('#modal-detalle-Hcargadas').on('hidden.bs.modal', function () {
+      self.modHorasCargadas.data = [];
+      self.modHorasCargadas.error = false;
+    });
+    $('#modal-eliminar-Hcargadas').on('hidden.bs.modal', function () {
+      self.eliHorasCargadas.data = [];
+      self.eliHorasCargadas.error = false;
+    });
+  },
   updated: function updated() {},
-  methods: {} // Fin methods
+  methods: {
+    valuesForm: function valuesForm(e) {
+      if (e.target.type === 'text' || e.target.type === 'textarea' || e.target.type === 'email') {
+        self.form[e.target.id].value = e.target.value.trim() === "" ? "" : $(e.target).val();
+      }
+
+      self.limpiarMensajeError(e);
+    },
+    limpiarMensajeErrorMultiselect: function limpiarMensajeErrorMultiselect() {
+      $(".multiselect").parent().find(".mensaje").html("").removeClass("invalid-feedback");
+      $(".multiselect").removeClass("error");
+    },
+    limpiarMensajeError: function limpiarMensajeError(e) {
+      $(e.target).removeClass("error");
+      $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
+    },
+    campoOpcionalARequerido: function campoOpcionalARequerido(e) {
+      self.valuesForm(e);
+      self.form[e.target.id].validar = self.form[e.target.id].value.length > 0 && self.form[e.target.id].validar === false ? true : false;
+    },
+    keyboard: function keyboard(e) {
+      if (e.keyCode === 13) {
+        self.crear();
+      }
+    },
+    crear: function crear() {
+      self.alertForm = {
+        "class": "",
+        message: "",
+        show: false
+      };
+
+      if (self.form.horas_trabajadas.value > 23) {
+        var message = "Maximo de 23 horas trabajadas al dia.";
+        self.alertForm = {
+          "class": "alert alert-warning",
+          message: message,
+          show: true
+        };
+      } else {
+        //Obtenemos valores
+        var parametros = {
+          fecha: self.form.fecha.value,
+          descripcion: self.form.descripcion.value,
+          horas_trabajadas: self.form.horas_trabajadas.value
+        };
+        axios.post('/cargarHoras', parametros).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.alertForm = {
+              "class": "alert alert-success",
+              message: response.data.message,
+              show: true
+            };
+            self.form.fecha.value = "";
+            self.form.descripcion.value = "";
+            self.form.horas_trabajadas.value = "";
+            self.actualizar();
+          } else {
+            throw response.data;
+          }
+        })["catch"](function (error) {
+          if (error.response) {
+            var message = "Existe un error!, consulte con el administrador del sistema.";
+          } else {
+            var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+          }
+
+          self.alertForm = {
+            "class": "alert alert-warning",
+            message: message,
+            show: true
+          };
+        });
+      }
+
+      ;
+    },
+    actualizar: function actualizar() {
+      axios.get('/datosHorasProyecto').then(function (response) {
+        if (response.status === 200) {
+          self.infoProyAnalista = response.data.infoProyAnalista;
+          self.infoHorasCargadas = response.data.infoHorasCargadas;
+          self.form.mostrar = true;
+          self.form.btn.Crear.html = self.form.btn.Crear.htmlInit;
+          self.horas_cargadas = 0;
+
+          for (var i = 0; i < self.infoHorasCargadas.length; i++) {
+            self.horas_cargadas = self.infoHorasCargadas[i].horas_trabajadas + self.horas_cargadas;
+          }
+
+          setTimeout(function () {
+            self.alertForm = {
+              "class": "",
+              message: "",
+              show: false
+            };
+          }, 2000);
+        } else {
+          throw "error";
+        }
+      })["catch"](function (error) {
+        self.submitCrear.disabled = true;
+        self.alert.mostrar = true;
+        self.alertForm = {
+          "class": "alert alert-warning",
+          message: "Existe un error!, consulte con el administrador del sistema.",
+          show: true
+        };
+      });
+    },
+    detalleModHorasCargadas: function detalleModHorasCargadas(idHcargadas, e) {
+      self.modHorasCargadas.error = false;
+      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
+      var parametros = {
+        idHcargadas: idHcargadas
+      };
+      axios.get('/detalleModHorasCargadas', {
+        params: parametros
+      }).then(function (response) {
+        if (response.status === 200) {
+          self.modHorasCargadas.data = response.data.infoModHorasCargadas;
+          self.form.fechaM.value = self.modHorasCargadas.data.fecha;
+          self.form.descripcionM.value = self.modHorasCargadas.data.descripcion;
+          self.form.horas_trabajadasM.value = self.modHorasCargadas.data.horas_trabajadas;
+          self.form.btn.Modificar.html = self.form.btn.Modificar.htmlInit;
+          $('#modal-detalle-Hcargadas').modal("show");
+          $(e.target).removeClass("fa-cog fa-spin").addClass("far fa-edit");
+        } else {
+          throw response.data;
+        }
+      })["catch"](function (error) {
+        self.modHorasCargadas.error = true;
+        $('#modal-detalle-Hcargadas').modal("show");
+        $(e.target).removeClass("fa-cog fa-spin").addClass("far fa-edit");
+      });
+    },
+    modificar: function modificar() {
+      self.alertForm = {
+        "class": "",
+        message: "",
+        show: false
+      }; //Obtenemos valores
+
+      var parametros = {
+        fecha: self.form.fechaM.value,
+        descripcion: self.form.descripcionM.value,
+        horas_trabajadas: self.form.horas_trabajadasM.value,
+        id: self.modHorasCargadas.data.id
+      };
+      axios.post('/ModificarHorasCargadas', parametros).then(function (response) {
+        if (response.status === 200 && response.data.response === true) {
+          self.alertForm = {
+            "class": "alert alert-success",
+            message: response.data.message,
+            show: true
+          };
+          self.form.fechaM.value = "";
+          self.form.descripcionM.value = "";
+          self.form.horas_trabajadasM.value = "";
+          self.actualizar();
+        } else {
+          throw response.data;
+        }
+      })["catch"](function (error) {
+        if (error.response) {
+          var message = "Existe un error!, consulte con el administrador del sistema.";
+        } else {
+          var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+        }
+
+        self.alertForm = {
+          "class": "alert alert-warning",
+          message: message,
+          show: true
+        };
+      });
+    },
+    detalleHorasEliminar: function detalleHorasEliminar(idHcargadas, e) {
+      self.eliHorasCargadas.error = false;
+      $(e.target).removeClass("fas fa-trash").addClass("fa-cog fa-spin");
+      var parametros = {
+        idHcargadas: idHcargadas
+      };
+      axios.get('/detalleHorasEliminar', {
+        params: parametros
+      }).then(function (response) {
+        if (response.status === 200) {
+          self.infoEliHorasCargadas = response.data.infoeliHorasCargadas;
+          self.form.btn.Eliminar.html = self.form.btn.Eliminar.htmlInit;
+          $('#modal-eliminar-Hcargadas').modal("show");
+          $(e.target).removeClass("fa-cog fa-spin").addClass("fas fa-trash");
+        } else {
+          throw response.data;
+        }
+      })["catch"](function (error) {
+        self.eliHorasCargadas.error = true;
+        $('#modal-eliminar-Hcargadas').modal("show");
+        $(e.target).removeClass("fa-cog fa-spin").addClass("fas fa-trash");
+      });
+    },
+    eliminar: function eliminar() {
+      self.alertForm = {
+        "class": "",
+        message: "",
+        show: false
+      }; //Obtenemos valores
+
+      var parametros = {
+        id: self.infoEliHorasCargadas.id
+      };
+      axios.post('/EliminarHorasCargadas', parametros).then(function (response) {
+        if (response.status === 200 && response.data.response === true) {
+          self.alertForm = {
+            "class": "alert alert-success",
+            message: response.data.message,
+            show: true
+          };
+          self.form.fechaM.value = "";
+          self.form.descripcionM.value = "";
+          self.form.horas_trabajadasM.value = "";
+          self.actualizar();
+        } else {
+          throw response.data;
+        }
+      })["catch"](function (error) {
+        if (error.response) {
+          var message = "Existe un error!, consulte con el administrador del sistema.";
+        } else {
+          var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+        }
+
+        self.alertForm = {
+          "class": "alert alert-warning",
+          message: message,
+          show: true
+        };
+      });
+    }
+  } // Fin methods
 
 });
 
 /***/ }),
 
-/***/ 1:
-/*!**************************************!*\
-  !*** multi ./resources/js/inicio.js ***!
-  \**************************************/
+/***/ 17:
+/*!**********************************************************!*\
+  !*** multi ./resources/js/horasCargables/cargarHoras.js ***!
+  \**********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\inicio.js */"./resources/js/inicio.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\horasCargables\cargarHoras.js */"./resources/js/horasCargables/cargarHoras.js");
 
 
 /***/ })
