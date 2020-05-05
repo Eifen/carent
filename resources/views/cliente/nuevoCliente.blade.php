@@ -178,7 +178,7 @@
                           v-model="form.rif.value"
                           v-on:keyup="valuesForm"
                           type="text"></the-mask>
-                <small id="rifHelp" class="form-text">V:, E:, P:, G:, J:, C:</small>
+                <small id="rifHelp" class="form-text">V-, E-, P-, G-, J-, C-</small>
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">

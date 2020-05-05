@@ -88,6 +88,7 @@ var app = new Vue({
         self.proyectos = response.data.proyectos;
         self.permisoActualizar = response.data.permisoActualizar;
         self.permisoVer = response.data.permisoVer;
+        self.permisoCrear = response.data.permisoCrear;
 
       }else{
 
@@ -163,14 +164,7 @@ var app = new Vue({
     refreshView: function(){
       window.location.href = "/proyectoDivision";
     },
-    limpiarFiltro: function(){
 
-      self.form.descripcion.value = "";
-      self.form.cliente.value = "";
-      self.form.estatus.value = "";
-      self.buscar();
-
-    },
     buscar: function(){
 
       permisoActualizar: false,
@@ -286,14 +280,15 @@ var app = new Vue({
 
     },
 
-    estados: function(analista,idAnaProy,idDproyecto,e){
+    estados: function(analista,idAnaProy,idDproyecto,id_proyecto_division,e){
 
       if(idAnaProy == null){
       
         let parametros = {
           estado: 1,
           idDproyecto: idDproyecto,
-          idUsuario: analista
+          idUsuario: analista,
+          id_proyecto_division: id_proyecto_division,
         };
 
         axios.get('/agregarAnalistaProy', {params: parametros})
@@ -301,24 +296,40 @@ var app = new Vue({
           if(response.status === 200 && response.data.response === true){
             self.detalleAnalista.data = response.data.analistas;
             self.detalleAsigproyecto.data = response.data.proyecto;
+            self.buscar();
           }
         })
 
       }else{
         let parametros = {
           idAnaProy: idAnaProy,
+          idDproyecto: idDproyecto,
         };
 
         axios.get('/modAnalistaProy', {params: parametros})
         .then(function (response) {
           if(response.status === 200 && response.data.response === true){
-
+            self.detalleAnalista.data = response.data.analistas;
+            self.detalleAsigproyecto.data = response.data.proyecto;
+            self.buscar();
       }else{
         throw response.data;
       }
     })
       }
       
+    },
+
+    formCargarHoras: function(idProyecto,idUsuario,e){
+
+
+      let parametros = {
+        idProyecto: idProyecto,
+        idUsuario: idUsuario
+      };
+
+      axios.get('/formCargarHoras', {params: parametros})
+
     }
 
   }// Fin methods

@@ -39581,6 +39581,17 @@ var app = new Vue({
 
 /***/ }),
 
+/***/ "./resources/less/horasCargables/cargarHoras.less":
+/*!********************************************************!*\
+  !*** ./resources/less/horasCargables/cargarHoras.less ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ "./resources/less/inicio.less":
 /*!************************************!*\
   !*** ./resources/less/inicio.less ***!
@@ -39681,30 +39692,31 @@ var app = new Vue({
 /***/ }),
 
 /***/ 0:
-/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** multi ./resources/js/login.js ./resources/less/login.less ./resources/less/inicio.less ./resources/less/cambiarClave.less ./resources/less/usuario/nuevoUsuario.less ./resources/less/usuario/buscarUsuario.less ./resources/less/usuario/modificarUsuario.less ./resources/less/cliente/nuevoCliente.less ./resources/less/cliente/buscarCliente.less ./resources/less/cliente/modificarCliente.less ./resources/less/cliente/detalleFactcliente.less ./resources/less/crea/buscarRegistro.less ./resources/less/crea/nuevoCargo.less ./resources/less/crea/nuevaDivision.less ./resources/less/proyecto/nuevoProyecto.less ./resources/less/proyecto/formBuscarProyectos.less ./resources/less/proyecto/modificarProyecto.less ./resources/less/proyecto/proyectoDivision.less ***!
-  \****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** multi ./resources/js/login.js ./resources/less/login.less ./resources/less/inicio.less ./resources/less/cambiarClave.less ./resources/less/usuario/nuevoUsuario.less ./resources/less/usuario/buscarUsuario.less ./resources/less/usuario/modificarUsuario.less ./resources/less/cliente/nuevoCliente.less ./resources/less/cliente/buscarCliente.less ./resources/less/cliente/modificarCliente.less ./resources/less/cliente/detalleFactcliente.less ./resources/less/crea/buscarRegistro.less ./resources/less/crea/nuevoCargo.less ./resources/less/crea/nuevaDivision.less ./resources/less/proyecto/nuevoProyecto.less ./resources/less/proyecto/formBuscarProyectos.less ./resources/less/proyecto/modificarProyecto.less ./resources/less/proyecto/proyectoDivision.less ./resources/less/horasCargables/cargarHoras.less ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\js\login.js */"./resources/js/login.js");
-__webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\login.less */"./resources/less/login.less");
-__webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\inicio.less */"./resources/less/inicio.less");
-__webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\cambiarClave.less */"./resources/less/cambiarClave.less");
-__webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\usuario\nuevoUsuario.less */"./resources/less/usuario/nuevoUsuario.less");
-__webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\usuario\buscarUsuario.less */"./resources/less/usuario/buscarUsuario.less");
-__webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\usuario\modificarUsuario.less */"./resources/less/usuario/modificarUsuario.less");
-__webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\cliente\nuevoCliente.less */"./resources/less/cliente/nuevoCliente.less");
-__webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\cliente\buscarCliente.less */"./resources/less/cliente/buscarCliente.less");
-__webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\cliente\modificarCliente.less */"./resources/less/cliente/modificarCliente.less");
-__webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\cliente\detalleFactcliente.less */"./resources/less/cliente/detalleFactcliente.less");
-__webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\crea\buscarRegistro.less */"./resources/less/crea/buscarRegistro.less");
-__webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\crea\nuevoCargo.less */"./resources/less/crea/nuevoCargo.less");
-__webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\crea\nuevaDivision.less */"./resources/less/crea/nuevaDivision.less");
-__webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\proyecto\nuevoProyecto.less */"./resources/less/proyecto/nuevoProyecto.less");
-__webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\proyecto\formBuscarProyectos.less */"./resources/less/proyecto/formBuscarProyectos.less");
-__webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\proyecto\modificarProyecto.less */"./resources/less/proyecto/modificarProyecto.less");
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\less\proyecto\proyectoDivision.less */"./resources/less/proyecto/proyectoDivision.less");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\login.js */"./resources/js/login.js");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\less\login.less */"./resources/less/login.less");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\less\inicio.less */"./resources/less/inicio.less");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\less\cambiarClave.less */"./resources/less/cambiarClave.less");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\less\usuario\nuevoUsuario.less */"./resources/less/usuario/nuevoUsuario.less");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\less\usuario\buscarUsuario.less */"./resources/less/usuario/buscarUsuario.less");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\less\usuario\modificarUsuario.less */"./resources/less/usuario/modificarUsuario.less");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\less\cliente\nuevoCliente.less */"./resources/less/cliente/nuevoCliente.less");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\less\cliente\buscarCliente.less */"./resources/less/cliente/buscarCliente.less");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\less\cliente\modificarCliente.less */"./resources/less/cliente/modificarCliente.less");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\less\cliente\detalleFactcliente.less */"./resources/less/cliente/detalleFactcliente.less");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\less\crea\buscarRegistro.less */"./resources/less/crea/buscarRegistro.less");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\less\crea\nuevoCargo.less */"./resources/less/crea/nuevoCargo.less");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\less\crea\nuevaDivision.less */"./resources/less/crea/nuevaDivision.less");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\less\proyecto\nuevoProyecto.less */"./resources/less/proyecto/nuevoProyecto.less");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\less\proyecto\formBuscarProyectos.less */"./resources/less/proyecto/formBuscarProyectos.less");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\less\proyecto\modificarProyecto.less */"./resources/less/proyecto/modificarProyecto.less");
+__webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\less\proyecto\proyectoDivision.less */"./resources/less/proyecto/proyectoDivision.less");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\less\horasCargables\cargarHoras.less */"./resources/less/horasCargables/cargarHoras.less");
 
 
 /***/ })
