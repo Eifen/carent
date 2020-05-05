@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 23-04-2020 a las 18:26:18
+-- Tiempo de generación: 04-05-2020 a las 11:22:21
 -- Versión del servidor: 8.0.18
 -- Versión de PHP: 7.3.12
 
@@ -815,6 +815,20 @@ INSERT INTO `tbl_estatus_login_denegado` (`id_estatus`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `tbl_horas_cargables`
+--
+
+CREATE TABLE `tbl_horas_cargables` (
+  `id` int(11) NOT NULL,
+  `id_proy_analista` int(11) NOT NULL,
+  `fecha` date NOT NULL,
+  `descripcion` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `horas_trabajadas` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `tbl_menu`
 --
 
@@ -872,7 +886,7 @@ INSERT INTO `tbl_menu_usuario` (`id`, `id_usuario`, `id_menu`, `C`, `R`, `U`, `D
 (5, 1, 7, 1, 1, 1, 0),
 (6, 1, 9, 1, 1, 0, 0),
 (7, 1, 10, 1, 1, 1, 0),
-(8, 1, 11, 1, 1, 1, 0);
+(8, 1, 11, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -2418,6 +2432,7 @@ INSERT INTO `tbl_proyecto` (`id`, `descripcion`, `id_cliente`, `horas_contratada
 CREATE TABLE `tbl_proyecto_analista` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `id_proyecto` int(11) NOT NULL,
+  `id_proyecto_division` int(11) DEFAULT NULL,
   `id_analista` int(11) NOT NULL,
   `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2426,8 +2441,8 @@ CREATE TABLE `tbl_proyecto_analista` (
 -- Volcado de datos para la tabla `tbl_proyecto_analista`
 --
 
-INSERT INTO `tbl_proyecto_analista` (`id`, `id_proyecto`, `id_analista`, `id_estatus`) VALUES
-(1, 5, 1, 1);
+INSERT INTO `tbl_proyecto_analista` (`id`, `id_proyecto`, `id_proyecto_division`, `id_analista`, `id_estatus`) VALUES
+(1, 5, 13, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -2519,7 +2534,7 @@ CREATE TABLE `tbl_usuario` (
 --
 
 INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `cedula`, `nombre_1`, `nombre_2`, `apellido_1`, `apellido_2`, `fecha_nacimiento`, `id_cargo`, `id_division`, `id_parroquia`, `avatar`, `id_estatus`) VALUES
-(1, '0001', 'eyJpdiI6IjB5dnJXUUswTEdZenNcLzRHbTRWXC9HUT09IiwidmFsdWUiOiJwbUpkdURFdGhoc3FOSFpGQU1yaU5RPT0iLCJtYWMiOiI2ZDY1NTVlMTBkYmQ4NGNiNWM0MWRkMTllMjcxZjkxOTM5MmFhZmMxYTIwNmFiMzM4MjRmYTgwYjEwYTQ0NTY0In0=', 17671370, 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '01/01/1980', 15, 3, 1131, '', 1),
+(1, '0001', 'eyJpdiI6IjB5dnJXUUswTEdZenNcLzRHbTRWXC9HUT09IiwidmFsdWUiOiJwbUpkdURFdGhoc3FOSFpGQU1yaU5RPT0iLCJtYWMiOiI2ZDY1NTVlMTBkYmQ4NGNiNWM0MWRkMTllMjcxZjkxOTM5MmFhZmMxYTIwNmFiMzM4MjRmYTgwYjEwYTQ0NTY0In0=', 17671370, 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '01/01/1980', 16, 3, 1131, '', 1),
 (2, '11525', 'eyJpdiI6IjkwZkVzUVRiMXVZcXZlZDMwM2dXdHc9PSIsInZhbHVlIjoiZFAxQjFLMVZZT2VsVDBNSkJIN0JJZz09IiwibWFjIjoiMWNhNWYxMGM4MDdhOWNjZTM1N2MxZmMyNjE3MDJlYTM1YTMwZDU4NDU0ZTNhYmQzZWUxZTViNTQxNTM0YmZiZCJ9', 27279090, 'JOSE', 'ARTURO', 'MADRIZ', 'MALAVE', '07/06/1996', 13, 3, 1123, '', 1),
 (3, '11450', 'eyJpdiI6Im5MWkhxSEVKV2N3ZkhJZ01XZTU2eFE9PSIsInZhbHVlIjoiZ2N3a2l2Nm1DNHFKMGtPYkp4ZmdzQT09IiwibWFjIjoiMTNmNTllMGNjNTc0MjNlMWMwYzkwYTA0NGYyNzQ5ZmU5YTg4M2YzMDIzZGMyNzVhNjllNmRhNDYzOWQ3Yzc1NyJ9', 14245244, 'ANA', '', 'BLANDIN', '', '09/05/1986', 13, 3, 26, '', 1),
 (4, '2209', 'eyJpdiI6IiswWVJuYXJsbVwvRkg0OGdxdGI4dW1RPT0iLCJ2YWx1ZSI6ImdFbWJYZGRWVEtNWFZcL3ZUdlNHY0JnPT0iLCJtYWMiOiI1NTUyMDg1Y2RkMWE4MTViYWM5MWM4YjAyOGJiZTAwYWQ0ZTc1NGE5Zjg4ZDlhNmRjYWU3OTZmNTU4YTIxMDZkIn0=', 13900761, 'CAROLINA', '', 'CORONEL', '', NULL, NULL, NULL, NULL, NULL, 1),
@@ -2584,6 +2599,12 @@ ALTER TABLE `tbl_estados`
 -- Indices de la tabla `tbl_estatus`
 --
 ALTER TABLE `tbl_estatus`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `tbl_horas_cargables`
+--
+ALTER TABLE `tbl_horas_cargables`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -2713,6 +2734,12 @@ ALTER TABLE `tbl_estados`
 --
 ALTER TABLE `tbl_estatus`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT de la tabla `tbl_horas_cargables`
+--
+ALTER TABLE `tbl_horas_cargables`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_menu`

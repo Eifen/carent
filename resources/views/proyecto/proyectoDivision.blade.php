@@ -18,7 +18,6 @@
 
       <div id="proyectoDivision" class="container-fluid" v-on:keypress="keyboard">
         <menu-principal></menu-principal>
-
         <div class="row align-items-center justify-content-center wrapper-forms">
           <div class="col-12 col-sm-11 col-md-9 wrapper-form" v-if="form.mostrar">
             <h5>búsqueda</h5>
@@ -88,6 +87,7 @@
                   <th scope="col">Estatus</th>
                   <th scope="col"v-if="permisoVer">Ver Empleados</th>
                   <th scope="col" v-if="permisoActualizar">Asiganar</th>
+                  <th scope="col" v-if="permisoCrear">Cargar Horas</th>
                 </tr>
               </thead>
               <tbody>
@@ -101,6 +101,10 @@
                   <td v-if="permisoActualizar">
                        <i class="far fa-edit" v-on:click="asignarAnalistaProyecto(proyecto.id_proyecto, $event)"></i>
                   </td>
+                  <td v-if= "permisoCrear">
+                    <a v-bind:href="'/formCargarHoras/'+proyecto.id_proy_analista" target="_self">
+                    <i class="fas fa-user-edit" v-if= "proyecto.permisoCrear"></i>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -109,17 +113,6 @@
             <div class="alert alert-warning text-center" v-html="alert.message"></div>
           </div>
         </div>
-
-
-
-
-
-
-
-
-
-
-
         <div id="modal-detalle-Dproyecto" class="modal fade" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
@@ -150,6 +143,7 @@
                   <th scope="col">Empleado</th>
                   <th scope="col">Divison</th>
                   <th scope="col">Cargo</th>
+                  <th scope="col">Horas Cargadas</th>
                 </tr>
               </thead>
               <tbody>
@@ -157,6 +151,7 @@
                   <th scope="row">@{{ Aproyecto.nombre }}</th>                  
                   <td>@{{ Aproyecto.division }}</td>
                   <td>@{{ Aproyecto.cargo }}</td>
+                  <td>@{{ Aproyecto.suma }}</td>
                 </tr>
               </tbody>
             </table>
@@ -164,15 +159,6 @@
             </div>
           </div>
         </div>
-
-
-
-
-
-
-
-
-
         <div id="modal-asignar-Aproyecto" class="modal fade" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
@@ -203,13 +189,20 @@
                   <th scope="col">Nombre</th>
                   <th scope="col">Cargo</th>
                   <th scope="col">Estatus</th>
+                  <th scope="col">Horas Cargadas</th>
+                  <th scope="col">Ver Horas Cargadas</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="analista in detalleAnalista.data">
                   <th scope="row">@{{ analista.nombre }}</th>
                   <td>@{{ analista.cargo }}</td>
-                  <td><input type="checkbox" v-on:change="estados(analista.id,analista.idAnaProy,proyecto.id, $event)" v-model="analista.estatus" ></td>
+                  <td><input type="checkbox" v-on:change="estados(analista.id,analista.idAnaProy,proyecto.id,proyecto.id_proyecto_division, $event)" v-model="analista.estatus" ></td>
+                  <td>@{{ analista.suma }}</td>
+                  <td>
+                    <a v-bind:href="'/formCargarHoras/'+analista.idAnaProy" target="_self">
+                    <i class="fas fa-user-edit" v-if= "analista.permisoCrear"></i>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -217,10 +210,7 @@
             </div>
           </div>
         </div>
-
       </div>
-
       <script src="{{ mix('/js/proyectoDivision.js') }}"></script>
-
     </body>
 </html>
