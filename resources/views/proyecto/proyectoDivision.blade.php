@@ -18,7 +18,6 @@
 
       <div id="proyectoDivision" class="container-fluid" v-on:keypress="keyboard">
         <menu-principal></menu-principal>
-
         <div class="row align-items-center justify-content-center wrapper-forms">
           <div class="col-12 col-sm-11 col-md-9 wrapper-form" v-if="form.mostrar">
             <h5>búsqueda</h5>
@@ -114,17 +113,6 @@
             <div class="alert alert-warning text-center" v-html="alert.message"></div>
           </div>
         </div>
-
-
-
-
-
-
-
-
-
-
-
         <div id="modal-detalle-Dproyecto" class="modal fade" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
@@ -171,15 +159,6 @@
             </div>
           </div>
         </div>
-
-
-
-
-
-
-
-
-
         <div id="modal-asignar-Aproyecto" class="modal fade" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
@@ -231,10 +210,7 @@
             </div>
           </div>
         </div>
-
       </div>
-
       <script src="{{ mix('/js/proyectoDivision.js') }}"></script>
-
     </body>
 </html>

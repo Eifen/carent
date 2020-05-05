@@ -15,10 +15,8 @@
 
     </head>
     <body>
-
       <div id="cargarHoras" class="container-fluid" v-on:keypress="keyboard">
         <menu-principal></menu-principal>
-
         <div class="row align-items-center justify-content-center wrapper-forms">
           <div class="col-12 col-sm-11 col-md-9 wrapper-form" v-if="form.mostrar">
             <h3>Datos del Proyecto a Cargar Horas</h3> 
@@ -117,9 +115,6 @@
             <div class="alert alert-warning text-center" v-html="alert.message"></div>
           </div>
         </div>
-
-
-
         <div id="modal-detalle-Hcargadas" class="modal fade" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
@@ -144,52 +139,52 @@
                   </div>
                 </form>
                 <form class="row">
-              <div class="form-group col-12 col-sm-6">
-                <label for="fechaM">Fecha</label>
-                  <datepicker input-class="form-control" 
-                              format= "dd/MM/yyyy"    
-                              :language="es"
-                              id= "fechaM"
-                              v-bind:disabled="form.fechaM.disabled"
-                              v-model="form.fechaM.value"
-                              v-on:keyup="valuesForm">                                 
-                  </datepicker>
-              </div>
-              <div class="form-group col-12 col-sm-6">
-                <label for="horas_trabajadasM">Horas Trabajadas</label>
-                  <input style="text-align:center" 
-                         class="form-control"
-                         id="horas_trabajadasM"
-                         v-bind:disabled="form.horas_trabajadasM.disabled" 
-                         v-model="form.horas_trabajadasM.value"
-                         v-on:keyup="valuesForm"
-                         type="text">
-              </div>
-              <div class="form-group col-18 col-sm-10">
-                <label for="descripcionM">Descripcion de lo Realizado</label>
-                  <input class="form-control"
-                         id="descripcionM"
-                         v-bind:disabled="form.descripcionM.disabled"
-                         v-model="form.descripcionM.value"
-                         v-on:keyup="valuesForm"
-                         type="text">
-              </div>
-            </form>
-            <div class="form-group col-12 col-sm-3">
-                <label>&nbsp;</label>
-                <button class="btn filtrar"
-                        type="button"
-                        v-on:click="modificar"
-                        v-bind:disabled="form.btn.Modificar.disabled"
-                        v-html="form.btn.Modificar.html"
-                        data-dismiss="modal"></button>
-              </div>
+                  <div class="form-group col-12 col-sm-6">
+                    <label for="fechaM">Fecha</label>
+                    <datepicker input-class="form-control" 
+                                format= "dd/MM/yyyy"    
+                                :language="es"
+                                id= "fechaM"
+                                v-bind:disabled="form.fechaM.disabled"
+                                v-model="form.fechaM.value"
+                                v-on:keyup="valuesForm">                                 
+                    </datepicker>
+                  </div>
+                  <div class="form-group col-12 col-sm-6">
+                    <label for="horas_trabajadasM">Horas Trabajadas</label>
+                      <input style="text-align:center" 
+                             class="form-control"
+                             id="horas_trabajadasM"
+                             v-bind:disabled="form.horas_trabajadasM.disabled" 
+                             v-model="form.horas_trabajadasM.value"
+                             v-on:keyup="valuesForm"
+                             type="text">
+                  </div>
+                  <div class="form-group col-18 col-sm-10">
+                      <label for="descripcionM">Descripcion de lo Realizado</label>
+                        <input class="form-control"
+                               id="descripcionM"
+                               v-bind:disabled="form.descripcionM.disabled"
+                               v-model="form.descripcionM.value"
+                               v-on:keyup="valuesForm"
+                               type="text">
+                  </div>
+                </form>
+                <div class="row justify-content-center wrapper-subtmit">
+                  <div class="form-group col-12 col-sm-3">
+                    <label>&nbsp;</label>
+                      <button class="btn btn-primary"
+                              type="button"
+                              v-on:click="modificar"
+                              v-bind:disabled="form.btn.Modificar.disabled"
+                              v-html="form.btn.Modificar.html"
+                              data-dismiss="modal"></button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-
-
         <div id="modal-eliminar-Hcargadas" class="modal fade" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
@@ -217,25 +212,22 @@
                     <input class="form-control" type="text" disabled v-bind:value="infoEliHorasCargadas.descripcion">
                   </div>
                 </form>
-                <div class="form-group col-12 col-sm-3">
-                  <label>&nbsp;</label>
-                    <button class="btn filtrar"
-                            type="button"
-                            v-on:click="eliminar"
-                            v-bind:disabled="form.btn.Eliminar.disabled"
-                            v-html="form.btn.Eliminar.html"
-                            data-dismiss="modal"></button>
+                <div class="row justify-content-center wrapper-subtmit">
+                  <div class="form-group col-12 col-sm-3">
+                    <label>&nbsp;</label>
+                      <button class="btn btn-danger"
+                              type="button"
+                              v-on:click="eliminar"
+                              v-bind:disabled="form.btn.Eliminar.disabled"
+                              v-html="form.btn.Eliminar.html"
+                              data-dismiss="modal"></button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-
-
       </div>
-
       <script src="{{ mix('/js/cargarHoras.js') }}"></script>
-
     </body>
 </html>
