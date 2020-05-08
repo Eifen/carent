@@ -129,7 +129,7 @@ class ProyectoModel extends Model
 
       $proyectos = DB::select('SELECT p.id,
                                       p.descripcion,
-                                      p.horas_contratadas,
+                                      (SELECT SUM(horas_contratadas) FROM tbl_proyecto_divisiones WHERE id_proyecto = p.id) AS horas_contratadas,
                                       p.fecha_contratacion,
                                       e.descripcion AS estatus,
                                       c.razon_social as cliente
