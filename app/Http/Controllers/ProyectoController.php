@@ -35,7 +35,7 @@ class ProyectoController extends Controller
       $divisiones = $request->input("divisiones");
       $estatus = $request->input("estatus");
 
-      $response = $modelo->crearProyecto($descripcion,$cliente,$horas,$fechaContratacion,$divisiones,$estatus);
+      $response = $modelo->crearProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus);
       return $response;
 
     }
