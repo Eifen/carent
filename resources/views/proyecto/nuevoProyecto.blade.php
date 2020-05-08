@@ -102,7 +102,7 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
-                <label for="apellido1">Horas Contratadas <span class="campo-obligatorio">*</span></label>
+                <label for="horas">Horas Contratadas <span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="horasHelp"
                        class="form-control"
                        data-validar="true"

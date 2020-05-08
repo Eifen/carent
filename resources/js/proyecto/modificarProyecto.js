@@ -39,7 +39,7 @@ const datosIniciales = () => {
 
       if(response.status === 200 && response.data.response === true){
 
-        resolve({                 
+        resolve({
                  info: response.data.info,
                  infodivi: response.data.infodivi,
                  detalleUsuarioG: response.data.info,
@@ -90,6 +90,7 @@ var app = new Vue({
         value: ""
       },
       horas:{
+        asignar: true,
         disabled: true,
         value: 1
       },
@@ -140,7 +141,6 @@ var app = new Vue({
         self.comboDivisiones = dataInit.divisiones;
         self.form.descripcion.disabled = false;
         self.form.cliente.disabled = false;
-        self.form.horas.disabled = false;
         self.form.fechaContratacion.disabled = false;
         self.form.estatus.disabled = false;
         self.form.mostrar = true;
@@ -149,7 +149,7 @@ var app = new Vue({
         for (var i = 0; i < dataInit.infodivi.length; i++) {
           for (var j = 0; j < self.comboDivisiones.length; j++) {
             if (dataInit.infodivi[i].id_division === self.comboDivisiones[j].id) {
-              data [i] = self.comboDivisiones[j];             
+              data [i] = self.comboDivisiones[j];
             }
           }
         }
@@ -182,6 +182,14 @@ var app = new Vue({
         indices.forEach(function(indiceObjecto, indice) {
           self.form[indiceObjecto].disabled = false;
         });
+
+        self.divisiones_v.forEach(function(item, index){
+
+          self.$refs["asignar-"+item.id_division][0].value = self.divisiones_v[index].horas_contratadas;
+          console.log(index);
+
+        });
+
       }
 
     }, 1000);
@@ -192,6 +200,42 @@ var app = new Vue({
   updated: function () {},
   methods:{
 
+    asignarHoras: function(valor){
+
+      self.form.horas.asignar = (valor.length > 0) ? true : false;
+
+      if(!self.form.horas.asignar){
+        self.form.horas.value = 0;
+        $("#horas").parent().find(".mensaje").html("").removeClass("invalid-feedback");
+        $("#horas").removeClass("error");
+      }
+
+    },
+    formatoHoraAsignada: function(input){
+
+      let regex = /^\d+$/;
+
+      if(!regex.test(input.key)){
+        input.preventDefault();
+        self.horasTotales();
+      }
+
+      $("#horas").parent().find(".mensaje").html("").removeClass("invalid-feedback");
+      $("#horas").removeClass("error");
+
+    },
+    horasTotales: function(){
+
+      var total = 0;
+
+      $(".hora-asignada").each(function(index,item){
+        let hora = ($(item).val().trim() === "") ? 0 : parseInt($(item).val());
+        total = parseInt(total) + hora;
+      });
+
+      self.form.horas.value = total;
+
+    },
     valuesForm: function(e){
 
       if(e.target.type === 'text' || e.target.type === 'textarea' || e.target.type === 'email'){
@@ -286,7 +330,7 @@ var app = new Vue({
           if(response.status === 200 && response.data.response === true){
 
             var indices = [];
-  
+
             indices.forEach(function(indiceObjecto, indice) {
               self.form[indiceObjecto].disabled = false;
             });
@@ -311,7 +355,7 @@ var app = new Vue({
         .catch(error => {
 
           var indices = [];
-  
+
           indices.forEach(function(indiceObjecto, indice) {
             self.form[indiceObjecto].disabled = false;
           });

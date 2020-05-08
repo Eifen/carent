@@ -244,8 +244,8 @@ class ProyectoModel extends Model
 
     function detalleProyectoModificar($id_proyecto){
 
-      $info = DB::select('SELECT *
-                          FROM tbl_proyecto
+      $info = DB::select('SELECT p.*, (SELECT SUM(horas_contratadas) FROM tbl_proyecto_divisiones WHERE id_proyecto = p.id) AS horas_contratadas
+                          FROM tbl_proyecto p
                           WHERE id = '.$id_proyecto.'');
 
       if(count($info) > 0){
@@ -262,7 +262,8 @@ class ProyectoModel extends Model
 
     function detalleDivisionProyecto($id_proyecto){
 
-      $info = DB::select('SELECT id_division
+      $info = DB::select('SELECT id_division,
+                                 horas_contratadas
                           FROM tbl_proyecto_divisiones
                           WHERE id_proyecto = '.$id_proyecto.'');
       if(count($info) > 0){
