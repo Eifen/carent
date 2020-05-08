@@ -135,31 +135,35 @@ class ProyectoController extends Controller
 
       $modelo = new ProyectoModel();
       $permisoActualizar = $modelo->permisoActualizar(session("usuario_id"), 11);
+      $permisoCrear = $modelo->permisoCrear(session("usuario_id"), 11);
       $id_usuario = $request->session()->get('usuario_id');
       $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
       $estatus = $modelo->estatusProyectos();
       if ($infoUsuario->id_cargo === 16) {
-        $infoProyectos = $modelo->proyectoSDivision();
+        $infoProyectos = $modelo->proyectoSDivision($id_usuario, 11);
+        $permisoVer = $modelo->permisoVer(session("usuario_id"), 11);
         return [
         "estatus" => $estatus,
         "proyectos" => $infoProyectos,
-        "permisoActualizar" => $permisoActualizar
+        "permisoVer" => $permisoVer,
+        "permisoCrear" => $permisoCrear
       ];
       }
       if ($infoUsuario->id_cargo === 15 || $permisoActualizar === "true") {
-        $infoProyectos = $modelo->proyectoDDivision($infoUsuario->id_division);
+        $infoProyectos = $modelo->proyectoDDivision($infoUsuario->id_division,$id_usuario, 11);
         return [
         "estatus" => $estatus,
         "proyectos" => $infoProyectos,
-        "permisoActualizar" => $permisoActualizar
+        "permisoActualizar" => $permisoActualizar,
+        "permisoCrear" => $permisoCrear
       ];
       }
       if ($infoUsuario->id_cargo < 15 ) {
-        $infoProyectos = $modelo->proyectoUDivision($infoUsuario->id);
+        $infoProyectos = $modelo->proyectoUDivision($id_usuario, 11);
         return [
         "estatus" => $estatus,
         "proyectos" => $infoProyectos,
-        "permisoActualizar" => $permisoActualizar
+        "permisoCrear" => $permisoCrear
       ];
       }
 
@@ -176,24 +180,19 @@ class ProyectoController extends Controller
       $proyecto = $request->input("proyecto");
       $estatus = $request->input("estatus");
       if ($infoUsuario->id_cargo === 16) {
-        $proyectos = $modelo->proyectosSdivi($proyecto, $cliente, $estatus);
-        if ($estatus === "1" || empty($estatus)) {
-          return array("proyectos" => $proyectos, "permisoActualizar" => $permisoActualizar);
-        }
+        $proyectos = $modelo->proyectosSdivi($id_usuario,11,$proyecto, $cliente, $estatus);
+
         return array("proyectos" => $proyectos);
       }
       if ($infoUsuario->id_cargo === 15 || $permisoActualizar === "true") {
-        $proyectos = $modelo->proyectosDdivi($infoUsuario->id_division,$proyecto, $cliente, $estatus);
+        $proyectos = $modelo->proyectosDdivi($infoUsuario->id_division,$id_usuario,11,$proyecto, $cliente, $estatus);
         if ($estatus === "1" || empty($estatus)) {
           return array("proyectos" => $proyectos, "permisoActualizar" => $permisoActualizar, "estatus" => $estatus);
         }
         return array("proyectos" => $proyectos);
       }
       if ($infoUsuario->id_cargo < 15) {
-        $proyectos = $modelo->proyectosUdivi($infoUsuario->id,$proyecto, $cliente, $estatus);
-          if ($estatus === "1" || empty($estatus)) {
-          return array("proyectos" => $proyectos, "permisoActualizar" => $permisoActualizar);
-        }
+        $proyectos = $modelo->proyectosUdivi($id_usuario,11,$proyecto, $cliente, $estatus);
         return array("proyectos" => $proyectos);
       }
     }
@@ -218,8 +217,8 @@ class ProyectoController extends Controller
       $id_proyecto = (int) $request->input("idDproyecto");
       $id_usuario = $request->session()->get('usuario_id');
       $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
-      $datosProyecto = $modelo->datosProyecto($id_proyecto);
-      $analistas = $modelo->analistasProyecto($id_proyecto,$infoUsuario->id_division);
+      $datosProyecto = $modelo->datosProyecto($id_proyecto,$infoUsuario->id_division);
+      $analistas = $modelo->analistasProyecto($id_usuario,11,$id_proyecto,$infoUsuario->id_division);
       if(!empty($datosProyecto)){
       return array("response" => true,"analistas" => $analistas, "proyecto" => $datosProyecto);
       }else{
@@ -234,11 +233,13 @@ class ProyectoController extends Controller
       $estado = $request->input("estado");
       $idUsuario = $request->input("idUsuario");
       $idProyecto = $request->input("idDproyecto");
-      $analis = $modelo->agregarAnalistaProy($estado,$idUsuario,$idProyecto);
+      $id_proyecto_division = $request->input("id_proyecto_division");
+      $analis = $modelo->agregarAnalistaProy($estado,$idUsuario,$idProyecto,$id_proyecto_division);
+
       $id_usuario = $request->session()->get('usuario_id');
       $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
-      $datosProyecto = $modelo->datosProyecto($idProyecto);
-      $analistas = $modelo->analistasProyecto($idProyecto,$infoUsuario->id_division);
+      $datosProyecto = $modelo->datosProyecto($idProyecto,$infoUsuario->id_division);
+      $analistas = $modelo->analistasProyecto($id_usuario,11,$idProyecto,$infoUsuario->id_division);
 
       $response = array("response" => true, "analis" => $analis,"analistas" => $analistas, "proyecto" => $datosProyecto);
       return $response;
@@ -257,10 +258,22 @@ class ProyectoController extends Controller
         $estado = 1;
       }
       $analis = $modelo->modAnalistaProy($estado,$idAnaProy);
-
-      $response = array("response" => true, "analis" => $analis);
+      $id_usuario = $request->session()->get('usuario_id');
+      $idProyecto = $request->input("idDproyecto");
+      $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
+      $datosProyecto = $modelo->datosProyecto($idProyecto,$infoUsuario->id_division);
+      $analistas = $modelo->analistasProyecto($id_usuario,11,$idProyecto,$infoUsuario->id_division);
+      $response = array("response" => true, "analis" => $analis,"analistas" => $analistas, "proyecto" => $datosProyecto);
       return $response;
 
     }
+
+    function formCargarHoras($idProyAnalista, Request $request){
+
+      $request->session()->put('idProyAnalista', $idProyAnalista);
+      return view('horasCargables/CargarHoras');
+
+    }
+
 
 }
