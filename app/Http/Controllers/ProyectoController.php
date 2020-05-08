@@ -31,7 +31,6 @@ class ProyectoController extends Controller
       $modelo = new ProyectoModel();
       $descripcion = $request->input("descripcion");
       $cliente = $request->input("cliente");
-      $horas = $request->input("horas");
       $fechaContratacion = $request->input("fechaContratacion");
       $divisiones = $request->input("divisiones");
       $estatus = $request->input("estatus");
@@ -163,8 +162,8 @@ class ProyectoController extends Controller
         "permisoActualizar" => $permisoActualizar
       ];
       }
-      
-      
+
+
     }
 
     function buscardiviProyectos(Request $request){
@@ -196,7 +195,7 @@ class ProyectoController extends Controller
           return array("proyectos" => $proyectos, "permisoActualizar" => $permisoActualizar);
         }
         return array("proyectos" => $proyectos);
-      }      
+      }
     }
 
     function DetalleDivProyecto(Request $request){

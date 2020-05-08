@@ -33735,8 +33735,9 @@ var app = new Vue({
         value: ""
       },
       horas: {
+        asignar: false,
         disabled: true,
-        value: 1
+        value: 0
       },
       fechaContratacion: {
         disabled: true,
@@ -33768,7 +33769,6 @@ var app = new Vue({
         self.comboDivisiones = response.data.divisiones;
         self.form.descripcion.disabled = false;
         self.form.cliente.disabled = false;
-        self.form.horas.disabled = false;
         self.form.fechaContratacion.disabled = false;
         self.form.estatus.disabled = false;
         self.form.divisiones.disabled = false;
@@ -33793,8 +33793,8 @@ var app = new Vue({
           decimalPlaces: 0,
           decimalCharacter: ',',
           digitGroupSeparator: '',
-          emptyInputBehavior: 1,
-          minimumValue: 1,
+          emptyInputBehavior: 0,
+          minimumValue: 0,
           modifyValueOnWheel: false
         });
       }
@@ -33802,6 +33802,34 @@ var app = new Vue({
   },
   updated: function updated() {},
   methods: {
+    asignarHoras: function asignarHoras(valor) {
+      self.form.horas.asignar = valor.length > 0 ? true : false;
+
+      if (!self.form.horas.asignar) {
+        self.form.horas.value = 0;
+        $("#horas").parent().find(".mensaje").html("").removeClass("invalid-feedback");
+        $("#horas").removeClass("error");
+      }
+    },
+    formatoHoraAsignada: function formatoHoraAsignada(input) {
+      var regex = /^\d+$/;
+
+      if (!regex.test(input.key)) {
+        input.preventDefault();
+        self.horasTotales();
+      }
+
+      $("#horas").parent().find(".mensaje").html("").removeClass("invalid-feedback");
+      $("#horas").removeClass("error");
+    },
+    horasTotales: function horasTotales() {
+      var total = 0;
+      $(".hora-asignada").each(function (index, item) {
+        var hora = $(item).val().trim() === "" ? 0 : parseInt($(item).val());
+        total = parseInt(total) + hora;
+      });
+      self.form.horas.value = total;
+    },
     valuesForm: function valuesForm(e) {
       if (e.target.type === 'text' || e.target.type === 'textarea' || e.target.type === 'email') {
         self.form[e.target.id].value = e.target.value.trim() === "" ? "" : $(e.target).val();
@@ -33845,6 +33873,11 @@ var app = new Vue({
           $(".multiselect").parent().find(".mensaje").html("Seleccione una opción").addClass("invalid-feedback");
           $(".multiselect").addClass("error");
           zenscroll.toY($("#divisiones").offset().top - 100);
+        } else if (parseInt(self.form.horas.value) === 0) {
+          formValido = false;
+          $("#horas").parent().find(".mensaje").html("Debe ser mayor a 0").addClass("invalid-feedback");
+          $("#horas").addClass("error");
+          zenscroll.toY($("#horas").offset().top - 100);
         }
       }
 
@@ -33856,13 +33889,16 @@ var app = new Vue({
         };
         var divisiones = [];
         self.form.divisiones.value.forEach(function (item, i) {
-          divisiones.push(item.id);
+          var hora = self.$refs["asignar-" + item.id][0].value.trim() === "" ? 0 : parseInt(self.$refs["asignar-" + item.id][0].value);
+          divisiones.push({
+            id: item.id,
+            horas: hora
+          });
         }); //Obtenemos valores
 
         var parametros = {
           descripcion: self.form.descripcion.value,
           cliente: self.form.cliente.value,
-          horas: self.form.horas.value,
           fechaContratacion: self.form.fechaContratacion.value,
           divisiones: divisiones,
           estatus: self.form.estatus.value
