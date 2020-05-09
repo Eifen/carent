@@ -33906,7 +33906,7 @@ var app = new Vue({
         self.submitCrear.content = '<i class="fas fa-cog fa-spin"></i>';
         self.submitCrear.disabled = true;
         Object.keys(self.form).forEach(function (indiceObjecto, indice) {
-          if (self.form[indiceObjecto].hasOwnProperty('disabled')) {
+          if (self.form[indiceObjecto].hasOwnProperty('disabled') && indiceObjecto !== "horas") {
             self.form[indiceObjecto].disabled = true;
           }
         });
@@ -33924,7 +33924,7 @@ var app = new Vue({
           }
         })["catch"](function (error) {
           Object.keys(self.form).forEach(function (indiceObjecto, indice) {
-            if (self.form[indiceObjecto].hasOwnProperty('disabled')) {
+            if (self.form[indiceObjecto].hasOwnProperty('disabled') && indiceObjecto !== "horas") {
               self.form[indiceObjecto].disabled = false;
             }
           });
@@ -34012,7 +34012,7 @@ var app = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\proyecto\nuevoProyecto.js */"./resources/js/proyecto/nuevoProyecto.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\js\proyecto\nuevoProyecto.js */"./resources/js/proyecto/nuevoProyecto.js");
 
 
 /***/ })

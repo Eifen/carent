@@ -249,7 +249,7 @@ var app = new Vue({
         self.submitCrear.disabled = true;
 
         Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-          if(self.form[indiceObjecto].hasOwnProperty('disabled')){
+          if(self.form[indiceObjecto].hasOwnProperty('disabled') && indiceObjecto !== "horas"){
             self.form[indiceObjecto].disabled = true;
           }
         });
@@ -278,7 +278,7 @@ var app = new Vue({
         .catch(error => {
 
           Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-            if(self.form[indiceObjecto].hasOwnProperty('disabled')){
+            if(self.form[indiceObjecto].hasOwnProperty('disabled') && indiceObjecto !== "horas"){
               self.form[indiceObjecto].disabled = false;
             }
           });

@@ -120,13 +120,12 @@ class ProyectoController extends Controller
       $idProyecto = $request->input("idProyecto");
       $descripcion = $request->input("descripcion");
       $cliente = $request->input("cliente");
-      $horas = $request->input("horas");
       $fechaContratacion = $request->input("fechaContratacion");
       $divisiones = $request->input("divisiones");
       $divisiones_v =  $modelo->detalleDivisionProyecto($id_proyecto);
       $estatus = $request->input("estatus");
 
-      $response = $modelo->modificarProyecto($descripcion,$cliente,$horas,$fechaContratacion,$divisiones,$estatus,$idProyecto,$divisiones_v);
+      $response = $modelo->modificarProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus,$idProyecto,$divisiones_v);
       return $response;
 
     }

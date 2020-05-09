@@ -79,6 +79,20 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
+                <label for="estatus">Estatus <span class="campo-obligatorio">*</span></label>
+                <select aria-describedby="estatusHelp"
+                        class="form-control"
+                        id="estatus"
+                        data-validar="true"
+                        v-bind:disabled="form.estatus.disabled"
+                        v-model="form.estatus.value"
+                        v-on:click="limpiarMensajeError">
+                  <option value="" disabled selected>Seleccione...</option>
+                  <option v-bind:value="estatus.id" v-for="estatus in comboEstatus">@{{ estatus.descripcion }}</option>
+                </select>
+                <div class="mensaje"></div>
+              </div>
+              <div class="form-group col-12 col-sm-6">
                 <label for="divisiones">Divisiones <span class="campo-obligatorio">*</span></label>
                 <multiselect @Open="limpiarMensajeErrorMultiselect"
                              :clear-on-select="false"
@@ -94,20 +108,6 @@
                              placeholder="Seleccione..."
                              track-by="descripcion"
                              v-model="form.divisiones.value"></multiselect>
-                <div class="mensaje"></div>
-              </div>
-              <div class="form-group col-12 col-sm-6">
-                <label for="estatus">Estatus <span class="campo-obligatorio">*</span></label>
-                <select aria-describedby="estatusHelp"
-                        class="form-control"
-                        id="estatus"
-                        data-validar="true"
-                        v-bind:disabled="form.estatus.disabled"
-                        v-model="form.estatus.value"
-                        v-on:click="limpiarMensajeError">
-                  <option value="" disabled selected>Seleccione...</option>
-                  <option v-bind:value="estatus.id" v-for="estatus in comboEstatus">@{{ estatus.descripcion }}</option>
-                </select>
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">

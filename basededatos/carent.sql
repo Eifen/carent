@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.2
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 04-05-2020 a las 11:22:21
+-- Tiempo de generación: 09-05-2020 a las 02:25:22
 -- Versión del servidor: 8.0.18
--- Versión de PHP: 7.3.12
+-- Versión de PHP: 7.3.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -620,14 +619,14 @@ CREATE TABLE `tbl_cliente_facturacion` (
   `id_cliente` int(11) DEFAULT NULL,
   `id_proyecto` int(11) DEFAULT NULL,
   `id_parroquia_factura` int(11) DEFAULT NULL,
-  `avenida_calle_factura` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `edificio_quinta_factura` varchar(25) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `piso_factura` varchar(3) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `numero_factura` varchar(5) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `ciudad_factura` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `telefono_factura` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `fax_factura` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `email_factura` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `avenida_calle_factura` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `edificio_quinta_factura` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `piso_factura` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `numero_factura` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ciudad_factura` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `telefono_factura` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `fax_factura` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email_factura` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `id_estatus` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -822,7 +821,7 @@ CREATE TABLE `tbl_horas_cargables` (
   `id` int(11) NOT NULL,
   `id_proy_analista` int(11) NOT NULL,
   `fecha` date NOT NULL,
-  `descripcion` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `descripcion` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `horas_trabajadas` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -2407,7 +2406,6 @@ CREATE TABLE `tbl_proyecto` (
   `id` int(11) NOT NULL,
   `descripcion` varchar(250) NOT NULL,
   `id_cliente` int(11) NOT NULL,
-  `horas_contratadas` int(11) NOT NULL,
   `fecha_contratacion` varchar(10) NOT NULL,
   `id_estatus` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -2416,12 +2414,13 @@ CREATE TABLE `tbl_proyecto` (
 -- Volcado de datos para la tabla `tbl_proyecto`
 --
 
-INSERT INTO `tbl_proyecto` (`id`, `descripcion`, `id_cliente`, `horas_contratadas`, `fecha_contratacion`, `id_estatus`) VALUES
-(1, 'Auditoría Banco I', 1, 95, '03/03/2020', 2),
-(2, 'Auditoría Banco II', 1, 20, '04/03/2020', 1),
-(3, 'Certificación de Cursos', 1, 90, '05/03/2020', 1),
-(4, 'Proyecto I', 1, 1, '10/03/2020', 0),
-(5, 'inventario IV', 2, 23, '22/02/2020', 1);
+INSERT INTO `tbl_proyecto` (`id`, `descripcion`, `id_cliente`, `fecha_contratacion`, `id_estatus`) VALUES
+(1, 'Auditoría Banco I', 1, '03/03/2020', 2),
+(2, 'Auditoría Banco II', 1, '04/03/2020', 1),
+(3, 'Certificación de Cursos', 1, '05/03/2020', 1),
+(4, 'Proyecto I', 1, '10/03/2020', 0),
+(5, 'inventario IV', 2, '22/02/2020', 1),
+(8, 'Prueba', 4, '10/10/1001', 1);
 
 -- --------------------------------------------------------
 
@@ -2453,26 +2452,29 @@ INSERT INTO `tbl_proyecto_analista` (`id`, `id_proyecto`, `id_proyecto_division`
 CREATE TABLE `tbl_proyecto_divisiones` (
   `id` int(11) NOT NULL,
   `id_division` int(11) NOT NULL,
-  `id_proyecto` int(11) NOT NULL
+  `id_proyecto` int(11) NOT NULL,
+  `horas_contratadas` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_proyecto_divisiones`
 --
 
-INSERT INTO `tbl_proyecto_divisiones` (`id`, `id_division`, `id_proyecto`) VALUES
-(1, 9, 1),
-(2, 10, 1),
-(3, 10, 2),
-(4, 8, 2),
-(5, 3, 3),
-(6, 9, 4),
-(7, 5, 4),
-(8, 7, 4),
-(9, 11, 4),
-(10, 5, 5),
-(13, 3, 5),
-(14, 3, 1);
+INSERT INTO `tbl_proyecto_divisiones` (`id`, `id_division`, `id_proyecto`, `horas_contratadas`) VALUES
+(1, 10, 1, 20),
+(2, 11, 1, 10),
+(3, 10, 2, 20),
+(4, 6, 2, 20),
+(5, 10, 3, 20),
+(6, 7, 3, 20),
+(7, 10, 4, 20),
+(8, 5, 4, 20),
+(9, 4, 4, 20),
+(10, 10, 5, 20),
+(13, 2, 5, 20),
+(14, 10, 8, 21),
+(19, 8, 8, 22),
+(20, 6, 8, 23);
 
 -- --------------------------------------------------------
 
@@ -2739,7 +2741,7 @@ ALTER TABLE `tbl_estatus`
 -- AUTO_INCREMENT de la tabla `tbl_horas_cargables`
 --
 ALTER TABLE `tbl_horas_cargables`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_menu`
@@ -2769,7 +2771,7 @@ ALTER TABLE `tbl_parroquias`
 -- AUTO_INCREMENT de la tabla `tbl_proyecto`
 --
 ALTER TABLE `tbl_proyecto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_proyecto_analista`
@@ -2781,7 +2783,7 @@ ALTER TABLE `tbl_proyecto_analista`
 -- AUTO_INCREMENT de la tabla `tbl_proyecto_divisiones`
 --
 ALTER TABLE `tbl_proyecto_divisiones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_telefono`

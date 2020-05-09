@@ -276,7 +276,7 @@ class ProyectoModel extends Model
       }
     }
 
-    function modificarProyecto($descripcion,$cliente,$horas,$fechaContratacion,$divisiones,$estatus,$idProyecto,$divisiones_v){
+    function modificarProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus,$idProyecto,$divisiones_v){
 
       DB::beginTransaction();
 
@@ -284,35 +284,40 @@ class ProyectoModel extends Model
 
       $data = array("descripcion" => $descripcion,
                     "id_cliente" => $cliente,
-                    "horas_contratadas" => $horas,
                     "fecha_contratacion" => $fechaContratacion,
                     "id_estatus" => $estatus);
 
       $update = DB::table('tbl_proyecto')->where("id",$idProyecto)->update($data);
 
-      $divisionCreada = true;
-
       for($i = 0; $i < count($divisiones); $i++){
         $si = 0;
         for($j = 0; $j < count($divisiones_v); $j++){
-          if ($divisiones[$i] === $divisiones_v[$j]->id_division) {
+          if ($divisiones[$i]["id"] === $divisiones_v[$j]->id_division) {
             $si=1;
           }
         }
         if ($si === 0) {
 
-          $data = array("id_proyecto" => $idProyecto,
-                      "id_division" => $divisiones[$i]);
+          $data = array(
+                        "id_proyecto" => $idProyecto,
+                        "id_division" => $divisiones[$i]["id"],
+                        "horas_contratadas" => $divisiones[$i]["horas"]
+                        );
           $div = DB::table('tbl_proyecto_divisiones')->insert($data);
-           $divisionCreada = false;
-          }
+
+        }else{
+
+          $data = array("horas_contratadas" => $divisiones[$i]["horas"]);
+          $div = DB::table('tbl_proyecto_divisiones')->where([['id_proyecto', '=', $idProyecto],['id_division', '=', $divisiones_v[$i]->id_division]])->update($data);
+
+        }
 
       }
 
       for($i = 0; $i < count($divisiones_v); $i++){
         $no = 0;
         for($j = 0; $j < count($divisiones); $j++){
-          if ($divisiones_v[$i]->id_division === $divisiones[$j]) {
+          if ($divisiones_v[$i]->id_division === $divisiones[$j]["id"]) {
             $no=1;
           }
         }

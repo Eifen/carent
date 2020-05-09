@@ -16,7 +16,9 @@ const errorInit = () => {
 
   Object.keys(self.form).forEach(function(indiceObjecto, indice) {
 
-    self.form[indiceObjecto].disabled = true;
+    if(self.form[indiceObjecto].hasOwnProperty('disabled') && indiceObjecto !== "horas"){
+      self.form[indiceObjecto].disabled = true;
+    }
 
   });
 
@@ -180,13 +182,14 @@ var app = new Vue({
          var indices = ["descripcion","cliente","horas","fechaContratacion","estatus","divisiones"];
 
         indices.forEach(function(indiceObjecto, indice) {
-          self.form[indiceObjecto].disabled = false;
+          if(self.form[indiceObjecto].hasOwnProperty('disabled') && indiceObjecto !== "horas"){
+            self.form[indiceObjecto].disabled = false;
+          }
         });
 
         self.divisiones_v.forEach(function(item, index){
 
           self.$refs["asignar-"+item.id_division][0].value = self.divisiones_v[index].horas_contratadas;
-          console.log(index);
 
         });
 
@@ -292,6 +295,11 @@ var app = new Vue({
           $(".multiselect").parent().find(".mensaje").html("Seleccione una opción").addClass("invalid-feedback");
           $(".multiselect").addClass("error");
           zenscroll.toY($("#divisiones").offset().top - 100);
+        }else if(parseInt(self.form.horas.value) === 0){
+          formValido = false;
+          $("#horas").parent().find(".mensaje").html("Debe ser mayor a 0").addClass("invalid-feedback");
+          $("#horas").addClass("error");
+          zenscroll.toY($("#horas").offset().top - 100);
         }
 
       }
@@ -306,7 +314,8 @@ var app = new Vue({
 
         const divisiones = [];
         self.form.divisiones.value.forEach((item, i) => {
-          divisiones.push(item.id);
+          let hora = (self.$refs["asignar-"+item.id][0].value.trim() === "") ? 0 : parseInt(self.$refs["asignar-"+item.id][0].value);
+          divisiones.push({id:item.id, horas: hora});
         });
 
         //Obtenemos valores
@@ -315,7 +324,6 @@ var app = new Vue({
           idProyecto: self.idProyecto,
           descripcion:  self.form.descripcion.value,
           cliente: self.form.cliente.value,
-          horas: self.form.horas.value,
           fechaContratacion: self.form.fechaContratacion.value,
           divisiones: divisiones,
           estatus: self.form.estatus.value
@@ -332,7 +340,9 @@ var app = new Vue({
             var indices = [];
 
             indices.forEach(function(indiceObjecto, indice) {
-              self.form[indiceObjecto].disabled = false;
+              if(self.form[indiceObjecto].hasOwnProperty('disabled') && indiceObjecto !== "horas"){
+                self.form[indiceObjecto].disabled = false;
+              }
             });
 
             self.submitActualizar.content = 'Actualizar Datos';
@@ -357,7 +367,9 @@ var app = new Vue({
           var indices = [];
 
           indices.forEach(function(indiceObjecto, indice) {
-            self.form[indiceObjecto].disabled = false;
+            if(self.form[indiceObjecto].hasOwnProperty('disabled') && indiceObjecto !== "horas"){
+              self.form[indiceObjecto].disabled = false;
+            }
           });
           self.submitActualizar.content = 'Actualizar Datos';
           self.submitActualizar.disabled = false;
