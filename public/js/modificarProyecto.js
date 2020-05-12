@@ -34473,7 +34473,9 @@ Vue.component('menu-principal', __webpack_require__(/*! ../components/menuPrinci
 
 var errorInit = function errorInit() {
   Object.keys(self.form).forEach(function (indiceObjecto, indice) {
-    self.form[indiceObjecto].disabled = true;
+    if (self.form[indiceObjecto].hasOwnProperty('disabled') && indiceObjecto !== "horas") {
+      self.form[indiceObjecto].disabled = true;
+    }
   });
   self.submitActualizar.disabled = true;
   self.alertForm = {
@@ -34531,6 +34533,7 @@ var app = new Vue({
         value: ""
       },
       horas: {
+        asignar: true,
         disabled: true,
         value: 1
       },
@@ -34589,7 +34592,6 @@ var app = new Vue({
                 self.comboDivisiones = dataInit.divisiones;
                 self.form.descripcion.disabled = false;
                 self.form.cliente.disabled = false;
-                self.form.horas.disabled = false;
                 self.form.fechaContratacion.disabled = false;
                 self.form.estatus.disabled = false;
                 self.form.mostrar = true;
@@ -34646,7 +34648,12 @@ var app = new Vue({
                   AutoNumeric.getAutoNumericElement("#horas").set(self.form.horas.value);
                   var indices = ["descripcion", "cliente", "horas", "fechaContratacion", "estatus", "divisiones"];
                   indices.forEach(function (indiceObjecto, indice) {
-                    self.form[indiceObjecto].disabled = false;
+                    if (self.form[indiceObjecto].hasOwnProperty('disabled') && indiceObjecto !== "horas") {
+                      self.form[indiceObjecto].disabled = false;
+                    }
+                  });
+                  self.divisiones_v.forEach(function (item, index) {
+                    self.$refs["asignar-" + item.id_division][0].value = self.divisiones_v[index].horas_contratadas;
                   });
                 }
               }, 1000);
@@ -34688,6 +34695,34 @@ var app = new Vue({
   }(),
   updated: function updated() {},
   methods: {
+    asignarHoras: function asignarHoras(valor) {
+      self.form.horas.asignar = valor.length > 0 ? true : false;
+
+      if (!self.form.horas.asignar) {
+        self.form.horas.value = 0;
+        $("#horas").parent().find(".mensaje").html("").removeClass("invalid-feedback");
+        $("#horas").removeClass("error");
+      }
+    },
+    formatoHoraAsignada: function formatoHoraAsignada(input) {
+      var regex = /^\d+$/;
+
+      if (!regex.test(input.key)) {
+        input.preventDefault();
+        self.horasTotales();
+      }
+
+      $("#horas").parent().find(".mensaje").html("").removeClass("invalid-feedback");
+      $("#horas").removeClass("error");
+    },
+    horasTotales: function horasTotales() {
+      var total = 0;
+      $(".hora-asignada").each(function (index, item) {
+        var hora = $(item).val().trim() === "" ? 0 : parseInt($(item).val());
+        total = parseInt(total) + hora;
+      });
+      self.form.horas.value = total;
+    },
     valuesForm: function valuesForm(e) {
       if (e.target.type === 'text' || e.target.type === 'textarea' || e.target.type === 'email') {
         self.form[e.target.id].value = e.target.value.trim() === "" ? "" : $(e.target).val();
@@ -34731,6 +34766,11 @@ var app = new Vue({
           $(".multiselect").parent().find(".mensaje").html("Seleccione una opción").addClass("invalid-feedback");
           $(".multiselect").addClass("error");
           zenscroll.toY($("#divisiones").offset().top - 100);
+        } else if (parseInt(self.form.horas.value) === 0) {
+          formValido = false;
+          $("#horas").parent().find(".mensaje").html("Debe ser mayor a 0").addClass("invalid-feedback");
+          $("#horas").addClass("error");
+          zenscroll.toY($("#horas").offset().top - 100);
         }
       }
 
@@ -34742,14 +34782,17 @@ var app = new Vue({
         };
         var divisiones = [];
         self.form.divisiones.value.forEach(function (item, i) {
-          divisiones.push(item.id);
+          var hora = self.$refs["asignar-" + item.id][0].value.trim() === "" ? 0 : parseInt(self.$refs["asignar-" + item.id][0].value);
+          divisiones.push({
+            id: item.id,
+            horas: hora
+          });
         }); //Obtenemos valores
 
         var parametros = {
           idProyecto: self.idProyecto,
           descripcion: self.form.descripcion.value,
           cliente: self.form.cliente.value,
-          horas: self.form.horas.value,
           fechaContratacion: self.form.fechaContratacion.value,
           divisiones: divisiones,
           estatus: self.form.estatus.value
@@ -34760,7 +34803,9 @@ var app = new Vue({
           if (response.status === 200 && response.data.response === true) {
             var indices = [];
             indices.forEach(function (indiceObjecto, indice) {
-              self.form[indiceObjecto].disabled = false;
+              if (self.form[indiceObjecto].hasOwnProperty('disabled') && indiceObjecto !== "horas") {
+                self.form[indiceObjecto].disabled = false;
+              }
             });
             self.submitActualizar.content = 'Actualizar Datos';
             self.submitActualizar.disabled = false;
@@ -34776,7 +34821,9 @@ var app = new Vue({
         })["catch"](function (error) {
           var indices = [];
           indices.forEach(function (indiceObjecto, indice) {
-            self.form[indiceObjecto].disabled = false;
+            if (self.form[indiceObjecto].hasOwnProperty('disabled') && indiceObjecto !== "horas") {
+              self.form[indiceObjecto].disabled = false;
+            }
           });
           self.submitActualizar.content = 'Actualizar Datos';
           self.submitActualizar.disabled = false;
@@ -34859,7 +34906,7 @@ var app = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\proyecto\modificarProyecto.js */"./resources/js/proyecto/modificarProyecto.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\js\proyecto\modificarProyecto.js */"./resources/js/proyecto/modificarProyecto.js");
 
 
 /***/ })

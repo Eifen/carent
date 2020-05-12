@@ -31,12 +31,11 @@ class ProyectoController extends Controller
       $modelo = new ProyectoModel();
       $descripcion = $request->input("descripcion");
       $cliente = $request->input("cliente");
-      $horas = $request->input("horas");
       $fechaContratacion = $request->input("fechaContratacion");
       $divisiones = $request->input("divisiones");
       $estatus = $request->input("estatus");
 
-      $response = $modelo->crearProyecto($descripcion,$cliente,$horas,$fechaContratacion,$divisiones,$estatus);
+      $response = $modelo->crearProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus);
       return $response;
 
     }
@@ -121,13 +120,12 @@ class ProyectoController extends Controller
       $idProyecto = $request->input("idProyecto");
       $descripcion = $request->input("descripcion");
       $cliente = $request->input("cliente");
-      $horas = $request->input("horas");
       $fechaContratacion = $request->input("fechaContratacion");
       $divisiones = $request->input("divisiones");
       $divisiones_v =  $modelo->detalleDivisionProyecto($id_proyecto);
       $estatus = $request->input("estatus");
 
-      $response = $modelo->modificarProyecto($descripcion,$cliente,$horas,$fechaContratacion,$divisiones,$estatus,$idProyecto,$divisiones_v);
+      $response = $modelo->modificarProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus,$idProyecto,$divisiones_v);
       return $response;
 
     }
@@ -167,8 +165,8 @@ class ProyectoController extends Controller
         "permisoCrear" => $permisoCrear
       ];
       }
-      
-      
+
+
     }
 
     function buscardiviProyectos(Request $request){
@@ -195,7 +193,7 @@ class ProyectoController extends Controller
       if ($infoUsuario->id_cargo < 15) {
         $proyectos = $modelo->proyectosUdivi($id_usuario,11,$proyecto, $cliente, $estatus);
         return array("proyectos" => $proyectos);
-      }    
+      }
     }
 
     function DetalleDivProyecto(Request $request){
