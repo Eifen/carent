@@ -55,15 +55,17 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
-                <label for="apellido1">Horas Contratadas <span class="campo-obligatorio">*</span></label>
-                <input aria-describedby="horasHelp"
-                       class="form-control"
-                       data-validar="true"
-                       id="horas"
-                       v-bind:disabled="form.horas.disabled"
-                       v-model="form.horas.value"
-                       type="text">
-                <small id="horasHelp" class="form-text text-muted">Ejemplo: 90</small>
+                <label for="estatus">Estatus <span class="campo-obligatorio">*</span></label>
+                <select aria-describedby="estatusHelp"
+                        class="form-control"
+                        id="estatus"
+                        data-validar="true"
+                        v-bind:disabled="form.estatus.disabled"
+                        v-model="form.estatus.value"
+                        v-on:click="limpiarMensajeError">
+                  <option value="" disabled selected>Seleccione...</option>
+                  <option v-bind:value="estatus.id" v-for="estatus in comboEstatus">@{{ estatus.descripcion }}</option>
+                </select>
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
@@ -82,7 +84,8 @@
               </div>
               <div class="form-group col-12 col-sm-6">
                 <label for="divisiones">Divisiones <span class="campo-obligatorio">*</span></label>
-                <multiselect @Open="limpiarMensajeErrorMultiselect"
+                <multiselect @input="asignarHoras"
+                             @Open="limpiarMensajeErrorMultiselect"
                              :clear-on-select="false"
                              :disabled="form.divisiones.disabled"
                              :multiple="true"
@@ -94,22 +97,39 @@
                              label="descripcion"
                              placeholder="Seleccione..."
                              track-by="descripcion"
-                             v-model="form.divisiones.value"></multiselect>
+                             v-model="form.divisiones.value">
+                </multiselect>
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
-                <label for="estatus">Estatus <span class="campo-obligatorio">*</span></label>
-                <select aria-describedby="estatusHelp"
-                        class="form-control"
-                        id="estatus"
-                        data-validar="true"
-                        v-bind:disabled="form.estatus.disabled"
-                        v-model="form.estatus.value"
-                        v-on:click="limpiarMensajeError">
-                  <option value="" disabled selected>Seleccione...</option>
-                  <option v-bind:value="estatus.id" v-for="estatus in comboEstatus">@{{ estatus.descripcion }}</option>
-                </select>
+                <label for="horas">Horas Contratadas <span class="campo-obligatorio">*</span></label>
+                <input aria-describedby="horasHelp"
+                       class="form-control"
+                       data-validar="true"
+                       id="horas"
+                       v-bind:disabled="form.horas.disabled"
+                       v-model="form.horas.value"
+                       type="text">
                 <div class="mensaje"></div>
+              </div>
+              <div class="form-group col-12" v-if="form.horas.asignar">
+                <h6 class="titulo-indicar-horas">Indica la cantidad de horas por división</h6>
+              </div>
+              <div class="form-group col-12" v-for="division in form.divisiones.value">
+                <div class="row">
+                  <div class="col-6">
+                    <label>División</label>
+                    <input type="text" readonly class="form-control-plaintext division" :value="division.descripcion+`:`">
+                  </div>
+                  <div class="col-6">
+                    <label>Horas</label>
+                    <input @keypress="formatoHoraAsignada"
+                           @keyup="horasTotales"
+                           :ref="'asignar-'+division.id"
+                           class="form-control hora-asignada"
+                           type="text">
+                  </div>
+                </div>
               </div>
             </form>
 

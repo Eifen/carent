@@ -35,8 +35,9 @@ var app = new Vue({
         value: ""
       },
       horas:{
+        asignar: false,
         disabled: true,
-        value: 1
+        value: 0
       },
       fechaContratacion:{
         disabled: true,
@@ -73,7 +74,6 @@ var app = new Vue({
         self.comboDivisiones = response.data.divisiones;
         self.form.descripcion.disabled = false;
         self.form.cliente.disabled = false;
-        self.form.horas.disabled = false;
         self.form.fechaContratacion.disabled = false;
         self.form.estatus.disabled = false;
         self.form.divisiones.disabled = false;
@@ -109,8 +109,8 @@ var app = new Vue({
           decimalPlaces: 0,
           decimalCharacter: ',',
           digitGroupSeparator: '',
-          emptyInputBehavior: 1,
-          minimumValue: 1,
+          emptyInputBehavior: 0,
+          minimumValue: 0,
           modifyValueOnWheel: false
         });
 
@@ -122,6 +122,42 @@ var app = new Vue({
   updated: function () {},
   methods:{
 
+    asignarHoras: function(valor){
+
+      self.form.horas.asignar = (valor.length > 0) ? true : false;
+
+      if(!self.form.horas.asignar){
+        self.form.horas.value = 0;
+        $("#horas").parent().find(".mensaje").html("").removeClass("invalid-feedback");
+        $("#horas").removeClass("error");
+      }
+
+    },
+    formatoHoraAsignada: function(input){
+
+      let regex = /^\d+$/;
+
+      if(!regex.test(input.key)){
+        input.preventDefault();
+        self.horasTotales();
+      }
+
+      $("#horas").parent().find(".mensaje").html("").removeClass("invalid-feedback");
+      $("#horas").removeClass("error");
+
+    },
+    horasTotales: function(){
+
+      var total = 0;
+
+      $(".hora-asignada").each(function(index,item){
+        let hora = ($(item).val().trim() === "") ? 0 : parseInt($(item).val());
+        total = parseInt(total) + hora;
+      });
+
+      self.form.horas.value = total;
+
+    },
     valuesForm: function(e){
 
       if(e.target.type === 'text' || e.target.type === 'textarea' || e.target.type === 'email'){
@@ -177,6 +213,11 @@ var app = new Vue({
           $(".multiselect").parent().find(".mensaje").html("Seleccione una opción").addClass("invalid-feedback");
           $(".multiselect").addClass("error");
           zenscroll.toY($("#divisiones").offset().top - 100);
+        }else if(parseInt(self.form.horas.value) === 0){
+          formValido = false;
+          $("#horas").parent().find(".mensaje").html("Debe ser mayor a 0").addClass("invalid-feedback");
+          $("#horas").addClass("error");
+          zenscroll.toY($("#horas").offset().top - 100);
         }
 
       }
@@ -191,14 +232,14 @@ var app = new Vue({
 
         const divisiones = [];
         self.form.divisiones.value.forEach((item, i) => {
-          divisiones.push(item.id);
+          let hora = (self.$refs["asignar-"+item.id][0].value.trim() === "") ? 0 : parseInt(self.$refs["asignar-"+item.id][0].value);
+          divisiones.push({id:item.id, horas: hora});
         });
 
         //Obtenemos valores
         let parametros = {
           descripcion:  self.form.descripcion.value,
           cliente: self.form.cliente.value,
-          horas: self.form.horas.value,
           fechaContratacion: self.form.fechaContratacion.value,
           divisiones: divisiones,
           estatus: self.form.estatus.value
@@ -208,7 +249,7 @@ var app = new Vue({
         self.submitCrear.disabled = true;
 
         Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-          if(self.form[indiceObjecto].hasOwnProperty('disabled')){
+          if(self.form[indiceObjecto].hasOwnProperty('disabled') && indiceObjecto !== "horas"){
             self.form[indiceObjecto].disabled = true;
           }
         });
@@ -237,7 +278,7 @@ var app = new Vue({
         .catch(error => {
 
           Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-            if(self.form[indiceObjecto].hasOwnProperty('disabled')){
+            if(self.form[indiceObjecto].hasOwnProperty('disabled') && indiceObjecto !== "horas"){
               self.form[indiceObjecto].disabled = false;
             }
           });

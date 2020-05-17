@@ -42,6 +42,11 @@ html {
 #app .wrapper-forms form > div.wrapper-required-legend .campo-obligatorio {
   color: #cc0000;
 }
+#app .wrapper-forms form > div.form-group .titulo-indicar-horas {
+  color: #cc0000;
+  margin-top: 30px;
+  text-decoration: underline;
+}
 #app .wrapper-forms form > div.form-group .campo-obligatorio {
   color: #cc0000;
 }
@@ -62,6 +67,9 @@ html {
 }
 #app .wrapper-forms form > div.form-group .form-control:disabled {
   cursor: not-allowed;
+}
+#app .wrapper-forms form > div.form-group .form-control-plaintext {
+  font-weight: 600;
 }
 #app .wrapper-forms .wrapper-subtmit > div {
   padding-left: 0px;
