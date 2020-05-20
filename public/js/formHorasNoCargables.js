@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 16);
+/******/ 	return __webpack_require__(__webpack_require__.s = 18);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -34110,10 +34110,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/proyecto/proyectoDivision.js":
-/*!***************************************************!*\
-  !*** ./resources/js/proyecto/proyectoDivision.js ***!
-  \***************************************************/
+/***/ "./resources/js/definicionesGenerales/horasNoCargables/formHorasNoCargables.js":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/definicionesGenerales/horasNoCargables/formHorasNoCargables.js ***!
+  \*************************************************************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -34136,33 +34136,49 @@ window.AutoNumeric = __webpack_require__(/*! autonumeric */ "./node_modules/auto
 
 var self;
 Vue.component('multiselect', vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default.a);
-Vue.component('menu-principal', __webpack_require__(/*! ../components/menuPrincipal.vue */ "./resources/js/components/menuPrincipal.vue")["default"]);
+Vue.component('menu-principal', __webpack_require__(/*! ../../components/menuPrincipal.vue */ "./resources/js/components/menuPrincipal.vue")["default"]);
 Vue.use(vue_numeric__WEBPACK_IMPORTED_MODULE_1___default.a);
 var app = new Vue({
-  el: '#proyectoDivision',
+  el: '#app',
   data: {
     alertForm: {
       "class": "",
       message: "",
       show: false
     },
-    alert: {
+    alertConceptoNuevo: {
+      "class": "",
       message: "",
-      mostrar: false
+      show: false
+    },
+    alertModificarConcepto: {
+      "class": "",
+      message: "",
+      show: false
     },
     comboEstatus: [],
-    form: {
+    comboDivisiones: [],
+    conceptos: [],
+    formFiltro: {
       btn: {
+        crear: {
+          disabled: false,
+          html: "",
+          htmlInit: "Crear Nuevo Concepto",
+          htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
+        },
         filtrar: {
           disabled: false,
           html: "",
-          htmlInit: "buscar proyecto",
+          htmlInit: "Aplicar Filtro",
+          htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
+        },
+        limpiarFiltro: {
+          disabled: false,
+          html: "",
+          htmlInit: "Limpiar Filtro",
           htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
         }
-      },
-      cliente: {
-        disabled: true,
-        value: ""
       },
       descripcion: {
         disabled: true,
@@ -34174,44 +34190,59 @@ var app = new Vue({
       },
       mostrar: false
     },
-    detalleDproyecto: {
-      error: false,
-      data: []
+    formNuevoConcepto: {
+      concepto: {
+        disabled: false,
+        value: ""
+      }
     },
-    detalleAproyecto: {
-      error: false,
-      data: []
+    formModificarConcepto: {
+      concepto: {
+        disabled: false,
+        id: null,
+        value: ""
+      },
+      estatus: {
+        disabled: false,
+        value: ""
+      }
     },
-    detalleAsigproyecto: {
-      error: false,
-      data: []
+    paginador: {
+      max: 0,
+      numPaginas: 0,
+      pagina: 1,
+      paginar: 0
     },
-    detalleAnalista: {
-      error: false,
-      data: []
+    submitModalConceptoNuevo: {
+      content: "Crear",
+      disabled: false,
+      show: true
     },
-    permisoActualizar: false,
-    proyectos: []
+    submitModalModificarConcepto: {
+      content: "Modificar",
+      disabled: false,
+      show: true
+    }
   },
   beforeCreate: function beforeCreate() {
     self = this;
-    axios.get('/asignarProyectos').then(function (response) {
+    axios.get('/dataInicialHorasNoCargables').then(function (response) {
       if (response.status === 200) {
         self.comboEstatus = response.data.estatus;
-        self.form.descripcion.disabled = false;
-        self.form.cliente.disabled = false;
-        self.form.estatus.disabled = false;
-        self.form.mostrar = true;
-        self.form.btn.filtrar.html = self.form.btn.filtrar.htmlInit;
-        self.proyectos = response.data.proyectos;
-        self.permisoActualizar = response.data.permisoActualizar;
-        self.permisoVer = response.data.permisoVer;
-        self.permisoCrear = response.data.permisoCrear;
+        self.formFiltro.descripcion.disabled = false;
+        self.formFiltro.estatus.disabled = false;
+        self.formFiltro.mostrar = true;
+        self.formFiltro.btn.crear.html = self.formFiltro.btn.crear.htmlInit;
+        self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
+        self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
+        self.conceptos = response.data.conceptos;
+        self.paginador.numPaginas = response.data.numero_paginas;
+        self.paginador.max = parseInt(response.data.numero_paginas);
+        self.paginador.paginar = response.data.paginar;
       } else {
         throw "error";
       }
     })["catch"](function (error) {
-      self.alert.mostrar = true;
       self.alertForm = {
         "class": "alert alert-warning",
         message: "Existe un error!, consulte con el administrador del sistema.",
@@ -34221,21 +34252,127 @@ var app = new Vue({
   },
   created: function created() {},
   mounted: function mounted() {
-    $('#modal-detalle-Dproyecto').on('hidden.bs.modal', function () {
-      self.detalleDproyecto.data = [];
-      self.detalleDproyecto.error = false;
-      self.detalleAproyecto.data = [];
-      self.detalleAproyecto.error = false;
+    $('#modal-crear-concepto').on('hidden.bs.modal', function () {
+      self.alertConceptoNuevo = {
+        "class": "",
+        message: "",
+        show: false
+      };
+      self.submitModalConceptoNuevo = {
+        content: "Crear",
+        disabled: false,
+        show: true
+      };
+      self.formNuevoConcepto = {
+        concepto: {
+          disabled: false,
+          value: ""
+        }
+      };
+      $("#conceptoNuevo").removeClass("error");
+      $("#conceptoNuevo").parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
     });
-    $('#modal-asignar-Aproyecto').on('hidden.bs.modal', function () {
-      self.detalleAsigproyecto.data = [];
-      self.detalleAsigproyecto.error = false;
-      self.detalleAnalista.data = [];
-      self.detalleAnalista.error = false;
+    $('#modal-modificar-concepto').on('hidden.bs.modal', function () {
+      self.alertModificarConcepto = {
+        "class": "",
+        message: "",
+        show: false
+      };
+      self.submitModalModificarConcepto = {
+        content: "Crear",
+        disabled: false,
+        show: true
+      };
+      self.formModificarConcepto = {
+        concepto: {
+          disabled: false,
+          id: null,
+          value: ""
+        },
+        estatus: {
+          disabled: false,
+          value: ""
+        }
+      };
+      $("#modificarConcepto").removeClass("error");
+      $("#modificarConcepto").parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
     });
   },
   updated: function updated() {},
   methods: {
+    crearNuevo: function crearNuevo() {
+      $("#modal-crear-concepto").modal("show");
+    },
+    soloLetras: function soloLetras(e) {
+      if (e.target.value.trim() === '') {
+        self.formNuevoConcepto.concepto.value = '';
+      }
+    },
+    crearConcepto: function crearConcepto() {
+      var formValido = true;
+      $("#formNuevoConcepto .form-group .mensaje").html("").removeClass("invalid-feedback");
+      $("#formNuevoConcepto .form-group .form-control").removeClass("error");
+      $("#formNuevoConcepto .form-group").each(function (index, elemento) {
+        var input = $(elemento).find(".form-control")[0];
+        var valido = self.validarValor(input);
+
+        if (!valido.respuesta) {
+          $(elemento).find(".mensaje").html(valido.mensaje).addClass("invalid-feedback");
+          $(elemento).find(".form-control").addClass("error");
+          formValido = valido.respuesta;
+          return false;
+        }
+      });
+
+      if (formValido) {
+        self.alertConceptoNuevo = {
+          "class": "",
+          message: "",
+          show: false
+        }; //Obtenemos valores
+
+        var parametros = {
+          concepto: self.formNuevoConcepto.concepto.value
+        };
+        self.submitModalConceptoNuevo.content = '<i class="fas fa-cog fa-spin"></i>';
+        self.submitModalConceptoNuevo.disabled = true;
+        self.formNuevoConcepto.concepto.disabled = true;
+        axios.post('/crearConceptoNoCargable', parametros).then(function (response) {
+          if (response.status === 200 && response.data.respuesta === true) {
+            //self.submitModalConceptoNuevo.show = false;
+            self.formNuevoConcepto.concepto.value = "";
+            self.submitModalConceptoNuevo.disabled = false;
+            self.formNuevoConcepto.concepto.disabled = false;
+            self.submitModalConceptoNuevo.content = 'Crear';
+            self.limpiarFiltro();
+            self.alertConceptoNuevo = {
+              "class": "alert alert-success",
+              message: response.data.mensaje,
+              show: true
+            };
+          } else {
+            throw response.data;
+          }
+        })["catch"](function (error) {
+          self.formNuevoConcepto.concepto.disabled = false;
+          self.submitModalConceptoNuevo.content = 'Crear';
+          self.submitModalConceptoNuevo.disabled = false;
+
+          if (error.response) {
+            var message = "Existe un error!, consulte con el administrador del sistema.";
+          } else {
+            var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+          }
+
+          self.alertConceptoNuevo = {
+            "class": "alert alert-warning",
+            message: message,
+            show: true
+          };
+        });
+      } // Fin if(formValido)
+
+    },
     valuesForm: function valuesForm(e) {
       if (e.target.type === 'text' || e.target.type === 'textarea' || e.target.type === 'email') {
         self.form[e.target.id].value = e.target.value.trim() === "" ? "" : $(e.target).val();
@@ -34255,135 +34392,162 @@ var app = new Vue({
       self.valuesForm(e);
       self.form[e.target.id].validar = self.form[e.target.id].value.length > 0 && self.form[e.target.id].validar === false ? true : false;
     },
-    keyboard: function keyboard(e) {
-      if (e.keyCode === 13) {
-        self.crear();
-      }
-    },
-    refreshView: function refreshView() {
-      window.location.href = "/proyectoDivision";
+    limpiarFiltro: function limpiarFiltro() {
+      self.formFiltro.descripcion.value = "";
+      self.formFiltro.estatus.value = "";
+      self.buscar();
     },
     buscar: function buscar() {
-      permisoActualizar: false, self.alert.mostrar = false;
+      self.formFiltro.descripcion.disabled = true;
+      self.formFiltro.estatus.disabled = true;
+      self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
+      self.formFiltro.btn.filtrar.disabled = true;
+      self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlLoading;
+      self.formFiltro.btn.limpiarFiltro.disabled = true;
+      self.formFiltro.btn.crear.html = self.formFiltro.btn.crear.htmlLoading;
+      self.formFiltro.btn.crear.disabled = true;
+      var desde = (self.paginador.pagina - 1) * self.paginador.paginar;
+      var parametros = {
+        desde: desde,
+        concepto: self.formFiltro.descripcion.value,
+        estatus: self.formFiltro.estatus.value,
+        paginar: self.paginador.paginar
+      };
+      axios.get('/buscarConceptoHorasNoCargables', {
+        params: parametros
+      }).then(function (response) {
+        self.formFiltro.descripcion.disabled = false;
+        self.formFiltro.estatus.disabled = false;
+        self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
+        self.formFiltro.btn.filtrar.disabled = false;
+        self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
+        self.formFiltro.btn.limpiarFiltro.disabled = false;
+        self.formFiltro.btn.crear.html = self.formFiltro.btn.crear.htmlInit;
+        self.formFiltro.btn.crear.disabled = false;
+        self.conceptos = response.data.conceptos;
+        self.paginador.numPaginas = response.data.paginas;
+        self.paginador.max = parseInt(response.data.paginas);
+      })["catch"](function (error) {
+        self.formFiltro.descripcion.disabled = false;
+        self.formFiltro.estatus.disabled = false;
+        self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
+        self.formFiltro.btn.filtrar.disabled = false;
+        self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
+        self.formFiltro.btn.limpiarFiltro.disabled = false;
+        self.formFiltro.btn.crear.html = self.formFiltro.btn.crear.htmlInit;
+        self.formFiltro.btn.crear.disabled = false;
+      });
+    },
+    paginaAnterior: function paginaAnterior() {
+      self.paginador.pagina = self.paginador.pagina - 1 === 0 ? 1 : self.paginador.pagina - 1;
+      self.buscar();
+    },
+    paginaSiguiente: function paginaSiguiente() {
+      self.paginador.pagina = self.paginador.pagina + 1 > self.paginador.max ? self.paginador.pagina : self.paginador.pagina + 1;
+      self.buscar();
+    },
+    numeroPagina: function numeroPagina(e) {
+      self.buscar();
+    },
+    validarValor: function validarValor(input) {
+      var respuesta = true;
+      var mensaje = '';
 
-      self.form.descripcion.disabled = true;
-      self.form.cliente.disabled = true;
-      self.form.estatus.disabled = true;
-      self.form.btn.filtrar.html = self.form.btn.filtrar.htmlLoading;
-      self.form.btn.filtrar.disabled = true;
-      var parametros = {
-        cliente: self.form.cliente.value,
-        proyecto: self.form.descripcion.value,
-        estatus: self.form.estatus.value
-      };
-      axios.get('/buscardiviProyectos', {
-        params: parametros
-      }).then(function (response) {
-        self.form.descripcion.disabled = false;
-        self.form.cliente.disabled = false;
-        self.form.estatus.disabled = false;
-        self.form.btn.filtrar.html = self.form.btn.filtrar.htmlInit;
-        self.form.btn.filtrar.disabled = false;
-        self.permisoActualizar = response.data.permisoActualizar;
-        self.proyectos = response.data.proyectos;
-      })["catch"](function (error) {
-        self.alert.mostrar = true;
-        self.form.descripcion.disabled = false;
-        self.form.cliente.disabled = false;
-        self.form.estatus.disabled = false;
-        self.form.btn.filtrar.html = self.form.btn.filtrar.htmlInit;
-        self.form.btn.filtrar.disabled = false;
-      });
-    },
-    mostrarDetalleDivProyecto: function mostrarDetalleDivProyecto(idDproyecto, e) {
-      self.detalleDproyecto.error = false;
-      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
-      var parametros = {
-        idDproyecto: idDproyecto
-      };
-      axios.get('/DetalleDivProyecto', {
-        params: parametros
-      }).then(function (response) {
-        if (response.status === 200 && response.data.response === true) {
-          self.detalleDproyecto.data = response.data.infoDproyecto;
-          self.detalleAproyecto.data = response.data.infoAproyecto;
-          $('#modal-detalle-Dproyecto').modal("show");
-          $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
-        } else {
-          throw response.data;
-        }
-      })["catch"](function (error) {
-        self.detalleDproyecto.error = true;
-        $('#modal-detalle-Dproyecto').modal("show");
-        $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
-      });
-    },
-    asignarAnalistaProyecto: function asignarAnalistaProyecto(idDproyecto, e) {
-      self.detalleAsigproyecto.error = false;
-      $(e.target).removeClass("far fa-edit").addClass("fa-cog fa-spin");
-      var parametros = {
-        idDproyecto: idDproyecto
-      };
-      axios.get('/detalleAnalistaProyecto', {
-        params: parametros
-      }).then(function (response) {
-        if (response.status === 200 && response.data.response === true) {
-          self.detalleAnalista.data = response.data.analistas;
-          self.detalleAsigproyecto.data = response.data.proyecto;
-          $('#modal-asignar-Aproyecto').modal("show");
-          $(e.target).removeClass("fa-cog fa-spin").addClass("far fa-edit");
-        } else {
-          throw response.data;
-        }
-      })["catch"](function (error) {
-        self.detalleAsigproyecto.error = true;
-        $('#modal-asignar-Aproyecto').modal("show");
-        $(e.target).removeClass("fa-cog fa-spin").addClass("far fa-edit");
-      });
-    },
-    estados: function estados(analista, idAnaProy, idDproyecto, id_proyecto_division, e) {
-      if (idAnaProy == null) {
-        var parametros = {
-          estado: 1,
-          idDproyecto: idDproyecto,
-          idUsuario: analista,
-          id_proyecto_division: id_proyecto_division
-        };
-        axios.get('/agregarAnalistaProy', {
-          params: parametros
-        }).then(function (response) {
-          if (response.status === 200 && response.data.response === true) {
-            self.detalleAnalista.data = response.data.analistas;
-            self.detalleAsigproyecto.data = response.data.proyecto;
-            self.buscar();
+      if (input.hasAttribute("data-validar")) {
+        if (input.getAttribute("data-validar") === "true") {
+          if (input.type === 'text' || input.type === 'textarea') {
+            if (input.getAttribute("data-min")) {
+              var minChar = input.getAttribute("data-min");
+              var numChar = input.value.length;
+
+              if (numChar < minChar) {
+                respuesta = false;
+                mensaje = "El campo debe contener al menos " + minChar + " caracteres!";
+                zenscroll.toY($(input).offset().top - 100);
+              }
+            }
           }
-        });
-      } else {
-        var _parametros = {
-          idAnaProy: idAnaProy,
-          idDproyecto: idDproyecto
+        }
+      }
+
+      return {
+        respuesta: respuesta,
+        mensaje: mensaje
+      };
+    },
+    modificarConcepto: function modificarConcepto(id, concepto, id_estatus) {
+      $("#modal-modificar-concepto").modal("show");
+      self.formModificarConcepto.concepto.value = concepto;
+      self.formModificarConcepto.concepto.id = id;
+      self.formModificarConcepto.estatus.value = id_estatus;
+    },
+    guardarModificarConcepto: function guardarModificarConcepto() {
+      var formValido = true;
+      $("#formModificarConcepto .form-group .mensaje").html("").removeClass("invalid-feedback");
+      $("#formModificarConcepto .form-group .form-control").removeClass("error");
+      $("#formModificarConcepto .form-group").each(function (index, elemento) {
+        var input = $(elemento).find(".form-control")[0];
+        var valido = self.validarValor(input);
+
+        if (!valido.respuesta) {
+          $(elemento).find(".mensaje").html(valido.mensaje).addClass("invalid-feedback");
+          $(elemento).find(".form-control").addClass("error");
+          formValido = valido.respuesta;
+          return false;
+        }
+      });
+
+      if (formValido) {
+        self.alertModificarConcepto = {
+          "class": "",
+          message: "",
+          show: false
+        }; //Obtenemos valores
+
+        var parametros = {
+          concepto: self.formModificarConcepto.concepto.value,
+          id: self.formModificarConcepto.concepto.id,
+          id_estatus: self.formModificarConcepto.estatus.value
         };
-        axios.get('/modAnalistaProy', {
-          params: _parametros
-        }).then(function (response) {
-          if (response.status === 200 && response.data.response === true) {
-            self.detalleAnalista.data = response.data.analistas;
-            self.detalleAsigproyecto.data = response.data.proyecto;
-            self.buscar();
+        self.submitModalModificarConcepto.content = '<i class="fas fa-cog fa-spin"></i>';
+        self.submitModalModificarConcepto.disabled = true;
+        self.formModificarConcepto.concepto.disabled = true;
+        self.formModificarConcepto.estatus.disabled = true;
+        axios.post('/modificarConceptoNoCargable', parametros).then(function (response) {
+          if (response.status === 200 && response.data.respuesta === true) {
+            self.submitModalModificarConcepto.disabled = false;
+            self.formModificarConcepto.concepto.disabled = false;
+            self.formModificarConcepto.estatus.disabled = false;
+            self.submitModalModificarConcepto.content = 'Modificar';
+            self.limpiarFiltro();
+            self.alertModificarConcepto = {
+              "class": "alert alert-success",
+              message: response.data.mensaje,
+              show: true
+            };
           } else {
             throw response.data;
           }
+        })["catch"](function (error) {
+          self.formModificarConcepto.concepto.disabled = false;
+          self.formModificarConcepto.estatus.disabled = false;
+          self.submitModalModificarConcepto.content = 'Modificar';
+          self.submitModalModificarConcepto.disabled = false;
+
+          if (error.response) {
+            var message = "Existe un error!, consulte con el administrador del sistema.";
+          } else {
+            var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+          }
+
+          self.alertModificarConcepto = {
+            "class": "alert alert-warning",
+            message: message,
+            show: true
+          };
         });
-      }
-    },
-    formCargarHoras: function formCargarHoras(idProyecto, idUsuario, e) {
-      var parametros = {
-        idProyecto: idProyecto,
-        idUsuario: idUsuario
-      };
-      axios.get('/formCargarHoras', {
-        params: parametros
-      });
+      } // Fin if(formValido)
+
     }
   } // Fin methods
 
@@ -34391,14 +34555,14 @@ var app = new Vue({
 
 /***/ }),
 
-/***/ 16:
-/*!*********************************************************!*\
-  !*** multi ./resources/js/proyecto/proyectoDivision.js ***!
-  \*********************************************************/
+/***/ 18:
+/*!*******************************************************************************************!*\
+  !*** multi ./resources/js/definicionesGenerales/horasNoCargables/formHorasNoCargables.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\js\proyecto\proyectoDivision.js */"./resources/js/proyecto/proyectoDivision.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\js\definicionesGenerales\horasNoCargables\formHorasNoCargables.js */"./resources/js/definicionesGenerales/horasNoCargables/formHorasNoCargables.js");
 
 
 /***/ })
