@@ -70,6 +70,7 @@ class HorasCargadasController extends Controller
       $modelo = new HorasCargadasModel();
       $idHoraCargada = $request->input("id");
       $fechaC = $request->input("fecha");
+      $horas = $request->input("horas");
       $fecha = date('Y-m-d', strtotime("$fechaC -1 day"));
       $descripcion = mb_strtoupper($request->input("descripcion"));
       $horas_trabajadas = $request->input("horas_trabajadas");
