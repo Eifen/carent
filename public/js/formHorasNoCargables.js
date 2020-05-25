@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 16);
+/******/ 	return __webpack_require__(__webpack_require__.s = 18);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -21647,17 +21647,6 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./node_modules/vue-the-mask/dist/vue-the-mask.js":
-/*!********************************************************!*\
-  !*** ./node_modules/vue-the-mask/dist/vue-the-mask.js ***!
-  \********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-(function(e,t){ true?module.exports=t():undefined})(this,function(){return function(e){function t(r){if(n[r])return n[r].exports;var a=n[r]={i:r,l:!1,exports:{}};return e[r].call(a.exports,a,a.exports,t),a.l=!0,a.exports}var n={};return t.m=e,t.c=n,t.i=function(e){return e},t.d=function(e,n,r){t.o(e,n)||Object.defineProperty(e,n,{configurable:!1,enumerable:!0,get:r})},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p=".",t(t.s=10)}([function(e,t){e.exports={"#":{pattern:/\d/},X:{pattern:/[0-9a-zA-Z]/},S:{pattern:/[a-zA-Z]/},A:{pattern:/[a-zA-Z]/,transform:function(e){return e.toLocaleUpperCase()}},a:{pattern:/[a-zA-Z]/,transform:function(e){return e.toLocaleLowerCase()}},"!":{escape:!0}}},function(e,t,n){"use strict";function r(e){var t=document.createEvent("Event");return t.initEvent(e,!0,!0),t}var a=n(2),o=n(0),i=n.n(o);t.a=function(e,t){var o=t.value;if((Array.isArray(o)||"string"==typeof o)&&(o={mask:o,tokens:i.a}),"INPUT"!==e.tagName.toLocaleUpperCase()){var u=e.getElementsByTagName("input");if(1!==u.length)throw new Error("v-mask directive requires 1 input, found "+u.length);e=u[0]}e.oninput=function(t){if(t.isTrusted){var i=e.selectionEnd,u=e.value[i-1];for(e.value=n.i(a.a)(e.value,o.mask,!0,o.tokens);i<e.value.length&&e.value.charAt(i-1)!==u;)i++;e===document.activeElement&&(e.setSelectionRange(i,i),setTimeout(function(){e.setSelectionRange(i,i)},0)),e.dispatchEvent(r("input"))}};var s=n.i(a.a)(e.value,o.mask,!0,o.tokens);s!==e.value&&(e.value=s,e.dispatchEvent(r("input")))}},function(e,t,n){"use strict";var r=n(6),a=n(5);t.a=function(e,t){var o=!(arguments.length>2&&void 0!==arguments[2])||arguments[2],i=arguments[3];return Array.isArray(t)?n.i(a.a)(r.a,t,i)(e,t,o,i):n.i(r.a)(e,t,o,i)}},function(e,t,n){"use strict";function r(e){e.component(s.a.name,s.a),e.directive("mask",i.a)}Object.defineProperty(t,"__esModule",{value:!0});var a=n(0),o=n.n(a),i=n(1),u=n(7),s=n.n(u);n.d(t,"TheMask",function(){return s.a}),n.d(t,"mask",function(){return i.a}),n.d(t,"tokens",function(){return o.a}),n.d(t,"version",function(){return c});var c="0.11.1";t.default=r,"undefined"!=typeof window&&window.Vue&&window.Vue.use(r)},function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var r=n(1),a=n(0),o=n.n(a),i=n(2);t.default={name:"TheMask",props:{value:[String,Number],mask:{type:[String,Array],required:!0},masked:{type:Boolean,default:!1},tokens:{type:Object,default:function(){return o.a}}},directives:{mask:r.a},data:function(){return{lastValue:null,display:this.value}},watch:{value:function(e){e!==this.lastValue&&(this.display=e)},masked:function(){this.refresh(this.display)}},computed:{config:function(){return{mask:this.mask,tokens:this.tokens,masked:this.masked}}},methods:{onInput:function(e){e.isTrusted||this.refresh(e.target.value)},refresh:function(e){this.display=e;var e=n.i(i.a)(e,this.mask,this.masked,this.tokens);e!==this.lastValue&&(this.lastValue=e,this.$emit("input",e))}}}},function(e,t,n){"use strict";function r(e,t,n){return t=t.sort(function(e,t){return e.length-t.length}),function(r,a){for(var o=!(arguments.length>2&&void 0!==arguments[2])||arguments[2],i=0;i<t.length;){var u=t[i];i++;var s=t[i];if(!(s&&e(r,s,!0,n).length>u.length))return e(r,u,o,n)}return""}}t.a=r},function(e,t,n){"use strict";function r(e,t){var n=!(arguments.length>2&&void 0!==arguments[2])||arguments[2],r=arguments[3];e=e||"",t=t||"";for(var a=0,o=0,i="";a<t.length&&o<e.length;){var u=t[a],s=r[u],c=e[o];s&&!s.escape?(s.pattern.test(c)&&(i+=s.transform?s.transform(c):c,a++),o++):(s&&s.escape&&(a++,u=t[a]),n&&(i+=u),c===u&&o++,a++)}for(var f="";a<t.length&&n;){var u=t[a];if(r[u]){f="";break}f+=u,a++}return i+f}t.a=r},function(e,t,n){var r=n(8)(n(4),n(9),null,null);e.exports=r.exports},function(e,t){e.exports=function(e,t,n,r){var a,o=e=e||{},i=typeof e.default;"object"!==i&&"function"!==i||(a=e,o=e.default);var u="function"==typeof o?o.options:o;if(t&&(u.render=t.render,u.staticRenderFns=t.staticRenderFns),n&&(u._scopeId=n),r){var s=u.computed||(u.computed={});Object.keys(r).forEach(function(e){var t=r[e];s[e]=function(){return t}})}return{esModule:a,exports:o,options:u}}},function(e,t){e.exports={render:function(){var e=this,t=e.$createElement;return(e._self._c||t)("input",{directives:[{name:"mask",rawName:"v-mask",value:e.config,expression:"config"}],attrs:{type:"text"},domProps:{value:e.display},on:{input:e.onInput}})},staticRenderFns:[]}},function(e,t,n){e.exports=n(3)}])});
-
-/***/ }),
-
 /***/ "./node_modules/vue/dist/vue.common.dev.js":
 /*!*************************************************!*\
   !*** ./node_modules/vue/dist/vue.common.dev.js ***!
@@ -34121,23 +34110,21 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/proyecto/proyectoDivision.js":
-/*!***************************************************!*\
-  !*** ./resources/js/proyecto/proyectoDivision.js ***!
-  \***************************************************/
+/***/ "./resources/js/definicionesGenerales/horasNoCargables/formHorasNoCargables.js":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/definicionesGenerales/horasNoCargables/formHorasNoCargables.js ***!
+  \*************************************************************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue_the_mask__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-the-mask */ "./node_modules/vue-the-mask/dist/vue-the-mask.js");
-/* harmony import */ var vue_the_mask__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_the_mask__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-multiselect */ "./node_modules/vue-multiselect/dist/vue-multiselect.min.js");
-/* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_multiselect__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var vue_numeric__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-numeric */ "./node_modules/vue-numeric/dist/vue-numeric.min.js");
-/* harmony import */ var vue_numeric__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vue_numeric__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var vue_multiselect_dist_vue_multiselect_min_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue-multiselect/dist/vue-multiselect.min.css */ "./node_modules/vue-multiselect/dist/vue-multiselect.min.css");
-/* harmony import */ var vue_multiselect_dist_vue_multiselect_min_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(vue_multiselect_dist_vue_multiselect_min_css__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-multiselect */ "./node_modules/vue-multiselect/dist/vue-multiselect.min.js");
+/* harmony import */ var vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_multiselect__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue_numeric__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-numeric */ "./node_modules/vue-numeric/dist/vue-numeric.min.js");
+/* harmony import */ var vue_numeric__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_numeric__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var vue_multiselect_dist_vue_multiselect_min_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-multiselect/dist/vue-multiselect.min.css */ "./node_modules/vue-multiselect/dist/vue-multiselect.min.css");
+/* harmony import */ var vue_multiselect_dist_vue_multiselect_min_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vue_multiselect_dist_vue_multiselect_min_css__WEBPACK_IMPORTED_MODULE_2__);
 __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.js");
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
@@ -34147,37 +34134,51 @@ window.AutoNumeric = __webpack_require__(/*! autonumeric */ "./node_modules/auto
 
 
 
-
 var self;
-Vue.use(vue_the_mask__WEBPACK_IMPORTED_MODULE_0___default.a);
-Vue.component('multiselect', vue_multiselect__WEBPACK_IMPORTED_MODULE_1___default.a);
-Vue.component('menu-principal', __webpack_require__(/*! ../components/menuPrincipal.vue */ "./resources/js/components/menuPrincipal.vue")["default"]);
-Vue.use(vue_numeric__WEBPACK_IMPORTED_MODULE_2___default.a);
+Vue.component('multiselect', vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default.a);
+Vue.component('menu-principal', __webpack_require__(/*! ../../components/menuPrincipal.vue */ "./resources/js/components/menuPrincipal.vue")["default"]);
+Vue.use(vue_numeric__WEBPACK_IMPORTED_MODULE_1___default.a);
 var app = new Vue({
-  el: '#proyectoDivision',
+  el: '#app',
   data: {
     alertForm: {
       "class": "",
       message: "",
       show: false
     },
-    alert: {
+    alertConceptoNuevo: {
+      "class": "",
       message: "",
-      mostrar: false
+      show: false
+    },
+    alertModificarConcepto: {
+      "class": "",
+      message: "",
+      show: false
     },
     comboEstatus: [],
-    form: {
+    comboDivisiones: [],
+    conceptos: [],
+    formFiltro: {
       btn: {
+        crear: {
+          disabled: false,
+          html: "",
+          htmlInit: "Crear Nuevo Concepto",
+          htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
+        },
         filtrar: {
           disabled: false,
           html: "",
-          htmlInit: "buscar proyecto",
+          htmlInit: "Aplicar Filtro",
+          htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
+        },
+        limpiarFiltro: {
+          disabled: false,
+          html: "",
+          htmlInit: "Limpiar Filtro",
           htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
         }
-      },
-      cliente: {
-        disabled: true,
-        value: ""
       },
       descripcion: {
         disabled: true,
@@ -34187,59 +34188,61 @@ var app = new Vue({
         disabled: true,
         value: ""
       },
-      horas: {
-        asignar: false,
-        disabled: true,
-        value: 0
-      },
-      analistas: {
-        disabled: true,
-        validar: false,
-        value: []
-      },
       mostrar: false
     },
-    detalleDproyecto: {
-      error: false,
-      data: []
+    formNuevoConcepto: {
+      concepto: {
+        disabled: false,
+        value: ""
+      }
     },
-    detalleAproyecto: {
-      error: false,
-      data: []
+    formModificarConcepto: {
+      concepto: {
+        disabled: false,
+        id: null,
+        value: ""
+      },
+      estatus: {
+        disabled: false,
+        value: ""
+      }
     },
-    detalleAsigproyecto: {
-      error: false,
-      data: []
+    paginador: {
+      max: 0,
+      numPaginas: 0,
+      pagina: 1,
+      paginar: 0
     },
-    detalleAnalista: {
-      error: false,
-      data: []
+    submitModalConceptoNuevo: {
+      content: "Crear",
+      disabled: false,
+      show: true
     },
-    permisoActualizar: false,
-    proyectos: [],
-    horasComparar: [],
-    diferencia: 0
+    submitModalModificarConcepto: {
+      content: "Modificar",
+      disabled: false,
+      show: true
+    }
   },
   beforeCreate: function beforeCreate() {
     self = this;
-    axios.get('/asignarProyectos').then(function (response) {
+    axios.get('/dataInicialHorasNoCargables').then(function (response) {
       if (response.status === 200) {
         self.comboEstatus = response.data.estatus;
-        self.form.descripcion.disabled = false;
-        self.form.cliente.disabled = false;
-        self.form.estatus.disabled = false;
-        self.form.analistas.disabled = false;
-        self.form.mostrar = true;
-        self.form.btn.filtrar.html = self.form.btn.filtrar.htmlInit;
-        self.proyectos = response.data.proyectos;
-        self.permisoActualizar = response.data.permisoActualizar;
-        self.permisoVer = response.data.permisoVer;
-        self.permisoCrear = response.data.permisoCrear;
+        self.formFiltro.descripcion.disabled = false;
+        self.formFiltro.estatus.disabled = false;
+        self.formFiltro.mostrar = true;
+        self.formFiltro.btn.crear.html = self.formFiltro.btn.crear.htmlInit;
+        self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
+        self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
+        self.conceptos = response.data.conceptos;
+        self.paginador.numPaginas = response.data.numero_paginas;
+        self.paginador.max = parseInt(response.data.numero_paginas);
+        self.paginador.paginar = response.data.paginar;
       } else {
         throw "error";
       }
     })["catch"](function (error) {
-      self.alert.mostrar = true;
       self.alertForm = {
         "class": "alert alert-warning",
         message: "Existe un error!, consulte con el administrador del sistema.",
@@ -34249,48 +34252,126 @@ var app = new Vue({
   },
   created: function created() {},
   mounted: function mounted() {
-    $('#modal-detalle-Dproyecto').on('hidden.bs.modal', function () {
-      self.detalleDproyecto.data = [];
-      self.detalleDproyecto.error = false;
-      self.detalleAproyecto.data = [];
-      self.detalleAproyecto.error = false;
+    $('#modal-crear-concepto').on('hidden.bs.modal', function () {
+      self.alertConceptoNuevo = {
+        "class": "",
+        message: "",
+        show: false
+      };
+      self.submitModalConceptoNuevo = {
+        content: "Crear",
+        disabled: false,
+        show: true
+      };
+      self.formNuevoConcepto = {
+        concepto: {
+          disabled: false,
+          value: ""
+        }
+      };
+      $("#conceptoNuevo").removeClass("error");
+      $("#conceptoNuevo").parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
     });
-    $('#modal-asignar-Aproyecto').on('hidden.bs.modal', function () {
-      self.detalleAsigproyecto.data = [];
-      self.detalleAsigproyecto.error = false;
-      self.detalleAnalista.data = [];
-      self.detalleAnalista.error = false;
+    $('#modal-modificar-concepto').on('hidden.bs.modal', function () {
+      self.alertModificarConcepto = {
+        "class": "",
+        message: "",
+        show: false
+      };
+      self.submitModalModificarConcepto = {
+        content: "Crear",
+        disabled: false,
+        show: true
+      };
+      self.formModificarConcepto = {
+        concepto: {
+          disabled: false,
+          id: null,
+          value: ""
+        },
+        estatus: {
+          disabled: false,
+          value: ""
+        }
+      };
+      $("#modificarConcepto").removeClass("error");
+      $("#modificarConcepto").parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
     });
   },
   updated: function updated() {},
   methods: {
-    asignarHoras: function asignarHoras(valor) {
-      self.form.horas.asignar = valor.length > 0 ? true : false;
-
-      if (!self.form.horas.asignar) {
-        self.form.horas.value = 0;
-        $("#horas").parent().find(".mensaje").html("").removeClass("invalid-feedback");
-        $("#horas").removeClass("error");
+    crearNuevo: function crearNuevo() {
+      $("#modal-crear-concepto").modal("show");
+    },
+    soloLetras: function soloLetras(e) {
+      if (e.target.value.trim() === '') {
+        self.formNuevoConcepto.concepto.value = '';
       }
     },
-    formatoHoraAsignada: function formatoHoraAsignada(input) {
-      var regex = /^\d+$/;
+    crearConcepto: function crearConcepto() {
+      var formValido = true;
+      $("#formNuevoConcepto .form-group .mensaje").html("").removeClass("invalid-feedback");
+      $("#formNuevoConcepto .form-group .form-control").removeClass("error");
+      $("#formNuevoConcepto .form-group").each(function (index, elemento) {
+        var input = $(elemento).find(".form-control")[0];
+        var valido = self.validarValor(input);
 
-      if (!regex.test(input.key)) {
-        input.preventDefault();
-        self.horasTotales();
-      }
-
-      $("#horas").parent().find(".mensaje").html("").removeClass("invalid-feedback");
-      $("#horas").removeClass("error");
-    },
-    horasTotales: function horasTotales() {
-      var total = 0;
-      $(".hora-asignada").each(function (index, item) {
-        var hora = $(item).val().trim() === "" ? 0 : parseInt($(item).val());
-        total = parseInt(total) + hora;
+        if (!valido.respuesta) {
+          $(elemento).find(".mensaje").html(valido.mensaje).addClass("invalid-feedback");
+          $(elemento).find(".form-control").addClass("error");
+          formValido = valido.respuesta;
+          return false;
+        }
       });
-      self.form.horas.value = total;
+
+      if (formValido) {
+        self.alertConceptoNuevo = {
+          "class": "",
+          message: "",
+          show: false
+        }; //Obtenemos valores
+
+        var parametros = {
+          concepto: self.formNuevoConcepto.concepto.value
+        };
+        self.submitModalConceptoNuevo.content = '<i class="fas fa-cog fa-spin"></i>';
+        self.submitModalConceptoNuevo.disabled = true;
+        self.formNuevoConcepto.concepto.disabled = true;
+        axios.post('/crearConceptoNoCargable', parametros).then(function (response) {
+          if (response.status === 200 && response.data.respuesta === true) {
+            //self.submitModalConceptoNuevo.show = false;
+            self.formNuevoConcepto.concepto.value = "";
+            self.submitModalConceptoNuevo.disabled = false;
+            self.formNuevoConcepto.concepto.disabled = false;
+            self.submitModalConceptoNuevo.content = 'Crear';
+            self.limpiarFiltro();
+            self.alertConceptoNuevo = {
+              "class": "alert alert-success",
+              message: response.data.mensaje,
+              show: true
+            };
+          } else {
+            throw response.data;
+          }
+        })["catch"](function (error) {
+          self.formNuevoConcepto.concepto.disabled = false;
+          self.submitModalConceptoNuevo.content = 'Crear';
+          self.submitModalConceptoNuevo.disabled = false;
+
+          if (error.response) {
+            var message = "Existe un error!, consulte con el administrador del sistema.";
+          } else {
+            var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+          }
+
+          self.alertConceptoNuevo = {
+            "class": "alert alert-warning",
+            message: message,
+            show: true
+          };
+        });
+      } // Fin if(formValido)
+
     },
     valuesForm: function valuesForm(e) {
       if (e.target.type === 'text' || e.target.type === 'textarea' || e.target.type === 'email') {
@@ -34311,220 +34392,162 @@ var app = new Vue({
       self.valuesForm(e);
       self.form[e.target.id].validar = self.form[e.target.id].value.length > 0 && self.form[e.target.id].validar === false ? true : false;
     },
-    keyboard: function keyboard(e) {
-      if (e.keyCode === 13) {
-        self.crear();
-      }
-    },
-    refreshView: function refreshView() {
-      window.location.href = "/proyectoDivision";
+    limpiarFiltro: function limpiarFiltro() {
+      self.formFiltro.descripcion.value = "";
+      self.formFiltro.estatus.value = "";
+      self.buscar();
     },
     buscar: function buscar() {
-      permisoActualizar: false, self.alert.mostrar = false;
-
-      self.form.descripcion.disabled = true;
-      self.form.cliente.disabled = true;
-      self.form.estatus.disabled = true;
-      self.form.btn.filtrar.html = self.form.btn.filtrar.htmlLoading;
-      self.form.btn.filtrar.disabled = true;
+      self.formFiltro.descripcion.disabled = true;
+      self.formFiltro.estatus.disabled = true;
+      self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
+      self.formFiltro.btn.filtrar.disabled = true;
+      self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlLoading;
+      self.formFiltro.btn.limpiarFiltro.disabled = true;
+      self.formFiltro.btn.crear.html = self.formFiltro.btn.crear.htmlLoading;
+      self.formFiltro.btn.crear.disabled = true;
+      var desde = (self.paginador.pagina - 1) * self.paginador.paginar;
       var parametros = {
-        cliente: self.form.cliente.value,
-        proyecto: self.form.descripcion.value,
-        estatus: self.form.estatus.value
+        desde: desde,
+        concepto: self.formFiltro.descripcion.value,
+        estatus: self.formFiltro.estatus.value,
+        paginar: self.paginador.paginar
       };
-      axios.get('/buscardiviProyectos', {
+      axios.get('/buscarConceptoHorasNoCargables', {
         params: parametros
       }).then(function (response) {
-        self.form.descripcion.disabled = false;
-        self.form.cliente.disabled = false;
-        self.form.estatus.disabled = false;
-        self.form.btn.filtrar.html = self.form.btn.filtrar.htmlInit;
-        self.form.btn.filtrar.disabled = false;
-        self.permisoActualizar = response.data.permisoActualizar;
-        self.proyectos = response.data.proyectos;
+        self.formFiltro.descripcion.disabled = false;
+        self.formFiltro.estatus.disabled = false;
+        self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
+        self.formFiltro.btn.filtrar.disabled = false;
+        self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
+        self.formFiltro.btn.limpiarFiltro.disabled = false;
+        self.formFiltro.btn.crear.html = self.formFiltro.btn.crear.htmlInit;
+        self.formFiltro.btn.crear.disabled = false;
+        self.conceptos = response.data.conceptos;
+        self.paginador.numPaginas = response.data.paginas;
+        self.paginador.max = parseInt(response.data.paginas);
       })["catch"](function (error) {
-        self.alert.mostrar = true;
-        self.form.descripcion.disabled = false;
-        self.form.cliente.disabled = false;
-        self.form.estatus.disabled = false;
-        self.form.btn.filtrar.html = self.form.btn.filtrar.htmlInit;
-        self.form.btn.filtrar.disabled = false;
+        self.formFiltro.descripcion.disabled = false;
+        self.formFiltro.estatus.disabled = false;
+        self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
+        self.formFiltro.btn.filtrar.disabled = false;
+        self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
+        self.formFiltro.btn.limpiarFiltro.disabled = false;
+        self.formFiltro.btn.crear.html = self.formFiltro.btn.crear.htmlInit;
+        self.formFiltro.btn.crear.disabled = false;
       });
     },
-    mostrarDetalleDivProyecto: function mostrarDetalleDivProyecto(idDproyecto, e) {
-      self.detalleDproyecto.error = false;
-      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
-      var parametros = {
-        idDproyecto: idDproyecto
-      };
-      axios.get('/DetalleDivProyecto', {
-        params: parametros
-      }).then(function (response) {
-        if (response.status === 200 && response.data.response === true) {
-          self.detalleDproyecto.data = response.data.infoDproyecto;
-          self.detalleAproyecto.data = response.data.infoAproyecto;
-          $('#modal-detalle-Dproyecto').modal("show");
-          $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
-        } else {
-          throw response.data;
-        }
-      })["catch"](function (error) {
-        self.detalleDproyecto.error = true;
-        $('#modal-detalle-Dproyecto').modal("show");
-        $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
-      });
+    paginaAnterior: function paginaAnterior() {
+      self.paginador.pagina = self.paginador.pagina - 1 === 0 ? 1 : self.paginador.pagina - 1;
+      self.buscar();
     },
-    asignarAnalistaProyecto: function asignarAnalistaProyecto(idDproyecto, e) {
-      self.detalleAsigproyecto.error = false;
-      $(e.target).removeClass("far fa-edit").addClass("fa-cog fa-spin");
-      var parametros = {
-        idDproyecto: idDproyecto
-      };
-      axios.get('/detalleAnalistaProyecto', {
-        params: parametros
-      }).then(function (response) {
-        if (response.status === 200 && response.data.response === true) {
-          self.detalleAnalista.data = response.data.analistas;
-          self.detalleAsigproyecto.data = response.data.proyecto;
-          self.form.horas.value = 0;
+    paginaSiguiente: function paginaSiguiente() {
+      self.paginador.pagina = self.paginador.pagina + 1 > self.paginador.max ? self.paginador.pagina : self.paginador.pagina + 1;
+      self.buscar();
+    },
+    numeroPagina: function numeroPagina(e) {
+      self.buscar();
+    },
+    validarValor: function validarValor(input) {
+      var respuesta = true;
+      var mensaje = '';
 
-          for (var i = 0; i < self.detalleAnalista.data.length; i++) {
-            self.horasComparar[i] = self.detalleAnalista.data[i].horas_asignadas;
+      if (input.hasAttribute("data-validar")) {
+        if (input.getAttribute("data-validar") === "true") {
+          if (input.type === 'text' || input.type === 'textarea') {
+            if (input.getAttribute("data-min")) {
+              var minChar = input.getAttribute("data-min");
+              var numChar = input.value.length;
 
-            if (self.detalleAnalista.data[i].horas_asignadas === null) {
-              self.horasComparar[i] = 0;
+              if (numChar < minChar) {
+                respuesta = false;
+                mensaje = "El campo debe contener al menos " + minChar + " caracteres!";
+                zenscroll.toY($(input).offset().top - 100);
+              }
             }
           }
-
-          for (var i = 0; i < self.horasComparar.length; i++) {
-            self.form.horas.value = self.horasComparar[i] + self.form.horas.value;
-          }
-
-          $('#modal-asignar-Aproyecto').modal("show");
-          $(e.target).removeClass("fa-cog fa-spin").addClass("far fa-edit");
-        } else {
-          throw response.data;
         }
-      })["catch"](function (error) {
-        self.detalleAsigproyecto.error = true;
-        $('#modal-asignar-Aproyecto').modal("show");
-        $(e.target).removeClass("fa-cog fa-spin").addClass("far fa-edit");
-      });
+      }
+
+      return {
+        respuesta: respuesta,
+        mensaje: mensaje
+      };
     },
-    estados: function estados(analista, idAnaProy, idDproyecto, id_proyecto_division, e) {
-      if (idAnaProy == null) {
+    modificarConcepto: function modificarConcepto(id, concepto, id_estatus) {
+      $("#modal-modificar-concepto").modal("show");
+      self.formModificarConcepto.concepto.value = concepto;
+      self.formModificarConcepto.concepto.id = id;
+      self.formModificarConcepto.estatus.value = id_estatus;
+    },
+    guardarModificarConcepto: function guardarModificarConcepto() {
+      var formValido = true;
+      $("#formModificarConcepto .form-group .mensaje").html("").removeClass("invalid-feedback");
+      $("#formModificarConcepto .form-group .form-control").removeClass("error");
+      $("#formModificarConcepto .form-group").each(function (index, elemento) {
+        var input = $(elemento).find(".form-control")[0];
+        var valido = self.validarValor(input);
+
+        if (!valido.respuesta) {
+          $(elemento).find(".mensaje").html(valido.mensaje).addClass("invalid-feedback");
+          $(elemento).find(".form-control").addClass("error");
+          formValido = valido.respuesta;
+          return false;
+        }
+      });
+
+      if (formValido) {
+        self.alertModificarConcepto = {
+          "class": "",
+          message: "",
+          show: false
+        }; //Obtenemos valores
+
         var parametros = {
-          estado: 1,
-          idDproyecto: idDproyecto,
-          idUsuario: analista,
-          id_proyecto_division: id_proyecto_division
+          concepto: self.formModificarConcepto.concepto.value,
+          id: self.formModificarConcepto.concepto.id,
+          id_estatus: self.formModificarConcepto.estatus.value
         };
-        axios.get('/agregarAnalistaProy', {
-          params: parametros
-        }).then(function (response) {
-          if (response.status === 200 && response.data.response === true) {
-            self.detalleAnalista.data = response.data.analistas;
-            self.detalleAsigproyecto.data = response.data.proyecto;
-
-            for (var i = 0; i < self.detalleAnalista.data.length; i++) {
-              self.horasComparar[i] = self.detalleAnalista.data[i].horas_asignadas;
-
-              if (self.detalleAnalista.data[i].horas_asignadas === null) {
-                self.horasComparar[i] = 0;
-              }
-            }
-
-            self.buscar();
-          }
-        });
-      } else {
-        var _parametros = {
-          idAnaProy: idAnaProy,
-          idDproyecto: idDproyecto
-        };
-        axios.get('/modAnalistaProy', {
-          params: _parametros
-        }).then(function (response) {
-          if (response.status === 200 && response.data.response === true) {
-            self.detalleAnalista.data = response.data.analistas;
-            self.detalleAsigproyecto.data = response.data.proyecto;
-
-            for (var i = 0; i < self.detalleAnalista.data.length; i++) {
-              self.horasComparar[i] = self.detalleAnalista.data[i].horas_asignadas;
-
-              if (self.detalleAnalista.data[i].horas_asignadas === null) {
-                self.horasComparar[i] = 0;
-              }
-            }
-
-            self.buscar();
+        self.submitModalModificarConcepto.content = '<i class="fas fa-cog fa-spin"></i>';
+        self.submitModalModificarConcepto.disabled = true;
+        self.formModificarConcepto.concepto.disabled = true;
+        self.formModificarConcepto.estatus.disabled = true;
+        axios.post('/modificarConceptoNoCargable', parametros).then(function (response) {
+          if (response.status === 200 && response.data.respuesta === true) {
+            self.submitModalModificarConcepto.disabled = false;
+            self.formModificarConcepto.concepto.disabled = false;
+            self.formModificarConcepto.estatus.disabled = false;
+            self.submitModalModificarConcepto.content = 'Modificar';
+            self.limpiarFiltro();
+            self.alertModificarConcepto = {
+              "class": "alert alert-success",
+              message: response.data.mensaje,
+              show: true
+            };
           } else {
             throw response.data;
           }
-        });
-      }
-    },
-    asigna: function asigna(analista, idAnaProy, idDproyecto, horas_contratadas, e) {
-      var total2 = [];
-      self.alertForm = {
-        "class": "",
-        message: "",
-        show: false
-      };
+        })["catch"](function (error) {
+          self.formModificarConcepto.concepto.disabled = false;
+          self.formModificarConcepto.estatus.disabled = false;
+          self.submitModalModificarConcepto.content = 'Modificar';
+          self.submitModalModificarConcepto.disabled = false;
 
-      if (self.form.horas.value > horas_contratadas) {
-        var message = "Se a sobrepasado el maximo de horas que puede asignar.";
-        self.alertForm = {
-          "class": "alert alert-warning",
-          message: message,
-          show: true
-        };
-      } else {
-        $(".hora-asignada").each(function (index, item) {
-          var hora = $(item).val().trim() === "" ? 0 : parseInt($(item).val());
-          total2.push({
-            hora: hora
-          });
-        });
-
-        for (var i = 0; i < total2.length; i++) {
-          total2[i] = total2[i]["hora"];
-        }
-
-        var parametros = {
-          idAnaProy: idAnaProy,
-          idDproyecto: idDproyecto,
-          horas_asignadas: total2,
-          horasComparar: self.horasComparar
-        };
-        axios.get('/asigHorasAnalistaProy', {
-          params: parametros
-        }).then(function (response) {
-          if (response.status === 200 && response.data.response === true) {
-            self.detalleAnalista.data = response.data.analistas;
-            self.detalleAsigproyecto.data = response.data.proyecto;
-
-            for (var i = 0; i < self.detalleAnalista.data.length; i++) {
-              self.horasComparar[i] = self.detalleAnalista.data[i].horas_asignadas;
-
-              if (self.detalleAnalista.data[i].horas_asignadas === null) {
-                self.horasComparar[i] = 0;
-              }
-            }
+          if (error.response) {
+            var message = "Existe un error!, consulte con el administrador del sistema.";
           } else {
-            throw response.data;
+            var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
           }
+
+          self.alertModificarConcepto = {
+            "class": "alert alert-warning",
+            message: message,
+            show: true
+          };
         });
-      }
-    },
-    formCargarHoras: function formCargarHoras(idProyecto, idUsuario, e) {
-      var parametros = {
-        idProyecto: idProyecto,
-        idUsuario: idUsuario
-      };
-      axios.get('/formCargarHoras', {
-        params: parametros
-      });
+      } // Fin if(formValido)
+
     }
   } // Fin methods
 
@@ -34532,14 +34555,14 @@ var app = new Vue({
 
 /***/ }),
 
-/***/ 16:
-/*!*********************************************************!*\
-  !*** multi ./resources/js/proyecto/proyectoDivision.js ***!
-  \*********************************************************/
+/***/ 18:
+/*!*******************************************************************************************!*\
+  !*** multi ./resources/js/definicionesGenerales/horasNoCargables/formHorasNoCargables.js ***!
+  \*******************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\proyecto\proyectoDivision.js */"./resources/js/proyecto/proyectoDivision.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\js\definicionesGenerales\horasNoCargables\formHorasNoCargables.js */"./resources/js/definicionesGenerales/horasNoCargables/formHorasNoCargables.js");
 
 
 /***/ })
