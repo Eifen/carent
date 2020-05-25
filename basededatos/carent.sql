@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 21-05-2020 a las 00:04:11
+-- Tiempo de generación: 09-05-2020 a las 02:25:22
 -- Versión del servidor: 8.0.18
 -- Versión de PHP: 7.3.16
 
@@ -641,35 +641,6 @@ INSERT INTO `tbl_cliente_facturacion` (`id`, `id_cliente`, `id_proyecto`, `id_pa
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tbl_concepto_horas_no_cargables`
---
-
-CREATE TABLE `tbl_concepto_horas_no_cargables` (
-  `id` int(11) NOT NULL,
-  `descripcion` varchar(250) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `id_estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `tbl_concepto_horas_no_cargables`
---
-
-INSERT INTO `tbl_concepto_horas_no_cargables` (`id`, `descripcion`, `id_estatus`) VALUES
-(1, 'Vacaciones', 1),
-(2, 'Permiso Médico', 2),
-(3, 'pruebas 1', 1),
-(4, 'prueba', 1),
-(5, 'prueba 2', 1),
-(6, 'Prueba 2', 2),
-(7, 'prueba concepto 3', 1),
-(8, 'prueba 1', 1),
-(9, 'prueba concepto 4', 1),
-(10, 'prueba concepto 5', 1),
-(11, 'prueba concepto 6', 1);
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `tbl_configuracion`
 --
 
@@ -794,7 +765,7 @@ INSERT INTO `tbl_estados` (`id`, `estado`, `iso_3166-2`) VALUES
 
 CREATE TABLE `tbl_estatus` (
   `id` int(11) NOT NULL,
-  `tabla` varchar(60) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `tabla` varchar(30) NOT NULL,
   `valor` int(2) NOT NULL,
   `descripcion` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -819,9 +790,7 @@ INSERT INTO `tbl_estatus` (`id`, `tabla`, `valor`, `descripcion`) VALUES
 (13, 'tbl_proyecto', 1, 'activo'),
 (14, 'tbl_proyecto', 2, 'inactivo'),
 (15, 'tbl_cliente', 1, 'activo'),
-(16, 'tbl_cliente', 2, 'inactivo'),
-(17, 'tbl_concepto_horas_no_cargables', 1, 'Activo'),
-(18, 'tbl_concepto_horas_no_cargables', 2, 'Inactivo');
+(16, 'tbl_cliente', 2, 'inactivo');
 
 -- --------------------------------------------------------
 
@@ -886,9 +855,7 @@ INSERT INTO `tbl_menu` (`id`, `id_menu_padre`, `descripcion`, `url`, `orden`, `i
 (8, 0, 'Proyectos', '', 0, 1),
 (9, 8, 'Crear Proyecto', '/formNuevoProyecto', 0, 1),
 (10, 8, 'Lista de Proyectos', '/proyectos', 1, 1),
-(11, 8, 'Asignados/ar Proyectos ', '/proyectoDivision', 2, 1),
-(12, 0, 'Definiciones Generales', '', 0, 1),
-(13, 12, 'Horas No Cargables', '/formHorasNoCargables', 0, 1);
+(11, 8, 'Asignados/ar Proyectos ', '/proyectoDivision', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -918,8 +885,7 @@ INSERT INTO `tbl_menu_usuario` (`id`, `id_usuario`, `id_menu`, `C`, `R`, `U`, `D
 (5, 1, 7, 1, 1, 1, 0),
 (6, 1, 9, 1, 1, 0, 0),
 (7, 1, 10, 1, 1, 1, 0),
-(8, 1, 11, 1, 1, 1, 1),
-(9, 1, 13, 1, 1, 1, 1);
+(8, 1, 11, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -2607,12 +2573,6 @@ ALTER TABLE `tbl_cliente_facturacion`
   ADD UNIQUE KEY `id` (`id`);
 
 --
--- Indices de la tabla `tbl_concepto_horas_no_cargables`
---
-ALTER TABLE `tbl_concepto_horas_no_cargables`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indices de la tabla `tbl_configuracion`
 --
 ALTER TABLE `tbl_configuracion`
@@ -2748,12 +2708,6 @@ ALTER TABLE `tbl_cliente_facturacion`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de la tabla `tbl_concepto_horas_no_cargables`
---
-ALTER TABLE `tbl_concepto_horas_no_cargables`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
-
---
 -- AUTO_INCREMENT de la tabla `tbl_configuracion`
 --
 ALTER TABLE `tbl_configuracion`
@@ -2781,7 +2735,7 @@ ALTER TABLE `tbl_estados`
 -- AUTO_INCREMENT de la tabla `tbl_estatus`
 --
 ALTER TABLE `tbl_estatus`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_horas_cargables`
@@ -2793,13 +2747,13 @@ ALTER TABLE `tbl_horas_cargables`
 -- AUTO_INCREMENT de la tabla `tbl_menu`
 --
 ALTER TABLE `tbl_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_menu_usuario`
 --
 ALTER TABLE `tbl_menu_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_municipios`

@@ -138,6 +138,13 @@ var app = new Vue({
       self.form[e.target.id].validar = (self.form[e.target.id].value.length > 0 && self.form[e.target.id].validar === false) ? true : false;
 
     },
+    keyboard: function(e){
+
+      if (e.keyCode === 13){
+        self.crear();
+      }
+
+    },
     refreshView: function(){
       window.location.href = "/formNuevoProyecto";
     },
