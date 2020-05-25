@@ -225,6 +225,11 @@ class ClienteModel extends Model
                   "email_fiscal" => $parametros["email_fiscal"],
                   "id_estatus" => 1);
     $contacto = DB::table('tbl_cliente')->insert($data);
+    $data = array("usuario_id" => $parametros["nomusuario_id"],
+                    "fecha_reg" => $parametros["fecha_reg"],
+                    "hora_reg" => $parametros["hora_reg"],
+                    "accion" => 'Creacion de Cliente: '.$parametros["razon_social"].'');
+      $bit = DB::table('tbl_bitacora')->insertGetId($data);
     if($contacto){
       DB::commit();
       return array("response" => true, "message" => "Cliente Creado con Éxito.");
@@ -550,6 +555,11 @@ class ClienteModel extends Model
                     "email_fiscal" => $parametros["email_fiscal"],
                     "id_estatus" => $parametros["estatus"],);      
         $contacto = DB::table('tbl_cliente')->where("id",$parametros["idCliente"])->update($data);
+        $data = array("usuario_id" => $parametros["nomusuario_id"],
+                      "fecha_reg" => $parametros["fecha_reg"],
+                      "hora_reg" => $parametros["hora_reg"],
+                      "accion" => 'Modificacion de Cliente: '.$parametros["razon_social"].'');
+        $bit = DB::table('tbl_bitacora')->insertGetId($data);
         DB::commit();
         return array("response" => true, "message" => "Cliente actualizado con Éxito!.");
     } catch(\Illuminate\Database\QueryException $ex){

@@ -179,7 +179,7 @@
                     <label>&nbsp;</label>
                       <button class="btn btn-primary"
                               type="button"
-                              v-on:click="modificar(horas_cargadas,ProyAnalista.horas_asignadas, $event)"
+                              v-on:click="modificar(horas_cargadas,ProyAnalista.horas_asignadas, form.horas_trabajadasA.value, $event)"
                               v-bind:disabled="form.btn.Modificar.disabled"
                               v-html="form.btn.Modificar.html"
                               data-dismiss="modal"></button>

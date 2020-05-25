@@ -16,7 +16,7 @@
     </head>
     <body>
 
-      <div id="app" class="container-fluid" v-on:keypress="keyboard">
+      <div id="app" class="container-fluid">
         <menu-principal></menu-principal>
 
         <div class="row align-items-center justify-content-center wrapper-forms">
