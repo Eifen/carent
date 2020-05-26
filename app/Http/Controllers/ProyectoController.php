@@ -184,7 +184,7 @@ class ProyectoController extends Controller
         return array("proyectos" => $proyectos);
       }
       if ($infoUsuario->id_cargo === 15 || $permisoActualizar === "true") {
-        $proyectos = $modelo->proyectosDdivi($infoUsuario->id_division,$id_usuario,11,$proyecto, $cliente, $estatus);
+        $proyectos = $modelo->proyectosDdivi($id_usuario,11,$infoUsuario->id_division,$proyecto, $cliente, $estatus);
         if ($estatus === "1" || empty($estatus)) {
           return array("proyectos" => $proyectos, "permisoActualizar" => $permisoActualizar, "estatus" => $estatus);
         }
@@ -262,6 +262,25 @@ class ProyectoController extends Controller
       $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
       $datosProyecto = $modelo->datosProyecto($idProyecto,$infoUsuario->id_division);
       $analistas = $modelo->analistasProyecto($id_usuario,11,$idProyecto,$infoUsuario->id_division);
+      $response = array("response" => true, "analis" => $analis,"analistas" => $analistas, "proyecto" => $datosProyecto);
+      return $response;
+
+    }
+
+    function asigHorasAnalistaProy(Request $request){
+
+      $modelo = new ProyectoModel();
+      $idAnaProy = $request->input("idAnaProy");
+      $horas_asignadas = $request->input("horas_asignadas");
+      $horasComparar = $request->input("horasComparar");
+      $analis = $modelo->modHorasAnalistaProy($horas_asignadas,$horasComparar,$idAnaProy);
+
+      $id_usuario = $request->session()->get('usuario_id');
+      $idProyecto = $request->input("idDproyecto");
+      $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
+      $datosProyecto = $modelo->datosProyecto($idProyecto,$infoUsuario->id_division);
+      $analistas = $modelo->analistasProyecto($id_usuario,11,$idProyecto,$infoUsuario->id_division);
+      
       $response = array("response" => true, "analis" => $analis,"analistas" => $analistas, "proyecto" => $datosProyecto);
       return $response;
 

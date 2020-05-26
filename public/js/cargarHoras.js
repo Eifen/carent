@@ -6548,7 +6548,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#wrapper-menu-principal{\r\n  background-color: white;\r\n  margin-left: -15px;\r\n  margin-right: -15px;\n}\n#wrapper-menu-principal .navbar-brand{\r\n  height: 100%;\r\n  position: relative;\n}\n#wrapper-menu-principal .navbar-brand img{\r\n  height: 35px;\r\n  width: auto;\n}\n#wrapper-menu-principal .nav-link{\r\n  color: #000000 !important;\r\n  -webkit-transition: all .3s;\r\n  transition: all .3s;\n}\n#wrapper-menu-principal .nav-link:hover{\r\n  color:#F6A81C !important;\r\n  cursor:pointer;\n}\n#wrapper-menu-principal .nav-link.btn-outline-danger{\r\n  color:#DC3545 !important;\r\n  border-radius:3px !important;\n}\n#wrapper-menu-principal .nav-link.btn-outline-danger:hover{\r\n  color:#ffffff !important;\n}\n#wrapper-menu-principal #wrapper-menu-items .dropdown-submenu {\r\n  position: relative;\n}\n#wrapper-menu-principal #wrapper-menu-items .dropdown-submenu>.dropdown-menu {\r\n  left: 90%;\r\n  margin-top: 0px;\r\n  margin-left: 0px;\r\n  top: 10;\n}\n#wrapper-menu-principal #wrapper-menu-items > .dropdown-submenu > .dropdown-menu{\r\n  left: 7px;\n}\n#ul-opciones-cuenta .dropdown-menu .dropdown-item{\r\n  -webkit-transition: all .3s;\r\n  transition: all .3s;\n}\n#ul-opciones-cuenta .dropdown-menu .dropdown-item:hover{\r\n  color:#F6A81C !important;\r\n  cursor:pointer;\n}\n#ul-opciones-cuenta .dropdown-menu .dropdown-item:focus{\r\n  background-color:transparent;\n}\r\n\r\n", ""]);
+exports.push([module.i, "\n#wrapper-menu-principal{\n  background-color: white;\n  margin-left: -15px;\n  margin-right: -15px;\n}\n#wrapper-menu-principal .navbar-brand{\n  height: 100%;\n  position: relative;\n}\n#wrapper-menu-principal .navbar-brand img{\n  height: 35px;\n  width: auto;\n}\n#wrapper-menu-principal .nav-link{\n  color: #000000 !important;\n  -webkit-transition: all .3s;\n  transition: all .3s;\n}\n#wrapper-menu-principal .nav-link:hover{\n  color:#F6A81C !important;\n  cursor:pointer;\n}\n#wrapper-menu-principal .nav-link.btn-outline-danger{\n  color:#DC3545 !important;\n  border-radius:3px !important;\n}\n#wrapper-menu-principal .nav-link.btn-outline-danger:hover{\n  color:#ffffff !important;\n}\n#wrapper-menu-principal #wrapper-menu-items .dropdown-submenu {\n  position: relative;\n}\n#wrapper-menu-principal #wrapper-menu-items .dropdown-submenu>.dropdown-menu {\n  left: 90%;\n  margin-top: 0px;\n  margin-left: 0px;\n  top: 10;\n}\n#wrapper-menu-principal #wrapper-menu-items > .dropdown-submenu > .dropdown-menu{\n  left: 7px;\n}\n#ul-opciones-cuenta .dropdown-menu .dropdown-item{\n  -webkit-transition: all .3s;\n  transition: all .3s;\n}\n#ul-opciones-cuenta .dropdown-menu .dropdown-item:hover{\n  color:#F6A81C !important;\n  cursor:pointer;\n}\n#ul-opciones-cuenta .dropdown-menu .dropdown-item:focus{\n  background-color:transparent;\n}\n\n", ""]);
 
 // exports
 
@@ -36185,6 +36185,7 @@ var app = new Vue({
       },
       mostrar: false
     },
+    horas_asignadas: "",
     modHorasCargadas: {
       error: false,
       data: []
@@ -36209,6 +36210,7 @@ var app = new Vue({
         self.permisoActualizar = response.data.permisoActualizar;
         self.permisoEliminar = response.data.permisoEliminar;
         self.permisoCrear = response.data.permisoCrear;
+        self.horas_asignadas = self.infoProyAnalista.horas_asignadas;
 
         for (var i = 0; i < self.infoHorasCargadas.length; i++) {
           self.horas_cargadas = self.infoHorasCargadas[i].horas_trabajadas + self.horas_cargadas;
@@ -36267,14 +36269,21 @@ var app = new Vue({
         self.crear();
       }
     },
-    crear: function crear() {
+    crear: function crear(horas_cargadas, horas_asignadas, e) {
       self.alertForm = {
         "class": "",
         message: "",
         show: false
       };
 
-      if (self.form.horas_trabajadas.value > 23) {
+      if (parseInt(horas_asignadas) < parseInt(horas_cargadas) + parseInt(self.form.horas_trabajadas.value)) {
+        var message = "Sobrepasaste el limite de horas asignadas";
+        self.alertForm = {
+          "class": "alert alert-warning",
+          message: message,
+          show: true
+        };
+      } else if (self.form.horas_trabajadas.value > 23) {
         var message = "Maximo de 23 horas trabajadas al dia.";
         self.alertForm = {
           "class": "alert alert-warning",
@@ -36366,6 +36375,7 @@ var app = new Vue({
           self.form.fechaM.value = self.modHorasCargadas.data.fecha;
           self.form.descripcionM.value = self.modHorasCargadas.data.descripcion;
           self.form.horas_trabajadasM.value = self.modHorasCargadas.data.horas_trabajadas;
+          self.form.horas_trabajadasA.value = self.modHorasCargadas.data.horas_trabajadas;
           self.form.btn.Modificar.html = self.form.btn.Modificar.htmlInit;
           $('#modal-detalle-Hcargadas').modal("show");
           $(e.target).removeClass("fa-cog fa-spin").addClass("far fa-edit");
@@ -36378,46 +36388,67 @@ var app = new Vue({
         $(e.target).removeClass("fa-cog fa-spin").addClass("far fa-edit");
       });
     },
-    modificar: function modificar() {
+    modificar: function modificar(horas_cargadas, horas_asignadas, horas_trabajadasA, e) {
+      var diferencia = parseInt(horas_cargadas) - parseInt(horas_trabajadasA);
       self.alertForm = {
         "class": "",
         message: "",
         show: false
-      }; //Obtenemos valores
-
-      var parametros = {
-        fecha: self.form.fechaM.value,
-        descripcion: self.form.descripcionM.value,
-        horas_trabajadas: self.form.horas_trabajadasM.value,
-        id: self.modHorasCargadas.data.id
       };
-      axios.post('/ModificarHorasCargadas', parametros).then(function (response) {
-        if (response.status === 200 && response.data.response === true) {
-          self.alertForm = {
-            "class": "alert alert-success",
-            message: response.data.message,
-            show: true
-          };
-          self.form.fechaM.value = "";
-          self.form.descripcionM.value = "";
-          self.form.horas_trabajadasM.value = "";
-          self.actualizar();
-        } else {
-          throw response.data;
-        }
-      })["catch"](function (error) {
-        if (error.response) {
-          var message = "Existe un error!, consulte con el administrador del sistema.";
-        } else {
-          var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
-        }
 
+      if (parseInt(horas_asignadas) < diferencia + parseInt(self.form.horas_trabajadasM.value)) {
+        var message = "Sobrepasaste el limite de horas asignadas";
         self.alertForm = {
           "class": "alert alert-warning",
           message: message,
           show: true
         };
-      });
+        self.form.fechaM.value = "";
+        self.form.descripcionM.value = "";
+        self.form.horas_trabajadasM.value = "";
+        setTimeout(function () {
+          self.alertForm = {
+            "class": "",
+            message: "",
+            show: false
+          };
+        }, 2000);
+      } else {
+        //Obtenemos valores
+        var parametros = {
+          fecha: self.form.fechaM.value,
+          descripcion: self.form.descripcionM.value,
+          horas_trabajadas: self.form.horas_trabajadasM.value,
+          id: self.modHorasCargadas.data.id
+        };
+        axios.post('/ModificarHorasCargadas', parametros).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.alertForm = {
+              "class": "alert alert-success",
+              message: response.data.message,
+              show: true
+            };
+            self.form.fechaM.value = "";
+            self.form.descripcionM.value = "";
+            self.form.horas_trabajadasM.value = "";
+            self.actualizar();
+          } else {
+            throw response.data;
+          }
+        })["catch"](function (error) {
+          if (error.response) {
+            var message = "Existe un error!, consulte con el administrador del sistema.";
+          } else {
+            var message = error.message ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+          }
+
+          self.alertForm = {
+            "class": "alert alert-warning",
+            message: message,
+            show: true
+          };
+        });
+      }
     },
     detalleHorasEliminar: function detalleHorasEliminar(idHcargadas, e) {
       self.eliHorasCargadas.error = false;
@@ -36493,7 +36524,7 @@ var app = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\js\horasCargables\cargarHoras.js */"./resources/js/horasCargables/cargarHoras.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\horasCargables\cargarHoras.js */"./resources/js/horasCargables/cargarHoras.js");
 
 
 /***/ })

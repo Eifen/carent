@@ -12,7 +12,8 @@ class HorasCargadasModel extends Model
 
     	$info = DB::select('SELECT (SELECT p.descripcion FROM tbl_proyecto p WHERE a.id_proyecto = 	p.id 					  )descripcion,
     							   (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = (SELECT p.id_cliente FROM tbl_proyecto p WHERE a.id_proyecto = p.id))cliente,
-    							   (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE a.id_analista = u.id)nombre
+    							   (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE a.id_analista = u.id)nombre,
+                     a.horas_asignadas
     						FROM tbl_proyecto_analista a
     						WHERE a.id = '.$idProyAnalista.'');
     if(count($info) > 0){
