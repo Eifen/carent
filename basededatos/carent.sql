@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 21-05-2020 a las 00:04:11
+-- Tiempo de generación: 26-05-2020 a las 06:36:43
 -- Versión del servidor: 8.0.18
--- Versión de PHP: 7.3.16
+-- Versión de PHP: 7.3.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -646,7 +647,7 @@ INSERT INTO `tbl_cliente_facturacion` (`id`, `id_cliente`, `id_proyecto`, `id_pa
 
 CREATE TABLE `tbl_concepto_horas_no_cargables` (
   `id` int(11) NOT NULL,
-  `descripcion` varchar(250) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `descripcion` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -2467,6 +2468,7 @@ CREATE TABLE `tbl_proyecto_analista` (
   `id_proyecto` int(11) NOT NULL,
   `id_proyecto_division` int(11) DEFAULT NULL,
   `id_analista` int(11) NOT NULL,
+  `horas_asignadas` int(11) DEFAULT NULL,
   `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -2474,8 +2476,8 @@ CREATE TABLE `tbl_proyecto_analista` (
 -- Volcado de datos para la tabla `tbl_proyecto_analista`
 --
 
-INSERT INTO `tbl_proyecto_analista` (`id`, `id_proyecto`, `id_proyecto_division`, `id_analista`, `id_estatus`) VALUES
-(1, 5, 13, 1, 1);
+INSERT INTO `tbl_proyecto_analista` (`id`, `id_proyecto`, `id_proyecto_division`, `id_analista`, `horas_asignadas`, `id_estatus`) VALUES
+(1, 5, 13, 1, NULL, 1);
 
 -- --------------------------------------------------------
 
