@@ -2373,6 +2373,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 window.$ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 var self;
@@ -6992,7 +6996,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n#wrapper-menu-principal{\r\n  background-color: white;\r\n  margin-left: -15px;\r\n  margin-right: -15px;\n}\n#wrapper-menu-principal .navbar-brand{\r\n  height: 100%;\r\n  position: relative;\n}\n#wrapper-menu-principal .navbar-brand img{\r\n  height: 35px;\r\n  width: auto;\n}\n#wrapper-menu-principal .nav-link{\r\n  color: #000000 !important;\r\n  -webkit-transition: all .3s;\r\n  transition: all .3s;\n}\n#wrapper-menu-principal .nav-link:hover{\r\n  color:#F6A81C !important;\r\n  cursor:pointer;\n}\n#wrapper-menu-principal .nav-link.btn-outline-danger{\r\n  color:#DC3545 !important;\r\n  border-radius:3px !important;\n}\n#wrapper-menu-principal .nav-link.btn-outline-danger:hover{\r\n  color:#ffffff !important;\n}\n#wrapper-menu-principal #wrapper-menu-items .dropdown-submenu {\r\n  position: relative;\n}\n#wrapper-menu-principal #wrapper-menu-items .dropdown-submenu>.dropdown-menu {\r\n  left: 90%;\r\n  margin-top: 0px;\r\n  margin-left: 0px;\r\n  top: 10;\n}\n#wrapper-menu-principal #wrapper-menu-items > .dropdown-submenu > .dropdown-menu{\r\n  left: 7px;\n}\n#ul-opciones-cuenta .dropdown-menu .dropdown-item{\r\n  -webkit-transition: all .3s;\r\n  transition: all .3s;\n}\n#ul-opciones-cuenta .dropdown-menu .dropdown-item:hover{\r\n  color:#F6A81C !important;\r\n  cursor:pointer;\n}\n#ul-opciones-cuenta .dropdown-menu .dropdown-item:focus{\r\n  background-color:transparent;\n}\r\n\r\n", ""]);
+exports.push([module.i, "\n#wrapper-menu-principal{\r\n  background-color: white;\r\n  margin-left: -15px;\r\n  margin-right: -15px;\n}\n#wrapper-menu-principal .navbar-brand{\r\n  height: 100%;\r\n  position: relative;\n}\n#wrapper-menu-principal .navbar-brand img{\r\n  height: 35px;\r\n  width: auto;\n}\n#wrapper-menu-principal .nav-link{\r\n  color: #000000 !important;\r\n  -webkit-transition: all .3s;\r\n  transition: all .3s;\n}\n#wrapper-menu-principal .nav-link:hover{\r\n  color:#F6A81C !important;\r\n  cursor:pointer;\n}\n#wrapper-menu-principal .dropdown-menu{\r\n  min-width:15rem !important;\n}\n#wrapper-menu-principal .nav-link.btn-outline-danger{\r\n  color:#DC3545 !important;\r\n  border-radius:3px !important;\n}\n#wrapper-menu-principal .nav-link.btn-outline-danger:hover{\r\n  color:#ffffff !important;\n}\n#wrapper-menu-principal #wrapper-menu-items .dropdown-submenu {\r\n  position: relative;\n}\n#wrapper-menu-principal #wrapper-menu-items .dropdown-submenu>.dropdown-menu {\r\n  left: 90%;\r\n  margin-top: 0px;\r\n  margin-left: 0px;\r\n  top: 10;\n}\n#wrapper-menu-principal #wrapper-menu-items > .dropdown-submenu > .dropdown-menu{\r\n  left: 7px;\n}\n#ul-opciones-cuenta .dropdown-menu .dropdown-item{\r\n  -webkit-transition: all .3s;\r\n  transition: all .3s;\n}\n#ul-opciones-cuenta .dropdown-menu .dropdown-item:hover{\r\n  color:#F6A81C !important;\r\n  cursor:pointer;\n}\n#ul-opciones-cuenta .dropdown-menu .dropdown-item:focus{\r\n  background-color:transparent;\n}\r\n\r\n", ""]);
 
 // exports
 

@@ -52,6 +52,10 @@
   cursor:pointer;
 }
 
+#wrapper-menu-principal .dropdown-menu{
+  min-width:15rem !important;
+}
+
 #wrapper-menu-principal .nav-link.btn-outline-danger{
   color:#DC3545 !important;
   border-radius:3px !important;
