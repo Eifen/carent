@@ -79,6 +79,7 @@ Route::get('/detalleAnalistaProyecto', 'ProyectoController@detalleAnalistaProyec
 Route::get('/agregarAnalistaProy', 'ProyectoController@agregarAnalistaProy');
 Route::get('/DetalleDivProyecto', 'ProyectoController@DetalleDivProyecto');
 Route::get('/modAnalistaProy', 'ProyectoController@modAnalistaProy');
+Route::get('/asigHorasAnalistaProy', 'ProyectoController@asigHorasAnalistaProy');
 Route::get('/formCargarHoras/{idProyAnalista}', 'ProyectoController@formCargarHoras');
 Route::get('/datosHorasProyecto', 'HorasCargadasController@datosHorasProyecto');
 Route::post('/cargarHoras', 'HorasCargadasController@cargarHoras');

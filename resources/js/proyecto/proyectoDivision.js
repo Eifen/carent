@@ -3,12 +3,13 @@ window.Vue = require('vue');
 window.zenscroll = require('zenscroll');
 window.axios = require('axios');
 window.AutoNumeric = require('autonumeric');
+import VueTheMask from 'vue-the-mask';
 import Multiselect from 'vue-multiselect';
 import VueNumeric from 'vue-numeric';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 var self;
 
-
+Vue.use(VueTheMask);
 Vue.component('multiselect', Multiselect);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
 Vue.use(VueNumeric);
@@ -48,6 +49,16 @@ var app = new Vue({
         disabled: true,
         value: ""
       },
+      horas:{
+        asignar: false,
+        disabled: true,
+        value: 0
+      },
+      analistas: {
+        disabled: true,
+        validar: false,
+        value: []
+      },
       mostrar: false
     },
     detalleDproyecto: {
@@ -67,7 +78,9 @@ var app = new Vue({
       data: []
     },
     permisoActualizar: false,
-    proyectos: []
+    proyectos: [],
+    horasComparar: [],
+    diferencia: 0,
   },
   beforeCreate: function(){
 
@@ -82,6 +95,7 @@ var app = new Vue({
         self.form.descripcion.disabled = false;
         self.form.cliente.disabled = false;
         self.form.estatus.disabled = false;
+        self.form.analistas.disabled = false;
         self.form.mostrar = true;
         self.form.btn.filtrar.html = self.form.btn.filtrar.htmlInit;
 
@@ -110,6 +124,7 @@ var app = new Vue({
   },
   created: function () {},
   mounted: function () {
+
     $('#modal-detalle-Dproyecto').on('hidden.bs.modal', function () {
 
       self.detalleDproyecto.data = [];
@@ -130,6 +145,44 @@ var app = new Vue({
   },
   updated: function () {},
   methods:{
+
+    asignarHoras: function(valor){
+
+      self.form.horas.asignar = (valor.length > 0) ? true : false;
+
+      if(!self.form.horas.asignar){
+        self.form.horas.value = 0;
+        $("#horas").parent().find(".mensaje").html("").removeClass("invalid-feedback");
+        $("#horas").removeClass("error");
+      }
+
+    },
+
+    formatoHoraAsignada: function(input){
+
+      let regex = /^\d+$/;
+
+      if(!regex.test(input.key)){
+        input.preventDefault();
+        self.horasTotales();
+      }
+
+      $("#horas").parent().find(".mensaje").html("").removeClass("invalid-feedback");
+      $("#horas").removeClass("error");
+
+    },
+    horasTotales: function(){
+
+      var total = 0;
+
+      $(".hora-asignada").each(function(index,item){
+        let hora = ($(item).val().trim() === "") ? 0 : parseInt($(item).val());
+        total = parseInt(total) + hora;
+      });
+
+      self.form.horas.value = total;
+
+    },
 
     valuesForm: function(e){
 
@@ -259,6 +312,16 @@ var app = new Vue({
 
           self.detalleAnalista.data = response.data.analistas;
           self.detalleAsigproyecto.data = response.data.proyecto;
+          self.form.horas.value = 0;
+          for (var i = 0; i < self.detalleAnalista.data.length; i++) {
+            self.horasComparar[i] = self.detalleAnalista.data[i].horas_asignadas;
+            if (self.detalleAnalista.data[i].horas_asignadas === null) {
+              self.horasComparar[i] = 0;
+            }            
+          }
+          for (var i = 0; i < self.horasComparar.length; i++) {
+            self.form.horas.value = self.horasComparar[i] + self.form.horas.value;
+          }
 
           $('#modal-asignar-Aproyecto').modal("show");
           $(e.target).removeClass("fa-cog fa-spin").addClass("far fa-edit");
@@ -296,6 +359,14 @@ var app = new Vue({
           if(response.status === 200 && response.data.response === true){
             self.detalleAnalista.data = response.data.analistas;
             self.detalleAsigproyecto.data = response.data.proyecto;
+
+            for (var i = 0; i < self.detalleAnalista.data.length; i++) {
+            self.horasComparar[i] = self.detalleAnalista.data[i].horas_asignadas;
+            if (self.detalleAnalista.data[i].horas_asignadas === null) {
+              self.horasComparar[i] = 0;
+            }
+            
+          }
             self.buscar();
           }
         })
@@ -311,6 +382,14 @@ var app = new Vue({
           if(response.status === 200 && response.data.response === true){
             self.detalleAnalista.data = response.data.analistas;
             self.detalleAsigproyecto.data = response.data.proyecto;
+
+            for (var i = 0; i < self.detalleAnalista.data.length; i++) {
+            self.horasComparar[i] = self.detalleAnalista.data[i].horas_asignadas;
+            if (self.detalleAnalista.data[i].horas_asignadas === null) {
+              self.horasComparar[i] = 0;
+            }
+            
+          }
             self.buscar();
       }else{
         throw response.data;
@@ -318,6 +397,61 @@ var app = new Vue({
     })
       }
       
+    },
+
+    asigna: function(analista,idAnaProy,idDproyecto,horas_contratadas,e){
+
+      var total2 = [];
+      self.alertForm = {
+          class : "",
+          message : "",
+          show: false
+        };
+
+      if (self.form.horas.value > horas_contratadas) {
+        var message = "Se a sobrepasado el maximo de horas que puede asignar.";
+          self.alertForm = {
+            class : "alert alert-warning",
+            message : message,
+            show: true
+          };
+      }else{
+        $(".hora-asignada").each(function(index,item){
+        let hora = ($(item).val().trim() === "") ? 0 : parseInt($(item).val());
+        total2.push({hora});
+      });   
+
+      for (var i = 0; i < total2.length; i++) {
+          total2[i] = total2[i]["hora"];
+        
+      }
+
+      let parametros = {
+        idAnaProy: idAnaProy,
+        idDproyecto: idDproyecto,
+        horas_asignadas: total2,
+        horasComparar: self.horasComparar,
+        
+      };
+
+      axios.get('/asigHorasAnalistaProy', {params: parametros})
+      .then(function (response) {
+        if(response.status === 200 && response.data.response === true){
+          self.detalleAnalista.data = response.data.analistas;
+          self.detalleAsigproyecto.data = response.data.proyecto;
+
+          for (var i = 0; i < self.detalleAnalista.data.length; i++) {
+            self.horasComparar[i] = self.detalleAnalista.data[i].horas_asignadas;
+            if (self.detalleAnalista.data[i].horas_asignadas === null) {
+              self.horasComparar[i] = 0;
+            }
+            
+          }
+        }else{
+          throw response.data;
+        }
+      })
+      }      
     },
 
     formCargarHoras: function(idProyecto,idUsuario,e){

@@ -83,6 +83,7 @@ var app = new Vue({
       },
       mostrar: false
       },
+    horas_asignadas: "",
     modHorasCargadas: {
       error: false,
       data: []
@@ -113,6 +114,7 @@ var app = new Vue({
         self.permisoEliminar = response.data.permisoEliminar;
         self.permisoCrear = response.data.permisoCrear;
 
+        self.horas_asignadas = self.infoProyAnalista.horas_asignadas;
         for (var i = 0; i < self.infoHorasCargadas.length; i++) {
               self.horas_cargadas = self.infoHorasCargadas[i].horas_trabajadas + self.horas_cargadas;          
         }
@@ -194,14 +196,22 @@ var app = new Vue({
 
     },
 
-    crear: function(){
+    crear: function(horas_cargadas,horas_asignadas,e){
 
         self.alertForm = {
           class : "",
           message : "",
           show: false
         };
-        if (self.form.horas_trabajadas.value > 23) {
+
+        if(parseInt(horas_asignadas) < parseInt(horas_cargadas) + parseInt(self.form.horas_trabajadas.value)){
+          var message = "Sobrepasaste el limite de horas asignadas";
+          self.alertForm = {
+            class : "alert alert-warning",
+            message : message,
+            show: true
+          };
+        }else if (self.form.horas_trabajadas.value > 23) {
           var message = "Maximo de 23 horas trabajadas al dia.";
           self.alertForm = {
             class : "alert alert-warning",
@@ -256,7 +266,6 @@ var app = new Vue({
 
         });
       };
-
     },
 
     actualizar: function(){
@@ -317,6 +326,7 @@ var app = new Vue({
           self.form.fechaM.value = self.modHorasCargadas.data.fecha;
           self.form.descripcionM.value = self.modHorasCargadas.data.descripcion;
           self.form.horas_trabajadasM.value = self.modHorasCargadas.data.horas_trabajadas;
+          self.form.horas_trabajadasA.value = self.modHorasCargadas.data.horas_trabajadas
           self.form.btn.Modificar.html = self.form.btn.Modificar.htmlInit;
 
 
@@ -340,14 +350,32 @@ var app = new Vue({
 
     },
 
-    modificar: function(){
+    modificar: function(horas_cargadas,horas_asignadas,horas_trabajadasA,e){
 
+      var diferencia = parseInt(horas_cargadas) - parseInt(horas_trabajadasA);
         self.alertForm = {
           class : "",
           message : "",
           show: false
         };
-
+        if (parseInt(horas_asignadas) < diferencia + parseInt(self.form.horas_trabajadasM.value)) {
+          var message = "Sobrepasaste el limite de horas asignadas";
+          self.alertForm = {
+            class : "alert alert-warning",
+            message : message,
+            show: true
+          };
+          self.form.fechaM.value = "";
+          self.form.descripcionM.value = "";
+          self.form.horas_trabajadasM.value = "";
+          setTimeout(function(){
+              self.alertForm = {
+              class: "",
+              message: "",
+              show: false
+              };
+            }, 2000);
+        }else{
         //Obtenemos valores
         let parametros = {
           fecha:  self.form.fechaM.value,
@@ -395,6 +423,7 @@ var app = new Vue({
           };
 
         });
+      }
 
     },
 

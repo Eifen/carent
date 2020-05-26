@@ -34,6 +34,10 @@
                   <input  style="text-align:center" class="form-control" type="text" disabled v-bind:value="ProyAnalista.nombre">
               </div>
               <div class="form-group col-4 col-sm-2">
+                <label>Horas Asignadas</label>
+                  <input  style="text-align:center" class="form-control" type="text" disabled v-bind:value="ProyAnalista.horas_asignadas">
+              </div>
+              <div class="form-group col-4 col-sm-2">
                 <label>Horas Cargadas</label>
                   <input  style="text-align:center" class="form-control" type="text" disabled v-bind:value="horas_cargadas">
               </div>
@@ -71,11 +75,11 @@
                          v-on:keyup="valuesForm"
                          type="text" >
               </div>
-              <div class="form-group col-12 col-sm-3">
+              <div class="form-group col-12 col-sm-3" v-for="ProyAnalista in infoProyAnalista">
                 <label>&nbsp;</label>
                 <button class="btn filtrar"
                         type="button"
-                        v-on:click="crear"
+                        v-on:click="crear(horas_cargadas,ProyAnalista.horas_asignadas, $event)"
                         v-bind:disabled="form.btn.Crear.disabled"
                         v-html="form.btn.Crear.html"></button>
               </div>
@@ -171,16 +175,21 @@
                   </div>
                 </form>
                 <div class="row justify-content-center wrapper-subtmit">
-                  <div class="form-group col-12 col-sm-3">
+                  <div class="form-group col-12 col-sm-3" v-for="ProyAnalista in infoProyAnalista">
                     <label>&nbsp;</label>
                       <button class="btn btn-primary"
                               type="button"
-                              v-on:click="modificar"
+                              v-on:click="modificar(horas_cargadas,ProyAnalista.horas_asignadas, form.horas_trabajadasA.value, $event)"
                               v-bind:disabled="form.btn.Modificar.disabled"
                               v-html="form.btn.Modificar.html"
                               data-dismiss="modal"></button>
                   </div>
                 </div>
+                <div class="row wrapper-alert">
+              <div class="col-12">
+                <div v-bind:class="alertForm.class" role="alert" v-if="alertForm.show" v-html="alertForm.message"></div>
+              </div>
+            </div>
               </div>
             </div>
           </div>
