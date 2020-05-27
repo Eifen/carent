@@ -86,6 +86,7 @@
                   <th scope="col">Proyecto</th>
                   <th scope="col">Estatus</th>
                   <th scope="col"v-if="permisoVer">Ver Empleados</th>
+                  <th scope="col" v-if="permisoActualizar">Horas Contratadas</th>
                   <th scope="col" v-if="permisoActualizar">Asiganar</th>
                   <th scope="col" v-if="permisoCrear">Cargar Horas</th>
                 </tr>
@@ -98,6 +99,7 @@
                   <td v-if="permisoVer">
                     <i class="fas fa-search-plus" v-on:click="mostrarDetalleDivProyecto(proyecto.id_proyecto, $event)"></i>
                   </td>
+                  <td v-if="permisoActualizar">@{{ proyecto.horas_contratadas }}</td>
                   <td v-if="permisoActualizar">
                        <i class="far fa-edit" v-on:click="asignarAnalistaProyecto(proyecto.id_proyecto, $event)"></i>
                   </td>
@@ -124,7 +126,7 @@
               </div>
               <div class="modal-body">
                 <div v-if="detalleDproyecto.error" class="alert alert-warning">
-                  Ocurrio un error al intentar mostrar el detalle del cliente, por favor intente nuevamente o comuníquese con el administrador del sistema!
+                  Ocurrio un error al intentar mostrar los detalles, por favor intente nuevamente o comuníquese con el administrador del sistema!
                 </div>
                 <form class="row" v-for="Dproyecto in detalleDproyecto.data">
                   <div class="form-group col-12 col-sm-6">
@@ -170,7 +172,7 @@
               </div>
               <div class="modal-body">
                 <div v-if="detalleAsigproyecto.error" class="alert alert-warning">
-                  Ocurrio un error al intentar mostrar el detalle del cliente, por favor intente nuevamente o comuníquese con el administrador del sistema!
+                  Ocurrio un error al intentar mostrar el detalle, por favor intente nuevamente o comuníquese con el administrador del sistema!
                 </div>
                 <form class="row" v-for="Asigproyecto in detalleAsigproyecto.data">
                   <div class="form-group col-12 col-sm-6">
@@ -181,7 +183,26 @@
                     <label>Proyecto</label>
                     <input class="form-control" type="text" disabled v-bind:value="Asigproyecto.proyecto">
                   </div>
+                  <div class="form-group col-12 col-sm-6">
+                    <label>Horas Contratadas</label>
+                    <input class="form-control" type="text" disabled v-bind:value="Asigproyecto.horas_contratadas">
+                  </div>
+                  <div class="form-group col-12 col-sm-6">
+                <label for="horas">Horas Contratadas <span class="campo-obligatorio">*</span></label>
+                <input aria-describedby="horasHelp"
+                       class="form-control"
+                       id="horas"
+                       v-bind:disabled="form.horas.disabled"
+                       v-model="form.horas.value"
+                       type="text">
+                <div class="mensaje"></div>
+              </div>
                 </form>
+                <div class="row wrapper-alert">
+              <div class="col-12">
+                <div v-bind:class="alertForm.class" role="alert" v-if="alertForm.show" v-html="alertForm.message"></div>
+              </div>
+              </div>
                 <h5>Asignar</h5>
                 <table class="table" v-for="proyecto in detalleAsigproyecto.data">
               <thead>
@@ -189,15 +210,24 @@
                   <th scope="col">Nombre</th>
                   <th scope="col">Cargo</th>
                   <th scope="col">Estatus</th>
+                  <th scope="col">Asignar horas</th>
                   <th scope="col">Horas Cargadas</th>
                   <th scope="col">Ver Horas Cargadas</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody v-for="Asigproyecto in detalleAsigproyecto.data">
                 <tr v-for="analista in detalleAnalista.data">
                   <th scope="row">@{{ analista.nombre }}</th>
                   <td>@{{ analista.cargo }}</td>
                   <td><input type="checkbox" v-on:change="estados(analista.id,analista.idAnaProy,proyecto.id,proyecto.id_proyecto_division, $event)" v-model="analista.estatus" ></td>
+                  <td><input @keypress="formatoHoraAsignada"
+                             @keyup="horasTotales" 
+                             v-model="analista.horas_asignadas"
+                             v-mask="'####'"
+                             :disabled="analista.estatus != 1" 
+                             v-on:keyup="asigna(analista.id,analista.idAnaProy,proyecto.id,Asigproyecto.horas_contratadas, $event)"
+                             class="form-control hora-asignada"
+                             type="text"></td>
                   <td>@{{ analista.suma }}</td>
                   <td>
                     <a v-bind:href="'/formCargarHoras/'+analista.idAnaProy" target="_self">
