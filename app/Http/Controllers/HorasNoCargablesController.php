@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Crypt;
 use App\Models\DefinicionesGeneralesModel;
 use Illuminate\Http\RedirectResponse;
 
-class DefinicionesGeneralesController extends Controller
+class HorasNoCargablesController extends Controller
 {
 
     function dataInicialHorasNoCargables(){

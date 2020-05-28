@@ -10,7 +10,7 @@ var self;
 
 
 Vue.component('multiselect', Multiselect);
-Vue.component('menu-principal', require('../../components/menuPrincipal.vue').default);
+Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
 Vue.use(VueNumeric);
 
 var app = new Vue({
