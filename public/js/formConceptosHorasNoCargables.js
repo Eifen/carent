@@ -34230,7 +34230,7 @@ var app = new Vue({
   },
   beforeCreate: function beforeCreate() {
     self = this;
-    axios.get('/dataInicialHorasNoCargables').then(function (response) {
+    axios.get('/dataInicialConceptosHorasNoCargables').then(function (response) {
       if (response.status === 200) {
         self.comboEstatus = response.data.estatus;
         self.formFiltro.descripcion.disabled = false;

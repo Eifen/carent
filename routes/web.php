@@ -88,8 +88,9 @@ Route::post('/ModificarHorasCargadas', 'HorasCargadasController@ModificarHorasCa
 Route::get('/detalleHorasEliminar', 'HorasCargadasController@detalleHorasEliminar');
 Route::post('/EliminarHorasCargadas', 'HorasCargadasController@EliminarHorasCargadas');
 Route::get('/formHorasNoCargables',  function() {return view('horasNoCargables/formConceptosHorasNoCargables');});
-Route::get('/dataInicialHorasNoCargables', 'HorasNoCargablesController@dataInicialHorasNoCargables');
+Route::get('/dataInicialConceptosHorasNoCargables', 'HorasNoCargablesController@dataInicialConceptosHorasNoCargables');
 Route::get('/buscarConceptoHorasNoCargables', 'HorasNoCargablesController@buscarConceptoHorasNoCargables');
 Route::post('/crearConceptoNoCargable', 'HorasNoCargablesController@crearConceptoNoCargable');
 Route::post('/modificarConceptoNoCargable', 'HorasNoCargablesController@modificarConceptoNoCargable');
 Route::get('/cargarHorasNoCargables',  function() {return view('horasNoCargables/formHorasNoCargables');});
+Route::get('/dataInicialHorasNoCargables', 'HorasNoCargablesController@dataInicialHorasNoCargables');

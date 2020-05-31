@@ -20,21 +20,61 @@
         <menu-principal></menu-principal>
 
         <div class="row align-items-center justify-content-center wrapper-forms">
-          <div class="col-12 col-sm-11 col-md-9 col-lg-7 wrapper-form" v-if="formFiltro.mostrar">
+          <div class="col-12 col-sm-12 col-md-11 col-lg-9 wrapper-form" v-if="formFiltro.mostrar">
             <h5>Filtros de búsqueda</h5>
             <form class="row">
-              <div class="form-group col-12 col-sm-8">
-                <label for="descripcion">Concepto / Descripciónsss</label>
-                <input aria-describedby="descripcionHelp"
-                       class="form-control form-control-sm"
-                       id="descripcion"
-                       maxlength="250"
-                       v-bind:disabled="formFiltro.descripcion.disabled"
-                       v-model.trim="formFiltro.descripcion.value"
-                       type="text">
+              <div class="form-group col-12 col-sm-3">
+                <label for="conceptos">Divisione</label>
+                <multiselect @Open="limpiarMensajeErrorMultiselect"
+                             :clear-on-select="false"
+                             :disabled="formFiltro.divisiones.disabled"
+                             :multiple="true"
+                             :options="comboDivisiones"
+                             :show-labels="false"
+                             data-validar="true"
+                             id="divisiones"
+                             label="descripcion"
+                             placeholder="Seleccione..."
+                             track-by="descripcion"
+                             v-model="formFiltro.divisiones.value">
+                </multiselect>
                 <div class="mensaje"></div>
               </div>
-              <div class="form-group col-12 col-sm-4">
+              <div class="form-group col-12 col-sm-3">
+                <label for="conceptos">Empleado</label>
+                <multiselect @Open="limpiarMensajeErrorMultiselect"
+                             :clear-on-select="false"
+                             :disabled="formFiltro.empleados.disabled"
+                             :multiple="true"
+                             :options="comboEmpleados"
+                             :show-labels="false"
+                             data-validar="true"
+                             id="empleados"
+                             label="nombre"
+                             placeholder="Seleccione..."
+                             track-by="nombre"
+                             v-model="formFiltro.empleados.value">
+                </multiselect>
+                <div class="mensaje"></div>
+              </div>
+              <div class="form-group col-12 col-sm-3">
+                <label for="conceptos">Conceptos</label>
+                <multiselect @Open="limpiarMensajeErrorMultiselect"
+                             :clear-on-select="false"
+                             :disabled="formFiltro.conceptos.disabled"
+                             :multiple="true"
+                             :options="comboConceptos"
+                             :show-labels="false"
+                             data-validar="true"
+                             id="conceptos"
+                             label="descripcion"
+                             placeholder="Seleccione..."
+                             track-by="descripcion"
+                             v-model="formFiltro.conceptos.value">
+                </multiselect>
+                <div class="mensaje"></div>
+              </div>
+              <div class="form-group col-12 col-sm-3">
                 <label for="estatus">Estatus</label>
                 <select aria-describedby="estatusHelp"
                         class="form-control form-control-sm"
@@ -69,8 +109,8 @@
                 <button class="btn btn-success"
                         type="button"
                         v-on:click="crearNuevo"
-                        v-bind:disabled="formFiltro.btn.crear.disabled"
-                        v-html="formFiltro.btn.crear.html"></button>
+                        v-bind:disabled="formFiltro.btn.cargar.disabled"
+                        v-html="formFiltro.btn.cargar.html"></button>
               </div>
             </form>
 

@@ -41,6 +41,7 @@ class LoginController extends Controller
             //Se crean las variables de sessión
             $request->session()->put('usuario_id', $usuario->id);
             $request->session()->put('division_id', $usuario->id_division);
+            $request->session()->put('cargo_id', $usuario->id_cargo);
 
             $response = array("login" => true, "message" => "Bienvenido!, espere unos segundo mientras mientras es redireccionado.");
 

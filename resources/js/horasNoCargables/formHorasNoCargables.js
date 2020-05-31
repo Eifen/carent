@@ -5,12 +5,14 @@ window.axios = require('axios');
 window.AutoNumeric = require('autonumeric');
 import Multiselect from 'vue-multiselect';
 import VueNumeric from 'vue-numeric';
+import Datepicker from 'vuejs-datepicker';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 var self;
 
 
 Vue.component('multiselect', Multiselect);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
+Vue.component('date-picker', Datepicker);
 Vue.use(VueNumeric);
 
 var app = new Vue({
@@ -37,10 +39,10 @@ var app = new Vue({
     conceptos: [],
     formFiltro: {
       btn: {
-        crear: {
+        cargar: {
           disabled: false,
           html: "",
-          htmlInit: "Crear Nuevo Concepto",
+          htmlInit: "Cargar Hora",
           htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
         },
         filtrar: {
@@ -56,7 +58,15 @@ var app = new Vue({
           htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
         }
       },
-      descripcion:{
+      conceptos: {
+        disabled: true,
+        value: ""
+      },
+      divisiones:{
+        disabled: true,
+        value: ""
+      },
+      empleados:{
         disabled: true,
         value: ""
       },
@@ -107,13 +117,18 @@ var app = new Vue({
     axios.get('/dataInicialHorasNoCargables')
     .then(function (response) {
 
-      if(response.status === 200){
+      if(response.status === 200 && response.data.error === false){
 
+        self.comboConceptos = response.data.conceptos;
+        self.comboDivisiones = response.data.divisiones;
+        self.comboEmpleados = response.data.empleados;
         self.comboEstatus = response.data.estatus;
-        self.formFiltro.descripcion.disabled = false;
+        self.formFiltro.conceptos.disabled = false;
+        self.formFiltro.divisiones.disabled = false;
+        self.formFiltro.empleados.disabled = false;
         self.formFiltro.estatus.disabled = false;
         self.formFiltro.mostrar = true;
-        self.formFiltro.btn.crear.html = self.formFiltro.btn.crear.htmlInit;
+        self.formFiltro.btn.cargar.html = self.formFiltro.btn.cargar.htmlInit;
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
         self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
 
@@ -123,10 +138,10 @@ var app = new Vue({
         self.paginador.max = parseInt(response.data.numero_paginas);
         self.paginador.paginar = response.data.paginar;
 
+      }else if(response.data.error === true){
+        throw response.data;
       }else{
-
         throw "error";
-
       }
 
     })
@@ -134,7 +149,7 @@ var app = new Vue({
 
       self.alertForm = {
         class : "alert alert-warning",
-        message : "Existe un error!, consulte con el administrador del sistema.",
+        message : (error.mensaje) ? error.mensaje : "Existe un error!, consulte con el administrador del sistema.",
         show: true
       };
 
@@ -331,21 +346,21 @@ var app = new Vue({
     },
     limpiarFiltro: function(){
 
-      self.formFiltro.descripcion.value = "";
+
       self.formFiltro.estatus.value = "";
       self.buscar();
 
     },
     buscar: function(){
 
-      self.formFiltro.descripcion.disabled = true;
+
       self.formFiltro.estatus.disabled = true;
       self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
       self.formFiltro.btn.filtrar.disabled = true;
       self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlLoading;
       self.formFiltro.btn.limpiarFiltro.disabled = true;
-      self.formFiltro.btn.crear.html = self.formFiltro.btn.crear.htmlLoading;
-      self.formFiltro.btn.crear.disabled = true;
+      self.formFiltro.btn.cargar.html = self.formFiltro.btn.cargar.htmlLoading;
+      self.formFiltro.btn.cargar.disabled = true;
 
       let desde = (self.paginador.pagina - 1) * self.paginador.paginar;
       let parametros = {
@@ -358,14 +373,13 @@ var app = new Vue({
       axios.get('/buscarConceptoHorasNoCargables', {params: parametros})
       .then(function (response) {
 
-        self.formFiltro.descripcion.disabled = false;
         self.formFiltro.estatus.disabled = false;
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
         self.formFiltro.btn.filtrar.disabled = false;
         self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
         self.formFiltro.btn.limpiarFiltro.disabled = false;
-        self.formFiltro.btn.crear.html = self.formFiltro.btn.crear.htmlInit;
-        self.formFiltro.btn.crear.disabled = false;
+        self.formFiltro.btn.cargar.html = self.formFiltro.btn.cargar.htmlInit;
+        self.formFiltro.btn.cargar.disabled = false;
 
         self.conceptos = response.data.conceptos;
         self.paginador.numPaginas = response.data.paginas;
@@ -373,14 +387,13 @@ var app = new Vue({
 
       }).catch(error => {
 
-        self.formFiltro.descripcion.disabled = false;
         self.formFiltro.estatus.disabled = false;
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
         self.formFiltro.btn.filtrar.disabled = false;
         self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
         self.formFiltro.btn.limpiarFiltro.disabled = false;
-        self.formFiltro.btn.crear.html = self.formFiltro.btn.crear.htmlInit;
-        self.formFiltro.btn.crear.disabled = false;
+        self.formFiltro.btn.cargar.html = self.formFiltro.btn.cargar.htmlInit;
+        self.formFiltro.btn.cargar.disabled = false;
 
       });
 

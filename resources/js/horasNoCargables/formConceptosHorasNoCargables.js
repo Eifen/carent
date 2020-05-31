@@ -104,7 +104,7 @@ var app = new Vue({
 
     self = this;
 
-    axios.get('/dataInicialHorasNoCargables')
+    axios.get('/dataInicialConceptosHorasNoCargables')
     .then(function (response) {
 
       if(response.status === 200){
