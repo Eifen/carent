@@ -139,7 +139,7 @@ class ProyectoController extends Controller
       $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
       $estatus = $modelo->estatusProyectos();
       if ($infoUsuario->id_cargo === 16) {
-        $infoProyectos = $modelo->proyectoSDivision($id_usuario, 11);
+        $infoProyectos = $modelo->proyectoUDivision($id_usuario, 11);
         $permisoVer = $modelo->permisoVer(session("usuario_id"), 11);
         return [
         "estatus" => $estatus,
@@ -151,22 +151,18 @@ class ProyectoController extends Controller
       if ($infoUsuario->id_cargo === 15 || $permisoActualizar === "true") {
         $infoProyectos = $modelo->proyectoDDivision($infoUsuario->id_division,$id_usuario, 11);
         return [
-        "estatus" => $estatus,
-        "proyectos" => $infoProyectos,
-        "permisoActualizar" => $permisoActualizar,
-        "permisoCrear" => $permisoCrear
+          "estatus" => $estatus,
+          "proyectos" => $infoProyectos,
+          "permisoActualizar" => $permisoActualizar,
+          "permisoCrear" => $permisoCrear
       ];
       }
-      if ($infoUsuario->id_cargo < 15 ) {
-        $infoProyectos = $modelo->proyectoUDivision($id_usuario, 11);
-        return [
+      $infoProyectos = $modelo->proyectoUDivision($id_usuario, 11);
+      return [
         "estatus" => $estatus,
         "proyectos" => $infoProyectos,
         "permisoCrear" => $permisoCrear
       ];
-      }
-
-
     }
 
     function buscardiviProyectos(Request $request){
@@ -179,7 +175,7 @@ class ProyectoController extends Controller
       $proyecto = $request->input("proyecto");
       $estatus = $request->input("estatus");
       if ($infoUsuario->id_cargo === 16) {
-        $proyectos = $modelo->proyectosSdivi($id_usuario,11,$proyecto, $cliente, $estatus);
+        $proyectos = $modelo->proyectosUdivi($id_usuario,11,$proyecto, $cliente, $estatus);
 
         return array("proyectos" => $proyectos);
       }
@@ -190,10 +186,8 @@ class ProyectoController extends Controller
         }
         return array("proyectos" => $proyectos);
       }
-      if ($infoUsuario->id_cargo < 15) {
-        $proyectos = $modelo->proyectosUdivi($id_usuario,11,$proyecto, $cliente, $estatus);
-        return array("proyectos" => $proyectos);
-      }
+      $proyectos = $modelo->proyectosUdivi($id_usuario,11,$proyecto, $cliente, $estatus);
+      return array("proyectos" => $proyectos);
     }
 
     function DetalleDivProyecto(Request $request){

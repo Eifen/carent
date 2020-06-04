@@ -34192,6 +34192,11 @@ var app = new Vue({
         disabled: true,
         value: 0
       },
+      horasC: {
+        asignar: false,
+        disabled: true,
+        value: 0
+      },
       analistas: {
         disabled: true,
         validar: false,
