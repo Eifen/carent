@@ -54,14 +54,27 @@ html{
 
           .multiselect{
 
+            &.multiselect--disabled{
+              min-height: 32px;
+            }
+
             .multiselect__select{
               height: 32px;
+              max-height: 50px;
             }
 
             .multiselect__tags{
               height: 32px;
+              max-height: 50px;
               min-height: 32px;
               padding: 2px 40px 0 8px;
+
+              .multiselect__single{
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+              }
+
             }
 
           }// Fin .multiselect
@@ -235,7 +248,7 @@ html{
 
   }// Fin .wrapper-forms
 
-  #modal-crear-concepto,
+  #modal-cargar,
   #modal-modificar-concepto{
 
     .modal-dialog{
@@ -268,6 +281,7 @@ html{
           padding: .5rem;
 
           form{
+
             margin-top: 10px;
 
             .form-group{
@@ -292,6 +306,18 @@ html{
                 }
 
               }// Fin .form-control
+
+              .multiselect{
+
+                .multiselect__tags{
+
+                  &.error{
+                    border-color: #dc3545;
+                  }
+
+                }
+
+              }// Fin .multiselect
 
             }// Fin .form-group
 
@@ -340,5 +366,44 @@ html{
     }// Fin .modal-dialog
 
   }// Fin #modal-recuperar-clave
+
+  .vdatetime-popup{
+
+    .vdatetime-popup__header{
+      background-color: #091F40;
+    }
+
+    .vdatetime-calendar__month__day--selected{
+
+      > span{
+
+        > span{
+          background-color: #091F40;
+        }
+
+      }
+
+    }
+
+    .vdatetime-popup__actions{
+
+      .vdatetime-popup__actions__button{
+        background-color: #091F40;
+        border: 2px solid #091F40;
+        border-radius: 2px;
+        color: rgba(255,255,255,1);
+        font-weight: 600;
+        padding: .375rem .75rem;
+        transition: all .3s;
+
+        &:hover{
+          background-color: #F6A81C;
+          color: #091F40;
+        }
+      }
+
+    }
+
+  }// Fin .vdatetime-popup
 
 }// Fin #app

@@ -94,3 +94,5 @@ Route::post('/crearConceptoNoCargable', 'HorasNoCargablesController@crearConcept
 Route::post('/modificarConceptoNoCargable', 'HorasNoCargablesController@modificarConceptoNoCargable');
 Route::get('/cargarHorasNoCargables',  function() {return view('horasNoCargables/formHorasNoCargables');});
 Route::get('/dataInicialHorasNoCargables', 'HorasNoCargablesController@dataInicialHorasNoCargables');
+Route::post('/registrarHorasNoCargables', 'HorasNoCargablesController@registrarHorasNoCargables');
+Route::get('/buscarHorasNoCargableCargadas', 'HorasNoCargablesController@buscarHorasNoCargableCargadas');

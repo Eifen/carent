@@ -96,125 +96,206 @@ class HorasNoCargablesModel extends Model
     }// Fin modificarConceptoNoCargable
 
     /*
-      Función que valida si el usuario puede cargar o ver las Horas No Cargables
-      ya sea para visualizar o crear un nuevo registro
+      Función que valida si supervisa a empleados o no
     */
-    function puedeCargarVer($id_division, $id_cargo){
+    function supervisaA($id_cargo, $id_division, $id_usuario){
 
-      // Se evalua el cargo del usuario
-      if($id_cargo !== NULL){
+      $sql = DB::select('SELECT * FROM(
+                            (
+                             SELECT COUNT(DISTINCT cs.id_cargo_supervisor) num_cargo_sup
+                             FROM tbl_cargo_supervisa cs
+                             WHERE cs.id_cargo_supervisor <> '.$id_cargo.'
+                            ) t1,
+                            (
+                             SELECT COUNT(1) supervisa
+                             FROM tbl_cargo_supervisa cs
+                             WHERE cs.id_cargo_supervisor = '.$id_cargo.'
+                             AND cs.id_cargo IN(
+                             	SELECT DISTINCT cs.id_cargo_supervisor
+                                FROM tbl_cargo_supervisa cs
+                                WHERE cs.id_cargo_supervisor <> '.$id_cargo.'
+                             )) t2
+                        )');
 
-        /*
-           Hacemos una consulta para verificar si la razón por la cual no tiene
-           división asociada es porque puede ver todas con su cargo
-        */
-        $sql = DB::select('SELECT (
-                                   SELECT COUNT(1) - 1
-                                   FROM tbl_cargo_empleado ce
-                                  )
-                                  -
-                                  (
-                                   SELECT COUNT(1)
-                                   FROM tbl_cargo_supervisa cs
-                                   WHERE cs.id_cargo_supervisor = '.$id_cargo.'
-                                  ) sin_supervisar');
+      if($sql[0]->num_cargo_sup === $sql[0]->supervisa){ // Supervisa a todos
 
-        if($sql[0]->sin_supervisar === 0){
-          $id_division = 0;
-        }
+        $condicion_divisiones = "";
+        $condicion_empleados = "";
+        $supervisor = true;
+        $supervisaTodo = true;
 
-        // Se evalua la división del usuario
-        if($id_division !== NULL){
+      }else if($sql[0]->num_cargo_sup > $sql[0]->supervisa && $sql[0]->supervisa > 0){ //Directores, Gerentes, etc
 
-          return array("error" => false, "division" => $id_division);
-
-        }else{
-
-          return array("error" => true, "mensaje" => "No posee una división asociada!");
-
-        }
+        $condicion_divisiones = " WHERE d.id = ".$id_division;
+        $condicion_empleados = " WHERE u.id_division = ".$id_division;
+        $supervisor = true;
+        $supervisaTodo = false;
 
       }else{
 
-        return array("error" => true, "mensaje" => "No posee un cargo válido!");
+        $condicion_divisiones = " WHERE d.id = ".$id_division;
+        $condicion_empleados = " WHERE u.id = ".$id_usuario;
+        $supervisor = false;
+        $supervisaTodo = false;
 
       }
 
-    }// Fin puedeCargarVer
-
-    function conceptos(){
+      $divisiones = DB::select('SELECT d.id,
+                                       d.descripcion
+                                FROM tbl_division d
+                                '.$condicion_divisiones.'
+                                ORDER BY d.descripcion ASC');
 
       $conceptos = DB::select('SELECT c.id,
                                       c.descripcion
                                FROM tbl_concepto_horas_no_cargables c
                                ORDER BY c.descripcion ASC');
 
-      return $conceptos;
+      $empleados = DB::select('SELECT * FROM (
+                                 SELECT u.id,
+                                        CONCAT(u.nombre_1," ",u.apellido_1) nombre,
+                                        u.codigo
+                                 FROM tbl_usuario u
+                                 '.$condicion_empleados.'
+                               ) t
+                               ORDER BY nombre ASC');
 
-    }// Fin conceptos
+      $estatus = DB::select('SELECT e.valor id,
+                                    e.descripcion
+                             FROM tbl_estatus e
+                             WHERE e.tabla = "tbl_horas_no_cargables"
+                             ORDER BY e.valor ASC');
 
-    function divisiones($division){
+      return [
+        "conceptos" => $conceptos,
+        "divisiones" => $divisiones,
+        "empleados" => $empleados,
+        "estatus" => $estatus,
+        "supervisa" => $supervisor,
+        "supervisaTodo" => $supervisaTodo
+      ];
 
-      if($division == 0){
-        $sql_condicion = "";
-      }else{
-        $sql_condicion = " WHERE d.id = ".$division;
-      }
+    }// Fin supervisaA
 
-      $divisiones = DB::select('SELECT d.id,
-                                       d.descripcion
-                               FROM tbl_division d
-                               '.$sql_condicion.'
-                               ORDER BY d.descripcion ASC');
+    function horasCargadas($paginar, $desde, $id_empleado = null, $id_division = null, $supervisa, $supervisaTodo, $id_concepto = null, $id_estatus = null){
 
-      return $divisiones;
-
-    }// Fin divisiones
-
-    function empleados($division, $id_usuario, $id_cargo){
-
-      if($division == 0){
+      if($supervisaTodo){
+        $sql_division = "";
+      }else if($id_division == null){
         $sql_division = "";
       }else{
-        $sql_division = " AND u.id_division = ".$division;
+        $sql_division = " AND hnc.id_division = ".$id_division;
       }
 
-      $sql_supervisados = 'SELECT cs.id_cargo
-                                  FROM tbl_cargo_supervisa cs
-                                  WHERE cs.id_cargo_supervisor = '.$id_cargo;
-      $supervisados = DB::select($sql_supervisados);
-
-      if(count($supervisados) > 0){
-
-        $empleados =  DB::select('SELECT * FROM(
-                                    SELECT u.id,
-                                           CONCAT(u.nombre_1," ",u.apellido_1) nombre,
-                                           u.codigo
-                                    FROM tbl_usuario u
-                                    WHERE u.id_cargo IN ('.$sql_supervisados.')
-                                    '.$sql_division.'
-
-                                    UNION
-
-                                    SELECT u.id,
-                                           CONCAT(u.nombre_1," ",u.apellido_1) nombre,
-                                           u.codigo
-                                    FROM tbl_usuario u
-                                    WHERE u.id = '.$id_usuario.') t
-                                  ORDER BY nombre ASC');
-
+      if($id_concepto == null){
+        $sql_concepto = "";
       }else{
-
-        $empleados =  DB::select('SELECT u.id,
-                                         CONCAT(u.nombre_1," ",u.apellido_1) nombre,
-                                         u.codigo
-                                  FROM tbl_usuario u
-                                  WHERE u.id = '.$id_usuario);
-
+        $sql_concepto = " AND c.id = ".$id_concepto;
       }
 
-      return $empleados;
+      if($id_estatus == null){
+        $sql_estatus = "";
+      }else{
+        $sql_estatus = " AND hnc.id_estatus = ".$id_estatus;
+      }
 
-    }// Fin empleados
+      if($supervisa == "true"){
+        $sql_empleado = "";
+      }else if($id_empleado == null){
+        $sql_empleado = "";
+      }else{
+        $sql_empleado = " AND u.id = ".$id_empleado;
+      }
+
+      $sql = DB::select("SELECT hnc.id,
+                                CONCAT(u.nombre_1,' ',u.apellido_1) nombre,
+                                u.codigo,
+                                c.descripcion concepto,
+                                e.descripcion estatus,
+                                d.descripcion division,
+                                DATE_FORMAT(hnc.fecha_desde, '%d/%m/%Y %l:%i %p') fecha_desde,
+                                DATE_FORMAT(hnc.fecha_hasta, '%d/%m/%Y %l:%i %p') fecha_hasta,
+                                DATE_FORMAT(hnc.fecha_aprobacion, '%d/%m/%Y %l:%i %p') fecha_aprobacion,
+                                hnc.observacion
+                         FROM tbl_horas_no_cargables hnc,
+                              tbl_usuario u,
+                              tbl_concepto_horas_no_cargables c,
+                              tbl_estatus e,
+                              tbl_division d
+                         WHERE hnc.id_usuario = u.id
+                         AND hnc.id_concepto = c.id
+                         AND e.tabla = 'tbl_horas_no_cargables'
+                         AND hnc.id_estatus = e.valor
+                         AND hnc.id_division = d.id
+                         ".$sql_division."
+                         ".$sql_concepto."
+                         ".$sql_estatus."
+                         ".$sql_empleado."
+                         ORDER BY hnc.fecha_desde DESC
+                         LIMIT ".$desde.", ".$paginar);
+
+        return $sql;
+
+    }// Fin horasCargadas
+
+    function cantidadPaginasHorasCargadas($paginar, $id_empleado = null, $id_division = null, $supervisa, $supervisaTodo, $id_concepto = null, $id_estatus = null){
+
+      if($supervisaTodo){
+        $sql_division = "";
+      }else if($id_division == null){
+        $sql_division = "";
+      }else{
+        $sql_division = " AND hnc.id_division = ".$id_division;
+      }
+
+      if($id_concepto == null){
+        $sql_concepto = "";
+      }else{
+        $sql_concepto = " AND c.id = ".$id_concepto;
+      }
+
+      if($id_estatus == null){
+        $sql_estatus = "";
+      }else{
+        $sql_estatus = " AND hnc.id_estatus = ".$id_estatus;
+      }
+
+      if($supervisa == true){
+        $sql_empleado = "";
+      }else if($id_empleado == null){
+        $sql_empleado = "";
+      }else{
+        $sql_empleado = " AND u.id = ".$id_empleado;
+      }
+
+      $numConceptos = DB::select('SELECT CEILING( COUNT(1) / '.$paginar.') paginas
+                                  FROM tbl_horas_no_cargables hnc,
+                                       tbl_usuario u,
+                                       tbl_concepto_horas_no_cargables c,
+                                       tbl_estatus e,
+                                       tbl_division d
+                                  WHERE hnc.id_usuario = u.id
+                                  AND hnc.id_concepto = c.id
+                                  AND e.tabla = "tbl_horas_no_cargables"
+                                  AND hnc.id_estatus = e.valor
+                                  AND hnc.id_division = d.id
+                                  '.$sql_division.'
+                                  '.$sql_concepto.'
+                                  '.$sql_estatus.'
+                                  '.$sql_empleado);
+
+      return $numConceptos[0]->paginas;
+
+    }
+
+    function registrarHorasNoCargables($parametros){
+
+      if(DB::table('tbl_horas_no_cargables')->insert($parametros)){
+        return array("respuesta" => true, "mensaje" => "Horas cargadas con éxito!");
+      }else{
+        return array("respuesta" => false, "mensaje" => "Error al tratar de cargar las horas, intente nuevamente!");
+      }
+
+    }// Fin registrarHorasNoCargables
 
 }

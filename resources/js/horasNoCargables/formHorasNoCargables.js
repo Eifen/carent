@@ -5,15 +5,17 @@ window.axios = require('axios');
 window.AutoNumeric = require('autonumeric');
 import Multiselect from 'vue-multiselect';
 import VueNumeric from 'vue-numeric';
-import Datepicker from 'vuejs-datepicker';
+import { Datetime } from 'vue-datetime';
+const luxon  = require("luxon");
+import 'vue-datetime/dist/vue-datetime.css';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 var self;
 
-
 Vue.component('multiselect', Multiselect);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
-Vue.component('date-picker', Datepicker);
+Vue.component('datetime', Datetime);
 Vue.use(VueNumeric);
+
 
 var app = new Vue({
 
@@ -24,7 +26,7 @@ var app = new Vue({
       message: "",
       show: false
     },
-    alertConceptoNuevo: {
+    alertCargarHora: {
       class: "",
       message: "",
       show: false
@@ -34,6 +36,8 @@ var app = new Vue({
       message: "",
       show: false
     },
+    comboConceptos: [],
+    comboEmpleados: [],
     comboEstatus: [],
     comboDivisiones: [],
     conceptos: [],
@@ -60,15 +64,15 @@ var app = new Vue({
       },
       conceptos: {
         disabled: true,
-        value: ""
+        value: []
       },
       divisiones:{
         disabled: true,
-        value: ""
+        value: []
       },
       empleados:{
         disabled: true,
-        value: ""
+        value: []
       },
       estatus: {
         disabled: true,
@@ -76,16 +80,29 @@ var app = new Vue({
       },
       mostrar: false
     },
-    formNuevoConcepto: {
+    formCargarHoras: {
       concepto: {
         disabled: false,
+        value: ""
+      },
+      fechaDesde:{
+        disabled:false,
+        value: ""
+      },
+      fechaHasta:{
+        disabled:true,
+        minValue: "",
+        value: ""
+      },
+      observacion: {
+        disabled:false,
+        maxlength: 250,
         value: ""
       }
     },
     formModificarConcepto: {
       concepto: {
         disabled: false,
-        id: null,
         value: ""
       },
       estatus:{
@@ -99,8 +116,8 @@ var app = new Vue({
       pagina:1,
       paginar: 0
     },
-    submitModalConceptoNuevo: {
-      content: "Crear",
+    submitModalCargarHora: {
+      content: "Cargar",
       disabled: false,
       show:true
     },
@@ -108,7 +125,9 @@ var app = new Vue({
       content: "Modificar",
       disabled: false,
       show:true
-    }
+    },
+    supervisor: false,
+    supervisarTodo: false
   },
   beforeCreate: function(){
 
@@ -132,7 +151,9 @@ var app = new Vue({
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
         self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
 
-        self.conceptos = response.data.conceptos;
+        self.registros = response.data.registros;
+        self.supervisor = response.data.supervisor;
+        self.supervisarTodo = response.data.supervisar_todo;
 
         self.paginador.numPaginas = response.data.numero_paginas;
         self.paginador.max = parseInt(response.data.numero_paginas);
@@ -159,29 +180,46 @@ var app = new Vue({
   created: function () {},
   mounted: function () {
 
-    $('#modal-crear-concepto').on('hidden.bs.modal', function () {
+    $('#modal-cargar').on('hidden.bs.modal', function () {
 
-      self.alertConceptoNuevo = {
+      self.alertCargarHora = {
         class : "",
         message : "",
         show: false
       };
 
-      self.submitModalConceptoNuevo = {
+      self.submitModalCargarHora = {
         content: "Crear",
         disabled: false,
         show:true
       }
 
-      self.formNuevoConcepto = {
+      self.formCargarHoras = {
         concepto: {
           disabled: false,
+          value: ""
+        },
+        fechaDesde:{
+          disabled:false,
+          value: ""
+        },
+        fechaHasta:{
+          disabled:true,
+          minValue: "",
+          value: ""
+        },
+        observacion: {
+          disabled:false,
+          maxlength: 250,
           value: ""
         }
       }
 
-      $("#conceptoNuevo").removeClass("error");
-      $("#conceptoNuevo").parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
+      $(".multiselect").parents(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
+      $(".multiselect .multiselect__tags").removeClass("error");
+
+      $("#formCargarHoras .fechaDesde, #formCargarHoras .fechaHasta").removeClass("error");
+      $("#formCargarHoras .fechaDesde, #formCargarHoras .fechaHasta").parents(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
 
     });
 
@@ -220,72 +258,67 @@ var app = new Vue({
   updated: function () {},
   methods:{
 
-    crearNuevo: function(){
-      $("#modal-crear-concepto").modal("show");
+    cargar: function(){
+      $("#modal-cargar").modal("show");
     },
-    soloLetras: function(e){
+    fechaMinima: function(form,e){
 
-      if(e.target.value.trim() === ''){
-        self.formNuevoConcepto.concepto.value = '';
+      if(e !== ""){
+
+        var fecha_hasta = new Date(e).getTime() + (30 * 60000);
+            fecha_hasta = new Date(fecha_hasta).toISOString();
+
+        self[form].fechaHasta.minValue = fecha_hasta;
+        self[form].fechaHasta.disabled = false;
+        self.limpiarMensajeError($("#"+form+" .fechaDesde"));
       }
 
     },
-    crearConcepto: function(){
+    cargarHoras: function(){
 
-      var formValido = true;
-
-      $("#formNuevoConcepto .form-group .mensaje").html("").removeClass("invalid-feedback");
-      $("#formNuevoConcepto .form-group .form-control").removeClass("error");
-
-      $("#formNuevoConcepto .form-group").each(function(index, elemento) {
-
-        var input = $(elemento).find(".form-control")[0];
-        var valido = self.validarValor(input);
-
-        if(!valido.respuesta){
-          $(elemento).find(".mensaje").html(valido.mensaje).addClass("invalid-feedback");
-          $(elemento).find(".form-control").addClass("error");
-          formValido = valido.respuesta;
-          return false;
-        }
-
-      });
+      var formValido = self.validarForm("formCargarHoras");
 
       if(formValido){
 
-        self.alertConceptoNuevo = {
+        self.alertCargarHora = {
           class : "",
           message : "",
           show: false
         };
 
+        self.formCargarHoras.concepto.disabled = true;
+        self.formCargarHoras.fechaDesde.disabled = true;
+        self.formCargarHoras.fechaHasta.disabled = true;
+        self.formCargarHoras.observacion.disabled = true;
+
         //Obtenemos valores
         let parametros = {
-          concepto: self.formNuevoConcepto.concepto.value
+          concepto: self.formCargarHoras.concepto.value.id,
+          fechaDesde: self.formCargarHoras.fechaDesde.value,
+          fechaHasta: self.formCargarHoras.fechaHasta.value,
+          observacion: self.formCargarHoras.observacion.value
         }
 
-        self.submitModalConceptoNuevo.content = '<i class="fas fa-cog fa-spin"></i>';
-        self.submitModalConceptoNuevo.disabled = true;
-        self.formNuevoConcepto.concepto.disabled = true;
+        self.submitModalCargarHora.content = '<i class="fas fa-cog fa-spin"></i>';
+        self.submitModalCargarHora.disabled = true;
+        self.formCargarHoras.concepto.disabled = true;
 
-        axios.post('/crearConceptoNoCargable', parametros)
+        axios.post('/registrarHorasNoCargables', parametros)
         .then(function (response) {
 
           if(response.status === 200 && response.data.respuesta === true){
 
-            //self.submitModalConceptoNuevo.show = false;
-            self.formNuevoConcepto.concepto.value = "";
-            self.submitModalConceptoNuevo.disabled = false;
-            self.formNuevoConcepto.concepto.disabled = false;
-            self.submitModalConceptoNuevo.content = 'Crear';
+            self.submitModalCargarHora.content = 'Cargar';
 
-            self.limpiarFiltro();
+            //self.limpiarFiltro();
 
-            self.alertConceptoNuevo = {
+            self.alertCargarHora = {
               class : "alert alert-success",
               message : response.data.mensaje,
               show: true
             };
+
+            setTimeout(function(){ $("#modal-cargar").modal("hide"); }, 3000);
 
           }else{
 
@@ -296,9 +329,12 @@ var app = new Vue({
         })
         .catch(error => {
 
-          self.formNuevoConcepto.concepto.disabled = false;
-          self.submitModalConceptoNuevo.content = 'Crear';
-          self.submitModalConceptoNuevo.disabled = false;
+          self.formCargarHoras.concepto.disabled = false;
+          self.formCargarHoras.fechaDesde.disabled = false;
+          self.formCargarHoras.fechaHasta.disabled = false;
+          self.formCargarHoras.observacion.disabled = false;
+          self.submitModalCargarHora.content = 'Cargar';
+          self.submitModalCargarHora.disabled = false;
 
           if(error.response){
 
@@ -310,7 +346,7 @@ var app = new Vue({
 
           }
 
-          self.alertConceptoNuevo = {
+          self.alertCargarHora = {
             class : "alert alert-warning",
             message : message,
             show: true
@@ -331,12 +367,20 @@ var app = new Vue({
 
     },
     limpiarMensajeErrorMultiselect: function(){
-      $(".multiselect").parent().find(".mensaje").html("").removeClass("invalid-feedback");
-      $(".multiselect").removeClass("error");
+      $(".multiselect").parents(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
+      $(".multiselect .multiselect__tags").removeClass("error");
     },
     limpiarMensajeError: function(e){
-      $(e.target).removeClass("error");
-      $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
+
+      if(typeof e.target === "undefined"){
+        var el = $(e);
+      }else{
+        var el = $(e.target);
+      }
+
+      el.removeClass("error");
+      el.parents(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
+
     },
     campoOpcionalARequerido: function(e){
 
@@ -346,15 +390,20 @@ var app = new Vue({
     },
     limpiarFiltro: function(){
 
-
+      self.formFiltro.conceptos.value = [];
+      self.formFiltro.divisiones.value = [];
+      self.formFiltro.empleados.value = [];
       self.formFiltro.estatus.value = "";
       self.buscar();
 
     },
     buscar: function(){
 
-
+      self.formFiltro.conceptos.disabled = true;
+      self.formFiltro.divisiones.disabled = true;
+      self.formFiltro.empleados.disabled = true;
       self.formFiltro.estatus.disabled = true;
+
       self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
       self.formFiltro.btn.filtrar.disabled = true;
       self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlLoading;
@@ -365,14 +414,22 @@ var app = new Vue({
       let desde = (self.paginador.pagina - 1) * self.paginador.paginar;
       let parametros = {
         desde: desde,
-        concepto: self.formFiltro.descripcion.value,
+        concepto: ((self.formFiltro.conceptos.value.length === 0) ? null : self.formFiltro.conceptos.value[0].id),
+        division: ((self.formFiltro.divisiones.value.length === 0) ? null : self.formFiltro.divisiones.value[0].id),
+        empleado: ((self.formFiltro.empleados.value.length === 0) ? null : self.formFiltro.empleados.value[0].id),
         estatus: self.formFiltro.estatus.value,
-        paginar: self.paginador.paginar
+        paginar: self.paginador.paginar,
+        supervisa: ((self.supervisor === true && self.formFiltro.empleados.value.length === 0) ? true : false),
+        supervisarTodo: ((self.supervisarTodo === true && self.formFiltro.divisiones.value.length === 0) ? true : false)
       };
 
-      axios.get('/buscarConceptoHorasNoCargables', {params: parametros})
+      axios.get('/buscarHorasNoCargableCargadas', {params: parametros})
       .then(function (response) {
 
+        self.formFiltro.conceptos.disabled = false;
+        self.formFiltro.divisiones.disabled = false;
+        self.formFiltro.empleados.disabled = false;
+        self.formFiltro.estatus.disabled = false;
         self.formFiltro.estatus.disabled = false;
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
         self.formFiltro.btn.filtrar.disabled = false;
@@ -381,12 +438,16 @@ var app = new Vue({
         self.formFiltro.btn.cargar.html = self.formFiltro.btn.cargar.htmlInit;
         self.formFiltro.btn.cargar.disabled = false;
 
-        self.conceptos = response.data.conceptos;
+        self.registros = response.data.registros;
         self.paginador.numPaginas = response.data.paginas;
         self.paginador.max = parseInt(response.data.paginas);
 
       }).catch(error => {
 
+        self.formFiltro.conceptos.disabled = false;
+        self.formFiltro.divisiones.disabled = false;
+        self.formFiltro.empleados.disabled = false;
+        self.formFiltro.estatus.disabled = false;
         self.formFiltro.estatus.disabled = false;
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
         self.formFiltro.btn.filtrar.disabled = false;
@@ -409,36 +470,42 @@ var app = new Vue({
     numeroPagina: function(e){
       self.buscar();
     },
-    validarValor: function(input) {
+    validarForm: function(formulario) {
 
-      var respuesta = true;
-      var mensaje   = '';
+      if(self[formulario].concepto.value === "" || self[formulario].concepto.value === null){
 
-      if(input.hasAttribute("data-validar")){
+        $('#'+formulario+" #conceptoNew").find(".mensaje").html("Este campo es requerido!").addClass("invalid-feedback");
+        $('#'+formulario+" #conceptoNew").find(".multiselect__tags").addClass("error");
 
-        if(input.getAttribute("data-validar") === "true"){
+        return false;
 
-          if(input.type === 'text' || input.type === 'textarea'){
+      }else{
 
-            if(input.getAttribute("data-min")){
-              let minChar = input.getAttribute("data-min");
-              let numChar = input.value.length
+        if(self[formulario].fechaDesde.value === "" || self[formulario].fechaDesde.value === null){
 
-              if(numChar < minChar){
-                respuesta = false;
-                mensaje   = "El campo debe contener al menos "+minChar+" caracteres!";
-                zenscroll.toY($(input).offset().top - 100);
-              }
+          $('#'+formulario+" #fechaDesde").find(".mensaje").html("Este campo es requerido!").addClass("invalid-feedback");
+          $('#'+formulario+" #fechaDesde").find(".form-control").addClass("error");
 
-            }
+          return false;
+
+        }else{
+
+          if(self[formulario].fechaHasta.value === "" || self[formulario].fechaHasta.value === null){
+
+            $('#'+formulario+" #fechaHasta").find(".mensaje").html("Este campo es requerido!").addClass("invalid-feedback");
+            $('#'+formulario+" #fechaHasta").find(".form-control").addClass("error");
+
+            return false;
+
+          }else{
+
+            return true;
 
           }
 
         }
 
-      }
-
-      return {respuesta: respuesta, mensaje: mensaje};
+      }// Fin del if
 
     },
     modificarConcepto: function(id,concepto,id_estatus){
@@ -451,7 +518,9 @@ var app = new Vue({
     },
     guardarModificarConcepto: function(){
 
-      var formValido = true;
+      var formValido = validarForm('formCargarHoras');
+console.log(formValido);
+      return
 
       $("#formModificarConcepto .form-group .mensaje").html("").removeClass("invalid-feedback");
       $("#formModificarConcepto .form-group .form-control").removeClass("error");
@@ -459,7 +528,7 @@ var app = new Vue({
       $("#formModificarConcepto .form-group").each(function(index, elemento) {
 
         var input = $(elemento).find(".form-control")[0];
-        var valido = self.validarValor(input);
+        var valido = self.validarForm(input);
 
         if(!valido.respuesta){
           $(elemento).find(".mensaje").html(valido.mensaje).addClass("invalid-feedback");

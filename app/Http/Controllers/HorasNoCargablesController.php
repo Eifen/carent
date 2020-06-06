@@ -64,32 +64,77 @@ class HorasNoCargablesController extends Controller
     function dataInicialHorasNoCargables(){
 
       $modelo = new HorasNoCargablesModel();
-      $puedeCargarVer = $modelo->puedeCargarVer(session("division_id"), session("cargo_id"));
 
-      if($puedeCargarVer["error"] === false){
+      if(session("cargo_id") !== NULL){
 
         $paginar = 10;
-        $conceptos = $modelo->conceptos();
-        $divisiones = $modelo->divisiones($puedeCargarVer["division"]);
-        $empleados = $modelo->empleados($puedeCargarVer["division"], session("usuario_id"), session("cargo_id"));
-        $estatus = $modelo->estatusHorasNoCargables();
-        //$cantidadPaginas = $modelo->cantidadPaginasConceptosHorasNoCargables($paginar);
+        $supervisa = $modelo->supervisaA(session("cargo_id"), session("division_id"), session("usuario_id"));
+        $horas = $modelo->horasCargadas($paginar, 0, session("usuario_id"), session("division_id"), $supervisa["supervisa"], $supervisa["supervisaTodo"]);
+        $cantidadPaginas = $modelo->cantidadPaginasHorasCargadas($paginar, session("usuario_id"), session("division_id"), $supervisa["supervisa"], $supervisa["supervisaTodo"]);
 
         return [
-          "conceptos" => $conceptos,
-          "divisiones" => $divisiones,
-          "empleados" => $empleados,
+          "conceptos" => $supervisa["conceptos"],
+          "divisiones" => $supervisa["divisiones"],
+          "empleados" => $supervisa["empleados"],
           "error" => false,
-          "estatus" => $estatus,
-          /*"numero_paginas" => $cantidadPaginas,*/
-          "paginar" => $paginar
+          "estatus" => $supervisa["estatus"],
+          "numero_paginas" => $cantidadPaginas,
+          "paginar" => $paginar,
+          "registros" => $horas,
+          "supervisor" => $supervisa["supervisa"],
+          "supervisar_todo" => $supervisa["supervisaTodo"]
         ];
 
       }else{
 
-        return $puedeCargarVer;
+        return array("error" => true, "mensaje" => "No posee un cargo válido!");
 
       }
+
+    }
+
+    function buscarHorasNoCargableCargadas(Request $request){
+
+      $modelo = new HorasNoCargablesModel();
+      $paginar = $request->input("paginar");
+      $desde = $request->input("desde");
+      $concepto = $request->input("concepto");
+      $estatus = $request->input("estatus");
+      $empleado = $request->input("empleado");
+      $division = $request->input("division");
+      $supervisa = $request->input("supervisa");
+      $supervisaTodo = $request->input("supervisaTodo");
+      $horas = $modelo->horasCargadas($paginar, $desde, $empleado, $division, $supervisa, $supervisaTodo, $concepto, $estatus);
+      $cantidadPaginas = $modelo->cantidadPaginasHorasCargadas($paginar, $empleado, $division, $supervisa, $supervisaTodo, $concepto, $estatus);
+
+      return [
+        "numero_paginas" => $cantidadPaginas,
+        "paginas" => $paginar,
+        "registros" => $horas
+      ];
+
+    }
+
+    function registrarHorasNoCargables(Request $request){
+
+      $modelo = new HorasNoCargablesModel();
+
+      $dat = date("Y-m-d H:i:s", strtotime($request->input("fechaDesde")));
+      $dat2 = date("Y-m-d H:i:s", strtotime($request->input("fechaHasta")));
+
+      $parametrosInsert = array(
+        "id_concepto" => $request->input("concepto"),
+        "id_usuario" => session("usuario_id"),
+        "id_division" => session("division_id"),
+        "fecha_desde" => date("Y-m-d H:i:s", strtotime($request->input("fechaDesde"))),
+        "fecha_hasta" => date("Y-m-d H:i:s", strtotime($request->input("fechaHasta"))),
+        "observacion" => $request->input("observacion"),
+        "id_estatus"  => 1
+      );
+
+      $resgitrarHora = $modelo->registrarHorasNoCargables($parametrosInsert);
+
+      return $resgitrarHora;
 
     }
 

@@ -24,53 +24,65 @@
             <h5>Filtros de búsqueda</h5>
             <form class="row">
               <div class="form-group col-12 col-sm-3">
-                <label for="conceptos">Divisione</label>
-                <multiselect @Open="limpiarMensajeErrorMultiselect"
-                             :clear-on-select="false"
+                <label for="divisiones">Divisiones</label>
+                <multiselect :clear-on-select="false"
                              :disabled="formFiltro.divisiones.disabled"
                              :multiple="true"
                              :options="comboDivisiones"
+                             :preserve-search="true"
                              :show-labels="false"
-                             data-validar="true"
                              id="divisiones"
                              label="descripcion"
                              placeholder="Seleccione..."
                              track-by="descripcion"
                              v-model="formFiltro.divisiones.value">
+                   <template slot="selection"
+                             slot-scope="{ values, search, isOpen }">
+                             <span class="multiselect__single"
+                                   v-if="values.length &amp;&amp; !isOpen">@{{ values.length }} seleccionado(s)</span>
+                   </template>
                 </multiselect>
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-3">
-                <label for="conceptos">Empleado</label>
-                <multiselect @Open="limpiarMensajeErrorMultiselect"
-                             :clear-on-select="false"
+                <label for="empleados">Empleado</label>
+                <multiselect :clear-on-select="false"
                              :disabled="formFiltro.empleados.disabled"
                              :multiple="true"
                              :options="comboEmpleados"
+                             :preserve-search="true"
                              :show-labels="false"
-                             data-validar="true"
                              id="empleados"
                              label="nombre"
                              placeholder="Seleccione..."
                              track-by="nombre"
                              v-model="formFiltro.empleados.value">
+                  <template slot="selection"
+                            slot-scope="{ values, search, isOpen }">
+                            <span class="multiselect__single"
+                                  v-if="values.length &amp;&amp; !isOpen">@{{ values.length }} seleccionado(s)</span>
+                  </template>
                 </multiselect>
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-3">
                 <label for="conceptos">Conceptos</label>
-                <multiselect @Open="limpiarMensajeErrorMultiselect"
-                             :clear-on-select="false"
+                <multiselect :clear-on-select="false"
                              :disabled="formFiltro.conceptos.disabled"
                              :multiple="true"
                              :options="comboConceptos"
+                             :preserve-search="true"
                              :show-labels="false"
-                             data-validar="true"
                              id="conceptos"
                              label="descripcion"
                              placeholder="Seleccione..."
                              track-by="descripcion"
                              v-model="formFiltro.conceptos.value">
+                   <template slot="selection"
+                             slot-scope="{ values, search, isOpen }">
+                             <span class="multiselect__single"
+                                   v-if="values.length &amp;&amp; !isOpen">@{{ values.length }} seleccionado(s)</span>
+                   </template>
                 </multiselect>
                 <div class="mensaje"></div>
               </div>
@@ -108,7 +120,7 @@
                 <label>&nbsp;</label>
                 <button class="btn btn-success"
                         type="button"
-                        v-on:click="crearNuevo"
+                        v-on:click="cargar"
                         v-bind:disabled="formFiltro.btn.cargar.disabled"
                         v-html="formFiltro.btn.cargar.html"></button>
               </div>
@@ -120,32 +132,40 @@
             <table class="table">
               <thead>
                 <tr>
+                  <th scope="col">Nombre</th>
                   <th scope="col">Concepto</th>
+                  <th scope="col">División</th>
+                  <th scope="col">Fecha Desde</th>
+                  <th scope="col">Fecha Hasta</th>
                   <th scope="col">Estatus</th>
                   <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="concepto in conceptos" v-if="conceptos.length > 0">
-                  <th scope="row">@{{ concepto.descripcion }}</th>
-                  <td>@{{ concepto.estatus }}</td>
+                <tr v-for="registro in registros" v-if="registros.length > 0">
+                  <th scope="row">@{{ registro.nombre }}</th>
+                  <td>@{{ registro.concepto }}</td>
+                  <td>@{{ registro.division }}</td>
+                  <td>@{{ registro.fecha_desde }}</td>
+                  <td>@{{ registro.fecha_hasta }}</td>
+                  <td>@{{ registro.estatus }}</td>
                   <td>
-                    <a v-on:click="modificarConcepto(concepto.id,concepto.descripcion,concepto.id_estatus)" target="_self">
+                    <a v-on:click="modificarConcepto(registro.id)" target="_self">
                        <i class="far fa-edit"></i>
                     </a>
                   </td>
                 </tr>
-                <tr v-if="conceptos.length < 1">
-                  <td colspan="6">
+                <tr v-if="registros.length < 1">
+                  <td colspan="7">
                     <div class="alert alert-warning text-center" role="alert">
                       La busqueda no arrojó resultado!
                     </div>
                   </td>
                 </tr>
               </tbody>
-              <tfoot v-if="conceptos.length > 0">
+              <tfoot v-if="registros.length > 0">
                 <tr>
-                  <td colspan="3">
+                  <td colspan="7">
                     <div>
                       <div><b>Página</b></div>
                       <div class="wrapper-input">
@@ -182,40 +202,89 @@
 
         </div>
 
-        <div id="modal-crear-concepto" class="modal fade" tabindex="-1" role="dialog">
+        <div id="modal-cargar" class="modal fade" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h4>Nuevo Concepto</h4>
+                <h4>Cargar Horas</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
-                <form id="formNuevoConcepto">
-                  <div class="form-group">
-                    <input class="form-control conceptoNuevo"
-                           data-min="3"
-                           data-validar="true"
-                           id="conceptoNuevo"
-                           ref="conceptoNuevo"
-                           type="text"
-                           v-bind:disabled="formNuevoConcepto.concepto.disabled"
-                           v-model="formNuevoConcepto.concepto.value"
-                           v-on:keyup="soloLetras">
-                    <small id="conceptoNuevoHelp" class="form-text text-muted">Ejemplo: Vacaciones</small>
+                <form id="formCargarHoras" class="row">
+                  <div class="form-group col-12" id="conceptoNew">
+                    <label for="conceptoNew">Concepto</label>
+                    <multiselect @input="limpiarMensajeErrorMultiselect"
+                                 :clear-on-select="false"
+                                 :disabled="formCargarHoras.concepto.disabled"
+                                 :options="comboConceptos"
+                                 :preserve-search="true"
+                                 :show-labels="false"
+                                 label="descripcion"
+                                 placeholder="Seleccione..."
+                                 track-by="descripcion"
+                                 v-model="formCargarHoras.concepto.value">
+                    </multiselect>
+                    <div class="mensaje"></div>
+                  </div>
+                  <div class="form-group col-6" id="fechaDesde">
+                    <label>Fecha Desde</label>
+                    <datetime
+                      @input="fechaMinima('formCargarHoras', $event)"
+                      :disabled="formCargarHoras.fechaDesde.disabled"
+                      :minute-step="30"
+                      :use12-hour="true"
+                      format="dd/LL/yyyy hh:mm a"
+                      input-class="form-control fechaDesde"
+                      v-model="formCargarHoras.fechaDesde.value"
+                      type="datetime">
+                      <template slot="button-cancel">
+                        Cerrar
+                      </template>
+                    </datetime>
+                    <div class="mensaje"></div>
+                  </div>
+                  <div class="form-group col-6" id="fechaHasta">
+                    <label>Fecha Hasta</label>
+                    <datetime
+                      @input="limpiarMensajeError"
+                      :disabled="formCargarHoras.fechaHasta.disabled"
+                      :min-datetime="formCargarHoras.fechaHasta.minValue"
+                      :minute-step="30"
+                      :use12-hour="true"
+                      format="dd/LL/yyyy hh:mm a"
+                      input-class="form-control"
+                      v-model="formCargarHoras.fechaHasta.value"
+                      type="datetime">
+                      <template slot="button-cancel">
+                        Cerrar
+                      </template>
+                    </datetime>
+                    <div class="mensaje"></div>
+                  </div>
+                  <div class="form-group col-12" id="observacionNew">
+                    <div class="form-group">
+                      <label>Observacion</label>
+                      <textarea :disabled="formCargarHoras.observacion.disabled"
+                                :maxlength="formCargarHoras.observacion.maxlength"
+                                class="form-control"
+                                rows="3"
+                                v-model="formCargarHoras.observacion.value"></textarea>
+                    </div>
+                    <small class="form-text text-muted">@{{ formCargarHoras.observacion.value.length }} de @{{ formCargarHoras.observacion.maxlength }} caracteres</small>
                     <div class="mensaje"></div>
                   </div>
                 </form>
-                <div v-bind:class="alertConceptoNuevo.class" role="alert" v-if="alertConceptoNuevo.show" v-html="alertConceptoNuevo.message"></div>
+                <div v-bind:class="alertCargarHora.class" role="alert" v-if="alertCargarHora.show" v-html="alertCargarHora.message"></div>
               </div>
               <div class="modal-footer">
                 <button class="btn"
                         type="button"
-                        v-bind:disabled="submitModalConceptoNuevo.disabled"
-                        v-if="submitModalConceptoNuevo.show"
-                        v-html="submitModalConceptoNuevo.content"
-                        v-on:click="crearConcepto"></button>
+                        v-bind:disabled="submitModalCargarHora.disabled"
+                        v-if="submitModalCargarHora.show"
+                        v-html="submitModalCargarHora.content"
+                        v-on:click="cargarHoras"></button>
               </div>
             </div>
           </div>
@@ -240,8 +309,7 @@
                            ref="modificarConcepto"
                            type="text"
                            v-bind:disabled="formModificarConcepto.concepto.disabled"
-                           v-model="formModificarConcepto.concepto.value"
-                           v-on:keyup="soloLetras">
+                           v-model="formModificarConcepto.concepto.value">
                     <small id="modificarConceptoHelp" class="form-text text-muted">Ejemplo: Vacaciones</small>
                     <div class="mensaje"></div>
                   </div>
