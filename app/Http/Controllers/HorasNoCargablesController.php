@@ -109,7 +109,6 @@ class HorasNoCargablesController extends Controller
 
       return [
         "numero_paginas" => $cantidadPaginas,
-        "paginas" => $paginar,
         "registros" => $horas
       ];
 

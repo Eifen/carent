@@ -458,12 +458,34 @@ var app = new Vue({
       self.formFiltro.btn.cargar.html = self.formFiltro.btn.cargar.htmlLoading;
       self.formFiltro.btn.cargar.disabled = true;
 
+      //Evaluamos como filtraremos la division
+      if(self.formFiltro.divisiones.value.length === 0 && self.comboDivisiones.length > 1){
+        var param_divisiones = null;
+      }else if(self.formFiltro.divisiones.value.length > 0){
+        var param_divisiones = self.formFiltro.divisiones.value;
+      }else if(self.formFiltro.divisiones.value.length === 0 && self.comboDivisiones.length === 1){
+        var param_divisiones = self.comboDivisiones[0].id;
+      }else{
+        var param_divisiones = null;
+      }
+
+      //Evaluamos como filtraremos al empleado
+      if(self.formFiltro.empleados.value.length === 0 && self.comboEmpleados.length > 1){
+        var param_empleados = null;
+      }else if(self.formFiltro.empleados.value.length > 0){
+        var param_empleados = self.formFiltro.empleados.value;
+      }else if(self.formFiltro.empleados.value.length === 0 && self.comboEmpleados.length === 1){
+        var param_empleados = self.comboEmpleados[0].id;
+      }else{
+        var param_empleados = null;
+      }
+
       let desde = (self.paginador.pagina - 1) * self.paginador.paginar;
       let parametros = {
         desde: desde,
         concepto: ((self.formFiltro.conceptos.value.length === 0) ? null : self.formFiltro.conceptos.value[0].id),
-        division: ((self.formFiltro.divisiones.value.length === 0) ? null : self.formFiltro.divisiones.value[0].id),
-        empleado: ((self.formFiltro.empleados.value.length === 0) ? null : self.formFiltro.empleados.value[0].id),
+        division: param_divisiones,
+        empleado: param_empleados,
         estatus: self.formFiltro.estatus.value,
         paginar: self.paginador.paginar,
         supervisa: ((self.supervisor === true && self.formFiltro.empleados.value.length === 0) ? true : false),
@@ -486,8 +508,8 @@ var app = new Vue({
         self.formFiltro.btn.cargar.disabled = false;
 
         self.registros = response.data.registros;
-        self.paginador.numPaginas = response.data.paginas;
-        self.paginador.max = parseInt(response.data.paginas);
+        self.paginador.numPaginas = response.data.numero_paginas;
+        self.paginador.max = parseInt(response.data.numero_paginas);
 
       }).catch(error => {
 

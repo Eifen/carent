@@ -268,7 +268,7 @@ class HorasNoCargablesModel extends Model
         $sql_estatus = " AND hnc.id_estatus = ".$id_estatus;
       }
 
-      if($supervisa == true){
+      if($supervisa == "true"){
         $sql_empleado = "";
       }else if($id_empleado == null){
         $sql_empleado = "";
