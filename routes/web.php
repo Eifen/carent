@@ -13,6 +13,7 @@
 
 Route::middleware('usuario.session')->group(function () {
     Route::get('/', function () { return view('login'); })->name('loginView');
+    //Route::get('/cargarHorasNoCargables',  function() { return view('horasNoCargables/formHorasNoCargables'); })->name('horasNoCargables');
 });
 
 Route::get('/encryptConfig', 'ConfigsController@encryptConfig');
@@ -87,8 +88,13 @@ Route::get('/detalleModHorasCargadas', 'HorasCargadasController@detalleModHorasC
 Route::post('/ModificarHorasCargadas', 'HorasCargadasController@ModificarHorasCargadas');
 Route::get('/detalleHorasEliminar', 'HorasCargadasController@detalleHorasEliminar');
 Route::post('/EliminarHorasCargadas', 'HorasCargadasController@EliminarHorasCargadas');
-Route::get('/formHorasNoCargables',  function() {return view('definicionesGenerales/horasNoCargables/formHorasNoCargables');});
-Route::get('/dataInicialHorasNoCargables', 'definicionesGeneralesController@dataInicialHorasNoCargables');
-Route::get('/buscarConceptoHorasNoCargables', 'definicionesGeneralesController@buscarConceptoHorasNoCargables');
-Route::post('/crearConceptoNoCargable', 'definicionesGeneralesController@crearConceptoNoCargable');
-Route::post('/modificarConceptoNoCargable', 'definicionesGeneralesController@modificarConceptoNoCargable');
+Route::get('/formHorasNoCargables',  function() {return view('horasNoCargables/formConceptosHorasNoCargables');});
+Route::get('/dataInicialConceptosHorasNoCargables', 'HorasNoCargablesController@dataInicialConceptosHorasNoCargables');
+Route::get('/buscarConceptoHorasNoCargables', 'HorasNoCargablesController@buscarConceptoHorasNoCargables');
+Route::post('/crearConceptoNoCargable', 'HorasNoCargablesController@crearConceptoNoCargable');
+Route::post('/modificarConceptoNoCargable', 'HorasNoCargablesController@modificarConceptoNoCargable');
+Route::get('/cargarHorasNoCargables',  function() {return view('horasNoCargables/formHorasNoCargables');});
+Route::get('/dataInicialHorasNoCargables', 'HorasNoCargablesController@dataInicialHorasNoCargables');
+Route::post('/registrarHorasNoCargables', 'HorasNoCargablesController@registrarHorasNoCargables');
+Route::get('/buscarHorasNoCargableCargadas', 'HorasNoCargablesController@buscarHorasNoCargableCargadas');
+Route::post('/modificarHorasNoCargables', 'HorasNoCargablesController@modificarHorasNoCargables');
