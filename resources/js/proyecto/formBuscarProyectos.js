@@ -162,9 +162,11 @@ var app = new Vue({
       self.formFiltro.btn.limpiarFiltro.disabled = true;
 
       let idsDivisiones = [];
-      self.formFiltro.divisiones.value.forEach((item, i) => {
-        idsDivisiones.push(item.id);
-      });
+      if(self.formFiltro.divisiones.value.length > 0){
+        self.formFiltro.divisiones.value.forEach((item, i) => {
+          idsDivisiones.push(item.id);
+        });
+      }
 
 
       let desde = (self.paginador.pagina - 1) * self.paginador.paginar;

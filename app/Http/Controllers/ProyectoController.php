@@ -67,7 +67,7 @@ class ProyectoController extends Controller
       $paginar = $request->input("paginar");
       $desde = $request->input("desde");
       $cliente = $request->input("cliente");
-      $divisiones = $request->input("divisiones");
+      $divisiones = ($request->input("divisiones") == null) ? [] : $request->input("divisiones");
       $proyecto = $request->input("proyecto");
       $estatus = $request->input("estatus");
       $proyectos = $modelo->proyectos(session("division_id"), $paginar, $desde, $proyecto, $cliente, $divisiones, $estatus);
@@ -274,7 +274,7 @@ class ProyectoController extends Controller
       $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
       $datosProyecto = $modelo->datosProyecto($idProyecto,$infoUsuario->id_division);
       $analistas = $modelo->analistasProyecto($id_usuario,11,$idProyecto,$infoUsuario->id_division);
-      
+
       $response = array("response" => true, "analis" => $analis,"analistas" => $analistas, "proyecto" => $datosProyecto);
       return $response;
 

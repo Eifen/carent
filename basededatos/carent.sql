@@ -3,7 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 26-05-2020 a las 06:36:43
+
+-- Tiempo de generación: 07-06-2020 a las 21:44:55
 -- Versión del servidor: 8.0.18
 -- Versión de PHP: 7.3.12
 
@@ -55,6 +56,92 @@ INSERT INTO `tbl_cargo_empleado` (`id`, `descripcion`, `id_estatus`) VALUES
 (14, 'Gerente Senior', 1),
 (15, 'Director', 1),
 (16, 'Socio', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_cargo_supervisa`
+--
+
+CREATE TABLE `tbl_cargo_supervisa` (
+  `id` int(11) NOT NULL,
+  `id_cargo` int(11) NOT NULL,
+  `id_cargo_supervisor` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `tbl_cargo_supervisa`
+--
+
+INSERT INTO `tbl_cargo_supervisa` (`id`, `id_cargo`, `id_cargo_supervisor`) VALUES
+(1, 1, 13),
+(2, 1, 14),
+(3, 1, 16),
+(4, 1, 15),
+(5, 1, 12),
+(6, 3, 15),
+(7, 3, 13),
+(8, 3, 14),
+(9, 3, 16),
+(10, 3, 12),
+(11, 4, 15),
+(13, 4, 13),
+(14, 4, 14),
+(15, 4, 16),
+(16, 4, 12),
+(17, 5, 15),
+(18, 5, 13),
+(19, 5, 14),
+(20, 5, 16),
+(21, 5, 12),
+(22, 1, 15),
+(23, 1, 13),
+(24, 1, 14),
+(26, 1, 12),
+(27, 2, 15),
+(28, 2, 13),
+(29, 2, 14),
+(30, 2, 16),
+(31, 2, 12),
+(32, 6, 15),
+(33, 6, 13),
+(34, 6, 14),
+(35, 6, 16),
+(36, 6, 12),
+(37, 7, 15),
+(38, 7, 13),
+(39, 7, 14),
+(40, 7, 16),
+(41, 7, 12),
+(42, 8, 15),
+(43, 8, 13),
+(44, 8, 14),
+(45, 8, 16),
+(46, 8, 12),
+(47, 9, 15),
+(48, 9, 13),
+(49, 9, 14),
+(50, 9, 16),
+(51, 9, 12),
+(52, 10, 15),
+(53, 10, 13),
+(54, 10, 14),
+(55, 10, 16),
+(56, 10, 12),
+(57, 11, 15),
+(58, 11, 13),
+(59, 11, 14),
+(60, 11, 16),
+(61, 11, 12),
+(62, 12, 13),
+(63, 12, 14),
+(64, 12, 16),
+(65, 12, 15),
+(66, 13, 15),
+(67, 13, 16),
+(68, 14, 15),
+(69, 14, 16),
+(70, 15, 16);
 
 -- --------------------------------------------------------
 
@@ -658,15 +745,7 @@ CREATE TABLE `tbl_concepto_horas_no_cargables` (
 INSERT INTO `tbl_concepto_horas_no_cargables` (`id`, `descripcion`, `id_estatus`) VALUES
 (1, 'Vacaciones', 1),
 (2, 'Permiso Médico', 2),
-(3, 'pruebas 1', 1),
-(4, 'prueba', 1),
-(5, 'prueba 2', 1),
-(6, 'Prueba 2', 2),
-(7, 'prueba concepto 3', 1),
-(8, 'prueba 1', 1),
-(9, 'prueba concepto 4', 1),
-(10, 'prueba concepto 5', 1),
-(11, 'prueba concepto 6', 1);
+(3, 'Reunión Técnica', 1);
 
 -- --------------------------------------------------------
 
@@ -822,7 +901,10 @@ INSERT INTO `tbl_estatus` (`id`, `tabla`, `valor`, `descripcion`) VALUES
 (15, 'tbl_cliente', 1, 'activo'),
 (16, 'tbl_cliente', 2, 'inactivo'),
 (17, 'tbl_concepto_horas_no_cargables', 1, 'Activo'),
-(18, 'tbl_concepto_horas_no_cargables', 2, 'Inactivo');
+(18, 'tbl_concepto_horas_no_cargables', 2, 'Inactivo'),
+(19, 'tbl_horas_no_cargables', 1, 'Por Aprobar'),
+(20, 'tbl_horas_no_cargables', 2, 'Aprobada'),
+(21, 'tbl_horas_no_cargables', 3, 'No Aprobada');
 
 -- --------------------------------------------------------
 
@@ -860,6 +942,43 @@ CREATE TABLE `tbl_horas_cargables` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `tbl_horas_no_cargables`
+--
+
+CREATE TABLE `tbl_horas_no_cargables` (
+  `id` int(11) NOT NULL,
+  `id_concepto` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `id_division` int(11) NOT NULL,
+  `aprobado_por` int(11) DEFAULT NULL,
+  `fecha_desde` datetime NOT NULL COMMENT 'El formato de la fecha es UTC',
+  `fecha_hasta` datetime NOT NULL COMMENT 'El formato de la fecha es UTC',
+  `fecha_aprobacion` datetime DEFAULT NULL,
+  `observacion` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `id_estatus` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `tbl_horas_no_cargables`
+--
+
+INSERT INTO `tbl_horas_no_cargables` (`id`, `id_concepto`, `id_usuario`, `id_division`, `aprobado_por`, `fecha_desde`, `fecha_hasta`, `fecha_aprobacion`, `observacion`, `id_estatus`) VALUES
+(1, 2, 3, 3, NULL, '2020-06-03 18:30:00', '2020-06-03 19:00:00', NULL, 'sfsdfsf', 1),
+(2, 1, 1, 3, 1, '2020-06-08 00:00:00', '2020-06-09 01:00:00', '2020-06-07 18:21:31', 'desde las 8pm hasta las 9pmd', 2),
+(3, 2, 1, 3, NULL, '2020-06-03 20:00:00', '2020-06-05 20:30:00', NULL, NULL, 3),
+(4, 2, 1, 3, NULL, '2020-06-03 20:00:00', '2020-06-03 20:30:00', NULL, 'sad', 1),
+(5, 1, 1, 3, NULL, '2020-06-03 20:00:00', '2020-06-03 20:30:00', NULL, NULL, 1),
+(6, 1, 5, 8, NULL, '2020-06-12 20:00:00', '2020-06-12 20:30:00', NULL, NULL, 1),
+(7, 3, 1, 3, NULL, '2020-06-07 00:00:00', '2020-06-08 00:30:00', NULL, 'prueba de 8pm a 8:30 pm', 1),
+(8, 1, 3, 3, 1, '2020-06-08 00:00:00', '2020-06-08 01:00:00', '2020-06-07 18:53:09', 'desde las 8pm hasta las 9pm', 2),
+(9, 1, 1, 3, NULL, '2020-06-07 01:00:00', '2020-06-07 02:00:00', NULL, '9 a 10 pm', 1),
+(10, 3, 1, 3, NULL, '2020-06-09 18:30:00', '2020-06-09 19:00:00', NULL, 'prueba David', 1),
+(11, 1, 1, 3, 1, '2020-06-10 18:30:00', '2020-06-12 19:00:00', '2020-06-07 18:38:06', 'ddddd', 2),
+(12, 1, 1, 3, NULL, '2020-06-14 18:30:00', '2020-06-30 19:00:00', NULL, 'ddddfffttgg', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `tbl_menu`
 --
 
@@ -888,8 +1007,9 @@ INSERT INTO `tbl_menu` (`id`, `id_menu_padre`, `descripcion`, `url`, `orden`, `i
 (9, 8, 'Crear Proyecto', '/formNuevoProyecto', 0, 1),
 (10, 8, 'Lista de Proyectos', '/proyectos', 1, 1),
 (11, 8, 'Asignados/ar Proyectos ', '/proyectoDivision', 2, 1),
-(12, 0, 'Definiciones Generales', '', 0, 1),
-(13, 12, 'Horas No Cargables', '/formHorasNoCargables', 0, 1);
+(12, 0, 'Horas No Cargables', '', 0, 1),
+(13, 12, 'Conceptos', '/formHorasNoCargables', 0, 1),
+(14, 12, 'Cargar', '/cargarHorasNoCargables', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -920,7 +1040,8 @@ INSERT INTO `tbl_menu_usuario` (`id`, `id_usuario`, `id_menu`, `C`, `R`, `U`, `D
 (6, 1, 9, 1, 1, 0, 0),
 (7, 1, 10, 1, 1, 1, 0),
 (8, 1, 11, 1, 1, 1, 1),
-(9, 1, 13, 1, 1, 1, 1);
+(9, 1, 13, 1, 1, 1, 1),
+(10, 1, 14, 1, 1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -2572,10 +2693,10 @@ CREATE TABLE `tbl_usuario` (
 --
 
 INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `cedula`, `nombre_1`, `nombre_2`, `apellido_1`, `apellido_2`, `fecha_nacimiento`, `id_cargo`, `id_division`, `id_parroquia`, `avatar`, `id_estatus`) VALUES
-(1, '0001', 'eyJpdiI6IjB5dnJXUUswTEdZenNcLzRHbTRWXC9HUT09IiwidmFsdWUiOiJwbUpkdURFdGhoc3FOSFpGQU1yaU5RPT0iLCJtYWMiOiI2ZDY1NTVlMTBkYmQ4NGNiNWM0MWRkMTllMjcxZjkxOTM5MmFhZmMxYTIwNmFiMzM4MjRmYTgwYjEwYTQ0NTY0In0=', 17671370, 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '01/01/1980', 16, 3, 1131, '', 1),
-(2, '11525', 'eyJpdiI6IjkwZkVzUVRiMXVZcXZlZDMwM2dXdHc9PSIsInZhbHVlIjoiZFAxQjFLMVZZT2VsVDBNSkJIN0JJZz09IiwibWFjIjoiMWNhNWYxMGM4MDdhOWNjZTM1N2MxZmMyNjE3MDJlYTM1YTMwZDU4NDU0ZTNhYmQzZWUxZTViNTQxNTM0YmZiZCJ9', 27279090, 'JOSE', 'ARTURO', 'MADRIZ', 'MALAVE', '07/06/1996', 13, 3, 1123, '', 1),
-(3, '11450', 'eyJpdiI6Im5MWkhxSEVKV2N3ZkhJZ01XZTU2eFE9PSIsInZhbHVlIjoiZ2N3a2l2Nm1DNHFKMGtPYkp4ZmdzQT09IiwibWFjIjoiMTNmNTllMGNjNTc0MjNlMWMwYzkwYTA0NGYyNzQ5ZmU5YTg4M2YzMDIzZGMyNzVhNjllNmRhNDYzOWQ3Yzc1NyJ9', 14245244, 'ANA', '', 'BLANDIN', '', '09/05/1986', 13, 3, 26, '', 1),
-(4, '2209', 'eyJpdiI6IiswWVJuYXJsbVwvRkg0OGdxdGI4dW1RPT0iLCJ2YWx1ZSI6ImdFbWJYZGRWVEtNWFZcL3ZUdlNHY0JnPT0iLCJtYWMiOiI1NTUyMDg1Y2RkMWE4MTViYWM5MWM4YjAyOGJiZTAwYWQ0ZTc1NGE5Zjg4ZDlhNmRjYWU3OTZmNTU4YTIxMDZkIn0=', 13900761, 'CAROLINA', '', 'CORONEL', '', NULL, NULL, NULL, NULL, NULL, 1),
+(1, '0001', 'eyJpdiI6IjB5dnJXUUswTEdZenNcLzRHbTRWXC9HUT09IiwidmFsdWUiOiJwbUpkdURFdGhoc3FOSFpGQU1yaU5RPT0iLCJtYWMiOiI2ZDY1NTVlMTBkYmQ4NGNiNWM0MWRkMTllMjcxZjkxOTM5MmFhZmMxYTIwNmFiMzM4MjRmYTgwYjEwYTQ0NTY0In0=', 17671370, 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '01/01/1980', 11, 3, 1131, '', 1),
+(2, '11525', 'eyJpdiI6IjkwZkVzUVRiMXVZcXZlZDMwM2dXdHc9PSIsInZhbHVlIjoiZFAxQjFLMVZZT2VsVDBNSkJIN0JJZz09IiwibWFjIjoiMWNhNWYxMGM4MDdhOWNjZTM1N2MxZmMyNjE3MDJlYTM1YTMwZDU4NDU0ZTNhYmQzZWUxZTViNTQxNTM0YmZiZCJ9', 27279090, 'JOSE', 'ARTURO', 'MADRIZ', 'MALAVE', '07/06/1996', 8, 3, 1123, '', 1),
+(3, '11450', 'eyJpdiI6Im5MWkhxSEVKV2N3ZkhJZ01XZTU2eFE9PSIsInZhbHVlIjoiZ2N3a2l2Nm1DNHFKMGtPYkp4ZmdzQT09IiwibWFjIjoiMTNmNTllMGNjNTc0MjNlMWMwYzkwYTA0NGYyNzQ5ZmU5YTg4M2YzMDIzZGMyNzVhNjllNmRhNDYzOWQ3Yzc1NyJ9', 14245244, 'ANA', '', 'BLANDIN', '', '09/05/1986', 11, 3, 26, '', 1),
+(4, '2209', 'eyJpdiI6IiswWVJuYXJsbVwvRkg0OGdxdGI4dW1RPT0iLCJ2YWx1ZSI6ImdFbWJYZGRWVEtNWFZcL3ZUdlNHY0JnPT0iLCJtYWMiOiI1NTUyMDg1Y2RkMWE4MTViYWM5MWM4YjAyOGJiZTAwYWQ0ZTc1NGE5Zjg4ZDlhNmRjYWU3OTZmNTU4YTIxMDZkIn0=', 13900761, 'CAROLINA', '', 'CORONEL', '', NULL, 9, 3, NULL, NULL, 1),
 (5, '22522', 'eyJpdiI6InlXdnhIMkZHYnBrczRGQTlRdGVIeUE9PSIsInZhbHVlIjoiWmJqNFd4c09Fd05JRGxZdTBmenUyQT09IiwibWFjIjoiOTYwNTVmNWJiMDFhOWU0ZDE2NTJiZWMwY2Y2OGY1YzllZjY5NTg0OGU4NzQzNWU1ZGFjZTdiYTg1NTQwM2RmYSJ9', 22522626, 'PRUEBA', '', 'PROGRAMA', '', '07/06/1996', 15, 8, 233, NULL, 1);
 
 --
@@ -2587,6 +2708,14 @@ INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `cedula`, `nombre_1`, `nombr
 --
 ALTER TABLE `tbl_cargo_empleado`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `tbl_cargo_supervisa`
+--
+ALTER TABLE `tbl_cargo_supervisa`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_cargo` (`id_cargo`),
+  ADD KEY `id_cargo_supervisor` (`id_cargo_supervisor`);
 
 --
 -- Indices de la tabla `tbl_ciudades`
@@ -2650,6 +2779,16 @@ ALTER TABLE `tbl_estatus`
 --
 ALTER TABLE `tbl_horas_cargables`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `tbl_horas_no_cargables`
+--
+ALTER TABLE `tbl_horas_no_cargables`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_concepto` (`id_concepto`),
+  ADD KEY `id_usuario` (`id_usuario`),
+  ADD KEY `aprobado_por` (`aprobado_por`),
+  ADD KEY `id_division` (`id_division`);
 
 --
 -- Indices de la tabla `tbl_menu`
@@ -2732,6 +2871,12 @@ ALTER TABLE `tbl_cargo_empleado`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
+-- AUTO_INCREMENT de la tabla `tbl_cargo_supervisa`
+--
+ALTER TABLE `tbl_cargo_supervisa`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+
+--
 -- AUTO_INCREMENT de la tabla `tbl_ciudades`
 --
 ALTER TABLE `tbl_ciudades`
@@ -2753,7 +2898,7 @@ ALTER TABLE `tbl_cliente_facturacion`
 -- AUTO_INCREMENT de la tabla `tbl_concepto_horas_no_cargables`
 --
 ALTER TABLE `tbl_concepto_horas_no_cargables`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_configuracion`
@@ -2783,7 +2928,7 @@ ALTER TABLE `tbl_estados`
 -- AUTO_INCREMENT de la tabla `tbl_estatus`
 --
 ALTER TABLE `tbl_estatus`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_horas_cargables`
@@ -2792,16 +2937,22 @@ ALTER TABLE `tbl_horas_cargables`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `tbl_horas_no_cargables`
+--
+ALTER TABLE `tbl_horas_no_cargables`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
 -- AUTO_INCREMENT de la tabla `tbl_menu`
 --
 ALTER TABLE `tbl_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_menu_usuario`
 --
 ALTER TABLE `tbl_menu_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_municipios`
@@ -2856,6 +3007,13 @@ ALTER TABLE `tbl_usuario`
 --
 
 --
+-- Filtros para la tabla `tbl_cargo_supervisa`
+--
+ALTER TABLE `tbl_cargo_supervisa`
+  ADD CONSTRAINT `tbl_cargo_supervisa_ibfk_1` FOREIGN KEY (`id_cargo`) REFERENCES `tbl_cargo_empleado` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `tbl_cargo_supervisa_ibfk_2` FOREIGN KEY (`id_cargo_supervisor`) REFERENCES `tbl_cargo_empleado` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
 -- Filtros para la tabla `tbl_ciudades`
 --
 ALTER TABLE `tbl_ciudades`
@@ -2866,6 +3024,15 @@ ALTER TABLE `tbl_ciudades`
 --
 ALTER TABLE `tbl_contacto_usuario`
   ADD CONSTRAINT `FK_ID_USUARIO` FOREIGN KEY (`id_usuario`) REFERENCES `tbl_usuario` (`id`);
+
+--
+-- Filtros para la tabla `tbl_horas_no_cargables`
+--
+ALTER TABLE `tbl_horas_no_cargables`
+  ADD CONSTRAINT `tbl_horas_no_cargables_ibfk_1` FOREIGN KEY (`id_concepto`) REFERENCES `tbl_concepto_horas_no_cargables` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `tbl_horas_no_cargables_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `tbl_usuario` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `tbl_horas_no_cargables_ibfk_3` FOREIGN KEY (`aprobado_por`) REFERENCES `tbl_usuario` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `tbl_horas_no_cargables_ibfk_4` FOREIGN KEY (`id_division`) REFERENCES `tbl_division` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Filtros para la tabla `tbl_menu_usuario`

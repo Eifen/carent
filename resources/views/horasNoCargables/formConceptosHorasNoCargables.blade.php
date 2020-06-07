@@ -11,7 +11,7 @@
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
         <link href="{{ mix('/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ mix('/css/fontawesome-free-5.12.0.css') }}" rel="stylesheet" type="text/css">
-        <link href="{{ mix('/css/formHorasNoCargables.css') }}" rel="stylesheet" type="text/css">
+        <link href="{{ mix('/css/formConceptosHorasNoCargables.css') }}" rel="stylesheet" type="text/css">
 
     </head>
     <body>
@@ -234,7 +234,7 @@
 
       </div>
 
-      <script src="{{ mix('/js/formHorasNoCargables.js') }}"></script>
+      <script src="{{ mix('/js/formConceptosHorasNoCargables.js') }}"></script>
 
     </body>
 </html>

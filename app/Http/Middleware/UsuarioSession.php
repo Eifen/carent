@@ -15,6 +15,7 @@ class UsuarioSession
      */
      public function handle($request, Closure $next)
      {
+
          if(session()->has("usuario_id")) {
              return redirect('/inicio');
          }
