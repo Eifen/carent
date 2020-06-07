@@ -13,6 +13,7 @@
 
 Route::middleware('usuario.session')->group(function () {
     Route::get('/', function () { return view('login'); })->name('loginView');
+    //Route::get('/cargarHorasNoCargables',  function() { return view('horasNoCargables/formHorasNoCargables'); })->name('horasNoCargables');
 });
 
 Route::get('/encryptConfig', 'ConfigsController@encryptConfig');

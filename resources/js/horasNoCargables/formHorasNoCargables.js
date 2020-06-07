@@ -6,7 +6,6 @@ window.AutoNumeric = require('autonumeric');
 import Multiselect from 'vue-multiselect';
 import VueNumeric from 'vue-numeric';
 import { Datetime } from 'vue-datetime';
-const luxon  = require("luxon");
 import 'vue-datetime/dist/vue-datetime.css';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 var self;
@@ -31,7 +30,7 @@ var app = new Vue({
       message: "",
       show: false
     },
-    alertModificarConcepto: {
+    alertModificarHora: {
       class: "",
       message: "",
       show: false
@@ -100,13 +99,27 @@ var app = new Vue({
         value: ""
       }
     },
-    formModificarConcepto: {
+    formModificarHoras: {
       concepto: {
         disabled: false,
         value: ""
       },
-      estatus:{
+      estatus: {
         disabled: false,
+        value: ""
+      },
+      fechaDesde:{
+        disabled:false,
+        value: ""
+      },
+      fechaHasta:{
+        disabled:false,
+        minValue: "",
+        value: ""
+      },
+      observacion: {
+        disabled:false,
+        maxlength: 250,
         value: ""
       }
     },
@@ -121,7 +134,7 @@ var app = new Vue({
       disabled: false,
       show:true
     },
-    submitModalModificarConcepto: {
+    submitModalModificarHora: {
       content: "Modificar",
       disabled: false,
       show:true
@@ -223,28 +236,41 @@ var app = new Vue({
 
     });
 
-    $('#modal-modificar-concepto').on('hidden.bs.modal', function () {
+    $('#modal-modificar').on('hidden.bs.modal', function () {
 
-      self.alertModificarConcepto = {
+      self.alertModificarHora = {
         class : "",
         message : "",
         show: false
       };
 
-      self.submitModalModificarConcepto = {
+      self.submitModalModificarHora = {
         content: "Crear",
         disabled: false,
         show:true
       }
 
-      self.formModificarConcepto = {
+      self.formModificarHoras = {
         concepto: {
           disabled: false,
-          id: null,
           value: ""
         },
         estatus: {
           disabled: false,
+          value: ""
+        },
+        fechaDesde:{
+          disabled:false,
+          value: ""
+        },
+        fechaHasta:{
+          disabled:false,
+          minValue: "",
+          value: ""
+        },
+        observacion: {
+          disabled:false,
+          maxlength: 250,
           value: ""
         }
       }
@@ -474,8 +500,8 @@ var app = new Vue({
 
       if(self[formulario].concepto.value === "" || self[formulario].concepto.value === null){
 
-        $('#'+formulario+" #conceptoNew").find(".mensaje").html("Este campo es requerido!").addClass("invalid-feedback");
-        $('#'+formulario+" #conceptoNew").find(".multiselect__tags").addClass("error");
+        $('#'+formulario+" #concepto").find(".mensaje").html("Este campo es requerido!").addClass("invalid-feedback");
+        $('#'+formulario+" #concepto").find(".multiselect__tags").addClass("error");
 
         return false;
 
@@ -508,12 +534,26 @@ var app = new Vue({
       }// Fin del if
 
     },
-    modificarConcepto: function(id,concepto,id_estatus){
+    modificarConcepto: function(id,autor,supervisor,id_concepto,concepto,fecha_desde,fecha_hasta,observacion,id_estatus){
+console.log(fecha_desde)
+console.log(fecha_hasta)
+      self.formModificarHoras.concepto.value = {
+        id:id_concepto,
+        descripcion: concepto
+      };
+      self.formModificarHoras.fechaDesde.value = fecha_desde;
+      self.fechaMinima("formModificarHoras",fecha_desde);
+      self.formModificarHoras.fechaHasta.value = fecha_hasta;
+      self.formModificarHoras.observacion.value = (observacion === null) ? "" : observacion;
+      self.formModificarHoras.estatus.value = id_estatus;
 
-      $("#modal-modificar-concepto").modal("show");
-      self.formModificarConcepto.concepto.value = concepto;
-      self.formModificarConcepto.concepto.id = id;
-      self.formModificarConcepto.estatus.value = id_estatus;
+      self.formModificarHoras.concepto.disabled = (autor === "1") ? true : false;
+      self.formModificarHoras.fechaDesde.disabled = (autor === "1") ? true : false;
+      self.formModificarHoras.fechaHasta.disabled = (autor === "1") ? true : false;
+      self.formModificarHoras.observacion.disabled = (autor === "1") ? true : false;
+      self.formModificarHoras.estatus.disabled = (autor === "1" && supervisor === true) ? false : true;
+
+      $("#modal-modificar").modal("show");
 
     },
     guardarModificarConcepto: function(){
@@ -522,10 +562,10 @@ var app = new Vue({
 console.log(formValido);
       return
 
-      $("#formModificarConcepto .form-group .mensaje").html("").removeClass("invalid-feedback");
-      $("#formModificarConcepto .form-group .form-control").removeClass("error");
+      $("#formModificarHoras .form-group .mensaje").html("").removeClass("invalid-feedback");
+      $("#formModificarHoras .form-group .form-control").removeClass("error");
 
-      $("#formModificarConcepto .form-group").each(function(index, elemento) {
+      $("#formModificarHoras .form-group").each(function(index, elemento) {
 
         var input = $(elemento).find(".form-control")[0];
         var valido = self.validarForm(input);
@@ -541,7 +581,7 @@ console.log(formValido);
 
       if(formValido){
 
-        self.alertModificarConcepto = {
+        self.alertModificarHora = {
           class : "",
           message : "",
           show: false
@@ -549,29 +589,29 @@ console.log(formValido);
 
         //Obtenemos valores
         let parametros = {
-          concepto: self.formModificarConcepto.concepto.value,
-          id: self.formModificarConcepto.concepto.id,
-          id_estatus: self.formModificarConcepto.estatus.value
+          concepto: self.formModificarHoras.concepto.value,
+          id: self.formModificarHoras.concepto.id,
+          id_estatus: self.formModificarHoras.estatus.value
         }
 
-        self.submitModalModificarConcepto.content = '<i class="fas fa-cog fa-spin"></i>';
-        self.submitModalModificarConcepto.disabled = true;
-        self.formModificarConcepto.concepto.disabled = true;
-        self.formModificarConcepto.estatus.disabled = true;
+        self.submitModalModificarHora.content = '<i class="fas fa-cog fa-spin"></i>';
+        self.submitModalModificarHora.disabled = true;
+        self.formModificarHoras.concepto.disabled = true;
+        self.formModificarHoras.estatus.disabled = true;
 
         axios.post('/modificarConceptoNoCargable', parametros)
         .then(function (response) {
 
           if(response.status === 200 && response.data.respuesta === true){
 
-            self.submitModalModificarConcepto.disabled = false;
-            self.formModificarConcepto.concepto.disabled = false;
-            self.formModificarConcepto.estatus.disabled = false;
-            self.submitModalModificarConcepto.content = 'Modificar';
+            self.submitModalModificarHora.disabled = false;
+            self.formModificarHoras.concepto.disabled = false;
+            self.formModificarHoras.estatus.disabled = false;
+            self.submitModalModificarHora.content = 'Modificar';
 
             self.limpiarFiltro();
 
-            self.alertModificarConcepto = {
+            self.alertModificarHora = {
               class : "alert alert-success",
               message : response.data.mensaje,
               show: true
@@ -586,10 +626,10 @@ console.log(formValido);
         })
         .catch(error => {
 
-          self.formModificarConcepto.concepto.disabled = false;
-          self.formModificarConcepto.estatus.disabled = false;
-          self.submitModalModificarConcepto.content = 'Modificar';
-          self.submitModalModificarConcepto.disabled = false;
+          self.formModificarHoras.concepto.disabled = false;
+          self.formModificarHoras.estatus.disabled = false;
+          self.submitModalModificarHora.content = 'Modificar';
+          self.submitModalModificarHora.disabled = false;
 
           if(error.response){
 
@@ -601,7 +641,7 @@ console.log(formValido);
 
           }
 
-          self.alertModificarConcepto = {
+          self.alertModificarHora = {
             class : "alert alert-warning",
             message : message,
             show: true

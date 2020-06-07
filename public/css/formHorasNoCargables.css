@@ -162,18 +162,18 @@ html {
   width: 100%;
 }
 #app #modal-cargar .modal-dialog .modal-content,
-#app #modal-modificar-concepto .modal-dialog .modal-content {
+#app #modal-modificar .modal-dialog .modal-content {
   background-color: #ffffff;
   border-radius: 2px !important;
 }
 #app #modal-cargar .modal-dialog .modal-content .modal-header,
-#app #modal-modificar-concepto .modal-dialog .modal-content .modal-header {
+#app #modal-modificar .modal-dialog .modal-content .modal-header {
   border-bottom: 0px;
   color: #022C43;
   padding: 0.5rem 0.5rem;
 }
 #app #modal-cargar .modal-dialog .modal-content .modal-header .close,
-#app #modal-modificar-concepto .modal-dialog .modal-content .modal-header .close {
+#app #modal-modificar .modal-dialog .modal-content .modal-header .close {
   color: #022C43;
   font-size: 2rem;
   opacity: 1;
@@ -182,58 +182,58 @@ html {
   transition: all 0.3s;
 }
 #app #modal-cargar .modal-dialog .modal-content .modal-header .close:hover,
-#app #modal-modificar-concepto .modal-dialog .modal-content .modal-header .close:hover {
+#app #modal-modificar .modal-dialog .modal-content .modal-header .close:hover {
   color: #cc0000;
 }
 #app #modal-cargar .modal-dialog .modal-content .modal-body,
-#app #modal-modificar-concepto .modal-dialog .modal-content .modal-body {
+#app #modal-modificar .modal-dialog .modal-content .modal-body {
   padding: 0.5rem;
 }
 #app #modal-cargar .modal-dialog .modal-content .modal-body form,
-#app #modal-modificar-concepto .modal-dialog .modal-content .modal-body form {
+#app #modal-modificar .modal-dialog .modal-content .modal-body form {
   margin-top: 10px;
 }
 #app #modal-cargar .modal-dialog .modal-content .modal-body form .form-group .invalid-feedback,
-#app #modal-modificar-concepto .modal-dialog .modal-content .modal-body form .form-group .invalid-feedback {
+#app #modal-modificar .modal-dialog .modal-content .modal-body form .form-group .invalid-feedback {
   display: block !important;
 }
 #app #modal-cargar .modal-dialog .modal-content .modal-body form .form-group label,
-#app #modal-modificar-concepto .modal-dialog .modal-content .modal-body form .form-group label {
+#app #modal-modificar .modal-dialog .modal-content .modal-body form .form-group label {
   color: #091F40;
 }
 #app #modal-cargar .modal-dialog .modal-content .modal-body form .form-group .form-control,
-#app #modal-modificar-concepto .modal-dialog .modal-content .modal-body form .form-group .form-control {
+#app #modal-modificar .modal-dialog .modal-content .modal-body form .form-group .form-control {
   border-radius: 2px;
 }
 #app #modal-cargar .modal-dialog .modal-content .modal-body form .form-group .form-control.error,
-#app #modal-modificar-concepto .modal-dialog .modal-content .modal-body form .form-group .form-control.error {
+#app #modal-modificar .modal-dialog .modal-content .modal-body form .form-group .form-control.error {
   border-color: #dc3545;
 }
 #app #modal-cargar .modal-dialog .modal-content .modal-body form .form-group .form-control:disabled,
-#app #modal-modificar-concepto .modal-dialog .modal-content .modal-body form .form-group .form-control:disabled {
+#app #modal-modificar .modal-dialog .modal-content .modal-body form .form-group .form-control:disabled {
   cursor: not-allowed;
 }
 #app #modal-cargar .modal-dialog .modal-content .modal-body form .form-group .multiselect .multiselect__tags.error,
-#app #modal-modificar-concepto .modal-dialog .modal-content .modal-body form .form-group .multiselect .multiselect__tags.error {
+#app #modal-modificar .modal-dialog .modal-content .modal-body form .form-group .multiselect .multiselect__tags.error {
   border-color: #dc3545;
 }
 #app #modal-cargar .modal-dialog .modal-content .modal-body .alert,
-#app #modal-modificar-concepto .modal-dialog .modal-content .modal-body .alert {
+#app #modal-modificar .modal-dialog .modal-content .modal-body .alert {
   margin-bottom: 0px;
   width: 100%;
 }
 #app #modal-cargar .modal-dialog .modal-content .modal-footer,
-#app #modal-modificar-concepto .modal-dialog .modal-content .modal-footer {
+#app #modal-modificar .modal-dialog .modal-content .modal-footer {
   border-top: 0px;
   padding: 0.3rem;
 }
 #app #modal-cargar .modal-dialog .modal-content .modal-footer .alert,
-#app #modal-modificar-concepto .modal-dialog .modal-content .modal-footer .alert {
+#app #modal-modificar .modal-dialog .modal-content .modal-footer .alert {
   margin-bottom: 0px;
   width: 100%;
 }
 #app #modal-cargar .modal-dialog .modal-content .modal-footer .btn,
-#app #modal-modificar-concepto .modal-dialog .modal-content .modal-footer .btn {
+#app #modal-modificar .modal-dialog .modal-content .modal-footer .btn {
   background-color: #091F40;
   border: 2px solid #091F40;
   border-radius: 2px;
@@ -244,12 +244,12 @@ html {
   transition: all 0.3s;
 }
 #app #modal-cargar .modal-dialog .modal-content .modal-footer .btn:hover,
-#app #modal-modificar-concepto .modal-dialog .modal-content .modal-footer .btn:hover {
+#app #modal-modificar .modal-dialog .modal-content .modal-footer .btn:hover {
   background-color: #F6A81C;
   color: #091F40;
 }
 #app #modal-cargar .modal-dialog .modal-content .modal-footer .btn:disabled,
-#app #modal-modificar-concepto .modal-dialog .modal-content .modal-footer .btn:disabled {
+#app #modal-modificar .modal-dialog .modal-content .modal-footer .btn:disabled {
   cursor: not-allowed;
 }
 #app .vdatetime-popup .vdatetime-popup__header {

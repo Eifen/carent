@@ -151,7 +151,7 @@ var app = new Vue({
         for (var i = 0; i < dataInit.infodivi.length; i++) {
           for (var j = 0; j < self.comboDivisiones.length; j++) {
             if (dataInit.infodivi[i].id_division === self.comboDivisiones[j].id) {
-              data [i] = self.comboDivisiones[j];
+              data[i] = self.comboDivisiones[j];
             }
           }
         }

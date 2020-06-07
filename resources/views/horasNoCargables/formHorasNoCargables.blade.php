@@ -150,8 +150,18 @@
                   <td>@{{ registro.fecha_hasta }}</td>
                   <td>@{{ registro.estatus }}</td>
                   <td>
-                    <a v-on:click="modificarConcepto(registro.id)" target="_self">
-                       <i class="far fa-edit"></i>
+                    <a v-on:click="modificarConcepto(
+                      registro.id,
+                      registro.autor,
+                      supervisor,
+                      registro.id_concepto,
+                      registro.concepto,
+                      registro.fecha_desde_utc,
+                      registro.fecha_hasta_utc,
+                      registro.observacion,
+                      registro.id_estatus
+                    )" target="_self">
+                       <i class="fas fa-cog"></i>
                     </a>
                   </td>
                 </tr>
@@ -213,8 +223,8 @@
               </div>
               <div class="modal-body">
                 <form id="formCargarHoras" class="row">
-                  <div class="form-group col-12" id="conceptoNew">
-                    <label for="conceptoNew">Concepto</label>
+                  <div class="form-group col-12" id="concepto">
+                    <label for="concepto">Concepto</label>
                     <multiselect @input="limpiarMensajeErrorMultiselect"
                                  :clear-on-select="false"
                                  :disabled="formCargarHoras.concepto.disabled"
@@ -290,50 +300,102 @@
           </div>
         </div>
 
-        <div id="modal-modificar-concepto" class="modal fade" tabindex="-1" role="dialog">
+        <div id="modal-modificar" class="modal fade" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h4>Modificar Concepto</h4>
+                <h4>Modificar Horas</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
-                <form id="formModificarConcepto">
-                  <div class="form-group">
-                    <input class="form-control"
-                           data-min="3"
-                           data-validar="true"
-                           id="modificarConcepto"
-                           ref="modificarConcepto"
-                           type="text"
-                           v-bind:disabled="formModificarConcepto.concepto.disabled"
-                           v-model="formModificarConcepto.concepto.value">
-                    <small id="modificarConceptoHelp" class="form-text text-muted">Ejemplo: Vacaciones</small>
+                <form id="formModificarHoras" class="row">
+                  <div class="form-group col-12" id="concepto">
+                    <label for="concepto">Concepto</label>
+                    <multiselect @input="limpiarMensajeErrorMultiselect"
+                                 :clear-on-select="false"
+                                 :disabled="formModificarHoras.concepto.disabled"
+                                 :options="comboConceptos"
+                                 :preserve-search="true"
+                                 :show-labels="false"
+                                 label="descripcion"
+                                 placeholder="Seleccione..."
+                                 track-by="descripcion"
+                                 v-model="formModificarHoras.concepto.value">
+                    </multiselect>
                     <div class="mensaje"></div>
                   </div>
-                  <div class="form-group">
+                  <div class="form-group col-6" id="fechaDesde">
+                    <label>Fecha Desde</label>
+                    <datetime
+                      @input="fechaMinima('formModificarHoras', $event)"
+                      :disabled="formModificarHoras.fechaDesde.disabled"
+                      :minute-step="30"
+                      :use12-hour="true"
+                      format="dd/LL/yyyy hh:mm a"
+                      input-class="form-control fechaDesde"
+                      v-model="formModificarHoras.fechaDesde.value"
+                      type="datetime">
+                      <template slot="button-cancel">
+                        Cerrar
+                      </template>
+                    </datetime>
+                    <div class="mensaje"></div>
+                  </div>
+                  <div class="form-group col-6" id="fechaHasta">
+                    <label>Fecha Hasta</label>
+                    <datetime
+                      @input="limpiarMensajeError"
+                      :disabled="formModificarHoras.fechaHasta.disabled"
+                      :min-datetime="formModificarHoras.fechaHasta.minValue"
+                      :minute-step="30"
+                      :use12-hour="true"
+                      format="dd/LL/yyyy hh:mm a"
+                      input-class="form-control"
+                      v-model="formModificarHoras.fechaHasta.value"
+                      type="datetime">
+                      <template slot="button-cancel">
+                        Cerrar
+                      </template>
+                    </datetime>
+                    <div class="mensaje"></div>
+                  </div>
+                  <div class="form-group col-12" id="observacionNew">
+                    <div class="form-group">
+                      <label>Observacion</label>
+                      <textarea :disabled="formModificarHoras.observacion.disabled"
+                                :maxlength="formModificarHoras.observacion.maxlength"
+                                class="form-control"
+                                rows="3"
+                                v-model="formModificarHoras.observacion.value"></textarea>
+                    </div>
+                    <small class="form-text text-muted">@{{ formModificarHoras.observacion.value.length }} de @{{ formModificarHoras.observacion.maxlength }} caracteres</small>
+                    <div class="mensaje"></div>
+                  </div>
+                  <div class="form-group col-12">
                     <label for="estatus">Estatus</label>
                     <select aria-describedby="estatusHelp"
                             class="form-control form-control-sm"
+                            id="estatus"
                             data-validar="true"
-                            v-bind:disabled="formModificarConcepto.estatus.disabled"
-                            v-model="formModificarConcepto.estatus.value"
+                            v-bind:disabled="formModificarHoras.estatus.disabled"
+                            v-model="formModificarHoras.estatus.value"
                             v-on:click="limpiarMensajeError">
-                      <option value="" selected>Seleccione...</option>
+                      <option value="" selected disabled>Seleccione...</option>
                       <option v-bind:value="estatus.id" v-for="estatus in comboEstatus">@{{ estatus.descripcion }}</option>
                     </select>
+                    <div class="mensaje"></div>
                   </div>
                 </form>
-                <div v-bind:class="alertModificarConcepto.class" role="alert" v-if="alertModificarConcepto.show" v-html="alertModificarConcepto.message"></div>
+                <div v-bind:class="alertModificarHora.class" role="alert" v-if="alertModificarHora.show" v-html="alertModificarHora.message"></div>
               </div>
               <div class="modal-footer">
                 <button class="btn"
                         type="button"
-                        v-bind:disabled="submitModalModificarConcepto.disabled"
-                        v-if="submitModalModificarConcepto.show"
-                        v-html="submitModalModificarConcepto.content"
+                        v-bind:disabled="submitModalModificarHora.disabled"
+                        v-if="submitModalModificarHora.show"
+                        v-html="submitModalModificarHora.content"
                         v-on:click="guardarModificarConcepto"></button>
               </div>
             </div>
