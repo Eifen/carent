@@ -221,7 +221,10 @@ class HorasNoCargablesModel extends Model
                                 DATE_FORMAT(hnc.fecha_aprobacion, '%d/%m/%Y %l:%i %p') fecha_aprobacion,
                                 hnc.observacion,
                                 hnc.id_estatus,
-                                IF(u.id = ".session('usuario_id').", true, false) autor
+                                IF(u.id = ".session('usuario_id').", true, false) autor,
+                                IF(hnc.id_estatus = 1, true, false) editar,
+                                DATE_FORMAT(hnc.fecha_aprobacion, '%d/%m/%Y %l:%i %p') fecha_aprobacion,
+                                (SELECT CONCAT(u2.nombre_1,' ',u2.apellido_1) FROM tbl_usuario u2 WHERE u2.id = hnc.aprobado_por) aprobado_por
                          FROM tbl_horas_no_cargables hnc,
                               tbl_usuario u,
                               tbl_concepto_horas_no_cargables c,
@@ -302,5 +305,15 @@ class HorasNoCargablesModel extends Model
       }
 
     }// Fin registrarHorasNoCargables
+
+    function modificarHorasNoCargables($parametros, $id){
+
+      if(DB::table('tbl_horas_no_cargables')->where("id",$id)->update($parametros)){
+        return array("respuesta" => true, "mensaje" => "Horas modificadas con éxito!");
+      }else{
+        return array("respuesta" => false, "mensaje" => "Error al modificar las horas, intente nuevamente!");
+      }
+
+    }
 
 }

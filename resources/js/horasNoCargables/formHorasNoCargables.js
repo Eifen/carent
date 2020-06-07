@@ -84,6 +84,10 @@ var app = new Vue({
         disabled: false,
         value: ""
       },
+      estatus: {
+        disabled: false,
+        value: ""
+      },
       fechaDesde:{
         disabled:false,
         value: ""
@@ -100,6 +104,7 @@ var app = new Vue({
       }
     },
     formModificarHoras: {
+      aprobadoPor: "",
       concepto: {
         disabled: false,
         value: ""
@@ -108,6 +113,7 @@ var app = new Vue({
         disabled: false,
         value: ""
       },
+      fechaAprobacion: "",
       fechaDesde:{
         disabled:false,
         value: ""
@@ -117,6 +123,7 @@ var app = new Vue({
         minValue: "",
         value: ""
       },
+      id: null,
       observacion: {
         disabled:false,
         maxlength: 250,
@@ -212,6 +219,10 @@ var app = new Vue({
           disabled: false,
           value: ""
         },
+        estatus: {
+          disabled: false,
+          value: ""
+        },
         fechaDesde:{
           disabled:false,
           value: ""
@@ -245,12 +256,13 @@ var app = new Vue({
       };
 
       self.submitModalModificarHora = {
-        content: "Crear",
+        content: "Modificar",
         disabled: false,
         show:true
       }
 
       self.formModificarHoras = {
+        aprobadoPor: "",
         concepto: {
           disabled: false,
           value: ""
@@ -259,6 +271,7 @@ var app = new Vue({
           disabled: false,
           value: ""
         },
+        fechaAprobacion: "",
         fechaDesde:{
           disabled:false,
           value: ""
@@ -268,6 +281,7 @@ var app = new Vue({
           minValue: "",
           value: ""
         },
+        id: null,
         observacion: {
           disabled:false,
           maxlength: 250,
@@ -287,6 +301,25 @@ var app = new Vue({
     cargar: function(){
       $("#modal-cargar").modal("show");
     },
+    utc_date: function(fecha){
+
+      let date = new Date(fecha);
+      let minutes = date.getMinutes();
+          minutes = minutes < 10 ? '0'+minutes : minutes;
+      let hours = date.getHours();
+      let ampm = hours >= 12 ? 'pm' : 'am';
+          hours = hours % 12;
+          hours = hours ? hours : 12;
+      let dd = date.getDate();
+          dd = dd < 10 ? '0'+dd : dd;
+      let mm = date.getMonth()+1;
+          mm = mm < 10 ? '0'+mm : mm;
+      let yyyy = date.getFullYear();
+      let date_formated = dd+"/"+mm+"/"+yyyy+" "+hours+":"+minutes+" "+ampm;
+
+      return date_formated
+
+    },
     fechaMinima: function(form,e){
 
       if(e !== ""){
@@ -295,6 +328,7 @@ var app = new Vue({
             fecha_hasta = new Date(fecha_hasta).toISOString();
 
         self[form].fechaHasta.minValue = fecha_hasta;
+        self[form].fechaHasta.value = "";
         self[form].fechaHasta.disabled = false;
         self.limpiarMensajeError($("#"+form+" .fechaDesde"));
       }
@@ -313,6 +347,7 @@ var app = new Vue({
         };
 
         self.formCargarHoras.concepto.disabled = true;
+        self.formCargarHoras.estatus.disabled = true;
         self.formCargarHoras.fechaDesde.disabled = true;
         self.formCargarHoras.fechaHasta.disabled = true;
         self.formCargarHoras.observacion.disabled = true;
@@ -320,6 +355,7 @@ var app = new Vue({
         //Obtenemos valores
         let parametros = {
           concepto: self.formCargarHoras.concepto.value.id,
+          estatus: self.formCargarHoras.estatus.value,
           fechaDesde: self.formCargarHoras.fechaDesde.value,
           fechaHasta: self.formCargarHoras.fechaHasta.value,
           observacion: self.formCargarHoras.observacion.value
@@ -335,8 +371,7 @@ var app = new Vue({
           if(response.status === 200 && response.data.respuesta === true){
 
             self.submitModalCargarHora.content = 'Cargar';
-
-            //self.limpiarFiltro();
+            self.limpiarFiltro();
 
             self.alertCargarHora = {
               class : "alert alert-success",
@@ -356,6 +391,7 @@ var app = new Vue({
         .catch(error => {
 
           self.formCargarHoras.concepto.disabled = false;
+          estatus: self.formCargarHoras.estatus.disabled = false;
           self.formCargarHoras.fechaDesde.disabled = false;
           self.formCargarHoras.fechaHasta.disabled = false;
           self.formCargarHoras.observacion.disabled = false;
@@ -383,15 +419,6 @@ var app = new Vue({
       }// Fin if(formValido)
 
     },
-    valuesForm: function(e){
-
-      if(e.target.type === 'text' || e.target.type === 'textarea' || e.target.type === 'email'){
-        self.form[e.target.id].value = (e.target.value.trim() === "") ? "" : $(e.target).val();
-      }
-
-      self.limpiarMensajeError(e);
-
-    },
     limpiarMensajeErrorMultiselect: function(){
       $(".multiselect").parents(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
       $(".multiselect .multiselect__tags").removeClass("error");
@@ -406,12 +433,6 @@ var app = new Vue({
 
       el.removeClass("error");
       el.parents(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
-
-    },
-    campoOpcionalARequerido: function(e){
-
-      self.valuesForm(e);
-      self.form[e.target.id].validar = (self.form[e.target.id].value.length > 0 && self.form[e.target.id].validar === false) ? true : false;
 
     },
     limpiarFiltro: function(){
@@ -534,9 +555,9 @@ var app = new Vue({
       }// Fin del if
 
     },
-    modificarConcepto: function(id,autor,supervisor,id_concepto,concepto,fecha_desde,fecha_hasta,observacion,id_estatus){
-console.log(fecha_desde)
-console.log(fecha_hasta)
+    modificarConcepto: function(id,autor,id_concepto,concepto,fecha_desde,fecha_hasta,observacion,id_estatus,editar, fecha_aprobacion, aprobado_por){
+
+      self.formModificarHoras.id = id;
       self.formModificarHoras.concepto.value = {
         id:id_concepto,
         descripcion: concepto
@@ -547,37 +568,21 @@ console.log(fecha_hasta)
       self.formModificarHoras.observacion.value = (observacion === null) ? "" : observacion;
       self.formModificarHoras.estatus.value = id_estatus;
 
-      self.formModificarHoras.concepto.disabled = (autor === "1") ? true : false;
-      self.formModificarHoras.fechaDesde.disabled = (autor === "1") ? true : false;
-      self.formModificarHoras.fechaHasta.disabled = (autor === "1") ? true : false;
-      self.formModificarHoras.observacion.disabled = (autor === "1") ? true : false;
-      self.formModificarHoras.estatus.disabled = (autor === "1" && supervisor === true) ? false : true;
+      self.formModificarHoras.concepto.disabled = ((autor === 1 && editar === 1) || (autor === 1 && self.supervisor === true)) ? false : true;
+      self.formModificarHoras.fechaDesde.disabled = ((autor === 1 && editar === 1) || (autor === 1 && self.supervisor === true)) ? false : true;
+      self.formModificarHoras.fechaHasta.disabled = ((autor === 1 && editar === 1) || (autor === 1 && self.supervisor === true)) ? false : true;
+      self.formModificarHoras.observacion.disabled = ((autor === 1 && editar === 1) || (autor === 1 && self.supervisor === true)) ? false : true;
+      self.formModificarHoras.estatus.disabled = (self.supervisor === true) ? false : true;
+      self.submitModalModificarHora.show = ((autor === 1 && editar === 1) || self.supervisor === true) ? true : false;
+      self.formModificarHoras.fechaAprobacion = (fecha_aprobacion === null) ? "" : fecha_aprobacion;
+      self.formModificarHoras.aprobadoPor = (aprobado_por === null) ? "" : aprobado_por;
 
       $("#modal-modificar").modal("show");
 
     },
-    guardarModificarConcepto: function(){
+    guardarModificar: function(){
 
-      var formValido = validarForm('formCargarHoras');
-console.log(formValido);
-      return
-
-      $("#formModificarHoras .form-group .mensaje").html("").removeClass("invalid-feedback");
-      $("#formModificarHoras .form-group .form-control").removeClass("error");
-
-      $("#formModificarHoras .form-group").each(function(index, elemento) {
-
-        var input = $(elemento).find(".form-control")[0];
-        var valido = self.validarForm(input);
-
-        if(!valido.respuesta){
-          $(elemento).find(".mensaje").html(valido.mensaje).addClass("invalid-feedback");
-          $(elemento).find(".form-control").addClass("error");
-          formValido = valido.respuesta;
-          return false;
-        }
-
-      });
+      var formValido = self.validarForm('formModificarHoras');
 
       if(formValido){
 
@@ -587,11 +592,20 @@ console.log(formValido);
           show: false
         };
 
+        self.formModificarHoras.concepto.disabled = true;
+        self.formModificarHoras.fechaDesde.disabled = true;
+        self.formModificarHoras.fechaHasta.disabled = true;
+        self.formModificarHoras.observacion.disabled = true;
+        self.formModificarHoras.estatus.disabled = true;
+
         //Obtenemos valores
         let parametros = {
-          concepto: self.formModificarHoras.concepto.value,
-          id: self.formModificarHoras.concepto.id,
-          id_estatus: self.formModificarHoras.estatus.value
+          id: self.formModificarHoras.id,
+          concepto: self.formModificarHoras.concepto.value.id,
+          fechaDesde: self.formModificarHoras.fechaDesde.value,
+          fechaHasta: self.formModificarHoras.fechaHasta.value,
+          observacion: self.formModificarHoras.observacion.value,
+          estatus: self.formModificarHoras.estatus.value
         }
 
         self.submitModalModificarHora.content = '<i class="fas fa-cog fa-spin"></i>';
@@ -599,16 +613,12 @@ console.log(formValido);
         self.formModificarHoras.concepto.disabled = true;
         self.formModificarHoras.estatus.disabled = true;
 
-        axios.post('/modificarConceptoNoCargable', parametros)
+        axios.post('/modificarHorasNoCargables', parametros)
         .then(function (response) {
 
           if(response.status === 200 && response.data.respuesta === true){
 
-            self.submitModalModificarHora.disabled = false;
-            self.formModificarHoras.concepto.disabled = false;
-            self.formModificarHoras.estatus.disabled = false;
             self.submitModalModificarHora.content = 'Modificar';
-
             self.limpiarFiltro();
 
             self.alertModificarHora = {
@@ -616,6 +626,8 @@ console.log(formValido);
               message : response.data.mensaje,
               show: true
             };
+
+            setTimeout(function(){ $("#modal-modificar").modal("hide"); }, 3000);
 
           }else{
 

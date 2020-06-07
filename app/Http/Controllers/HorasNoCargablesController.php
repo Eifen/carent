@@ -119,9 +119,6 @@ class HorasNoCargablesController extends Controller
 
       $modelo = new HorasNoCargablesModel();
 
-      $dat = date("Y-m-d H:i:s", strtotime($request->input("fechaDesde")));
-      $dat2 = date("Y-m-d H:i:s", strtotime($request->input("fechaHasta")));
-
       $parametrosInsert = array(
         "id_concepto" => $request->input("concepto"),
         "id_usuario" => session("usuario_id"),
@@ -129,12 +126,36 @@ class HorasNoCargablesController extends Controller
         "fecha_desde" => date("Y-m-d H:i:s", strtotime($request->input("fechaDesde"))),
         "fecha_hasta" => date("Y-m-d H:i:s", strtotime($request->input("fechaHasta"))),
         "observacion" => $request->input("observacion"),
-        "id_estatus"  => 1
+        "id_estatus"  => (($request->input("estatus") == "") ? 1 : $request->input("estatus"))
       );
 
       $resgitrarHora = $modelo->registrarHorasNoCargables($parametrosInsert);
 
       return $resgitrarHora;
+
+    }
+
+    function modificarHorasNoCargables(Request $request){
+
+      $modelo = new HorasNoCargablesModel();
+
+      $aprobado_por = ($request->input("estatus") === 1) ? null : session("usuario_id");
+      $fecha_aprobacion = ($request->input("estatus") === 1) ? null : date("Y-m-d H:i:s");
+      $id = $request->input("id");
+
+      $parametrosUpdate = array(
+        "id_concepto" => $request->input("concepto"),
+        "fecha_desde" => date("Y-m-d H:i:s", strtotime($request->input("fechaDesde"))),
+        "fecha_hasta" => date("Y-m-d H:i:s", strtotime($request->input("fechaHasta"))),
+        "observacion" => $request->input("observacion"),
+        "id_estatus"  => $request->input("estatus"),
+        "aprobado_por" => $aprobado_por,
+        "fecha_aprobacion" => $fecha_aprobacion
+      );
+
+      $modificarHora = $modelo->modificarHorasNoCargables($parametrosUpdate, $id);
+
+      return $modificarHora;
 
     }
 

@@ -97,3 +97,4 @@ Route::get('/cargarHorasNoCargables',  function() {return view('horasNoCargables
 Route::get('/dataInicialHorasNoCargables', 'HorasNoCargablesController@dataInicialHorasNoCargables');
 Route::post('/registrarHorasNoCargables', 'HorasNoCargablesController@registrarHorasNoCargables');
 Route::get('/buscarHorasNoCargableCargadas', 'HorasNoCargablesController@buscarHorasNoCargableCargadas');
+Route::post('/modificarHorasNoCargables', 'HorasNoCargablesController@modificarHorasNoCargables');

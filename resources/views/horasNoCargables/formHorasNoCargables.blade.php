@@ -135,8 +135,7 @@
                   <th scope="col">Nombre</th>
                   <th scope="col">Concepto</th>
                   <th scope="col">División</th>
-                  <th scope="col">Fecha Desde</th>
-                  <th scope="col">Fecha Hasta</th>
+                  <th scope="col">Fecha Desde / Hasta</th>
                   <th scope="col">Estatus</th>
                   <th scope="col"></th>
                 </tr>
@@ -146,27 +145,28 @@
                   <th scope="row">@{{ registro.nombre }}</th>
                   <td>@{{ registro.concepto }}</td>
                   <td>@{{ registro.division }}</td>
-                  <td>@{{ registro.fecha_desde }}</td>
-                  <td>@{{ registro.fecha_hasta }}</td>
+                  <td>@{{ utc_date(registro.fecha_desde_utc) }} - @{{ utc_date(registro.fecha_hasta_utc) }}</td>
                   <td>@{{ registro.estatus }}</td>
                   <td>
                     <a v-on:click="modificarConcepto(
                       registro.id,
                       registro.autor,
-                      supervisor,
                       registro.id_concepto,
                       registro.concepto,
                       registro.fecha_desde_utc,
                       registro.fecha_hasta_utc,
                       registro.observacion,
-                      registro.id_estatus
+                      registro.id_estatus,
+                      registro.editar,
+                      registro.fecha_aprobacion,
+                      registro.aprobado_por
                     )" target="_self">
                        <i class="fas fa-cog"></i>
                     </a>
                   </td>
                 </tr>
                 <tr v-if="registros.length < 1">
-                  <td colspan="7">
+                  <td colspan="6">
                     <div class="alert alert-warning text-center" role="alert">
                       La busqueda no arrojó resultado!
                     </div>
@@ -273,7 +273,7 @@
                     </datetime>
                     <div class="mensaje"></div>
                   </div>
-                  <div class="form-group col-12" id="observacionNew">
+                  <div class="form-group col-12">
                     <div class="form-group">
                       <label>Observacion</label>
                       <textarea :disabled="formCargarHoras.observacion.disabled"
@@ -283,6 +283,20 @@
                                 v-model="formCargarHoras.observacion.value"></textarea>
                     </div>
                     <small class="form-text text-muted">@{{ formCargarHoras.observacion.value.length }} de @{{ formCargarHoras.observacion.maxlength }} caracteres</small>
+                    <div class="mensaje"></div>
+                  </div>
+                  <div class="form-group col-12" v-if="supervisor">
+                    <label for="estatus">Estatus</label>
+                    <select aria-describedby="estatusHelp"
+                            class="form-control form-control-sm"
+                            id="estatus"
+                            data-validar="true"
+                            v-bind:disabled="formCargarHoras.estatus.disabled"
+                            v-model="formCargarHoras.estatus.value"
+                            v-on:click="limpiarMensajeError">
+                      <option value="" selected disabled>Seleccione...</option>
+                      <option v-bind:value="estatus.id" v-for="estatus in comboEstatus">@{{ estatus.descripcion }}</option>
+                    </select>
                     <div class="mensaje"></div>
                   </div>
                 </form>
@@ -361,7 +375,7 @@
                     </datetime>
                     <div class="mensaje"></div>
                   </div>
-                  <div class="form-group col-12" id="observacionNew">
+                  <div class="form-group col-12">
                     <div class="form-group">
                       <label>Observacion</label>
                       <textarea :disabled="formModificarHoras.observacion.disabled"
@@ -372,6 +386,18 @@
                     </div>
                     <small class="form-text text-muted">@{{ formModificarHoras.observacion.value.length }} de @{{ formModificarHoras.observacion.maxlength }} caracteres</small>
                     <div class="mensaje"></div>
+                  </div>
+                  <div class="form-group col-12">
+                    <div class="form-group">
+                      <label>Aprobado por</label>
+                      <input class="form-control" v-model="formModificarHoras.aprobadoPor" disabled>
+                    </div>
+                  </div>
+                  <div class="form-group col-12">
+                    <div class="form-group">
+                      <label>Fecha de Aprobación</label>
+                      <input class="form-control" v-model="formModificarHoras.fechaAprobacion" disabled>
+                    </div>
                   </div>
                   <div class="form-group col-12">
                     <label for="estatus">Estatus</label>
@@ -396,7 +422,7 @@
                         v-bind:disabled="submitModalModificarHora.disabled"
                         v-if="submitModalModificarHora.show"
                         v-html="submitModalModificarHora.content"
-                        v-on:click="guardarModificarConcepto"></button>
+                        v-on:click="guardarModificar"></button>
               </div>
             </div>
           </div>
