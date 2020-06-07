@@ -137,6 +137,14 @@
                     <label>Proyecto</label>
                     <input class="form-control" type="text" disabled v-bind:value="Dproyecto.descripcion">
                   </div>
+                  <div class="form-group col-12 col-sm-6">
+                    <label>Horas Contratadas</label>
+                    <input class="form-control" type="text" disabled v-bind:value="Dproyecto.horas_contratadas">
+                  </div>
+                  <div class="form-group col-12 col-sm-6">
+                    <label>Total de Horas Cargadas</label>
+                    <input class="form-control" type="text" disabled v-bind:value="Dproyecto.horas_cargadas">
+                  </div>
                 </form>
                 <h5>Empleados Asigandos</h5>
                 <table class="table" >
@@ -153,7 +161,7 @@
                   <th scope="row">@{{ Aproyecto.nombre }}</th>                  
                   <td>@{{ Aproyecto.division }}</td>
                   <td>@{{ Aproyecto.cargo }}</td>
-                  <td>@{{ Aproyecto.suma }}</td>
+                  <td>@{{ Aproyecto.horas_cargadas }}</td>
                 </tr>
               </tbody>
             </table>
@@ -188,7 +196,7 @@
                     <input class="form-control" type="text" disabled v-bind:value="Asigproyecto.horas_contratadas">
                   </div>
                   <div class="form-group col-12 col-sm-6">
-                <label for="horas">Horas Contratadas <span class="campo-obligatorio">*</span></label>
+                <label for="horas">Total de Horas Asignadas</label>
                 <input aria-describedby="horasHelp"
                        class="form-control"
                        id="horas"
