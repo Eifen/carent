@@ -32,18 +32,18 @@
           </div>
 
           <div class="col-12 col-sm-11 col-md-9 col-lg-8">
-            <h3>Estas modificando al Cliente</h3>
+            <h3>Estas Modificando al Cliente</h3>
             <form class="row">
               <div class="form-group col-12 col-md-4">
                 <select class="form-control"
                         v-bind:disabled="formSearch.select.disabled"
                         v-model="formSearch.select.value"
                         v-on:change="tipoFiltro">
-                  <option value="" selected disabled>Agregar Socio encargado por</option>
-                  <option value="1">Código de usuario</option>
+                  <option value="" selected disabled>Agregar Socio Encargado Por</option>
+                  <option value="1">Código de Usuario</option>
                   <option value="2">Cédula</option>
-                  <option value="4">Primer o segundo nombre</option>
-                  <option value="5">Primer o segundo apellido</option>
+                  <option value="4">Primer o Segundo Nombre</option>
+                  <option value="5">Primer o Segundo Apellido</option>
                 </select>
               </div>
               <div class="form-group col-12 col-md-6">
@@ -56,6 +56,7 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-md-2">
+                <!--Al hacer clic se invoca el metodo buscar de modificarCliente.js y abre la modal-->
                 <button class="btn btn-primary"
                         type="button"
                         v-bind:disabled="formSearch.submit.disabled"
@@ -75,6 +76,7 @@
                         </tr>
                       </thead>
                       <tbody>
+                        <!-- Se llena la tabla con los valores que tiene usuarios.registros obtenidos de modificarCliente.js -->
                         <tr v-for="usuario in usuarios.registros">
                           <th scope="row">@{{ usuario.codigo }}</th>
                           <td>@{{ usuario.cedula }}</td>
@@ -105,11 +107,11 @@
                         v-bind:disabled="formSearchG.selectG.disabled"
                         v-model="formSearchG.selectG.value"
                         v-on:change="tipoFiltroG">
-                  <option value="" selected disabled>Agregar Gerente encargado por</option>
-                  <option value="1">Código de usuario</option>
+                  <option value="" selected disabled>Agregar Gerente Encargado Por</option>
+                  <option value="1">Código de Usuario</option>
                   <option value="2">Cédula</option>
-                  <option value="4">Primer o segundo nombre</option>
-                  <option value="5">Primer o segundo apellido</option>
+                  <option value="4">Primer o Segundo Nombre</option>
+                  <option value="5">Primer o Segundo Apellido</option>
                 </select>
               </div>
               <div class="form-group col-12 col-md-6">
@@ -122,6 +124,7 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-md-2">
+                <!--Al hacer clic se invoca el metodo buscarG de modificarCliente.js y abre la modal-->
                 <button class="btn btn-primary"
                         type="button"
                         v-bind:disabled="formSearchG.submitG.disabled"
@@ -415,6 +418,7 @@
                    type="button">Regresar</a>
               </div>
               <div class="col-12 col-md-6 col-lg-4">
+                <!--Al hacer clic se invoca el metodo actualizar de modificarCliente.js y envia los valores de las variables para su modificacion-->
                 <button class="btn subtmit"
                         type="button"
                         v-on:click="actualizar"

@@ -26,12 +26,13 @@
                         v-model="formSearch.select.value"
                         v-on:change="tipoFiltro">
                   <option value="" selected disabled>Buscar Clientes por</option>
-                  <option value="1">Codigo del cliente</option>
+                  <option value="1">Codigo del Cliente</option>
                   <option value="2">Nombre o Razon Social</option>
-                  <option value="3">rif</option>
+                  <option value="3">Rif</option>
                 </select>
               </div>
               <div class="form-group col-12 col-md-6">
+                <!-- Se invoca el metodo evaluarCampo de detalleFactclienteCliente.js y abre la modal-->
                 <input class="form-control inputSearch"
                        ref="inputSearch"
                        type="text"
@@ -55,20 +56,21 @@
                       <thead>
                         <tr>
                           <th scope="col">Código Cliente</th>
-                          <th scope="col">RIF</th>
-                          <th scope="col">Razon social</th>
+                          <th scope="col">Rif</th>
+                          <th scope="col">RazonSocial</th>
                           <th scope="col">Correo Electronico</th>
                           <th scope="col"></th>
                         </tr>
                       </thead>
                       <tbody>
+                        <!-- Se llena la tabla con los valores que tiene clientes.registro obtenidos de detalleFactclienteCliente.js -->
                         <tr v-for="cliente in clientes.registros">
                           <th scope="row">@{{ cliente.codigo  }}</th>
                           <td>@{{ cliente.rif }}</td>
                           <td>@{{ cliente.razon_social }}</td>
                           <td>@{{ cliente.email_fiscal }}</td>
                           <td>
-                            <i class="fas fa-check-square" data-dismiss="modal" v-on:click="SelecionarCliente(cliente.id, $event)"></i>
+                            <i class="fas fa-check-square" data-dismiss="modal" v-on:click="SelecionarCliente(cliente.id, $event)"></i> <!-- Se invoca el metodo SelecionarCliente de detalleFactclienteCliente.js -->
                           </td>
                         </tr>
                       </tbody>
@@ -87,7 +89,7 @@
                   </div>
             </form>
           </form>
-
+          <!-- Al hacer clic Se invoca el metodo Selecionar de detalleFactclienteCliente.js y abre la modal-->
           <form class="row">
             <div class="form-group col-12 col-md-6">
               <button class="btn btn-primary"
@@ -125,7 +127,7 @@
                 <input class="form-control" type="text" disabled v-bind:value="detalleClienteProy.data.descripcion">
               </div>
           </form>
-            <h5>Dirección para entrega de facturas</h5>
+            <h5>Dirección para Entrega de Facturas</h5>
             <form class="row">
               <div class="form-group col-12 col-sm-6">
                 <label for="estadofa">Estado <span class="campo-obligatorio">*</span></label>
@@ -300,6 +302,7 @@
             </div>
             <div class="row justify-content-center wrapper-subtmit" v-if="permisoCrear">
               <div class="col-12 col-md-6 col-lg-4">
+                <!--Al hacer clic se invoca el metodo crear de detalleFactCliente.js -->
                 <button class="btn"
                         type="button"
                         v-on:click="crear"
@@ -312,7 +315,7 @@
               <div class="col-12 col-md-6 col-lg-4">
                 <button class="btn"
                         type="button"
-                        v-on:click="refreshView">Nuevo detalle de facturacion</button>
+                        v-on:click="refreshView">Nuevo Detalle de Facturacion</button>
               </div>
             </div>
             <div class="row wrapper-alert">

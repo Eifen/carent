@@ -41,6 +41,11 @@
                 <label>Horas Cargadas</label>
                   <input  style="text-align:center" class="form-control" type="text" disabled v-bind:value="horas_cargadas">
               </div>
+              <div class="col-12 col-md-6 col-lg-4">
+                <a class="btn atras"
+                   href="{{ url()->previous() }}"
+                   type="button">Regresar</a>
+              </div>
             </form>
             <h3 v-if="permisoCrear">Cargar Horas</h3>
             <form class="row" v-if="permisoCrear">
@@ -123,7 +128,7 @@
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h4>Detalle de las horas cargadas</h4>
+                <h4>Detalle de las Horas Cargadas</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
