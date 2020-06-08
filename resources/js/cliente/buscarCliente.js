@@ -7,7 +7,7 @@ window.$ = require('jquery');
 var self;
 
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
-
+//se declaran todas las varibles
 var app = new Vue({
 
   el: '#buscarCliente',
@@ -68,12 +68,12 @@ var app = new Vue({
 
         self.formSearch.submit.html = '<i class="fas fa-cog fa-spin"></i>';
         self.formSearch.submit.disabled = true;
-
+        //Obtenemos los valores
         let parametros = {
           buscarPor: self.formSearch.select.value,
           dato: self.formSearch.inputSearch.value
         };
-
+        //Se utiliza el metodo get y se envia al clienteController y se envian los parametros
         axios.get('/buscarClientes', {params: parametros})
         .then(function (response) {
 
@@ -165,11 +165,11 @@ var app = new Vue({
 
       self.detalleCliente.error = false;
       $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
-
+      // Obtenemos los valores
       let parametros = {
         idCliente: idCliente
       };
-
+      //Se utiliza el metodo get y se envia al clienteController y se envian los parametros
       axios.get('/detalleCliente', {params: parametros})
       .then(function (response) {
 

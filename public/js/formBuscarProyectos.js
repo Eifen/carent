@@ -34362,7 +34362,8 @@ window.AutoNumeric = __webpack_require__(/*! autonumeric */ "./node_modules/auto
 var self;
 Vue.component('multiselect', vue_multiselect__WEBPACK_IMPORTED_MODULE_0___default.a);
 Vue.component('menu-principal', __webpack_require__(/*! ../components/menuPrincipal.vue */ "./resources/js/components/menuPrincipal.vue")["default"]);
-Vue.use(vue_numeric__WEBPACK_IMPORTED_MODULE_1___default.a);
+Vue.use(vue_numeric__WEBPACK_IMPORTED_MODULE_1___default.a); //Declaramos las variables
+
 var app = new Vue({
   el: '#app',
   data: {
@@ -34416,9 +34417,11 @@ var app = new Vue({
     proyectos: []
   },
   beforeCreate: function beforeCreate() {
-    self = this;
+    self = this; //Se utiliza el metodo get para obtener los valores inciales
+
     axios.get('/dataInicialListadoProyectos').then(function (response) {
       if (response.status === 200) {
+        //Le asignamos los valores a las variables
         self.comboEstatus = response.data.estatus;
         self.comboDivisiones = response.data.divisiones;
         self.formFiltro.descripcion.disabled = false;
@@ -34492,7 +34495,8 @@ var app = new Vue({
         self.formFiltro.divisiones.value.forEach(function (item, i) {
           idsDivisiones.push(item.id);
         });
-      }
+      } //Obtenemos los valores
+
 
       var desde = (self.paginador.pagina - 1) * self.paginador.paginar;
       var parametros = {
@@ -34502,7 +34506,8 @@ var app = new Vue({
         desde: desde,
         estatus: self.formFiltro.estatus.value,
         paginar: self.paginador.paginar
-      };
+      }; //Se utiliza el metodo get para su busqueda y se envian con los parametros
+
       axios.get('/buscarProyectos', {
         params: parametros
       }).then(function (response) {
@@ -34513,7 +34518,8 @@ var app = new Vue({
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
         self.formFiltro.btn.filtrar.disabled = false;
         self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
-        self.formFiltro.btn.limpiarFiltro.disabled = false;
+        self.formFiltro.btn.limpiarFiltro.disabled = false; // Se le asigna los valores a las variables
+
         self.proyectos = response.data.proyectos;
         self.paginador.numPaginas = response.data.paginas;
         self.paginador.max = parseInt(response.data.paginas);
@@ -34552,7 +34558,7 @@ var app = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\js\proyecto\formBuscarProyectos.js */"./resources/js/proyecto/formBuscarProyectos.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\proyecto\formBuscarProyectos.js */"./resources/js/proyecto/formBuscarProyectos.js");
 
 
 /***/ })

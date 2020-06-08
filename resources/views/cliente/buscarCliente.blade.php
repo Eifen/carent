@@ -28,7 +28,7 @@
                         v-model="formSearch.select.value"
                         v-on:change="tipoFiltro">
                   <option value="" selected disabled>Consultar por</option>
-                  <option value="1">Codigo del cliente</option>
+                  <option value="1">Codigo del Cliente</option>
                   <option value="2">Nombre o Razon Social </option>
                   <option value="3">Descripcion</option>
                 </select>
@@ -38,11 +38,12 @@
                        ref="inputSearch"
                        type="text"
                        v-bind:disabled="formSearch.inputSearch.disabled"
-                       v-on:keyup="evaluarCampo('inputSearch', $event)"
+                       v-on:keyup="evaluarCampo('inputSearch', $event)" 
                        v-model="formSearch.inputSearch.value">
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-md-2">
+                <!--Al hacer clic se invoca el metodo buscar de buscarCliente.js -->
                 <button class="btn btn-primary"
                         type="button"
                         v-bind:disabled="formSearch.submit.disabled"
@@ -57,29 +58,31 @@
               <thead>
                 <tr>
                   <th scope="col">Código</th>
-                  <th scope="col">Razon social</th>
+                  <th scope="col">Razon Social</th>
                   <th scope="col">Correo Electronico</th>
                   <th scope="col"></th>
                   <th scope="col" v-if="permisoActualizar"></th>
                 </tr>
               </thead>
               <tbody>
+                <!-- Se llena la tabla con los valores que tiene clientes.registro obtenidos de buscarCliente.js -->
                 <tr v-for="cliente in clientes.registros">
                   <th scope="row">@{{ cliente.codigo }}</th>
                   <td>@{{ cliente.razon_social }}</td>
                   <td>@{{ cliente.email_fiscal }}</td>
                   <td>
-                    <i class="fas fa-search-plus" v-on:click="mostrarDetalleCliente(cliente.id, $event)"></i>
+                    <i class="fas fa-search-plus" v-on:click="mostrarDetalleCliente(cliente.id, $event)"></i><!-- Se invoca el metodo mostrarDetalleCliente de buscarCliente.js y abre una modal -->
                   </td>
                   <td v-if="permisoActualizar">
                     <a v-bind:href="'/formModificarCliente/'+cliente.id" target="_self">
-                       <i class="far fa-edit"></i>
+                       <i class="far fa-edit"></i><!-- Se invoca el metodo formModificarCliente de buscarCliente.js y te lleva a la ventana de modificacion de cliente -->
                     </a>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
+          <!-- modal que inicia mostrarDetalleCliente-->
           <div class="col-12 col-sm-11 col-md-10 col-lg-8 col-xl-7" v-if="alert.mostrar">
             <div class="alert alert-warning text-center" v-html="alert.message"></div>
           </div>
@@ -88,7 +91,7 @@
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h4>Detalle del cliente</h4>
+                <h4>Detalle del Cliente</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
