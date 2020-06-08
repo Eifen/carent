@@ -33767,7 +33767,8 @@ window.AutoNumeric = __webpack_require__(/*! autonumeric */ "./node_modules/auto
 window.zenscroll = __webpack_require__(/*! zenscroll */ "./node_modules/zenscroll/zenscroll.js");
 window.$ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 var self;
-Vue.component('menu-principal', __webpack_require__(/*! ../components/menuPrincipal.vue */ "./resources/js/components/menuPrincipal.vue")["default"]);
+Vue.component('menu-principal', __webpack_require__(/*! ../components/menuPrincipal.vue */ "./resources/js/components/menuPrincipal.vue")["default"]); //se declaran todas las varibles
+
 var app = new Vue({
   el: '#buscarCliente',
   data: {
@@ -33816,11 +33817,13 @@ var app = new Vue({
 
       if (self.formSearch.inputSearch.value.trim() !== "") {
         self.formSearch.submit.html = '<i class="fas fa-cog fa-spin"></i>';
-        self.formSearch.submit.disabled = true;
+        self.formSearch.submit.disabled = true; //Obtenemos los valores
+
         var parametros = {
           buscarPor: self.formSearch.select.value,
           dato: self.formSearch.inputSearch.value
-        };
+        }; //Se utiliza el metodo get y se envia al clienteController y se envian los parametros
+
         axios.get('/buscarClientes', {
           params: parametros
         }).then(function (response) {
@@ -33887,10 +33890,12 @@ var app = new Vue({
     },
     mostrarDetalleCliente: function mostrarDetalleCliente(idCliente, e) {
       self.detalleCliente.error = false;
-      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
+      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin"); // Obtenemos los valores
+
       var parametros = {
         idCliente: idCliente
-      };
+      }; //Se utiliza el metodo get y se envia al clienteController y se envian los parametros
+
       axios.get('/detalleCliente', {
         params: parametros
       }).then(function (response) {
@@ -34007,7 +34012,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\js\cliente\buscarCliente.js */"./resources/js/cliente/buscarCliente.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\cliente\buscarCliente.js */"./resources/js/cliente/buscarCliente.js");
 
 
 /***/ })

@@ -41241,6 +41241,7 @@ var errorInit = function errorInit() {
 
 var datosIniciales = function datosIniciales() {
   return new Promise(function (resolve, reject) {
+    // Se busca los parametros iniciales para la modificacion
     axios.get('/detalleClienteModificar').then(function (response) {
       if (response.status === 200 && response.data.response === true) {
         resolve({
@@ -41263,7 +41264,8 @@ var datosIniciales = function datosIniciales() {
       });
     });
   });
-};
+}; // Se declaran las variables
+
 
 var app = new Vue({
   el: '#modificarCliente',
@@ -41362,9 +41364,6 @@ var app = new Vue({
         disabled: false,
         value: ""
       },
-      empleado: {
-        checked: true
-      },
       estatus: {
         disabled: true,
         value: ""
@@ -41434,7 +41433,8 @@ var app = new Vue({
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              self = this;
+              self = this; // Se le asigna los valores a las variables con los valores iniciales
+
               _context.next = 3;
               return datosIniciales();
 
@@ -41578,11 +41578,13 @@ var app = new Vue({
 
       if (self.formSearch.inputSearch.value.trim() !== "") {
         self.formSearch.submit.html = '<i class="fas fa-cog fa-spin"></i>';
-        self.formSearch.submit.disabled = true;
+        self.formSearch.submit.disabled = true; // Obtenemos los valores
+
         var parametros = {
           buscarPor: self.formSearch.select.value,
           dato: self.formSearch.inputSearch.value
-        };
+        }; //Se utiliza el metodo get para su busqueda y se envian con los parametros
+
         axios.get('/buscarUsuariosS', {
           params: parametros
         }).then(function (response) {
@@ -41623,11 +41625,13 @@ var app = new Vue({
 
       if (self.formSearchG.inputSearchG.value.trim() !== "") {
         self.formSearchG.submitG.html = '<i class="fas fa-cog fa-spin"></i>';
-        self.formSearchG.submitG.disabled = true;
+        self.formSearchG.submitG.disabled = true; //Obtenemos los valores
+
         var parametros = {
           buscarPor: self.formSearchG.selectG.value,
           dato: self.formSearchG.inputSearchG.value
-        };
+        }; //Se utiliza el metodo get para su busqueda y se envian con los parametros
+
         axios.get('/buscarUsuariosG', {
           params: parametros
         }).then(function (response) {
@@ -41717,10 +41721,12 @@ var app = new Vue({
     },
     SelecionarUsuario: function SelecionarUsuario(idUsuario, e) {
       self.detalleUsuario.error = false;
-      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
+      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin"); // Obtenemos los valores
+
       var parametros = {
         idUsuario: idUsuario
-      };
+      }; //Se utiliza el metodo get para su busqueda y se envian con los parametros
+
       axios.get('/detalleUsuarios', {
         params: parametros
       }).then(function (response) {
@@ -41737,10 +41743,12 @@ var app = new Vue({
     },
     SelecionarUsuarioG: function SelecionarUsuarioG(idUsuario, e) {
       self.detalleUsuarioG.error = false;
-      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
+      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin"); //Obtenemos los valores
+
       var parametros = {
         idUsuario: idUsuario
-      };
+      }; //Se utiliza el metodo get para su busqueda y se envian con los parametros
+
       axios.get('/detalleUsuarios', {
         params: parametros
       }).then(function (response) {
@@ -41811,28 +41819,6 @@ var app = new Vue({
         };
       });
     },
-    esEmpleado: function esEmpleado(e) {
-      if (self.form.empleado.checked) {
-        self.form.estadofi.disabled = false;
-        self.form.estadofa.disabled = false;
-        self.form.estadofi.validar = true;
-        self.form.municipiofi.validar = true;
-        self.form.parroquiafi.validar = true;
-        self.form.estadofi.value = "";
-      } else {
-        $(e.target).parents("form").find(".form-group .mensaje").html("").removeClass("invalid-feedback");
-        $(e.target).parents("form").find(".form-group .form-control").removeClass("error");
-        self.form.estadofi.disabled = true;
-        self.form.municipiofi.disabled = true;
-        self.form.parroquiafi.disabled = true;
-        self.form.estadofi.validar = false;
-        self.form.municipiofi.validar = false;
-        self.form.parroquiafi.validar = false;
-        self.form.estadofi.value = "";
-        self.form.municipiofi.value = "";
-        self.form.parroquiafi.value = "";
-      }
-    },
     valuesForm: function valuesForm(e) {
       if (e.target.type === 'text' || e.target.type === 'textarea' || e.target.type === 'email') {
         self.form[e.target.id].value = e.target.value.trim() === "" ? "" : $(e.target).val();
@@ -41896,15 +41882,11 @@ var app = new Vue({
         self.submitActualizar.disabled = true;
         Object.keys(self.form).forEach(function (indiceObjecto, indice) {
           self.form[indiceObjecto].disabled = true;
-        });
+        }); //Se utiliza el metodo post para la modificacion y se envian con los parametros
+
         axios.post('/modificarCliente', parametros).then(function (response) {
           if (response.status === 200 && response.data.response === true) {
             var indices = ["rif", "nit", "razon_social", "ciudad_fiscal", "avenida_calle_fiscal", "edificio_quinta_fiscal", "piso_fiscal", "numero_fiscal", "telefono_fiscal", "fax_fiscal", "email_fiscal"];
-
-            if (self.form.empleado.checked) {
-              indices.push("estadofi", "municipiofi", "parroquiafi");
-            }
-
             indices.forEach(function (indiceObjecto, indice) {
               self.form[indiceObjecto].disabled = false;
             });
@@ -41921,11 +41903,6 @@ var app = new Vue({
           }
         })["catch"](function (error) {
           var indices = ["rif", "nit", "razon_social", "ciudad_fiscal", "avenida_calle_fiscal", "edificio_quinta_fiscal", "piso_fiscal", "numero_fiscal", "telefono_fiscal", "fax_fiscal", "email_fiscal"];
-
-          if (self.form.empleado.checked) {
-            indices.push("estadofi", "municipiofi", "parroquiafi");
-          }
-
           indices.forEach(function (indiceObjecto, indice) {
             self.form[indiceObjecto].disabled = false;
           });
@@ -42130,7 +42107,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\js\cliente\modificarCliente.js */"./resources/js/cliente/modificarCliente.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\cliente\modificarCliente.js */"./resources/js/cliente/modificarCliente.js");
 
 
 /***/ })

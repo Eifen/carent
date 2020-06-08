@@ -40470,6 +40470,7 @@ var self;
 Vue.use(vue_the_mask__WEBPACK_IMPORTED_MODULE_0___default.a);
 Vue.component('menu-principal', __webpack_require__(/*! ../components/menuPrincipal.vue */ "./resources/js/components/menuPrincipal.vue")["default"]);
 var app = new Vue({
+  // se declaran las variables
   el: '#detalleFactcliente',
   data: {
     alertForm: {
@@ -40604,11 +40605,13 @@ var app = new Vue({
 
       if (self.formSearch.inputSearch.value.trim() !== "") {
         self.formSearch.submit.html = '<i class="fas fa-cog fa-spin"></i>';
-        self.formSearch.submit.disabled = true;
+        self.formSearch.submit.disabled = true; // Obtenemos los valores
+
         var parametros = {
           buscarPor: self.formSearch.select.value,
           dato: self.formSearch.inputSearch.value
-        };
+        }; //Se utiliza el metodo get y se envian los parametros
+
         axios.get('/buscarCliente', {
           params: parametros
         }).then(function (response) {
@@ -40672,10 +40675,12 @@ var app = new Vue({
     },
     SelecionarCliente: function SelecionarCliente(idCliente, e) {
       self.detalleCliente.error = false;
-      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
+      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin"); // Obtenemos los valores
+
       var parametros = {
         idCliente: idCliente
-      };
+      }; //Se utiliza el metodo get para su busqueda y se envian con los parametros
+
       axios.get('/detalleCliente', {
         params: parametros
       }).then(function (response) {
@@ -40709,10 +40714,12 @@ var app = new Vue({
     Selecionar: function Selecionar(e) {
       self.alert.mostrar = false;
       self.formSearchP.submit.html = '<i class="fas fa-cog fa-spin"></i>';
-      self.formSearchP.submit.disabled = true;
+      self.formSearchP.submit.disabled = true; // Obtenemos los valores
+
       var parametros = {
         idCliente: self.detalleCliente.data.id
-      };
+      }; //Se utiliza el metodo get para su busqueda y se envian con los parametros
+
       axios.get('/buscarClieProyec', {
         params: parametros
       }).then(function (response) {
@@ -40745,10 +40752,12 @@ var app = new Vue({
     },
     SelecionarClienteProy: function SelecionarClienteProy(clienteProy, e) {
       self.detalleClienteProy.error = false;
-      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
+      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin"); // Obtenemos los valores
+
       var parametros = {
         idclienteProy: clienteProy
-      };
+      }; //Se utiliza el metodo get para su busqueda y se envian con los parametros
+
       axios.get('/detalleClienteProy', {
         params: parametros
       }).then(function (response) {
@@ -40926,7 +40935,8 @@ var app = new Vue({
         self.submitActualizar.disabled = true;
         Object.keys(self.form).forEach(function (indiceObjecto, indice) {
           self.form[indiceObjecto].disabled = true;
-        });
+        }); //Se utiliza el metodo post para la actualizacion y se envian con los parametros
+
         axios.post('/actualizarFactCliente', parametros).then(function (response) {
           if (response.status === 200 && response.data.response === true) {
             self.refreshForm = true;
@@ -41022,7 +41032,8 @@ var app = new Vue({
         self.submitCrear.disabled = true;
         Object.keys(self.form).forEach(function (indiceObjecto, indice) {
           self.form[indiceObjecto].disabled = true;
-        });
+        }); //Se utiliza el metodo post la creacion y se envian con los parametros
+
         axios.post('/crearFactCliente', parametros).then(function (response) {
           if (response.status === 200 && response.data.response === true) {
             self.submitCrear.show = false;
@@ -41246,7 +41257,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\js\cliente\detalleFactcliente.js */"./resources/js/cliente/detalleFactcliente.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\cliente\detalleFactcliente.js */"./resources/js/cliente/detalleFactcliente.js");
 
 
 /***/ })

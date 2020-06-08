@@ -12,7 +12,7 @@ Vue.use(VueTheMask);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
 
 var app = new Vue({
-
+  // se declaran las variables
   el: '#detalleFactcliente',
   data: {
     alertForm: {
@@ -158,12 +158,12 @@ var app = new Vue({
 
         self.formSearch.submit.html = '<i class="fas fa-cog fa-spin"></i>';
         self.formSearch.submit.disabled = true;
-
+        // Obtenemos los valores
         let parametros = {
           buscarPor: self.formSearch.select.value,
           dato: self.formSearch.inputSearch.value
         };
-
+        //Se utiliza el metodo get y se envian los parametros
         axios.get('/buscarCliente', {params: parametros})
         .then(function (response) {
 
@@ -256,11 +256,11 @@ var app = new Vue({
 
       self.detalleCliente.error = false;
       $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
-
+      // Obtenemos los valores
       let parametros = {
         idCliente: idCliente
       };
-
+      //Se utiliza el metodo get para su busqueda y se envian con los parametros
       axios.get('/detalleCliente', {params: parametros})
       .then(function (response) {
 
@@ -311,11 +311,11 @@ var app = new Vue({
 
         self.formSearchP.submit.html = '<i class="fas fa-cog fa-spin"></i>';
         self.formSearchP.submit.disabled = true;
-
+        // Obtenemos los valores
         let parametros = {
           idCliente: self.detalleCliente.data.id
         };
-
+        //Se utiliza el metodo get para su busqueda y se envian con los parametros
         axios.get('/buscarClieProyec', {params: parametros})
         .then(function (response) {
 
@@ -366,11 +366,11 @@ var app = new Vue({
 
       self.detalleClienteProy.error = false;
       $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
-
+      // Obtenemos los valores
       let parametros = {
         idclienteProy: clienteProy
       };
-
+      //Se utiliza el metodo get para su busqueda y se envian con los parametros
       axios.get('/detalleClienteProy', {params: parametros})
       .then(function (response) {
 
@@ -619,7 +619,7 @@ var app = new Vue({
         Object.keys(self.form).forEach(function(indiceObjecto, indice) {
           self.form[indiceObjecto].disabled = true;
         });
-
+        //Se utiliza el metodo post para la actualizacion y se envian con los parametros
         axios.post('/actualizarFactCliente', parametros)
         .then(function (response) {
 
@@ -742,7 +742,7 @@ var app = new Vue({
         Object.keys(self.form).forEach(function(indiceObjecto, indice) {
           self.form[indiceObjecto].disabled = true;
         });
-
+        //Se utiliza el metodo post la creacion y se envian con los parametros
         axios.post('/crearFactCliente', parametros)
         .then(function (response) {
 

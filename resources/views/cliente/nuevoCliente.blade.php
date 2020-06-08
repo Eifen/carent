@@ -161,14 +161,6 @@
               <div class="col-12 wrapper-required-legend">
                 <b>Campos obligatorios (<span class="campo-obligatorio">*</span>)</b>
               </div>
-              <div class="form-group form-check col-12">
-                <input class="form-check-input"
-                       id="empleado"
-                       type="checkbox"
-                       v-model="form.empleado.checked"
-                       v-on:change="esEmpleado">
-                <label class="form-check-label label-warning" for="empleado">Crear Nuevo Cliente</label>
-              </div>
               <div class="form-group col-12 col-sm-6">
                 <label for="rif">Rif<span class="campo-obligatorio">*</span> </label>
                 <the-mask mask="F- NNNNNNNNNN" :tokens="hexTokens" 

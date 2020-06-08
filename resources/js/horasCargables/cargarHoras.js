@@ -14,6 +14,7 @@ export default {
 var self;
 Vue.use(VueTheMask);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
+//Declaramos las variables
 var app = new Vue({
 
   el: '#cargarHoras',
@@ -100,7 +101,7 @@ var app = new Vue({
   beforeCreate: function(){
 
     self = this;
-
+    //Buscamos los parametros iniciales y se los asignamos a las variables
     axios.get('/datosHorasProyecto')
     .then(function (response) {
 
@@ -225,6 +226,7 @@ var app = new Vue({
           descripcion: self.form.descripcion.value,
           horas_trabajadas: self.form.horas_trabajadas.value,
         }
+        //Se utiliza el metodo post para cargar horas y se envian con los parametros
         axios.post('/cargarHoras', parametros)
         .then(function (response) {
 
@@ -238,7 +240,7 @@ var app = new Vue({
             self.form.fecha.value = "";
             self.form.descripcion.value = "";
             self.form.horas_trabajadas.value = "";
-            self.actualizar();
+            self.actualizar(); //Invocamos el metodo actualizar
           }else{
 
             throw response.data;
@@ -269,6 +271,7 @@ var app = new Vue({
     },
 
     actualizar: function(){
+      //Se buscan los parametros actualizados y se los asignamos a las variables
       axios.get('/datosHorasProyecto')
       .then(function (response) {
 
@@ -312,16 +315,16 @@ var app = new Vue({
 
       self.modHorasCargadas.error = false;
       $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
-
+      // Obtenemos lo valores
       let parametros = {
         idHcargadas: idHcargadas
       };
-
+      //Se utiliza el metodo get para su busqueda y se envian con los parametros
       axios.get('/detalleModHorasCargadas', {params: parametros})
       .then(function (response) {
 
         if(response.status === 200 ){
-
+          //Le asignamos los valores a las variables
           self.modHorasCargadas.data = response.data.infoModHorasCargadas;
           self.form.fechaM.value = self.modHorasCargadas.data.fecha;
           self.form.descripcionM.value = self.modHorasCargadas.data.descripcion;
@@ -383,6 +386,7 @@ var app = new Vue({
           horas_trabajadas: self.form.horas_trabajadasM.value,
           id: self.modHorasCargadas.data.id,
         }
+        //Se utiliza el metodo post para modificar y se envian con los parametros
         axios.post('/ModificarHorasCargadas', parametros)
         .then(function (response) {
 
@@ -396,7 +400,7 @@ var app = new Vue({
             self.form.fechaM.value = "";
             self.form.descripcionM.value = "";
             self.form.horas_trabajadasM.value = "";
-            self.actualizar();
+            self.actualizar(); // Invocamos el metodo actualizar
           }else{
 
             throw response.data;
@@ -431,11 +435,11 @@ var app = new Vue({
 
       self.eliHorasCargadas.error = false;
       $(e.target).removeClass("fas fa-trash").addClass("fa-cog fa-spin");
-
+      // Obtenemos lo valores
       let parametros = {
         idHcargadas: idHcargadas
       };
-
+      //Se utiliza el metodo get para eliminar y se envian con los parametros
       axios.get('/detalleHorasEliminar', {params: parametros})
       .then(function (response) {
 
