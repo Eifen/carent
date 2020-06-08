@@ -20,7 +20,7 @@
         <menu-principal></menu-principal>
         <div class="row align-items-center justify-content-center wrapper-forms">
           <div class="col-12 col-sm-11 col-md-9 col-lg-8">
-            <h3>Estas creando a un nuevo Cliente</h3>
+            <h3>Estas Creando a un Nuevo Cliente</h3>
              <form class="row">
               <div class="form-group col-12 col-md-4">
                 <select class="form-control"
@@ -43,6 +43,7 @@
                        v-model="formSearch.inputSearch.value">
                 <div class="mensaje"></div>
               </div>
+              <!--Al hacer clic se invoca el metodo buscar de crearCliente.js y abre la modal-->
               <div class="form-group col-12 col-md-2">
                 <button class="btn btn-primary"
                         type="button"
@@ -64,6 +65,7 @@
                         </tr>
                       </thead>
                       <tbody>
+                        <!-- Se llena la tabla con los valores que tiene usuarios.registros obtenidos de crearCliente.js -->
                         <tr v-for="usuario in usuarios.registros">
                           <th scope="row">@{{ usuario.codigo }}</th>
                           <td>@{{ usuario.cedula }}</td>
@@ -111,6 +113,7 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-md-2">
+                <!--Al hacer clic se invoca el metodo buscarG de crearCliente.js y abre la modal-->
                 <button class="btn btn-primary"
                         type="button"
                         v-bind:disabled="formSearchG.submitG.disabled"
@@ -132,6 +135,7 @@
                         </tr>
                       </thead>
                       <tbody>
+                        <!-- Se llena la tabla con los valores que tiene usuariosG.registros obtenidos de crearCliente.js -->
                         <tr v-for="usuario in usuariosG.registros">
                           <th scope="row">@{{ usuario.codigo }}</th>
                           <td>@{{ usuario.cedula }}</td>
@@ -160,14 +164,6 @@
             <form class="row">
               <div class="col-12 wrapper-required-legend">
                 <b>Campos obligatorios (<span class="campo-obligatorio">*</span>)</b>
-              </div>
-              <div class="form-group form-check col-12">
-                <input class="form-check-input"
-                       id="empleado"
-                       type="checkbox"
-                       v-model="form.empleado.checked"
-                       v-on:change="esEmpleado">
-                <label class="form-check-label label-warning" for="empleado">Crear Nuevo Cliente</label>
               </div>
               <div class="form-group col-12 col-sm-6">
                 <label for="rif">Rif<span class="campo-obligatorio">*</span> </label>
@@ -378,6 +374,7 @@
             </form>
             <div class="row justify-content-center wrapper-subtmit">
               <div class="col-12 col-md-6 col-lg-4">
+                <!--Al hacer clic se invoca el metodo crear de crearCliente.js y envia los valores de las variables para su modificacion-->
                 <button class="btn"
                         type="button"
                         v-on:click="crear"

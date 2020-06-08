@@ -119,10 +119,6 @@ class ClienteController extends Controller
       $email = $modelo->buscarEmail($request->input("email_fiscal"));
       if(!$email["response"]){
         $parametros = array(
-          "usuario_id" => $request->session()->get('usuario_id'),
-          "nomusuario_id" => $nomusuario_id->nombre,
-          "fecha_reg" => date('Y-m-d'),
-          "hora_reg" => date("H:i:s"),
           "idUsuario" => (int) $request->input("idUsuario"),
           "idUsuario2" => (int) $request->input("idUsuario2"),
           "codigoCliente" => $codigoCliente,
@@ -306,9 +302,6 @@ class ClienteController extends Controller
     $modelo = new ClienteModel();
     $nomusuario_id = $modelo->buscarUsuari($request->session()->get('usuario_id'));
     $parametros = array(
-            "nomusuario_id" => $nomusuario_id->nombre,
-            "fecha_reg" => date("Y-m-d"),
-            "hora_reg" => date("H:i:s"),
       "idCliente" => $request->input("idCliente"),
       "idUsuario" => (int) $request->input("idUsuario"),
       "idUsuario2" => (int) $request->input("idUsuario2"),

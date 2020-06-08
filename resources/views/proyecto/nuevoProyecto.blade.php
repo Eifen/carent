@@ -83,6 +83,7 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
+                <!--Selecionador multiple a ir escogiendo una division se habilita un campo para introducir las horas-->
                 <label for="divisiones">Divisiones <span class="campo-obligatorio">*</span></label>
                 <multiselect @input="asignarHoras"
                              @Open="limpiarMensajeErrorMultiselect"
@@ -132,7 +133,7 @@
                 </div>
               </div>
             </form>
-
+             <!--Al hacer clic se invoca el metodo crear de nuevoProyecto.js y envia los valores de las variables para su modificacion-->
             <div class="row justify-content-center wrapper-subtmit">
               <div class="col-12 col-md-6 col-lg-4">
                 <button class="btn"

@@ -34,7 +34,7 @@
             <h3>Estas Modificando un Proyecto</h3>
             <form class="row">
               <div class="col-12 wrapper-required-legend">
-                <b>Campos obligatorios (<span class="campo-obligatorio">*</span>)</b>
+                <b>Campos Obligatorios (<span class="campo-obligatorio">*</span>)</b>
               </div>
               <div class="form-group col-12 col-sm-6">
                 <label for="descripcion">Descripción <span class="campo-obligatorio">*</span></label>
@@ -93,6 +93,7 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
+                <!--Selecionador multiple a ir escogiendo una division se habilita un campo para introducir las horas-->
                 <label for="divisiones">Divisiones <span class="campo-obligatorio">*</span></label>
                 <multiselect @Open="limpiarMensajeErrorMultiselect"
                              :clear-on-select="false"
@@ -149,6 +150,7 @@
                    type="button">Regresar</a>
               </div>
               <div class="col-12 col-md-6 col-lg-4">
+                <!--Al hacer clic se invoca el metodo actualizar de modificarProyecto.js y envia los valores de las variables para su modificacion-->
                 <button class="btn subtmit"
                         type="button"
                         v-on:click="actualizar"

@@ -12,7 +12,7 @@ var self;
 Vue.component('multiselect', Multiselect);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
 Vue.use(VueNumeric);
-
+//Declaramos las variables
 var app = new Vue({
 
   el: '#app',
@@ -69,12 +69,12 @@ var app = new Vue({
   beforeCreate: function(){
 
     self = this;
-
+    //Se utiliza el metodo get para obtener los valores inciales
     axios.get('/dataInicialListadoProyectos')
     .then(function (response) {
 
       if(response.status === 200){
-
+        //Le asignamos los valores a las variables
         self.comboEstatus = response.data.estatus;
         self.comboDivisiones = response.data.divisiones;
         self.formFiltro.descripcion.disabled = false;
@@ -168,7 +168,7 @@ var app = new Vue({
         });
       }
 
-
+      //Obtenemos los valores
       let desde = (self.paginador.pagina - 1) * self.paginador.paginar;
       let parametros = {
         cliente: self.formFiltro.cliente.value,
@@ -178,7 +178,7 @@ var app = new Vue({
         estatus: self.formFiltro.estatus.value,
         paginar: self.paginador.paginar
       };
-
+      //Se utiliza el metodo get para su busqueda y se envian con los parametros
       axios.get('/buscarProyectos', {params: parametros})
       .then(function (response) {
 
@@ -190,7 +190,7 @@ var app = new Vue({
         self.formFiltro.btn.filtrar.disabled = false;
         self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
         self.formFiltro.btn.limpiarFiltro.disabled = false;
-
+        // Se le asigna los valores a las variables
         self.proyectos = response.data.proyectos;
         self.paginador.numPaginas = response.data.paginas;
         self.paginador.max = parseInt(response.data.paginas);

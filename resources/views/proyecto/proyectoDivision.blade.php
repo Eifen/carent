@@ -20,7 +20,7 @@
         <menu-principal></menu-principal>
         <div class="row align-items-center justify-content-center wrapper-forms">
           <div class="col-12 col-sm-11 col-md-9 wrapper-form" v-if="form.mostrar">
-            <h5>búsqueda</h5>
+            <h5>Búsqueda</h5>
             <form class="row">
               <div class="form-group col-12 col-sm-4">
                 <label for="descripcion">Proyecto</label>
@@ -31,7 +31,7 @@
                        v-bind:disabled="form.descripcion.disabled"
                        v-model.trim="form.descripcion.value"
                        type="text">
-                <small id="descripcionHelp" class="form-text text-muted">Nombre del proyecto</small>
+                <small id="descripcionHelp" class="form-text text-muted">Nombre del Proyecto</small>
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-4">
@@ -43,7 +43,7 @@
                        v-bind:disabled="form.cliente.disabled"
                        v-model.trim="form.cliente.value"
                        type="text">
-                <small id="clienteHelp" class="form-text text-muted">Razón Social del cliente</small>
+                <small id="clienteHelp" class="form-text text-muted">Razón Social del Cliente</small>
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-4">
@@ -62,6 +62,7 @@
               </div>
               <div class="form-group col-12 col-sm-3">
                 <label>&nbsp;</label>
+                <!--Al hacer clic se invoca el metodo buscar de proyectoDivision.js y envia los valores de las variables para su modificacion-->
                 <button class="btn filtrar"
                         type="button"
                         v-on:click="buscar"
@@ -81,13 +82,14 @@
 
             <table class="table">
               <thead>
+                <!--Dependiendo de los permisos que posea el usuario se les hablitara o no las columnas-->
                 <tr>
                   <th scope="col">Clientes</th>
                   <th scope="col">Proyecto</th>
                   <th scope="col">Estatus</th>
-                  <th scope="col"v-if="permisoVer">Ver Empleados</th>
-                  <th scope="col" v-if="permisoActualizar">Horas Contratadas</th>
-                  <th scope="col" v-if="permisoActualizar">Asiganar</th>
+                  <th scope="col"v-if="permisoVer">Ver Empleados</th><!--Socios-->
+                  <th scope="col" v-if="permisoActualizar">Horas Contratadas</th><!--Director o encargado del area-->
+                  <th scope="col" v-if="permisoActualizar">Asiganar</th><!--Director o encargado del area-->
                   <th scope="col" v-if="permisoCrear">Cargar Horas</th>
                 </tr>
               </thead>
@@ -97,15 +99,15 @@
                   <td>@{{ proyecto.proyecto }}</td>
                   <td>@{{ proyecto.estatus }}</td>
                   <td v-if="permisoVer">
-                    <i class="fas fa-search-plus" v-on:click="mostrarDetalleDivProyecto(proyecto.id_proyecto, $event)"></i>
+                    <i class="fas fa-search-plus" v-on:click="mostrarDetalleDivProyecto(proyecto.id_proyecto, $event)"></i><!--Al hacer clic se invoca el metodo mostrarDetalleDivProyecto y abre la modal-->
                   </td>
                   <td v-if="permisoActualizar">@{{ proyecto.horas_contratadas }}</td>
                   <td v-if="permisoActualizar">
-                       <i class="far fa-edit" v-on:click="asignarAnalistaProyecto(proyecto.id_proyecto, $event)"></i>
+                       <i class="far fa-edit" v-on:click="asignarAnalistaProyecto(proyecto.id_proyecto, $event)"></i><!--Al hacer clic se invoca el metodo asignarAnalistaProyecto y abre la modal-->
                   </td>
                   <td v-if= "permisoCrear">
                     <a v-bind:href="'/formCargarHoras/'+proyecto.id_proy_analista" target="_self">
-                    <i class="fas fa-user-edit" v-if= "proyecto.permisoCrear"></i>
+                    <i class="fas fa-user-edit" v-if= "proyecto.permisoCrear"></i><!--Al hacer clic te envia a la pagina de cargar horas-->
                   </td>
                 </tr>
               </tbody>
@@ -119,7 +121,7 @@
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h4>Detalle del proyecto</h4>
+                <h4>Detalle del Proyecto</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -137,6 +139,14 @@
                     <label>Proyecto</label>
                     <input class="form-control" type="text" disabled v-bind:value="Dproyecto.descripcion">
                   </div>
+                  <div class="form-group col-12 col-sm-6">
+                    <label>Horas Contratadas</label>
+                    <input class="form-control" type="text" disabled v-bind:value="Dproyecto.horas_contratadas">
+                  </div>
+                  <div class="form-group col-12 col-sm-6">
+                    <label>Total de Horas Cargadas</label>
+                    <input class="form-control" type="text" disabled v-bind:value="Dproyecto.horas_cargadas">
+                  </div>
                 </form>
                 <h5>Empleados Asigandos</h5>
                 <table class="table" >
@@ -153,7 +163,7 @@
                   <th scope="row">@{{ Aproyecto.nombre }}</th>                  
                   <td>@{{ Aproyecto.division }}</td>
                   <td>@{{ Aproyecto.cargo }}</td>
-                  <td>@{{ Aproyecto.suma }}</td>
+                  <td>@{{ Aproyecto.horas_cargadas }}</td>
                 </tr>
               </tbody>
             </table>
@@ -188,7 +198,7 @@
                     <input class="form-control" type="text" disabled v-bind:value="Asigproyecto.horas_contratadas">
                   </div>
                   <div class="form-group col-12 col-sm-6">
-                <label for="horas">Horas Contratadas <span class="campo-obligatorio">*</span></label>
+                <label for="horas">Total de Horas Asignadas</label>
                 <input aria-describedby="horasHelp"
                        class="form-control"
                        id="horas"

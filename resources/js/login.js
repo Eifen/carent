@@ -7,8 +7,8 @@ window.AutoNumeric = require('autonumeric');
 const CryptoJS = require("crypto-js");
 const AES = require("crypto-js/aes");
 var self;
-
-var app = new Vue({
+//se declaran todas las varibles
+var app = new Vue({ 
 
   el: '#login',
   data: {

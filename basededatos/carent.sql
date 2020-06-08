@@ -1,13 +1,15 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
+
 -- Tiempo de generación: 07-06-2020 a las 21:44:55
 -- Versión del servidor: 8.0.18
--- Versión de PHP: 7.3.16
+-- Versión de PHP: 7.3.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 

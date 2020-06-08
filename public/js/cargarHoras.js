@@ -36342,7 +36342,8 @@ window.AutoNumeric = __webpack_require__(/*! autonumeric */ "./node_modules/auto
 });
 var self;
 Vue.use(vue_the_mask__WEBPACK_IMPORTED_MODULE_0___default.a);
-Vue.component('menu-principal', __webpack_require__(/*! ../components/menuPrincipal.vue */ "./resources/js/components/menuPrincipal.vue")["default"]);
+Vue.component('menu-principal', __webpack_require__(/*! ../components/menuPrincipal.vue */ "./resources/js/components/menuPrincipal.vue")["default"]); //Declaramos las variables
+
 var app = new Vue({
   el: '#cargarHoras',
   components: {
@@ -36425,7 +36426,8 @@ var app = new Vue({
     horas_cargadas: 0
   },
   beforeCreate: function beforeCreate() {
-    self = this;
+    self = this; //Buscamos los parametros iniciales y se los asignamos a las variables
+
     axios.get('/datosHorasProyecto').then(function (response) {
       if (response.status === 200) {
         self.infoProyAnalista = response.data.infoProyAnalista;
@@ -36521,7 +36523,8 @@ var app = new Vue({
           fecha: self.form.fecha.value,
           descripcion: self.form.descripcion.value,
           horas_trabajadas: self.form.horas_trabajadas.value
-        };
+        }; //Se utiliza el metodo post para cargar horas y se envian con los parametros
+
         axios.post('/cargarHoras', parametros).then(function (response) {
           if (response.status === 200 && response.data.response === true) {
             self.alertForm = {
@@ -36532,7 +36535,7 @@ var app = new Vue({
             self.form.fecha.value = "";
             self.form.descripcion.value = "";
             self.form.horas_trabajadas.value = "";
-            self.actualizar();
+            self.actualizar(); //Invocamos el metodo actualizar
           } else {
             throw response.data;
           }
@@ -36554,6 +36557,7 @@ var app = new Vue({
       ;
     },
     actualizar: function actualizar() {
+      //Se buscan los parametros actualizados y se los asignamos a las variables
       axios.get('/datosHorasProyecto').then(function (response) {
         if (response.status === 200) {
           self.infoProyAnalista = response.data.infoProyAnalista;
@@ -36588,14 +36592,17 @@ var app = new Vue({
     },
     detalleModHorasCargadas: function detalleModHorasCargadas(idHcargadas, e) {
       self.modHorasCargadas.error = false;
-      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
+      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin"); // Obtenemos lo valores
+
       var parametros = {
         idHcargadas: idHcargadas
-      };
+      }; //Se utiliza el metodo get para su busqueda y se envian con los parametros
+
       axios.get('/detalleModHorasCargadas', {
         params: parametros
       }).then(function (response) {
         if (response.status === 200) {
+          //Le asignamos los valores a las variables
           self.modHorasCargadas.data = response.data.infoModHorasCargadas;
           self.form.fechaM.value = self.modHorasCargadas.data.fecha;
           self.form.descripcionM.value = self.modHorasCargadas.data.descripcion;
@@ -36645,7 +36652,8 @@ var app = new Vue({
           descripcion: self.form.descripcionM.value,
           horas_trabajadas: self.form.horas_trabajadasM.value,
           id: self.modHorasCargadas.data.id
-        };
+        }; //Se utiliza el metodo post para modificar y se envian con los parametros
+
         axios.post('/ModificarHorasCargadas', parametros).then(function (response) {
           if (response.status === 200 && response.data.response === true) {
             self.alertForm = {
@@ -36656,7 +36664,7 @@ var app = new Vue({
             self.form.fechaM.value = "";
             self.form.descripcionM.value = "";
             self.form.horas_trabajadasM.value = "";
-            self.actualizar();
+            self.actualizar(); // Invocamos el metodo actualizar
           } else {
             throw response.data;
           }
@@ -36677,10 +36685,12 @@ var app = new Vue({
     },
     detalleHorasEliminar: function detalleHorasEliminar(idHcargadas, e) {
       self.eliHorasCargadas.error = false;
-      $(e.target).removeClass("fas fa-trash").addClass("fa-cog fa-spin");
+      $(e.target).removeClass("fas fa-trash").addClass("fa-cog fa-spin"); // Obtenemos lo valores
+
       var parametros = {
         idHcargadas: idHcargadas
-      };
+      }; //Se utiliza el metodo get para eliminar y se envian con los parametros
+
       axios.get('/detalleHorasEliminar', {
         params: parametros
       }).then(function (response) {
@@ -36749,7 +36759,7 @@ var app = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\js\horasCargables\cargarHoras.js */"./resources/js/horasCargables/cargarHoras.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\horasCargables\cargarHoras.js */"./resources/js/horasCargables/cargarHoras.js");
 
 
 /***/ })
