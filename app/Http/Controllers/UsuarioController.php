@@ -242,4 +242,57 @@ class UsuarioController extends Controller
 
     }
 
+    function detalleMenu(Request $request){
+
+      $modelo = new UsuarioModel();
+      $id_usuario = (int) $request->input("idUsuario");
+      $datosUsuario = $modelo->divisionUsu($id_usuario);
+      $infoMenuUsuario = $modelo->detalleMenu($id_usuario);
+      $response = array("response" => true, "info" => $infoMenuUsuario, "id_usuario" => $id_usuario, "datosUsuario" => $datosUsuario);
+      return $response;
+
+    }
+
+    function agregarMenUsu(Request $request){
+
+      $modelo= new UsuarioModel();
+      $menuCr = (int) $request->input("menuCr");
+      $C = (int) $request->input("C");
+      $R = (int) $request->input("R");
+      $U = (int) $request->input("U");
+      $D = (int) $request->input("D");
+      $idUsuario = (int) $request->input("idUsuario");
+      $menu= $modelo->agregarMenUsu($menuCr,$C,$R,$U,$D,$idUsuario);
+      if(!empty($menu)){
+      $response = array("response" => true, "menUsus" => $menu);
+      }else{
+      $response = array("response" => false, "message" => "No se encontraron resultadoos");
+      }
+    return $response;
+    }
+
+    function quitarMenUsu(Request $request){
+
+      $modelo= new UsuarioModel();
+      $menuCr = (int) $request->input("menuCr");
+      $idUsuario = (int) $request->input("idUsuario");
+      $menu= $modelo->quitarMenUsu($menuCr, $idUsuario);
+      $response = array("response" => true, "menUsus" => $menu);
+      return $response;
+    }
+
+    function modificarMenUsu(Request $request){
+
+      $modelo= new UsuarioModel();
+      $menuCr = (int) $request->input("menuCr");
+      $C = (int) $request->input("C");
+      $R = (int) $request->input("R");
+      $U = (int) $request->input("U");
+      $D = (int) $request->input("D");
+      $idUsuario = (int) $request->input("idUsuario");
+      $menu= $modelo->modificarMenUsu($menuCr,$C,$R,$U,$D,$idUsuario);
+      $response = array("response" => true, "menUsus" => $menu);
+      return $response;
+    }
+
 }
