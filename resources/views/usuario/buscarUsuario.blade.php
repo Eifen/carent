@@ -328,10 +328,6 @@
                     </div>                
                   </div>
                 </form>
-
-
-
-
                  <h5>Detalle de Facturacion</h5>
                 <form class="row" v-if="!detalleMenu.error">
                   <div class="custom-control custom-switch" v-if="permisoContraloria">
