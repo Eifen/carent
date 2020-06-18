@@ -386,4 +386,106 @@ class UsuarioModel extends Model
 
     }// Fin crearUsuario
 
+    function detalleMenu($id_usuario){
+
+      $info = DB::select('SELECT *
+                          FROM tbl_menu_usuario m
+                          WHERE m.id_usuario = '.$id_usuario.'
+                        ');
+
+      if(count($info) > 0){
+
+        return $info;
+
+      }else{
+
+        return array();
+
+      }
+
+    }
+
+    function divisionUsu($id_usuario){
+
+      $info = DB::select('SELECT u.id_division,
+                                 u.id_cargo,
+                                 CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)nombre,
+                                 (SELECT d.descripcion FROM tbl_division d WHERE d.id = u.id_division)Ddivision, 
+                                 (SELECT ce.descripcion FROM tbl_cargo_empleado ce WHERE ce.id = u.id_cargo)Dcargo
+                          FROM tbl_usuario u
+                          WHERE u.id = '.$id_usuario.'
+                        ');
+
+      if(count($info) > 0){
+
+        return $info[0];
+
+      }else{
+
+        return array();
+
+      }
+
+    }
+
+    function agregarMenUsu($menuCr,$C,$R,$U,$D, $id_usuario){
+
+    DB::beginTransaction();
+
+     $data = array("id_usuario" => $id_usuario,
+                   "id_menu" => $menuCr,
+                   "C" => $C,
+                   "R" => $R,
+                   "U" => $U,
+                   "D" => $D);
+      $contacto = DB::table('tbl_menu_usuario')->insert($data);
+      if($contacto){
+        DB::commit();
+        return array("response" => true, "message" => "Menu Creada con Éxito.");
+      }else{
+       DB::rollBack();
+        return array("response" => false, "message" => "Error al tratar de crear el menu.");
+      }
+    }
+
+    function quitarMenUsu($menuCr,$idUsuario){
+
+    DB::beginTransaction();
+
+      $contacto = DB::table('tbl_menu_usuario')->where([['id_usuario', '=', $idUsuario],['id_menu', '=', $menuCr]])->delete();
+      if($contacto){
+        DB::commit();
+        return array("response" => true, "message" => "menu eliminado con exito.");
+      }else{
+       DB::rollBack();
+        return array("response" => false, "message" => "Error al tratar de eliminar el menu.");
+      }
+  }
+
+  function modificarMenUsu($menuCr,$C,$R,$U,$D,$idUsuario){
+
+    DB::beginTransaction();
+
+    try {
+
+        $data = array("id_usuario" => $idUsuario,
+                      "id_menu" => $menuCr,
+                      "C" => $C,
+                      "R" => $R,
+                      "U" => $U,
+                      "D" => $D);
+
+        $update = DB::table('tbl_menu_usuario')->where([['id_usuario', '=', $idUsuario],['id_menu', '=', $menuCr]])->update($data);
+
+        DB::commit();
+        return array("response" => true, "message" => "Menu actualizado con Éxito!.");
+
+      } catch(\Illuminate\Database\QueryException $ex){
+
+        DB::rollBack();
+        return array("response" => false, "message" => "Error al tratar de actualizar la información del menu.");
+
+      }
+
+  }
 }

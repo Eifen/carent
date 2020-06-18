@@ -33884,7 +33884,139 @@ var app = new Vue({
       error: false,
       data: []
     },
-    permisoActualizar: false
+    detalleMenu: {
+      error: false,
+      data: []
+    },
+    crUsuario: {
+      checked: false,
+      menu: 2,
+      c: 0
+    },
+    coUsuario: {
+      checked: false,
+      menu: 3,
+      r: 0,
+      u: 0
+    },
+    modUsuario: {
+      checked: false,
+      menu: 3,
+      r: 0,
+      u: 0
+    },
+    crCliente: {
+      checked: false,
+      menu: 5,
+      c: 0
+    },
+    coCliente: {
+      checked: false,
+      menu: 6,
+      r: 0,
+      u: 0
+    },
+    modCliente: {
+      checked: false,
+      menu: 6,
+      r: 0,
+      u: 0
+    },
+    crProyecto: {
+      checked: false,
+      menu: 9,
+      c: 0
+    },
+    coProyecto: {
+      checked: false,
+      menu: 10,
+      r: 0,
+      u: 0
+    },
+    modProyecto: {
+      checked: false,
+      menu: 10,
+      r: 0,
+      u: 0
+    },
+    crFact: {
+      checked: false,
+      menu: 7,
+      c: 0,
+      r: 0,
+      u: 0
+    },
+    verFact: {
+      checked: false,
+      menu: 7,
+      c: 0,
+      r: 0,
+      u: 0
+    },
+    modFact: {
+      checked: false,
+      menu: 7,
+      c: 0,
+      r: 0,
+      u: 0
+    },
+    verAsigna: {
+      checked: false,
+      menu: 11,
+      c: 0,
+      r: 0,
+      u: 0,
+      d: 0
+    },
+    modAsigna: {
+      checked: false,
+      menu: 11,
+      c: 0,
+      r: 0,
+      u: 0,
+      d: 0
+    },
+    caHora: {
+      checked: false,
+      menu: 11,
+      c: 0,
+      r: 0,
+      u: 0,
+      d: 0
+    },
+    eliHora: {
+      checked: false,
+      menu: 11,
+      c: 0,
+      r: 0,
+      u: 0,
+      d: 0
+    },
+    conHoraNoC: {
+      checked: false,
+      menu: 13,
+      u: 0
+    },
+    carHoraNoC: {
+      checked: false,
+      menu: 14,
+      u: 0
+    },
+    usuario: {
+      data: ""
+    },
+    division: {
+      data: ""
+    },
+    cargo: {
+      data: ""
+    },
+    permisoActualizar: false,
+    permisoRRHH: false,
+    permisoContraloria: false,
+    permisoSocio: false,
+    permisoEncargado: false,
+    infoUsuario: []
   },
   beforeCreate: function beforeCreate() {
     self = this;
@@ -33894,6 +34026,10 @@ var app = new Vue({
     $('#modal-detalle-usuario').on('hidden.bs.modal', function () {
       self.detalleUsuario.data = [];
       self.detalleUsuario.error = false;
+    });
+    $('#modal-asignar-menu').on('hidden.bs.modal', function () {
+      self.detalleMenu.data = [];
+      self.detalleMenu.error = false;
     });
   },
   updated: function updated() {},
@@ -33992,6 +34128,1347 @@ var app = new Vue({
         self.detalleUsuario.error = true;
         $('#modal-detalle-usuario').modal("show");
         $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
+      });
+    },
+    mostrarDetalleMenu: function mostrarDetalleMenu(idUsuario, e) {
+      infoUsuario = [];
+      self.permisoRRHH = false;
+      self.permisoContraloria = false;
+      self.permisoSocio = false;
+      self.permisoEncargado = true;
+      self.detalleMenu.error = false;
+      self.crUsuario.checked = false;
+      self.crUsuario.c = 0;
+      self.coUsuario.checked = false;
+      self.coUsuario.r = 2;
+      self.coUsuario.u = 2;
+      self.modUsuario.checked = false;
+      self.modUsuario.r = 2;
+      self.modUsuario.u = 2;
+      self.crCliente.checked = false;
+      self.crCliente.c = 0;
+      self.coCliente.checked = false;
+      self.coCliente.r = 2;
+      self.coCliente.u = 2;
+      self.modCliente.checked = false;
+      self.modCliente.r = 2;
+      self.modCliente.u = 2;
+      self.crProyecto.checked = false;
+      self.crProyecto.c = 0;
+      self.coProyecto.checked = false;
+      self.coProyecto.r = 2;
+      self.coProyecto.u = 2;
+      self.modProyecto.checked = false;
+      self.modProyecto.r = 2;
+      self.modProyecto.u = 2;
+      self.crFact.checked = false;
+      self.crFact.c = 2;
+      self.crFact.r = 2;
+      self.crFact.u = 2;
+      self.verFact.checked = false;
+      self.verFact.c = 2;
+      self.verFact.r = 2;
+      self.verFact.u = 2;
+      self.modFact.checked = false;
+      self.modFact.c = 2;
+      self.modFact.r = 2;
+      self.modFact.u = 2;
+      self.verAsigna.checked = false;
+      self.verAsigna.c = 2;
+      self.verAsigna.r = 2;
+      self.verAsigna.u = 2;
+      self.verAsigna.d = 2;
+      self.modAsigna.checked = false;
+      self.modAsigna.c = 2;
+      self.modAsigna.r = 2;
+      self.modAsigna.u = 2;
+      self.modAsigna.d = 2;
+      self.caHora.checked = false;
+      self.caHora.c = 2;
+      self.caHora.r = 2;
+      self.caHora.u = 2;
+      self.caHora.d = 2;
+      self.eliHora.checked = false;
+      self.eliHora.c = 2;
+      self.eliHora.r = 2;
+      self.eliHora.u = 2;
+      self.eliHora.d = 2;
+      self.conHoraNoC.checked = false;
+      self.conHoraNoC.u = 0;
+      self.carHoraNoC.checked = false;
+      self.carHoraNoC.u = 0;
+      $(e.target).removeClass("fa-user-edit").addClass("fa-cog fa-spin");
+      var parametros = {
+        idUsuario: idUsuario
+      };
+      axios.get('/detalleMenu', {
+        params: parametros
+      }).then(function (response) {
+        if (response.status === 200 && response.data.response === true) {
+          self.usuario.data = response.data.id_usuario;
+          self.infoUsuario = response.data.datosUsuario;
+          self.division.data = response.data.datosUsuario.id_division;
+
+          if (self.division.data === 6) {
+            self.permisoRRHH = true;
+          } else if (self.division.data === 9) {
+            self.permisoContraloria = true;
+          }
+
+          self.cargo.data = response.data.datosUsuario.id_cargo;
+
+          if (self.division.data === 16) {
+            self.permisoSocio = true;
+            self.permisoEncargado = false;
+          }
+
+          self.detalleMenu.data = response.data.info;
+
+          for (var i = 0; i < self.detalleMenu.data.length; i++) {
+            if (self.detalleMenu.data[i].id_menu === 2) {
+              self.crUsuario.checked = true;
+              self.crUsuario.c = 1;
+            }
+
+            if (self.detalleMenu.data[i].id_menu === 3) {
+              if (self.detalleMenu.data[i].R === 1) {
+                self.coUsuario.checked = true;
+                self.coUsuario.r = self.detalleMenu.data[i].R;
+                self.coUsuario.u = self.detalleMenu.data[i].U;
+                self.modUsuario.u = self.detalleMenu.data[i].U;
+              }
+
+              if (self.detalleMenu.data[i].U === 1) {
+                self.modUsuario.checked = true;
+                self.modUsuario.r = self.detalleMenu.data[i].R;
+                self.modUsuario.u = self.detalleMenu.data[i].U;
+                self.coUsuario.r = self.detalleMenu.data[i].R;
+              }
+            }
+
+            if (self.detalleMenu.data[i].id_menu === 5) {
+              self.crCliente.checked = true;
+              self.crCliente.c = 1;
+            }
+
+            if (self.detalleMenu.data[i].id_menu === 6) {
+              if (self.detalleMenu.data[i].R === 1) {
+                self.coCliente.checked = true;
+                self.coCliente.r = self.detalleMenu.data[i].R;
+                self.coCliente.u = self.detalleMenu.data[i].U;
+                self.modCliente.u = self.detalleMenu.data[i].U;
+              }
+
+              if (self.detalleMenu.data[i].U === 1) {
+                self.modCliente.checked = true;
+                self.modCliente.r = self.detalleMenu.data[i].R;
+                self.modCliente.u = self.detalleMenu.data[i].U;
+                self.coCliente.r = self.detalleMenu.data[i].R;
+              }
+            }
+
+            if (self.detalleMenu.data[i].id_menu === 7) {
+              if (self.detalleMenu.data[i].C === 1) {
+                self.crFact.checked = true;
+                self.crFact.c = self.detalleMenu.data[i].C;
+                self.crFact.r = self.detalleMenu.data[i].R;
+                self.crFact.u = self.detalleMenu.data[i].U;
+                self.verFact.c = self.detalleMenu.data[i].C;
+                self.verFact.r = self.detalleMenu.data[i].R;
+                self.verFact.u = self.detalleMenu.data[i].U;
+                self.modFact.c = self.detalleMenu.data[i].C;
+                self.modFact.r = self.detalleMenu.data[i].R;
+                self.modFact.u = self.detalleMenu.data[i].U;
+              }
+
+              if (self.detalleMenu.data[i].R === 1) {
+                self.verFact.checked = true;
+                self.verFact.c = self.detalleMenu.data[i].C;
+                self.verFact.r = self.detalleMenu.data[i].R;
+                self.verFact.u = self.detalleMenu.data[i].U;
+                self.crFact.c = self.detalleMenu.data[i].C;
+                self.crFact.r = self.detalleMenu.data[i].R;
+                self.crFact.u = self.detalleMenu.data[i].U;
+                self.modFact.c = self.detalleMenu.data[i].C;
+                self.modFact.r = self.detalleMenu.data[i].R;
+                self.modFact.u = self.detalleMenu.data[i].U;
+              }
+
+              if (self.detalleMenu.data[i].U === 1) {
+                self.modFact.checked = true;
+                self.modFact.c = self.detalleMenu.data[i].C;
+                self.modFact.r = self.detalleMenu.data[i].R;
+                self.modFact.u = self.detalleMenu.data[i].U;
+                self.verFact.c = self.detalleMenu.data[i].C;
+                self.verFact.r = self.detalleMenu.data[i].R;
+                self.verFact.u = self.detalleMenu.data[i].U;
+                self.crFact.c = self.detalleMenu.data[i].C;
+                self.crFact.r = self.detalleMenu.data[i].R;
+                self.crFact.u = self.detalleMenu.data[i].U;
+              }
+            }
+
+            if (self.detalleMenu.data[i].id_menu === 9) {
+              self.crProyecto.checked = true;
+              self.crProyecto.c = 1;
+            }
+
+            if (self.detalleMenu.data[i].id_menu === 10) {
+              if (self.detalleMenu.data[i].R === 1) {
+                self.coProyecto.checked = true;
+                self.coProyecto.r = self.detalleMenu.data[i].R;
+                self.coProyecto.u = self.detalleMenu.data[i].U;
+                self.modProyecto.u = self.detalleMenu.data[i].U;
+              }
+
+              if (self.detalleMenu.data[i].U === 1) {
+                self.modProyecto.checked = true;
+                self.modProyecto.r = self.detalleMenu.data[i].R;
+                self.modProyecto.u = self.detalleMenu.data[i].U;
+                self.coProyecto.r = self.detalleMenu.data[i].R;
+              }
+            }
+
+            if (self.detalleMenu.data[i].id_menu === 11) {
+              if (self.detalleMenu.data[i].R === 1) {
+                self.verAsigna.checked = true;
+                self.verAsigna.c = self.detalleMenu.data[i].C;
+                self.verAsigna.r = self.detalleMenu.data[i].R;
+                self.verAsigna.u = self.detalleMenu.data[i].U;
+                self.verAsigna.d = self.detalleMenu.data[i].D;
+                self.modAsigna.c = self.detalleMenu.data[i].C;
+                self.modAsigna.r = self.detalleMenu.data[i].R;
+                self.modAsigna.u = self.detalleMenu.data[i].U;
+                self.modAsigna.d = self.detalleMenu.data[i].D;
+                self.caHora.c = self.detalleMenu.data[i].C;
+                self.caHora.r = self.detalleMenu.data[i].R;
+                self.caHora.u = self.detalleMenu.data[i].U;
+                self.caHora.d = self.detalleMenu.data[i].D;
+                self.eliHora.c = self.detalleMenu.data[i].C;
+                self.eliHora.r = self.detalleMenu.data[i].R;
+                self.eliHora.u = self.detalleMenu.data[i].U;
+                self.eliHora.d = self.detalleMenu.data[i].D;
+              }
+
+              if (self.detalleMenu.data[i].U === 1) {
+                self.modAsigna.checked = true;
+                self.modAsigna.c = self.detalleMenu.data[i].C;
+                self.modAsigna.r = self.detalleMenu.data[i].R;
+                self.modAsigna.u = self.detalleMenu.data[i].U;
+                self.modAsigna.d = self.detalleMenu.data[i].D;
+                self.verAsigna.c = self.detalleMenu.data[i].C;
+                self.verAsigna.r = self.detalleMenu.data[i].R;
+                self.verAsigna.u = self.detalleMenu.data[i].U;
+                self.verAsigna.d = self.detalleMenu.data[i].D;
+                self.caHora.c = self.detalleMenu.data[i].C;
+                self.caHora.r = self.detalleMenu.data[i].R;
+                self.caHora.u = self.detalleMenu.data[i].U;
+                self.caHora.d = self.detalleMenu.data[i].D;
+                self.eliHora.c = self.detalleMenu.data[i].C;
+                self.eliHora.r = self.detalleMenu.data[i].R;
+                self.eliHora.u = self.detalleMenu.data[i].U;
+                self.eliHora.d = self.detalleMenu.data[i].D;
+              }
+
+              if (self.detalleMenu.data[i].C === 1) {
+                self.caHora.checked = true;
+                self.caHora.c = self.detalleMenu.data[i].C;
+                self.caHora.r = self.detalleMenu.data[i].R;
+                self.caHora.u = self.detalleMenu.data[i].U;
+                self.caHora.d = self.detalleMenu.data[i].D;
+                self.modAsigna.c = self.detalleMenu.data[i].C;
+                self.modAsigna.r = self.detalleMenu.data[i].R;
+                self.modAsigna.u = self.detalleMenu.data[i].U;
+                self.modAsigna.d = self.detalleMenu.data[i].D;
+                self.verAsigna.c = self.detalleMenu.data[i].C;
+                self.verAsigna.r = self.detalleMenu.data[i].R;
+                self.verAsigna.u = self.detalleMenu.data[i].U;
+                self.verAsigna.d = self.detalleMenu.data[i].D;
+                self.eliHora.c = self.detalleMenu.data[i].C;
+                self.eliHora.r = self.detalleMenu.data[i].R;
+                self.eliHora.u = self.detalleMenu.data[i].U;
+                self.eliHora.d = self.detalleMenu.data[i].D;
+              }
+
+              if (self.detalleMenu.data[i].D === 1) {
+                self.eliHora.checked = true;
+                self.eliHora.c = self.detalleMenu.data[i].C;
+                self.eliHora.r = self.detalleMenu.data[i].R;
+                self.eliHora.u = self.detalleMenu.data[i].U;
+                self.eliHora.d = self.detalleMenu.data[i].D;
+                self.caHora.c = self.detalleMenu.data[i].C;
+                self.caHora.r = self.detalleMenu.data[i].R;
+                self.caHora.u = self.detalleMenu.data[i].U;
+                self.caHora.d = self.detalleMenu.data[i].D;
+                self.modAsigna.c = self.detalleMenu.data[i].C;
+                self.modAsigna.r = self.detalleMenu.data[i].R;
+                self.modAsigna.u = self.detalleMenu.data[i].U;
+                self.modAsigna.d = self.detalleMenu.data[i].D;
+                self.verAsigna.c = self.detalleMenu.data[i].C;
+                self.verAsigna.r = self.detalleMenu.data[i].R;
+                self.verAsigna.u = self.detalleMenu.data[i].U;
+                self.verAsigna.d = self.detalleMenu.data[i].D;
+              }
+            }
+
+            if (self.detalleMenu.data[i].id_menu === 13) {
+              if (self.detalleMenu.data[i].U === 1) {
+                self.conHoraNoC.checked = true;
+                self.conHoraNoC.u = self.detalleMenu.data[i].U;
+              }
+            }
+
+            if (self.detalleMenu.data[i].id_menu === 14) {
+              if (self.detalleMenu.data[i].U === 1) {
+                self.carHoraNoC.checked = true;
+                self.carHoraNoC.u = self.detalleMenu.data[i].U;
+              }
+            }
+          }
+
+          $('#modal-asignar-menu').modal("show");
+          $(e.target).removeClass("fa-cog fa-spin").addClass("fa-user-edit");
+        } else {
+          throw response.data;
+        }
+      })["catch"](function (error) {
+        self.detalleUsuario.error = true;
+        $('#modal-asignar-menu').modal("show");
+        $(e.target).removeClass("fa-cog fa-spin").addClass("fa-user-edit");
+      });
+    },
+    Crear: function Crear(crear, menu, e) {
+      if (crear === 0) {
+        var parametros = {
+          menuCr: menu,
+          C: 0,
+          R: 0,
+          U: 0,
+          D: 0,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/agregarMenUsu', {
+          params: parametros
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else {
+        var _parametros = {
+          menuCr: menu,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/quitarMenUsu', {
+          params: _parametros
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      }
+    },
+    Consultar: function Consultar(ver, modificar1, modificar2, menu, e) {
+      if (ver === 2 && modificar1 === 2) {
+        var parametros = {
+          menuCr: menu,
+          C: 0,
+          R: 1,
+          U: 0,
+          D: 0,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/agregarMenUsu', {
+          params: parametros
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (ver === 0) {
+        var _parametros2 = {
+          menuCr: menu,
+          C: 0,
+          R: 1,
+          U: modificar2,
+          D: 0,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/modificarMenUsu', {
+          params: _parametros2
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (ver === 1 && modificar2 === 1) {
+        var _parametros3 = {
+          menuCr: menu,
+          C: 0,
+          R: 0,
+          U: modificar2,
+          D: 0,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/modificarMenUsu', {
+          params: _parametros3
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (ver === 1 && modificar1 === 0) {
+        var _parametros4 = {
+          menuCr: menu,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/quitarMenUsu', {
+          params: _parametros4
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      }
+    },
+    Modificar: function Modificar(ver1, modificar, ver2, menu, e) {
+      if (ver1 === 2 && modificar === 2) {
+        var parametros = {
+          menuCr: menu,
+          C: 0,
+          R: 0,
+          U: 1,
+          D: 0,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/agregarMenUsu', {
+          params: parametros
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (modificar === 0) {
+        var _parametros5 = {
+          menuCr: menu,
+          C: 0,
+          R: ver2,
+          U: 1,
+          D: 0,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/modificarMenUsu', {
+          params: _parametros5
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (ver2 === 1 && modificar === 1) {
+        var _parametros6 = {
+          menuCr: menu,
+          C: 0,
+          R: ver2,
+          U: 0,
+          D: 0,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/modificarMenUsu', {
+          params: _parametros6
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (modificar === 1 && ver1 === 0) {
+        var _parametros7 = {
+          menuCr: menu,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/quitarMenUsu', {
+          params: _parametros7
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      }
+    },
+    crFactura: function crFactura(crear, leer, modificar, menu, e) {
+      if (crear === 2 && leer === 2 && modificar === 2) {
+        var parametros = {
+          menuCr: menu,
+          C: 1,
+          R: 0,
+          U: 0,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/agregarMenUsu', {
+          params: parametros
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (crear === 1 && leer === 0 && modificar === 0) {
+        var _parametros8 = {
+          menuCr: menu,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/quitarMenUsu', {
+          params: _parametros8
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (crear === 1) {
+        var _parametros9 = {
+          menuCr: menu,
+          C: 0,
+          R: leer,
+          U: modificar,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/modificarMenUsu', {
+          params: _parametros9
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (crear === 0) {
+        var _parametros10 = {
+          menuCr: menu,
+          C: 1,
+          R: leer,
+          U: modificar,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/modificarMenUsu', {
+          params: _parametros10
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      }
+    },
+    verFactura: function verFactura(crear, leer, modificar, menu, e) {
+      if (crear === 2 && leer === 2 && modificar === 2) {
+        var parametros = {
+          menuCr: menu,
+          C: 0,
+          R: 1,
+          U: 0,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/agregarMenUsu', {
+          params: parametros
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (crear === 0 && leer === 1 && modificar === 0) {
+        var _parametros11 = {
+          menuCr: menu,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/quitarMenUsu', {
+          params: _parametros11
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (leer === 1) {
+        var _parametros12 = {
+          menuCr: menu,
+          C: crear,
+          R: 0,
+          U: modificar,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/modificarMenUsu', {
+          params: _parametros12
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (leer === 0) {
+        var _parametros13 = {
+          menuCr: menu,
+          C: crear,
+          R: 1,
+          U: modificar,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/modificarMenUsu', {
+          params: _parametros13
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      }
+    },
+    modFactura: function modFactura(crear, leer, modificar, menu, e) {
+      if (crear === 2 && leer === 2 && modificar === 2) {
+        var parametros = {
+          menuCr: menu,
+          C: 0,
+          R: 0,
+          U: 1,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/agregarMenUsu', {
+          params: parametros
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (crear === 0 && leer === 0 && modificar === 1) {
+        var _parametros14 = {
+          menuCr: menu,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/quitarMenUsu', {
+          params: _parametros14
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (modificar === 1) {
+        var _parametros15 = {
+          menuCr: menu,
+          C: crear,
+          R: leer,
+          U: 0,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/modificarMenUsu', {
+          params: _parametros15
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (modificar === 0) {
+        var _parametros16 = {
+          menuCr: menu,
+          C: crear,
+          R: leer,
+          U: 1,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/modificarMenUsu', {
+          params: _parametros16
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      }
+    },
+    verAsignar: function verAsignar(crear, leer, modificar, eliminar, menu, e) {
+      if (crear === 2 && leer === 2 && modificar === 2 && eliminar === 2) {
+        var parametros = {
+          menuCr: menu,
+          C: 0,
+          R: 1,
+          U: 0,
+          D: 0,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/agregarMenUsu', {
+          params: parametros
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (crear === 0 && leer === 1 && modificar === 0 && eliminar === 0) {
+        var _parametros17 = {
+          menuCr: menu,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/quitarMenUsu', {
+          params: _parametros17
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (leer === 1) {
+        var _parametros18 = {
+          menuCr: menu,
+          C: crear,
+          R: 0,
+          U: modificar,
+          D: eliminar,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/modificarMenUsu', {
+          params: _parametros18
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (leer === 0) {
+        var _parametros19 = {
+          menuCr: menu,
+          C: crear,
+          R: 1,
+          U: modificar,
+          D: eliminar,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/modificarMenUsu', {
+          params: _parametros19
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      }
+    },
+    modAsignar: function modAsignar(crear, leer, modificar, eliminar, menu, e) {
+      if (crear === 2 && leer === 2 && modificar === 2 && eliminar === 2) {
+        var parametros = {
+          menuCr: menu,
+          C: 0,
+          R: 0,
+          U: 1,
+          D: 0,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/agregarMenUsu', {
+          params: parametros
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (crear === 0 && leer === 0 && modificar === 1 && eliminar === 0) {
+        var _parametros20 = {
+          menuCr: menu,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/quitarMenUsu', {
+          params: _parametros20
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (modificar === 1) {
+        var _parametros21 = {
+          menuCr: menu,
+          C: crear,
+          R: leer,
+          U: 0,
+          D: eliminar,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/modificarMenUsu', {
+          params: _parametros21
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (modificar === 0) {
+        var _parametros22 = {
+          menuCr: menu,
+          C: crear,
+          R: leer,
+          U: 1,
+          D: eliminar,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/modificarMenUsu', {
+          params: _parametros22
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      }
+    },
+    caHoras: function caHoras(crear, leer, modificar, eliminar, menu, e) {
+      if (crear === 2 && leer === 2 && modificar === 2 && eliminar === 2) {
+        var parametros = {
+          menuCr: menu,
+          C: 1,
+          R: 0,
+          U: 0,
+          D: 0,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/agregarMenUsu', {
+          params: parametros
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (crear === 1 && leer === 0 && modificar === 0 && eliminar === 0) {
+        var _parametros23 = {
+          menuCr: menu,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/quitarMenUsu', {
+          params: _parametros23
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (crear === 1) {
+        var _parametros24 = {
+          menuCr: menu,
+          C: 0,
+          R: leer,
+          U: modificar,
+          D: eliminar,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/modificarMenUsu', {
+          params: _parametros24
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (crear === 0) {
+        var _parametros25 = {
+          menuCr: menu,
+          C: 1,
+          R: leer,
+          U: modificar,
+          D: eliminar,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/modificarMenUsu', {
+          params: _parametros25
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      }
+    },
+    eliHoras: function eliHoras(crear, leer, modificar, eliminar, menu, e) {
+      if (crear === 2 && leer === 2 && modificar === 2 && eliminar === 2) {
+        var parametros = {
+          menuCr: menu,
+          C: 0,
+          R: 0,
+          U: 0,
+          D: 1,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/agregarMenUsu', {
+          params: parametros
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (crear === 0 && leer === 0 && modificar === 0 && eliminar === 1) {
+        var _parametros26 = {
+          menuCr: menu,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/quitarMenUsu', {
+          params: _parametros26
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (eliminar === 1) {
+        var _parametros27 = {
+          menuCr: menu,
+          C: crear,
+          R: leer,
+          U: modificar,
+          D: 0,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/modificarMenUsu', {
+          params: _parametros27
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else if (eliminar === 0) {
+        var _parametros28 = {
+          menuCr: menu,
+          C: crear,
+          R: leer,
+          U: modificar,
+          D: 1,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/modificarMenUsu', {
+          params: _parametros28
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      }
+    },
+    conHorasNoC: function conHorasNoC(modificar, menu, e) {
+      if (modificar === 0) {
+        var parametros = {
+          menuCr: menu,
+          C: 1,
+          R: 1,
+          U: 1,
+          D: 1,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/agregarMenUsu', {
+          params: parametros
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else {
+        var _parametros29 = {
+          menuCr: menu,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/quitarMenUsu', {
+          params: _parametros29
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      }
+    },
+    carHorasNoC: function carHorasNoC(modificar, menu, e) {
+      if (modificar === 0) {
+        var parametros = {
+          menuCr: menu,
+          C: 1,
+          R: 1,
+          U: 1,
+          D: 0,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/agregarMenUsu', {
+          params: parametros
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      } else {
+        var _parametros30 = {
+          menuCr: menu,
+          idUsuario: self.usuario.data
+        };
+        axios.get('/quitarMenUsu', {
+          params: _parametros30
+        }).then(function (response) {
+          if (response.status === 200 && response.data.response === true) {
+            self.actualizarDetalleMenu(self.usuario.data);
+          } else {
+            throw response.data;
+          }
+        });
+      }
+    },
+    actualizarDetalleMenu: function actualizarDetalleMenu(idUsuario) {
+      infoUsuario = [];
+      self.permisoRRHH = false;
+      self.permisoContraloria = false;
+      self.permisoSocio = false;
+      self.permisoEncargado = true;
+      self.detalleMenu.error = false;
+      self.crUsuario.checked = false;
+      self.crUsuario.c = 0;
+      self.coUsuario.checked = false;
+      self.coUsuario.r = 2;
+      self.coUsuario.u = 2;
+      self.modUsuario.checked = false;
+      self.modUsuario.r = 2;
+      self.modUsuario.u = 2;
+      self.crCliente.checked = false;
+      self.crCliente.c = 0;
+      self.coCliente.checked = false;
+      self.coCliente.r = 2;
+      self.coCliente.u = 2;
+      self.modCliente.checked = false;
+      self.modCliente.r = 2;
+      self.modCliente.u = 2;
+      self.crProyecto.checked = false;
+      self.crProyecto.c = 0;
+      self.coProyecto.checked = false;
+      self.coProyecto.r = 2;
+      self.coProyecto.u = 2;
+      self.modProyecto.checked = false;
+      self.modProyecto.r = 2;
+      self.modProyecto.u = 2;
+      self.crFact.checked = false;
+      self.crFact.c = 2;
+      self.crFact.r = 2;
+      self.crFact.u = 2;
+      self.verFact.checked = false;
+      self.verFact.c = 2;
+      self.verFact.r = 2;
+      self.verFact.u = 2;
+      self.modFact.checked = false;
+      self.modFact.c = 2;
+      self.modFact.r = 2;
+      self.modFact.u = 2;
+      self.verAsigna.checked = false;
+      self.verAsigna.c = 2;
+      self.verAsigna.r = 2;
+      self.verAsigna.u = 2;
+      self.verAsigna.d = 2;
+      self.modAsigna.checked = false;
+      self.modAsigna.c = 2;
+      self.modAsigna.r = 2;
+      self.modAsigna.u = 2;
+      self.modAsigna.d = 2;
+      self.caHora.checked = false;
+      self.caHora.c = 2;
+      self.caHora.r = 2;
+      self.caHora.u = 2;
+      self.caHora.d = 2;
+      self.eliHora.checked = false;
+      self.eliHora.c = 2;
+      self.eliHora.r = 2;
+      self.eliHora.u = 2;
+      self.eliHora.d = 2;
+      self.conHoraNoC.checked = false;
+      self.conHoraNoC.u = 0;
+      self.carHoraNoC.checked = false;
+      self.carHoraNoC.u = 0;
+      var parametros = {
+        idUsuario: idUsuario
+      };
+      axios.get('/detalleMenu', {
+        params: parametros
+      }).then(function (response) {
+        if (response.status === 200 && response.data.response === true) {
+          self.usuario.data = response.data.id_usuario;
+          self.infoUsuario = response.data.datosUsuario;
+          self.division.data = response.data.datosUsuario.id_division;
+
+          if (self.division.data === 6) {
+            self.permisoRRHH = true;
+          } else if (self.division.data === 9) {
+            self.permisoContraloria = true;
+          }
+
+          self.cargo.data = response.data.datosUsuario.id_cargo;
+
+          if (self.division.data === 16) {
+            self.permisoSocio = true;
+            self.permisoEncargado = false;
+          }
+
+          self.detalleMenu.data = response.data.info;
+
+          for (var i = 0; i < self.detalleMenu.data.length; i++) {
+            if (self.detalleMenu.data[i].id_menu === 2) {
+              self.crUsuario.checked = true;
+              self.crUsuario.c = 1;
+            }
+
+            if (self.detalleMenu.data[i].id_menu === 3) {
+              if (self.detalleMenu.data[i].R === 1) {
+                self.coUsuario.checked = true;
+                self.coUsuario.r = self.detalleMenu.data[i].R;
+                self.coUsuario.u = self.detalleMenu.data[i].U;
+                self.modUsuario.u = self.detalleMenu.data[i].U;
+              }
+
+              if (self.detalleMenu.data[i].U === 1) {
+                self.modUsuario.checked = true;
+                self.modUsuario.r = self.detalleMenu.data[i].R;
+                self.modUsuario.u = self.detalleMenu.data[i].U;
+                self.coUsuario.r = self.detalleMenu.data[i].R;
+              }
+            }
+
+            if (self.detalleMenu.data[i].id_menu === 5) {
+              self.crCliente.checked = true;
+              self.crCliente.c = 1;
+            }
+
+            if (self.detalleMenu.data[i].id_menu === 6) {
+              if (self.detalleMenu.data[i].R === 1) {
+                self.coCliente.checked = true;
+                self.coCliente.r = self.detalleMenu.data[i].R;
+                self.coCliente.u = self.detalleMenu.data[i].U;
+                self.modCliente.u = self.detalleMenu.data[i].U;
+              }
+
+              if (self.detalleMenu.data[i].U === 1) {
+                self.modCliente.checked = true;
+                self.modCliente.r = self.detalleMenu.data[i].R;
+                self.modCliente.u = self.detalleMenu.data[i].U;
+                self.coCliente.r = self.detalleMenu.data[i].R;
+              }
+            }
+
+            if (self.detalleMenu.data[i].id_menu === 7) {
+              if (self.detalleMenu.data[i].C === 1) {
+                self.crFact.checked = true;
+                self.crFact.c = self.detalleMenu.data[i].C;
+                self.crFact.r = self.detalleMenu.data[i].R;
+                self.crFact.u = self.detalleMenu.data[i].U;
+                self.verFact.c = self.detalleMenu.data[i].C;
+                self.verFact.r = self.detalleMenu.data[i].R;
+                self.verFact.u = self.detalleMenu.data[i].U;
+                self.modFact.c = self.detalleMenu.data[i].C;
+                self.modFact.r = self.detalleMenu.data[i].R;
+                self.modFact.u = self.detalleMenu.data[i].U;
+              }
+
+              if (self.detalleMenu.data[i].R === 1) {
+                self.verFact.checked = true;
+                self.verFact.c = self.detalleMenu.data[i].C;
+                self.verFact.r = self.detalleMenu.data[i].R;
+                self.verFact.u = self.detalleMenu.data[i].U;
+                self.crFact.c = self.detalleMenu.data[i].C;
+                self.crFact.r = self.detalleMenu.data[i].R;
+                self.crFact.u = self.detalleMenu.data[i].U;
+                self.modFact.c = self.detalleMenu.data[i].C;
+                self.modFact.r = self.detalleMenu.data[i].R;
+                self.modFact.u = self.detalleMenu.data[i].U;
+              }
+
+              if (self.detalleMenu.data[i].U === 1) {
+                self.modFact.checked = true;
+                self.modFact.c = self.detalleMenu.data[i].C;
+                self.modFact.r = self.detalleMenu.data[i].R;
+                self.modFact.u = self.detalleMenu.data[i].U;
+                self.verFact.c = self.detalleMenu.data[i].C;
+                self.verFact.r = self.detalleMenu.data[i].R;
+                self.verFact.u = self.detalleMenu.data[i].U;
+                self.crFact.c = self.detalleMenu.data[i].C;
+                self.crFact.r = self.detalleMenu.data[i].R;
+                self.crFact.u = self.detalleMenu.data[i].U;
+              }
+            }
+
+            if (self.detalleMenu.data[i].id_menu === 9) {
+              self.crProyecto.checked = true;
+              self.crProyecto.c = 1;
+            }
+
+            if (self.detalleMenu.data[i].id_menu === 10) {
+              if (self.detalleMenu.data[i].R === 1) {
+                self.coProyecto.checked = true;
+                self.coProyecto.r = self.detalleMenu.data[i].R;
+                self.coProyecto.u = self.detalleMenu.data[i].U;
+                self.modProyecto.u = self.detalleMenu.data[i].U;
+              }
+
+              if (self.detalleMenu.data[i].U === 1) {
+                self.modProyecto.checked = true;
+                self.modProyecto.r = self.detalleMenu.data[i].R;
+                self.modProyecto.u = self.detalleMenu.data[i].U;
+                self.coProyecto.r = self.detalleMenu.data[i].R;
+              }
+            }
+
+            if (self.detalleMenu.data[i].id_menu === 11) {
+              if (self.detalleMenu.data[i].R === 1) {
+                self.verAsigna.checked = true;
+                self.verAsigna.c = self.detalleMenu.data[i].C;
+                self.verAsigna.r = self.detalleMenu.data[i].R;
+                self.verAsigna.u = self.detalleMenu.data[i].U;
+                self.verAsigna.d = self.detalleMenu.data[i].D;
+                self.modAsigna.c = self.detalleMenu.data[i].C;
+                self.modAsigna.r = self.detalleMenu.data[i].R;
+                self.modAsigna.u = self.detalleMenu.data[i].U;
+                self.modAsigna.d = self.detalleMenu.data[i].D;
+                self.caHora.c = self.detalleMenu.data[i].C;
+                self.caHora.r = self.detalleMenu.data[i].R;
+                self.caHora.u = self.detalleMenu.data[i].U;
+                self.caHora.d = self.detalleMenu.data[i].D;
+                self.eliHora.c = self.detalleMenu.data[i].C;
+                self.eliHora.r = self.detalleMenu.data[i].R;
+                self.eliHora.u = self.detalleMenu.data[i].U;
+                self.eliHora.d = self.detalleMenu.data[i].D;
+              }
+
+              if (self.detalleMenu.data[i].U === 1) {
+                self.modAsigna.checked = true;
+                self.modAsigna.c = self.detalleMenu.data[i].C;
+                self.modAsigna.r = self.detalleMenu.data[i].R;
+                self.modAsigna.u = self.detalleMenu.data[i].U;
+                self.modAsigna.d = self.detalleMenu.data[i].D;
+                self.verAsigna.c = self.detalleMenu.data[i].C;
+                self.verAsigna.r = self.detalleMenu.data[i].R;
+                self.verAsigna.u = self.detalleMenu.data[i].U;
+                self.verAsigna.d = self.detalleMenu.data[i].D;
+                self.caHora.c = self.detalleMenu.data[i].C;
+                self.caHora.r = self.detalleMenu.data[i].R;
+                self.caHora.u = self.detalleMenu.data[i].U;
+                self.caHora.d = self.detalleMenu.data[i].D;
+                self.eliHora.c = self.detalleMenu.data[i].C;
+                self.eliHora.r = self.detalleMenu.data[i].R;
+                self.eliHora.u = self.detalleMenu.data[i].U;
+                self.eliHora.d = self.detalleMenu.data[i].D;
+              }
+
+              if (self.detalleMenu.data[i].C === 1) {
+                self.caHora.checked = true;
+                self.caHora.c = self.detalleMenu.data[i].C;
+                self.caHora.r = self.detalleMenu.data[i].R;
+                self.caHora.u = self.detalleMenu.data[i].U;
+                self.caHora.d = self.detalleMenu.data[i].D;
+                self.modAsigna.c = self.detalleMenu.data[i].C;
+                self.modAsigna.r = self.detalleMenu.data[i].R;
+                self.modAsigna.u = self.detalleMenu.data[i].U;
+                self.modAsigna.d = self.detalleMenu.data[i].D;
+                self.verAsigna.c = self.detalleMenu.data[i].C;
+                self.verAsigna.r = self.detalleMenu.data[i].R;
+                self.verAsigna.u = self.detalleMenu.data[i].U;
+                self.verAsigna.d = self.detalleMenu.data[i].D;
+                self.eliHora.c = self.detalleMenu.data[i].C;
+                self.eliHora.r = self.detalleMenu.data[i].R;
+                self.eliHora.u = self.detalleMenu.data[i].U;
+                self.eliHora.d = self.detalleMenu.data[i].D;
+              }
+
+              if (self.detalleMenu.data[i].D === 1) {
+                self.eliHora.checked = true;
+                self.eliHora.c = self.detalleMenu.data[i].C;
+                self.eliHora.r = self.detalleMenu.data[i].R;
+                self.eliHora.u = self.detalleMenu.data[i].U;
+                self.eliHora.d = self.detalleMenu.data[i].D;
+                self.caHora.c = self.detalleMenu.data[i].C;
+                self.caHora.r = self.detalleMenu.data[i].R;
+                self.caHora.u = self.detalleMenu.data[i].U;
+                self.caHora.d = self.detalleMenu.data[i].D;
+                self.modAsigna.c = self.detalleMenu.data[i].C;
+                self.modAsigna.r = self.detalleMenu.data[i].R;
+                self.modAsigna.u = self.detalleMenu.data[i].U;
+                self.modAsigna.d = self.detalleMenu.data[i].D;
+                self.verAsigna.c = self.detalleMenu.data[i].C;
+                self.verAsigna.r = self.detalleMenu.data[i].R;
+                self.verAsigna.u = self.detalleMenu.data[i].U;
+                self.verAsigna.d = self.detalleMenu.data[i].D;
+              }
+            }
+
+            if (self.detalleMenu.data[i].id_menu === 13) {
+              if (self.detalleMenu.data[i].U === 1) {
+                self.conHoraNoC.checked = true;
+                self.conHoraNoC.u = self.detalleMenu.data[i].U;
+              }
+            }
+
+            if (self.detalleMenu.data[i].id_menu === 14) {
+              if (self.detalleMenu.data[i].U === 1) {
+                self.carHoraNoC.checked = true;
+                self.carHoraNoC.u = self.detalleMenu.data[i].U;
+              }
+            }
+          }
+        } else {
+          throw response.data;
+        }
       });
     }
   } // Fin methods

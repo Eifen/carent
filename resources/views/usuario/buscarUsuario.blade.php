@@ -65,6 +65,7 @@
                   <th scope="col">Estatus</th>
                   <th scope="col"></th>
                   <th scope="col" v-if="permisoActualizar"></th>
+                  <th scope="col" v-if="permisoActualizar">Asignar Menus</th>
                 </tr>
               </thead>
               <tbody>
@@ -81,6 +82,9 @@
                     <a v-bind:href="'/formModificarUsuario/'+usuario.id" target="_self">
                        <i class="far fa-edit"></i>
                     </a>
+                  </td>
+                  <td>
+                    <i class="fas fa-user-edit" v-on:click="mostrarDetalleMenu(usuario.id, $event)"></i>
                   </td>
                 </tr>
               </tbody>
@@ -178,6 +182,279 @@
                     <input class="form-control" type="text" disabled v-bind:value="detalleUsuario.data.cargo">
                   </div>
                 </form>
+              </div>
+              <div class="modal-footer">
+                <button class="btn"
+                        data-dismiss="modal"
+                        type="button">Ok</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="modal-asignar-menu" class="modal fade" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4>Asignar los Menus</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div v-if="detalleMenu.error" class="alert alert-warning">
+                  Ocurrio un error al intentar mostrar el detalle del usuario, por favor intente nuevamente o comuníquese con el administrador del sistema!
+                </div>
+                <h5>Datos del Empleado</h5>
+                <form class="row" v-if="!detalleMenu.error">
+                  <div class="form-group col-12 col-sm-6">
+                    <label>Nombre</label>
+                    <input class="form-control" type="text" disabled v-bind:value="infoUsuario.nombre">
+                  </div>
+                  <div class="form-group col-12 col-sm-6">
+                    <label>Division</label>
+                    <input class="form-control" type="text" disabled v-bind:value="infoUsuario.Ddivision">
+                  </div>
+                  <div class="form-group col-12 col-sm-6">
+                    <label>Cargo</label>
+                    <input class="form-control" type="text" disabled v-bind:value="infoUsuario.Dcargo">
+                  </div>
+                </form>
+                <h5 v-if="permisoRRHH">Usuarios</h5>
+                <form class="row" v-if="!detalleMenu.error">
+                  <div class="custom-control custom-switch" v-if="permisoRRHH">
+                    <label>Crear Usuarios</label>
+                    <div class="form-group form-check col-12">
+                      <input class="custom-control-input"
+                             id="crUsuario"
+                             type="checkbox"
+                             v-model="crUsuario.checked"
+                             v-on:change="Crear(crUsuario.c, crUsuario.menu, $event)">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="crUsuario"></label>
+                    </div>                
+                  </div>
+                  <div class="custom-control custom-switch" v-if="permisoRRHH">
+                    <label>Consultar Usuarios</label>
+                    <div class="form-group form-check col-12">
+                      <input class="custom-control-input"
+                             id="coUsuario"
+                             type="checkbox"
+                             v-model="coUsuario.checked"
+                             v-on:change="Consultar(coUsuario.r, coUsuario.u, modUsuario.u, coUsuario.menu, $event)">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="coUsuario"></label>
+                    </div>                
+                  </div>
+                  <div class="custom-control custom-switch" v-if="permisoRRHH">
+                    <label>Modificar Usuarios</label>
+                    <div class="form-group form-check col-12">
+                      <input class="custom-control-input"
+                             id="modUsuario"
+                             type="checkbox"
+                             v-model="modUsuario.checked"
+                             v-on:change="Modificar(modUsuario.r, modUsuario.u, coUsuario.r, modUsuario.menu, $event)">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="modUsuario"></label>
+                    </div>                
+                  </div>
+                </form>
+                <h5 v-if="permisoContraloria">Clientes</h5>
+                <form class="row" v-if="!detalleMenu.error">
+                  <div class="custom-control custom-switch" v-if="permisoContraloria">
+                    <label>Crear Clientes</label>
+                    <div class="form-group form-check col-12">
+                      <input class="custom-control-input"
+                             id="crCliente"
+                             type="checkbox"
+                             v-model="crCliente.checked"
+                             v-on:change="Crear(crCliente.c, crCliente.menu, $event)">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="crCliente"></label>
+                    </div>                
+                  </div>
+                  <div class="custom-control custom-switch" v-if="permisoContraloria">
+                    <label>Consultar Clientes</label>
+                    <div class="form-group form-check col-12">
+                      <input class="custom-control-input"
+                             id="coCliente"
+                             type="checkbox"
+                             v-model="coCliente.checked"
+                             v-on:change="Consultar(coCliente.r, coCliente.u, modCliente.u, coCliente.menu, $event)">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="coCliente"></label>
+                    </div>                
+                  </div>
+                  <div class="custom-control custom-switch" v-if="permisoContraloria">
+                    <label>Modificar Clientes</label>
+                    <div class="form-group form-check col-12">
+                      <input class="custom-control-input"
+                             id="modCliente"
+                             type="checkbox"
+                             v-model="modCliente.checked"
+                             v-on:change="Modificar(modCliente.r, modCliente.u, coCliente.r, modCliente.menu, $event)">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="modCliente"></label>
+                    </div>                
+                  </div>
+                </form>
+
+                <h5 v-if="permisoContraloria">Proyectos</h5>
+                <form class="row" v-if="!detalleMenu.error">
+                  <div class="custom-control custom-switch" v-if="permisoContraloria">
+                    <label>Crear Proyectos</label>
+                    <div class="form-group form-check col-12">
+                      <input class="custom-control-input"
+                             id="crProyecto"
+                             type="checkbox"
+                             v-model="crProyecto.checked"
+                             v-on:change="Crear(crProyecto.c, crProyecto.menu, $event)">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="crProyecto"></label>
+                    </div>                
+                  </div>
+                  <div class="custom-control custom-switch" v-if="permisoContraloria">
+                    <label>Lista de Proyecto</label>
+                    <div class="form-group form-check col-12">
+                      <input class="custom-control-input"
+                             id="coProyecto"
+                             type="checkbox"
+                             v-model="coProyecto.checked"
+                             v-on:change="Consultar(coProyecto.r, coProyecto.u, modProyecto.u, coProyecto.menu, $event)">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="coProyecto"></label>
+                    </div>                
+                  </div>
+                  <div class="custom-control custom-switch" v-if="permisoContraloria">
+                    <label>Modificar Proyectos</label>
+                    <div class="form-group form-check col-12">
+                      <input class="custom-control-input"
+                             id="modProyecto"
+                             type="checkbox"
+                             v-model="modProyecto.checked"
+                             v-on:change="Modificar(modProyecto.r, modProyecto.u, coProyecto.r, modProyecto.menu, $event)">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="modProyecto"></label>
+                    </div>                
+                  </div>
+                </form>
+
+
+
+
+                 <h5>Detalle de Facturacion</h5>
+                <form class="row" v-if="!detalleMenu.error">
+                  <div class="custom-control custom-switch" v-if="permisoContraloria">
+                    <label>Crear Detalles de Facturacion</label>
+                    <div class="form-group form-check col-12">
+                      <input class="custom-control-input"
+                             id="crFact"
+                             type="checkbox"
+                             v-model="crFact.checked"
+                             v-on:change="crFactura(crFact.c, crFact.r, crFact.u, crFact.menu, $event)">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="crFact"></label>
+                    </div>                
+                  </div>
+                  <div class="custom-control custom-switch">
+                    <label>Ver Datos de Facturacion</label>
+                    <div class="form-group form-check col-12">
+                      <input class="custom-control-input"
+                             id="verFact"
+                             type="checkbox"
+                             v-model="verFact.checked"
+                             v-on:change="verFactura(verFact.c, verFact.r, verFact.u, verFact.menu, $event)">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="verFact"></label>
+                    </div>                
+                  </div>
+                  <div class="custom-control custom-switch" v-if="permisoContraloria">
+                    <label>Modificar Detalles de Facturacion</label>
+                    <div class="form-group form-check col-12">
+                      <input class="custom-control-input"
+                             id="modFact"
+                             type="checkbox"
+                             v-model="modFact.checked"
+                             v-on:change="modFactura(modFact.c, modFact.r, modFact.u, modFact.menu, $event)">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="modFact"></label>
+                    </div>                
+                  </div>
+                </form>
+                <h5>Asignar Proyectos</h5>
+                <form class="row" v-if="!detalleMenu.error">
+                  <div class="custom-control custom-switch" v-if="permisoSocio">
+                    <label>Ver Personal en los Proyectos</label>
+                    <div class="form-group form-check col-12">
+                      <input class="custom-control-input"
+                             id="verAsigna"
+                             type="checkbox"
+                             v-model="verAsigna.checked"
+                             v-on:change="verAsignar(verAsigna.c, verAsigna.r, verAsigna.u, verAsigna.d, verAsigna.menu, $event)">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="verAsigna"></label>
+                    </div>                
+                  </div>
+                  <div class="custom-control custom-switch" v-if="permisoEncargado">
+                    <label>Asignar Personal (Unicamente para directores o encargados de la division)</label>
+                    <div class="form-group form-check col-12">
+                      <input class="custom-control-input"
+                             id="modAsigna"
+                             type="checkbox"
+                             v-model="modAsigna.checked"
+                             v-on:change="modAsignar(modAsigna.c, modAsigna.r, modAsigna.u, modAsigna.d, modAsigna.menu, $event)">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="modAsigna"></label>
+                    </div>                
+                  </div>
+                </form>
+
+                <h5>Horas Cargables</h5>
+                <form class="row" v-if="!detalleMenu.error">
+                  <div class="custom-control custom-switch">
+                    <label>Cargar Horas</label>
+                    <div class="form-group form-check col-12">
+                      <input class="custom-control-input"
+                             id="caHora"
+                             type="checkbox"
+                             v-model="caHora.checked"
+                             v-on:change="caHoras(caHora.c, caHora.r, caHora.u, caHora.d, caHora.menu, $event)">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="caHora"></label>
+                    </div>                
+                  </div>
+                  <div class="custom-control custom-switch" v-if="permisoSocio">
+                    <label>Modificar Horas Cargadas</label>
+                    <div class="form-group form-check col-12">
+                      <input class="custom-control-input"
+                             id="modAsigna"
+                             type="checkbox"
+                             v-model="modAsigna.checked"
+                             v-on:change="modAsignar(modAsigna.c, modAsigna.r, modAsigna.u, modAsigna.d, modAsigna.menu, $event)">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="modAsigna"></label>
+                    </div>                
+                  </div>
+                  <div class="custom-control custom-switch">
+                    <label>Eliminar Horas Cargadas (Para socios,directores o encargados de division)</label>
+                    <div class="form-group form-check col-12">
+                      <input class="custom-control-input"
+                             id="eliHora"
+                             type="checkbox"
+                             v-model="eliHora.checked"
+                             v-on:change="eliHoras(eliHora.c, eliHora.r, eliHora.u, eliHora.d, eliHora.menu, $event)">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="eliHora"></label>
+                    </div>                
+                  </div>
+                </form>
+                <h5>Horas No Cargables</h5>
+                <form class="row" v-if="!detalleMenu.error">
+                  <div class="custom-control custom-switch">
+                    <label>Conceptos de Horas no Cargables</label>
+                    <div class="form-group form-check col-12">
+                      <input class="custom-control-input"
+                             id="conHoraNoC"
+                             type="checkbox"
+                             v-model="conHoraNoC.checked"
+                             v-on:change="conHorasNoC(conHoraNoC.u, conHoraNoC.menu, $event)">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="conHoraNoC"></label>
+                    </div>                
+                  </div>
+                  <div class="custom-control custom-switch">
+                    <label>Cargar Horas no Cargadas</label>
+                    <div class="form-group form-check col-12">
+                      <input class="custom-control-input"
+                             id="carHoraNoC"
+                             type="checkbox"
+                             v-model="carHoraNoC.checked"
+                             v-on:change="carHorasNoC(carHoraNoC.u, carHoraNoC.menu, $event)">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="carHoraNoC"></label>
+                    </div>                
+                  </div>
+                </form>                
               </div>
               <div class="modal-footer">
                 <button class="btn"
