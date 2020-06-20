@@ -34217,7 +34217,7 @@ var app = new Vue({
 
           self.cargo.data = response.data.datosUsuario.id_cargo;
 
-          if (self.division.data === 16) {
+          if (self.cargo.data === 16) {
             self.permisoSocio = true;
             self.permisoEncargado = false;
           }
@@ -34615,6 +34615,14 @@ var app = new Vue({
       }
     },
     crFactura: function crFactura(crear, leer, modificar, menu, e) {
+      if (self.crFact.checked === true) {
+        self.crFact.checked = false;
+      }
+
+      if (self.crFact.checked === false) {
+        self.crFact.checked = true;
+      }
+
       if (crear === 2 && leer === 2 && modificar === 2) {
         var parametros = {
           menuCr: menu,
@@ -34683,6 +34691,14 @@ var app = new Vue({
       }
     },
     verFactura: function verFactura(crear, leer, modificar, menu, e) {
+      if (self.verFact.checked === true) {
+        self.verFact.checked = false;
+      }
+
+      if (self.verFact.checked === false) {
+        self.verFact.checked = true;
+      }
+
       if (crear === 2 && leer === 2 && modificar === 2) {
         var parametros = {
           menuCr: menu,
@@ -34751,6 +34767,14 @@ var app = new Vue({
       }
     },
     modFactura: function modFactura(crear, leer, modificar, menu, e) {
+      if (self.modFact.checked === true) {
+        self.modFact.checked = false;
+      }
+
+      if (self.modFact.checked === false) {
+        self.modFact.checked = true;
+      }
+
       if (crear === 2 && leer === 2 && modificar === 2) {
         var parametros = {
           menuCr: menu,
@@ -34819,6 +34843,14 @@ var app = new Vue({
       }
     },
     verAsignar: function verAsignar(crear, leer, modificar, eliminar, menu, e) {
+      if (self.verAsigna.checked === true) {
+        self.verAsigna.checked = false;
+      }
+
+      if (self.verAsigna.checked === false) {
+        self.verAsigna.checked = true;
+      }
+
       if (crear === 2 && leer === 2 && modificar === 2 && eliminar === 2) {
         var parametros = {
           menuCr: menu,
@@ -34890,6 +34922,14 @@ var app = new Vue({
       }
     },
     modAsignar: function modAsignar(crear, leer, modificar, eliminar, menu, e) {
+      if (self.modAsigna.checked === true) {
+        self.modAsigna.checked = false;
+      }
+
+      if (self.modAsigna.checked === false) {
+        self.modAsigna.checked = true;
+      }
+
       if (crear === 2 && leer === 2 && modificar === 2 && eliminar === 2) {
         var parametros = {
           menuCr: menu,
@@ -34961,6 +35001,14 @@ var app = new Vue({
       }
     },
     caHoras: function caHoras(crear, leer, modificar, eliminar, menu, e) {
+      if (self.caHora.checked === true) {
+        self.caHora.checked = false;
+      }
+
+      if (self.caHora.checked === false) {
+        self.caHora.checked = true;
+      }
+
       if (crear === 2 && leer === 2 && modificar === 2 && eliminar === 2) {
         var parametros = {
           menuCr: menu,
@@ -35032,6 +35080,14 @@ var app = new Vue({
       }
     },
     eliHoras: function eliHoras(crear, leer, modificar, eliminar, menu, e) {
+      if (self.eliHora.checked === true) {
+        self.eliHora.checked = false;
+      }
+
+      if (self.eliHora.checked === false) {
+        self.eliHora.checked = true;
+      }
+
       if (crear === 2 && leer === 2 && modificar === 2 && eliminar === 2) {
         var parametros = {
           menuCr: menu,
@@ -35103,6 +35159,14 @@ var app = new Vue({
       }
     },
     conHorasNoC: function conHorasNoC(modificar, menu, e) {
+      if (self.conHoraNoC.checked === true) {
+        self.conHoraNoC.checked = false;
+      }
+
+      if (self.conHoraNoC.checked === false) {
+        self.conHoraNoC.checked = true;
+      }
+
       if (modificar === 0) {
         var parametros = {
           menuCr: menu,
@@ -35138,6 +35202,14 @@ var app = new Vue({
       }
     },
     carHorasNoC: function carHorasNoC(modificar, menu, e) {
+      if (self.carHoraNoC.checked === true) {
+        self.carHoraNoC.checked = false;
+      }
+
+      if (self.carHoraNoC.checked === false) {
+        self.carHoraNoC.checked = true;
+      }
+
       if (modificar === 0) {
         var parametros = {
           menuCr: menu,
@@ -35174,11 +35246,6 @@ var app = new Vue({
     },
     actualizarDetalleMenu: function actualizarDetalleMenu(idUsuario) {
       infoUsuario = [];
-      self.permisoRRHH = false;
-      self.permisoContraloria = false;
-      self.permisoSocio = false;
-      self.permisoEncargado = true;
-      self.detalleMenu.error = false;
       self.crUsuario.checked = false;
       self.crUsuario.c = 0;
       self.coUsuario.checked = false;
@@ -35203,41 +35270,32 @@ var app = new Vue({
       self.modProyecto.checked = false;
       self.modProyecto.r = 2;
       self.modProyecto.u = 2;
-      self.crFact.checked = false;
       self.crFact.c = 2;
       self.crFact.r = 2;
       self.crFact.u = 2;
-      self.verFact.checked = false;
       self.verFact.c = 2;
       self.verFact.r = 2;
       self.verFact.u = 2;
-      self.modFact.checked = false;
       self.modFact.c = 2;
       self.modFact.r = 2;
       self.modFact.u = 2;
-      self.verAsigna.checked = false;
       self.verAsigna.c = 2;
       self.verAsigna.r = 2;
       self.verAsigna.u = 2;
       self.verAsigna.d = 2;
-      self.modAsigna.checked = false;
       self.modAsigna.c = 2;
       self.modAsigna.r = 2;
       self.modAsigna.u = 2;
       self.modAsigna.d = 2;
-      self.caHora.checked = false;
       self.caHora.c = 2;
       self.caHora.r = 2;
       self.caHora.u = 2;
       self.caHora.d = 2;
-      self.eliHora.checked = false;
       self.eliHora.c = 2;
       self.eliHora.r = 2;
       self.eliHora.u = 2;
       self.eliHora.d = 2;
-      self.conHoraNoC.checked = false;
       self.conHoraNoC.u = 0;
-      self.carHoraNoC.checked = false;
       self.carHoraNoC.u = 0;
       var parametros = {
         idUsuario: idUsuario
@@ -35248,21 +35306,6 @@ var app = new Vue({
         if (response.status === 200 && response.data.response === true) {
           self.usuario.data = response.data.id_usuario;
           self.infoUsuario = response.data.datosUsuario;
-          self.division.data = response.data.datosUsuario.id_division;
-
-          if (self.division.data === 6) {
-            self.permisoRRHH = true;
-          } else if (self.division.data === 9) {
-            self.permisoContraloria = true;
-          }
-
-          self.cargo.data = response.data.datosUsuario.id_cargo;
-
-          if (self.division.data === 16) {
-            self.permisoSocio = true;
-            self.permisoEncargado = false;
-          }
-
           self.detalleMenu.data = response.data.info;
 
           for (var i = 0; i < self.detalleMenu.data.length; i++) {
@@ -35310,7 +35353,6 @@ var app = new Vue({
 
             if (self.detalleMenu.data[i].id_menu === 7) {
               if (self.detalleMenu.data[i].C === 1) {
-                self.crFact.checked = true;
                 self.crFact.c = self.detalleMenu.data[i].C;
                 self.crFact.r = self.detalleMenu.data[i].R;
                 self.crFact.u = self.detalleMenu.data[i].U;
@@ -35323,7 +35365,6 @@ var app = new Vue({
               }
 
               if (self.detalleMenu.data[i].R === 1) {
-                self.verFact.checked = true;
                 self.verFact.c = self.detalleMenu.data[i].C;
                 self.verFact.r = self.detalleMenu.data[i].R;
                 self.verFact.u = self.detalleMenu.data[i].U;
@@ -35336,7 +35377,6 @@ var app = new Vue({
               }
 
               if (self.detalleMenu.data[i].U === 1) {
-                self.modFact.checked = true;
                 self.modFact.c = self.detalleMenu.data[i].C;
                 self.modFact.r = self.detalleMenu.data[i].R;
                 self.modFact.u = self.detalleMenu.data[i].U;
@@ -35372,7 +35412,6 @@ var app = new Vue({
 
             if (self.detalleMenu.data[i].id_menu === 11) {
               if (self.detalleMenu.data[i].R === 1) {
-                self.verAsigna.checked = true;
                 self.verAsigna.c = self.detalleMenu.data[i].C;
                 self.verAsigna.r = self.detalleMenu.data[i].R;
                 self.verAsigna.u = self.detalleMenu.data[i].U;
@@ -35392,7 +35431,6 @@ var app = new Vue({
               }
 
               if (self.detalleMenu.data[i].U === 1) {
-                self.modAsigna.checked = true;
                 self.modAsigna.c = self.detalleMenu.data[i].C;
                 self.modAsigna.r = self.detalleMenu.data[i].R;
                 self.modAsigna.u = self.detalleMenu.data[i].U;
@@ -35412,7 +35450,6 @@ var app = new Vue({
               }
 
               if (self.detalleMenu.data[i].C === 1) {
-                self.caHora.checked = true;
                 self.caHora.c = self.detalleMenu.data[i].C;
                 self.caHora.r = self.detalleMenu.data[i].R;
                 self.caHora.u = self.detalleMenu.data[i].U;
@@ -35432,7 +35469,6 @@ var app = new Vue({
               }
 
               if (self.detalleMenu.data[i].D === 1) {
-                self.eliHora.checked = true;
                 self.eliHora.c = self.detalleMenu.data[i].C;
                 self.eliHora.r = self.detalleMenu.data[i].R;
                 self.eliHora.u = self.detalleMenu.data[i].U;
@@ -35454,14 +35490,12 @@ var app = new Vue({
 
             if (self.detalleMenu.data[i].id_menu === 13) {
               if (self.detalleMenu.data[i].U === 1) {
-                self.conHoraNoC.checked = true;
                 self.conHoraNoC.u = self.detalleMenu.data[i].U;
               }
             }
 
             if (self.detalleMenu.data[i].id_menu === 14) {
               if (self.detalleMenu.data[i].U === 1) {
-                self.carHoraNoC.checked = true;
                 self.carHoraNoC.u = self.detalleMenu.data[i].U;
               }
             }

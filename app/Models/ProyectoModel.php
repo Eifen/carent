@@ -219,7 +219,7 @@ class ProyectoModel extends Model
                                     END AS permiso
                              FROM tbl_menu_usuario mu
                              WHERE mu.id_usuario = '.$id_usuario.'
-                             AND mu.C = 1
+                             AND mu.R = 1
                              AND mu.id_menu = '. $id_menu.'');
 
       if(count($permiso) > 0){

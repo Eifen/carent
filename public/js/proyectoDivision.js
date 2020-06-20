@@ -34448,7 +34448,9 @@ var app = new Vue({
     permisoActualizar: false,
     proyectos: [],
     horasComparar: [],
-    diferencia: 0
+    diferencia: 0,
+    permisoVer: false,
+    permisoCrear: false
   },
   beforeCreate: function beforeCreate() {
     self = this;
