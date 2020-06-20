@@ -86,6 +86,8 @@ var app = new Vue({
     proyectos: [],
     horasComparar: [],
     diferencia: 0,
+    permisoVer: false,
+    permisoCrear: false,
   },
   beforeCreate: function(){
 

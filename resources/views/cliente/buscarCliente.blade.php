@@ -30,7 +30,6 @@
                   <option value="" selected disabled>Consultar por</option>
                   <option value="1">Codigo del Cliente</option>
                   <option value="2">Nombre o Razon Social </option>
-                  <option value="3">Descripcion</option>
                 </select>
               </div>
               <div class="form-group col-12 col-md-6">

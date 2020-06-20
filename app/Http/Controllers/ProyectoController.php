@@ -283,7 +283,7 @@ class ProyectoController extends Controller
     function formCargarHoras($idProyAnalista, Request $request){
 
       $request->session()->put('idProyAnalista', $idProyAnalista);
-      return view('horasCargables/CargarHoras');
+      return view('horasCargables/cargarHoras');
 
     }
 
