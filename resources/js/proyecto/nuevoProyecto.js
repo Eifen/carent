@@ -322,7 +322,7 @@ var app = new Vue({
 
               let minChar = input.getAttribute("data-min");
               let numChar = input.value.length
-              let regexName = /^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/;
+              let regexName = /^[A-Za-zÀ-ÖØ-öø-ÿ 0-9 -]+$/;
 
               if(numChar < minChar){
 
@@ -333,7 +333,7 @@ var app = new Vue({
               }else if(!regexName.test(input.value)){
 
                 respuesta = false;
-                mensaje = "Solo se permiten letras y este caracter (',´)!";
+                mensaje = "Solo se permiten letras y este caracter (',´,0-9)!";
                 zenscroll.toY($(input).offset().top - 100);
 
               }
