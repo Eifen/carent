@@ -34181,7 +34181,7 @@ var app = new Vue({
             if (input.getAttribute("data-min")) {
               var minChar = input.getAttribute("data-min");
               var numChar = input.value.length;
-              var regexName = /^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/;
+              var regexName = /^[A-Za-zÀ-ÖØ-öø-ÿ 0-9 -]+$/;
 
               if (numChar < minChar) {
                 respuesta = false;
@@ -34189,7 +34189,7 @@ var app = new Vue({
                 zenscroll.toY($(input).offset().top - 100);
               } else if (!regexName.test(input.value)) {
                 respuesta = false;
-                mensaje = "Solo se permiten letras y este caracter (',´)!";
+                mensaje = "Solo se permiten letras y este caracter (',´,0-9)!";
                 zenscroll.toY($(input).offset().top - 100);
               }
             } else if (input.getAttribute("data-date")) {

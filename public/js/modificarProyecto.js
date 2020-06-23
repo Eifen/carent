@@ -35078,7 +35078,7 @@ var app = new Vue({
             if (input.getAttribute("data-min")) {
               var minChar = input.getAttribute("data-min");
               var numChar = input.value.length;
-              var regexName = /^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/;
+              var regexName = /^[A-Za-zÀ-ÖØ-öø-ÿ 0-9 -]+$/;
 
               if (numChar < minChar) {
                 respuesta = false;

@@ -410,7 +410,7 @@ var app = new Vue({
 
               let minChar = input.getAttribute("data-min");
               let numChar = input.value.length
-              let regexName = /^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/;
+              let regexName = /^[A-Za-zÀ-ÖØ-öø-ÿ 0-9 -]+$/;
 
               if(numChar < minChar){
 
