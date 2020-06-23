@@ -116,8 +116,6 @@ class ClienteController extends Controller
     $nomusuario_id = $modelo->buscarUsuari($request->session()->get('usuario_id'));
     if(!empty($codigo)){
       $codigoCliente = $codigo->codigo + 1;
-      $email = $modelo->buscarEmail($request->input("email_fiscal"));
-      if(!$email["response"]){
         $parametros = array(
           "idUsuario" => (int) $request->input("idUsuario"),
           "idUsuario2" => (int) $request->input("idUsuario2"),
@@ -136,9 +134,7 @@ class ClienteController extends Controller
           "email_fiscal" => strtolower($request->input("email_fiscal"))
         );
          $response = $modelo->crearCliente($parametros);
-      }else{
-        $response = array("response" => false, "message" => "El correo ya se encuentra asociado a otro usuario");
-      }
+
     }else{
       $codigoCliente = 1000;
         $parametros = array(
