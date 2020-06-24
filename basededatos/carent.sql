@@ -1,15 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.2
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
-
--- Tiempo de generación: 07-06-2020 a las 21:44:55
+-- Tiempo de generación: 24-06-2020 a las 11:04:12
 -- Versión del servidor: 8.0.18
--- Versión de PHP: 7.3.12
+-- Versión de PHP: 7.3.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -22,6 +20,20 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `carent`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `logs_auditoria`
+--
+
+CREATE TABLE `logs_auditoria` (
+  `id` int(11) NOT NULL,
+  `usuario_id` int(11) DEFAULT NULL,
+  `fecha` datetime DEFAULT NULL,
+  `direccion_ip` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `accion` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -2576,7 +2588,8 @@ INSERT INTO `tbl_proyecto` (`id`, `descripcion`, `id_cliente`, `fecha_contrataci
 (3, 'Certificación de Cursos', 1, '05/03/2020', 1),
 (4, 'Proyecto I', 1, '10/03/2020', 0),
 (5, 'inventario IV', 2, '22/02/2020', 1),
-(8, 'Prueba', 4, '10/10/1001', 1);
+(8, 'Prueba', 4, '10/10/1001', 1),
+(9, 'proyecto covid-19', 2, '23/06/2020', 1);
 
 -- --------------------------------------------------------
 
@@ -2631,7 +2644,8 @@ INSERT INTO `tbl_proyecto_divisiones` (`id`, `id_division`, `id_proyecto`, `hora
 (13, 2, 5, 20),
 (14, 10, 8, 21),
 (19, 8, 8, 22),
-(20, 6, 8, 23);
+(20, 6, 8, 23),
+(22, 5, 9, 12);
 
 -- --------------------------------------------------------
 
@@ -2702,6 +2716,12 @@ INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `cedula`, `nombre_1`, `nombr
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `logs_auditoria`
+--
+ALTER TABLE `logs_auditoria`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `tbl_cargo_empleado`
@@ -2865,6 +2885,12 @@ ALTER TABLE `tbl_usuario`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `logs_auditoria`
+--
+ALTER TABLE `logs_auditoria`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `tbl_cargo_empleado`
 --
 ALTER TABLE `tbl_cargo_empleado`
@@ -2970,7 +2996,7 @@ ALTER TABLE `tbl_parroquias`
 -- AUTO_INCREMENT de la tabla `tbl_proyecto`
 --
 ALTER TABLE `tbl_proyecto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_proyecto_analista`
@@ -2982,7 +3008,7 @@ ALTER TABLE `tbl_proyecto_analista`
 -- AUTO_INCREMENT de la tabla `tbl_proyecto_divisiones`
 --
 ALTER TABLE `tbl_proyecto_divisiones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_telefono`
