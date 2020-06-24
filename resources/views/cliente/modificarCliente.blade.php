@@ -344,9 +344,9 @@
                 <label for="piso_fiscal">Piso<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="piso_ficalHelp"
                        class="form-control text-lowercase"
-                       data-validar="true"
                        id="piso_fiscal"
                        v-bind:disabled="form.piso_fiscal.disabled"
+                       v-mask="'XXX'"
                        v-model="form.piso_fiscal.value"
                        v-on:keyup="valuesForm"
                        type="text">
@@ -358,11 +358,9 @@
                 <label for="numero_fiscal">Numero</label>
                 <input aria-describedby="numero_fiscal"
                        class="form-control text-lowercase"
-                       data-formated-number="true"
-                       data-only-number="true"
-                       data-validar="true"
                        id="numero_fiscal"
                        v-bind:disabled="form.numero_fiscal.disabled"
+                       v-mask="'XXXXX'"
                        v-model="form.numero_fiscal.value"
                        v-on:keyup="valuesForm"
                        type="text">

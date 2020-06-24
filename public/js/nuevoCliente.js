@@ -40480,7 +40480,7 @@ var app = new Vue({
           return v.toLocaleUpperCase();
         }
       },
-      N: {
+      M: {
         pattern: /[0-9]/,
         transform: function transform(v) {
           return v.toLocaleUpperCase();

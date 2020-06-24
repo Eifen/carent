@@ -34,8 +34,11 @@ class ProyectoController extends Controller
       $fechaContratacion = $request->input("fechaContratacion");
       $divisiones = $request->input("divisiones");
       $estatus = $request->input("estatus");
+      $usuario_id = $request->session()->get('usuario_id');
+      $fecha = date("Y-m-d H:i:s");
+      $direccion_ip = $request->session()->get('direccion');
 
-      $response = $modelo->crearProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus);
+      $response = $modelo->crearProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus,$usuario_id,$fecha,$direccion_ip);
       return $response;
 
     }
@@ -124,8 +127,11 @@ class ProyectoController extends Controller
       $divisiones = $request->input("divisiones");
       $divisiones_v =  $modelo->detalleDivisionProyecto($id_proyecto);
       $estatus = $request->input("estatus");
+      $usuario_id = $request->session()->get('usuario_id');
+      $fecha = date("Y-m-d H:i:s");
+      $direccion_ip = $request->session()->get('direccion');
 
-      $response = $modelo->modificarProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus,$idProyecto,$divisiones_v);
+      $response = $modelo->modificarProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus,$idProyecto,$divisiones_v,$usuario_id,$fecha,$direccion_ip);
       return $response;
 
     }
@@ -227,7 +233,10 @@ class ProyectoController extends Controller
       $idUsuario = $request->input("idUsuario");
       $idProyecto = $request->input("idDproyecto");
       $id_proyecto_division = $request->input("id_proyecto_division");
-      $analis = $modelo->agregarAnalistaProy($estado,$idUsuario,$idProyecto,$id_proyecto_division);
+      $usuario_id = $request->session()->get('usuario_id');
+      $fecha = date("Y-m-d H:i:s");
+      $direccion_ip = $request->session()->get('direccion');
+      $analis = $modelo->agregarAnalistaProy($estado,$idUsuario,$idProyecto,$id_proyecto_division,$usuario_id,$fecha,$direccion_ip);
 
       $id_usuario = $request->session()->get('usuario_id');
       $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
@@ -244,15 +253,18 @@ class ProyectoController extends Controller
       $modelo = new ProyectoModel();
       $idAnaProy = $request->input("idAnaProy");
       $estatus = $modelo->estatusAnalistaProy($idAnaProy);
+      $idProyecto = $request->input("idDproyecto");
       if ($estatus->id_estatus === 1) {
         $estado = 0;
       }
       if($estatus->id_estatus === 0) {
         $estado = 1;
       }
-      $analis = $modelo->modAnalistaProy($estado,$idAnaProy);
-      $id_usuario = $request->session()->get('usuario_id');
-      $idProyecto = $request->input("idDproyecto");
+      $usuario_id = $request->session()->get('usuario_id');
+      $fecha = date("Y-m-d H:i:s");
+      $direccion_ip = $request->session()->get('direccion');
+      $analis = $modelo->modAnalistaProy($estado,$idAnaProy,$idProyecto,$usuario_id,$fecha,$direccion_ip);
+      $id_usuario = $request->session()->get('usuario_id');      
       $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
       $datosProyecto = $modelo->datosProyecto($idProyecto,$infoUsuario->id_division);
       $analistas = $modelo->analistasProyecto($id_usuario,11,$idProyecto,$infoUsuario->id_division);

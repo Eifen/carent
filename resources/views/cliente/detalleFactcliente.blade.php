@@ -225,8 +225,8 @@
                 <label for="piso_factura">Piso<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="piso_facturaHelp"
                        class="form-control text-lowercase"
-                       data-validar="true"
                        id="piso_factura"
+                       v-mask="'XXX'"
                        v-bind:disabled="form.piso_factura.disabled"
                        v-model="form.piso_factura.value"
                        v-on:keyup="valuesForm"
@@ -239,9 +239,9 @@
                 <label for="numero_factura">Numero</label>
                 <input aria-describedby="numero_factura"
                        class="form-control text-lowercase"
-                       data-validar="true"
                        id="numero_factura"
                        v-bind:disabled="form.numero_factura.disabled"
+                       v-mask="'XXXXX'"
                        v-model="form.numero_factura.value"
                        v-on:keyup="valuesForm"
                        type="text">

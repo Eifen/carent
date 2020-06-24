@@ -167,7 +167,7 @@
               </div>
               <div class="form-group col-12 col-sm-6">
                 <label for="rif">Rif<span class="campo-obligatorio">*</span> </label>
-                <the-mask mask="F- NNNNNNNNNN" :tokens="hexTokens" 
+                <the-mask mask="F- MMMMMMMMMM" :tokens="hexTokens" 
                           class="form-control"
                           id="rif"
                           v-bind:disabled="form.rif.disabled"
@@ -305,9 +305,9 @@
                 <label for="piso_fiscal">Piso<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="piso_ficalHelp"
                        class="form-control text-lowercase"
-                       data-validar="true"
                        id="piso_fiscal"
                        v-bind:disabled="form.piso_fiscal.disabled"
+                       v-mask="'XXX'"
                        v-model="form.piso_fiscal.value"
                        v-on:keyup="valuesForm"
                        type="text">
@@ -319,9 +319,7 @@
                 <label for="numero_fiscal">Numero</label>
                 <input aria-describedby="numero_fiscal"
                        class="form-control text-lowercase"
-                       data-formated-number="true"
-                       data-only-number="true"
-                       data-validar="true"
+                       v-mask="'XXXXX'"
                        id="numero_fiscal"
                        v-bind:disabled="form.numero_fiscal.disabled"
                        v-model="form.numero_fiscal.value"

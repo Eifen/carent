@@ -20,7 +20,7 @@ var app = new Vue({
         pattern: /[cegjpvCEGJPV]/,
         transform: v => v.toLocaleUpperCase()
       },
-      N:{
+      M:{
         pattern: /[0-9]/,
         transform: v => v.toLocaleUpperCase()
       }
