@@ -809,12 +809,22 @@ class ProyectoModel extends Model
 
 
         DB::commit();
-        $info = db::select('SELECT id_analista FROM tbl_proyecto_analista WHERE id = '.$idAnaProy.'');
-        $data = array("usuario_id" => $usuario_id,
+        $info = db::select('SELECT * FROM tbl_proyecto_analista WHERE id = '.$idAnaProy.'');
+        if ($info[0]->id_estatus === 1) {
+          $data = array("usuario_id" => $usuario_id,
+                      "fecha" => $fecha,
+                      "direccion_ip" => $direccion_ip,
+                      "accion" => 'Asignacion del analista: '.$info[0]->id_analista.' al proyecto: '.$idProyecto.'');
+          $bit = DB::table('logs_auditoria')->insertGetId($data);
+        }
+        if ($info[0]->id_estatus === 0) {
+          $data = array("usuario_id" => $usuario_id,
                       "fecha" => $fecha,
                       "direccion_ip" => $direccion_ip,
                       "accion" => 'Eliminacion del analista: '.$info[0]->id_analista.' del proyecto: '.$idProyecto.'');
-        $bit = DB::table('logs_auditoria')->insertGetId($data);
+          $bit = DB::table('logs_auditoria')->insertGetId($data);
+        }
+        
         return array("response" => true, "message" => "Analista actualizado con éxito.");
 
       } catch(\Illuminate\Database\QueryException $ex){
