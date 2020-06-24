@@ -231,7 +231,7 @@
                        v-model="form.piso_factura.value"
                        v-on:keyup="valuesForm"
                        type="text">
-                <small id="piso_facturaHelp" class="form-text text-muted">ejemplo: 24E</small>
+                <small id="piso_facturaHelp" class="form-text text-muted">ejemplo: 24</small>
                 <div class="mensaje"></div>
               </div>
 

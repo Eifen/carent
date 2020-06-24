@@ -350,7 +350,7 @@
                        v-model="form.piso_fiscal.value"
                        v-on:keyup="valuesForm"
                        type="text">
-                <small id="piso_ficalHelp" class="form-text text-muted">ejemplo: 24E</small>
+                <small id="piso_ficalHelp" class="form-text text-muted">ejemplo: 24</small>
                 <div class="mensaje"></div>
               </div>
 
