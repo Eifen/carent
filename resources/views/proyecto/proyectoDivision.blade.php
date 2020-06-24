@@ -73,7 +73,7 @@
                 <label>&nbsp;</label>
                 <button class="btn limpiar_filtro"
                         type="button"
-                        v-on:click="refreshView"> Restablecer</button>
+                        v-on:click="refreshView">Restablecer</button>
               </div>
             </form>
 
@@ -121,7 +121,7 @@
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h4>Detalle del Proyecto</h4>
+                <h4>Detallé del Proyecto</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -153,8 +153,8 @@
               <thead>
                 <tr>
                   <th scope="col">Empleado</th>
-                  <th scope="col">Divison</th>
-                  <th scope="col">Cargo</th>
+                  <th scope="col">División</th>
+                  <th scope="col">Cargó</th>
                   <th scope="col">Horas Cargadas</th>
                 </tr>
               </thead>
@@ -175,7 +175,7 @@
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h4>Asignacion de Personal al Proyecto</h4>
+                <h4>Asignación de Personal al Proyecto</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -218,7 +218,7 @@
               <thead>
                 <tr>
                   <th scope="col">Nombre</th>
-                  <th scope="col">Cargo</th>
+                  <th scope="col">Cargó</th>
                   <th scope="col">Estatus</th>
                   <th scope="col">Asignar horas</th>
                   <th scope="col">Horas Cargadas</th>

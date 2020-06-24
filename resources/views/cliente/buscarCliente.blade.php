@@ -28,8 +28,8 @@
                         v-model="formSearch.select.value"
                         v-on:change="tipoFiltro">
                   <option value="" selected disabled>Consultar por</option>
-                  <option value="1">Codigo del Cliente</option>
-                  <option value="2">Nombre o Razon Social </option>
+                  <option value="1">Código  del Cliente</option>
+                  <option value="2">Nombre o Razón Social</option>
                 </select>
               </div>
               <div class="form-group col-12 col-md-6">
@@ -57,8 +57,8 @@
               <thead>
                 <tr>
                   <th scope="col">Código</th>
-                  <th scope="col">Razon Social</th>
-                  <th scope="col">Correo Electronico</th>
+                  <th scope="col">Razón Social </th>
+                  <th scope="col">Correo Electrónico</th>
                   <th scope="col"></th>
                   <th scope="col" v-if="permisoActualizar"></th>
                 </tr>
@@ -136,11 +136,11 @@
                     <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.nit">
                   </div>
                   <div class="form-group col-12 col-sm-6">
-                    <label>Nombre o Razon social</label>
+                    <label>Nombre o Razón Social</label>
                     <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.razon_social">
                   </div>
                 </form>
-                <h5 v-if="!detalleCliente.error">Direccion Fiscal</h5>
+                <h5 v-if="!detalleCliente.error">Dirección Fiscal</h5>
                 <form class="row" v-if="!detalleCliente.error">
                   <div class="form-group col-12 col-sm-6">
                     <label>Estado</label>
@@ -167,11 +167,11 @@
                     <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.edificio_quinta_fiscal">
                   </div>
                   <div class="form-group col-12 col-sm-6">
-                    <label>Piso</label>
+                    <label>Pisó</label>
                     <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.piso_fiscal">
                   </div>
                   <div class="form-group col-12 col-sm-6">
-                    <label>Numero</label>
+                    <label>Número</label>
                     <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.numero_fiscal">
                   </div>
                   <div class="form-group col-12 col-sm-6">

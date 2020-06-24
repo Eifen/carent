@@ -21,7 +21,7 @@
 
         <div class="row align-items-center justify-content-center wrapper-forms">
           <div class="col-12 col-sm-11 col-md-9 col-lg-8">
-            <h3>Estas creando a un nuevo Usuario</h3>
+            <h3>Estas creando a un nuevo usuario</h3>
             <form class="row">
               <div class="col-12 wrapper-required-legend">
                 <b>Campos obligatorios (<span class="campo-obligatorio">*</span>)</b>
@@ -130,7 +130,7 @@
             <h5>Datos de contacto</h5>
             <form class="row">
               <div class="form-group col-12 col-sm-6">
-                <label for="correo_principal">Correo Principal <span class="campo-obligatorio">*</span></label>
+                <label for="correo_principal">Correó Principal <span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="correoPrincipalHelp"
                        class="form-control text-lowercase"
                        data-validar="true"
@@ -143,7 +143,7 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
-                <label for="correo_principal">Correo Secundario</label>
+                <label for="correo_principal">Correó Secundario</label>
                 <input aria-describedby="correoSecundariolHelp"
                        class="form-control text-lowercase"
                        id="correoSecundario"

@@ -26,8 +26,8 @@
                         v-model="formSearch.select.value"
                         v-on:change="tipoFiltro">
                   <option value="" selected disabled>Buscar Clientes por</option>
-                  <option value="1">Codigo del Cliente</option>
-                  <option value="2">Nombre o Razon Social</option>
+                  <option value="1">Código del Cliente</option>
+                  <option value="2">Nombre o Razón Social</option>
                   <option value="3">Rif</option>
                 </select>
               </div>
@@ -57,8 +57,8 @@
                         <tr>
                           <th scope="col">Código Cliente</th>
                           <th scope="col">Rif</th>
-                          <th scope="col">RazonSocial</th>
-                          <th scope="col">Correo Electronico</th>
+                          <th scope="col">Razón Social </th>
+                          <th scope="col">Correo Electrónico</th>
                           <th scope="col"></th>
                         </tr>
                       </thead>
@@ -80,11 +80,11 @@
               </div>
             <form class="row" v-if="!detalleCliente.error">
                   <div class="form-group col-12 col-sm-6" v-show="clientes.mostrar">
-                    <label>Codigo</label>
+                    <label>Código</label>
                     <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.codigo">
                   </div>
                   <div class="form-group col-12 col-sm-6" v-show="clientes.mostrar">
-                    <label>Razon social</label>
+                    <label>Razón social</label>
                     <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.razon_social">
                   </div>
             </form>
@@ -105,8 +105,8 @@
                     <table class="table">
                       <thead>
                         <tr>
-                          <th scope="col">Descripcion</th>
-                          <th scope="col">Fecha de Contratacion</th>
+                          <th scope="col">Descripción</th>
+                          <th scope="col">Fecha de Contratación</th>
                           <th scope="col"></th>
                         </tr>
                       </thead>
@@ -180,7 +180,7 @@
                 <div class="mensaje"></div>
               </div>
             <div class="form-group col-12 col-sm-6">
-                <label for="ciudad_factura">Ciudad <span class="campo-obligatorio">*</span></label>
+                <label for="ciudad_factura">Ciudad<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="ciudad_facturaHelp"
                        class="form-control text-lowercase"
                        data-validar="true"
@@ -219,10 +219,8 @@
                 <small id="edificio_quinta_facturaHelp" class="form-text text-muted"></small>
                 <div class="mensaje"></div>
               </div>
-
-
               <div class="form-group col-12 col-sm-6">
-                <label for="piso_factura">Piso<span class="campo-obligatorio">*</span></label>
+                <label for="piso_factura">Pisó<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="piso_facturaHelp"
                        class="form-control text-lowercase"
                        id="piso_factura"
@@ -236,7 +234,7 @@
               </div>
 
               <div class="form-group col-12 col-sm-6">
-                <label for="numero_factura">Numero</label>
+                <label for="numero_factura">Número</label>
                 <input aria-describedby="numero_factura"
                        class="form-control text-lowercase"
                        id="numero_factura"
@@ -250,7 +248,7 @@
               </div>
 
               <div class="form-group col-12 col-sm-6">
-                <label for="telefono_factura">Nº de Teléfono de Facturacion Principal</label>
+                <label for="telefono_factura">Nº de Teléfono de Facturación Principal</label>
                 <input aria-describedby="telefono_facturaHelp"
                        class="form-control"
                        id="telefono_factura"
@@ -277,7 +275,7 @@
               </div>
 
                <div class="form-group col-12 col-sm-6">
-                <label for="correo_factura">Email De Factura <span class="campo-obligatorio">*</span></label>
+                <label for="correo_factura">Email De Factura<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="correo_facturaHelp"
                        class="form-control text-lowercase"
                        data-validar="true"
@@ -315,7 +313,7 @@
               <div class="col-12 col-md-6 col-lg-4">
                 <button class="btn"
                         type="button"
-                        v-on:click="refreshView">Nuevo Detalle de Facturacion</button>
+                        v-on:click="refreshView">Nuevo Detalle de Facturación</button>
               </div>
             </div>
             <div class="row wrapper-alert">
