@@ -24,9 +24,22 @@ class LoginController extends Controller
 
       $codigoUsuario = $this->desencriptarCryptoJS($request->input("codigoUsuario"));
       $claveForm = $this->desencriptarCryptoJS($request->input("clave"));
-
+      $fecha = date("Y-m-d H:i:s"); 
+      if (isset($_SERVER["HTTP_CLIENT_IP"])){
+        $direccion = $_SERVER["HTTP_CLIENT_IP"];
+      }elseif (isset($_SERVER["HTTP_X_FORWARDED_FOR"])){
+        $direccion = $_SERVER["HTTP_X_FORWARDED_FOR"];
+      }elseif (isset($_SERVER["HTTP_X_FORWARDED"])){
+        $direccion = $_SERVER["HTTP_X_FORWARDED"];
+      }elseif (isset($_SERVER["HTTP_FORWARDED_FOR"])){
+        $direccion = $_SERVER["HTTP_FORWARDED_FOR"];
+      }elseif (isset($_SERVER["HTTP_FORWARDED"])){
+        $direccion = $_SERVER["HTTP_FORWARDED"];
+      }else{
+        $direccion = $_SERVER["REMOTE_ADDR"];
+      }
       $modelo = new LoginModel();
-      $usuario = $modelo->buscarUsuario($codigoUsuario);
+      $usuario = $modelo->buscarUsuario($codigoUsuario,$fecha,$direccion);
       $loginDenegado = $modelo->estatusLoginDenegado($usuario->id_estatus);
 
       if(!empty($usuario)){
@@ -42,6 +55,7 @@ class LoginController extends Controller
             $request->session()->put('usuario_id', $usuario->id);
             $request->session()->put('division_id', $usuario->id_division);
             $request->session()->put('cargo_id', $usuario->id_cargo);
+            $request->session()->put('direccion', $direccion);
 
             $response = array("login" => true, "message" => "Bienvenido!, espere unos segundo mientras mientras es redireccionado.");
 

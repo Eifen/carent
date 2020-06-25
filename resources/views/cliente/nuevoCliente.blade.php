@@ -81,7 +81,7 @@
               </div>
             <form class="row" v-if="!detalleUsuario.error">
                   <div class="form-group col-12 col-sm-6" v-show="usuarios.mostrar">
-                    <label>Codigo</label>
+                    <label>Código</label>
                     <input class="form-control" type="text" disabled v-bind:value="detalleUsuario.data.codigo">
                   </div>
                   <div class="form-group col-12 col-sm-6" v-show="usuarios.mostrar">
@@ -152,7 +152,7 @@
               </div>
             <form class="row" v-if="!detalleUsuarioG.error">
                   <div class="form-group col-12 col-sm-6" v-show="usuariosG.mostrar">
-                    <label>Codigo</label>
+                    <label>Código</label>
                     <input class="form-control" type="text" disabled v-bind:value="detalleUsuarioG.data.codigo">
                   </div>
                   <div class="form-group col-12 col-sm-6" v-show="usuariosG.mostrar">
@@ -167,7 +167,7 @@
               </div>
               <div class="form-group col-12 col-sm-6">
                 <label for="rif">Rif<span class="campo-obligatorio">*</span> </label>
-                <the-mask mask="F- NNNNNNNNNN" :tokens="hexTokens" 
+                <the-mask mask="F- MMMMMMMMMM" :tokens="hexTokens" 
                           class="form-control"
                           id="rif"
                           v-bind:disabled="form.rif.disabled"
@@ -192,7 +192,7 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
-                <label for="razon_social">Nombre o Razon social<span class="campo-obligatorio">*</span></label>
+                <label for="razon_social">Nombre o Razón social<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="razon_socialHelp"
                        class="form-control text-lowercase"
                        data-min="3"
@@ -209,7 +209,7 @@
             <h5>Direccion Fiscal</h5>
             <form class="row">
               <div class="form-group col-12 col-sm-6">
-                <label for="estadofi">Estado <span class="campo-obligatorio">*</span></label>
+                <label for="estadofi">Estado<span class="campo-obligatorio">*</span></label>
                 <select aria-describedby="estadoHelp"
                         class="form-control"
                         id="estadofi"
@@ -259,7 +259,7 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
-                <label for="ciudad_fiscal">Ciudad <span class="campo-obligatorio">*</span></label>
+                <label for="ciudad_fiscal">Ciudad<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="ciudad_fiscalHelp"
                        class="form-control text-lowercase"                       
                        data-validar="true"
@@ -273,7 +273,7 @@
               </div>
 
               <div class="form-group col-12 col-sm-6">
-                <label for="avenida_calle_fiscal">Avenida o Calle <span class="campo-obligatorio">*</span></label>
+                <label for="avenida_calle_fiscal">Avenida o Calle<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="avenida_calle_fiscalHelp"
                        class="form-control text-lowercase"
                        data-validar="true"
@@ -302,26 +302,24 @@
 
 
               <div class="form-group col-12 col-sm-6">
-                <label for="piso_fiscal">Piso<span class="campo-obligatorio">*</span></label>
+                <label for="piso_fiscal">Pisó<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="piso_ficalHelp"
                        class="form-control text-lowercase"
-                       data-validar="true"
                        id="piso_fiscal"
                        v-bind:disabled="form.piso_fiscal.disabled"
+                       v-mask="'XXX'"
                        v-model="form.piso_fiscal.value"
                        v-on:keyup="valuesForm"
                        type="text">
-                <small id="piso_ficalHelp" class="form-text text-muted">ejemplo: 24E</small>
+                <small id="piso_ficalHelp" class="form-text text-muted">ejemplo: 24</small>
                 <div class="mensaje"></div>
               </div>
 
               <div class="form-group col-12 col-sm-6">
-                <label for="numero_fiscal">Numero</label>
+                <label for="numero_fiscal">Número</label>
                 <input aria-describedby="numero_fiscal"
                        class="form-control text-lowercase"
-                       data-formated-number="true"
-                       data-only-number="true"
-                       data-validar="true"
+                       v-mask="'XXXXX'"
                        id="numero_fiscal"
                        v-bind:disabled="form.numero_fiscal.disabled"
                        v-model="form.numero_fiscal.value"

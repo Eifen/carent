@@ -40480,7 +40480,7 @@ var app = new Vue({
           return v.toLocaleUpperCase();
         }
       },
-      N: {
+      M: {
         pattern: /[0-9]/,
         transform: function transform(v) {
           return v.toLocaleUpperCase();
@@ -41202,7 +41202,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\js\cliente\nuevoCliente.js */"./resources/js/cliente/nuevoCliente.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\cliente\nuevoCliente.js */"./resources/js/cliente/nuevoCliente.js");
 
 
 /***/ })

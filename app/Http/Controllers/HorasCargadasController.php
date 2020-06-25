@@ -47,8 +47,10 @@ class HorasCargadasController extends Controller
       $fecha = date('Y-m-d', strtotime($fechaC));
       $descripcion = mb_strtoupper($request->input("descripcion"));
       $horas_trabajadas = $request->input("horas_trabajadas");
-      
-      $response = $modelo->cargarHoras($idProyAnalista,$fecha,$descripcion,$horas_trabajadas);
+      $usuario_id = $request->session()->get('usuario_id');
+      $fechab = date("Y-m-d H:i:s");
+      $direccion_ip = $request->session()->get('direccion');
+      $response = $modelo->cargarHoras($idProyAnalista,$fecha,$descripcion,$horas_trabajadas,$usuario_id,$fechab,$direccion_ip);
       return $response;
 
     }
@@ -74,8 +76,11 @@ class HorasCargadasController extends Controller
       $fecha = date('Y-m-d', strtotime("$fechaC -1 day"));
       $descripcion = mb_strtoupper($request->input("descripcion"));
       $horas_trabajadas = $request->input("horas_trabajadas");
+      $usuario_id = $request->session()->get('usuario_id');
+      $fechab = date("Y-m-d H:i:s");
+      $direccion_ip = $request->session()->get('direccion');
       
-      $response = $modelo->ModificarHorasCargadas($idHoraCargada,$fecha,$descripcion,$horas_trabajadas);
+      $response = $modelo->ModificarHorasCargadas($idHoraCargada,$fecha,$descripcion,$horas_trabajadas,$usuario_id,$fechab,$direccion_ip);
       return $response;
 
     }
@@ -95,8 +100,11 @@ class HorasCargadasController extends Controller
     function EliminarHorasCargadas(Request $request){
 
       $modelo = new HorasCargadasModel();
-      $idHoraCargada = $request->input("id");      
-      $response = $modelo->EliminarHorasCargadas($idHoraCargada);
+      $idHoraCargada = $request->input("id");
+      $usuario_id = $request->session()->get('usuario_id');
+      $fechab = date("Y-m-d H:i:s");
+      $direccion_ip = $request->session()->get('direccion');      
+      $response = $modelo->EliminarHorasCargadas($idHoraCargada,$usuario_id,$fechab,$direccion_ip);
       return $response;
 
     }

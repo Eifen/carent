@@ -428,7 +428,7 @@
                 </form>
                 <h5>Horas No Cargables</h5>
                 <form class="row" v-if="!detalleMenu.error">
-                  <div class="custom-control custom-switch">
+                  <div class="custom-control custom-switch" v-if="permisoRRHH">
                     <label>Conceptos de Horas no Cargables</label>
                     <div class="form-group form-check col-12">
                       <input class="custom-control-input"
@@ -440,7 +440,7 @@
                     </div>                
                   </div>
                   <div class="custom-control custom-switch">
-                    <label>Cargar Horas no Cargadas</label>
+                    <label>Cargar Horas no Cargables</label>
                     <div class="form-group form-check col-12">
                       <input class="custom-control-input"
                              id="carHoraNoC"

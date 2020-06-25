@@ -61,7 +61,7 @@
                   </datepicker>
               </div>
               <div class="form-group col-14 col-sm-8">
-                <label for="descripcion">Descripcion de lo Realizado</label>
+                <label for="descripcion">Descripción de lo Realizado</label>
                   <input class="form-control"
                          id="descripcion"
                          v-bind:disabled="form.descripcion.disabled"
@@ -99,7 +99,7 @@
               <thead>
                 <tr>
                   <th scope="col">Fecha</th>
-                  <th scope="col">Descripcion</th>
+                  <th scope="col">Descripción</th>
                   <th scope="col">Horas</th>
                   <th scope="col" v-if="permisoActualizar">Modificar</th>
                   <th scope="col" v-if="permisoEliminar">Eliminar</th>
@@ -128,7 +128,7 @@
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h4>Detalle de las Horas Cargadas</h4>
+                <h4>Detallé de las Horas Cargadas</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -170,7 +170,7 @@
                              type="text">
                   </div>
                   <div class="form-group col-18 col-sm-10">
-                      <label for="descripcionM">Descripcion de lo Realizado</label>
+                      <label for="descripcionM">Descripción de lo Realizado</label>
                         <input class="form-control"
                                id="descripcionM"
                                v-bind:disabled="form.descripcionM.disabled"
@@ -203,7 +203,7 @@
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h4>Detalle de las horas cargadas a eliminar</h4>
+                <h4>Detallé de las horas cargadas a eliminar</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -222,7 +222,7 @@
                     <input class="form-control" type="text" disabled v-bind:value="infoEliHorasCargadas.horas_trabajadas">
                   </div>
                   <div class="form-group col-18 col-sm-10">
-                    <label>Descripcion de lo Realizado</label>
+                    <label>Descripción de lo Realizado</label>
                     <input class="form-control" type="text" disabled v-bind:value="infoEliHorasCargadas.descripcion">
                   </div>
                 </form>
