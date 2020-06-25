@@ -316,7 +316,7 @@
               </div>
 
               <div class="form-group col-12 col-sm-6">
-                <label for="numero_fiscal">Número</label>
+                <label for="numero_fiscal">Número<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="numero_fiscal"
                        class="form-control text-lowercase"
                        v-mask="'XXXXX'"
@@ -330,7 +330,7 @@
               </div>
 
               <div class="form-group col-12 col-sm-6">
-                <label for="telefono_fiscal">Nº de Teléfono Principal</label>
+                <label for="telefono_fiscal">Nº de Teléfono Principal<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="telefono_fiscalHelp"
                        class="form-control"
                        id="telefono_fiscal"
@@ -350,6 +350,7 @@
                        id="fax_fiscal"
                        v-bind:disabled="form.fax_fiscal.disabled"
                        v-model="form.fax_fiscal.value"
+                       v-mask="'###########'"
                        v-on:keyup="valuesForm"
                        type="text">
                 <small id="fax_fiscalHelp" class="form-text text-muted"></small>
