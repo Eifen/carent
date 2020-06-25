@@ -45,8 +45,11 @@ class HorasNoCargablesController extends Controller
 
       $modelo = new HorasNoCargablesModel();
       $concepto = $request->input("concepto");
+      $usuario_id = $request->session()->get('usuario_id');
+      $fecha = date("Y-m-d H:i:s");
+      $direccion_ip = $request->session()->get('direccion');
 
-      return $modelo->crearConceptoNoCargable($concepto);
+      return $modelo->crearConceptoNoCargable($concepto,$usuario_id,$fecha,$direccion_ip);
 
     }
 
@@ -56,8 +59,11 @@ class HorasNoCargablesController extends Controller
       $concepto = $request->input("concepto");
       $id = $request->input("id");
       $id_estatus = $request->input("id_estatus");
+      $usuario_id = $request->session()->get('usuario_id');
+      $fecha = date("Y-m-d H:i:s");
+      $direccion_ip = $request->session()->get('direccion');
 
-      return $modelo->modificarConceptoNoCargable($id,$concepto,$id_estatus);
+      return $modelo->modificarConceptoNoCargable($id,$concepto,$id_estatus,$usuario_id,$fecha,$direccion_ip);
 
     }
 
@@ -125,7 +131,10 @@ class HorasNoCargablesController extends Controller
         "fecha_desde" => date("Y-m-d H:i:s", strtotime($request->input("fechaDesde"))),
         "fecha_hasta" => date("Y-m-d H:i:s", strtotime($request->input("fechaHasta"))),
         "observacion" => $request->input("observacion"),
-        "id_estatus"  => (($request->input("estatus") == "") ? 1 : $request->input("estatus"))
+        "id_estatus"  => (($request->input("estatus") == "") ? 1 : $request->input("estatus")),
+        "usuario_id" => $request->session()->get('usuario_id'),
+        "fecha" => date("Y-m-d H:i:s"),
+        "direccion_ip" => $request->session()->get('direccion'),
       );
 
       $resgitrarHora = $modelo->registrarHorasNoCargables($parametrosInsert);

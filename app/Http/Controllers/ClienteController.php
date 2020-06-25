@@ -113,11 +113,8 @@ class ClienteController extends Controller
 
     $modelo = new ClienteModel();
     $codigo = $modelo->agregarCodigoCliente();
-    $nomusuario_id = $modelo->buscarUsuari($request->session()->get('usuario_id'));
     if(!empty($codigo)){
       $codigoCliente = $codigo->codigo + 1;
-      $email = $modelo->buscarEmail($request->input("email_fiscal"));
-      if(!$email["response"]){
         $parametros = array(
           "idUsuario" => (int) $request->input("idUsuario"),
           "idUsuario2" => (int) $request->input("idUsuario2"),
@@ -133,12 +130,13 @@ class ClienteController extends Controller
           "numero_fiscal" => $request->input("numero_fiscal"),
           "telefono_fiscal" => $request->input("telefono_fiscal"),
           "fax_fiscal" => $request->input("fax_fiscal"),
-          "email_fiscal" => strtolower($request->input("email_fiscal"))
+          "email_fiscal" => strtolower($request->input("email_fiscal")),
+          "usuario_id" => $request->session()->get('usuario_id'),
+          "fecha" => date("Y-m-d H:i:s"),
+          "direccion_ip" => $request->session()->get('direccion'),
         );
          $response = $modelo->crearCliente($parametros);
-      }else{
-        $response = array("response" => false, "message" => "El correo ya se encuentra asociado a otro usuario");
-      }
+
     }else{
       $codigoCliente = 1000;
         $parametros = array(
@@ -156,7 +154,10 @@ class ClienteController extends Controller
           "numero_fiscal" => $request->input("numero_fiscal"),
           "telefono_fiscal" => $request->input("telefono_fiscal"),
           "fax_fiscal" => $request->input("fax_fiscal"),
-          "email_fiscal" => strtolower($request->input("email_fiscal"))
+          "email_fiscal" => strtolower($request->input("email_fiscal")),
+          "usuario_id" => $request->session()->get('usuario_id'),
+          "fecha" => date("Y-m-d H:i:s"),
+          "direccion_ip" => $request->session()->get('direccion'),
         );
          $response = $modelo->crearCliente($parametros);
     }
@@ -272,7 +273,10 @@ class ClienteController extends Controller
         "numero_factura" => $request->input("numero_factura"),
         "telefono_factura" => $request->input("telefono_factura"),
         "fax_factura" => $request->input("fax_factura"),
-        "correo_factura" => strtolower($request->input("correo_factura"))
+        "correo_factura" => strtolower($request->input("correo_factura")),
+        "usuario_id" => $request->session()->get('usuario_id'),
+        "fecha" => date("Y-m-d H:i:s"),
+        "direccion_ip" => $request->session()->get('direccion'),
       );
       $response = $modelo->CrearFactCliente($parametros);
       return $response;    
@@ -282,6 +286,8 @@ class ClienteController extends Controller
 
     $modelo = new ClienteModel();
       $parametros = array(
+        "id_cliente" => (int) $request->input("id_cliente"),
+        "id_proyecto" => (int) $request->input("id_proyecto"),
         "id_fact_cliente" => (int) $request->input("id_fact_cliente"),
         "parroquiafa" => $request->input("parroquiafa"),
         "ciudad_factura" => mb_strtoupper($request->input("ciudad_factura")),
@@ -291,7 +297,10 @@ class ClienteController extends Controller
         "numero_factura" => $request->input("numero_factura"),
         "telefono_factura" => $request->input("telefono_factura"),
         "fax_factura" => $request->input("fax_factura"),
-        "correo_factura" => strtolower($request->input("correo_factura"))
+        "correo_factura" => strtolower($request->input("correo_factura")),
+        "usuario_id" => $request->session()->get('usuario_id'),
+        "fecha" => date("Y-m-d H:i:s"),
+        "direccion_ip" => $request->session()->get('direccion'),
       );
       $response = $modelo->actualizarFactCliente($parametros);
       return $response;
@@ -300,11 +309,11 @@ class ClienteController extends Controller
     function modificarCliente(Request $request){
 
     $modelo = new ClienteModel();
-    $nomusuario_id = $modelo->buscarUsuari($request->session()->get('usuario_id'));
     $parametros = array(
       "idCliente" => $request->input("idCliente"),
       "idUsuario" => (int) $request->input("idUsuario"),
       "idUsuario2" => (int) $request->input("idUsuario2"),
+      "codigoCliente" => (int) $request->input("codigoCliente"),
       "rif" => $request->input("rif"),
       "nit" => $request->input("nit"),
       "razon_social" => mb_strtoupper ($request->input("razon_social")),
@@ -317,7 +326,10 @@ class ClienteController extends Controller
       "telefono_fiscal" => $request->input("telefono_fiscal"),
       "fax_fiscal" => $request->input("fax_fiscal"),
       "email_fiscal" => strtolower($request->input("email_fiscal")),
-      "estatus" => $request->input("estatus")
+      "estatus" => $request->input("estatus"),
+      "usuario_id" => $request->session()->get('usuario_id'),
+      "fecha" => date("Y-m-d H:i:s"),
+      "direccion_ip" => $request->session()->get('direccion'),
     );
     $response = $modelo->modificarCliente($parametros);
     return $response;

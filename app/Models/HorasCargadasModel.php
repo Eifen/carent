@@ -110,7 +110,7 @@ class HorasCargadasModel extends Model
     }
 
 
-    function cargarHoras($idProyAnalista,$fecha,$descripcion,$horas_trabajadas){
+    function cargarHoras($idProyAnalista,$fecha,$descripcion,$horas_trabajadas,$usuario_id,$fechab,$direccion_ip){
 
       DB::beginTransaction();
 
@@ -121,7 +121,12 @@ class HorasCargadasModel extends Model
 
       $horasCargadas = DB::table('tbl_horas_cargables')->insertGetId($data);
       if($horasCargadas){
-
+        $info = db::select('SELECT * FROM tbl_proyecto_analista WHERE id = '.$idProyAnalista.'');
+        $data = array("usuario_id" => $usuario_id,
+                      "fecha" => $fechab,
+                      "direccion_ip" => $direccion_ip,
+                      "accion" => 'Usuario: '.$info[0]->id_analista.' Cargo: '.$horas_trabajadas.' horas en el proyecto:'.$info[0]->id_proyecto.'');
+        $bit = DB::table('logs_auditoria')->insertGetId($data);
         DB::commit();
         return array("response" => true, "message" => "Horas Cargadas con éxito.");
 
@@ -149,7 +154,7 @@ class HorasCargadasModel extends Model
     }
     }
 
-    function ModificarHorasCargadas($idHoraCargada,$fecha,$descripcion,$horas_trabajadas){
+    function ModificarHorasCargadas($idHoraCargada,$fecha,$descripcion,$horas_trabajadas,$usuario_id,$fechab,$direccion_ip){
 
       DB::beginTransaction();
 
@@ -163,6 +168,12 @@ class HorasCargadasModel extends Model
 
 
         DB::commit();
+        $info = db::select('SELECT * FROM tbl_proyecto_analista WHERE id = (SELECT id_proy_analista FROM tbl_horas_cargables WHERE id = '.$idHoraCargada.')');
+        $data = array("usuario_id" => $usuario_id,
+                      "fecha" => $fechab,
+                      "direccion_ip" => $direccion_ip,
+                      "accion" => 'Modificacion de horas del usuario: '.$info[0]->id_analista.' en el proyecto:'.$info[0]->id_proyecto.'');
+        $bit = DB::table('logs_auditoria')->insertGetId($data);
         return array("response" => true, "message" => "Horas cargadas actualizadas con éxito.");
 
       } catch(\Illuminate\Database\QueryException $ex){
@@ -189,12 +200,19 @@ class HorasCargadasModel extends Model
     }
     }
 
-    function EliminarHorasCargadas($idHcargadas){
+    function EliminarHorasCargadas($idHcargadas,$usuario_id,$fechab,$direccion_ip){
 
     DB::beginTransaction();
-
+      $horas = DB::select('SELECT * FROM tbl_horas_cargables WHERE id = '.$idHcargadas.'');
+      $info = db::select('SELECT * FROM tbl_proyecto_analista WHERE id = (SELECT id_proy_analista FROM tbl_horas_cargables WHERE id = '.$idHcargadas.')');
       $delete = DB::table('tbl_horas_cargables')->where("id",$idHcargadas)->delete();	
       if($delete){
+
+        $data = array("usuario_id" => $usuario_id,
+                      "fecha" => $fechab,
+                      "direccion_ip" => $direccion_ip,
+                      "accion" => 'Eliminacion de '.$horas[0]->horas_trabajadas.' horas del usuario: '.$info[0]->id_analista.' en el proyecto:'.$info[0]->id_proyecto.'');
+        $bit = DB::table('logs_auditoria')->insertGetId($data);
         DB::commit();
         return array("response" => true, "message" => "Hora eliminada con exito");
       }else{
