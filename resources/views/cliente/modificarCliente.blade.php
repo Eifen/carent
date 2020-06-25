@@ -378,8 +378,7 @@
                        type="text">
                 <small id="telefono_fiscalHelp" class="form-text text-muted">Ejemplo: 0424-1234567</small>
                 <div class="mensaje"></div>
-              </div>
-                        
+              </div>                        
               <div class="form-group col-12 col-sm-6">
                 <label for="fax_fiscal">Nº de Fax</label>
                 <input aria-describedby="fax_fiscalHelp"
