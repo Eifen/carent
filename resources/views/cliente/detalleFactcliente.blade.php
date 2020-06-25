@@ -273,6 +273,7 @@
                        id="fax_factura"
                        v-bind:disabled="form.fax_factura.disabled"
                        v-model="form.fax_factura.value"
+                       v-mask="'###############'"
                        v-on:keyup="valuesForm"
                        type="text">
                 <small id="fax_facturaHelp" class="form-text text-muted"></small>
