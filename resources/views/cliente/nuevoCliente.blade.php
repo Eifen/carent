@@ -350,7 +350,7 @@
                        id="fax_fiscal"
                        v-bind:disabled="form.fax_fiscal.disabled"
                        v-model="form.fax_fiscal.value"
-                       v-mask="'###########'"
+                       v-mask="'(####) - ### ####'"
                        v-on:keyup="valuesForm"
                        type="text">
                 <small id="fax_fiscalHelp" class="form-text text-muted"></small>
