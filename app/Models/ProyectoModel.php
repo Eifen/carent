@@ -26,7 +26,7 @@ class ProyectoModel extends Model
                                        d.descripcion
                                 FROM tbl_division d
                                 WHERE d.id_estatus = 1
-                                ORDER BY d.descripcion ASC');
+                                ORDER BY d.id ASC');
 
       return $divisiones;
 
@@ -114,13 +114,17 @@ class ProyectoModel extends Model
 
         $idsDivisiones = implode(",", $divisiones);
 
-        $idProyectos = DB::select('SELECT id
+        $idProyectos = DB::select('SELECT id_proyecto
                                    FROM tbl_proyecto_divisiones pd
                                    WHERE pd.id_division IN('.$idsDivisiones.')');
 
-        $arrayIds = [];
-        foreach($idProyectos as $id){
-          $arrayIds[] = $id->id;
+        if (!empty($idProyectos)) {
+          $arrayIds = [];
+          foreach($idProyectos as $id){
+            $arrayIds[] = $id->id_proyecto;
+          }
+        }else{
+          $arrayIds = [0];
         }
 
         $ids = implode(",", $arrayIds);
@@ -262,13 +266,17 @@ class ProyectoModel extends Model
 
         $idsDivisiones = implode(",", $divisiones);
 
-        $idProyectos = DB::select('SELECT id
+        $idProyectos = DB::select('SELECT id_proyecto
                                    FROM tbl_proyecto_divisiones pd
                                    WHERE pd.id_division IN('.$idsDivisiones.')');
 
-        $arrayIds = [];
-        foreach($idProyectos as $id){
-          $arrayIds[] = $id->id;
+        if (!empty($idProyectos)) {
+          $arrayIds = [];
+          foreach($idProyectos as $id){
+            $arrayIds[] = $id->id_proyecto;
+          }
+        }else{
+          $arrayIds = [0];
         }
 
        $ids = implode(",", $arrayIds);
