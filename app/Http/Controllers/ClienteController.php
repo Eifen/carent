@@ -67,11 +67,7 @@ class ClienteController extends Controller
     $modelo = new ClienteModel();
     $idCliente = (int) $request->input("idCliente");
     $permisoCrear = $modelo->permisoCrear(session("usuario_id"), 7);
-    if ($permisoCrear === 'true') {
-      $clienteProy = $modelo->buscarClieProyec($idCliente);
-    }else{
-      $clienteProy = $modelo->buscarClieProyect($idCliente);
-    }
+    $clienteProy = $modelo->buscarClieProyec($idCliente);
     if(!empty($clienteProy)){
       $response = array("response" => true, "clienteProy" => $clienteProy, "permisoCrear" => $permisoCrear);
     }else{
