@@ -127,6 +127,11 @@
                 <input class="form-control" type="text" disabled v-bind:value="detalleClienteProy.data.descripcion">
               </div>
           </form>
+          <div class="row wrapper-alert">
+              <div class="col-12">
+                <div v-bind:class="alertFormP.class" role="alert" v-if="alertFormP.show" v-html="alertFormP.message"></div>
+              </div>
+            </div>
             <h5>Dirección para Entrega de Facturas</h5>
             <form class="row">
               <div class="form-group col-12 col-sm-6">
@@ -268,6 +273,7 @@
                        id="fax_factura"
                        v-bind:disabled="form.fax_factura.disabled"
                        v-model="form.fax_factura.value"
+                       v-mask="'###############'"
                        v-on:keyup="valuesForm"
                        type="text">
                 <small id="fax_facturaHelp" class="form-text text-muted"></small>

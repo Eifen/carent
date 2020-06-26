@@ -219,6 +219,7 @@ var app = new Vue({
     buscar: function(e){
 
       self.alert.mostrar = false;
+      self.usuarios.mostrar = false;
 
       if(self.formSearch.inputSearch.value.trim() !== ""){
 
@@ -238,11 +239,9 @@ var app = new Vue({
 
           if(response.status === 200 && response.data.response === true){
 
-            self.usuarios.mostrar = true;
+            
             self.usuarios.registros = response.data.usuarios;
             $('#modal-detalle-usuario').modal("show");
-            $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
-
 
           }else{
 
@@ -287,7 +286,7 @@ var app = new Vue({
     buscarG: function(e){
 
       self.alert.mostrar = false;
-
+      self.usuariosG.mostrar = false;
       if(self.formSearchG.inputSearchG.value.trim() !== ""){
 
         self.formSearchG.submitG.html = '<i class="fas fa-cog fa-spin"></i>';
@@ -306,10 +305,8 @@ var app = new Vue({
 
           if(response.status === 200 && response.data.response === true){
 
-            self.usuariosG.mostrar = true;
             self.usuariosG.registros = response.data.usuariosG;
             $('#modal-detalle-usuarioG').modal("show");
-            $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
 
 
           }else{
@@ -418,7 +415,7 @@ var app = new Vue({
     SelecionarUsuario: function(idUsuario,e){
 
       self.detalleUsuario.error = false;
-      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
+      $(e.target).removeClass("fa-check-square").addClass("fa-cog fa-spin");
       // Obtenemos lo valores
       let parametros = {
         idUsuario: idUsuario
@@ -429,7 +426,9 @@ var app = new Vue({
 
         if(response.status === 200 && response.data.response === true){
 
+          self.usuarios.mostrar = true;
           self.detalleUsuario.data = response.data.info;
+          $(e.target).removeClass("fa-cog fa-spin").addClass("fa-check-square");
 
         }else{
 
@@ -442,7 +441,7 @@ var app = new Vue({
 
         self.detalleUsuario.error = true;
         $('#modal-detalle-usuario').modal("show");
-        $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
+        $(e.target).removeClass("fa-check-square").addClass("fa-cog fa-spin");
 
       });
 
@@ -450,7 +449,7 @@ var app = new Vue({
     SelecionarUsuarioG: function(idUsuario,e){
 
       self.detalleUsuarioG.error = false;
-      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
+      $(e.target).removeClass("fa-check-square").addClass("fa-cog fa-spin");
       // Obtenemos lo valores
       let parametros = {
         idUsuario: idUsuario
@@ -461,7 +460,9 @@ var app = new Vue({
 
         if(response.status === 200 && response.data.response === true){
 
+          self.usuariosG.mostrar = true;
           self.detalleUsuarioG.data = response.data.info;
+          $(e.target).removeClass("fa-cog fa-spin").addClass("fa-check-square");
 
         }else{
 
@@ -712,7 +713,7 @@ var app = new Vue({
         })
         .catch(error => {
 
-          var indices = ["idUsuario","idUsuario2","rif","nit","razon_social","ciudad_fiscal","avenida_calle_fiscal","edificio_quinta_fiscal","piso_fiscal","numero_fiscal","telefono_fiscal","fax_fiscal","email_fiscal"];
+          var indices = ["rif","nit","razon_social","ciudad_fiscal","avenida_calle_fiscal","edificio_quinta_fiscal","piso_fiscal","numero_fiscal","telefono_fiscal","fax_fiscal","email_fiscal","estadofi","municipiofi","parroquiafi"];
   
           indices.forEach(function(indiceObjecto, indice) {
             self.form[indiceObjecto].disabled = false;
