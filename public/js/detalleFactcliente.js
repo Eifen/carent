@@ -40613,6 +40613,9 @@ var app = new Vue({
   updated: function updated() {},
   methods: {
     buscar: function buscar(e) {
+      self.permisoActualizar = false;
+      self.permisoCrear = false;
+      self.formSearchP.submit.disabled = true;
       self.detalleClienteProy.error = false;
       self.clienteProy.mostrar = false;
       self.detalleClienteProy.data = [];
@@ -40874,6 +40877,13 @@ var app = new Vue({
             self.form.parroquiafa.value = self.detalleFactcliente.data.id_parroquia_factura;
             self.permisoActualizar = response.data.permisoActualizar;
             self.permisoCrear = false;
+          }
+
+          if (self.permisoCrear === false && self.permisoActualizar === false) {
+            var indices = ["ciudad_factura", "avenida_calle_factura", "edificio_quinta_factura", "piso_factura", "numero_factura", "telefono_factura", "fax_factura", "correo_factura", "estadofa", "municipiofa", "parroquiafa"];
+            indices.forEach(function (indiceObjecto, indice) {
+              self.form[indiceObjecto].disabled = true;
+            });
           }
 
           if (respose.data.permisoCrear) {

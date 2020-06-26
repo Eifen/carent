@@ -145,7 +145,7 @@
                   </div>
                   <div class="form-group col-12 col-sm-6">
                     <label>Total de Horas Cargadas</label>
-                    <input class="form-control" type="text" disabled v-bind:value="Dproyecto.horas_cargadas">
+                    <input class="form-control" type="text" disabled v-bind:value="horas_cargadas">
                   </div>
                 </form>
                 <h5>Empleados Asigandos</h5>
