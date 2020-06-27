@@ -78,6 +78,7 @@ class HorasNoCargablesModel extends Model
     function crearConceptoNoCargable($concepto,$usuario_id,$fecha,$direccion_ip){
 
       if(DB::table('tbl_concepto_horas_no_cargables')->insert(array("descripcion" => $concepto, "id_estatus" => 1))){
+
         $data = array("usuario_id" => $usuario_id,
                       "fecha" => $fecha,
                       "direccion_ip" => $direccion_ip,
@@ -306,9 +307,14 @@ class HorasNoCargablesModel extends Model
 
     }
 
-    function registrarHorasNoCargables($parametros){
+    function registrarHorasNoCargables($parametros,$usuario_id,$fecha,$direccion_ip){
 
       if(DB::table('tbl_horas_no_cargables')->insert($parametros)){
+        $data = array("usuario_id" => $usuario_id,
+                      "fecha" => $fecha,
+                      "direccion_ip" => $direccion_ip,
+                      "accion" => 'Registro de de horas no cargables al usuario: '.$usuario_id.'');
+        $bit = DB::table('logs_auditoria')->insertGetId($data);
         return array("respuesta" => true, "mensaje" => "Horas cargadas con éxito!");
       }else{
         return array("respuesta" => false, "mensaje" => "Error al tratar de cargar las horas, intente nuevamente!");
