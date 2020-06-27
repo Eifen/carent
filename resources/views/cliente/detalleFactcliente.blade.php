@@ -70,7 +70,7 @@
                           <td>@{{ cliente.razon_social }}</td>
                           <td>@{{ cliente.email_fiscal }}</td>
                           <td>
-                            <i class="fas fa-check-square" data-dismiss="modal" v-on:click="SelecionarCliente(cliente.id, $event)"></i> <!-- Se invoca el metodo SelecionarCliente de detalleFactclienteCliente.js -->
+                            <i class="fas fa-check-square" v-on:click="SelecionarCliente(cliente.id, $event)"></i> <!-- Se invoca el metodo SelecionarCliente de detalleFactclienteCliente.js -->
                           </td>
                         </tr>
                       </tbody>
@@ -115,7 +115,7 @@
                           <th scope="row">@{{ clienteProy.descripcion  }}</th>
                           <td>@{{ clienteProy.fecha_contratacion }}</td>
                           <td>
-                            <i class="fas fa-check-square" data-dismiss="modal" v-on:click="SelecionarClienteProy(clienteProy.id, $event)"></i>
+                            <i class="fas fa-check-square" v-on:click="SelecionarClienteProy(clienteProy.id, $event)"></i>
                           </td>
                         </tr>
                       </tbody>

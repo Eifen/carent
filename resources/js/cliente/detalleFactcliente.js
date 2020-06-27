@@ -310,6 +310,7 @@ var app = new Vue({
           self.detalleCliente.data = response.data.info;
           self.formSearchP.submit.disabled = false;
           $(e.target).removeClass("fa-cog fa-spin").addClass("fa-check-square");
+          $('#modal-detalle-cliente').modal("hide");
 
         }else{
 
@@ -457,7 +458,6 @@ var app = new Vue({
         if(response.status === 200 && response.data.response === true){
 
           self.clienteProy.mostrar = true;
-          $(e.target).removeClass("fa-cog fa-spin").addClass("fa-check-square");
           self.permisoCrear = response.data.permisoCrear;
           self.detalleClienteProy.data = response.data.infoproy;
           self.detalleFactcliente.data = response.data.infoFactCliente;
@@ -473,19 +473,12 @@ var app = new Vue({
           self.comboMunicipiosfa = response.data.municipiosfa;
           self.comboParroquiasfa = response.data.parroquiasfa;
 
-          self.form.ciudad_factura.disabled = false;
-          self.form.avenida_calle_factura.disabled = false;
-          self.form.edificio_quinta_factura.disabled = false;
-          self.form.piso_factura.disabled = false;
-          self.form.numero_factura.disabled = false;
-          self.form.telefono_factura.disabled = false;
-          self.form.fax_factura.disabled = false;
-          self.form.correo_factura.disabled = false;
-
-          self.form.estadofa.disabled = false;
-          self.form.municipiofa.disabled = false;
-          self.form.parroquiafa.disabled = false;
-
+          var indices = ["ciudad_factura","avenida_calle_factura","edificio_quinta_factura","piso_factura","numero_factura","telefono_factura","fax_factura","correo_factura","estadofa","municipiofa","parroquiafa"];
+  
+            indices.forEach(function(indiceObjecto, indice) {
+              self.form[indiceObjecto].disabled = false;
+            });
+          $('#modal-detalle-clienteProy').modal("hide");
           self.form.estadofa.validar = true;
           self.form.municipiofa.validar = true;
           self.form.parroquiafa.validar = true;
@@ -505,6 +498,7 @@ var app = new Vue({
               self.form[indiceObjecto].disabled = true;
             });
           }
+          $(e.target).removeClass("fa-cog fa-spin").addClass("fa-check-square");
           if (respose.data.permisoCrear) {
             var message = "No Puedes Crear Detalles de Facturacion";
           }
