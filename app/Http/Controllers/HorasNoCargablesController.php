@@ -124,6 +124,10 @@ class HorasNoCargablesController extends Controller
 
       $modelo = new HorasNoCargablesModel();
 
+      $usuario_id = $request->session()->get('usuario_id');
+      $fecha = date("Y-m-d H:i:s");
+      $direccion_ip = $request->session()->get('direccion');
+
       $parametrosInsert = array(
         "id_concepto" => $request->input("concepto"),
         "id_usuario" => session("usuario_id"),
@@ -132,12 +136,9 @@ class HorasNoCargablesController extends Controller
         "fecha_hasta" => date("Y-m-d H:i:s", strtotime($request->input("fechaHasta"))),
         "observacion" => $request->input("observacion"),
         "id_estatus"  => (($request->input("estatus") == "") ? 1 : $request->input("estatus")),
-        "usuario_id" => $request->session()->get('usuario_id'),
-        "fecha" => date("Y-m-d H:i:s"),
-        "direccion_ip" => $request->session()->get('direccion'),
       );
 
-      $resgitrarHora = $modelo->registrarHorasNoCargables($parametrosInsert);
+      $resgitrarHora = $modelo->registrarHorasNoCargables($parametrosInsert,$usuario_id,$fecha,$direccion_ip);
 
       return $resgitrarHora;
 
