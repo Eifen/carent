@@ -26,7 +26,7 @@ class ProyectoModel extends Model
                                        d.descripcion
                                 FROM tbl_division d
                                 WHERE d.id_estatus = 1
-                                ORDER BY d.descripcion ASC');
+                                ORDER BY d.id ASC');
 
       return $divisiones;
 
@@ -44,7 +44,7 @@ class ProyectoModel extends Model
 
     }// Fin clientes
 
-    function crearProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus){
+    function crearProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus,$usuario_id,$fecha,$direccion_ip){
 
       DB::beginTransaction();
 
@@ -73,7 +73,11 @@ class ProyectoModel extends Model
       }
 
       if($divisionCreada){
-
+        $data = array("usuario_id" => $usuario_id,
+                      "fecha" => $fecha,
+                      "direccion_ip" => $direccion_ip,
+                      "accion" => 'Registro del proyecto: '.$descripcion.' del cliente:'.$cliente.'');
+        $bit = DB::table('logs_auditoria')->insertGetId($data);
         DB::commit();
         return array("response" => true, "message" => "Proyecto creado con éxito.");
 
@@ -110,13 +114,17 @@ class ProyectoModel extends Model
 
         $idsDivisiones = implode(",", $divisiones);
 
-        $idProyectos = DB::select('SELECT id
+        $idProyectos = DB::select('SELECT id_proyecto
                                    FROM tbl_proyecto_divisiones pd
                                    WHERE pd.id_division IN('.$idsDivisiones.')');
 
-        $arrayIds = [];
-        foreach($idProyectos as $id){
-          $arrayIds[] = $id->id;
+        if (!empty($idProyectos)) {
+          $arrayIds = [];
+          foreach($idProyectos as $id){
+            $arrayIds[] = $id->id_proyecto;
+          }
+        }else{
+          $arrayIds = [0];
         }
 
         $ids = implode(",", $arrayIds);
@@ -258,13 +266,17 @@ class ProyectoModel extends Model
 
         $idsDivisiones = implode(",", $divisiones);
 
-        $idProyectos = DB::select('SELECT id
+        $idProyectos = DB::select('SELECT id_proyecto
                                    FROM tbl_proyecto_divisiones pd
                                    WHERE pd.id_division IN('.$idsDivisiones.')');
 
-        $arrayIds = [];
-        foreach($idProyectos as $id){
-          $arrayIds[] = $id->id;
+        if (!empty($idProyectos)) {
+          $arrayIds = [];
+          foreach($idProyectos as $id){
+            $arrayIds[] = $id->id_proyecto;
+          }
+        }else{
+          $arrayIds = [0];
         }
 
        $ids = implode(",", $arrayIds);
@@ -322,7 +334,7 @@ class ProyectoModel extends Model
       }
     }
 
-    function modificarProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus,$idProyecto,$divisiones_v){
+    function modificarProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus,$idProyecto,$divisiones_v,$usuario_id,$fecha,$direccion_ip){
 
       DB::beginTransaction();
 
@@ -373,6 +385,11 @@ class ProyectoModel extends Model
 
       }
         DB::commit();
+        $data = array("usuario_id" => $usuario_id,
+                      "fecha" => $fecha,
+                      "direccion_ip" => $direccion_ip,
+                      "accion" => 'Modificacion del proyecto: '.$descripcion.' del cliente:'.$cliente.'');
+        $bit = DB::table('logs_auditoria')->insertGetId($data);
         return array("response" => true, "message" => "Proyecto actualizado con éxito.");
 
       } catch(\Illuminate\Database\QueryException $ex){
@@ -648,9 +665,6 @@ class ProyectoModel extends Model
                                p.descripcion,
                                (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = p.id_cliente) cliente,
                                (SELECT SUM(d.horas_contratadas) FROM tbl_proyecto_divisiones d WHERE d.id_proyecto = '.$idDproyecto.') horas_contratadas,
-
-                               (SELECT SUM(h.horas_trabajadas) FROM tbl_horas_cargables h WHERE h.id_proy_analista = (SELECT a.id FROM tbl_proyecto_analista a WHERE a.id_proyecto = '.$idDproyecto.'))horas_cargadas,
-
                                p.fecha_contratacion
                           FROM tbl_proyecto p
                           WHERE p.id = '.$idDproyecto.'
@@ -668,12 +682,13 @@ class ProyectoModel extends Model
     $info = DB::select('SELECT a.id,
                                (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE u.id = a.id_analista) nombre,
                                (SELECT c.descripcion FROM tbl_cargo_empleado c WHERE c.id = (SELECT u.id_cargo FROM tbl_usuario u WHERE u.id = a.id_analista)) cargo,
+                               (SELECT u.id_cargo FROM tbl_usuario u WHERE u.id = a.id_analista) id_cargo,
                                (SELECT d.descripcion FROM tbl_division d WHERE d.id = (SELECT u.id_division FROM tbl_usuario u WHERE u.id = a.id_analista)) division,
                                (SELECT SUM(h.horas_trabajadas) FROM tbl_horas_cargables h WHERE h.id_proy_analista = a.id AND a.id_analista = (SELECT u.id FROM tbl_usuario u WHERE u.id = a.id_analista))horas_cargadas
-
                           FROM tbl_proyecto_analista a
                           WHERE a.id_proyecto = '.$idDproyecto.'
-                          AND a.id_estatus = 1');
+                          AND a.id_estatus = 1
+                          ORDER BY id_cargo DESC');
     if(count($info) > 0)
     {
       return $info;
@@ -741,7 +756,7 @@ class ProyectoModel extends Model
 
     }
 
-    function agregarAnalistaProy($estado,$idUsuario,$idProyecto,$id_proyecto_division){
+    function agregarAnalistaProy($estado,$idUsuario,$idProyecto,$id_proyecto_division,$usuario_id,$fecha,$direccion_ip){
 
       DB::beginTransaction();
 
@@ -753,7 +768,11 @@ class ProyectoModel extends Model
       $analistaAgregado = DB::table('tbl_proyecto_analista')->insertGetId($data);
 
       if($analistaAgregado){
-
+        $data = array("usuario_id" => $usuario_id,
+                      "fecha" => $fecha,
+                      "direccion_ip" => $direccion_ip,
+                      "accion" => 'Asignacion del analista: '.$idUsuario.' al proyecto: '.$idProyecto.'');
+        $bit = DB::table('logs_auditoria')->insertGetId($data);
         DB::commit();
         return array("response" => true, "message" => "Analista agregado con éxito.");
 
@@ -784,7 +803,7 @@ class ProyectoModel extends Model
 
     }
 
-    function modAnalistaProy($estado,$idAnaProy){
+    function modAnalistaProy($estado,$idAnaProy,$idProyecto,$usuario_id,$fecha,$direccion_ip){
 
       DB::beginTransaction();
 
@@ -796,6 +815,22 @@ class ProyectoModel extends Model
 
 
         DB::commit();
+        $info = db::select('SELECT * FROM tbl_proyecto_analista WHERE id = '.$idAnaProy.'');
+        if ($info[0]->id_estatus === 1) {
+          $data = array("usuario_id" => $usuario_id,
+                      "fecha" => $fecha,
+                      "direccion_ip" => $direccion_ip,
+                      "accion" => 'Asignacion del analista: '.$info[0]->id_analista.' al proyecto: '.$idProyecto.'');
+          $bit = DB::table('logs_auditoria')->insertGetId($data);
+        }
+        if ($info[0]->id_estatus === 0) {
+          $data = array("usuario_id" => $usuario_id,
+                      "fecha" => $fecha,
+                      "direccion_ip" => $direccion_ip,
+                      "accion" => 'Eliminacion del analista: '.$info[0]->id_analista.' del proyecto: '.$idProyecto.'');
+          $bit = DB::table('logs_auditoria')->insertGetId($data);
+        }
+        
         return array("response" => true, "message" => "Analista actualizado con éxito.");
 
       } catch(\Illuminate\Database\QueryException $ex){

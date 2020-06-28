@@ -34448,6 +34448,7 @@ var app = new Vue({
     permisoActualizar: false,
     proyectos: [],
     horasComparar: [],
+    horas_cargadas: 0,
     diferencia: 0,
     permisoVer: false,
     permisoCrear: false
@@ -34585,6 +34586,7 @@ var app = new Vue({
     },
     mostrarDetalleDivProyecto: function mostrarDetalleDivProyecto(idDproyecto, e) {
       self.detalleDproyecto.error = false;
+      self.horas_cargadas = 0;
       $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
       var parametros = {
         idDproyecto: idDproyecto
@@ -34595,6 +34597,11 @@ var app = new Vue({
         if (response.status === 200 && response.data.response === true) {
           self.detalleDproyecto.data = response.data.infoDproyecto;
           self.detalleAproyecto.data = response.data.infoAproyecto;
+
+          for (var i = 0; i < self.detalleAproyecto.data.length; i++) {
+            self.horas_cargadas = parseInt(self.detalleAproyecto.data[i].horas_cargadas) + self.horas_cargadas;
+          }
+
           $('#modal-detalle-Dproyecto').modal("show");
           $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
         } else {
@@ -34771,7 +34778,7 @@ var app = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\js\proyecto\proyectoDivision.js */"./resources/js/proyecto/proyectoDivision.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\proyecto\proyectoDivision.js */"./resources/js/proyecto/proyectoDivision.js");
 
 
 /***/ })

@@ -26,8 +26,8 @@
                         v-model="formSearch.select.value"
                         v-on:change="tipoFiltro">
                   <option value="" selected disabled>Buscar Clientes por</option>
-                  <option value="1">Codigo del Cliente</option>
-                  <option value="2">Nombre o Razon Social</option>
+                  <option value="1">Código del Cliente</option>
+                  <option value="2">Nombre o Razón Social</option>
                   <option value="3">Rif</option>
                 </select>
               </div>
@@ -57,8 +57,8 @@
                         <tr>
                           <th scope="col">Código Cliente</th>
                           <th scope="col">Rif</th>
-                          <th scope="col">RazonSocial</th>
-                          <th scope="col">Correo Electronico</th>
+                          <th scope="col">Razón Social </th>
+                          <th scope="col">Correo Electrónico</th>
                           <th scope="col"></th>
                         </tr>
                       </thead>
@@ -70,7 +70,7 @@
                           <td>@{{ cliente.razon_social }}</td>
                           <td>@{{ cliente.email_fiscal }}</td>
                           <td>
-                            <i class="fas fa-check-square" data-dismiss="modal" v-on:click="SelecionarCliente(cliente.id, $event)"></i> <!-- Se invoca el metodo SelecionarCliente de detalleFactclienteCliente.js -->
+                            <i class="fas fa-check-square" v-on:click="SelecionarCliente(cliente.id, $event)"></i> <!-- Se invoca el metodo SelecionarCliente de detalleFactclienteCliente.js -->
                           </td>
                         </tr>
                       </tbody>
@@ -80,11 +80,11 @@
               </div>
             <form class="row" v-if="!detalleCliente.error">
                   <div class="form-group col-12 col-sm-6" v-show="clientes.mostrar">
-                    <label>Codigo</label>
+                    <label>Código</label>
                     <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.codigo">
                   </div>
                   <div class="form-group col-12 col-sm-6" v-show="clientes.mostrar">
-                    <label>Razon social</label>
+                    <label>Razón social</label>
                     <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.razon_social">
                   </div>
             </form>
@@ -105,8 +105,8 @@
                     <table class="table">
                       <thead>
                         <tr>
-                          <th scope="col">Descripcion</th>
-                          <th scope="col">Fecha de Contratacion</th>
+                          <th scope="col">Descripción</th>
+                          <th scope="col">Fecha de Contratación</th>
                           <th scope="col"></th>
                         </tr>
                       </thead>
@@ -115,7 +115,7 @@
                           <th scope="row">@{{ clienteProy.descripcion  }}</th>
                           <td>@{{ clienteProy.fecha_contratacion }}</td>
                           <td>
-                            <i class="fas fa-check-square" data-dismiss="modal" v-on:click="SelecionarClienteProy(clienteProy.id, $event)"></i>
+                            <i class="fas fa-check-square" v-on:click="SelecionarClienteProy(clienteProy.id, $event)"></i>
                           </td>
                         </tr>
                       </tbody>
@@ -127,6 +127,11 @@
                 <input class="form-control" type="text" disabled v-bind:value="detalleClienteProy.data.descripcion">
               </div>
           </form>
+          <div class="row wrapper-alert">
+              <div class="col-12">
+                <div v-bind:class="alertFormP.class" role="alert" v-if="alertFormP.show" v-html="alertFormP.message"></div>
+              </div>
+            </div>
             <h5>Dirección para Entrega de Facturas</h5>
             <form class="row">
               <div class="form-group col-12 col-sm-6">
@@ -180,7 +185,7 @@
                 <div class="mensaje"></div>
               </div>
             <div class="form-group col-12 col-sm-6">
-                <label for="ciudad_factura">Ciudad <span class="campo-obligatorio">*</span></label>
+                <label for="ciudad_factura">Ciudad<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="ciudad_facturaHelp"
                        class="form-control text-lowercase"
                        data-validar="true"
@@ -219,29 +224,27 @@
                 <small id="edificio_quinta_facturaHelp" class="form-text text-muted"></small>
                 <div class="mensaje"></div>
               </div>
-
-
               <div class="form-group col-12 col-sm-6">
-                <label for="piso_factura">Piso<span class="campo-obligatorio">*</span></label>
+                <label for="piso_factura">Pisó<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="piso_facturaHelp"
                        class="form-control text-lowercase"
-                       data-validar="true"
                        id="piso_factura"
+                       v-mask="'XXX'"
                        v-bind:disabled="form.piso_factura.disabled"
                        v-model="form.piso_factura.value"
                        v-on:keyup="valuesForm"
                        type="text">
-                <small id="piso_facturaHelp" class="form-text text-muted">ejemplo: 24E</small>
+                <small id="piso_facturaHelp" class="form-text text-muted">ejemplo: 24</small>
                 <div class="mensaje"></div>
               </div>
 
               <div class="form-group col-12 col-sm-6">
-                <label for="numero_factura">Numero</label>
+                <label for="numero_factura">Número</label>
                 <input aria-describedby="numero_factura"
                        class="form-control text-lowercase"
-                       data-validar="true"
                        id="numero_factura"
                        v-bind:disabled="form.numero_factura.disabled"
+                       v-mask="'XXXXX'"
                        v-model="form.numero_factura.value"
                        v-on:keyup="valuesForm"
                        type="text">
@@ -250,7 +253,7 @@
               </div>
 
               <div class="form-group col-12 col-sm-6">
-                <label for="telefono_factura">Nº de Teléfono de Facturacion Principal</label>
+                <label for="telefono_factura">Nº de Teléfono de Facturación Principal</label>
                 <input aria-describedby="telefono_facturaHelp"
                        class="form-control"
                        id="telefono_factura"
@@ -270,6 +273,7 @@
                        id="fax_factura"
                        v-bind:disabled="form.fax_factura.disabled"
                        v-model="form.fax_factura.value"
+                       v-mask="'(####) - ### ####'"
                        v-on:keyup="valuesForm"
                        type="text">
                 <small id="fax_facturaHelp" class="form-text text-muted"></small>
@@ -277,7 +281,7 @@
               </div>
 
                <div class="form-group col-12 col-sm-6">
-                <label for="correo_factura">Email De Factura <span class="campo-obligatorio">*</span></label>
+                <label for="correo_factura">Email De Factura<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="correo_facturaHelp"
                        class="form-control text-lowercase"
                        data-validar="true"
@@ -315,7 +319,7 @@
               <div class="col-12 col-md-6 col-lg-4">
                 <button class="btn"
                         type="button"
-                        v-on:click="refreshView">Nuevo Detalle de Facturacion</button>
+                        v-on:click="refreshView">Nuevo Detalle de Facturación</button>
               </div>
             </div>
             <div class="row wrapper-alert">

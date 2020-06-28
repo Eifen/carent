@@ -20,6 +20,11 @@ var app = new Vue({
       message: "",
       show: false
     },
+    alertFormP: {
+      class: "",
+      message: "",
+      show: false
+    },
     comboEstadosfa: [],
     comboMunicipiosfa: [],
     comboParroquiasfa: [],
@@ -145,6 +150,16 @@ var app = new Vue({
   },
    mounted: function () {
 
+    $('#modal-detalle-cliente').on('hidden.bs.modal', function () {
+
+      self.clientes.registros = [];
+
+    });
+    $('#modal-detalle-clienteProy').on('hidden.bs.modal', function () {
+
+      self.clienteProy.registros = [];
+
+    });
 
   },
   updated: function () {},
@@ -152,8 +167,36 @@ var app = new Vue({
 
     buscar: function(e){
 
+      self.permisoActualizar = false;
+      self.permisoCrear = false;
+      self.formSearchP.submit.disabled = true;
+      self.detalleClienteProy.error = false;
+      self.clienteProy.mostrar = false;
+      self.detalleClienteProy.data = [];
       self.alert.mostrar = false;
-
+      self.clientes.mostrar = false;
+      self.form.ciudad_factura.disabled = true;
+      self.form.avenida_calle_factura.disabled = true;
+      self.form.edificio_quinta_factura.disabled = true;
+      self.form.piso_factura.disabled = true;
+      self.form.numero_factura.disabled = true;
+      self.form.telefono_factura.disabled = true;
+      self.form.fax_factura.disabled = true;
+      self.form.correo_factura.disabled = true;
+      self.form.estadofa.disabled = true;
+      self.form.municipiofa.disabled = true;
+      self.form.parroquiafa.disabled = true;
+      self.form.ciudad_factura.value = "";
+      self.form.avenida_calle_factura.value = "";
+      self.form.edificio_quinta_factura.value = "";
+      self.form.piso_factura.value = "";
+      self.form.numero_factura.value = "";
+      self.form.telefono_factura.value = "";
+      self.form.fax_factura.value = "";
+      self.form.correo_factura.value = "";
+      self.form.estadofa.value = "";
+      self.form.municipiofa.value = "";
+      self.form.parroquiafa.value = "";
       if(self.formSearch.inputSearch.value.trim() !== ""){
 
         self.formSearch.submit.html = '<i class="fas fa-cog fa-spin"></i>';
@@ -172,11 +215,8 @@ var app = new Vue({
 
           if(response.status === 200 && response.data.response === true){
 
-            self.clientes.mostrar = true;
             self.clientes.registros = response.data.clientes;
             $('#modal-detalle-cliente').modal("show");
-            $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
-
 
           }else{
 
@@ -255,7 +295,7 @@ var app = new Vue({
     SelecionarCliente: function(idCliente,e){
 
       self.detalleCliente.error = false;
-      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
+      $(e.target).removeClass("fa-check-square").addClass("fa-cog fa-spin");
       // Obtenemos los valores
       let parametros = {
         idCliente: idCliente
@@ -266,8 +306,11 @@ var app = new Vue({
 
         if(response.status === 200 && response.data.response === true){
 
+          self.clientes.mostrar = true;
           self.detalleCliente.data = response.data.info;
           self.formSearchP.submit.disabled = false;
+          $(e.target).removeClass("fa-cog fa-spin").addClass("fa-check-square");
+          $('#modal-detalle-cliente').modal("hide");
 
         }else{
 
@@ -280,7 +323,7 @@ var app = new Vue({
 
         self.detalleCliente.error = true;
         $('#modal-detalle-cliente').modal("show");
-        $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
+        $(e.target).removeClass("fa-cog fa-spin").addClass("fa-check-square");
 
       });
 
@@ -308,6 +351,33 @@ var app = new Vue({
      Selecionar: function(e){
 
       self.alert.mostrar = false;
+      self.permisoActualizar = false;
+      self.permisoCrear = false;
+      self.clienteProy.mostrar = false;
+      self.detalleClienteProy.data = [];
+
+      self.form.ciudad_factura.disabled = true;
+      self.form.avenida_calle_factura.disabled = true;
+      self.form.edificio_quinta_factura.disabled = true;
+      self.form.piso_factura.disabled = true;
+      self.form.numero_factura.disabled = true;
+      self.form.telefono_factura.disabled = true;
+      self.form.fax_factura.disabled = true;
+      self.form.correo_factura.disabled = true;
+      self.form.estadofa.disabled = true;
+      self.form.municipiofa.disabled = true;
+      self.form.parroquiafa.disabled = true;
+      self.form.ciudad_factura.value = "";
+      self.form.avenida_calle_factura.value = "";
+      self.form.edificio_quinta_factura.value = "";
+      self.form.piso_factura.value = "";
+      self.form.numero_factura.value = "";
+      self.form.telefono_factura.value = "";
+      self.form.fax_factura.value = "";
+      self.form.correo_factura.value = "";
+      self.form.estadofa.value = "";
+      self.form.municipiofa.value = "";
+      self.form.parroquiafa.value = "";
 
         self.formSearchP.submit.html = '<i class="fas fa-cog fa-spin"></i>';
         self.formSearchP.submit.disabled = true;
@@ -324,13 +394,23 @@ var app = new Vue({
 
           if(response.status === 200 && response.data.response === true){
 
-            self.clienteProy.mostrar = true;
             self.clienteProy.registros = response.data.clienteProy;
             $('#modal-detalle-clienteProy').modal("show");
-            $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
-
 
           }else{
+
+            self.alertFormP = {
+              class : "alert alert-warning",
+              message : "Este cliente no posee proyectos asignados.",
+              show: true
+            };
+            setTimeout(function(){
+              self.alertFormP = {
+              class: "",
+              message: "",
+              show: false
+              };
+            }, 3000);
 
             throw response.data;
 
@@ -365,7 +445,8 @@ var app = new Vue({
     SelecionarClienteProy: function(clienteProy,e){
 
       self.detalleClienteProy.error = false;
-      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
+      self.clienteProy.mostrar = false;
+      $(e.target).removeClass("fa-check-square").addClass("fa-cog fa-spin");
       // Obtenemos los valores
       let parametros = {
         idclienteProy: clienteProy
@@ -376,6 +457,7 @@ var app = new Vue({
 
         if(response.status === 200 && response.data.response === true){
 
+          self.clienteProy.mostrar = true;
           self.permisoCrear = response.data.permisoCrear;
           self.detalleClienteProy.data = response.data.infoproy;
           self.detalleFactcliente.data = response.data.infoFactCliente;
@@ -391,19 +473,12 @@ var app = new Vue({
           self.comboMunicipiosfa = response.data.municipiosfa;
           self.comboParroquiasfa = response.data.parroquiasfa;
 
-          self.form.ciudad_factura.disabled = false;
-          self.form.avenida_calle_factura.disabled = false;
-          self.form.edificio_quinta_factura.disabled = false;
-          self.form.piso_factura.disabled = false;
-          self.form.numero_factura.disabled = false;
-          self.form.telefono_factura.disabled = false;
-          self.form.fax_factura.disabled = false;
-          self.form.correo_factura.disabled = false;
-
-          self.form.estadofa.disabled = false;
-          self.form.municipiofa.disabled = false;
-          self.form.parroquiafa.disabled = false;
-
+          var indices = ["ciudad_factura","avenida_calle_factura","edificio_quinta_factura","piso_factura","numero_factura","telefono_factura","fax_factura","correo_factura","estadofa","municipiofa","parroquiafa"];
+  
+            indices.forEach(function(indiceObjecto, indice) {
+              self.form[indiceObjecto].disabled = false;
+            });
+          $('#modal-detalle-clienteProy').modal("hide");
           self.form.estadofa.validar = true;
           self.form.municipiofa.validar = true;
           self.form.parroquiafa.validar = true;
@@ -414,11 +489,18 @@ var app = new Vue({
             self.form.parroquiafa.value = self.detalleFactcliente.data.id_parroquia_factura;
             self.permisoActualizar = response.data.permisoActualizar;
             self.permisoCrear = false;
-
           }
 
+          if (self.permisoCrear === false && self.permisoActualizar === false) {
+            var indices = ["ciudad_factura","avenida_calle_factura","edificio_quinta_factura","piso_factura","numero_factura","telefono_factura","fax_factura","correo_factura","estadofa","municipiofa","parroquiafa"];
+  
+            indices.forEach(function(indiceObjecto, indice) {
+              self.form[indiceObjecto].disabled = true;
+            });
+          }
+          $(e.target).removeClass("fa-cog fa-spin").addClass("fa-check-square");
           if (respose.data.permisoCrear) {
-            var message = "No Puedes Crear Detalles de Facturacions";
+            var message = "No Puedes Crear Detalles de Facturacion";
           }
         
 
@@ -434,7 +516,7 @@ var app = new Vue({
         self.actualizar.mostrar = false;
         self.detalleClienteProy.error = true;
         $('#modal-detalle-clienteProy').modal("show");
-        $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
+        $(e.target).removeClass("fa-cog fa-spin").addClass("fa-check-square");
 
       });
 

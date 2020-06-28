@@ -40480,7 +40480,7 @@ var app = new Vue({
           return v.toLocaleUpperCase();
         }
       },
-      N: {
+      M: {
         pattern: /[0-9]/,
         transform: function transform(v) {
           return v.toLocaleUpperCase();
@@ -40656,6 +40656,7 @@ var app = new Vue({
   methods: {
     buscar: function buscar(e) {
       self.alert.mostrar = false;
+      self.usuarios.mostrar = false;
 
       if (self.formSearch.inputSearch.value.trim() !== "") {
         self.formSearch.submit.html = '<i class="fas fa-cog fa-spin"></i>';
@@ -40673,10 +40674,8 @@ var app = new Vue({
           self.formSearch.submit.disabled = false;
 
           if (response.status === 200 && response.data.response === true) {
-            self.usuarios.mostrar = true;
             self.usuarios.registros = response.data.usuarios;
             $('#modal-detalle-usuario').modal("show");
-            $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
           } else {
             throw response.data;
           }
@@ -40703,6 +40702,7 @@ var app = new Vue({
     },
     buscarG: function buscarG(e) {
       self.alert.mostrar = false;
+      self.usuariosG.mostrar = false;
 
       if (self.formSearchG.inputSearchG.value.trim() !== "") {
         self.formSearchG.submitG.html = '<i class="fas fa-cog fa-spin"></i>';
@@ -40720,10 +40720,8 @@ var app = new Vue({
           self.formSearchG.submitG.disabled = false;
 
           if (response.status === 200 && response.data.response === true) {
-            self.usuariosG.mostrar = true;
             self.usuariosG.registros = response.data.usuariosG;
             $('#modal-detalle-usuarioG').modal("show");
-            $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
           } else {
             throw response.data;
           }
@@ -40802,7 +40800,7 @@ var app = new Vue({
     },
     SelecionarUsuario: function SelecionarUsuario(idUsuario, e) {
       self.detalleUsuario.error = false;
-      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin"); // Obtenemos lo valores
+      $(e.target).removeClass("fa-check-square").addClass("fa-cog fa-spin"); // Obtenemos lo valores
 
       var parametros = {
         idUsuario: idUsuario
@@ -40812,19 +40810,21 @@ var app = new Vue({
         params: parametros
       }).then(function (response) {
         if (response.status === 200 && response.data.response === true) {
+          self.usuarios.mostrar = true;
           self.detalleUsuario.data = response.data.info;
+          $(e.target).removeClass("fa-cog fa-spin").addClass("fa-check-square");
         } else {
           throw response.data;
         }
       })["catch"](function (error) {
         self.detalleUsuario.error = true;
         $('#modal-detalle-usuario').modal("show");
-        $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
+        $(e.target).removeClass("fa-check-square").addClass("fa-cog fa-spin");
       });
     },
     SelecionarUsuarioG: function SelecionarUsuarioG(idUsuario, e) {
       self.detalleUsuarioG.error = false;
-      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin"); // Obtenemos lo valores
+      $(e.target).removeClass("fa-check-square").addClass("fa-cog fa-spin"); // Obtenemos lo valores
 
       var parametros = {
         idUsuario: idUsuario
@@ -40834,7 +40834,9 @@ var app = new Vue({
         params: parametros
       }).then(function (response) {
         if (response.status === 200 && response.data.response === true) {
+          self.usuariosG.mostrar = true;
           self.detalleUsuarioG.data = response.data.info;
+          $(e.target).removeClass("fa-cog fa-spin").addClass("fa-check-square");
         } else {
           throw response.data;
         }
@@ -40997,7 +40999,7 @@ var app = new Vue({
             throw response.data;
           }
         })["catch"](function (error) {
-          var indices = ["idUsuario", "idUsuario2", "rif", "nit", "razon_social", "ciudad_fiscal", "avenida_calle_fiscal", "edificio_quinta_fiscal", "piso_fiscal", "numero_fiscal", "telefono_fiscal", "fax_fiscal", "email_fiscal"];
+          var indices = ["rif", "nit", "razon_social", "ciudad_fiscal", "avenida_calle_fiscal", "edificio_quinta_fiscal", "piso_fiscal", "numero_fiscal", "telefono_fiscal", "fax_fiscal", "email_fiscal", "estadofi", "municipiofi", "parroquiafi"];
           indices.forEach(function (indiceObjecto, indice) {
             self.form[indiceObjecto].disabled = false;
           });
@@ -41202,7 +41204,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\js\cliente\nuevoCliente.js */"./resources/js/cliente/nuevoCliente.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\cliente\nuevoCliente.js */"./resources/js/cliente/nuevoCliente.js");
 
 
 /***/ })

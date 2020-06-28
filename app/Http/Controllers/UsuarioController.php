@@ -81,7 +81,10 @@ class UsuarioController extends Controller
               "telefono2" => $request->input("telefono2"),
               "parroquia" => $request->input("parroquia"),
               "division" => $request->input("division"),
-              "cargo" => $request->input("cargo")
+              "cargo" => $request->input("cargo"),
+              "usuario_id" => $request->session()->get('usuario_id'),
+              "fecha" => date("Y-m-d H:i:s"),
+              "direccion_ip" => $request->session()->get('direccion'),
             );
 
             $response = $modelo->crearUsuario($parametros);
@@ -212,7 +215,11 @@ class UsuarioController extends Controller
         "parroquia" => $request->input("parroquia"),
         "division" => $request->input("division"),
         "cargo" => $request->input("cargo"),
-        "estatus" => $request->input("estatus")
+        "estatus" => $request->input("estatus"),
+        "codigoUsuario" => $this->desencriptarCryptoJS($request->input("codigoUsuario")),
+        "usuario_id" => $request->session()->get('usuario_id'),
+        "fecha" => date("Y-m-d H:i:s"),
+        "direccion_ip" => $request->session()->get('direccion'),
       );
 
       $response = $modelo->modificarUsuario($parametros);

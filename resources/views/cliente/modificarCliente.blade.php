@@ -162,7 +162,7 @@
               </div>
             <form class="row" v-if="!detalleUsuarioG.error">
                   <div class="form-group col-12 col-sm-6">
-                    <label>Codigo</label>
+                    <label>Código</label>
                     <input class="form-control" type="text" disabled v-bind:value="detalleUsuarioG.data.codigo">
                   </div>
                   <div class="form-group col-12 col-sm-6">
@@ -217,7 +217,7 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
-                <label for="razon_social">Nombre o Razon social<span class="campo-obligatorio">*</span></label>
+                <label for="razon_social">Nombre o Razón social<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="razon_socialHelp"
                        class="form-control text-lowercase"
                        data-min="3"
@@ -245,7 +245,7 @@
                 <div class="mensaje"></div>
               </div>
             </form>
-            <h5>Direccion Fiscal</h5>
+            <h5>Dirección Fiscal</h5>
             <form class="row">
               <div class="form-group col-12 col-sm-6">
                 <label for="estadofi">Estado <span class="campo-obligatorio">*</span></label>
@@ -298,7 +298,7 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
-                <label for="ciudad_fiscal">Ciudad <span class="campo-obligatorio">*</span></label>
+                <label for="ciudad_fiscal">Ciudad<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="ciudad_fiscalHelp"
                        class="form-control text-lowercase"                       
                        data-validar="true"
@@ -338,31 +338,27 @@
                 <small id="edificio_quinta_fiscalHelp" class="form-text text-muted"></small>
                 <div class="mensaje"></div>
               </div>
-
-
               <div class="form-group col-12 col-sm-6">
-                <label for="piso_fiscal">Piso<span class="campo-obligatorio">*</span></label>
+                <label for="piso_fiscal">Pisó<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="piso_ficalHelp"
                        class="form-control text-lowercase"
-                       data-validar="true"
                        id="piso_fiscal"
                        v-bind:disabled="form.piso_fiscal.disabled"
+                       v-mask="'XXX'"
                        v-model="form.piso_fiscal.value"
                        v-on:keyup="valuesForm"
                        type="text">
-                <small id="piso_ficalHelp" class="form-text text-muted">ejemplo: 24E</small>
+                <small id="piso_ficalHelp" class="form-text text-muted">ejemplo: 24</small>
                 <div class="mensaje"></div>
               </div>
 
               <div class="form-group col-12 col-sm-6">
-                <label for="numero_fiscal">Numero</label>
+                <label for="numero_fiscal">Número<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="numero_fiscal"
                        class="form-control text-lowercase"
-                       data-formated-number="true"
-                       data-only-number="true"
-                       data-validar="true"
                        id="numero_fiscal"
                        v-bind:disabled="form.numero_fiscal.disabled"
+                       v-mask="'XXXXX'"
                        v-model="form.numero_fiscal.value"
                        v-on:keyup="valuesForm"
                        type="text">
@@ -371,7 +367,7 @@
               </div>
 
               <div class="form-group col-12 col-sm-6">
-                <label for="telefono_fiscal">Nº de Teléfono Principal</label>
+                <label for="telefono_fiscal">Nº de Teléfono Principal<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="telefono_fiscalHelp"
                        class="form-control"
                        id="telefono_fiscal"
@@ -382,8 +378,7 @@
                        type="text">
                 <small id="telefono_fiscalHelp" class="form-text text-muted">Ejemplo: 0424-1234567</small>
                 <div class="mensaje"></div>
-              </div>
-                        
+              </div>                        
               <div class="form-group col-12 col-sm-6">
                 <label for="fax_fiscal">Nº de Fax</label>
                 <input aria-describedby="fax_fiscalHelp"
@@ -391,6 +386,7 @@
                        id="fax_fiscal"
                        v-bind:disabled="form.fax_fiscal.disabled"
                        v-model="form.fax_fiscal.value"
+                       v-mask="'(####) - ### ####'"
                        v-on:keyup="valuesForm"
                        type="text">
                 <small id="fax_fiscalHelp" class="form-text text-muted"></small>

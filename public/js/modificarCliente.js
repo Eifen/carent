@@ -41575,6 +41575,7 @@ var app = new Vue({
   methods: {
     buscar: function buscar(e) {
       self.alert.mostrar = false;
+      self.usuarios.mostrar = false;
 
       if (self.formSearch.inputSearch.value.trim() !== "") {
         self.formSearch.submit.html = '<i class="fas fa-cog fa-spin"></i>';
@@ -41595,7 +41596,6 @@ var app = new Vue({
             self.usuarios.mostrar = true;
             self.usuarios.registros = response.data.usuarios;
             $('#modal-detalle-usuario').modal("show");
-            $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
           } else {
             throw response.data;
           }
@@ -41622,6 +41622,7 @@ var app = new Vue({
     },
     buscarG: function buscarG(e) {
       self.alert.mostrar = false;
+      self.usuariosG.mostrar = false;
 
       if (self.formSearchG.inputSearchG.value.trim() !== "") {
         self.formSearchG.submitG.html = '<i class="fas fa-cog fa-spin"></i>';
@@ -41642,7 +41643,6 @@ var app = new Vue({
             self.usuariosG.mostrar = true;
             self.usuariosG.registros = response.data.usuariosG;
             $('#modal-detalle-usuarioG').modal("show");
-            $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
           } else {
             throw response.data;
           }
@@ -41721,7 +41721,7 @@ var app = new Vue({
     },
     SelecionarUsuario: function SelecionarUsuario(idUsuario, e) {
       self.detalleUsuario.error = false;
-      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin"); // Obtenemos los valores
+      $(e.target).removeClass("fa-check-square").addClass("fa-cog fa-spin"); // Obtenemos los valores
 
       var parametros = {
         idUsuario: idUsuario
@@ -41731,19 +41731,21 @@ var app = new Vue({
         params: parametros
       }).then(function (response) {
         if (response.status === 200 && response.data.response === true) {
+          self.usuarios.mostrar = true;
           self.detalleUsuario.data = response.data.info;
+          $(e.target).removeClass("fa-cog fa-spin").addClass("fa-check-square");
         } else {
           throw response.data;
         }
       })["catch"](function (error) {
         self.detalleUsuario.error = true;
         $('#modal-detalle-usuario').modal("show");
-        $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
+        $(e.target).removeClass("fa-check-square").addClass("fa-cog fa-spin");
       });
     },
     SelecionarUsuarioG: function SelecionarUsuarioG(idUsuario, e) {
       self.detalleUsuarioG.error = false;
-      $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin"); //Obtenemos los valores
+      $(e.target).removeClass("fa-check-square").addClass("fa-cog fa-spin"); //Obtenemos los valores
 
       var parametros = {
         idUsuario: idUsuario
@@ -41753,7 +41755,9 @@ var app = new Vue({
         params: parametros
       }).then(function (response) {
         if (response.status === 200 && response.data.response === true) {
+          self.usuariosG.mostrar = true;
           self.detalleUsuarioG.data = response.data.info;
+          $(e.target).removeClass("fa-cog fa-spin").addClass("fa-check-square");
         } else {
           throw response.data;
         }
@@ -42107,7 +42111,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\js\cliente\modificarCliente.js */"./resources/js/cliente/modificarCliente.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\cliente\modificarCliente.js */"./resources/js/cliente/modificarCliente.js");
 
 
 /***/ })

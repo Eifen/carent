@@ -226,6 +226,11 @@ class ClienteModel extends Model
                   "id_estatus" => 1);
     $contacto = DB::table('tbl_cliente')->insert($data);
     if($contacto){
+      $data = array("usuario_id" => $parametros["usuario_id"],
+                      "fecha" => $parametros["fecha"],
+                      "direccion_ip" => $parametros["direccion_ip"],
+                      "accion" => 'Registro del cliente:'.$parametros["codigoCliente"].'');
+      $bit = DB::table('logs_auditoria')->insertGetId($data);
       DB::commit();
       return array("response" => true, "message" => "Cliente Creado con Éxito.");
     }else{
@@ -496,6 +501,11 @@ class ClienteModel extends Model
                     "id_estatus" => 1);
     $contacto = DB::table('tbl_cliente_facturacion')->insert($data);
     if($contacto){
+      $data = array("usuario_id" => $parametros["usuario_id"],
+                      "fecha" => $parametros["fecha"],
+                      "direccion_ip" => $parametros["direccion_ip"],
+                      "accion" => 'Registro del detalle de facturacion del cliente:'.$parametros["id_cliente"].' proyecto:'.$parametros["id_proyecto"].'');
+      $bit = DB::table('logs_auditoria')->insertGetId($data);
       DB::commit();
       return array("response" => true, "message" => "Detalle de Facturacion del Cliente Creada con Éxito.");
     }else{
@@ -521,12 +531,17 @@ class ClienteModel extends Model
                     "email_factura" => $parametros["correo_factura"]);      
         $contacto = DB::table('tbl_cliente_facturacion')->where("id", $parametros["id_fact_cliente"])->update($data);
         DB::commit();
+        $data = array("usuario_id" => $parametros["usuario_id"],
+                      "fecha" => $parametros["fecha"],
+                      "direccion_ip" => $parametros["direccion_ip"],
+                      "accion" => 'Modificacion del detalle de facturacion del cliente:'.$parametros["id_cliente"].' proyecto:'.$parametros["id_proyecto"].'');
+      $bit = DB::table('logs_auditoria')->insertGetId($data);
         return array("response" => true, "message" => "Factura Cliente actualizada con Éxito!.");
     } catch(\Illuminate\Database\QueryException $ex){
       DB::rollBack();
       return array("response" => false, "message" => "Error al tratar de actualizar la información la factura del cliente.");
     }
-  }// Fin crearUsuario
+  }// Fin 
   
   function modificarCliente($parametros){
 
@@ -551,28 +566,15 @@ class ClienteModel extends Model
                     "id_estatus" => $parametros["estatus"],);      
         $contacto = DB::table('tbl_cliente')->where("id",$parametros["idCliente"])->update($data);
         DB::commit();
+        $data = array("usuario_id" => $parametros["usuario_id"],
+                      "fecha" => $parametros["fecha"],
+                      "direccion_ip" => $parametros["direccion_ip"],
+                      "accion" => 'Creacion de cliente:'.$parametros["codigoCliente"].'');
+      $bit = DB::table('logs_auditoria')->insertGetId($data);
         return array("response" => true, "message" => "Cliente actualizado con Éxito!.");
     } catch(\Illuminate\Database\QueryException $ex){
       DB::rollBack();
       return array("response" => false, "message" => "Error al tratar de actualizar la información del usuario.");
     }
   }// Fin modificarUsuario
-
-    function buscarUsuari($codigo){
-
-      $usuario = DB::select('SELECT CONCAT(nombre_1," ",apellido_1) AS nombre
-                             FROM tbl_usuario 
-                             WHERE id = "'.$codigo.'"');
-
-      if(count($usuario) > 0){
-
-        return $usuario[0];
-
-      }else{
-
-        return array();
-
-      }
-
-}
 }
