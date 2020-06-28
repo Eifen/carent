@@ -103,15 +103,21 @@
               </div>
               <div class="form-group col-12 col-sm-6">
                 <label for="fechaNacimiento">Fecha de Nacimiento</label>
-                <input aria-describedby="fechaNacimientoHelp"
-                       class="form-control"
-                       id="fechaNacimiento"
-                       v-bind:disabled="form.fechaNacimiento.disabled"
-                       v-mask="'##/##/####'"
-                       v-model="form.fechaNacimiento.value"
-                       v-on:keyup="valuesForm"
-                       type="text">
-                <small id="fechaNacimientoHelp" class="form-text text-muted">Ejemplo: 20/02/1985</small>
+                <datetime
+                  @input="limpiarMensajeError2"
+                  :disabled="form.fechaNacimiento.disabled"
+                  format="dd/LL/yyyy"
+                  input-class="form-control fechaNacimiento"
+                  ref="fechaNacimiento"
+                  v-bind:data-validar="form.fechaNacimiento.validar"
+                  v-model="form.fechaNacimiento.value"
+                  value-zone='local'
+                  type="date"
+                  zone='local'>
+                  <template slot="button-cancel">
+                    Cerrar
+                  </template>
+                </datetime>
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
@@ -281,7 +287,9 @@
                   ref="fechaIngreso"
                   v-bind:data-validar="form.fechaIngreso.validar"
                   v-model="form.fechaIngreso.value"
-                  type="date">
+                  value-zone='local'
+                  type="date"
+                  zone='local'>
                   <template slot="button-cancel">
                     Cerrar
                   </template>

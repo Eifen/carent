@@ -248,7 +248,9 @@
                       format="dd/LL/yyyy hh:mm a"
                       input-class="form-control fechaDesde"
                       v-model="formCargarHoras.fechaDesde.value"
-                      type="datetime">
+                      value-zone='local'
+                      type="datetime"
+                      zone='local'>
                       <template slot="button-cancel">
                         Cerrar
                       </template>
@@ -266,7 +268,9 @@
                       format="dd/LL/yyyy hh:mm a"
                       input-class="form-control"
                       v-model="formCargarHoras.fechaHasta.value"
-                      type="datetime">
+                      value-zone='local'
+                      type="datetime"
+                      zone='local'>
                       <template slot="button-cancel">
                         Cerrar
                       </template>
@@ -350,7 +354,9 @@
                       format="dd/LL/yyyy hh:mm a"
                       input-class="form-control fechaDesde"
                       v-model="formModificarHoras.fechaDesde.value"
-                      type="datetime">
+                      value-zone='local'
+                      type="datetime"
+                      zone='local'>
                       <template slot="button-cancel">
                         Cerrar
                       </template>
@@ -368,7 +374,9 @@
                       format="dd/LL/yyyy hh:mm a"
                       input-class="form-control"
                       v-model="formModificarHoras.fechaHasta.value"
-                      type="datetime">
+                      value-zone='local'
+                      type="datetime"
+                      zone='local'>
                       <template slot="button-cancel">
                         Cerrar
                       </template>
