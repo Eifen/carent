@@ -65,18 +65,14 @@ html {
 #nuevoUsuario .wrapper-forms form > div.form-group .form-control:disabled {
   cursor: not-allowed;
 }
-#nuevoUsuario .wrapper-forms form > div.wrapper-recovery-pass {
-  margin-bottom: 10px;
-  margin-top: 10px;
-}
-#nuevoUsuario .wrapper-forms form > div.wrapper-recovery-pass .recuperarClave {
-  color: #007BFF;
-  -webkit-transition: all 0.3s;
-  transition: all 0.3s;
-}
-#nuevoUsuario .wrapper-forms form > div.wrapper-recovery-pass .recuperarClave:hover {
+#nuevoUsuario .wrapper-forms form > div.form-group .input-group-append:hover {
   cursor: pointer;
-  text-decoration: underline;
+}
+#nuevoUsuario .wrapper-forms form > div.form-group .input-group-append:hover .remove {
+  color: #cc0000;
+}
+#nuevoUsuario .wrapper-forms form > div.form-group .input-group-append .remove {
+  color: #E25353;
 }
 #nuevoUsuario .wrapper-forms .wrapper-subtmit > div {
   padding-left: 0px;

@@ -102,25 +102,6 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
-                <label for="fechaNacimiento">Fecha de Nacimiento</label>
-                <datetime
-                  @input="limpiarMensajeError2"
-                  :disabled="form.fechaNacimiento.disabled"
-                  format="dd/LL/yyyy"
-                  input-class="form-control fechaNacimiento"
-                  ref="fechaNacimiento"
-                  v-bind:data-validar="form.fechaNacimiento.validar"
-                  v-model="form.fechaNacimiento.value"
-                  value-zone='local'
-                  type="date"
-                  zone='local'>
-                  <template slot="button-cancel">
-                    Cerrar
-                  </template>
-                </datetime>
-                <div class="mensaje"></div>
-              </div>
-              <div class="form-group col-12 col-sm-6">
                 <label for="codigoUsuario">Código de usuario <span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="codigoUsuarioHelp"
                        class="form-control"
@@ -132,6 +113,30 @@
                        v-on:keyup="valuesForm"
                        type="text">
                 <small id="codigoUsuarioHelp" class="form-text text-muted">Ejemplo: 2209</small>
+                <div class="mensaje"></div>
+              </div>
+              <div class="form-group col-12 col-sm-6">
+                <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                <div class="input-group">
+                  <datetime
+                    :disabled="form.fechaNacimiento.disabled"
+                    format="dd/LL/yyyy"
+                    input-class="form-control fechaNacimiento"
+                    ref="fechaNacimiento"
+                    v-model="form.fechaNacimiento.value"
+                    value-zone='local'
+                    type="date"
+                    zone='local'>
+                    <template slot="button-cancel">
+                      Cerrar
+                    </template>
+                  </datetime>
+                  <div class="input-group-append" data-toggle="tooltip" title="Borrar">
+                    <span class="input-group-text" @click="limpiarFecha('fechaNacimiento')">
+                      <i class="fas fa-times-circle remove"></i>
+                    </span>
+                  </div>
+                </div>
                 <div class="mensaje"></div>
               </div>
             </form>

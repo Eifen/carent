@@ -72,7 +72,7 @@ class UsuarioController extends Controller
               "apellido1" => mb_strtoupper($request->input("apellido1")),
               "apellido2" => mb_strtoupper($request->input("apellido2")),
               "cedula" => $request->input("cedula"),
-              "fechaNacimiento" => $request->input("fechaNacimiento"),
+              "fechaNacimiento" => date("Y-m-d H:i:s", strtotime($request->input("fechaNacimiento"))),
               "codigoUsuario" => $codigoUsuario,
               "clave" => $this->encriptarLaravel($request->input("cedula")),
               "correoPrincipal" => strtolower($request->input("correoPrincipal")),
@@ -85,8 +85,9 @@ class UsuarioController extends Controller
               "usuario_id" => $request->session()->get('usuario_id'),
               "fecha" => date("Y-m-d H:i:s"),
               "direccion_ip" => $request->session()->get('direccion'),
+              "fecha_ingreso" => date("Y-m-d H:i:s", strtotime($request->input("fechaIngreso")))
             );
-
+            return $parametros;exit();
             $response = $modelo->crearUsuario($parametros);
 
         }else{

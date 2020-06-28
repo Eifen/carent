@@ -174,14 +174,18 @@ var app = new Vue({
       decimalPlaces: 0,
       decimalCharacter: ',',
       digitGroupSeparator: '',
-      leadingZero: 'keep'
+      leadingZero: 'keep',
+      minimumValue: 0
     });
 
     new AutoNumeric('#cedula', {
       decimalPlaces: 0,
       decimalCharacter: ',',
-      digitGroupSeparator: '.'
+      digitGroupSeparator: '.',
+      minimumValue: 0
     });
+
+    $('[data-toggle="tooltip"]').tooltip()
 
   },
   updated: function () {},
@@ -523,8 +527,6 @@ var app = new Vue({
           fechaIngreso: self.form.fechaIngreso.value
         }
 
-        console.log(parametros); return;
-
         self.submitCrear.content = '<i class="fas fa-cog fa-spin"></i>';
         self.submitCrear.disabled = true;
 
@@ -558,7 +560,7 @@ var app = new Vue({
           var indices = ["nombre1","nombre2","apellido1","apellido2","fechaNacimiento","codigoUsuario","cedula","correoPrincipal","correoSecundario","telefono1","telefono2"];
 
           if(self.form.empleado.checked){
-            indices.push("estado","municipio","parroquia","division","cargo");
+            indices.push("estado","municipio","parroquia","division","cargo","fechaIngreso");
           }
 
           indices.forEach(function(indiceObjecto, indice) {
@@ -705,6 +707,9 @@ var app = new Vue({
     },
     refreshView: function(){
       window.location.href = "/formNuevoUsuario";
+    },
+    limpiarFecha: function(nameRef){
+      console.log(nameRef)
     }
 
   }// Fin methods
