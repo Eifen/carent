@@ -302,7 +302,7 @@
 
 
               <div class="form-group col-12 col-sm-6">
-                <label for="piso_fiscal">Pisó<span class="campo-obligatorio">*</span></label>
+                <label for="piso_fiscal">Piso<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="piso_ficalHelp"
                        class="form-control text-lowercase"
                        id="piso_fiscal"

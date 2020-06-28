@@ -225,7 +225,7 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
-                <label for="piso_factura">Pisó<span class="campo-obligatorio">*</span></label>
+                <label for="piso_factura">Piso<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="piso_facturaHelp"
                        class="form-control text-lowercase"
                        id="piso_factura"

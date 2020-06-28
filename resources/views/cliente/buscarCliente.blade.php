@@ -167,7 +167,7 @@
                     <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.edificio_quinta_fiscal">
                   </div>
                   <div class="form-group col-12 col-sm-6">
-                    <label>Pisó</label>
+                    <label>Piso</label>
                     <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.piso_fiscal">
                   </div>
                   <div class="form-group col-12 col-sm-6">
