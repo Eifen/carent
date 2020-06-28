@@ -17,9 +17,12 @@
     <body>
 
       <div id="nuevoUsuario" class="container-fluid" v-on:keypress="keyboard">
-        <menu-principal></menu-principal>
 
-        <div class="row align-items-center justify-content-center wrapper-forms">
+        <loading :loading="loading" v-show="loading"></loading>
+
+        <menu-principal v-cloak></menu-principal>
+
+        <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
           <div class="col-12 col-sm-11 col-md-9 col-lg-8">
             <h3>Estas creando a un nuevo usuario</h3>
             <form class="row">
@@ -266,6 +269,20 @@
                   <option value="" disabled selected>Seleccione...</option>
                   <option v-bind:value="cargo.id" v-for="cargo in comboCargos">@{{ cargo.descripcion }}</option>
                 </select>
+                <div class="mensaje"></div>
+              </div>
+              <div class="form-group col-12 col-sm-6">
+                <label for="estado">Fecha de Ingreso <span v-if="form.empleado.checked" class="campo-obligatorio">*</span></label>
+                <datetime
+                  :disabled="form.fechaIngreso.disabled"
+                  format="dd/LL/yyyy"
+                  input-class="form-control fechaIngreso"
+                  v-model="form.fechaIngreso.value"
+                  type="date">
+                  <template slot="button-cancel">
+                    Cerrar
+                  </template>
+                </datetime>
                 <div class="mensaje"></div>
               </div>
             </form>

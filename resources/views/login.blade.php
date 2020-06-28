@@ -20,7 +20,7 @@
 
         <loading :loading="loading" v-show="loading"></loading>
 
-        <div class="row align-items-center justify-content-center">
+        <div class="row align-items-center justify-content-center" v-cloak>
           <div class="col-12 col-sm-9 col-md-6 col-lg-4">
             <form id="formLogin">
               <div class="logo">
@@ -69,7 +69,7 @@
           </div>
         </div>
 
-        <div id="modal-recuperar-clave" class="modal fade" tabindex="-1" role="dialog">
+        <div id="modal-recuperar-clave" class="modal fade" tabindex="-1" role="dialog" v-cloak>
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">

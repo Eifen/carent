@@ -6,10 +6,14 @@ window.AutoNumeric = require('autonumeric');
 import VueTheMask from 'vue-the-mask';
 const CryptoJS = require("crypto-js");
 const AES = require("crypto-js/aes");
+import { Datetime } from 'vue-datetime';
+import 'vue-datetime/dist/vue-datetime.css';
 var self;
 
 Vue.use(VueTheMask);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
+Vue.component('loading',require('../components/loading.vue').default);
+Vue.component('datetime', Datetime);
 
 var app = new Vue({
 
@@ -101,8 +105,13 @@ var app = new Vue({
       },
       empleado: {
         checked:false
+      },
+      fechaIngreso:{
+        disabled: true,
+        value: ""
       }
     },
+    loading: true,
     submitCrear: {
       content: "Crear nuevo Usuario",
       disabled: false,
@@ -122,6 +131,7 @@ var app = new Vue({
 
         self.key = response.data.key;
         self.iv = response.data.iv;
+        self.loading = false;
 
       }else{
 
@@ -145,6 +155,8 @@ var app = new Vue({
         message : "Existe un error!, consulte con el administrador del sistema.",
         show: true
       };
+
+      self.loading = false;
 
     });
 
@@ -378,12 +390,14 @@ var app = new Vue({
         self.form.estado.disabled = false;
         self.form.division.disabled = false;
         self.form.cargo.disabled = false;
+        self.form.fechaIngreso.disabled = false;
 
         self.form.estado.validar = true;
         self.form.municipio.validar = true;
         self.form.parroquia.validar = true;
         self.form.division.validar = true;
         self.form.cargo.validar = true;
+        self.form.fechaIngreso.validar = true;
 
         self.form.estado.value = "";
 
@@ -397,12 +411,14 @@ var app = new Vue({
         self.form.parroquia.disabled = true;
         self.form.division.disabled = true;
         self.form.cargo.disabled = true;
+        self.form.fechaIngreso.disabled = true;
 
         self.form.estado.validar = false;
         self.form.municipio.validar = false;
         self.form.parroquia.validar = false;
         self.form.division.validar = false;
         self.form.cargo.validar = false;
+        self.form.fechaIngreso.validar = false;
 
         self.form.estado.value = "";
         self.form.municipio.value = "";

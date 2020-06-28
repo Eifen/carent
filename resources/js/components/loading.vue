@@ -41,12 +41,12 @@
 </style>
 
 <template>
-  <b-row align-h="center" align-v="center" id="wrapper-loading" v-if="loading">
-    <b-col cols="12" class="text-center wrapper-images">
-      <img src="/images/loading-1.png">
-      <img src="/images/loading-2.png" class="efecto">
-    </b-col>
-  </b-row>
+  <div class="row align-items-center justify-content-center" id="wrapper-loading" v-if="loading">
+    <div class="col-12 text-center wrapper-images">
+      <img src="/images/loading-1.png" class="efecto">
+      <img src="/images/loading-2.png">
+    </div>
+  </div>
 </template>
 
 <script>

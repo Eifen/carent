@@ -71,6 +71,7 @@ var app = new Vue({
 
         self.key = response.data.key;
         self.iv = response.data.iv;
+        self.loading = false;
 
       }else{
 
@@ -95,6 +96,8 @@ var app = new Vue({
         message : "Existe un error!, consulte con el administrador del sistema.",
         show: true
       };
+
+      self.loading = false;
 
     });
 

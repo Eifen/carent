@@ -17,9 +17,12 @@
     <body>
 
       <div id="inicio" class="container-fluid">
-        <menu-principal></menu-principal>
 
-        <div class="row align-items-center justify-content-center">
+        <loading :loading="loading" v-show="loading"></loading>
+
+        <menu-principal v-cloak></menu-principal>
+
+        <div class="row align-items-center justify-content-center" v-cloak>
           <div class="col-12 col-sm-9 col-md-6 col-lg-4"></div>
         </div>
       </div>
