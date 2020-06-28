@@ -17,6 +17,9 @@
     <body>
 
       <div id="login" class="container-fluid" v-on:keypress="keyboard">
+
+        <loading :loading="loading" v-show="loading"></loading>
+
         <div class="row align-items-center justify-content-center">
           <div class="col-12 col-sm-9 col-md-6 col-lg-4">
             <form id="formLogin">

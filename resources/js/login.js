@@ -7,8 +7,11 @@ window.AutoNumeric = require('autonumeric');
 const CryptoJS = require("crypto-js");
 const AES = require("crypto-js/aes");
 var self;
+
+Vue.component('loading',require('./components/loading.vue').default);
+
 //se declaran todas las varibles
-var app = new Vue({ 
+var app = new Vue({
 
   el: '#login',
   data: {
@@ -44,6 +47,7 @@ var app = new Vue({
     iv: null,
     key: null,
     linkRecoveryPass: true,
+    loading: true,
     showSubmitModal: true,
     submitLogin: {
       content: "Entrar",
