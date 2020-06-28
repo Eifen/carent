@@ -85,9 +85,9 @@ class UsuarioController extends Controller
               "usuario_id" => $request->session()->get('usuario_id'),
               "fecha" => date("Y-m-d H:i:s"),
               "direccion_ip" => $request->session()->get('direccion'),
-              "fecha_ingreso" => date("Y-m-d H:i:s", strtotime($request->input("fechaIngreso")))
+              "fechaIngreso" => date("Y-m-d H:i:s", strtotime($request->input("fechaIngreso")))
             );
-            return $parametros;exit();
+
             $response = $modelo->crearUsuario($parametros);
 
         }else{

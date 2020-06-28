@@ -709,7 +709,7 @@ var app = new Vue({
       window.location.href = "/formNuevoUsuario";
     },
     limpiarFecha: function(nameRef){
-      console.log(nameRef)
+      self.form[nameRef].value = "";
     }
 
   }// Fin methods

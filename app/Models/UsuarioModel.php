@@ -141,7 +141,8 @@ class UsuarioModel extends Model
                     "id_parroquia" => $parametros["parroquia"],
                     "id_estatus" => 1,
                     "clave" => $parametros["clave"],
-                    "cedula" => $parametros["cedula"]);
+                    "cedula" => $parametros["cedula"],
+                    "fecha_ingreso" => $parametros["fechaIngreso"]);
 
       $idUsuario = DB::table('tbl_usuario')->insertGetId($data);
 
@@ -421,7 +422,7 @@ class UsuarioModel extends Model
       $info = DB::select('SELECT u.id_division,
                                  u.id_cargo,
                                  CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)nombre,
-                                 (SELECT d.descripcion FROM tbl_division d WHERE d.id = u.id_division)Ddivision, 
+                                 (SELECT d.descripcion FROM tbl_division d WHERE d.id = u.id_division)Ddivision,
                                  (SELECT ce.descripcion FROM tbl_cargo_empleado ce WHERE ce.id = u.id_cargo)Dcargo
                           FROM tbl_usuario u
                           WHERE u.id = '.$id_usuario.'

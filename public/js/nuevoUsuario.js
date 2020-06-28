@@ -51002,7 +51002,7 @@ var app = new Vue({
       window.location.href = "/formNuevoUsuario";
     },
     limpiarFecha: function limpiarFecha(nameRef) {
-      console.log(nameRef);
+      self.form[nameRef].value = "";
     }
   } // Fin methods
 
