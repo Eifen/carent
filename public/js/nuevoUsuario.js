@@ -50808,7 +50808,13 @@ var app = new Vue({
     },
     limpiarMensajeError: function limpiarMensajeError(e) {
       $(e.target).removeClass("error");
-      $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
+      $(e.target).parents(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
+    },
+    limpiarMensajeError2: function limpiarMensajeError2() {
+      if (self.$refs["fechaIngreso"]) {
+        $(self.$refs["fechaIngreso"].$el).children("input").removeClass("error");
+        $(self.$refs["fechaIngreso"].$el).parents(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
+      }
     },
     campoOpcionalARequerido: function campoOpcionalARequerido(e) {
       self.valuesForm(e);
@@ -50855,8 +50861,11 @@ var app = new Vue({
           correoSecundario: self.form.correoSecundario.value,
           telefono1: self.form.telefono1.value,
           telefono2: self.form.telefono2.value,
-          empleado: self.form.empleado.checked
+          empleado: self.form.empleado.checked,
+          fechaIngreso: self.form.fechaIngreso.value
         };
+        console.log(parametros);
+        return;
         self.submitCrear.content = '<i class="fas fa-cog fa-spin"></i>';
         self.submitCrear.disabled = true;
         Object.keys(self.form).forEach(function (indiceObjecto, indice) {
@@ -50916,7 +50925,7 @@ var app = new Vue({
               zenscroll.toY($(input).offset().top - 100);
               mensaje = "Correo inválido";
             }
-          } else if (input.type === 'text' || input.type === 'textarea') {
+          } else if (input.type === 'text' || input.type === 'textarea' || input.type === 'date') {
             if (input.getAttribute("data-min") && !input.getAttribute("data-name-lastname")) {
               var minChar = Number(input.getAttribute("data-min")) === 0 ? 1 : input.getAttribute("data-min");
               var numChar = input.value.length;
@@ -50959,6 +50968,12 @@ var app = new Vue({
 
               if (!respuesta) {
                 mensaje = "Solo números";
+                zenscroll.toY($(input).offset().top - 100);
+              }
+            } else {
+              if (input.value === "") {
+                respuesta = false;
+                mensaje = "Este campo es requerido!";
                 zenscroll.toY($(input).offset().top - 100);
               }
             }

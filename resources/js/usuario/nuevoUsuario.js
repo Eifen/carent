@@ -453,7 +453,15 @@ var app = new Vue({
     },
     limpiarMensajeError: function(e){
       $(e.target).removeClass("error");
-      $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
+      $(e.target).parents(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
+    },
+    limpiarMensajeError2: function(){
+
+      if(self.$refs["fechaIngreso"]){
+        $(self.$refs["fechaIngreso"].$el).children("input").removeClass("error");
+        $(self.$refs["fechaIngreso"].$el).parents(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
+      }
+
     },
     campoOpcionalARequerido: function(e){
 
@@ -512,7 +520,10 @@ var app = new Vue({
           telefono1: self.form.telefono1.value,
           telefono2: self.form.telefono2.value,
           empleado: self.form.empleado.checked,
+          fechaIngreso: self.form.fechaIngreso.value
         }
+
+        console.log(parametros); return;
 
         self.submitCrear.content = '<i class="fas fa-cog fa-spin"></i>';
         self.submitCrear.disabled = true;
@@ -596,7 +607,7 @@ var app = new Vue({
               mensaje        = "Correo inválido";
             }
 
-          }else if(input.type === 'text' || input.type === 'textarea'){
+          }else if(input.type === 'text' || input.type === 'textarea' || input.type === 'date'){
 
             if(input.getAttribute("data-min") && !input.getAttribute("data-name-lastname")){
 
@@ -655,6 +666,14 @@ var app = new Vue({
 
               if(!respuesta){
                 mensaje = "Solo números";
+                zenscroll.toY($(input).offset().top - 100);
+              }
+
+            }else{
+
+              if(input.value === ""){
+                respuesta= false;
+                mensaje = "Este campo es requerido!";
                 zenscroll.toY($(input).offset().top - 100);
               }
 

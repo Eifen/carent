@@ -272,11 +272,14 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
-                <label for="estado">Fecha de Ingreso <span v-if="form.empleado.checked" class="campo-obligatorio">*</span></label>
+                <label for="fechaIngreso">Fecha de Ingreso <span v-if="form.empleado.checked" class="campo-obligatorio">*</span></label>
                 <datetime
+                  @input="limpiarMensajeError2"
                   :disabled="form.fechaIngreso.disabled"
                   format="dd/LL/yyyy"
                   input-class="form-control fechaIngreso"
+                  ref="fechaIngreso"
+                  v-bind:data-validar="form.fechaIngreso.validar"
                   v-model="form.fechaIngreso.value"
                   type="date">
                   <template slot="button-cancel">
