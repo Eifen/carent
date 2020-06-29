@@ -41534,7 +41534,7 @@ var app = new Vue({
         value: ""
       },
       estatus: {
-        disabled: true,
+        disabled: false,
         value: ""
       }
     },
@@ -42061,7 +42061,7 @@ var app = new Vue({
 
         axios.post('/modificarCliente', parametros).then(function (response) {
           if (response.status === 200 && response.data.response === true) {
-            var indices = ["rif", "nit", "razon_social", "ciudad_fiscal", "avenida_calle_fiscal", "edificio_quinta_fiscal", "piso_fiscal", "numero_fiscal", "telefono_fiscal", "fax_fiscal", "email_fiscal"];
+            var indices = ["rif", "nit", "razon_social", "ciudad_fiscal", "avenida_calle_fiscal", "edificio_quinta_fiscal", "piso_fiscal", "numero_fiscal", "telefono_fiscal", "fax_fiscal", "email_fiscal", "estadofi", "parroquiafi", "municipiofi", "estatus"];
             indices.forEach(function (indiceObjecto, indice) {
               self.form[indiceObjecto].disabled = false;
             });
@@ -42077,7 +42077,7 @@ var app = new Vue({
             throw response.data;
           }
         })["catch"](function (error) {
-          var indices = ["rif", "nit", "razon_social", "ciudad_fiscal", "avenida_calle_fiscal", "edificio_quinta_fiscal", "piso_fiscal", "numero_fiscal", "telefono_fiscal", "fax_fiscal", "email_fiscal"];
+          var indices = ["rif", "nit", "razon_social", "ciudad_fiscal", "avenida_calle_fiscal", "edificio_quinta_fiscal", "piso_fiscal", "numero_fiscal", "telefono_fiscal", "fax_fiscal", "email_fiscal", "estadofi", "parroquiafi", "municipiofi", "estatus"];
           indices.forEach(function (indiceObjecto, indice) {
             self.form[indiceObjecto].disabled = false;
           });
