@@ -16,8 +16,9 @@
     </head>
     <body>
       <div id="detalleFactcliente" class="container-fluid" v-on:submit.prevent="buscar">
+        <loading :loading="loading" v-show="loading"></loading>
         <menu-principal></menu-principal>
-        <div class="row align-items-center justify-content-center wrapper-forms">
+        <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
           <div class="col-12 col-sm-11 col-md-10 col-lg-8 col-xl-7">
             <form class="row">
               <div class="form-group col-12 col-md-4">
@@ -49,7 +50,7 @@
                         v-on:click="buscar">                          
                 </button>
               </div>
-              <div id="modal-detalle-cliente" class="modal fade" tabindex="-1" role="dialog">
+              <div id="modal-detalle-cliente" class="modal fade" tabindex="-1" role="dialog" v-cloak>
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                   <div class="modal-content">
                     <table class="table">
@@ -99,7 +100,7 @@
                 v-on:click="Selecionar">                        
               </button>
             </div>
-            <div id="modal-detalle-clienteProy" class="modal fade" tabindex="-1" role="dialog">
+            <div id="modal-detalle-clienteProy" class="modal fade" tabindex="-1" role="dialog" v-cloak>
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                   <div class="modal-content">
                     <table class="table">

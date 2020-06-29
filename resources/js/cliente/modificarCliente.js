@@ -10,7 +10,7 @@ var self;
 
 Vue.use(VueTheMask);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
-
+Vue.component('loading',require('../components/loading.vue').default);
 const errorInit = () => {
 
   Object.keys(self.form).forEach(function(indiceObjecto, indice) {
@@ -218,6 +218,7 @@ var app = new Vue({
       disabled: false,
       show:true
     },
+    loading: true,
     dataInicial: false
   },
 
@@ -269,6 +270,7 @@ var app = new Vue({
           self.form.estadofi.value = dataInit.infoClie.id_estado_fiscal;
           self.form.municipiofi.value = dataInit.infoClie.id_municipio_fiscal;
           self.form.parroquiafi.value = dataInit.infoClie.id_parroquia_fiscal;
+          self.loading = false;
 
       }else{
         errorInit();
