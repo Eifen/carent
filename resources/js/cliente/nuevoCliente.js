@@ -10,6 +10,7 @@ var self;
 
 Vue.use(VueTheMask);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
+Vue.component('loading',require('../components/loading.vue').default);
 //Declaramos las variables
 var app = new Vue({
 
@@ -150,7 +151,8 @@ var app = new Vue({
       error: false,
       data: []
     },
-      submitCrear: {
+    loading: true,
+    submitCrear: {
       content: "Crear nuevo Cliente",
       disabled: false,
       show:true
@@ -167,6 +169,7 @@ var app = new Vue({
 
         self.key = response.data.key;
         self.iv = response.data.iv;
+        self.loading = false;
 
       }else{
 
@@ -190,6 +193,7 @@ var app = new Vue({
         message : "Existe un error!, consulte con el administrador del sistema.",
         show: true
       };
+      self.loading = false;
 
     });
 

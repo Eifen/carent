@@ -98,7 +98,8 @@ var app = new Vue({
     infoEliHorasCargadas: [],
     permisoActualizar: false,
     horas_cargadas: 0,
-    loading: true
+    loading: true,
+    cargar: 1,
   },
   beforeCreate: function(){
 
@@ -206,19 +207,46 @@ var app = new Vue({
 
     crear: function(horas_cargadas,horas_asignadas,e){
 
+      var fechaN = self.form.fecha.value;
+      var formValido = true;
+
+      $("form .form-group .mensaje").html("").removeClass("invalid-feedback");
+      $("form .form-group .form-control").removeClass("error");
+
+      $("form .form-group").each(function(index, elemento) {
+
+        if($(elemento).find(".form-control").length > 0){
+
+          var input = $(elemento).find(".form-control")[0];
+          var valido = self.validarValor(input);
+
+          if(!valido.respuesta){
+            $(elemento).find(".mensaje").html(valido.mensaje).addClass("invalid-feedback");
+            $(elemento).find(".form-control").addClass("error");
+            formValido = valido.respuesta;
+            return false;
+          }
+
+        }
+
+      });
+
+      if(formValido){
+
         self.alertForm = {
           class : "",
           message : "",
           show: false
         };
 
-        if(parseInt(horas_asignadas) < parseInt(horas_cargadas) + parseInt(self.form.horas_trabajadas.value)){
-          var message = "Sobrepasaste el limite de horas asignadas";
+        if(parseInt(horas_asignadas) < parseInt(horas_cargadas) + parseInt(self.form.horas_trabajadas.value) && self.cargar === 1){
+          var message = "Sobrepasaste el limite de horas asignadas. Si estas seguro volver hacer clic en Cargar Horas";
           self.alertForm = {
             class : "alert alert-warning",
             message : message,
             show: true
           };
+          self.cargar = 0;
         }else if (self.form.horas_trabajadas.value > 23) {
           var message = "Maximo de 23 horas trabajadas al dia.";
           self.alertForm = {
@@ -226,6 +254,20 @@ var app = new Vue({
             message : message,
             show: true
           };
+        }else if (fechaN < "06/01/2010") {
+          var message = "Debe introducir una fecha valida";
+          self.alertForm = {
+            class : "alert alert-warning",
+            message : message,
+            show: true
+          };
+          setTimeout(function(){
+              self.alertForm = {
+              class: "",
+              message: "",
+              show: false
+              };
+            }, 2000);
         }else{
         //Obtenemos valores
         let parametros = {
@@ -247,6 +289,7 @@ var app = new Vue({
             self.form.fecha.value = "";
             self.form.descripcion.value = "";
             self.form.horas_trabajadas.value = "";
+            self.cargar = 1;
             self.actualizar(); //Invocamos el metodo actualizar
           }else{
 
@@ -275,6 +318,7 @@ var app = new Vue({
 
         });
       };
+    }
     },
 
     actualizar: function(){
@@ -531,6 +575,106 @@ var app = new Vue({
 
     },
 
+    validarValor: function(input) {
+
+      var respuesta = true;
+      var mensaje   = '';
+
+      if(input.hasAttribute("data-validar")){
+
+        if(input.getAttribute("data-validar") === "true"){
+
+          if(input.type === 'email'){
+
+            let regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            respuesta      = regexEmail.test(input.value);
+
+            if(!respuesta){
+              zenscroll.toY($(input).offset().top - 100);
+              mensaje        = "Correo inválido";
+            }
+
+          }else if(input.type === 'text' || input.type === 'textarea'){
+
+            if(input.getAttribute("data-min") && !input.getAttribute("data-name-lastname")){
+
+              let minChar = (Number(input.getAttribute("data-min")) === 0) ? 1 : input.getAttribute("data-min");
+              let numChar = input.value.length
+              let regexName = /^[a-zA-Z ']+$/;
+
+              if(numChar < minChar){
+
+                respuesta = false;
+                mensaje   = "El campo debe contener al menos "+minChar+" caracteres!";
+                zenscroll.toY($(input).offset().top - 100);
+
+              }
+
+            }else if(input.getAttribute("data-min") && input.getAttribute("data-name-lastname")){
+
+              let minChar = input.getAttribute("data-min");
+              let numChar = input.value.length
+              let regexName = /^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/;
+
+              if(numChar < minChar){
+
+                respuesta = false;
+                mensaje   = "El campo debe contener al menos "+minChar+" caracteres!";
+                zenscroll.toY($(input).offset().top - 100);
+
+              }else if(!regexName.test(input.value)){
+
+                respuesta = false;
+                mensaje = "Solo se permiten letras y este caracter (',´)!";
+                zenscroll.toY($(input).offset().top - 100);
+
+              }
+
+            }else if(input.getAttribute("data-name-lastname")){
+
+              if(input.value.length > 0){
+
+                let regexName = /^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/;
+                respuesta = regexName.test(input.value);
+
+                if(!respuesta){
+                  mensaje = "Solo se permiten letras y este caracter (')!";
+                  zenscroll.toY($(input).offset().top - 100);
+                }
+
+              }
+
+            }else if(input.getAttribute("data-only-number")){
+
+              var valor = (input.getAttribute("data-formated-number")) ? AutoNumeric.getAutoNumericElement("#"+input.id).getNumber() : input.value;
+
+              let regexNumber = /^\d+$/;
+              respuesta = regexNumber.test(valor);
+
+              if(!respuesta){
+                mensaje = "Solo números";
+                zenscroll.toY($(input).offset().top - 100);
+              }
+
+            }
+
+          }else if(input.type === "select-one"){
+
+            if(input.value === ""){
+              respuesta = false;
+              mensaje = "Debe seleccionar una opción!";
+              zenscroll.toY($(input).offset().top - 100);
+            }
+
+          }
+
+        }
+
+      }
+
+      return {respuesta: respuesta, mensaje: mensaje};
+
+    },
    }// Fin methods
 
 });

@@ -566,15 +566,15 @@ class ClienteModel extends Model
                     "id_estatus" => $parametros["estatus"],);      
         $contacto = DB::table('tbl_cliente')->where("id",$parametros["idCliente"])->update($data);
         DB::commit();
-        $data = array("usuario_id" => $parametros["usuario_id"],
+        $date = array("usuario_id" => $parametros["usuario_id"],
                       "fecha" => $parametros["fecha"],
                       "direccion_ip" => $parametros["direccion_ip"],
                       "accion" => 'Creacion de cliente:'.$parametros["codigoCliente"].'');
-      $bit = DB::table('logs_auditoria')->insertGetId($data);
+      $bit = DB::table('logs_auditoria')->insertGetId($date);
         return array("response" => true, "message" => "Cliente actualizado con Éxito!.");
     } catch(\Illuminate\Database\QueryException $ex){
       DB::rollBack();
-      return array("response" => false, "message" => "Error al tratar de actualizar la información del usuario.");
+      return array("response" => false, "message" => "Error al tratar de actualizar la información del cliente.");
     }
   }// Fin modificarUsuario
 }

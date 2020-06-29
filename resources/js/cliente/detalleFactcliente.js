@@ -10,6 +10,7 @@ var self;
 
 Vue.use(VueTheMask);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
+Vue.component('loading',require('../components/loading.vue').default);
 
 var app = new Vue({
   // se declaran las variables
@@ -137,6 +138,7 @@ var app = new Vue({
       disabled: false,
       show:true
     },
+    loading: true,
     permisoActualizar: false,
     permisoCrear: false
   },
@@ -160,6 +162,8 @@ var app = new Vue({
       self.clienteProy.registros = [];
 
     });
+
+    self.loading = false;
 
   },
   updated: function () {},
