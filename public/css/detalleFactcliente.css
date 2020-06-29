@@ -5,6 +5,9 @@
 html {
   overflow-x: hidden;
 }
+[v-cloak] {
+  display: none;
+}
 #detalleFactcliente {
   background-color: #E9ECEF;
 }

@@ -10,7 +10,7 @@ var self;
 
 Vue.use(VueTheMask);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
-
+Vue.component('loading',require('../components/loading.vue').default);
 const errorInit = () => {
 
   Object.keys(self.form).forEach(function(indiceObjecto, indice) {
@@ -161,7 +161,7 @@ var app = new Vue({
         value: ""
       },
       estatus:{
-        disabled: true,
+        disabled: false,
         value: ""
       }
     },
@@ -218,6 +218,7 @@ var app = new Vue({
       disabled: false,
       show:true
     },
+    loading: true,
     dataInicial: false
   },
 
@@ -269,6 +270,7 @@ var app = new Vue({
           self.form.estadofi.value = dataInit.infoClie.id_estado_fiscal;
           self.form.municipiofi.value = dataInit.infoClie.id_municipio_fiscal;
           self.form.parroquiafi.value = dataInit.infoClie.id_parroquia_fiscal;
+          self.loading = false;
 
       }else{
         errorInit();
@@ -767,7 +769,7 @@ var app = new Vue({
 
           if(response.status === 200 && response.data.response === true){
 
-            var indices = ["rif","nit","razon_social","ciudad_fiscal","avenida_calle_fiscal","edificio_quinta_fiscal","piso_fiscal","numero_fiscal","telefono_fiscal","fax_fiscal","email_fiscal"];
+            var indices = ["rif","nit","razon_social","ciudad_fiscal","avenida_calle_fiscal","edificio_quinta_fiscal","piso_fiscal","numero_fiscal","telefono_fiscal","fax_fiscal","email_fiscal", "estadofi","parroquiafi","municipiofi","estatus"];
   
             indices.forEach(function(indiceObjecto, indice) {
               self.form[indiceObjecto].disabled = false;
@@ -792,7 +794,7 @@ var app = new Vue({
         })
         .catch(error => {
 
-          var indices = ["rif","nit","razon_social","ciudad_fiscal","avenida_calle_fiscal","edificio_quinta_fiscal","piso_fiscal","numero_fiscal","telefono_fiscal","fax_fiscal","email_fiscal"];
+          var indices = ["rif","nit","razon_social","ciudad_fiscal","avenida_calle_fiscal","edificio_quinta_fiscal","piso_fiscal","numero_fiscal","telefono_fiscal","fax_fiscal","email_fiscal","estadofi","parroquiafi","municipiofi","estatus"];
   
           indices.forEach(function(indiceObjecto, indice) {
             self.form[indiceObjecto].disabled = false;

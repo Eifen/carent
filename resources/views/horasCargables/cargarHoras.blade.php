@@ -68,6 +68,8 @@
                          v-bind:disabled="form.descripcion.disabled"
                          v-model="form.descripcion.value"
                          v-on:keyup="valuesForm"
+                         data-validar="true"
+                         data-min="3"
                          type="text">
               </div>
               <div class="form-group col-2 col-sm-2">
@@ -79,6 +81,8 @@
                          v-bind:disabled="form.horas_trabajadas.disabled"
                          v-model="form.horas_trabajadas.value"
                          v-on:keyup="valuesForm"
+                         data-validar="true"
+                         data-min="1"
                          type="text" >
               </div>
               <div class="form-group col-12 col-sm-3" v-for="ProyAnalista in infoProyAnalista">

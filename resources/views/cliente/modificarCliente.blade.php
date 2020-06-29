@@ -17,9 +17,10 @@
     <body>
 
       <div id="modificarCliente" class="container-fluid" v-on:keypress="keyboard">
+        <loading :loading="loading" v-show="loading"></loading>
         <menu-principal></menu-principal>
 
-        <div class="row align-items-center justify-content-center wrapper-forms">
+        <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
 
           <div class="col-12 col-sm-11 col-md-9 col-lg-8 wrapper-back-btn">
             <div class="row justify-content-center">
@@ -63,7 +64,7 @@
                         v-html="formSearch.submit.html"
                         v-on:click="buscar"></button>
               </div>
-              <div id="modal-detalle-usuario" class="modal fade" tabindex="-1" role="dialog">
+              <div id="modal-detalle-usuario" class="modal fade" tabindex="-1" role="dialog" v-cloak>
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                   <div class="modal-content">
                     <table class="table">
@@ -132,7 +133,7 @@
                         v-on:click="buscarG">                          
                 </button>
               </div>
-              <div id="modal-detalle-usuarioG" class="modal fade" tabindex="-1" role="dialog">
+              <div id="modal-detalle-usuarioG" class="modal fade" tabindex="-1" role="dialog" v-cloak>
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                   <div class="modal-content">
                     <table class="table">
@@ -339,7 +340,7 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
-                <label for="piso_fiscal">Pisó<span class="campo-obligatorio">*</span></label>
+                <label for="piso_fiscal">Piso<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="piso_ficalHelp"
                        class="form-control text-lowercase"
                        id="piso_fiscal"
