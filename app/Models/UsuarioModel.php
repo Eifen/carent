@@ -141,7 +141,8 @@ class UsuarioModel extends Model
                     "id_parroquia" => $parametros["parroquia"],
                     "id_estatus" => 1,
                     "clave" => $parametros["clave"],
-                    "cedula" => $parametros["cedula"]);
+                    "cedula" => $parametros["cedula"],
+                    "fecha_ingreso" => $parametros["fechaIngreso"]);
 
       $idUsuario = DB::table('tbl_usuario')->insertGetId($data);
 
@@ -295,7 +296,7 @@ class UsuarioModel extends Model
 
     function detalleUsuarioModificar($id_usuario){
 
-      $info = DB::select('SELECT u.id,
+      $info = DB::select("SELECT u.id,
                                  u.codigo,
                                  u.avatar,
                                  u.cedula,
@@ -303,7 +304,12 @@ class UsuarioModel extends Model
                                  u.nombre_2,
                                  u.apellido_1,
                                  u.apellido_2,
-                                 u.fecha_nacimiento,
+                                 DATE_FORMAT(u.fecha_nacimiento,'%Y-%m-%d') fecha_nacimiento_utc,
+                                 DATE_FORMAT(u.fecha_nacimiento,'%d/%m/%Y') fecha_nacimiento,
+                                 DATE_FORMAT(u.fecha_ingreso,'%Y-%m-%d') fecha_ingreso_utc,
+                                 DATE_FORMAT(u.fecha_ingreso,'%d/%m/%Y') fecha_ingreso,
+                                 DATE_FORMAT(u.fecha_egreso,'%Y-%m-%d') fecha_egreso_utc,
+                                 DATE_FORMAT(u.fecha_egreso,'%d/%m/%Y') fecha_egreso,
                                  u.id_estatus,
                                  cu.correo_principal,
                                  cu.correo_secundario,
@@ -323,10 +329,10 @@ class UsuarioModel extends Model
                           FROM tbl_usuario u,
                                tbl_estatus e,
                                tbl_contacto_usuario cu
-                          WHERE u.id = '.$id_usuario.'
-                          AND e.tabla = "tbl_usuario"
+                          WHERE u.id = ".$id_usuario."
+                          AND e.tabla = 'tbl_usuario'
                           AND e.valor = u.id_estatus
-                          AND u.id = cu.id_usuario');
+                          AND u.id = cu.id_usuario");
 
       if(count($info) > 0){
 
@@ -367,11 +373,11 @@ class UsuarioModel extends Model
                       "id_division" => $parametros["division"],
                       "id_parroquia" => $parametros["parroquia"],
                       "id_estatus" => $parametros["estatus"],
-                      "cedula" => $parametros["cedula"]);
+                      "cedula" => $parametros["cedula"],
+                      "fecha_ingreso" => $parametros["fechaIngreso"],
+                      "fecha_egreso" => $parametros["fechaEgreso"]);
 
         $update = DB::table('tbl_usuario')->where("id",$parametros["idUsuario"])->update($data);
-
-
 
         $data = array("correo_principal" => $parametros["correoPrincipal"],
                       "correo_secundario" => $parametros["correoSecundario"],
@@ -421,7 +427,7 @@ class UsuarioModel extends Model
       $info = DB::select('SELECT u.id_division,
                                  u.id_cargo,
                                  CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)nombre,
-                                 (SELECT d.descripcion FROM tbl_division d WHERE d.id = u.id_division)Ddivision, 
+                                 (SELECT d.descripcion FROM tbl_division d WHERE d.id = u.id_division)Ddivision,
                                  (SELECT ce.descripcion FROM tbl_cargo_empleado ce WHERE ce.id = u.id_cargo)Dcargo
                           FROM tbl_usuario u
                           WHERE u.id = '.$id_usuario.'

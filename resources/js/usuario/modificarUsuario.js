@@ -6,10 +6,14 @@ window.AutoNumeric = require('autonumeric');
 import VueTheMask from 'vue-the-mask';
 const CryptoJS = require("crypto-js");
 const AES = require("crypto-js/aes");
+import { Datetime } from 'vue-datetime';
+import 'vue-datetime/dist/vue-datetime.css';
 var self;
 
 Vue.use(VueTheMask);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
+Vue.component('loading',require('../components/loading.vue').default);
+Vue.component('datetime', Datetime);
 
 const errorInit = () => {
 
@@ -26,6 +30,8 @@ const errorInit = () => {
     message : "Existe un error!, consulte con el administrador del sistema.",
     show: true
   };
+
+  self.loading = false;
 
 }
 
@@ -187,8 +193,18 @@ var app = new Vue({
       estatus:{
         disabled: true,
         value: ""
+      },
+      fechaIngreso:{
+        disabled: true,
+        value: ""
+      },
+      fechaEgreso:{
+        disabled: true,
+        minValue: "",
+        value: ""
       }
     },
+    loading: true,
     submitActualizar: {
       content: "Actualizar Datos",
       disabled: false,
@@ -219,7 +235,7 @@ var app = new Vue({
         self.form.apellido1.value = dataInit.infoUsu.apellido_1;
         self.form.apellido2.value = dataInit.infoUsu.apellido_2;
         self.form.cedula.value = dataInit.infoUsu.cedula;
-        self.form.fechaNacimiento.value = dataInit.infoUsu.fecha_nacimiento;
+        self.form.fechaNacimiento.value = dataInit.infoUsu.fecha_nacimiento_utc;
         self.form.codigoUsuario.value = dataInit.infoUsu.codigo;
         self.form.correoPrincipal.value = dataInit.infoUsu.correo_principal;
         self.form.correoSecundario.value = dataInit.infoUsu.correo_secundario;
@@ -243,18 +259,27 @@ var app = new Vue({
           self.form.parroquia.disabled = false;
           self.form.division.disabled = false;
           self.form.cargo.disabled = false;
+          self.form.fechaIngreso.disabled = false;
+          self.form.fechaEgreso.disabled = false;
 
           self.form.estado.validar = true;
           self.form.municipio.validar = true;
           self.form.parroquia.validar = true;
           self.form.division.validar = true;
           self.form.cargo.validar = true;
+          self.form.fechaIngreso.validar = true;
 
           self.form.estado.value = dataInit.infoUsu.id_estado;
           self.form.municipio.value = dataInit.infoUsu.id_municipio;
           self.form.parroquia.value = dataInit.infoUsu.id_parroquia;
           self.form.division.value = dataInit.infoUsu.id_division;
           self.form.cargo.value = dataInit.infoUsu.id_cargo;
+          self.form.fechaIngreso.value = dataInit.infoUsu.fecha_ingreso_utc;
+          self.form.fechaEgreso.value = dataInit.infoUsu.fecha_egreso_utc;
+
+          self.fechaMinima(dataInit.infoUsu.fecha_ingreso_utc, dataInit.infoUsu.fecha_egreso_utc);
+
+          self.loading = false;
 
         }
 
@@ -303,6 +328,7 @@ var app = new Vue({
 
   },
   mounted: async function () {
+    $('[data-toggle="tooltip"]').tooltip();
   },
   updated: function () {},
   methods:{
@@ -518,7 +544,9 @@ var app = new Vue({
           telefono1: self.form.telefono1.value,
           telefono2: self.form.telefono2.value,
           empleado: self.form.empleado.checked,
-          estatus: self.form.estatus.value
+          estatus: self.form.estatus.value,
+          fechaIngreso: self.form.fechaIngreso.value,
+          fechaEngreso: self.form.fechaEgreso.value
         }
 
         self.submitActualizar.content = '<i class="fas fa-cog fa-spin"></i>';
@@ -536,7 +564,7 @@ var app = new Vue({
             var indices = ["nombre1","nombre2","apellido1","apellido2","fechaNacimiento","cedula","correoPrincipal","correoSecundario","telefono1","telefono2", "estatus"];
 
             if(self.form.empleado.checked){
-              indices.push("estado","municipio","parroquia","division","cargo");
+              indices.push("estado","municipio","parroquia","division","cargo","fechaIngreso","fechaEgreso");
             }
 
             indices.forEach(function(indiceObjecto, indice) {
@@ -565,7 +593,7 @@ var app = new Vue({
           var indices = ["nombre1","nombre2","apellido1","apellido2","fechaNacimiento","cedula","correoPrincipal","correoSecundario","telefono1","telefono2"];
 
           if(self.form.empleado.checked){
-            indices.push("estado","municipio","parroquia","division","cargo");
+            indices.push("estado","municipio","parroquia","division","cargo","fechaIngreso","fechaEgreso");
           }
 
           indices.forEach(function(indiceObjecto, indice) {
@@ -614,7 +642,7 @@ var app = new Vue({
               mensaje        = "Correo inválido";
             }
 
-          }else if(input.type === 'text' || input.type === 'textarea'){
+          }else if(input.type === 'text' || input.type === 'textarea' || input.type === 'date'){
 
             if(input.getAttribute("data-min") && !input.getAttribute("data-name-lastname")){
 
@@ -676,6 +704,14 @@ var app = new Vue({
                 zenscroll.toY($(input).offset().top - 100);
               }
 
+            }else{
+
+              if(input.value === ""){
+                respuesta= false;
+                mensaje = "Este campo es requerido!";
+                zenscroll.toY($(input).offset().top - 100);
+              }
+
             }
 
           }else if(input.type === "select-one"){
@@ -700,6 +736,33 @@ var app = new Vue({
       if (e.keyCode === 13){
         self.actualizar();
       }
+
+    },
+    limpiarFecha: function(nameRef){
+      self.form[nameRef].value = "";
+    },
+    limpiarMensajeError2: function(nameRef){
+
+      if(self.$refs[nameRef]){
+        $(self.$refs[nameRef].$el).children("input").removeClass("error");
+        $(self.$refs[nameRef].$el).parents(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
+      }
+
+    },
+    fechaMinima: function(fecha_minima, fecha_egreso = null){
+
+      self.limpiarMensajeError2("fechaIngreso");
+
+      const fecha_e = (fecha_egreso !== "" && fecha_egreso !== null) ? fecha_egreso : "";
+
+      if(fecha_minima !== ""){
+
+        self.form.fechaEgreso.minValue = fecha_minima;
+        self.form.fechaEgreso.value = fecha_e;
+        self.form.fechaEgreso.disabled = false;
+
+      }
+
 
     }
 

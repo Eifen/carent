@@ -14,7 +14,8 @@ export default {
 var self;
 Vue.use(VueTheMask);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
-//Declaramos las variables
+Vue.component('loading',require('../components/loading.vue').default);
+
 var app = new Vue({
 
   el: '#cargarHoras',
@@ -97,6 +98,7 @@ var app = new Vue({
     infoEliHorasCargadas: [],
     permisoActualizar: false,
     horas_cargadas: 0,
+    loading: true
   },
   beforeCreate: function(){
 
@@ -117,8 +119,11 @@ var app = new Vue({
 
         self.horas_asignadas = self.infoProyAnalista.horas_asignadas;
         for (var i = 0; i < self.infoHorasCargadas.length; i++) {
-              self.horas_cargadas = self.infoHorasCargadas[i].horas_trabajadas + self.horas_cargadas;          
+              self.horas_cargadas = self.infoHorasCargadas[i].horas_trabajadas + self.horas_cargadas;
         }
+
+        self.loading = false;
+
       }else{
 
         throw "error";
@@ -134,6 +139,8 @@ var app = new Vue({
         show: true
       };
 
+      self.loading = false;
+
     });
   },
   created: function () {
@@ -144,9 +151,9 @@ var app = new Vue({
       decimalPlaces: 0,
       maximumValue: 23,
       minimumValue: 1,
-    });  
+    });
 
-     
+
 
     $('#modal-detalle-Hcargadas').on('hidden.bs.modal', function () {
 
@@ -161,7 +168,7 @@ var app = new Vue({
       self.eliHorasCargadas.error = false;
 
     });
-    
+
   },
   updated: function () {},
   methods:{
@@ -283,7 +290,7 @@ var app = new Vue({
         self.form.btn.Crear.html = self.form.btn.Crear.htmlInit;
         self.horas_cargadas = 0;
         for (var i = 0; i < self.infoHorasCargadas.length; i++) {
-              self.horas_cargadas = self.infoHorasCargadas[i].horas_trabajadas + self.horas_cargadas;          
+              self.horas_cargadas = self.infoHorasCargadas[i].horas_trabajadas + self.horas_cargadas;
         }
         setTimeout(function(){
               self.alertForm = {
@@ -523,7 +530,7 @@ var app = new Vue({
         });
 
     },
-    
+
    }// Fin methods
 
 });

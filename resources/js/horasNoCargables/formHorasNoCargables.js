@@ -12,6 +12,7 @@ var self;
 
 Vue.component('multiselect', Multiselect);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
+Vue.component('loading',require('../components/loading.vue').default);
 Vue.component('datetime', Datetime);
 Vue.use(VueNumeric);
 
@@ -130,6 +131,7 @@ var app = new Vue({
         value: ""
       }
     },
+    loading: true,
     paginador: {
       max: 0,
       numPaginas: 0,
@@ -179,6 +181,8 @@ var app = new Vue({
         self.paginador.max = parseInt(response.data.numero_paginas);
         self.paginador.paginar = response.data.paginar;
 
+        self.loading = false;
+
       }else if(response.data.error === true){
         throw response.data;
       }else{
@@ -193,6 +197,8 @@ var app = new Vue({
         message : (error.mensaje) ? error.mensaje : "Existe un error!, consulte con el administrador del sistema.",
         show: true
       };
+
+      self.loading = false;
 
     });
 

@@ -7,6 +7,7 @@ window.$ = require('jquery');
 var self;
 
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
+Vue.component('loading',require('../components/loading.vue').default);
 
 var app = new Vue({
 
@@ -30,6 +31,7 @@ var app = new Vue({
         value: ""
       }
     },
+    loading: true,
     usuarios: {
       mostrar: false,
       registros: []
@@ -195,6 +197,8 @@ var app = new Vue({
       self.detalleMenu.error = false;
 
     });
+
+    self.loading = false;
 
   },
   updated: function () {},
@@ -441,13 +445,13 @@ var app = new Vue({
                 self.coUsuario.r = self.detalleMenu.data[i].R;
                 self.coUsuario.u = self.detalleMenu.data[i].U;
                 self.modUsuario.u = self.detalleMenu.data[i].U;
-              } 
+              }
               if (self.detalleMenu.data[i].U === 1) {
                 self.modUsuario.checked = true;
                 self.modUsuario.r = self.detalleMenu.data[i].R;
                 self.modUsuario.u = self.detalleMenu.data[i].U;
                 self.coUsuario.r = self.detalleMenu.data[i].R;
-              }             
+              }
             }
             if (self.detalleMenu.data[i].id_menu === 5) {
              self.crCliente.checked = true;
@@ -459,13 +463,13 @@ var app = new Vue({
                 self.coCliente.r = self.detalleMenu.data[i].R;
                 self.coCliente.u = self.detalleMenu.data[i].U;
                 self.modCliente.u = self.detalleMenu.data[i].U;
-              } 
+              }
               if (self.detalleMenu.data[i].U === 1) {
                 self.modCliente.checked = true;
                 self.modCliente.r = self.detalleMenu.data[i].R;
                 self.modCliente.u = self.detalleMenu.data[i].U;
                 self.coCliente.r = self.detalleMenu.data[i].R;
-              }             
+              }
             }
             if (self.detalleMenu.data[i].id_menu === 7) {
               if (self.detalleMenu.data[i].C === 1) {
@@ -479,7 +483,7 @@ var app = new Vue({
                 self.modFact.c = self.detalleMenu.data[i].C;
                 self.modFact.r = self.detalleMenu.data[i].R;
                 self.modFact.u = self.detalleMenu.data[i].U;
-              } 
+              }
               if (self.detalleMenu.data[i].R === 1) {
                 self.verFact.checked = true;
                 self.verFact.c = self.detalleMenu.data[i].C;
@@ -491,7 +495,7 @@ var app = new Vue({
                 self.modFact.c = self.detalleMenu.data[i].C;
                 self.modFact.r = self.detalleMenu.data[i].R;
                 self.modFact.u = self.detalleMenu.data[i].U;
-              }   
+              }
               if (self.detalleMenu.data[i].U === 1) {
                 self.modFact.checked = true;
                 self.modFact.c = self.detalleMenu.data[i].C;
@@ -503,7 +507,7 @@ var app = new Vue({
                 self.crFact.c = self.detalleMenu.data[i].C;
                 self.crFact.r = self.detalleMenu.data[i].R;
                 self.crFact.u = self.detalleMenu.data[i].U;
-              }             
+              }
             }
             if (self.detalleMenu.data[i].id_menu === 9) {
              self.crProyecto.checked = true;
@@ -515,13 +519,13 @@ var app = new Vue({
                 self.coProyecto.r = self.detalleMenu.data[i].R;
                 self.coProyecto.u = self.detalleMenu.data[i].U;
                 self.modProyecto.u = self.detalleMenu.data[i].U;
-              } 
+              }
               if (self.detalleMenu.data[i].U === 1) {
                 self.modProyecto.checked = true;
                 self.modProyecto.r = self.detalleMenu.data[i].R;
                 self.modProyecto.u = self.detalleMenu.data[i].U;
                 self.coProyecto.r = self.detalleMenu.data[i].R;
-              }             
+              }
             }
             if (self.detalleMenu.data[i].id_menu === 11) {
               if (self.detalleMenu.data[i].R === 1) {
@@ -542,7 +546,7 @@ var app = new Vue({
                 self.eliHora.r = self.detalleMenu.data[i].R;
                 self.eliHora.u = self.detalleMenu.data[i].U;
                 self.eliHora.d = self.detalleMenu.data[i].D;
-              } 
+              }
               if (self.detalleMenu.data[i].U === 1) {
                 self.modAsigna.checked = true;
                 self.modAsigna.c = self.detalleMenu.data[i].C;
@@ -599,20 +603,20 @@ var app = new Vue({
                 self.verAsigna.r = self.detalleMenu.data[i].R;
                 self.verAsigna.u = self.detalleMenu.data[i].U;
                 self.verAsigna.d = self.detalleMenu.data[i].D;
-              }              
+              }
             }
             if (self.detalleMenu.data[i].id_menu === 13) {
               if (self.detalleMenu.data[i].U === 1) {
                 self.conHoraNoC.checked = true;
                 self.conHoraNoC.u = self.detalleMenu.data[i].U;
               }
-            } 
+            }
             if (self.detalleMenu.data[i].id_menu === 14) {
               if (self.detalleMenu.data[i].U === 1) {
                 self.carHoraNoC.checked = true;
                 self.carHoraNoC.u = self.detalleMenu.data[i].U;
               }
-            } 
+            }
           }
 
           $('#modal-asignar-menu').modal("show");
@@ -645,7 +649,7 @@ var app = new Vue({
           R: 0,
           U: 0,
           D: 0,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/agregarMenUsu', {params: parametros})
         .then(function (response) {
@@ -684,7 +688,7 @@ var app = new Vue({
           R: 1,
           U: 0,
           D: 0,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/agregarMenUsu', {params: parametros})
         .then(function (response) {
@@ -702,11 +706,11 @@ var app = new Vue({
           R: 1,
           U: modificar2,
           D: 0,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/modificarMenUsu', {params: parametros})
         .then(function (response) {
-          if(response.status === 200 && response.data.response === true){      
+          if(response.status === 200 && response.data.response === true){
             self.actualizarDetalleMenu(self.usuario.data)
           }else{
             throw response.data;
@@ -720,7 +724,7 @@ var app = new Vue({
           R: 0,
           U: modificar2,
           D: 0,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/modificarMenUsu', {params: parametros})
         .then(function (response) {
@@ -757,11 +761,11 @@ var app = new Vue({
           R: 0,
           U: 1,
           D: 0,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/agregarMenUsu', {params: parametros})
         .then(function (response) {
-          if(response.status === 200 && response.data.response === true){            
+          if(response.status === 200 && response.data.response === true){
             self.actualizarDetalleMenu(self.usuario.data)
           }else{
             throw response.data;
@@ -775,11 +779,11 @@ var app = new Vue({
           R: ver2,
           U: 1,
           D: 0,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/modificarMenUsu', {params: parametros})
         .then(function (response) {
-          if(response.status === 200 && response.data.response === true){            
+          if(response.status === 200 && response.data.response === true){
             self.actualizarDetalleMenu(self.usuario.data)
           }else{
             throw response.data;
@@ -793,7 +797,7 @@ var app = new Vue({
           R: ver2,
           U: 0,
           D: 0,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/modificarMenUsu', {params: parametros})
         .then(function (response) {
@@ -811,7 +815,7 @@ var app = new Vue({
         };
         axios.get('/quitarMenUsu', {params: parametros})
         .then(function (response) {
-          if(response.status === 200 && response.data.response === true){           
+          if(response.status === 200 && response.data.response === true){
             self.actualizarDetalleMenu(self.usuario.data)
           }else{
             throw response.data;
@@ -836,7 +840,7 @@ var app = new Vue({
           C: 1,
           R: 0,
           U: 0,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/agregarMenUsu', {params: parametros})
         .then(function (response) {
@@ -850,11 +854,11 @@ var app = new Vue({
 
         let parametros = {
           menuCr: menu,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/quitarMenUsu', {params: parametros})
         .then(function (response) {
-          if(response.status === 200 && response.data.response === true){  
+          if(response.status === 200 && response.data.response === true){
             self.actualizarDetalleMenu(self.usuario.data)
           }else{
             throw response.data;
@@ -867,11 +871,11 @@ var app = new Vue({
           C: 0,
           R: leer,
           U: modificar,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/modificarMenUsu', {params: parametros})
         .then(function (response) {
-          if(response.status === 200 && response.data.response === true){            
+          if(response.status === 200 && response.data.response === true){
             self.actualizarDetalleMenu(self.usuario.data)
           }else{
             throw response.data;
@@ -884,11 +888,11 @@ var app = new Vue({
           C: 1,
           R: leer,
           U: modificar,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/modificarMenUsu', {params: parametros})
         .then(function (response) {
-          if(response.status === 200 && response.data.response === true){            
+          if(response.status === 200 && response.data.response === true){
             self.actualizarDetalleMenu(self.usuario.data)
           }else{
             throw response.data;
@@ -913,11 +917,11 @@ var app = new Vue({
           C: 0,
           R: 1,
           U: 0,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/agregarMenUsu', {params: parametros})
         .then(function (response) {
-          if(response.status === 200 && response.data.response === true){            
+          if(response.status === 200 && response.data.response === true){
             self.actualizarDetalleMenu(self.usuario.data)
           }else{
             throw response.data;
@@ -927,7 +931,7 @@ var app = new Vue({
 
         let parametros = {
           menuCr: menu,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/quitarMenUsu', {params: parametros})
         .then(function (response) {
@@ -944,7 +948,7 @@ var app = new Vue({
           C: crear,
           R: 0,
           U: modificar,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/modificarMenUsu', {params: parametros})
         .then(function (response) {
@@ -961,7 +965,7 @@ var app = new Vue({
           C: crear,
           R: 1,
           U: modificar,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/modificarMenUsu', {params: parametros})
         .then(function (response) {
@@ -990,7 +994,7 @@ var app = new Vue({
           C: 0,
           R: 0,
           U: 1,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/agregarMenUsu', {params: parametros})
         .then(function (response) {
@@ -1004,7 +1008,7 @@ var app = new Vue({
 
         let parametros = {
           menuCr: menu,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/quitarMenUsu', {params: parametros})
         .then(function (response) {
@@ -1021,7 +1025,7 @@ var app = new Vue({
           C: crear,
           R: leer,
           U: 0,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/modificarMenUsu', {params: parametros})
         .then(function (response) {
@@ -1038,7 +1042,7 @@ var app = new Vue({
           C: crear,
           R: leer,
           U: 1,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/modificarMenUsu', {params: parametros})
         .then(function (response) {
@@ -1068,7 +1072,7 @@ var app = new Vue({
           R: 1,
           U: 0,
           D: 0,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/agregarMenUsu', {params: parametros})
         .then(function (response) {
@@ -1082,7 +1086,7 @@ var app = new Vue({
 
         let parametros = {
           menuCr: menu,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/quitarMenUsu', {params: parametros})
         .then(function (response) {
@@ -1100,7 +1104,7 @@ var app = new Vue({
           R: 0,
           U: modificar,
           D: eliminar,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/modificarMenUsu', {params: parametros})
         .then(function (response) {
@@ -1118,7 +1122,7 @@ var app = new Vue({
           R: 1,
           U: modificar,
           D: eliminar,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/modificarMenUsu', {params: parametros})
         .then(function (response) {
@@ -1148,7 +1152,7 @@ var app = new Vue({
           R: 0,
           U: 1,
           D: 0,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/agregarMenUsu', {params: parametros})
         .then(function (response) {
@@ -1162,7 +1166,7 @@ var app = new Vue({
 
         let parametros = {
           menuCr: menu,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/quitarMenUsu', {params: parametros})
         .then(function (response) {
@@ -1180,7 +1184,7 @@ var app = new Vue({
           R: leer,
           U: 0,
           D: eliminar,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/modificarMenUsu', {params: parametros})
         .then(function (response) {
@@ -1198,7 +1202,7 @@ var app = new Vue({
           R: leer,
           U: 1,
           D: eliminar,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/modificarMenUsu', {params: parametros})
         .then(function (response) {
@@ -1228,7 +1232,7 @@ var app = new Vue({
           R: 0,
           U: 0,
           D: 0,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/agregarMenUsu', {params: parametros})
         .then(function (response) {
@@ -1242,7 +1246,7 @@ var app = new Vue({
 
         let parametros = {
           menuCr: menu,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/quitarMenUsu', {params: parametros})
         .then(function (response) {
@@ -1260,7 +1264,7 @@ var app = new Vue({
           R: leer,
           U: modificar,
           D: eliminar,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/modificarMenUsu', {params: parametros})
         .then(function (response) {
@@ -1278,7 +1282,7 @@ var app = new Vue({
           R: leer,
           U: modificar,
           D: eliminar,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/modificarMenUsu', {params: parametros})
         .then(function (response) {
@@ -1308,7 +1312,7 @@ var app = new Vue({
           R: 0,
           U: 0,
           D: 1,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/agregarMenUsu', {params: parametros})
         .then(function (response) {
@@ -1322,7 +1326,7 @@ var app = new Vue({
 
         let parametros = {
           menuCr: menu,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/quitarMenUsu', {params: parametros})
         .then(function (response) {
@@ -1340,7 +1344,7 @@ var app = new Vue({
           R: leer,
           U: modificar,
           D: 0,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/modificarMenUsu', {params: parametros})
         .then(function (response) {
@@ -1358,11 +1362,11 @@ var app = new Vue({
           R: leer,
           U: modificar,
           D: 1,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/modificarMenUsu', {params: parametros})
         .then(function (response) {
-          if(response.status === 200 && response.data.response === true){            
+          if(response.status === 200 && response.data.response === true){
             self.actualizarDetalleMenu(self.usuario.data)
           }else{
             throw response.data;
@@ -1388,7 +1392,7 @@ var app = new Vue({
           R: 1,
           U: 1,
           D: 1,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/agregarMenUsu', {params: parametros})
         .then(function (response) {
@@ -1432,7 +1436,7 @@ var app = new Vue({
           R: 1,
           U: 1,
           D: 0,
-          idUsuario: self.usuario.data 
+          idUsuario: self.usuario.data
         };
         axios.get('/agregarMenUsu', {params: parametros})
         .then(function (response) {
@@ -1462,7 +1466,7 @@ var app = new Vue({
     actualizarDetalleMenu: function(idUsuario){
 
       infoUsuario = [];
-      
+
       self.crUsuario.checked = false;
       self.crUsuario.c = 0;
       self.coUsuario.checked = false;
@@ -1548,13 +1552,13 @@ var app = new Vue({
                 self.coUsuario.r = self.detalleMenu.data[i].R;
                 self.coUsuario.u = self.detalleMenu.data[i].U;
                 self.modUsuario.u = self.detalleMenu.data[i].U;
-              } 
+              }
               if (self.detalleMenu.data[i].U === 1) {
                 self.modUsuario.checked = true;
                 self.modUsuario.r = self.detalleMenu.data[i].R;
                 self.modUsuario.u = self.detalleMenu.data[i].U;
                 self.coUsuario.r = self.detalleMenu.data[i].R;
-              }             
+              }
             }
             if (self.detalleMenu.data[i].id_menu === 5) {
              self.crCliente.checked = true;
@@ -1566,13 +1570,13 @@ var app = new Vue({
                 self.coCliente.r = self.detalleMenu.data[i].R;
                 self.coCliente.u = self.detalleMenu.data[i].U;
                 self.modCliente.u = self.detalleMenu.data[i].U;
-              } 
+              }
               if (self.detalleMenu.data[i].U === 1) {
                 self.modCliente.checked = true;
                 self.modCliente.r = self.detalleMenu.data[i].R;
                 self.modCliente.u = self.detalleMenu.data[i].U;
                 self.coCliente.r = self.detalleMenu.data[i].R;
-              }             
+              }
             }
             if (self.detalleMenu.data[i].id_menu === 7) {
               if (self.detalleMenu.data[i].C === 1) {
@@ -1586,7 +1590,7 @@ var app = new Vue({
                 self.modFact.c = self.detalleMenu.data[i].C;
                 self.modFact.r = self.detalleMenu.data[i].R;
                 self.modFact.u = self.detalleMenu.data[i].U;
-              } 
+              }
               if (self.detalleMenu.data[i].R === 1) {
 
                 self.verFact.c = self.detalleMenu.data[i].C;
@@ -1598,7 +1602,7 @@ var app = new Vue({
                 self.modFact.c = self.detalleMenu.data[i].C;
                 self.modFact.r = self.detalleMenu.data[i].R;
                 self.modFact.u = self.detalleMenu.data[i].U;
-              }   
+              }
               if (self.detalleMenu.data[i].U === 1) {
 
                 self.modFact.c = self.detalleMenu.data[i].C;
@@ -1610,7 +1614,7 @@ var app = new Vue({
                 self.crFact.c = self.detalleMenu.data[i].C;
                 self.crFact.r = self.detalleMenu.data[i].R;
                 self.crFact.u = self.detalleMenu.data[i].U;
-              }             
+              }
             }
             if (self.detalleMenu.data[i].id_menu === 9) {
              self.crProyecto.checked = true;
@@ -1622,13 +1626,13 @@ var app = new Vue({
                 self.coProyecto.r = self.detalleMenu.data[i].R;
                 self.coProyecto.u = self.detalleMenu.data[i].U;
                 self.modProyecto.u = self.detalleMenu.data[i].U;
-              } 
+              }
               if (self.detalleMenu.data[i].U === 1) {
                 self.modProyecto.checked = true;
                 self.modProyecto.r = self.detalleMenu.data[i].R;
                 self.modProyecto.u = self.detalleMenu.data[i].U;
                 self.coProyecto.r = self.detalleMenu.data[i].R;
-              }             
+              }
             }
             if (self.detalleMenu.data[i].id_menu === 11) {
               if (self.detalleMenu.data[i].R === 1) {
@@ -1649,7 +1653,7 @@ var app = new Vue({
                 self.eliHora.r = self.detalleMenu.data[i].R;
                 self.eliHora.u = self.detalleMenu.data[i].U;
                 self.eliHora.d = self.detalleMenu.data[i].D;
-              } 
+              }
               if (self.detalleMenu.data[i].U === 1) {
 
                 self.modAsigna.c = self.detalleMenu.data[i].C;
@@ -1706,19 +1710,19 @@ var app = new Vue({
                 self.verAsigna.r = self.detalleMenu.data[i].R;
                 self.verAsigna.u = self.detalleMenu.data[i].U;
                 self.verAsigna.d = self.detalleMenu.data[i].D;
-              }              
+              }
             }
             if (self.detalleMenu.data[i].id_menu === 13) {
               if (self.detalleMenu.data[i].U === 1) {
                 self.conHoraNoC.u = self.detalleMenu.data[i].U;
               }
-            } 
+            }
             if (self.detalleMenu.data[i].id_menu === 14) {
               if (self.detalleMenu.data[i].U === 1) {
 
                 self.carHoraNoC.u = self.detalleMenu.data[i].U;
               }
-            } 
+            }
           }
 
         }else{

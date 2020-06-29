@@ -17,9 +17,11 @@
     <body>
 
       <div id="modificarProyecto" class="container-fluid" v-on:keypress="keyboard">
-        <menu-principal></menu-principal>
 
-        <div class="row align-items-center justify-content-center wrapper-forms">
+        <loading :loading="loading" v-show="loading"></loading>
+        <menu-principal v-cloak></menu-principal>
+
+        <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
           <div class="col-12 col-sm-11 col-md-9 col-lg-8 wrapper-back-btn">
             <div class="row justify-content-center">
               <div class="col-12 col-md-6 col-lg-4">

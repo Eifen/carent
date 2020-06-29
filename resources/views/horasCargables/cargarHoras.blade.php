@@ -16,10 +16,11 @@
     </head>
     <body>
       <div id="cargarHoras" class="container-fluid" v-on:keypress="keyboard">
-        <menu-principal></menu-principal>
-        <div class="row align-items-center justify-content-center wrapper-forms">
+        <loading :loading="loading" v-show="loading"></loading>
+        <menu-principal v-cloak></menu-principal>
+        <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
           <div class="col-12 col-sm-11 col-md-9 wrapper-form" v-if="form.mostrar">
-            <h3>Datos del Proyecto a Cargar Horas</h3> 
+            <h3>Datos del Proyecto a Cargar Horas</h3>
             <form class="row" v-for="ProyAnalista in infoProyAnalista">
               <div class="form-group col-12 col-sm-6">
                 <label>Cliente</label>
@@ -51,13 +52,13 @@
             <form class="row" v-if="permisoCrear">
               <div class="form-group col-2 col-sm-2">
                 <label for="fecha">Fecha</label>
-                  <datepicker input-class="form-control" 
-                              format= "dd/MM/yyyy"    
+                  <datepicker input-class="form-control"
+                              format= "dd/MM/yyyy"
                               :language="es"
                               id= "fecha"
                               v-bind:disabled="form.fecha.disabled"
                               v-model="form.fecha.value"
-                              v-on:keyup="valuesForm">                                 
+                              v-on:keyup="valuesForm">
                   </datepicker>
               </div>
               <div class="form-group col-14 col-sm-8">
@@ -71,11 +72,11 @@
               </div>
               <div class="form-group col-2 col-sm-2">
                 <label for="horas_trabajadas">Horas Trabajadas</label>
-                  <input style="text-align:center" 
+                  <input style="text-align:center"
                          class="form-control"
                          id="horas_trabajadas"
                          v-mask="'##'"
-                         v-bind:disabled="form.horas_trabajadas.disabled" 
+                         v-bind:disabled="form.horas_trabajadas.disabled"
                          v-model="form.horas_trabajadas.value"
                          v-on:keyup="valuesForm"
                          type="text" >
@@ -124,7 +125,7 @@
             <div class="alert alert-warning text-center" v-html="alert.message"></div>
           </div>
         </div>
-        <div id="modal-detalle-Hcargadas" class="modal fade" tabindex="-1" role="dialog">
+        <div id="modal-detalle-Hcargadas" class="modal fade" tabindex="-1" role="dialog" v-cloak>
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -150,21 +151,21 @@
                 <form class="row">
                   <div class="form-group col-12 col-sm-6">
                     <label for="fechaM">Fecha</label>
-                    <datepicker input-class="form-control" 
-                                format= "dd/MM/yyyy"    
+                    <datepicker input-class="form-control"
+                                format= "dd/MM/yyyy"
                                 :language="es"
                                 id= "fechaM"
                                 v-bind:disabled="form.fechaM.disabled"
                                 v-model="form.fechaM.value"
-                                v-on:keyup="valuesForm">                                 
+                                v-on:keyup="valuesForm">
                     </datepicker>
                   </div>
                   <div class="form-group col-12 col-sm-6">
                     <label for="horas_trabajadasM">Horas Trabajadas</label>
-                      <input style="text-align:center" 
+                      <input style="text-align:center"
                              class="form-control"
                              id="horas_trabajadasM"
-                             v-bind:disabled="form.horas_trabajadasM.disabled" 
+                             v-bind:disabled="form.horas_trabajadasM.disabled"
                              v-model="form.horas_trabajadasM.value"
                              v-on:keyup="valuesForm"
                              type="text">
@@ -199,7 +200,7 @@
             </div>
           </div>
         </div>
-        <div id="modal-eliminar-Hcargadas" class="modal fade" tabindex="-1" role="dialog">
+        <div id="modal-eliminar-Hcargadas" class="modal fade" tabindex="-1" role="dialog" v-cloak>
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">

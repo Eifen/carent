@@ -11,8 +11,9 @@ var self;
 
 Vue.component('multiselect', Multiselect);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
+Vue.component('loading',require('../components/loading.vue').default);
 Vue.use(VueNumeric);
-//Declaramos las variables
+
 var app = new Vue({
 
   el: '#app',
@@ -57,6 +58,7 @@ var app = new Vue({
       },
       mostrar: false
     },
+    loading: true,
     paginador: {
       max: 0,
       numPaginas: 0,
@@ -92,6 +94,8 @@ var app = new Vue({
         self.paginador.max = parseInt(response.data.numero_paginas);
         self.paginador.paginar = response.data.paginar;
 
+        self.loading = false;
+
       }else{
 
         throw "error";
@@ -106,6 +110,8 @@ var app = new Vue({
         message : "Existe un error!, consulte con el administrador del sistema.",
         show: true
       };
+
+      self.loading = false;
 
     });
 
