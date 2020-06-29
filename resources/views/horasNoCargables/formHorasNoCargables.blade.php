@@ -17,9 +17,11 @@
     <body>
 
       <div id="app" class="container-fluid">
-        <menu-principal></menu-principal>
 
-        <div class="row align-items-center justify-content-center wrapper-forms">
+        <loading :loading="loading" v-show="loading"></loading>
+        <menu-principal v-cloak></menu-principal>
+
+        <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
           <div class="col-12 col-sm-12 col-md-11 col-lg-9 wrapper-form" v-if="formFiltro.mostrar">
             <h5>Filtros de búsqueda</h5>
             <form class="row">
@@ -212,7 +214,7 @@
 
         </div>
 
-        <div id="modal-cargar" class="modal fade" tabindex="-1" role="dialog">
+        <div id="modal-cargar" class="modal fade" tabindex="-1" role="dialog" v-cloak>
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -248,7 +250,9 @@
                       format="dd/LL/yyyy hh:mm a"
                       input-class="form-control fechaDesde"
                       v-model="formCargarHoras.fechaDesde.value"
-                      type="datetime">
+                      value-zone='local'
+                      type="datetime"
+                      zone='local'>
                       <template slot="button-cancel">
                         Cerrar
                       </template>
@@ -266,7 +270,9 @@
                       format="dd/LL/yyyy hh:mm a"
                       input-class="form-control"
                       v-model="formCargarHoras.fechaHasta.value"
-                      type="datetime">
+                      value-zone='local'
+                      type="datetime"
+                      zone='local'>
                       <template slot="button-cancel">
                         Cerrar
                       </template>
@@ -314,7 +320,7 @@
           </div>
         </div>
 
-        <div id="modal-modificar" class="modal fade" tabindex="-1" role="dialog">
+        <div id="modal-modificar" class="modal fade" tabindex="-1" role="dialog" v-cloak>
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -350,7 +356,9 @@
                       format="dd/LL/yyyy hh:mm a"
                       input-class="form-control fechaDesde"
                       v-model="formModificarHoras.fechaDesde.value"
-                      type="datetime">
+                      value-zone='local'
+                      type="datetime"
+                      zone='local'>
                       <template slot="button-cancel">
                         Cerrar
                       </template>
@@ -368,7 +376,9 @@
                       format="dd/LL/yyyy hh:mm a"
                       input-class="form-control"
                       v-model="formModificarHoras.fechaHasta.value"
-                      type="datetime">
+                      value-zone='local'
+                      type="datetime"
+                      zone='local'>
                       <template slot="button-cancel">
                         Cerrar
                       </template>

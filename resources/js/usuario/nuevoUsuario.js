@@ -6,10 +6,14 @@ window.AutoNumeric = require('autonumeric');
 import VueTheMask from 'vue-the-mask';
 const CryptoJS = require("crypto-js");
 const AES = require("crypto-js/aes");
+import { Datetime } from 'vue-datetime';
+import 'vue-datetime/dist/vue-datetime.css';
 var self;
 
 Vue.use(VueTheMask);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
+Vue.component('loading',require('../components/loading.vue').default);
+Vue.component('datetime', Datetime);
 
 var app = new Vue({
 
@@ -101,8 +105,13 @@ var app = new Vue({
       },
       empleado: {
         checked:false
+      },
+      fechaIngreso:{
+        disabled: true,
+        value: ""
       }
     },
+    loading: true,
     submitCrear: {
       content: "Crear nuevo Usuario",
       disabled: false,
@@ -122,6 +131,7 @@ var app = new Vue({
 
         self.key = response.data.key;
         self.iv = response.data.iv;
+        self.loading = false;
 
       }else{
 
@@ -146,6 +156,8 @@ var app = new Vue({
         show: true
       };
 
+      self.loading = false;
+
     });
 
   },
@@ -162,14 +174,18 @@ var app = new Vue({
       decimalPlaces: 0,
       decimalCharacter: ',',
       digitGroupSeparator: '',
-      leadingZero: 'keep'
+      leadingZero: 'keep',
+      minimumValue: 0
     });
 
     new AutoNumeric('#cedula', {
       decimalPlaces: 0,
       decimalCharacter: ',',
-      digitGroupSeparator: '.'
+      digitGroupSeparator: '.',
+      minimumValue: 0
     });
+
+    $('[data-toggle="tooltip"]').tooltip();
 
   },
   updated: function () {},
@@ -378,12 +394,14 @@ var app = new Vue({
         self.form.estado.disabled = false;
         self.form.division.disabled = false;
         self.form.cargo.disabled = false;
+        self.form.fechaIngreso.disabled = false;
 
         self.form.estado.validar = true;
         self.form.municipio.validar = true;
         self.form.parroquia.validar = true;
         self.form.division.validar = true;
         self.form.cargo.validar = true;
+        self.form.fechaIngreso.validar = true;
 
         self.form.estado.value = "";
 
@@ -397,12 +415,14 @@ var app = new Vue({
         self.form.parroquia.disabled = true;
         self.form.division.disabled = true;
         self.form.cargo.disabled = true;
+        self.form.fechaIngreso.disabled = true;
 
         self.form.estado.validar = false;
         self.form.municipio.validar = false;
         self.form.parroquia.validar = false;
         self.form.division.validar = false;
         self.form.cargo.validar = false;
+        self.form.fechaIngreso.validar = false;
 
         self.form.estado.value = "";
         self.form.municipio.value = "";
@@ -437,7 +457,15 @@ var app = new Vue({
     },
     limpiarMensajeError: function(e){
       $(e.target).removeClass("error");
-      $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
+      $(e.target).parents(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
+    },
+    limpiarMensajeError2: function(){
+
+      if(self.$refs["fechaIngreso"]){
+        $(self.$refs["fechaIngreso"].$el).children("input").removeClass("error");
+        $(self.$refs["fechaIngreso"].$el).parents(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
+      }
+
     },
     campoOpcionalARequerido: function(e){
 
@@ -496,6 +524,7 @@ var app = new Vue({
           telefono1: self.form.telefono1.value,
           telefono2: self.form.telefono2.value,
           empleado: self.form.empleado.checked,
+          fechaIngreso: self.form.fechaIngreso.value
         }
 
         self.submitCrear.content = '<i class="fas fa-cog fa-spin"></i>';
@@ -531,7 +560,7 @@ var app = new Vue({
           var indices = ["nombre1","nombre2","apellido1","apellido2","fechaNacimiento","codigoUsuario","cedula","correoPrincipal","correoSecundario","telefono1","telefono2"];
 
           if(self.form.empleado.checked){
-            indices.push("estado","municipio","parroquia","division","cargo");
+            indices.push("estado","municipio","parroquia","division","cargo","fechaIngreso");
           }
 
           indices.forEach(function(indiceObjecto, indice) {
@@ -580,7 +609,7 @@ var app = new Vue({
               mensaje        = "Correo inválido";
             }
 
-          }else if(input.type === 'text' || input.type === 'textarea'){
+          }else if(input.type === 'text' || input.type === 'textarea' || input.type === 'date'){
 
             if(input.getAttribute("data-min") && !input.getAttribute("data-name-lastname")){
 
@@ -642,6 +671,14 @@ var app = new Vue({
                 zenscroll.toY($(input).offset().top - 100);
               }
 
+            }else{
+
+              if(input.value === ""){
+                respuesta= false;
+                mensaje = "Este campo es requerido!";
+                zenscroll.toY($(input).offset().top - 100);
+              }
+
             }
 
           }else if(input.type === "select-one"){
@@ -670,6 +707,9 @@ var app = new Vue({
     },
     refreshView: function(){
       window.location.href = "/formNuevoUsuario";
+    },
+    limpiarFecha: function(nameRef){
+      self.form[nameRef].value = "";
     }
 
   }// Fin methods

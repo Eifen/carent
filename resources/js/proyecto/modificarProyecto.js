@@ -11,6 +11,7 @@ var self;
 Vue.use(VueTheMask);
 Vue.component('multiselect', Multiselect);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
+Vue.component('loading',require('../components/loading.vue').default);
 
 const errorInit = () => {
 
@@ -29,6 +30,8 @@ const errorInit = () => {
     message : "Existe un error!, consulte con el administrador del sistema.",
     show: true
   };
+
+  self.loading = false;
 
 }
 
@@ -111,7 +114,8 @@ var app = new Vue({
       },
       mostrar: false
     },
-      alert:{
+    loading: true,
+    alert:{
       message: "",
       mostrar: false
     },
@@ -157,6 +161,8 @@ var app = new Vue({
         }
         self.form.divisiones.value = data;
         self.form.divisiones.disabled = false;
+
+        self.loading = false;
 
       }else{
         errorInit();

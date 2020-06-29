@@ -17,9 +17,11 @@
     <body>
 
       <div id="modificarUsuario" class="container-fluid" v-on:keypress="keyboard">
-        <menu-principal></menu-principal>
 
-        <div class="row align-items-center justify-content-center wrapper-forms">
+        <loading :loading="loading" v-show="loading"></loading>
+        <menu-principal v-cloak></menu-principal>
+
+        <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
 
           <div class="col-12 col-sm-11 col-md-9 col-lg-8 wrapper-back-btn">
             <div class="row justify-content-center">
@@ -110,19 +112,6 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
-                <label for="fechaNacimiento">Fecha de Nacimiento</label>
-                <input aria-describedby="fechaNacimientoHelp"
-                       class="form-control"
-                       id="fechaNacimiento"
-                       v-bind:disabled="form.fechaNacimiento.disabled"
-                       v-mask="'##/##/####'"
-                       v-model="form.fechaNacimiento.value"
-                       v-on:keyup="valuesForm"
-                       type="text">
-                <small id="fechaNacimientoHelp" class="form-text text-muted">Ejemplo: 20/02/1985</small>
-                <div class="mensaje"></div>
-              </div>
-              <div class="form-group col-12 col-sm-6">
                 <label for="codigoUsuario">Código de usuario <span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="codigoUsuarioHelp"
                        class="form-control"
@@ -131,6 +120,30 @@
                        v-model="form.codigoUsuario.value"
                        v-on:keyup="valuesForm"
                        type="text">
+                <div class="mensaje"></div>
+              </div>
+              <div class="form-group col-12 col-sm-6">
+                <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                <div class="input-group">
+                  <datetime
+                    :disabled="form.fechaNacimiento.disabled"
+                    format="dd/LL/yyyy"
+                    input-class="form-control fechaNacimiento"
+                    ref="fechaNacimiento"
+                    v-model="form.fechaNacimiento.value"
+                    value-zone='local'
+                    type="date"
+                    zone='local'>
+                    <template slot="button-cancel">
+                      Cerrar
+                    </template>
+                  </datetime>
+                  <div class="input-group-append" data-toggle="tooltip" title="Borrar">
+                    <span class="input-group-text" @click="limpiarFecha('fechaNacimiento')">
+                      <i class="fas fa-times-circle remove"></i>
+                    </span>
+                  </div>
+                </div>
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
@@ -289,6 +302,42 @@
                   <option v-bind:value="cargo.id" v-for="cargo in comboCargos">@{{ cargo.descripcion }}</option>
                 </select>
                 <div class="mensaje"></div>
+              </div>
+              <div class="form-group col-12 col-sm-6">
+                <label for="fechaIngreso">Fecha de Ingreso <span v-if="form.empleado.checked" class="campo-obligatorio">*</span></label>
+                <datetime
+                  @input="fechaMinima"
+                  :disabled="form.fechaIngreso.disabled"
+                  format="dd/LL/yyyy"
+                  input-class="form-control fechaIngreso"
+                  ref="fechaIngreso"
+                  v-bind:data-validar="form.fechaIngreso.validar"
+                  v-model="form.fechaIngreso.value"
+                  value-zone='local'
+                  type="date"
+                  zone='local'>
+                  <template slot="button-cancel">
+                    Cerrar
+                  </template>
+                </datetime>
+                <div class="mensaje"></div>
+              </div>
+              <div class="form-group col-12 col-sm-6">
+                <label for="fechaEgreso">Fecha de Egreso</label>
+                <datetime
+                  :disabled="form.fechaEgreso.disabled"
+                  :min-datetime="form.fechaEgreso.minValue"
+                  format="dd/LL/yyyy"
+                  input-class="form-control fechaEgreso"
+                  ref="fechaEgreso"
+                  v-model="form.fechaEgreso.value"
+                  value-zone='local'
+                  type="date"
+                  zone='local'>
+                  <template slot="button-cancel">
+                    Cerrar
+                  </template>
+                </datetime>
               </div>
             </form>
 

@@ -17,8 +17,9 @@
     <body>
 
       <div id="proyectoDivision" class="container-fluid" v-on:keypress="keyboard">
-        <menu-principal></menu-principal>
-        <div class="row align-items-center justify-content-center wrapper-forms">
+        <loading :loading="loading" v-show="loading"></loading>
+        <menu-principal v-cloak></menu-principal>
+        <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
           <div class="col-12 col-sm-11 col-md-9 wrapper-form" v-if="form.mostrar">
             <h5>Búsqueda</h5>
             <form class="row">
@@ -117,7 +118,7 @@
             <div class="alert alert-warning text-center" v-html="alert.message"></div>
           </div>
         </div>
-        <div id="modal-detalle-Dproyecto" class="modal fade" tabindex="-1" role="dialog">
+        <div id="modal-detalle-Dproyecto" class="modal fade" tabindex="-1" role="dialog" v-cloak>
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -160,7 +161,7 @@
               </thead>
               <tbody>
                 <tr v-for="Aproyecto in detalleAproyecto.data">
-                  <th scope="row">@{{ Aproyecto.nombre }}</th>                  
+                  <th scope="row">@{{ Aproyecto.nombre }}</th>
                   <td>@{{ Aproyecto.division }}</td>
                   <td>@{{ Aproyecto.cargo }}</td>
                   <td>@{{ Aproyecto.horas_cargadas }}</td>
@@ -171,7 +172,7 @@
             </div>
           </div>
         </div>
-        <div id="modal-asignar-Aproyecto" class="modal fade" tabindex="-1" role="dialog">
+        <div id="modal-asignar-Aproyecto" class="modal fade" tabindex="-1" role="dialog" v-cloak>
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -231,10 +232,10 @@
                   <td>@{{ analista.cargo }}</td>
                   <td><input type="checkbox" v-on:change="estados(analista.id,analista.idAnaProy,proyecto.id,proyecto.id_proyecto_division, $event)" v-model="analista.estatus" ></td>
                   <td><input @keypress="formatoHoraAsignada"
-                             @keyup="horasTotales" 
+                             @keyup="horasTotales"
                              v-model="analista.horas_asignadas"
                              v-mask="'####'"
-                             :disabled="analista.estatus != 1" 
+                             :disabled="analista.estatus != 1"
                              v-on:keyup="asigna(analista.id,analista.idAnaProy,proyecto.id,Asigproyecto.horas_contratadas, $event)"
                              class="form-control hora-asignada"
                              type="text"></td>

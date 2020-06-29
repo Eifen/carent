@@ -1,6 +1,9 @@
 html {
   overflow-x: hidden;
 }
+[v-cloak] {
+  display: none;
+}
 #proyectoDivision {
   background-color: #E9ECEF;
 }

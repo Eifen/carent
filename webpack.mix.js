@@ -51,5 +51,5 @@ const mix = require('laravel-mix');
     .less('resources/less/horasCargables/cargarHoras.less', 'public/css/cargarHoras.css')
     .less('resources/less/horasNoCargables/formConceptosHorasNoCargables.less', 'public/css/formConceptosHorasNoCargables.css')
     .less('resources/less/horasNoCargables/formHorasNoCargables.less', 'public/css/formHorasNoCargables.css')
-    .styles('resources/css/bootstrap-4.4.1/bootstrap.min.css','public/css/bootstrap.min.css')
+    .styles('resources/css/bootstrap-4.5.0/bootstrap.min.css','public/css/bootstrap.min.css')
     .styles('resources/css/fontawesome-free-5.12.0/all.min.css','public/css/fontawesome-free-5.12.0.css');

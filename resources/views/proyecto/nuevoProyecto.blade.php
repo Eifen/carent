@@ -17,9 +17,11 @@
     <body>
 
       <div id="app" class="container-fluid" v-on:keypress="keyboard">
-        <menu-principal></menu-principal>
 
-        <div class="row align-items-center justify-content-center wrapper-forms">
+        <loading :loading="loading" v-show="loading"></loading>
+        <menu-principal v-cloak></menu-principal>
+
+        <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
           <div class="col-12 col-sm-11 col-md-9 col-lg-8" v-if="form.mostrar">
             <h3>Estas creando un nuevo Proyecto</h3>
             <form class="row">
@@ -155,7 +157,7 @@
 
           </div>
 
-          <div class="col-12 col-sm-11 col-md-9 col-lg-8">
+          <div class="col-12 col-sm-11 col-md-9 col-lg-8" v-cloak>
             <div class="row wrapper-alert">
               <div class="col-12">
                 <div v-bind:class="alertForm.class" role="alert" v-if="alertForm.show" v-html="alertForm.message"></div>

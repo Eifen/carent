@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 24-06-2020 a las 11:04:12
+-- Tiempo de generación: 29-06-2020 a las 00:47:08
 -- Versión del servidor: 8.0.18
 -- Versión de PHP: 7.3.16
 
@@ -35,6 +35,148 @@ CREATE TABLE `logs_auditoria` (
   `accion` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `logs_auditoria`
+--
+
+INSERT INTO `logs_auditoria` (`id`, `usuario_id`, `fecha`, `direccion_ip`, `accion`) VALUES
+(1, 1, '2020-06-25 09:15:06', '138.122.7.94', 'Inicio de Sesion'),
+(2, 1, '2020-06-25 09:15:44', '10.81.234.6', 'Inicio de Sesion'),
+(3, 1, '2020-06-25 09:22:25', '201.211.230.66', 'Inicio de Sesion'),
+(4, 15, '2020-06-25 09:23:13', '201.211.230.66', 'Inicio de Sesion'),
+(5, 15, '2020-06-25 09:25:46', '201.211.230.66', 'Registro del cliente:121'),
+(6, 1, '2020-06-25 09:26:27', '201.211.230.66', 'Inicio de Sesion'),
+(7, 15, '2020-06-25 09:27:27', '201.211.230.66', 'Inicio de Sesion'),
+(8, 15, '2020-06-25 09:28:46', '201.211.230.66', 'Registro del proyecto: auditoría 2019-II del cliente:11'),
+(9, 15, '2020-06-25 09:36:24', '201.211.230.66', 'Registro del detalle de facturacion del cliente:11 proyecto:14'),
+(10, 15, '2020-06-25 09:39:31', '186.89.24.197', 'Inicio de Sesion'),
+(11, 15, '2020-06-25 10:02:41', '186.89.24.197', 'Inicio de Sesion'),
+(12, 1, '2020-06-25 11:27:48', '201.211.230.66', 'Inicio de Sesion'),
+(13, 1, '2020-06-25 11:31:35', '201.211.230.66', 'Inicio de Sesion'),
+(14, 1, '2020-06-25 11:36:44', '201.211.230.66', 'Asignacion del analista: 6 al proyecto: 11'),
+(15, 1, '2020-06-25 14:23:07', '186.185.53.225', 'Inicio de Sesion'),
+(16, 1, '2020-06-25 14:23:28', '186.185.53.225', 'Inicio de Sesion'),
+(17, 1, '2020-06-25 14:23:38', '186.89.24.197', 'Inicio de Sesion'),
+(18, 1, '2020-06-25 14:23:39', '186.185.53.225', 'Inicio de Sesion'),
+(19, 1, '2020-06-25 14:25:16', '201.211.230.66', 'Inicio de Sesion'),
+(20, 1, '2020-06-25 14:26:44', '201.211.230.66', 'Inicio de Sesion'),
+(21, 1, '2020-06-25 14:32:15', '201.211.230.66', 'Inicio de Sesion'),
+(22, 15, '2020-06-25 14:32:27', '186.185.53.225', 'Inicio de Sesion'),
+(23, 1, '2020-06-25 14:34:54', '201.211.230.66', 'Registro del cliente:122'),
+(24, 15, '2020-06-25 14:43:51', '186.185.53.225', 'Inicio de Sesion'),
+(25, 1, '2020-06-25 14:46:07', '201.211.230.66', 'Registro del proyecto: Autitoría TI 2018-II del cliente:12'),
+(26, 15, '2020-06-25 14:48:29', '186.185.53.225', 'Registro del proyecto: auditoria financiera junio 2020-I del cliente:8'),
+(27, 15, '2020-06-25 14:52:17', '186.185.53.225', 'Registro del detalle de facturacion del cliente:8 proyecto:16'),
+(28, 1, '2020-06-25 14:56:34', '201.211.230.66', 'Inicio de Sesion'),
+(29, 15, '2020-06-25 15:00:11', '201.211.230.66', 'Inicio de Sesion'),
+(30, 15, '2020-06-25 15:02:35', '201.211.230.66', 'Registro del cliente:123'),
+(31, 1, '2020-06-25 15:03:24', '201.211.230.66', 'Inicio de Sesion'),
+(32, 15, '2020-06-25 15:04:03', '201.211.230.66', 'Inicio de Sesion'),
+(33, 1, '2020-06-25 15:10:20', '201.211.230.66', 'Inicio de Sesion'),
+(34, 15, '2020-06-25 15:10:58', '201.211.230.66', 'Inicio de Sesion'),
+(35, 15, '2020-06-25 15:15:00', '201.211.230.66', 'Registro del cliente:124'),
+(36, 1, '2020-06-25 15:17:11', '201.211.230.66', 'Inicio de Sesion'),
+(37, 15, '2020-06-25 15:17:45', '201.211.230.66', 'Inicio de Sesion'),
+(38, 15, '2020-06-25 15:19:04', '186.89.24.197', 'Inicio de Sesion'),
+(39, 15, '2020-06-25 15:20:59', '186.89.24.197', 'Registro del cliente:125'),
+(40, 15, '2020-06-25 15:26:17', '186.89.24.197', 'Inicio de Sesion'),
+(41, 15, '2020-06-25 15:28:02', '186.89.24.197', 'Registro del cliente:126'),
+(42, 15, '2020-06-25 15:33:23', '201.211.230.66', 'Inicio de Sesion'),
+(43, 15, '2020-06-25 16:05:22', '201.211.230.66', 'Inicio de Sesion'),
+(44, 15, '2020-06-25 16:05:32', '201.211.230.66', 'Inicio de Sesion'),
+(45, 15, '2020-06-25 16:11:22', '201.211.230.66', 'Inicio de Sesion'),
+(46, 15, '2020-06-25 16:58:49', '186.89.24.197', 'Inicio de Sesion'),
+(47, 15, '2020-06-25 17:00:29', '186.89.24.197', 'Registro del cliente:127'),
+(48, 15, '2020-06-25 17:43:47', '186.89.24.197', 'Inicio de Sesion'),
+(49, 15, '2020-06-25 17:46:04', '201.211.230.66', 'Inicio de Sesion'),
+(50, 15, '2020-06-25 17:50:37', '186.89.24.197', 'Registro del cliente:128'),
+(51, 15, '2020-06-25 17:51:29', '201.211.230.66', 'Registro del cliente:129'),
+(52, 1, '2020-06-25 20:01:54', '201.211.230.66', 'Inicio de Sesion'),
+(53, 1, '2020-06-26 08:56:52', '201.211.230.66', 'Inicio de Sesion'),
+(54, 1, '2020-06-26 09:00:21', '201.211.230.66', 'Registro de Usuario Codigo:10572'),
+(55, 1, '2020-06-26 09:03:45', '201.211.230.66', 'Registro de Usuario Codigo:11467'),
+(56, 1, '2020-06-26 09:06:36', '201.211.230.66', 'Registro de Usuario Codigo:10968'),
+(57, 1, '2020-06-26 09:13:39', '201.211.230.66', 'Registro de Usuario Codigo:11401'),
+(58, 1, '2020-06-26 09:24:43', '201.211.230.66', 'Registro del cliente:130'),
+(59, 1, '2020-06-26 09:29:05', '201.211.230.66', 'Registro del proyecto: auditoría 2019-II del cliente:20'),
+(60, 9, '2020-06-26 09:48:51', '201.211.230.66', 'Inicio de Sesion'),
+(61, 1, '2020-06-26 09:51:44', '201.211.230.66', 'Inicio de Sesion'),
+(62, 1, '2020-06-26 09:57:56', '201.211.230.66', 'Modificacion del Usuario Codigo:10863'),
+(63, 9, '2020-06-26 09:58:35', '201.211.230.66', 'Inicio de Sesion'),
+(64, 9, '2020-06-26 10:05:25', '201.211.230.66', 'Inicio de Sesion'),
+(65, 1, '2020-06-26 10:06:30', '201.211.230.66', 'Inicio de Sesion'),
+(66, 19, '2020-06-26 10:11:27', '201.211.230.66', 'Inicio de Sesion'),
+(67, 9, '2020-06-26 10:12:42', '186.89.24.197', 'Inicio de Sesion'),
+(68, 1, '2020-06-26 10:13:42', '186.89.24.197', 'Inicio de Sesion'),
+(69, 9, '2020-06-26 10:15:26', '186.89.24.197', 'Inicio de Sesion'),
+(70, 19, '2020-06-26 10:16:17', '201.211.230.66', 'Asignacion del analista: 9 al proyecto: 17'),
+(71, 19, '2020-06-26 10:16:26', '201.211.230.66', 'Asignacion del analista: 19 al proyecto: 17'),
+(72, 19, '2020-06-26 10:16:34', '201.211.230.66', 'Asignacion del analista: 20 al proyecto: 17'),
+(73, 19, '2020-06-26 10:16:46', '201.211.230.66', 'Asignacion del analista: 21 al proyecto: 17'),
+(74, 19, '2020-06-26 10:16:59', '201.211.230.66', 'Asignacion del analista: 22 al proyecto: 17'),
+(75, 1, '2020-06-26 10:17:43', '201.211.230.66', 'Inicio de Sesion'),
+(76, 9, '2020-06-26 10:39:17', '186.167.250.121', 'Inicio de Sesion'),
+(77, 15, '2020-06-26 10:57:39', '186.185.102.40', 'Inicio de Sesion'),
+(78, 1, '2020-06-26 13:13:31', '186.89.24.197', 'Inicio de Sesion'),
+(79, 1, '2020-06-26 13:14:04', '186.89.24.197', 'Registro del concepto de horas no cargables: Permiso'),
+(80, 15, '2020-06-26 14:03:29', '186.89.24.197', 'Inicio de Sesion'),
+(81, 1, '2020-06-26 17:14:41', '10.81.234.6', 'Inicio de Sesion'),
+(82, 1, '2020-06-26 20:52:54', '10.81.234.6', 'Inicio de Sesion'),
+(83, 1, '2020-06-26 20:53:08', '10.81.234.6', 'Inicio de Sesion'),
+(84, 15, '2020-06-26 20:55:10', '201.211.230.66', 'Inicio de Sesion'),
+(85, 15, '2020-06-26 20:55:24', '201.211.230.66', 'Inicio de Sesion'),
+(86, 15, '2020-06-26 20:57:46', '201.211.230.66', 'Registro del cliente:131'),
+(87, 9, '2020-06-26 21:02:09', '10.81.234.6', 'Inicio de Sesion'),
+(88, 1, '2020-06-26 21:06:08', '10.81.234.6', 'Inicio de Sesion'),
+(89, 9, '2020-06-26 22:16:56', '186.89.24.197', 'Inicio de Sesion'),
+(90, 1, '2020-06-26 22:20:31', '186.89.24.197', 'Inicio de Sesion'),
+(91, 9, '2020-06-26 22:25:29', '186.89.24.197', 'Inicio de Sesion'),
+(92, 1, '2020-06-27 07:48:18', '186.89.24.197', 'Inicio de Sesion'),
+(93, 1, '2020-06-27 09:17:33', '186.89.24.197', 'Inicio de Sesion'),
+(94, 1, '2020-06-27 13:30:34', '201.211.230.66', 'Inicio de Sesion'),
+(95, 1, '2020-06-27 13:38:08', '201.211.230.66', 'Modificacion del Usuario Codigo:10863'),
+(96, 1, '2020-06-27 13:39:27', '201.211.230.66', 'Modificacion del Usuario Codigo:10572'),
+(97, 1, '2020-06-27 13:40:48', '201.211.230.66', 'Modificacion del Usuario Codigo:11467'),
+(98, 1, '2020-06-27 13:42:01', '201.211.230.66', 'Modificacion del Usuario Codigo:10968'),
+(99, 1, '2020-06-27 13:43:23', '201.211.230.66', 'Modificacion del Usuario Codigo:11401'),
+(100, 1, '2020-06-27 13:46:24', '201.211.230.66', 'Modificacion del Usuario Codigo:10589'),
+(101, 15, '2020-06-27 14:01:08', '201.211.230.66', 'Inicio de Sesion'),
+(102, 15, '2020-06-27 14:23:00', '201.211.230.66', 'Registro del cliente:132'),
+(103, 15, '2020-06-27 14:24:59', '201.211.230.66', 'Creacion de cliente:132'),
+(104, 15, '2020-06-27 14:30:29', '201.211.230.66', 'Registro del proyecto: Auditoría 2018 del cliente:22'),
+(105, 15, '2020-06-27 14:35:47', '201.211.230.66', 'Inicio de Sesion'),
+(106, 15, '2020-06-27 14:40:03', '201.211.230.66', 'Registro del detalle de facturacion del cliente:22 proyecto:18'),
+(107, 19, '2020-06-27 14:43:25', '201.211.230.66', 'Inicio de Sesion'),
+(108, 19, '2020-06-27 14:48:02', '201.211.230.66', 'Asignacion del analista: 9 al proyecto: 18'),
+(109, 19, '2020-06-27 14:48:15', '201.211.230.66', 'Asignacion del analista: 22 al proyecto: 18'),
+(110, 19, '2020-06-27 14:48:24', '201.211.230.66', 'Asignacion del analista: 21 al proyecto: 18'),
+(111, 19, '2020-06-27 14:48:30', '201.211.230.66', 'Asignacion del analista: 20 al proyecto: 18'),
+(112, 19, '2020-06-27 14:48:36', '201.211.230.66', 'Asignacion del analista: 19 al proyecto: 18'),
+(113, 19, '2020-06-27 14:49:46', '201.211.230.66', 'Usuario: 19 Cargo: 4 horas en el proyecto:18'),
+(114, 19, '2020-06-27 14:50:07', '201.211.230.66', 'Usuario: 19 Cargo: 4 horas en el proyecto:18'),
+(115, 19, '2020-06-27 14:50:44', '201.211.230.66', 'Eliminacion de 4 horas del usuario: 19 en el proyecto:18'),
+(116, 19, '2020-06-27 15:01:12', '201.211.230.66', 'Inicio de Sesion'),
+(117, 19, '2020-06-27 15:07:54', '201.211.230.66', 'Usuario: 19 Cargo: 4 horas en el proyecto:18'),
+(118, 19, '2020-06-27 15:09:41', '201.211.230.66', 'Modificacion de horas del usuario: 19 en el proyecto:18'),
+(119, 1, '2020-06-27 15:11:57', '201.211.230.66', 'Inicio de Sesion'),
+(120, 1, '2020-06-27 15:55:23', '186.89.24.197', 'Inicio de Sesion'),
+(121, 19, '2020-06-27 16:52:03', '201.211.230.66', 'Inicio de Sesion'),
+(122, 19, '2020-06-27 16:53:05', '201.211.230.66', 'Registro de de horas no cargables al usuario: 19'),
+(123, 9, '2020-06-27 16:53:35', '201.211.230.66', 'Inicio de Sesion'),
+(124, 1, '2020-06-27 17:20:49', '186.89.24.197', 'Inicio de Sesion'),
+(125, 1, '2020-06-27 19:24:19', '186.89.24.197', 'Inicio de Sesion'),
+(126, 1, '2020-06-28 09:48:11', '127.0.0.1', 'Inicio de Sesion'),
+(127, 1, '2020-06-28 15:54:24', '127.0.0.1', 'Registro de Usuario Codigo:0002'),
+(128, 1, '2020-06-28 18:51:41', '127.0.0.1', 'Inicio de Sesion'),
+(129, 1, '2020-06-28 18:55:35', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
+(130, 1, '2020-06-28 18:57:23', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
+(131, 1, '2020-06-28 19:04:48', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
+(132, 1, '2020-06-28 19:06:00', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
+(133, 1, '2020-06-28 19:06:22', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
+(134, 1, '2020-06-28 19:06:41', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
+(135, 1, '2020-06-28 20:11:00', '127.0.0.1', 'Registro de Usuario Codigo:0003'),
+(136, 1, '2020-06-28 20:12:38', '127.0.0.1', 'Registro de Usuario Codigo:0004');
+
 -- --------------------------------------------------------
 
 --
@@ -44,7 +186,7 @@ CREATE TABLE `logs_auditoria` (
 CREATE TABLE `tbl_cargo_empleado` (
   `id` int(11) NOT NULL,
   `descripcion` varchar(50) NOT NULL,
-  `id_estatus` int(1) NOT NULL
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -693,7 +835,7 @@ CREATE TABLE `tbl_cliente` (
   `numero_fiscal` varchar(5) NOT NULL,
   `ciudad_fiscal` varchar(50) NOT NULL,
   `telefono_fiscal` varchar(20) NOT NULL,
-  `fax_fiscal` varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `fax_fiscal` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `email_fiscal` varchar(100) NOT NULL,
   `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -706,7 +848,25 @@ INSERT INTO `tbl_cliente` (`id`, `id_usuario_socio`, `id_usuario_gerente`, `codi
 (1, 1, 4, 111, '234', 1221, 'BANCOS. C', 1, 'D', 'DD', '2', '2', 'FD', '(2222) - 222 2222', '2', 'fj@gmail.com', 1),
 (2, 1, 1, 112, '335', 22, 'BANCO H', 1, 'AVENIDA', 'QUINTA', '2', '2', 'CIUDAD', '(2222) - 222 2222', '222', 'kose@gmail.com', 1),
 (3, 1, 1, 113, '9212', 2, 'BANCO I', 26, 'AVENIDA', 'QUINTA', '21', '11', 'CIUDAD', '(0202) - 020 2020', '20020', 'bancoi@gmail.com', 1),
-(4, 1, 1, 114, 'V12', 1, 'BANCO J', 28, 'AVENIDAD', 'QUINTA', '1', '1', 'CIUDAD', '(2002) - 022 0020', NULL, 'bancoj@gmail.com', 1);
+(4, 1, 1, 114, 'V12', 1, 'BANCO J', 28, 'AVENIDAD', 'QUINTA', '1', '1', 'CIUDAD', '(2002) - 022 0020', NULL, 'bancoj@gmail.com', 1),
+(5, 9, 6, 115, 'J123456789', 0, 'EMPRESAS UNIDAS JAMAS SERAN VENCIDAS S.A.C.A.', 619, 'AVENIDA GUAICAIPURO', 'DANTE GUALPIERI', 'PH', '1', 'CARACASA', '(0212) - 265 5555', '02122657777', 'eujsv.facturacion@eujsv.com.ve', 1),
+(6, 10, 6, 116, 'J987654321', 0, 'LAS PIEDRAS SPA EXÓTICO C.A.', 209, 'AVENIDA Nº 1', 'LAS PIEDRAS SPA EXÓTICO', 'PB', '0', 'PUERTO ORDÁZ', '(0424) - 963 8574', '04269638574', 'laspierdasspa.direccion@laspierdasspa.com.ve', 1),
+(7, 10, 6, 117, 'J741852963', 0, 'INVERSIONES LA NATA S.A.', 647, 'LOS LABORATORIOS', 'EDIFICIO OFINCA', '1', '111', 'CARACAS', '(0212) - 239 1592', '02122399215', 'direccion.lanata@lanata.com', 1),
+(8, 9, 6, 118, 'G2000517845', 0, 'BANCO DEL TESORO BANCO UNIVERSAL C.A.', 619, 'GUAICAIPURO', 'TORRE BT', 'PH', '1', 'CARACAS', '(0212) - 263 8574', NULL, 'presidente@bt.gob.ve', 1),
+(9, 10, 6, 119, 'J7418529632', 0, 'PEROLITO & ESCVARLATA C.A.', 619, 'FCO DE MIRANDA', 'CENTRO PERÚ', '10', '10', 'CARACAS', '(0212) - 263 5478', '02122635489', 'eldueno@pyeca.com', 1),
+(10, 16, 18, 120, 'V123456789', 0, 'PRUEBA', 226, 'AVENIDA', 'QUINTA', '24', '2', 'CIUDAD', '(0212) - 123 4567', NULL, 'pruebaer@gmail.com', 1),
+(11, 16, 0, 121, 'J159263487', 951623847, 'INVERSIONES EL CONTROL TOTAL', 619, 'FRANCISCO DE MIRANDA', 'TORRE CAVENDES', '1', '1', 'CARACAS', '(0212) - 285 4679', '02122859764', 'presidente@ct.com.ve', 1),
+(12, 16, 15, 122, 'G200000123', 741852963, 'FUNDAPAIMA', 619, 'FRANCISCO DE MIRANDA', 'TORRE CAVENDES', 'PB', '1', 'CARACAS', '(0212) - 285 9515', '02122859764', 'presidente@ct.com.ve', 1),
+(13, 16, 0, 123, 'G95162378', 741, 'JUNDACIÓN DEPORTE JUVENI', 619, 'FRANCISCO DE MIRANDA', 'TORRE EUROPA', '5', '55', 'CARACAS', '(0212) - 999 7845', '02129998754', 'presidencia@fundacion.com.ve', 1),
+(14, 16, 6, 124, 'J407038389', 0, 'MITICKERA C.A.', 1135, 'AVENIDA PRICIPAL', 'PEAVY', 'PB', '0', 'CARACAS', '(0212) - 662 8745', '02126624578', 'prueba@gmail.com', 1),
+(15, 16, 18, 125, 'V123654', 0, 'PRUEBA CLIENTE', 163, 'AVENIDA', 'QUINTA', '1', '1', 'CIUDAD', '(0202) - 020 2020', NULL, 'pruebacliente@gmail.com', 1),
+(16, 10, 18, 126, 'V76543', 0, 'PRUEBA CLIENTE 2', 1, 'AVENIDA', 'QUINRA', '11', '0', 'CIUDAD', '(0212) - 123 4567', NULL, 'pruebacliente2@gmail.com', 1),
+(17, 16, 18, 127, 'E12345', 0, 'PRUEBA CLIENTE 2', 1, 'AVENIDA', 'QUINTA', '24', '0', 'CIUDAD', '(1234) - 567 8900', NULL, 'pruebacliente2@gmail.com', 1),
+(18, 16, 18, 128, 'V65432', 0, 'PRUEBA CLIENTE 3', 87, 'AVENIDA', 'QUINTA', '24', '0', 'CIUDAD', '(0212) - 123 4567', NULL, 'pruebacliente3@gmail.com', 1),
+(19, 16, 18, 129, 'J951623847', 951623847, 'INVERSIONES VALLETY PARKING', 619, 'FRANCISCO DE MIRANDA', 'TORRE EUROPA', '10', '10', 'CARACAS', '(0212) - 263 3333', NULL, 'prueba@valletparking.com', 1),
+(20, 9, 19, 130, 'J000082766', 0, 'GRUPO SAMBIL C.A.', 619, 'FRANCISCO DE MIRANDA', 'CENTRO LIDO', '7', '70', 'CARACAS', '(0212) - 740 0200', NULL, 'contacto@constructorasambil.com.ve', 1),
+(21, 9, 19, 131, 'J407038389', 0, 'TICKETERA.COM', 1126, 'PRINCIPAL', 'PEAVY', 'PB', '1', 'CARACAS', '(0212) - 698 4554', NULL, 'prueba@gmail.com', 1),
+(22, 16, 19, 132, 'J000063729', 0, 'CERVECERÍA POLAR LOS CORTIJOS C.A.', 647, 'AVENIDA PRINCIPAL DE LOS CORTIJOS', 'CENTRO POLAR', 'PB', '12', 'CARACAS', '(0212) - 239 7841', '(0212) - 239 3232', 'empresaspolar@empresaspolar.com', 1);
 
 -- --------------------------------------------------------
 
@@ -736,7 +896,15 @@ CREATE TABLE `tbl_cliente_facturacion` (
 
 INSERT INTO `tbl_cliente_facturacion` (`id`, `id_cliente`, `id_proyecto`, `id_parroquia_factura`, `avenida_calle_factura`, `edificio_quinta_factura`, `piso_factura`, `numero_factura`, `ciudad_factura`, `telefono_factura`, `fax_factura`, `email_factura`, `id_estatus`) VALUES
 (1, 1, 1, 226, 'ALA', 'QUINTA', '33', '33', 'BACA', '(5654) - 020 2020', '32', 'vjd5@gmail.com', 1),
-(2, 1, 2, 259, 'AVENIDA', 'QUINTA', '21', '2', 'CIUDAD', '(0202) - 020 2020', '20', 'preubas@gmail.com', 1);
+(2, 1, 2, 259, 'AVENIDA', 'QUINTA', '21', '2', 'CIUDAD', '(0202) - 020 2020', '20', 'preubas@gmail.com', 1),
+(3, 5, 9, 619, 'GUAICAIPURO', 'DANTE GUALTIERI', 'PH', '1', 'CARACAS', '(0212) - 265 555', '02122657777', 'eujsv.facturacion@eujsv.com.ve', 1),
+(4, 1, 4, 1134, 'AVENIDA', 'QUINTA', '23', '2', 'CIUDAD', '(0212) - 123 4556', NULL, 'pruebas1@gmail.com', 1),
+(5, 6, 10, 647, 'LOS LABORATORIOS', 'EDIFICIO OFINCA', '4', '44', 'CARACAS', '(0212) - 239 7418', '02122398147', 'laspiedrasspa.facruracion@laspiedrasspa.com', 1),
+(6, 7, 11, 647, 'LOS LABORATORIOS', 'EDIFICIO OFINCA', '1', '111', 'CARACAS', '(0212) - 239 7418', '02122398147', 'facturacion.lanata@lanata.com', 1),
+(7, 8, 12, 1136, 'AVENIDA URDANETA', 'BANCO DEL TESORO', '13', '13A', 'CARACAS', '(0212) - 414 2185', '0212-414-2185', 'bancodeltesoro@gob.ve', 1),
+(8, 11, 14, 619, 'FRANCISCO', 'TORRE CAVENDES', '1', '1', 'CARACAS', '(0212) - 285 2634', '02122851926', 'presidente@ct.com.ve', 1),
+(9, 8, 16, 1120, 'URDANETA', 'BANCO DEL TESORO', '1', '1', 'CARACAS', '(0212) - 435 2100', '0212-4352101', 'bancodeltesoro@gob.ve', 1),
+(10, 22, 18, 647, 'AVENIDA PRINCIPAL DE LOS CORTIJOS', 'EMPRESAS POLAR', 'PB', '7', 'CARACAS', '(0212) - 239 7418', '(0212) - 239 8147', 'facturacion@empresaspolar.com', 1);
 
 -- --------------------------------------------------------
 
@@ -757,7 +925,14 @@ CREATE TABLE `tbl_concepto_horas_no_cargables` (
 INSERT INTO `tbl_concepto_horas_no_cargables` (`id`, `descripcion`, `id_estatus`) VALUES
 (1, 'Vacaciones', 1),
 (2, 'Permiso Médico', 2),
-(3, 'Reunión Técnica', 1);
+(3, 'Reunión Técnica', 1),
+(4, 'Disponible', 1),
+(5, 'Reunión de Staff', 1),
+(6, 'Capacitación Técnica', 1),
+(7, 'Tareas Administrativas', 1),
+(8, 'Reposo Médico', 1),
+(9, 'Permiso Universitario', 1),
+(10, 'Permiso', 1);
 
 -- --------------------------------------------------------
 
@@ -804,7 +979,27 @@ INSERT INTO `tbl_contacto_usuario` (`id`, `id_usuario`, `correo_principal`, `cor
 (2, 2, 'josearturo0706@gmail.com', '', '(0202) - 020 2020', NULL),
 (3, 3, 'ana.blandin@crowe.com.ve', '', '(2020) - 020 2020', NULL),
 (4, 4, 'dq@l.com', '', NULL, NULL),
-(5, 5, 'prueba@gmail.com', '', '(0202) - 020 2020', NULL);
+(5, 5, 'prueba@gmail.com', '', '(0202) - 020 2020', NULL),
+(6, 6, 'gustavo.puchi@crowe.com.ve', 'gapuchi@gmail.com', '(0412) - 220 6492', NULL),
+(7, 7, 'alfio.saglimbeni@crowe.com.ve', '', '(0416) - 827 2679', NULL),
+(8, 8, 'arianna.matos@crowe.com.ve', '', '(0424) - 123 4567', NULL),
+(9, 9, 'sergio.marquez@crowe.com.ve', 'sergiofmarquezt@gmail.com', '(0414) - 907 0900', NULL),
+(10, 10, 'mirlangela.salaya@crowe.com.ve', 'mirlangela.salaya@gmail.com', '(0416) - 123 5968', '(0414) - 123 5968'),
+(11, 11, 'pedro.machado@crowe.com.ve', 'pedro.machado@gmail.com', '(0426) - 123 4578', '(0212) - 123 5689'),
+(12, 12, 'recursos.humanos@crowe.com.ve', 'recursos.humanos@gmail.com', '(0416) - 987 5423', '(0414) - 987 5423'),
+(13, 13, 'siloes.alejos@crowe.com.ve', 'siloes.alejos@gmail.com', '(0416) - 310 9740', '(0212) - 263 6735'),
+(14, 14, 'yolimer.mendoza@crowe.com.ve', 'mendozayolymer@gmail.com', '(0414) - 901 8276', NULL),
+(15, 15, 'jose.machado@crowe.com.ve', 'jsemachado67@hotmail.com', '(0414) - 250 1932', '(0212) - 235 7418'),
+(16, 16, 'jesus.perez@crowe.com.ve', '', '(0414) - 020 1452', NULL),
+(17, 17, 'ignayari.mendoza@crowe.com.ve', '', '(0424) - 277 9397', NULL),
+(18, 18, 'machado@crowe.com.ve', 'jose@gmail.com', '(0414) - 741 8596', '(0416) - 369 2514'),
+(19, 19, 'oliver.paez@crowe.com.ve', '', '(0414) - 246 0953', NULL),
+(20, 20, 'ladymar.morett@crowe.com.ve', 'ladymar_01@hotmail.com', '(0426) - 119 7245', NULL),
+(21, 21, 'yodelina.torres@crowe.com.ve', '', '(0424) - 244 1557', NULL),
+(22, 22, 'jonathan.azocar@crowe.com.ve', 'jonathanzoncar24@gmail.com', '(0426) - 637 3419', NULL),
+(23, 23, 'dmolina102@gmail.com', '', NULL, NULL),
+(24, 24, 'carolina.coronel3@gmail.com', '', NULL, NULL),
+(25, 25, 'ek@dd.com', '', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -815,7 +1010,7 @@ INSERT INTO `tbl_contacto_usuario` (`id`, `id_usuario`, `correo_principal`, `cor
 CREATE TABLE `tbl_division` (
   `id` int(11) NOT NULL,
   `descripcion` varchar(50) NOT NULL,
-  `id_estatus` int(1) NOT NULL
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -823,17 +1018,23 @@ CREATE TABLE `tbl_division` (
 --
 
 INSERT INTO `tbl_division` (`id`, `descripcion`, `id_estatus`) VALUES
-(1, 'Sin Division Asignada', 1),
-(2, 'Financiera', 1),
-(3, 'Tecnología', 1),
-(4, 'Método y Proceso', 1),
-(5, 'Asesoría Tributaria Legal', 1),
-(6, 'Recursos Humanos', 1),
-(7, 'Administración', 1),
-(8, 'Servicios General', 1),
-(9, 'Contraloría', 1),
-(10, 'Contabilidad', 1),
-(11, 'Legal', 1);
+(1, 'Auditoría', 1),
+(2, 'Asesoría Tributaria', 1),
+(3, 'Tecnología TI', 1),
+(4, 'Outsourcing', 1),
+(5, 'Auditoría Interna y Procesos', 1),
+(6, 'Administración/Capital Humano', 1),
+(7, 'Administración/Contabilidad', 1),
+(8, 'Administración/Tesorería', 1),
+(9, 'Administración/Contraloría', 1),
+(10, 'Administración/Servicios Generales', 1),
+(11, 'Administración/Edición', 1),
+(12, 'Administración/Soporte Técnico', 1),
+(13, 'Adiestramiento', 1),
+(14, 'Pasantes Inces', 1),
+(15, 'Conapdis', 1),
+(16, 'Legal', 1),
+(17, 'Servicios Profesionales (Puerto Ordaz)', 1);
 
 -- --------------------------------------------------------
 
@@ -887,7 +1088,7 @@ INSERT INTO `tbl_estados` (`id`, `estado`, `iso_3166-2`) VALUES
 CREATE TABLE `tbl_estatus` (
   `id` int(11) NOT NULL,
   `tabla` varchar(60) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `valor` int(2) NOT NULL,
+  `valor` int(11) NOT NULL,
   `descripcion` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -951,6 +1152,27 @@ CREATE TABLE `tbl_horas_cargables` (
   `horas_trabajadas` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Volcado de datos para la tabla `tbl_horas_cargables`
+--
+
+INSERT INTO `tbl_horas_cargables` (`id`, `id_proy_analista`, `fecha`, `descripcion`, `horas_trabajadas`) VALUES
+(1, 4, '2020-06-15', 'TRABAJO TRABAJO Y MÁS TRABAJO', 8),
+(2, 4, '2020-06-16', 'MAS TRABAJA', 8),
+(3, 12, '2020-03-09', 'INICIO DE ACTIVIDADES ADMINISTRATIVAS DEL PROYECTO', 8),
+(4, 15, '2020-06-01', 'REUNION CON CLIENTE', 4),
+(5, 15, '2020-06-02', 'ACTIVIDAD 01', 4),
+(6, 15, '2020-06-03', 'REUNIÓN CON EQUIPO DE TRABAJO', 8),
+(7, 15, '2020-06-10', 'SPRING 1', 1),
+(8, 15, '2020-06-11', 'SPING 2', 1),
+(9, 15, '2020-06-12', 'SPRING 3', 1),
+(10, 15, '2020-06-15', 'EVALUACIÓN DE AVANCE', 4),
+(11, 15, '2020-06-26', 'REUNIÓN CON TI', 3),
+(12, 15, '2020-06-22', 'REUNIÓN CON GERENCIA', 4),
+(13, 14, '2020-06-01', 'INVERSIONES', 8),
+(15, 26, '2020-06-02', 'REUNIÓN CON EQUIPO DE TRABAJO', 2),
+(16, 26, '2020-06-01', 'REUNIÓN DE ACERCAMIENTO CON EL CLIENTE', 4);
+
 -- --------------------------------------------------------
 
 --
@@ -986,7 +1208,21 @@ INSERT INTO `tbl_horas_no_cargables` (`id`, `id_concepto`, `id_usuario`, `id_div
 (9, 1, 1, 3, NULL, '2020-06-07 01:00:00', '2020-06-07 02:00:00', NULL, '9 a 10 pm', 1),
 (10, 3, 1, 3, NULL, '2020-06-09 18:30:00', '2020-06-09 19:00:00', NULL, 'prueba David', 1),
 (11, 1, 1, 3, 1, '2020-06-10 18:30:00', '2020-06-12 19:00:00', '2020-06-07 18:38:06', 'ddddd', 2),
-(12, 1, 1, 3, NULL, '2020-06-14 18:30:00', '2020-06-30 19:00:00', NULL, 'ddddfffttgg', 1);
+(12, 1, 1, 3, NULL, '2020-06-14 18:30:00', '2020-06-30 19:00:00', NULL, 'ddddfffttgg', 1),
+(13, 3, 8, 3, 9, '2020-06-10 15:00:00', '2020-06-11 15:00:00', '2020-06-26 10:57:24', NULL, 2),
+(14, 2, 8, 3, 9, '2020-06-26 23:30:00', '2020-06-28 00:00:00', '2020-06-26 10:57:49', NULL, 3),
+(15, 3, 6, 3, 6, '2020-06-16 12:00:00', '2020-06-16 21:00:00', '2020-06-20 18:53:39', 'Reunión con personal de Central Madeirense C.A.', 2),
+(16, 7, 14, 6, 9, '2020-06-22 08:00:00', '2020-06-26 17:00:00', '2020-06-26 10:51:02', 'Tareas administrativas de la Gerencvia de Recursos humanos', 2),
+(17, 7, 11, 9, NULL, '2020-06-16 12:00:00', '2020-06-30 21:00:00', NULL, 'Trabajo administrativo diario', 2),
+(18, 7, 15, 9, NULL, '2020-06-16 12:00:00', '2020-06-30 21:00:00', NULL, 'TRABAJO ADMINISTRATIVO DIARIO', 2),
+(19, 7, 11, 9, 15, '2020-06-01 12:00:00', '2020-06-15 21:00:00', '2020-06-23 20:08:58', 'aprueba esta horas machado', 2),
+(20, 7, 17, 6, 14, '2020-06-01 12:00:00', '2020-06-15 21:00:00', '2020-06-24 02:34:22', NULL, 2),
+(21, 7, 17, 6, 14, '2020-06-16 12:00:00', '2020-06-30 21:00:00', '2020-06-24 02:33:58', NULL, 2),
+(22, 3, 1, 3, NULL, '2020-06-08 12:00:00', '2020-06-08 15:00:00', NULL, NULL, 1),
+(23, 3, 14, 6, NULL, '2020-06-08 12:00:00', '2020-06-08 15:00:00', NULL, 'Reunido con Alfio de Tecnología Pruebas Sistema Nuevo', 2),
+(24, 4, 1, 3, NULL, '2020-05-04 14:00:00', '2020-06-24 14:00:00', NULL, NULL, 1),
+(25, 9, 8, 3, 6, '2020-06-23 14:00:00', '2020-06-24 14:00:00', '2020-06-24 14:17:25', 'inscripción en la universidad', 2),
+(26, 2, 19, 1, 9, '2020-06-12 04:00:00', '2020-06-12 13:00:00', '2020-06-27 16:54:01', 'Evaluación médica pre vacaciones', 2);
 
 -- --------------------------------------------------------
 
@@ -1000,7 +1236,7 @@ CREATE TABLE `tbl_menu` (
   `descripcion` varchar(50) NOT NULL,
   `url` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `orden` int(11) NOT NULL,
-  `id_estatus` int(1) NOT NULL
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1033,10 +1269,10 @@ CREATE TABLE `tbl_menu_usuario` (
   `id` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
   `id_menu` int(11) NOT NULL,
-  `C` int(1) NOT NULL,
-  `R` int(1) NOT NULL,
-  `U` int(1) NOT NULL,
-  `D` int(1) NOT NULL
+  `C` int(11) NOT NULL,
+  `R` int(11) NOT NULL,
+  `U` int(11) NOT NULL,
+  `D` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -1053,7 +1289,78 @@ INSERT INTO `tbl_menu_usuario` (`id`, `id_usuario`, `id_menu`, `C`, `R`, `U`, `D
 (7, 1, 10, 1, 1, 1, 0),
 (8, 1, 11, 1, 1, 1, 1),
 (9, 1, 13, 1, 1, 1, 1),
-(10, 1, 14, 1, 1, 1, 0);
+(10, 1, 14, 1, 1, 1, 0),
+(11, 9, 7, 0, 1, 0, 0),
+(12, 9, 11, 1, 1, 1, 1),
+(13, 9, 13, 1, 1, 1, 1),
+(14, 9, 14, 1, 1, 1, 0),
+(15, 8, 11, 1, 0, 0, 0),
+(16, 10, 7, 0, 1, 0, 0),
+(17, 10, 11, 1, 0, 1, 1),
+(18, 10, 13, 1, 1, 1, 1),
+(19, 10, 14, 1, 1, 1, 0),
+(20, 8, 14, 1, 1, 1, 0),
+(22, 2, 14, 1, 1, 1, 0),
+(23, 2, 11, 1, 0, 0, 1),
+(24, 11, 7, 1, 1, 1, 0),
+(25, 11, 11, 1, 0, 1, 1),
+(26, 11, 13, 1, 1, 1, 1),
+(27, 11, 13, 1, 1, 1, 1),
+(28, 11, 14, 1, 1, 1, 0),
+(29, 11, 5, 0, 0, 0, 0),
+(30, 11, 6, 0, 1, 1, 0),
+(31, 11, 9, 0, 0, 0, 0),
+(32, 11, 10, 0, 1, 1, 0),
+(33, 6, 7, 0, 1, 0, 0),
+(34, 6, 11, 1, 0, 1, 1),
+(35, 6, 13, 1, 1, 1, 1),
+(36, 6, 14, 1, 1, 1, 0),
+(37, 12, 2, 0, 0, 0, 0),
+(38, 12, 3, 0, 1, 1, 0),
+(39, 12, 11, 1, 0, 0, 0),
+(41, 12, 14, 1, 1, 1, 0),
+(42, 13, 11, 1, 0, 1, 1),
+(43, 13, 13, 1, 1, 1, 1),
+(44, 13, 14, 1, 1, 1, 0),
+(45, 14, 2, 0, 0, 0, 0),
+(46, 14, 3, 0, 1, 1, 0),
+(47, 14, 11, 1, 0, 0, 0),
+(48, 14, 13, 1, 1, 1, 1),
+(49, 14, 14, 1, 1, 1, 0),
+(59, 16, 7, 0, 1, 0, 0),
+(60, 16, 11, 1, 0, 1, 1),
+(61, 16, 13, 1, 1, 1, 1),
+(62, 16, 14, 1, 1, 1, 0),
+(63, 17, 2, 0, 0, 0, 0),
+(64, 17, 3, 0, 1, 1, 0),
+(68, 17, 14, 1, 1, 1, 0),
+(69, 15, 5, 0, 0, 0, 0),
+(70, 15, 6, 0, 1, 1, 0),
+(71, 15, 7, 1, 1, 1, 0),
+(72, 15, 13, 1, 1, 1, 1),
+(73, 15, 14, 1, 1, 1, 0),
+(74, 18, 5, 0, 0, 0, 0),
+(75, 18, 6, 0, 1, 1, 0),
+(76, 18, 9, 0, 0, 0, 0),
+(77, 18, 10, 0, 1, 1, 0),
+(78, 18, 7, 1, 1, 1, 0),
+(79, 18, 13, 1, 1, 1, 1),
+(80, 18, 14, 1, 1, 1, 0),
+(81, 15, 9, 0, 0, 0, 0),
+(82, 15, 10, 0, 1, 1, 0),
+(83, 19, 7, 0, 1, 0, 0),
+(84, 19, 11, 1, 0, 1, 1),
+(85, 19, 14, 1, 1, 1, 0),
+(86, 20, 7, 0, 1, 0, 0),
+(87, 20, 11, 1, 0, 1, 1),
+(88, 20, 14, 1, 1, 1, 0),
+(89, 21, 7, 0, 1, 0, 0),
+(90, 21, 11, 1, 0, 1, 1),
+(91, 21, 14, 1, 1, 1, 0),
+(92, 22, 7, 0, 1, 0, 0),
+(93, 22, 11, 1, 0, 1, 1),
+(94, 22, 14, 1, 1, 1, 0),
+(95, 15, 11, 1, 0, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -2575,7 +2882,7 @@ CREATE TABLE `tbl_proyecto` (
   `descripcion` varchar(250) NOT NULL,
   `id_cliente` int(11) NOT NULL,
   `fecha_contratacion` varchar(10) NOT NULL,
-  `id_estatus` int(1) NOT NULL
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2589,7 +2896,16 @@ INSERT INTO `tbl_proyecto` (`id`, `descripcion`, `id_cliente`, `fecha_contrataci
 (4, 'Proyecto I', 1, '10/03/2020', 0),
 (5, 'inventario IV', 2, '22/02/2020', 1),
 (8, 'Prueba', 4, '10/10/1001', 1),
-(9, 'proyecto covid-19', 2, '23/06/2020', 1);
+(9, 'Auditoría de vulnerabilidad', 5, '01/01/2020', 1),
+(10, 'Auditoría de TI', 6, '01/02/2020', 1),
+(11, 'Auditoría TI', 7, '01/03/2020', 1),
+(12, 'AUDITORIA FINANCIERA JUNIO', 8, '30/06/2020', 1),
+(13, 'auditoria financiera', 2, '30/06/2020', 1),
+(14, 'auditoría 2019-II', 11, '15/01/2020', 1),
+(15, 'Autitoría TI 2018-II', 12, '03/01/2020', 1),
+(16, 'auditoria financiera junio 2020-I', 8, '15/06/2020', 1),
+(17, 'auditoría 2019-II', 20, '26/06/2020', 1),
+(18, 'Auditoría 2018', 22, '27/06/2020', 1);
 
 -- --------------------------------------------------------
 
@@ -2611,7 +2927,32 @@ CREATE TABLE `tbl_proyecto_analista` (
 --
 
 INSERT INTO `tbl_proyecto_analista` (`id`, `id_proyecto`, `id_proyecto_division`, `id_analista`, `horas_asignadas`, `id_estatus`) VALUES
-(1, 5, 13, 1, NULL, 1);
+(1, 5, 13, 1, NULL, 1),
+(2, 9, 22, 6, 0, 0),
+(3, 9, 22, 7, 0, 0),
+(4, 9, 22, 8, 0, 0),
+(5, 9, 22, 2, 0, 0),
+(6, 10, 24, 8, 250, 1),
+(7, 10, 24, 2, NULL, 0),
+(8, 10, 24, 7, 160, 1),
+(9, 10, 24, 6, 80, 1),
+(10, 10, 24, 10, 10, 1),
+(11, 11, 25, 10, 0, 0),
+(12, 11, 25, 6, 100, 1),
+(13, 11, 25, 7, 0, 0),
+(14, 11, 25, 8, 250, 1),
+(15, 9, 22, 13, 0, 0),
+(16, 11, 25, 1, 300, 1),
+(17, 17, 40, 9, 10, 1),
+(18, 17, 40, 19, 25, 1),
+(19, 17, 40, 20, 50, 1),
+(20, 17, 40, 21, 75, 1),
+(21, 17, 40, 22, 75, 1),
+(22, 18, 42, 9, 50, 1),
+(23, 18, 42, 22, 250, 1),
+(24, 18, 42, 21, 250, 1),
+(25, 18, 42, 20, 150, 1),
+(26, 18, 42, 19, 100, 1);
 
 -- --------------------------------------------------------
 
@@ -2645,7 +2986,27 @@ INSERT INTO `tbl_proyecto_divisiones` (`id`, `id_division`, `id_proyecto`, `hora
 (14, 10, 8, 21),
 (19, 8, 8, 22),
 (20, 6, 8, 23),
-(22, 5, 9, 12);
+(22, 3, 9, 500),
+(23, 2, 9, 500),
+(24, 3, 10, 500),
+(25, 3, 11, 1000),
+(26, 2, 12, 400),
+(27, 5, 12, 200),
+(28, 4, 12, 200),
+(29, 3, 12, 200),
+(30, 2, 13, 400),
+(31, 5, 13, 400),
+(32, 3, 13, 400),
+(33, 4, 13, 400),
+(34, 3, 14, 500),
+(35, 3, 15, 1500),
+(36, 2, 16, 400),
+(37, 5, 16, 200),
+(38, 9, 16, 200),
+(39, 3, 16, 200),
+(40, 2, 17, 750),
+(41, 3, 17, 750),
+(42, 1, 18, 1000);
 
 -- --------------------------------------------------------
 
@@ -2667,7 +3028,7 @@ CREATE TABLE `tbl_telefono` (
 CREATE TABLE `tbl_tipo_contacto` (
   `id` int(11) NOT NULL,
   `descripcion` varchar(30) NOT NULL,
-  `estatus` int(1) NOT NULL
+  `estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -2694,11 +3055,13 @@ CREATE TABLE `tbl_usuario` (
   `nombre_2` varchar(20) DEFAULT NULL,
   `apellido_1` varchar(20) NOT NULL,
   `apellido_2` varchar(20) DEFAULT NULL,
-  `fecha_nacimiento` varchar(10) DEFAULT NULL,
+  `fecha_nacimiento` datetime DEFAULT NULL COMMENT 'El formato de la fecha es UTC',
   `id_cargo` int(11) DEFAULT NULL,
   `id_division` int(11) DEFAULT NULL,
   `id_parroquia` int(11) DEFAULT NULL,
   `avatar` varchar(30) DEFAULT NULL,
+  `fecha_ingreso` datetime DEFAULT NULL COMMENT 'El formato de la fecha es UTC',
+  `fecha_egreso` datetime DEFAULT NULL COMMENT 'El formato de la fecha es UTC',
   `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -2706,12 +3069,32 @@ CREATE TABLE `tbl_usuario` (
 -- Volcado de datos para la tabla `tbl_usuario`
 --
 
-INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `cedula`, `nombre_1`, `nombre_2`, `apellido_1`, `apellido_2`, `fecha_nacimiento`, `id_cargo`, `id_division`, `id_parroquia`, `avatar`, `id_estatus`) VALUES
-(1, '0001', 'eyJpdiI6IjB5dnJXUUswTEdZenNcLzRHbTRWXC9HUT09IiwidmFsdWUiOiJwbUpkdURFdGhoc3FOSFpGQU1yaU5RPT0iLCJtYWMiOiI2ZDY1NTVlMTBkYmQ4NGNiNWM0MWRkMTllMjcxZjkxOTM5MmFhZmMxYTIwNmFiMzM4MjRmYTgwYjEwYTQ0NTY0In0=', 17671370, 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '01/01/1980', 11, 3, 1131, '', 1),
-(2, '11525', 'eyJpdiI6IjkwZkVzUVRiMXVZcXZlZDMwM2dXdHc9PSIsInZhbHVlIjoiZFAxQjFLMVZZT2VsVDBNSkJIN0JJZz09IiwibWFjIjoiMWNhNWYxMGM4MDdhOWNjZTM1N2MxZmMyNjE3MDJlYTM1YTMwZDU4NDU0ZTNhYmQzZWUxZTViNTQxNTM0YmZiZCJ9', 27279090, 'JOSE', 'ARTURO', 'MADRIZ', 'MALAVE', '07/06/1996', 8, 3, 1123, '', 1),
-(3, '11450', 'eyJpdiI6Im5MWkhxSEVKV2N3ZkhJZ01XZTU2eFE9PSIsInZhbHVlIjoiZ2N3a2l2Nm1DNHFKMGtPYkp4ZmdzQT09IiwibWFjIjoiMTNmNTllMGNjNTc0MjNlMWMwYzkwYTA0NGYyNzQ5ZmU5YTg4M2YzMDIzZGMyNzVhNjllNmRhNDYzOWQ3Yzc1NyJ9', 14245244, 'ANA', '', 'BLANDIN', '', '09/05/1986', 11, 3, 26, '', 1),
-(4, '2209', 'eyJpdiI6IiswWVJuYXJsbVwvRkg0OGdxdGI4dW1RPT0iLCJ2YWx1ZSI6ImdFbWJYZGRWVEtNWFZcL3ZUdlNHY0JnPT0iLCJtYWMiOiI1NTUyMDg1Y2RkMWE4MTViYWM5MWM4YjAyOGJiZTAwYWQ0ZTc1NGE5Zjg4ZDlhNmRjYWU3OTZmNTU4YTIxMDZkIn0=', 13900761, 'CAROLINA', '', 'CORONEL', '', NULL, 9, 3, NULL, NULL, 1),
-(5, '22522', 'eyJpdiI6InlXdnhIMkZHYnBrczRGQTlRdGVIeUE9PSIsInZhbHVlIjoiWmJqNFd4c09Fd05JRGxZdTBmenUyQT09IiwibWFjIjoiOTYwNTVmNWJiMDFhOWU0ZDE2NTJiZWMwY2Y2OGY1YzllZjY5NTg0OGU4NzQzNWU1ZGFjZTdiYTg1NTQwM2RmYSJ9', 22522626, 'PRUEBA', '', 'PROGRAMA', '', '07/06/1996', 15, 8, 233, NULL, 1);
+INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `cedula`, `nombre_1`, `nombre_2`, `apellido_1`, `apellido_2`, `fecha_nacimiento`, `id_cargo`, `id_division`, `id_parroquia`, `avatar`, `fecha_ingreso`, `fecha_egreso`, `id_estatus`) VALUES
+(1, '0001', 'eyJpdiI6IjB5dnJXUUswTEdZenNcLzRHbTRWXC9HUT09IiwidmFsdWUiOiJwbUpkdURFdGhoc3FOSFpGQU1yaU5RPT0iLCJtYWMiOiI2ZDY1NTVlMTBkYmQ4NGNiNWM0MWRkMTllMjcxZjkxOTM5MmFhZmMxYTIwNmFiMzM4MjRmYTgwYjEwYTQ0NTY0In0=', 17671370, 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', NULL, 11, 3, 1131, '', NULL, NULL, 1),
+(2, '11525', 'eyJpdiI6IjkwZkVzUVRiMXVZcXZlZDMwM2dXdHc9PSIsInZhbHVlIjoiZFAxQjFLMVZZT2VsVDBNSkJIN0JJZz09IiwibWFjIjoiMWNhNWYxMGM4MDdhOWNjZTM1N2MxZmMyNjE3MDJlYTM1YTMwZDU4NDU0ZTNhYmQzZWUxZTViNTQxNTM0YmZiZCJ9', 27279090, 'JOSE', 'ARTURO', 'MADRIZ', 'MALAVE', NULL, 8, 3, 1123, '', NULL, NULL, 1),
+(3, '11450', 'eyJpdiI6Im5MWkhxSEVKV2N3ZkhJZ01XZTU2eFE9PSIsInZhbHVlIjoiZ2N3a2l2Nm1DNHFKMGtPYkp4ZmdzQT09IiwibWFjIjoiMTNmNTllMGNjNTc0MjNlMWMwYzkwYTA0NGYyNzQ5ZmU5YTg4M2YzMDIzZGMyNzVhNjllNmRhNDYzOWQ3Yzc1NyJ9', 14245244, 'ANA', '', 'BLANDIN', '', NULL, 11, 3, 26, '', NULL, NULL, 1),
+(4, '2209', 'eyJpdiI6IiswWVJuYXJsbVwvRkg0OGdxdGI4dW1RPT0iLCJ2YWx1ZSI6ImdFbWJYZGRWVEtNWFZcL3ZUdlNHY0JnPT0iLCJtYWMiOiI1NTUyMDg1Y2RkMWE4MTViYWM5MWM4YjAyOGJiZTAwYWQ0ZTc1NGE5Zjg4ZDlhNmRjYWU3OTZmNTU4YTIxMDZkIn0=', 13900761, 'CAROLINA', '', 'CORONEL', '', NULL, 9, 3, NULL, NULL, NULL, NULL, 1),
+(5, '22522', 'eyJpdiI6InlXdnhIMkZHYnBrczRGQTlRdGVIeUE9PSIsInZhbHVlIjoiWmJqNFd4c09Fd05JRGxZdTBmenUyQT09IiwibWFjIjoiOTYwNTVmNWJiMDFhOWU0ZDE2NTJiZWMwY2Y2OGY1YzllZjY5NTg0OGU4NzQzNWU1ZGFjZTdiYTg1NTQwM2RmYSJ9', 22522626, 'PRUEBA', '', 'PROGRAMA', '', NULL, 15, 8, 233, NULL, NULL, NULL, 1),
+(6, '0010', 'eyJpdiI6Ik1IK21ZSWlubytsMmU3dDV1aHdIa0E9PSIsInZhbHVlIjoiQXlvUytpTzF5c1haZkl3TXRDUWRMZz09IiwibWFjIjoiNDdmMGE4Yzg1ZGE2YTA0OTExOTJkMTI5ZDYwMDhmMWJjMmEzYWVlZjZhYjE1YzgyNDc2NWFkZjE4OTk0OTViYSJ9', 6823447, 'GUSTAVO', 'ADOLFO', 'PUCHI', 'MEDINA', NULL, 14, 3, 1130, NULL, NULL, NULL, 1),
+(7, '0011', 'eyJpdiI6ImJiQktSUnJPY1dHcVhoSmtESTg2bHc9PSIsInZhbHVlIjoibGFZMTdQWk5uUHllMytnOUR4VVJqQT09IiwibWFjIjoiNzFkMDY4OTgzZjVlZDVhNjhiMjNhNzVmMjhlODE0OWJjOTM1NDBkZGE3ZDgxNWMyOTNiZTQyN2JiZWQyNGM3ZCJ9', 6823443, 'ALFIO', 'FILIPPO', 'SAGLIMBENI', 'MUSCOLINO', NULL, 12, 3, 619, NULL, NULL, NULL, 1),
+(8, '0012', 'eyJpdiI6InpEaU9aQU56TCtHZlhRWkhtY0VlZnc9PSIsInZhbHVlIjoiXC9ZNXBQXC8wUFYxXC9tZzF5a1U2WkJjUT09IiwibWFjIjoiNzZjNzRiM2Y1ZmUyZGZmMzI1MGYwOTUyZWRjYTQ4Mzc0ODk5NzY2OTZkODA1ZWQ1Yjc4MmJmOTRkZTdjYTQ2ZSJ9', 6823444, 'ARIANNA', 'ELENA', 'MATOS', 'YACOBELLIS', NULL, 6, 3, 625, NULL, NULL, NULL, 1),
+(9, '10863', 'eyJpdiI6IlphVGpuenJLdEprSVVaTXIxMzNyV1E9PSIsInZhbHVlIjoicDR0ZlRLUTMyVWRvRTR4cExadFVwdz09IiwibWFjIjoiYjBhYjE2ZjA2MDk2NTgxM2U0YTczNTIzYzQ3OWUzMmFkZjI3NjU5MTBkY2M1NWQwOTQ4MTllMDU1ZTY0MzRiMiJ9', 10785418, 'SERGIO', 'FREDDYS', 'MÁRQUEZ', 'TOVAR', NULL, 16, 1, 612, NULL, NULL, NULL, 1),
+(10, '0019', 'eyJpdiI6ImNLM21JVmtxVkJobk1IWU9lWWFDRGc9PSIsInZhbHVlIjoiVysyS0k0K0g1eWxyRFwvOGFLUUd2bFE9PSIsIm1hYyI6IjFhYjc3OTIyMWNmNDk4MTRmZjIyZjIzNTVmYzEwZTZmZjNhNDlhNDQwMjkzZjU3YmRiNTNhZGJjNTVmMmVhNjQifQ==', 6823448, 'MIRLANGELA', 'MARIA', 'SALAYA', 'PÉREZ', NULL, 16, 3, 1131, NULL, NULL, NULL, 1),
+(11, '0100', 'eyJpdiI6IjltXC81dm43OUNBUGVPYUpcL2VCSjRRUT09IiwidmFsdWUiOiJFcWNzU2pQM3ZKbHdzMStTTHY3UVJBPT0iLCJtYWMiOiI5MWYxOWMxZjYwZWY1MzcxYjhkOTg1NTAyNWExZWQ3N2IyNjY1MDk2YmQ3MDY1NDE5ZmUxN2QxNGU0NjIzZmI5In0=', 6823400, 'PEDRO', 'LUIS', 'MACHADO', 'FLORES', NULL, 14, 9, 1117, NULL, NULL, NULL, 1),
+(12, '0101', 'eyJpdiI6InQxckZzNFBKRTd4MDFBNUN6R3BYbFE9PSIsInZhbHVlIjoiQmpNMklLU0gyT204czdBQ0d1cHZBZz09IiwibWFjIjoiZTIzYTIwZDk1YmI0ZGFiOGU4YThlMzA4NmVhZWQyZjJmM2I3MDVlNDJmZGZkYzY3NDA2ZGQxMWQ0MzYwYjEwYyJ9', 6823440, 'RECURSOS', '', 'HUMANOS', '', NULL, 14, 6, 619, NULL, NULL, NULL, 1),
+(13, '0202', 'eyJpdiI6InMwUFMrMEo0QVdpU1NZVDFVNnJXY0E9PSIsInZhbHVlIjoiUUVkUnA1OUxvR2VQVXNOVUdhZnF2dz09IiwibWFjIjoiZGNmMzdlMWEzMTY1MDhkZTM1OGFkOTM0NjU5NDUwZjNhYjJkOTYyY2U0MDRkM2ExMDk4NzdhMzU5ZDc3ZDBkYSJ9', 8513452, 'SILOES', 'DEL CARMEN', 'ALEJOS', 'PEÑA', NULL, 15, 3, 619, NULL, NULL, NULL, 1),
+(14, '11559', 'eyJpdiI6ImhBY0poMjhqeDl2WnhOOW9TN0hKU2c9PSIsInZhbHVlIjoiR0NlN1czTHpUUDNcL2pGV05mbmlIeVE9PSIsIm1hYyI6ImI4Zjg0NmYxM2VmYzdkZDE2NGYxMzhiYmZjMTY2NDQ2MDE4ZTYwZmIxZDMzYTYxYzQzMTliMzg4ZjdiZDM5N2EifQ==', 10812350, 'YOLYMER', 'ALICIA', 'MENDOZA', 'GARCÍA', NULL, 13, 6, 647, NULL, NULL, NULL, 1),
+(15, '10589', 'eyJpdiI6ImN1OVRzTkVBTkdHbjZCN3hmMnhEa2c9PSIsInZhbHVlIjoiVzl5NzlrcFdzR1IzNTFLbEh3Ulwvdnc9PSIsIm1hYyI6ImE1OTJlYzIwNmYzYTY4MjQwYzc4NDhlZGM1ZDIxZmFiMDA3MTljOGE2OTMxOWE2OWM0MmI0MjRiYmRkODM3ODAifQ==', 6270987, 'JOSE', 'ANTONIO', 'MACHADO', 'PEREZ', NULL, 14, 9, 647, NULL, NULL, NULL, 1),
+(16, '10141', 'eyJpdiI6Inh4bjRnM0pLZDdWcENQMU1DOTVwOGc9PSIsInZhbHVlIjoicjQ5c3RLaUpmTTVMbDNrXC9jTG43MWc9PSIsIm1hYyI6ImZhNTRkMTlmYTYxMWU3M2Y1MjkwNWZkOWUyMTg0Mzc4NzM2OWY3NzBhMTI5OTM0MzEwMjU1NDMzNDk1YWE4ZTgifQ==', 5597044, 'JESUS', 'ERASMO', 'PÉREZ', 'RAVELO', NULL, 16, 2, 647, NULL, NULL, NULL, 1),
+(17, '11558', 'eyJpdiI6IjBzSXlIWVlmNjQ2V0l4Z0FqSGxjZWc9PSIsInZhbHVlIjoiNjhKYVdaNGRMaDlzM2JzR0s0d0haZz09IiwibWFjIjoiMGYxNjJkYjYxNjA5ZmVlOTgyZTZjNjM0MTBmMjVkMmViNDY1MjA5ZjJjNDI0Yzg0YjE5NTUyNTljODRlZGRlNCJ9', 10812351, 'IGNAYARI', 'KATHERINE', 'MENDOZA', 'LUZARDO', NULL, 7, 6, 647, NULL, NULL, NULL, 1),
+(18, '10666', 'eyJpdiI6IjdhYlluNzNBZWtVemZkSDlOamk2OVE9PSIsInZhbHVlIjoiT2lMYmtFT0ViOEN1OWtWZXlrWlNoQT09IiwibWFjIjoiNzU3MmY3ZjQ1OWUzNjdlYzI2NjE1YjIxNGY2MDVmYWVhMTZkOTFhNzc0MmRjOWJiODUzNjMwZmUxNzBjZjE3YiJ9', 9876543, 'JOSE', 'ANTONIO', 'MACHADO', 'PEREZ', NULL, 14, 9, 619, NULL, NULL, NULL, 1),
+(19, '10572', 'eyJpdiI6InBQSndlcUZDaWxielIwY1Z3emZtOVE9PSIsInZhbHVlIjoiR3pSM25aYkhYeXZkWnNsZDN3aDM2UT09IiwibWFjIjoiMjJjNzk5YjJlZDM1MTM0ZGEwNGRiNDYxNzJkNGNkOTg1NTQ0YmViZGU2MmVhODI0NmQ4MWUxY2M4N2M3YWRiYSJ9', 15304238, 'OLIVER', 'JOSÉ', 'PAÉZ', 'RANGEL', NULL, 14, 1, 647, NULL, NULL, NULL, 1),
+(20, '11467', 'eyJpdiI6IkdDM0JIN2VuSDlZTWY0bWxxajZsamc9PSIsInZhbHVlIjoiSmJWdElJT1FpUGFZam85OUZmcGtPdz09IiwibWFjIjoiMGE0MjYwNjFjMjk5ZDAzMzcxMDcwN2Q1OTliZGM0ZTgxOGU1YmJhOGNiMTI1Zjk0MzU3OWJmMzUyYTJhMjQzOCJ9', 15235084, 'LADYMAR', '', 'MORETT', 'RONDÓN', NULL, 12, 1, 647, NULL, NULL, NULL, 1),
+(21, '10968', 'eyJpdiI6IkIyRk5TZjhmXC9IWnIwZ2U2NHZITzBRPT0iLCJ2YWx1ZSI6IjRaaFgzaHJwV3J4SG5ucFwvMTFLa29BPT0iLCJtYWMiOiJlZWMxNmIwM2E1Y2ZlZDg1ZDc1N2IwNDJlMDkwYWY1M2QzODQ2NzAwNTEyOGEzYjBhYzA5MTgxOTkwZTExZjFkIn0=', 22025009, 'YODELINA', '', 'TORRES', 'MORALES', NULL, 11, 1, 647, NULL, NULL, NULL, 1),
+(22, '11401', 'eyJpdiI6IkFUWlFBWDl2UVA1MUhFUnFPQXlUNXc9PSIsInZhbHVlIjoiZnpHRlZGVEV2WTN1ejFuMThGenlnZz09IiwibWFjIjoiNjA3NGE2ZmE3YTVjNWRkMjgwMjE4YmZiYzAzZmUyYzJhMmM0NmI3NDBjMjc4ZDViODA4MWE2Y2M1NjgzOTJhMiJ9', 22964636, 'JONATHAN', 'JOSÉ', 'AZOCAR', 'RODRÍGUEZ', NULL, 8, 1, 647, NULL, NULL, NULL, 1),
+(23, '0002', 'eyJpdiI6IkJPSE4xeWtDUFAzaGQwMitPcjJLdGc9PSIsInZhbHVlIjoiaHRwQnU1UGRuSGNpK0xvajJhMnBQZz09IiwibWFjIjoiMmE1NTZjZWU4YmE2MDZhNmEyMjIwNGE0YTk2YjNlYzgyMGRlMGVhODRlZTRkMTQzMzNmN2Y2MWU3MDI5YjgxNyJ9', 17671373, 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '1986-08-05 00:00:00', 1, 13, 2, NULL, '2020-06-30 00:00:00', '2020-07-05 00:00:00', 1),
+(24, '0003', 'eyJpdiI6ImE1eDZKYmpJVXVwYXhweVhURG5WdEE9PSIsInZhbHVlIjoiYTJRcGR0S1VCRTlvejlGY3NDRzczUT09IiwibWFjIjoiNGVhZWEyMWZkYmQ2MWU3NmU1NjAwZTc3Mzg5NGQ1NjhlOTgzZjlmMjIyNGFiY2U5ODRkMWNiZTk2ZjA2YmRiZSJ9', 13900761, 'EMILIA', 'CAROLINA', 'CORONEL', 'MONTERO', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+(25, '0004', 'eyJpdiI6ImFFR1wvaWgzTXNsSlF2VmVaamhPeEFnPT0iLCJ2YWx1ZSI6IlwvN2JmdXoyOUQ4TXh1cXZSNVlkZG1nPT0iLCJtYWMiOiJmMGIzNzA3NzlmZDQ3ODMwNDE5YTM5OGZjOTgzMmI3N2FjYWMxNGNkNzk5NjRiYzBjMzAxN2FkNTIwODdjMTAyIn0=', 11100000, 'EMILIA', '', 'MONTERO', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
 
 --
 -- Índices para tablas volcadas
@@ -2888,7 +3271,7 @@ ALTER TABLE `tbl_usuario`
 -- AUTO_INCREMENT de la tabla `logs_auditoria`
 --
 ALTER TABLE `logs_auditoria`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=137;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cargo_empleado`
@@ -2912,19 +3295,19 @@ ALTER TABLE `tbl_ciudades`
 -- AUTO_INCREMENT de la tabla `tbl_cliente`
 --
 ALTER TABLE `tbl_cliente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cliente_facturacion`
 --
 ALTER TABLE `tbl_cliente_facturacion`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_concepto_horas_no_cargables`
 --
 ALTER TABLE `tbl_concepto_horas_no_cargables`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_configuracion`
@@ -2936,13 +3319,13 @@ ALTER TABLE `tbl_configuracion`
 -- AUTO_INCREMENT de la tabla `tbl_contacto_usuario`
 --
 ALTER TABLE `tbl_contacto_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_division`
 --
 ALTER TABLE `tbl_division`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_estados`
@@ -2960,13 +3343,13 @@ ALTER TABLE `tbl_estatus`
 -- AUTO_INCREMENT de la tabla `tbl_horas_cargables`
 --
 ALTER TABLE `tbl_horas_cargables`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_horas_no_cargables`
 --
 ALTER TABLE `tbl_horas_no_cargables`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_menu`
@@ -2978,7 +3361,7 @@ ALTER TABLE `tbl_menu`
 -- AUTO_INCREMENT de la tabla `tbl_menu_usuario`
 --
 ALTER TABLE `tbl_menu_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_municipios`
@@ -2996,19 +3379,19 @@ ALTER TABLE `tbl_parroquias`
 -- AUTO_INCREMENT de la tabla `tbl_proyecto`
 --
 ALTER TABLE `tbl_proyecto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_proyecto_analista`
 --
 ALTER TABLE `tbl_proyecto_analista`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_proyecto_divisiones`
 --
 ALTER TABLE `tbl_proyecto_divisiones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_telefono`
@@ -3026,7 +3409,7 @@ ALTER TABLE `tbl_tipo_contacto`
 -- AUTO_INCREMENT de la tabla `tbl_usuario`
 --
 ALTER TABLE `tbl_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- Restricciones para tablas volcadas

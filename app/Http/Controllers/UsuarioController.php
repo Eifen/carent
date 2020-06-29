@@ -66,13 +66,16 @@ class UsuarioController extends Controller
 
         if(!$correos["response"]){
 
+          $fecha_nacimiento = (trim($request->input("fechaNacimiento")) == "") ? null : date("Y-m-d H:i:s", strtotime($request->input("fechaNacimiento")));
+          $fecha_ingreso = (trim($request->input("fechaIngreso")) == "") ? null : date("Y-m-d H:i:s", strtotime($request->input("fechaIngreso")));
+
             $parametros = array(
               "nombre1" => mb_strtoupper ($request->input("nombre1")),
               "nombre2" => mb_strtoupper ($request->input("nombre2")),
               "apellido1" => mb_strtoupper($request->input("apellido1")),
               "apellido2" => mb_strtoupper($request->input("apellido2")),
               "cedula" => $request->input("cedula"),
-              "fechaNacimiento" => $request->input("fechaNacimiento"),
+              "fechaNacimiento" => $fecha_nacimiento,
               "codigoUsuario" => $codigoUsuario,
               "clave" => $this->encriptarLaravel($request->input("cedula")),
               "correoPrincipal" => strtolower($request->input("correoPrincipal")),
@@ -85,6 +88,7 @@ class UsuarioController extends Controller
               "usuario_id" => $request->session()->get('usuario_id'),
               "fecha" => date("Y-m-d H:i:s"),
               "direccion_ip" => $request->session()->get('direccion'),
+              "fechaIngreso" => $fecha_ingreso
             );
 
             $response = $modelo->crearUsuario($parametros);
@@ -200,6 +204,10 @@ class UsuarioController extends Controller
 
       $modelo = new UsuarioModel();
 
+      $fecha_nacimiento = (trim($request->input("fechaNacimiento")) == "") ? null : date("Y-m-d H:i:s", strtotime($request->input("fechaNacimiento")));
+      $fecha_ingreso = (trim($request->input("fechaIngreso")) == "") ? null : date("Y-m-d H:i:s", strtotime($request->input("fechaIngreso")));
+      $fecha_egreso = (trim($request->input("fechaEngreso")) == "") ? null : date("Y-m-d H:i:s", strtotime($request->input("fechaEngreso")));
+
       $parametros = array(
         "idUsuario" => $request->input("idUsuario"),
         "nombre1" => mb_strtoupper($request->input("nombre1")),
@@ -207,7 +215,7 @@ class UsuarioController extends Controller
         "apellido1" => mb_strtoupper($request->input("apellido1")),
         "apellido2" => mb_strtoupper($request->input("apellido2")),
         "cedula" => $request->input("cedula"),
-        "fechaNacimiento" => $request->input("fechaNacimiento"),
+        "fechaNacimiento" => $fecha_nacimiento,
         "correoPrincipal" => strtolower($request->input("correoPrincipal")),
         "correoSecundario" => strtolower($request->input("correoSecundario")),
         "telefono1" => $request->input("telefono1"),
@@ -220,6 +228,8 @@ class UsuarioController extends Controller
         "usuario_id" => $request->session()->get('usuario_id'),
         "fecha" => date("Y-m-d H:i:s"),
         "direccion_ip" => $request->session()->get('direccion'),
+        "fechaIngreso" => $fecha_ingreso,
+        "fechaEgreso" => $fecha_egreso
       );
 
       $response = $modelo->modificarUsuario($parametros);

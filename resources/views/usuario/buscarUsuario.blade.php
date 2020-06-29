@@ -17,9 +17,11 @@
     <body>
 
       <div id="buscarUsuario" class="container-fluid" v-on:submit.prevent="buscar">
-        <menu-principal></menu-principal>
 
-        <div class="row align-items-center justify-content-center wrapper-forms">
+        <loading :loading="loading" v-show="loading"></loading>
+        <menu-principal v-cloak></menu-principal>
+
+        <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
           <div class="col-12 col-sm-11 col-md-10 col-lg-8 col-xl-7">
             <form class="row">
               <div class="form-group col-12 col-md-4">
@@ -97,7 +99,7 @@
 
         </div>
 
-        <div id="modal-detalle-usuario" class="modal fade" tabindex="-1" role="dialog">
+        <div id="modal-detalle-usuario" class="modal fade" tabindex="-1" role="dialog" v-cloak>
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -191,7 +193,7 @@
             </div>
           </div>
         </div>
-        <div id="modal-asignar-menu" class="modal fade" tabindex="-1" role="dialog">
+        <div id="modal-asignar-menu" class="modal fade" tabindex="-1" role="dialog" v-cloak>
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -230,7 +232,7 @@
                              v-model="crUsuario.checked"
                              v-on:change="Crear(crUsuario.c, crUsuario.menu, $event)">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="crUsuario"></label>
-                    </div>                
+                    </div>
                   </div>
                   <div class="custom-control custom-switch" v-if="permisoRRHH">
                     <label>Consultar Usuarios</label>
@@ -241,7 +243,7 @@
                              v-model="coUsuario.checked"
                              v-on:change="Consultar(coUsuario.r, coUsuario.u, modUsuario.u, coUsuario.menu, $event)">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="coUsuario"></label>
-                    </div>                
+                    </div>
                   </div>
                   <div class="custom-control custom-switch" v-if="permisoRRHH">
                     <label>Modificar Usuarios</label>
@@ -252,7 +254,7 @@
                              v-model="modUsuario.checked"
                              v-on:change="Modificar(modUsuario.r, modUsuario.u, coUsuario.r, modUsuario.menu, $event)">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="modUsuario"></label>
-                    </div>                
+                    </div>
                   </div>
                 </form>
                 <h5 v-if="permisoContraloria">Clientes</h5>
@@ -266,7 +268,7 @@
                              v-model="crCliente.checked"
                              v-on:change="Crear(crCliente.c, crCliente.menu, $event)">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="crCliente"></label>
-                    </div>                
+                    </div>
                   </div>
                   <div class="custom-control custom-switch" v-if="permisoContraloria">
                     <label>Consultar Clientes</label>
@@ -277,7 +279,7 @@
                              v-model="coCliente.checked"
                              v-on:change="Consultar(coCliente.r, coCliente.u, modCliente.u, coCliente.menu, $event)">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="coCliente"></label>
-                    </div>                
+                    </div>
                   </div>
                   <div class="custom-control custom-switch" v-if="permisoContraloria">
                     <label>Modificar Clientes</label>
@@ -288,7 +290,7 @@
                              v-model="modCliente.checked"
                              v-on:change="Modificar(modCliente.r, modCliente.u, coCliente.r, modCliente.menu, $event)">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="modCliente"></label>
-                    </div>                
+                    </div>
                   </div>
                 </form>
 
@@ -303,7 +305,7 @@
                              v-model="crProyecto.checked"
                              v-on:change="Crear(crProyecto.c, crProyecto.menu, $event)">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="crProyecto"></label>
-                    </div>                
+                    </div>
                   </div>
                   <div class="custom-control custom-switch" v-if="permisoContraloria">
                     <label>Lista de Proyecto</label>
@@ -314,7 +316,7 @@
                              v-model="coProyecto.checked"
                              v-on:change="Consultar(coProyecto.r, coProyecto.u, modProyecto.u, coProyecto.menu, $event)">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="coProyecto"></label>
-                    </div>                
+                    </div>
                   </div>
                   <div class="custom-control custom-switch" v-if="permisoContraloria">
                     <label>Modificar Proyectos</label>
@@ -325,7 +327,7 @@
                              v-model="modProyecto.checked"
                              v-on:change="Modificar(modProyecto.r, modProyecto.u, coProyecto.r, modProyecto.menu, $event)">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="modProyecto"></label>
-                    </div>                
+                    </div>
                   </div>
                 </form>
                  <h5>Detalle de Facturacion</h5>
@@ -339,7 +341,7 @@
                              v-model="crFact.checked"
                              v-on:change="crFactura(crFact.c, crFact.r, crFact.u, crFact.menu, $event)">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="crFact"></label>
-                    </div>                
+                    </div>
                   </div>
                   <div class="custom-control custom-switch">
                     <label>Ver Datos de Facturacion</label>
@@ -350,7 +352,7 @@
                              v-model="verFact.checked"
                              v-on:change="verFactura(verFact.c, verFact.r, verFact.u, verFact.menu, $event)">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="verFact"></label>
-                    </div>                
+                    </div>
                   </div>
                   <div class="custom-control custom-switch" v-if="permisoContraloria">
                     <label>Modificar Detalles de Facturacion</label>
@@ -361,7 +363,7 @@
                              v-model="modFact.checked"
                              v-on:change="modFactura(modFact.c, modFact.r, modFact.u, modFact.menu, $event)">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="modFact"></label>
-                    </div>                
+                    </div>
                   </div>
                 </form>
                 <h5>Asignar Proyectos</h5>
@@ -375,7 +377,7 @@
                              v-model="verAsigna.checked"
                              v-on:change="verAsignar(verAsigna.c, verAsigna.r, verAsigna.u, verAsigna.d, verAsigna.menu, $event)">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="verAsigna"></label>
-                    </div>                
+                    </div>
                   </div>
                   <div class="custom-control custom-switch" v-if="permisoEncargado">
                     <label>Asignar Personal (Unicamente para directores o encargados de la division)</label>
@@ -386,7 +388,7 @@
                              v-model="modAsigna.checked"
                              v-on:change="modAsignar(modAsigna.c, modAsigna.r, modAsigna.u, modAsigna.d, modAsigna.menu, $event)">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="modAsigna"></label>
-                    </div>                
+                    </div>
                   </div>
                 </form>
 
@@ -401,7 +403,7 @@
                              v-model="caHora.checked"
                              v-on:change="caHoras(caHora.c, caHora.r, caHora.u, caHora.d, caHora.menu, $event)">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="caHora"></label>
-                    </div>                
+                    </div>
                   </div>
                   <div class="custom-control custom-switch" v-if="permisoSocio">
                     <label>Modificar Horas Cargadas</label>
@@ -412,7 +414,7 @@
                              v-model="modAsigna.checked"
                              v-on:change="modAsignar(modAsigna.c, modAsigna.r, modAsigna.u, modAsigna.d, modAsigna.menu, $event)">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="modAsigna"></label>
-                    </div>                
+                    </div>
                   </div>
                   <div class="custom-control custom-switch">
                     <label>Eliminar Horas Cargadas (Para socios,directores o encargados de division)</label>
@@ -423,7 +425,7 @@
                              v-model="eliHora.checked"
                              v-on:change="eliHoras(eliHora.c, eliHora.r, eliHora.u, eliHora.d, eliHora.menu, $event)">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="eliHora"></label>
-                    </div>                
+                    </div>
                   </div>
                 </form>
                 <h5>Horas No Cargables</h5>
@@ -437,7 +439,7 @@
                              v-model="conHoraNoC.checked"
                              v-on:change="conHorasNoC(conHoraNoC.u, conHoraNoC.menu, $event)">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="conHoraNoC"></label>
-                    </div>                
+                    </div>
                   </div>
                   <div class="custom-control custom-switch">
                     <label>Cargar Horas no Cargables</label>
@@ -448,9 +450,9 @@
                              v-model="carHoraNoC.checked"
                              v-on:change="carHorasNoC(carHoraNoC.u, carHoraNoC.menu, $event)">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="carHoraNoC"></label>
-                    </div>                
+                    </div>
                   </div>
-                </form>                
+                </form>
               </div>
               <div class="modal-footer">
                 <button class="btn"
