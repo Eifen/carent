@@ -185,7 +185,7 @@ var app = new Vue({
       minimumValue: 0
     });
 
-    $('[data-toggle="tooltip"]').tooltip()
+    $('[data-toggle="tooltip"]').tooltip();
 
   },
   updated: function () {},

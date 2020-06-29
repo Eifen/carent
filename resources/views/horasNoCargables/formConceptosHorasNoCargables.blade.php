@@ -17,9 +17,11 @@
     <body>
 
       <div id="app" class="container-fluid">
-        <menu-principal></menu-principal>
 
-        <div class="row align-items-center justify-content-center wrapper-forms">
+        <loading :loading="loading" v-show="loading"></loading>
+        <menu-principal v-cloak></menu-principal>
+
+        <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
           <div class="col-12 col-sm-11 col-md-9 col-lg-7 wrapper-form" v-if="formFiltro.mostrar">
             <h5>Filtros de búsqueda</h5>
             <form class="row">
@@ -142,7 +144,7 @@
 
         </div>
 
-        <div id="modal-crear-concepto" class="modal fade" tabindex="-1" role="dialog">
+        <div id="modal-crear-concepto" class="modal fade" tabindex="-1" role="dialog" v-cloak>
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -181,7 +183,7 @@
           </div>
         </div>
 
-        <div id="modal-modificar-concepto" class="modal fade" tabindex="-1" role="dialog">
+        <div id="modal-modificar-concepto" class="modal fade" tabindex="-1" role="dialog" v-cloak>
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">

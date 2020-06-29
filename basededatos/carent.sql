@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.0.1
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Jun 27, 2020 at 08:29 PM
--- Server version: 8.0.20
--- PHP Version: 7.3.14-1~deb10u1
+-- Servidor: localhost:3306
+-- Tiempo de generación: 29-06-2020 a las 00:47:08
+-- Versión del servidor: 8.0.18
+-- Versión de PHP: 7.3.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -19,25 +18,25 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `carent`
+-- Base de datos: `carent`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `logs_auditoria`
+-- Estructura de tabla para la tabla `logs_auditoria`
 --
 
 CREATE TABLE `logs_auditoria` (
-  `id` int NOT NULL,
-  `usuario_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `usuario_id` int(11) DEFAULT NULL,
   `fecha` datetime DEFAULT NULL,
   `direccion_ip` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `accion` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `logs_auditoria`
+-- Volcado de datos para la tabla `logs_auditoria`
 --
 
 INSERT INTO `logs_auditoria` (`id`, `usuario_id`, `fecha`, `direccion_ip`, `accion`) VALUES
@@ -165,22 +164,33 @@ INSERT INTO `logs_auditoria` (`id`, `usuario_id`, `fecha`, `direccion_ip`, `acci
 (122, 19, '2020-06-27 16:53:05', '201.211.230.66', 'Registro de de horas no cargables al usuario: 19'),
 (123, 9, '2020-06-27 16:53:35', '201.211.230.66', 'Inicio de Sesion'),
 (124, 1, '2020-06-27 17:20:49', '186.89.24.197', 'Inicio de Sesion'),
-(125, 1, '2020-06-27 19:24:19', '186.89.24.197', 'Inicio de Sesion');
+(125, 1, '2020-06-27 19:24:19', '186.89.24.197', 'Inicio de Sesion'),
+(126, 1, '2020-06-28 09:48:11', '127.0.0.1', 'Inicio de Sesion'),
+(127, 1, '2020-06-28 15:54:24', '127.0.0.1', 'Registro de Usuario Codigo:0002'),
+(128, 1, '2020-06-28 18:51:41', '127.0.0.1', 'Inicio de Sesion'),
+(129, 1, '2020-06-28 18:55:35', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
+(130, 1, '2020-06-28 18:57:23', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
+(131, 1, '2020-06-28 19:04:48', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
+(132, 1, '2020-06-28 19:06:00', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
+(133, 1, '2020-06-28 19:06:22', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
+(134, 1, '2020-06-28 19:06:41', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
+(135, 1, '2020-06-28 20:11:00', '127.0.0.1', 'Registro de Usuario Codigo:0003'),
+(136, 1, '2020-06-28 20:12:38', '127.0.0.1', 'Registro de Usuario Codigo:0004');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_cargo_empleado`
+-- Estructura de tabla para la tabla `tbl_cargo_empleado`
 --
 
 CREATE TABLE `tbl_cargo_empleado` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `descripcion` varchar(50) NOT NULL,
-  `id_estatus` int NOT NULL
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `tbl_cargo_empleado`
+-- Volcado de datos para la tabla `tbl_cargo_empleado`
 --
 
 INSERT INTO `tbl_cargo_empleado` (`id`, `descripcion`, `id_estatus`) VALUES
@@ -204,17 +214,17 @@ INSERT INTO `tbl_cargo_empleado` (`id`, `descripcion`, `id_estatus`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_cargo_supervisa`
+-- Estructura de tabla para la tabla `tbl_cargo_supervisa`
 --
 
 CREATE TABLE `tbl_cargo_supervisa` (
-  `id` int NOT NULL,
-  `id_cargo` int NOT NULL,
-  `id_cargo_supervisor` int NOT NULL
+  `id` int(11) NOT NULL,
+  `id_cargo` int(11) NOT NULL,
+  `id_cargo_supervisor` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbl_cargo_supervisa`
+-- Volcado de datos para la tabla `tbl_cargo_supervisa`
 --
 
 INSERT INTO `tbl_cargo_supervisa` (`id`, `id_cargo`, `id_cargo_supervisor`) VALUES
@@ -290,18 +300,18 @@ INSERT INTO `tbl_cargo_supervisa` (`id`, `id_cargo`, `id_cargo_supervisor`) VALU
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_ciudades`
+-- Estructura de tabla para la tabla `tbl_ciudades`
 --
 
 CREATE TABLE `tbl_ciudades` (
-  `id_ciudad` int NOT NULL,
-  `id_estado` int NOT NULL,
+  `id_ciudad` int(11) NOT NULL,
+  `id_estado` int(11) NOT NULL,
   `ciudad` varchar(200) NOT NULL,
   `capital` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `tbl_ciudades`
+-- Volcado de datos para la tabla `tbl_ciudades`
 --
 
 INSERT INTO `tbl_ciudades` (`id_ciudad`, `id_estado`, `ciudad`, `capital`) VALUES
@@ -807,18 +817,18 @@ INSERT INTO `tbl_ciudades` (`id_ciudad`, `id_estado`, `ciudad`, `capital`) VALUE
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_cliente`
+-- Estructura de tabla para la tabla `tbl_cliente`
 --
 
 CREATE TABLE `tbl_cliente` (
-  `id` int NOT NULL,
-  `id_usuario_socio` int NOT NULL,
-  `id_usuario_gerente` int NOT NULL,
-  `codigo` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_usuario_socio` int(11) NOT NULL,
+  `id_usuario_gerente` int(11) NOT NULL,
+  `codigo` int(11) NOT NULL,
   `rif` varchar(15) NOT NULL,
-  `nit` int NOT NULL,
+  `nit` int(11) NOT NULL,
   `razon_social` varchar(500) NOT NULL,
-  `id_parroquia_fiscal` int NOT NULL,
+  `id_parroquia_fiscal` int(11) NOT NULL,
   `avenida_calle_fiscal` varchar(250) NOT NULL,
   `edificio_quinta_fiscal` varchar(25) NOT NULL,
   `piso_fiscal` varchar(3) NOT NULL,
@@ -827,11 +837,11 @@ CREATE TABLE `tbl_cliente` (
   `telefono_fiscal` varchar(20) NOT NULL,
   `fax_fiscal` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `email_fiscal` varchar(100) NOT NULL,
-  `id_estatus` int NOT NULL
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `tbl_cliente`
+-- Volcado de datos para la tabla `tbl_cliente`
 --
 
 INSERT INTO `tbl_cliente` (`id`, `id_usuario_socio`, `id_usuario_gerente`, `codigo`, `rif`, `nit`, `razon_social`, `id_parroquia_fiscal`, `avenida_calle_fiscal`, `edificio_quinta_fiscal`, `piso_fiscal`, `numero_fiscal`, `ciudad_fiscal`, `telefono_fiscal`, `fax_fiscal`, `email_fiscal`, `id_estatus`) VALUES
@@ -861,14 +871,14 @@ INSERT INTO `tbl_cliente` (`id`, `id_usuario_socio`, `id_usuario_gerente`, `codi
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_cliente_facturacion`
+-- Estructura de tabla para la tabla `tbl_cliente_facturacion`
 --
 
 CREATE TABLE `tbl_cliente_facturacion` (
-  `id` bigint UNSIGNED NOT NULL,
-  `id_cliente` int DEFAULT NULL,
-  `id_proyecto` int DEFAULT NULL,
-  `id_parroquia_factura` int DEFAULT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `id_cliente` int(11) DEFAULT NULL,
+  `id_proyecto` int(11) DEFAULT NULL,
+  `id_parroquia_factura` int(11) DEFAULT NULL,
   `avenida_calle_factura` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `edificio_quinta_factura` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `piso_factura` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -877,11 +887,11 @@ CREATE TABLE `tbl_cliente_facturacion` (
   `telefono_factura` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `fax_factura` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `email_factura` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `id_estatus` int DEFAULT NULL
+  `id_estatus` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbl_cliente_facturacion`
+-- Volcado de datos para la tabla `tbl_cliente_facturacion`
 --
 
 INSERT INTO `tbl_cliente_facturacion` (`id`, `id_cliente`, `id_proyecto`, `id_parroquia_factura`, `avenida_calle_factura`, `edificio_quinta_factura`, `piso_factura`, `numero_factura`, `ciudad_factura`, `telefono_factura`, `fax_factura`, `email_factura`, `id_estatus`) VALUES
@@ -899,17 +909,17 @@ INSERT INTO `tbl_cliente_facturacion` (`id`, `id_cliente`, `id_proyecto`, `id_pa
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_concepto_horas_no_cargables`
+-- Estructura de tabla para la tabla `tbl_concepto_horas_no_cargables`
 --
 
 CREATE TABLE `tbl_concepto_horas_no_cargables` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `descripcion` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `id_estatus` int NOT NULL
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbl_concepto_horas_no_cargables`
+-- Volcado de datos para la tabla `tbl_concepto_horas_no_cargables`
 --
 
 INSERT INTO `tbl_concepto_horas_no_cargables` (`id`, `descripcion`, `id_estatus`) VALUES
@@ -927,18 +937,18 @@ INSERT INTO `tbl_concepto_horas_no_cargables` (`id`, `descripcion`, `id_estatus`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_configuracion`
+-- Estructura de tabla para la tabla `tbl_configuracion`
 --
 
 CREATE TABLE `tbl_configuracion` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `nombre` varchar(50) NOT NULL,
   `valor` varchar(255) NOT NULL,
   `descripcion` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `tbl_configuracion`
+-- Volcado de datos para la tabla `tbl_configuracion`
 --
 
 INSERT INTO `tbl_configuracion` (`id`, `nombre`, `valor`, `descripcion`) VALUES
@@ -948,12 +958,12 @@ INSERT INTO `tbl_configuracion` (`id`, `nombre`, `valor`, `descripcion`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_contacto_usuario`
+-- Estructura de tabla para la tabla `tbl_contacto_usuario`
 --
 
 CREATE TABLE `tbl_contacto_usuario` (
-  `id` int NOT NULL,
-  `id_usuario` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
   `correo_principal` varchar(255) NOT NULL,
   `correo_secundario` varchar(255) DEFAULT NULL,
   `telefono_principal` varchar(30) DEFAULT NULL,
@@ -961,7 +971,7 @@ CREATE TABLE `tbl_contacto_usuario` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `tbl_contacto_usuario`
+-- Volcado de datos para la tabla `tbl_contacto_usuario`
 --
 
 INSERT INTO `tbl_contacto_usuario` (`id`, `id_usuario`, `correo_principal`, `correo_secundario`, `telefono_principal`, `telefono_secundario`) VALUES
@@ -986,22 +996,25 @@ INSERT INTO `tbl_contacto_usuario` (`id`, `id_usuario`, `correo_principal`, `cor
 (19, 19, 'oliver.paez@crowe.com.ve', '', '(0414) - 246 0953', NULL),
 (20, 20, 'ladymar.morett@crowe.com.ve', 'ladymar_01@hotmail.com', '(0426) - 119 7245', NULL),
 (21, 21, 'yodelina.torres@crowe.com.ve', '', '(0424) - 244 1557', NULL),
-(22, 22, 'jonathan.azocar@crowe.com.ve', 'jonathanzoncar24@gmail.com', '(0426) - 637 3419', NULL);
+(22, 22, 'jonathan.azocar@crowe.com.ve', 'jonathanzoncar24@gmail.com', '(0426) - 637 3419', NULL),
+(23, 23, 'dmolina102@gmail.com', '', NULL, NULL),
+(24, 24, 'carolina.coronel3@gmail.com', '', NULL, NULL),
+(25, 25, 'ek@dd.com', '', NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_division`
+-- Estructura de tabla para la tabla `tbl_division`
 --
 
 CREATE TABLE `tbl_division` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `descripcion` varchar(50) NOT NULL,
-  `id_estatus` int NOT NULL
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `tbl_division`
+-- Volcado de datos para la tabla `tbl_division`
 --
 
 INSERT INTO `tbl_division` (`id`, `descripcion`, `id_estatus`) VALUES
@@ -1026,17 +1039,17 @@ INSERT INTO `tbl_division` (`id`, `descripcion`, `id_estatus`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_estados`
+-- Estructura de tabla para la tabla `tbl_estados`
 --
 
 CREATE TABLE `tbl_estados` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `estado` varchar(250) NOT NULL,
   `iso_3166-2` varchar(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `tbl_estados`
+-- Volcado de datos para la tabla `tbl_estados`
 --
 
 INSERT INTO `tbl_estados` (`id`, `estado`, `iso_3166-2`) VALUES
@@ -1069,18 +1082,18 @@ INSERT INTO `tbl_estados` (`id`, `estado`, `iso_3166-2`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_estatus`
+-- Estructura de tabla para la tabla `tbl_estatus`
 --
 
 CREATE TABLE `tbl_estatus` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `tabla` varchar(60) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `valor` int NOT NULL,
+  `valor` int(11) NOT NULL,
   `descripcion` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `tbl_estatus`
+-- Volcado de datos para la tabla `tbl_estatus`
 --
 
 INSERT INTO `tbl_estatus` (`id`, `tabla`, `valor`, `descripcion`) VALUES
@@ -1109,15 +1122,15 @@ INSERT INTO `tbl_estatus` (`id`, `tabla`, `valor`, `descripcion`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_estatus_login_denegado`
+-- Estructura de tabla para la tabla `tbl_estatus_login_denegado`
 --
 
 CREATE TABLE `tbl_estatus_login_denegado` (
-  `id_estatus` int NOT NULL
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Estatus de usuario los cuales no se les permite el acceso';
 
 --
--- Dumping data for table `tbl_estatus_login_denegado`
+-- Volcado de datos para la tabla `tbl_estatus_login_denegado`
 --
 
 INSERT INTO `tbl_estatus_login_denegado` (`id_estatus`) VALUES
@@ -1128,19 +1141,19 @@ INSERT INTO `tbl_estatus_login_denegado` (`id_estatus`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_horas_cargables`
+-- Estructura de tabla para la tabla `tbl_horas_cargables`
 --
 
 CREATE TABLE `tbl_horas_cargables` (
-  `id` int NOT NULL,
-  `id_proy_analista` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_proy_analista` int(11) NOT NULL,
   `fecha` date NOT NULL,
   `descripcion` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `horas_trabajadas` int NOT NULL
+  `horas_trabajadas` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbl_horas_cargables`
+-- Volcado de datos para la tabla `tbl_horas_cargables`
 --
 
 INSERT INTO `tbl_horas_cargables` (`id`, `id_proy_analista`, `fecha`, `descripcion`, `horas_trabajadas`) VALUES
@@ -1163,24 +1176,24 @@ INSERT INTO `tbl_horas_cargables` (`id`, `id_proy_analista`, `fecha`, `descripci
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_horas_no_cargables`
+-- Estructura de tabla para la tabla `tbl_horas_no_cargables`
 --
 
 CREATE TABLE `tbl_horas_no_cargables` (
-  `id` int NOT NULL,
-  `id_concepto` int NOT NULL,
-  `id_usuario` int NOT NULL,
-  `id_division` int NOT NULL,
-  `aprobado_por` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `id_concepto` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `id_division` int(11) NOT NULL,
+  `aprobado_por` int(11) DEFAULT NULL,
   `fecha_desde` datetime NOT NULL COMMENT 'El formato de la fecha es UTC',
   `fecha_hasta` datetime NOT NULL COMMENT 'El formato de la fecha es UTC',
   `fecha_aprobacion` datetime DEFAULT NULL,
   `observacion` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `id_estatus` int NOT NULL
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbl_horas_no_cargables`
+-- Volcado de datos para la tabla `tbl_horas_no_cargables`
 --
 
 INSERT INTO `tbl_horas_no_cargables` (`id`, `id_concepto`, `id_usuario`, `id_division`, `aprobado_por`, `fecha_desde`, `fecha_hasta`, `fecha_aprobacion`, `observacion`, `id_estatus`) VALUES
@@ -1214,20 +1227,20 @@ INSERT INTO `tbl_horas_no_cargables` (`id`, `id_concepto`, `id_usuario`, `id_div
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_menu`
+-- Estructura de tabla para la tabla `tbl_menu`
 --
 
 CREATE TABLE `tbl_menu` (
-  `id` int NOT NULL,
-  `id_menu_padre` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_menu_padre` int(11) NOT NULL,
   `descripcion` varchar(50) NOT NULL,
   `url` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `orden` int NOT NULL,
-  `id_estatus` int NOT NULL
+  `orden` int(11) NOT NULL,
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `tbl_menu`
+-- Volcado de datos para la tabla `tbl_menu`
 --
 
 INSERT INTO `tbl_menu` (`id`, `id_menu_padre`, `descripcion`, `url`, `orden`, `id_estatus`) VALUES
@@ -1249,21 +1262,21 @@ INSERT INTO `tbl_menu` (`id`, `id_menu_padre`, `descripcion`, `url`, `orden`, `i
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_menu_usuario`
+-- Estructura de tabla para la tabla `tbl_menu_usuario`
 --
 
 CREATE TABLE `tbl_menu_usuario` (
-  `id` int NOT NULL,
-  `id_usuario` int NOT NULL,
-  `id_menu` int NOT NULL,
-  `C` int NOT NULL,
-  `R` int NOT NULL,
-  `U` int NOT NULL,
-  `D` int NOT NULL
+  `id` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `id_menu` int(11) NOT NULL,
+  `C` int(11) NOT NULL,
+  `R` int(11) NOT NULL,
+  `U` int(11) NOT NULL,
+  `D` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `tbl_menu_usuario`
+-- Volcado de datos para la tabla `tbl_menu_usuario`
 --
 
 INSERT INTO `tbl_menu_usuario` (`id`, `id_usuario`, `id_menu`, `C`, `R`, `U`, `D`) VALUES
@@ -1352,17 +1365,17 @@ INSERT INTO `tbl_menu_usuario` (`id`, `id_usuario`, `id_menu`, `C`, `R`, `U`, `D
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_municipios`
+-- Estructura de tabla para la tabla `tbl_municipios`
 --
 
 CREATE TABLE `tbl_municipios` (
-  `id` int NOT NULL,
-  `id_estado` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_estado` int(11) NOT NULL,
   `municipio` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `tbl_municipios`
+-- Volcado de datos para la tabla `tbl_municipios`
 --
 
 INSERT INTO `tbl_municipios` (`id`, `id_estado`, `municipio`) VALUES
@@ -1705,17 +1718,17 @@ INSERT INTO `tbl_municipios` (`id`, `id_estado`, `municipio`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_parroquias`
+-- Estructura de tabla para la tabla `tbl_parroquias`
 --
 
 CREATE TABLE `tbl_parroquias` (
-  `id` int NOT NULL,
-  `id_municipio` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_municipio` int(11) NOT NULL,
   `parroquia` varchar(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `tbl_parroquias`
+-- Volcado de datos para la tabla `tbl_parroquias`
 --
 
 INSERT INTO `tbl_parroquias` (`id`, `id_municipio`, `parroquia`) VALUES
@@ -2861,19 +2874,19 @@ INSERT INTO `tbl_parroquias` (`id`, `id_municipio`, `parroquia`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_proyecto`
+-- Estructura de tabla para la tabla `tbl_proyecto`
 --
 
 CREATE TABLE `tbl_proyecto` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `descripcion` varchar(250) NOT NULL,
-  `id_cliente` int NOT NULL,
+  `id_cliente` int(11) NOT NULL,
   `fecha_contratacion` varchar(10) NOT NULL,
-  `id_estatus` int NOT NULL
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `tbl_proyecto`
+-- Volcado de datos para la tabla `tbl_proyecto`
 --
 
 INSERT INTO `tbl_proyecto` (`id`, `descripcion`, `id_cliente`, `fecha_contratacion`, `id_estatus`) VALUES
@@ -2897,20 +2910,20 @@ INSERT INTO `tbl_proyecto` (`id`, `descripcion`, `id_cliente`, `fecha_contrataci
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_proyecto_analista`
+-- Estructura de tabla para la tabla `tbl_proyecto_analista`
 --
 
 CREATE TABLE `tbl_proyecto_analista` (
-  `id` bigint UNSIGNED NOT NULL,
-  `id_proyecto` int NOT NULL,
-  `id_proyecto_division` int DEFAULT NULL,
-  `id_analista` int NOT NULL,
-  `horas_asignadas` int DEFAULT NULL,
-  `id_estatus` int NOT NULL
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `id_proyecto` int(11) NOT NULL,
+  `id_proyecto_division` int(11) DEFAULT NULL,
+  `id_analista` int(11) NOT NULL,
+  `horas_asignadas` int(11) DEFAULT NULL,
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `tbl_proyecto_analista`
+-- Volcado de datos para la tabla `tbl_proyecto_analista`
 --
 
 INSERT INTO `tbl_proyecto_analista` (`id`, `id_proyecto`, `id_proyecto_division`, `id_analista`, `horas_asignadas`, `id_estatus`) VALUES
@@ -2944,18 +2957,18 @@ INSERT INTO `tbl_proyecto_analista` (`id`, `id_proyecto`, `id_proyecto_division`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_proyecto_divisiones`
+-- Estructura de tabla para la tabla `tbl_proyecto_divisiones`
 --
 
 CREATE TABLE `tbl_proyecto_divisiones` (
-  `id` int NOT NULL,
-  `id_division` int NOT NULL,
-  `id_proyecto` int NOT NULL,
-  `horas_contratadas` int NOT NULL
+  `id` int(11) NOT NULL,
+  `id_division` int(11) NOT NULL,
+  `id_proyecto` int(11) NOT NULL,
+  `horas_contratadas` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `tbl_proyecto_divisiones`
+-- Volcado de datos para la tabla `tbl_proyecto_divisiones`
 --
 
 INSERT INTO `tbl_proyecto_divisiones` (`id`, `id_division`, `id_proyecto`, `horas_contratadas`) VALUES
@@ -2998,28 +3011,28 @@ INSERT INTO `tbl_proyecto_divisiones` (`id`, `id_division`, `id_proyecto`, `hora
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_telefono`
+-- Estructura de tabla para la tabla `tbl_telefono`
 --
 
 CREATE TABLE `tbl_telefono` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `numero` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_tipo_contacto`
+-- Estructura de tabla para la tabla `tbl_tipo_contacto`
 --
 
 CREATE TABLE `tbl_tipo_contacto` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `descripcion` varchar(30) NOT NULL,
-  `estatus` int NOT NULL
+  `estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `tbl_tipo_contacto`
+-- Volcado de datos para la tabla `tbl_tipo_contacto`
 --
 
 INSERT INTO `tbl_tipo_contacto` (`id`, `descripcion`, `estatus`) VALUES
@@ -3030,72 +3043,77 @@ INSERT INTO `tbl_tipo_contacto` (`id`, `descripcion`, `estatus`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_usuario`
+-- Estructura de tabla para la tabla `tbl_usuario`
 --
 
 CREATE TABLE `tbl_usuario` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `codigo` varchar(6) NOT NULL,
   `clave` text NOT NULL,
-  `cedula` int NOT NULL,
+  `cedula` int(11) NOT NULL,
   `nombre_1` varchar(20) NOT NULL,
   `nombre_2` varchar(20) DEFAULT NULL,
   `apellido_1` varchar(20) NOT NULL,
   `apellido_2` varchar(20) DEFAULT NULL,
-  `fecha_nacimiento` varchar(10) DEFAULT NULL,
-  `id_cargo` int DEFAULT NULL,
-  `id_division` int DEFAULT NULL,
-  `id_parroquia` int DEFAULT NULL,
+  `fecha_nacimiento` datetime DEFAULT NULL COMMENT 'El formato de la fecha es UTC',
+  `id_cargo` int(11) DEFAULT NULL,
+  `id_division` int(11) DEFAULT NULL,
+  `id_parroquia` int(11) DEFAULT NULL,
   `avatar` varchar(30) DEFAULT NULL,
-  `id_estatus` int NOT NULL
+  `fecha_ingreso` datetime DEFAULT NULL COMMENT 'El formato de la fecha es UTC',
+  `fecha_egreso` datetime DEFAULT NULL COMMENT 'El formato de la fecha es UTC',
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `tbl_usuario`
+-- Volcado de datos para la tabla `tbl_usuario`
 --
 
-INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `cedula`, `nombre_1`, `nombre_2`, `apellido_1`, `apellido_2`, `fecha_nacimiento`, `id_cargo`, `id_division`, `id_parroquia`, `avatar`, `id_estatus`) VALUES
-(1, '0001', 'eyJpdiI6IjB5dnJXUUswTEdZenNcLzRHbTRWXC9HUT09IiwidmFsdWUiOiJwbUpkdURFdGhoc3FOSFpGQU1yaU5RPT0iLCJtYWMiOiI2ZDY1NTVlMTBkYmQ4NGNiNWM0MWRkMTllMjcxZjkxOTM5MmFhZmMxYTIwNmFiMzM4MjRmYTgwYjEwYTQ0NTY0In0=', 17671370, 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '01/01/1980', 11, 3, 1131, '', 1),
-(2, '11525', 'eyJpdiI6IjkwZkVzUVRiMXVZcXZlZDMwM2dXdHc9PSIsInZhbHVlIjoiZFAxQjFLMVZZT2VsVDBNSkJIN0JJZz09IiwibWFjIjoiMWNhNWYxMGM4MDdhOWNjZTM1N2MxZmMyNjE3MDJlYTM1YTMwZDU4NDU0ZTNhYmQzZWUxZTViNTQxNTM0YmZiZCJ9', 27279090, 'JOSE', 'ARTURO', 'MADRIZ', 'MALAVE', '07/06/1996', 8, 3, 1123, '', 1),
-(3, '11450', 'eyJpdiI6Im5MWkhxSEVKV2N3ZkhJZ01XZTU2eFE9PSIsInZhbHVlIjoiZ2N3a2l2Nm1DNHFKMGtPYkp4ZmdzQT09IiwibWFjIjoiMTNmNTllMGNjNTc0MjNlMWMwYzkwYTA0NGYyNzQ5ZmU5YTg4M2YzMDIzZGMyNzVhNjllNmRhNDYzOWQ3Yzc1NyJ9', 14245244, 'ANA', '', 'BLANDIN', '', '09/05/1986', 11, 3, 26, '', 1),
-(4, '2209', 'eyJpdiI6IiswWVJuYXJsbVwvRkg0OGdxdGI4dW1RPT0iLCJ2YWx1ZSI6ImdFbWJYZGRWVEtNWFZcL3ZUdlNHY0JnPT0iLCJtYWMiOiI1NTUyMDg1Y2RkMWE4MTViYWM5MWM4YjAyOGJiZTAwYWQ0ZTc1NGE5Zjg4ZDlhNmRjYWU3OTZmNTU4YTIxMDZkIn0=', 13900761, 'CAROLINA', '', 'CORONEL', '', NULL, 9, 3, NULL, NULL, 1),
-(5, '22522', 'eyJpdiI6InlXdnhIMkZHYnBrczRGQTlRdGVIeUE9PSIsInZhbHVlIjoiWmJqNFd4c09Fd05JRGxZdTBmenUyQT09IiwibWFjIjoiOTYwNTVmNWJiMDFhOWU0ZDE2NTJiZWMwY2Y2OGY1YzllZjY5NTg0OGU4NzQzNWU1ZGFjZTdiYTg1NTQwM2RmYSJ9', 22522626, 'PRUEBA', '', 'PROGRAMA', '', '07/06/1996', 15, 8, 233, NULL, 1),
-(6, '0010', 'eyJpdiI6Ik1IK21ZSWlubytsMmU3dDV1aHdIa0E9PSIsInZhbHVlIjoiQXlvUytpTzF5c1haZkl3TXRDUWRMZz09IiwibWFjIjoiNDdmMGE4Yzg1ZGE2YTA0OTExOTJkMTI5ZDYwMDhmMWJjMmEzYWVlZjZhYjE1YzgyNDc2NWFkZjE4OTk0OTViYSJ9', 6823447, 'GUSTAVO', 'ADOLFO', 'PUCHI', 'MEDINA', '28/08/1965', 14, 3, 1130, NULL, 1),
-(7, '0011', 'eyJpdiI6ImJiQktSUnJPY1dHcVhoSmtESTg2bHc9PSIsInZhbHVlIjoibGFZMTdQWk5uUHllMytnOUR4VVJqQT09IiwibWFjIjoiNzFkMDY4OTgzZjVlZDVhNjhiMjNhNzVmMjhlODE0OWJjOTM1NDBkZGE3ZDgxNWMyOTNiZTQyN2JiZWQyNGM3ZCJ9', 6823443, 'ALFIO', 'FILIPPO', 'SAGLIMBENI', 'MUSCOLINO', '03/08/1967', 12, 3, 619, NULL, 1),
-(8, '0012', 'eyJpdiI6InpEaU9aQU56TCtHZlhRWkhtY0VlZnc9PSIsInZhbHVlIjoiXC9ZNXBQXC8wUFYxXC9tZzF5a1U2WkJjUT09IiwibWFjIjoiNzZjNzRiM2Y1ZmUyZGZmMzI1MGYwOTUyZWRjYTQ4Mzc0ODk5NzY2OTZkODA1ZWQ1Yjc4MmJmOTRkZTdjYTQ2ZSJ9', 6823444, 'ARIANNA', 'ELENA', 'MATOS', 'YACOBELLIS', '03/08/1967', 6, 3, 625, NULL, 1),
-(9, '10863', 'eyJpdiI6IlphVGpuenJLdEprSVVaTXIxMzNyV1E9PSIsInZhbHVlIjoicDR0ZlRLUTMyVWRvRTR4cExadFVwdz09IiwibWFjIjoiYjBhYjE2ZjA2MDk2NTgxM2U0YTczNTIzYzQ3OWUzMmFkZjI3NjU5MTBkY2M1NWQwOTQ4MTllMDU1ZTY0MzRiMiJ9', 10785418, 'SERGIO', 'FREDDYS', 'MÁRQUEZ', 'TOVAR', '31/12/1971', 16, 1, 612, NULL, 1),
-(10, '0019', 'eyJpdiI6ImNLM21JVmtxVkJobk1IWU9lWWFDRGc9PSIsInZhbHVlIjoiVysyS0k0K0g1eWxyRFwvOGFLUUd2bFE9PSIsIm1hYyI6IjFhYjc3OTIyMWNmNDk4MTRmZjIyZjIzNTVmYzEwZTZmZjNhNDlhNDQwMjkzZjU3YmRiNTNhZGJjNTVmMmVhNjQifQ==', 6823448, 'MIRLANGELA', 'MARIA', 'SALAYA', 'PÉREZ', '03/08/1967', 16, 3, 1131, NULL, 1),
-(11, '0100', 'eyJpdiI6IjltXC81dm43OUNBUGVPYUpcL2VCSjRRUT09IiwidmFsdWUiOiJFcWNzU2pQM3ZKbHdzMStTTHY3UVJBPT0iLCJtYWMiOiI5MWYxOWMxZjYwZWY1MzcxYjhkOTg1NTAyNWExZWQ3N2IyNjY1MDk2YmQ3MDY1NDE5ZmUxN2QxNGU0NjIzZmI5In0=', 6823400, 'PEDRO', 'LUIS', 'MACHADO', 'FLORES', '03/08/1967', 14, 9, 1117, NULL, 1),
-(12, '0101', 'eyJpdiI6InQxckZzNFBKRTd4MDFBNUN6R3BYbFE9PSIsInZhbHVlIjoiQmpNMklLU0gyT204czdBQ0d1cHZBZz09IiwibWFjIjoiZTIzYTIwZDk1YmI0ZGFiOGU4YThlMzA4NmVhZWQyZjJmM2I3MDVlNDJmZGZkYzY3NDA2ZGQxMWQ0MzYwYjEwYyJ9', 6823440, 'RECURSOS', '', 'HUMANOS', '', '03/08/1967', 14, 6, 619, NULL, 1),
-(13, '0202', 'eyJpdiI6InMwUFMrMEo0QVdpU1NZVDFVNnJXY0E9PSIsInZhbHVlIjoiUUVkUnA1OUxvR2VQVXNOVUdhZnF2dz09IiwibWFjIjoiZGNmMzdlMWEzMTY1MDhkZTM1OGFkOTM0NjU5NDUwZjNhYjJkOTYyY2U0MDRkM2ExMDk4NzdhMzU5ZDc3ZDBkYSJ9', 8513452, 'SILOES', 'DEL CARMEN', 'ALEJOS', 'PEÑA', '07/01/1969', 15, 3, 619, NULL, 1),
-(14, '11559', 'eyJpdiI6ImhBY0poMjhqeDl2WnhOOW9TN0hKU2c9PSIsInZhbHVlIjoiR0NlN1czTHpUUDNcL2pGV05mbmlIeVE9PSIsIm1hYyI6ImI4Zjg0NmYxM2VmYzdkZDE2NGYxMzhiYmZjMTY2NDQ2MDE4ZTYwZmIxZDMzYTYxYzQzMTliMzg4ZjdiZDM5N2EifQ==', 10812350, 'YOLYMER', 'ALICIA', 'MENDOZA', 'GARCÍA', '29/10/1973', 13, 6, 647, NULL, 1),
-(15, '10589', 'eyJpdiI6ImN1OVRzTkVBTkdHbjZCN3hmMnhEa2c9PSIsInZhbHVlIjoiVzl5NzlrcFdzR1IzNTFLbEh3Ulwvdnc9PSIsIm1hYyI6ImE1OTJlYzIwNmYzYTY4MjQwYzc4NDhlZGM1ZDIxZmFiMDA3MTljOGE2OTMxOWE2OWM0MmI0MjRiYmRkODM3ODAifQ==', 6270987, 'JOSE', 'ANTONIO', 'MACHADO', 'PEREZ', '19/08/1967', 14, 9, 647, NULL, 1),
-(16, '10141', 'eyJpdiI6Inh4bjRnM0pLZDdWcENQMU1DOTVwOGc9PSIsInZhbHVlIjoicjQ5c3RLaUpmTTVMbDNrXC9jTG43MWc9PSIsIm1hYyI6ImZhNTRkMTlmYTYxMWU3M2Y1MjkwNWZkOWUyMTg0Mzc4NzM2OWY3NzBhMTI5OTM0MzEwMjU1NDMzNDk1YWE4ZTgifQ==', 5597044, 'JESUS', 'ERASMO', 'PÉREZ', 'RAVELO', '09/11/1959', 16, 2, 647, NULL, 1),
-(17, '11558', 'eyJpdiI6IjBzSXlIWVlmNjQ2V0l4Z0FqSGxjZWc9PSIsInZhbHVlIjoiNjhKYVdaNGRMaDlzM2JzR0s0d0haZz09IiwibWFjIjoiMGYxNjJkYjYxNjA5ZmVlOTgyZTZjNjM0MTBmMjVkMmViNDY1MjA5ZjJjNDI0Yzg0YjE5NTUyNTljODRlZGRlNCJ9', 10812351, 'IGNAYARI', 'KATHERINE', 'MENDOZA', 'LUZARDO', '11/06/1990', 7, 6, 647, NULL, 1),
-(18, '10666', 'eyJpdiI6IjdhYlluNzNBZWtVemZkSDlOamk2OVE9PSIsInZhbHVlIjoiT2lMYmtFT0ViOEN1OWtWZXlrWlNoQT09IiwibWFjIjoiNzU3MmY3ZjQ1OWUzNjdlYzI2NjE1YjIxNGY2MDVmYWVhMTZkOTFhNzc0MmRjOWJiODUzNjMwZmUxNzBjZjE3YiJ9', 9876543, 'JOSE', 'ANTONIO', 'MACHADO', 'PEREZ', '19/08/1967', 14, 9, 619, NULL, 1),
-(19, '10572', 'eyJpdiI6InBQSndlcUZDaWxielIwY1Z3emZtOVE9PSIsInZhbHVlIjoiR3pSM25aYkhYeXZkWnNsZDN3aDM2UT09IiwibWFjIjoiMjJjNzk5YjJlZDM1MTM0ZGEwNGRiNDYxNzJkNGNkOTg1NTQ0YmViZGU2MmVhODI0NmQ4MWUxY2M4N2M3YWRiYSJ9', 15304238, 'OLIVER', 'JOSÉ', 'PAÉZ', 'RANGEL', '16/10/1982', 14, 1, 647, NULL, 1),
-(20, '11467', 'eyJpdiI6IkdDM0JIN2VuSDlZTWY0bWxxajZsamc9PSIsInZhbHVlIjoiSmJWdElJT1FpUGFZam85OUZmcGtPdz09IiwibWFjIjoiMGE0MjYwNjFjMjk5ZDAzMzcxMDcwN2Q1OTliZGM0ZTgxOGU1YmJhOGNiMTI1Zjk0MzU3OWJmMzUyYTJhMjQzOCJ9', 15235084, 'LADYMAR', '', 'MORETT', 'RONDÓN', '18/03/1983', 12, 1, 647, NULL, 1),
-(21, '10968', 'eyJpdiI6IkIyRk5TZjhmXC9IWnIwZ2U2NHZITzBRPT0iLCJ2YWx1ZSI6IjRaaFgzaHJwV3J4SG5ucFwvMTFLa29BPT0iLCJtYWMiOiJlZWMxNmIwM2E1Y2ZlZDg1ZDc1N2IwNDJlMDkwYWY1M2QzODQ2NzAwNTEyOGEzYjBhYzA5MTgxOTkwZTExZjFkIn0=', 22025009, 'YODELINA', '', 'TORRES', 'MORALES', '15/09/1994', 11, 1, 647, NULL, 1),
-(22, '11401', 'eyJpdiI6IkFUWlFBWDl2UVA1MUhFUnFPQXlUNXc9PSIsInZhbHVlIjoiZnpHRlZGVEV2WTN1ejFuMThGenlnZz09IiwibWFjIjoiNjA3NGE2ZmE3YTVjNWRkMjgwMjE4YmZiYzAzZmUyYzJhMmM0NmI3NDBjMjc4ZDViODA4MWE2Y2M1NjgzOTJhMiJ9', 22964636, 'JONATHAN', 'JOSÉ', 'AZOCAR', 'RODRÍGUEZ', '24/08/1994', 8, 1, 647, NULL, 1);
+INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `cedula`, `nombre_1`, `nombre_2`, `apellido_1`, `apellido_2`, `fecha_nacimiento`, `id_cargo`, `id_division`, `id_parroquia`, `avatar`, `fecha_ingreso`, `fecha_egreso`, `id_estatus`) VALUES
+(1, '0001', 'eyJpdiI6IjB5dnJXUUswTEdZenNcLzRHbTRWXC9HUT09IiwidmFsdWUiOiJwbUpkdURFdGhoc3FOSFpGQU1yaU5RPT0iLCJtYWMiOiI2ZDY1NTVlMTBkYmQ4NGNiNWM0MWRkMTllMjcxZjkxOTM5MmFhZmMxYTIwNmFiMzM4MjRmYTgwYjEwYTQ0NTY0In0=', 17671370, 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', NULL, 11, 3, 1131, '', NULL, NULL, 1),
+(2, '11525', 'eyJpdiI6IjkwZkVzUVRiMXVZcXZlZDMwM2dXdHc9PSIsInZhbHVlIjoiZFAxQjFLMVZZT2VsVDBNSkJIN0JJZz09IiwibWFjIjoiMWNhNWYxMGM4MDdhOWNjZTM1N2MxZmMyNjE3MDJlYTM1YTMwZDU4NDU0ZTNhYmQzZWUxZTViNTQxNTM0YmZiZCJ9', 27279090, 'JOSE', 'ARTURO', 'MADRIZ', 'MALAVE', NULL, 8, 3, 1123, '', NULL, NULL, 1),
+(3, '11450', 'eyJpdiI6Im5MWkhxSEVKV2N3ZkhJZ01XZTU2eFE9PSIsInZhbHVlIjoiZ2N3a2l2Nm1DNHFKMGtPYkp4ZmdzQT09IiwibWFjIjoiMTNmNTllMGNjNTc0MjNlMWMwYzkwYTA0NGYyNzQ5ZmU5YTg4M2YzMDIzZGMyNzVhNjllNmRhNDYzOWQ3Yzc1NyJ9', 14245244, 'ANA', '', 'BLANDIN', '', NULL, 11, 3, 26, '', NULL, NULL, 1),
+(4, '2209', 'eyJpdiI6IiswWVJuYXJsbVwvRkg0OGdxdGI4dW1RPT0iLCJ2YWx1ZSI6ImdFbWJYZGRWVEtNWFZcL3ZUdlNHY0JnPT0iLCJtYWMiOiI1NTUyMDg1Y2RkMWE4MTViYWM5MWM4YjAyOGJiZTAwYWQ0ZTc1NGE5Zjg4ZDlhNmRjYWU3OTZmNTU4YTIxMDZkIn0=', 13900761, 'CAROLINA', '', 'CORONEL', '', NULL, 9, 3, NULL, NULL, NULL, NULL, 1),
+(5, '22522', 'eyJpdiI6InlXdnhIMkZHYnBrczRGQTlRdGVIeUE9PSIsInZhbHVlIjoiWmJqNFd4c09Fd05JRGxZdTBmenUyQT09IiwibWFjIjoiOTYwNTVmNWJiMDFhOWU0ZDE2NTJiZWMwY2Y2OGY1YzllZjY5NTg0OGU4NzQzNWU1ZGFjZTdiYTg1NTQwM2RmYSJ9', 22522626, 'PRUEBA', '', 'PROGRAMA', '', NULL, 15, 8, 233, NULL, NULL, NULL, 1),
+(6, '0010', 'eyJpdiI6Ik1IK21ZSWlubytsMmU3dDV1aHdIa0E9PSIsInZhbHVlIjoiQXlvUytpTzF5c1haZkl3TXRDUWRMZz09IiwibWFjIjoiNDdmMGE4Yzg1ZGE2YTA0OTExOTJkMTI5ZDYwMDhmMWJjMmEzYWVlZjZhYjE1YzgyNDc2NWFkZjE4OTk0OTViYSJ9', 6823447, 'GUSTAVO', 'ADOLFO', 'PUCHI', 'MEDINA', NULL, 14, 3, 1130, NULL, NULL, NULL, 1),
+(7, '0011', 'eyJpdiI6ImJiQktSUnJPY1dHcVhoSmtESTg2bHc9PSIsInZhbHVlIjoibGFZMTdQWk5uUHllMytnOUR4VVJqQT09IiwibWFjIjoiNzFkMDY4OTgzZjVlZDVhNjhiMjNhNzVmMjhlODE0OWJjOTM1NDBkZGE3ZDgxNWMyOTNiZTQyN2JiZWQyNGM3ZCJ9', 6823443, 'ALFIO', 'FILIPPO', 'SAGLIMBENI', 'MUSCOLINO', NULL, 12, 3, 619, NULL, NULL, NULL, 1),
+(8, '0012', 'eyJpdiI6InpEaU9aQU56TCtHZlhRWkhtY0VlZnc9PSIsInZhbHVlIjoiXC9ZNXBQXC8wUFYxXC9tZzF5a1U2WkJjUT09IiwibWFjIjoiNzZjNzRiM2Y1ZmUyZGZmMzI1MGYwOTUyZWRjYTQ4Mzc0ODk5NzY2OTZkODA1ZWQ1Yjc4MmJmOTRkZTdjYTQ2ZSJ9', 6823444, 'ARIANNA', 'ELENA', 'MATOS', 'YACOBELLIS', NULL, 6, 3, 625, NULL, NULL, NULL, 1),
+(9, '10863', 'eyJpdiI6IlphVGpuenJLdEprSVVaTXIxMzNyV1E9PSIsInZhbHVlIjoicDR0ZlRLUTMyVWRvRTR4cExadFVwdz09IiwibWFjIjoiYjBhYjE2ZjA2MDk2NTgxM2U0YTczNTIzYzQ3OWUzMmFkZjI3NjU5MTBkY2M1NWQwOTQ4MTllMDU1ZTY0MzRiMiJ9', 10785418, 'SERGIO', 'FREDDYS', 'MÁRQUEZ', 'TOVAR', NULL, 16, 1, 612, NULL, NULL, NULL, 1),
+(10, '0019', 'eyJpdiI6ImNLM21JVmtxVkJobk1IWU9lWWFDRGc9PSIsInZhbHVlIjoiVysyS0k0K0g1eWxyRFwvOGFLUUd2bFE9PSIsIm1hYyI6IjFhYjc3OTIyMWNmNDk4MTRmZjIyZjIzNTVmYzEwZTZmZjNhNDlhNDQwMjkzZjU3YmRiNTNhZGJjNTVmMmVhNjQifQ==', 6823448, 'MIRLANGELA', 'MARIA', 'SALAYA', 'PÉREZ', NULL, 16, 3, 1131, NULL, NULL, NULL, 1),
+(11, '0100', 'eyJpdiI6IjltXC81dm43OUNBUGVPYUpcL2VCSjRRUT09IiwidmFsdWUiOiJFcWNzU2pQM3ZKbHdzMStTTHY3UVJBPT0iLCJtYWMiOiI5MWYxOWMxZjYwZWY1MzcxYjhkOTg1NTAyNWExZWQ3N2IyNjY1MDk2YmQ3MDY1NDE5ZmUxN2QxNGU0NjIzZmI5In0=', 6823400, 'PEDRO', 'LUIS', 'MACHADO', 'FLORES', NULL, 14, 9, 1117, NULL, NULL, NULL, 1),
+(12, '0101', 'eyJpdiI6InQxckZzNFBKRTd4MDFBNUN6R3BYbFE9PSIsInZhbHVlIjoiQmpNMklLU0gyT204czdBQ0d1cHZBZz09IiwibWFjIjoiZTIzYTIwZDk1YmI0ZGFiOGU4YThlMzA4NmVhZWQyZjJmM2I3MDVlNDJmZGZkYzY3NDA2ZGQxMWQ0MzYwYjEwYyJ9', 6823440, 'RECURSOS', '', 'HUMANOS', '', NULL, 14, 6, 619, NULL, NULL, NULL, 1),
+(13, '0202', 'eyJpdiI6InMwUFMrMEo0QVdpU1NZVDFVNnJXY0E9PSIsInZhbHVlIjoiUUVkUnA1OUxvR2VQVXNOVUdhZnF2dz09IiwibWFjIjoiZGNmMzdlMWEzMTY1MDhkZTM1OGFkOTM0NjU5NDUwZjNhYjJkOTYyY2U0MDRkM2ExMDk4NzdhMzU5ZDc3ZDBkYSJ9', 8513452, 'SILOES', 'DEL CARMEN', 'ALEJOS', 'PEÑA', NULL, 15, 3, 619, NULL, NULL, NULL, 1),
+(14, '11559', 'eyJpdiI6ImhBY0poMjhqeDl2WnhOOW9TN0hKU2c9PSIsInZhbHVlIjoiR0NlN1czTHpUUDNcL2pGV05mbmlIeVE9PSIsIm1hYyI6ImI4Zjg0NmYxM2VmYzdkZDE2NGYxMzhiYmZjMTY2NDQ2MDE4ZTYwZmIxZDMzYTYxYzQzMTliMzg4ZjdiZDM5N2EifQ==', 10812350, 'YOLYMER', 'ALICIA', 'MENDOZA', 'GARCÍA', NULL, 13, 6, 647, NULL, NULL, NULL, 1),
+(15, '10589', 'eyJpdiI6ImN1OVRzTkVBTkdHbjZCN3hmMnhEa2c9PSIsInZhbHVlIjoiVzl5NzlrcFdzR1IzNTFLbEh3Ulwvdnc9PSIsIm1hYyI6ImE1OTJlYzIwNmYzYTY4MjQwYzc4NDhlZGM1ZDIxZmFiMDA3MTljOGE2OTMxOWE2OWM0MmI0MjRiYmRkODM3ODAifQ==', 6270987, 'JOSE', 'ANTONIO', 'MACHADO', 'PEREZ', NULL, 14, 9, 647, NULL, NULL, NULL, 1),
+(16, '10141', 'eyJpdiI6Inh4bjRnM0pLZDdWcENQMU1DOTVwOGc9PSIsInZhbHVlIjoicjQ5c3RLaUpmTTVMbDNrXC9jTG43MWc9PSIsIm1hYyI6ImZhNTRkMTlmYTYxMWU3M2Y1MjkwNWZkOWUyMTg0Mzc4NzM2OWY3NzBhMTI5OTM0MzEwMjU1NDMzNDk1YWE4ZTgifQ==', 5597044, 'JESUS', 'ERASMO', 'PÉREZ', 'RAVELO', NULL, 16, 2, 647, NULL, NULL, NULL, 1),
+(17, '11558', 'eyJpdiI6IjBzSXlIWVlmNjQ2V0l4Z0FqSGxjZWc9PSIsInZhbHVlIjoiNjhKYVdaNGRMaDlzM2JzR0s0d0haZz09IiwibWFjIjoiMGYxNjJkYjYxNjA5ZmVlOTgyZTZjNjM0MTBmMjVkMmViNDY1MjA5ZjJjNDI0Yzg0YjE5NTUyNTljODRlZGRlNCJ9', 10812351, 'IGNAYARI', 'KATHERINE', 'MENDOZA', 'LUZARDO', NULL, 7, 6, 647, NULL, NULL, NULL, 1),
+(18, '10666', 'eyJpdiI6IjdhYlluNzNBZWtVemZkSDlOamk2OVE9PSIsInZhbHVlIjoiT2lMYmtFT0ViOEN1OWtWZXlrWlNoQT09IiwibWFjIjoiNzU3MmY3ZjQ1OWUzNjdlYzI2NjE1YjIxNGY2MDVmYWVhMTZkOTFhNzc0MmRjOWJiODUzNjMwZmUxNzBjZjE3YiJ9', 9876543, 'JOSE', 'ANTONIO', 'MACHADO', 'PEREZ', NULL, 14, 9, 619, NULL, NULL, NULL, 1),
+(19, '10572', 'eyJpdiI6InBQSndlcUZDaWxielIwY1Z3emZtOVE9PSIsInZhbHVlIjoiR3pSM25aYkhYeXZkWnNsZDN3aDM2UT09IiwibWFjIjoiMjJjNzk5YjJlZDM1MTM0ZGEwNGRiNDYxNzJkNGNkOTg1NTQ0YmViZGU2MmVhODI0NmQ4MWUxY2M4N2M3YWRiYSJ9', 15304238, 'OLIVER', 'JOSÉ', 'PAÉZ', 'RANGEL', NULL, 14, 1, 647, NULL, NULL, NULL, 1),
+(20, '11467', 'eyJpdiI6IkdDM0JIN2VuSDlZTWY0bWxxajZsamc9PSIsInZhbHVlIjoiSmJWdElJT1FpUGFZam85OUZmcGtPdz09IiwibWFjIjoiMGE0MjYwNjFjMjk5ZDAzMzcxMDcwN2Q1OTliZGM0ZTgxOGU1YmJhOGNiMTI1Zjk0MzU3OWJmMzUyYTJhMjQzOCJ9', 15235084, 'LADYMAR', '', 'MORETT', 'RONDÓN', NULL, 12, 1, 647, NULL, NULL, NULL, 1),
+(21, '10968', 'eyJpdiI6IkIyRk5TZjhmXC9IWnIwZ2U2NHZITzBRPT0iLCJ2YWx1ZSI6IjRaaFgzaHJwV3J4SG5ucFwvMTFLa29BPT0iLCJtYWMiOiJlZWMxNmIwM2E1Y2ZlZDg1ZDc1N2IwNDJlMDkwYWY1M2QzODQ2NzAwNTEyOGEzYjBhYzA5MTgxOTkwZTExZjFkIn0=', 22025009, 'YODELINA', '', 'TORRES', 'MORALES', NULL, 11, 1, 647, NULL, NULL, NULL, 1),
+(22, '11401', 'eyJpdiI6IkFUWlFBWDl2UVA1MUhFUnFPQXlUNXc9PSIsInZhbHVlIjoiZnpHRlZGVEV2WTN1ejFuMThGenlnZz09IiwibWFjIjoiNjA3NGE2ZmE3YTVjNWRkMjgwMjE4YmZiYzAzZmUyYzJhMmM0NmI3NDBjMjc4ZDViODA4MWE2Y2M1NjgzOTJhMiJ9', 22964636, 'JONATHAN', 'JOSÉ', 'AZOCAR', 'RODRÍGUEZ', NULL, 8, 1, 647, NULL, NULL, NULL, 1),
+(23, '0002', 'eyJpdiI6IkJPSE4xeWtDUFAzaGQwMitPcjJLdGc9PSIsInZhbHVlIjoiaHRwQnU1UGRuSGNpK0xvajJhMnBQZz09IiwibWFjIjoiMmE1NTZjZWU4YmE2MDZhNmEyMjIwNGE0YTk2YjNlYzgyMGRlMGVhODRlZTRkMTQzMzNmN2Y2MWU3MDI5YjgxNyJ9', 17671373, 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '1986-08-05 00:00:00', 1, 13, 2, NULL, '2020-06-30 00:00:00', '2020-07-05 00:00:00', 1),
+(24, '0003', 'eyJpdiI6ImE1eDZKYmpJVXVwYXhweVhURG5WdEE9PSIsInZhbHVlIjoiYTJRcGR0S1VCRTlvejlGY3NDRzczUT09IiwibWFjIjoiNGVhZWEyMWZkYmQ2MWU3NmU1NjAwZTc3Mzg5NGQ1NjhlOTgzZjlmMjIyNGFiY2U5ODRkMWNiZTk2ZjA2YmRiZSJ9', 13900761, 'EMILIA', 'CAROLINA', 'CORONEL', 'MONTERO', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
+(25, '0004', 'eyJpdiI6ImFFR1wvaWgzTXNsSlF2VmVaamhPeEFnPT0iLCJ2YWx1ZSI6IlwvN2JmdXoyOUQ4TXh1cXZSNVlkZG1nPT0iLCJtYWMiOiJmMGIzNzA3NzlmZDQ3ODMwNDE5YTM5OGZjOTgzMmI3N2FjYWMxNGNkNzk5NjRiYzBjMzAxN2FkNTIwODdjMTAyIn0=', 11100000, 'EMILIA', '', 'MONTERO', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
 
 --
--- Indexes for dumped tables
+-- Índices para tablas volcadas
 --
 
 --
--- Indexes for table `logs_auditoria`
+-- Indices de la tabla `logs_auditoria`
 --
 ALTER TABLE `logs_auditoria`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tbl_cargo_empleado`
+-- Indices de la tabla `tbl_cargo_empleado`
 --
 ALTER TABLE `tbl_cargo_empleado`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tbl_cargo_supervisa`
+-- Indices de la tabla `tbl_cargo_supervisa`
 --
 ALTER TABLE `tbl_cargo_supervisa`
   ADD PRIMARY KEY (`id`),
@@ -3103,70 +3121,70 @@ ALTER TABLE `tbl_cargo_supervisa`
   ADD KEY `id_cargo_supervisor` (`id_cargo_supervisor`);
 
 --
--- Indexes for table `tbl_ciudades`
+-- Indices de la tabla `tbl_ciudades`
 --
 ALTER TABLE `tbl_ciudades`
   ADD PRIMARY KEY (`id_ciudad`),
   ADD KEY `id_estado` (`id_estado`);
 
 --
--- Indexes for table `tbl_cliente`
+-- Indices de la tabla `tbl_cliente`
 --
 ALTER TABLE `tbl_cliente`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tbl_cliente_facturacion`
+-- Indices de la tabla `tbl_cliente_facturacion`
 --
 ALTER TABLE `tbl_cliente_facturacion`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id` (`id`);
 
 --
--- Indexes for table `tbl_concepto_horas_no_cargables`
+-- Indices de la tabla `tbl_concepto_horas_no_cargables`
 --
 ALTER TABLE `tbl_concepto_horas_no_cargables`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tbl_configuracion`
+-- Indices de la tabla `tbl_configuracion`
 --
 ALTER TABLE `tbl_configuracion`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tbl_contacto_usuario`
+-- Indices de la tabla `tbl_contacto_usuario`
 --
 ALTER TABLE `tbl_contacto_usuario`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_usuario` (`id_usuario`);
 
 --
--- Indexes for table `tbl_division`
+-- Indices de la tabla `tbl_division`
 --
 ALTER TABLE `tbl_division`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tbl_estados`
+-- Indices de la tabla `tbl_estados`
 --
 ALTER TABLE `tbl_estados`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tbl_estatus`
+-- Indices de la tabla `tbl_estatus`
 --
 ALTER TABLE `tbl_estatus`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tbl_horas_cargables`
+-- Indices de la tabla `tbl_horas_cargables`
 --
 ALTER TABLE `tbl_horas_cargables`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tbl_horas_no_cargables`
+-- Indices de la tabla `tbl_horas_no_cargables`
 --
 ALTER TABLE `tbl_horas_no_cargables`
   ADD PRIMARY KEY (`id`),
@@ -3176,13 +3194,13 @@ ALTER TABLE `tbl_horas_no_cargables`
   ADD KEY `id_division` (`id_division`);
 
 --
--- Indexes for table `tbl_menu`
+-- Indices de la tabla `tbl_menu`
 --
 ALTER TABLE `tbl_menu`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tbl_menu_usuario`
+-- Indices de la tabla `tbl_menu_usuario`
 --
 ALTER TABLE `tbl_menu_usuario`
   ADD PRIMARY KEY (`id`),
@@ -3190,34 +3208,34 @@ ALTER TABLE `tbl_menu_usuario`
   ADD KEY `id_usuario` (`id_usuario`);
 
 --
--- Indexes for table `tbl_municipios`
+-- Indices de la tabla `tbl_municipios`
 --
 ALTER TABLE `tbl_municipios`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_estado` (`id_estado`);
 
 --
--- Indexes for table `tbl_parroquias`
+-- Indices de la tabla `tbl_parroquias`
 --
 ALTER TABLE `tbl_parroquias`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_municipio` (`id_municipio`);
 
 --
--- Indexes for table `tbl_proyecto`
+-- Indices de la tabla `tbl_proyecto`
 --
 ALTER TABLE `tbl_proyecto`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tbl_proyecto_analista`
+-- Indices de la tabla `tbl_proyecto_analista`
 --
 ALTER TABLE `tbl_proyecto_analista`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id` (`id`);
 
 --
--- Indexes for table `tbl_proyecto_divisiones`
+-- Indices de la tabla `tbl_proyecto_divisiones`
 --
 ALTER TABLE `tbl_proyecto_divisiones`
   ADD PRIMARY KEY (`id`),
@@ -3225,19 +3243,19 @@ ALTER TABLE `tbl_proyecto_divisiones`
   ADD KEY `id_proyecto` (`id_proyecto`);
 
 --
--- Indexes for table `tbl_telefono`
+-- Indices de la tabla `tbl_telefono`
 --
 ALTER TABLE `tbl_telefono`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tbl_tipo_contacto`
+-- Indices de la tabla `tbl_tipo_contacto`
 --
 ALTER TABLE `tbl_tipo_contacto`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tbl_usuario`
+-- Indices de la tabla `tbl_usuario`
 --
 ALTER TABLE `tbl_usuario`
   ADD PRIMARY KEY (`id`),
@@ -3246,178 +3264,178 @@ ALTER TABLE `tbl_usuario`
   ADD KEY `id_parroquia` (`id_parroquia`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT for table `logs_auditoria`
+-- AUTO_INCREMENT de la tabla `logs_auditoria`
 --
 ALTER TABLE `logs_auditoria`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=126;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=137;
 
 --
--- AUTO_INCREMENT for table `tbl_cargo_empleado`
+-- AUTO_INCREMENT de la tabla `tbl_cargo_empleado`
 --
 ALTER TABLE `tbl_cargo_empleado`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
--- AUTO_INCREMENT for table `tbl_cargo_supervisa`
+-- AUTO_INCREMENT de la tabla `tbl_cargo_supervisa`
 --
 ALTER TABLE `tbl_cargo_supervisa`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
 
 --
--- AUTO_INCREMENT for table `tbl_ciudades`
+-- AUTO_INCREMENT de la tabla `tbl_ciudades`
 --
 ALTER TABLE `tbl_ciudades`
-  MODIFY `id_ciudad` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=523;
+  MODIFY `id_ciudad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=523;
 
 --
--- AUTO_INCREMENT for table `tbl_cliente`
+-- AUTO_INCREMENT de la tabla `tbl_cliente`
 --
 ALTER TABLE `tbl_cliente`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
--- AUTO_INCREMENT for table `tbl_cliente_facturacion`
+-- AUTO_INCREMENT de la tabla `tbl_cliente_facturacion`
 --
 ALTER TABLE `tbl_cliente_facturacion`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT for table `tbl_concepto_horas_no_cargables`
+-- AUTO_INCREMENT de la tabla `tbl_concepto_horas_no_cargables`
 --
 ALTER TABLE `tbl_concepto_horas_no_cargables`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT for table `tbl_configuracion`
+-- AUTO_INCREMENT de la tabla `tbl_configuracion`
 --
 ALTER TABLE `tbl_configuracion`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `tbl_contacto_usuario`
+-- AUTO_INCREMENT de la tabla `tbl_contacto_usuario`
 --
 ALTER TABLE `tbl_contacto_usuario`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
--- AUTO_INCREMENT for table `tbl_division`
+-- AUTO_INCREMENT de la tabla `tbl_division`
 --
 ALTER TABLE `tbl_division`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
--- AUTO_INCREMENT for table `tbl_estados`
+-- AUTO_INCREMENT de la tabla `tbl_estados`
 --
 ALTER TABLE `tbl_estados`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
--- AUTO_INCREMENT for table `tbl_estatus`
+-- AUTO_INCREMENT de la tabla `tbl_estatus`
 --
 ALTER TABLE `tbl_estatus`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
--- AUTO_INCREMENT for table `tbl_horas_cargables`
+-- AUTO_INCREMENT de la tabla `tbl_horas_cargables`
 --
 ALTER TABLE `tbl_horas_cargables`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
--- AUTO_INCREMENT for table `tbl_horas_no_cargables`
+-- AUTO_INCREMENT de la tabla `tbl_horas_no_cargables`
 --
 ALTER TABLE `tbl_horas_no_cargables`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
--- AUTO_INCREMENT for table `tbl_menu`
+-- AUTO_INCREMENT de la tabla `tbl_menu`
 --
 ALTER TABLE `tbl_menu`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT for table `tbl_menu_usuario`
+-- AUTO_INCREMENT de la tabla `tbl_menu_usuario`
 --
 ALTER TABLE `tbl_menu_usuario`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
 
 --
--- AUTO_INCREMENT for table `tbl_municipios`
+-- AUTO_INCREMENT de la tabla `tbl_municipios`
 --
 ALTER TABLE `tbl_municipios`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=463;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=463;
 
 --
--- AUTO_INCREMENT for table `tbl_parroquias`
+-- AUTO_INCREMENT de la tabla `tbl_parroquias`
 --
 ALTER TABLE `tbl_parroquias`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1139;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1139;
 
 --
--- AUTO_INCREMENT for table `tbl_proyecto`
+-- AUTO_INCREMENT de la tabla `tbl_proyecto`
 --
 ALTER TABLE `tbl_proyecto`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
--- AUTO_INCREMENT for table `tbl_proyecto_analista`
+-- AUTO_INCREMENT de la tabla `tbl_proyecto_analista`
 --
 ALTER TABLE `tbl_proyecto_analista`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
--- AUTO_INCREMENT for table `tbl_proyecto_divisiones`
+-- AUTO_INCREMENT de la tabla `tbl_proyecto_divisiones`
 --
 ALTER TABLE `tbl_proyecto_divisiones`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
--- AUTO_INCREMENT for table `tbl_telefono`
+-- AUTO_INCREMENT de la tabla `tbl_telefono`
 --
 ALTER TABLE `tbl_telefono`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `tbl_tipo_contacto`
+-- AUTO_INCREMENT de la tabla `tbl_tipo_contacto`
 --
 ALTER TABLE `tbl_tipo_contacto`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `tbl_usuario`
+-- AUTO_INCREMENT de la tabla `tbl_usuario`
 --
 ALTER TABLE `tbl_usuario`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
--- Constraints for dumped tables
+-- Restricciones para tablas volcadas
 --
 
 --
--- Constraints for table `tbl_cargo_supervisa`
+-- Filtros para la tabla `tbl_cargo_supervisa`
 --
 ALTER TABLE `tbl_cargo_supervisa`
   ADD CONSTRAINT `tbl_cargo_supervisa_ibfk_1` FOREIGN KEY (`id_cargo`) REFERENCES `tbl_cargo_empleado` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `tbl_cargo_supervisa_ibfk_2` FOREIGN KEY (`id_cargo_supervisor`) REFERENCES `tbl_cargo_empleado` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
--- Constraints for table `tbl_ciudades`
+-- Filtros para la tabla `tbl_ciudades`
 --
 ALTER TABLE `tbl_ciudades`
   ADD CONSTRAINT `tbl_ciudades_ibfk_1` FOREIGN KEY (`id_estado`) REFERENCES `tbl_estados` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `tbl_contacto_usuario`
+-- Filtros para la tabla `tbl_contacto_usuario`
 --
 ALTER TABLE `tbl_contacto_usuario`
   ADD CONSTRAINT `FK_ID_USUARIO` FOREIGN KEY (`id_usuario`) REFERENCES `tbl_usuario` (`id`);
 
 --
--- Constraints for table `tbl_horas_no_cargables`
+-- Filtros para la tabla `tbl_horas_no_cargables`
 --
 ALTER TABLE `tbl_horas_no_cargables`
   ADD CONSTRAINT `tbl_horas_no_cargables_ibfk_1` FOREIGN KEY (`id_concepto`) REFERENCES `tbl_concepto_horas_no_cargables` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
@@ -3426,33 +3444,33 @@ ALTER TABLE `tbl_horas_no_cargables`
   ADD CONSTRAINT `tbl_horas_no_cargables_ibfk_4` FOREIGN KEY (`id_division`) REFERENCES `tbl_division` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
--- Constraints for table `tbl_menu_usuario`
+-- Filtros para la tabla `tbl_menu_usuario`
 --
 ALTER TABLE `tbl_menu_usuario`
   ADD CONSTRAINT `tbl_menu_usuario_ibfk_1` FOREIGN KEY (`id_menu`) REFERENCES `tbl_menu` (`id`),
   ADD CONSTRAINT `tbl_menu_usuario_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `tbl_usuario` (`id`);
 
 --
--- Constraints for table `tbl_municipios`
+-- Filtros para la tabla `tbl_municipios`
 --
 ALTER TABLE `tbl_municipios`
   ADD CONSTRAINT `tbl_municipios_ibfk_1` FOREIGN KEY (`id_estado`) REFERENCES `tbl_estados` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `tbl_parroquias`
+-- Filtros para la tabla `tbl_parroquias`
 --
 ALTER TABLE `tbl_parroquias`
   ADD CONSTRAINT `tbl_parroquias_ibfk_1` FOREIGN KEY (`id_municipio`) REFERENCES `tbl_municipios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `tbl_proyecto_divisiones`
+-- Filtros para la tabla `tbl_proyecto_divisiones`
 --
 ALTER TABLE `tbl_proyecto_divisiones`
   ADD CONSTRAINT `tbl_proyecto_divisiones_ibfk_1` FOREIGN KEY (`id_division`) REFERENCES `tbl_division` (`id`),
   ADD CONSTRAINT `tbl_proyecto_divisiones_ibfk_2` FOREIGN KEY (`id_proyecto`) REFERENCES `tbl_proyecto` (`id`);
 
 --
--- Constraints for table `tbl_usuario`
+-- Filtros para la tabla `tbl_usuario`
 --
 ALTER TABLE `tbl_usuario`
   ADD CONSTRAINT `tbl_usuario_ibfk_1` FOREIGN KEY (`id_cargo`) REFERENCES `tbl_cargo_empleado` (`id`),

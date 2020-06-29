@@ -12,6 +12,7 @@ var self;
 Vue.use(VueTheMask);
 Vue.component('multiselect', Multiselect);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
+Vue.component('loading',require('../components/loading.vue').default);
 Vue.use(VueNumeric);
 
 var app = new Vue({
@@ -89,6 +90,7 @@ var app = new Vue({
     diferencia: 0,
     permisoVer: false,
     permisoCrear: false,
+    loading: true
   },
   beforeCreate: function(){
 
@@ -112,6 +114,8 @@ var app = new Vue({
         self.permisoVer = response.data.permisoVer;
         self.permisoCrear = response.data.permisoCrear;
 
+        self.loading = false;
+
       }else{
 
         throw "error";
@@ -126,6 +130,8 @@ var app = new Vue({
         message : "Existe un error!, consulte con el administrador del sistema.",
         show: true
       };
+
+      self.loading = false;
 
     });
 
@@ -329,7 +335,7 @@ var app = new Vue({
             self.horasComparar[i] = self.detalleAnalista.data[i].horas_asignadas;
             if (self.detalleAnalista.data[i].horas_asignadas === null) {
               self.horasComparar[i] = 0;
-            }            
+            }
           }
           for (var i = 0; i < self.horasComparar.length; i++) {
             self.form.horas.value = self.horasComparar[i] + self.form.horas.value;
@@ -358,7 +364,7 @@ var app = new Vue({
     estados: function(analista,idAnaProy,idDproyecto,id_proyecto_division,e){
 
       if(idAnaProy == null){
-      
+
         let parametros = {
           estado: 1,
           idDproyecto: idDproyecto,
@@ -377,7 +383,7 @@ var app = new Vue({
             if (self.detalleAnalista.data[i].horas_asignadas === null) {
               self.horasComparar[i] = 0;
             }
-            
+
           }
             self.buscar();
           }
@@ -400,7 +406,7 @@ var app = new Vue({
             if (self.detalleAnalista.data[i].horas_asignadas === null) {
               self.horasComparar[i] = 0;
             }
-            
+
           }
             self.buscar();
       }else{
@@ -408,7 +414,7 @@ var app = new Vue({
       }
     })
       }
-      
+
     },
 
     asigna: function(analista,idAnaProy,idDproyecto,horas_contratadas,e){
@@ -431,11 +437,11 @@ var app = new Vue({
         $(".hora-asignada").each(function(index,item){
         let hora = ($(item).val().trim() === "") ? 0 : parseInt($(item).val());
         total2.push({hora});
-      });   
+      });
 
       for (var i = 0; i < total2.length; i++) {
           total2[i] = total2[i]["hora"];
-        
+
       }
 
       let parametros = {
@@ -443,7 +449,7 @@ var app = new Vue({
         idDproyecto: idDproyecto,
         horas_asignadas: total2,
         horasComparar: self.horasComparar,
-        
+
       };
 
       axios.get('/asigHorasAnalistaProy', {params: parametros})
@@ -457,13 +463,13 @@ var app = new Vue({
             if (self.detalleAnalista.data[i].horas_asignadas === null) {
               self.horasComparar[i] = 0;
             }
-            
+
           }
         }else{
           throw response.data;
         }
       })
-      }      
+      }
     },
 
     formCargarHoras: function(idProyecto,idUsuario,e){

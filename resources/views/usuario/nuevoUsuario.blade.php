@@ -19,7 +19,6 @@
       <div id="nuevoUsuario" class="container-fluid" v-on:keypress="keyboard">
 
         <loading :loading="loading" v-show="loading"></loading>
-
         <menu-principal v-cloak></menu-principal>
 
         <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
