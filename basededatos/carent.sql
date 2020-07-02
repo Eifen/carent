@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 02-07-2020 a las 01:37:18
+-- Tiempo de generación: 02-07-2020 a las 13:30:22
 -- Versión del servidor: 8.0.18
--- Versión de PHP: 7.3.16
+-- Versión de PHP: 7.3.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -175,7 +176,8 @@ INSERT INTO `logs_auditoria` (`id`, `usuario_id`, `fecha`, `direccion_ip`, `acci
 (133, 1, '2020-06-28 19:06:22', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
 (134, 1, '2020-06-28 19:06:41', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
 (135, 1, '2020-06-28 20:11:00', '127.0.0.1', 'Registro de Usuario Codigo:0003'),
-(136, 1, '2020-06-28 20:12:38', '127.0.0.1', 'Registro de Usuario Codigo:0004');
+(136, 1, '2020-06-28 20:12:38', '127.0.0.1', 'Registro de Usuario Codigo:0004'),
+(137, 1, '2020-07-02 16:24:43', '127.0.0.1', 'Inicio de Sesion');
 
 -- --------------------------------------------------------
 
@@ -1324,7 +1326,7 @@ INSERT INTO `tbl_menu` (`id`, `id_menu_padre`, `descripcion`, `url`, `orden`, `i
 (8, 0, 'Proyectos', '', 0, 1),
 (9, 8, 'Crear Proyecto', '/formNuevoProyecto', 0, 1),
 (10, 8, 'Lista de Proyectos', '/proyectos', 1, 1),
-(11, 8, 'Asignados/ar Proyectos ', '/proyectoDivision', 2, 1),
+(11, 8, 'Asig.Personal/Horas Cargables', '/proyectoDivision', 2, 1),
 (12, 0, 'Horas No Cargables', '', 0, 1),
 (13, 12, 'Conceptos', '/formHorasNoCargables', 0, 1),
 (14, 12, 'Cargar', '/cargarHorasNoCargables', 1, 1);
@@ -3097,7 +3099,7 @@ CREATE TABLE `tbl_telefono` (
 
 CREATE TABLE `tbl_tipo_cargo` (
   `id` int(11) NOT NULL,
-  `descripcion` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL
+  `descripcion` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3360,7 +3362,7 @@ ALTER TABLE `tbl_usuario`
 -- AUTO_INCREMENT de la tabla `logs_auditoria`
 --
 ALTER TABLE `logs_auditoria`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=137;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=138;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cargo_empleado`
