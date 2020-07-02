@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 29-06-2020 a las 00:47:08
+-- Tiempo de generación: 02-07-2020 a las 01:37:18
 -- Versión del servidor: 8.0.18
 -- Versión de PHP: 7.3.16
 
@@ -186,6 +186,8 @@ INSERT INTO `logs_auditoria` (`id`, `usuario_id`, `fecha`, `direccion_ip`, `acci
 CREATE TABLE `tbl_cargo_empleado` (
   `id` int(11) NOT NULL,
   `descripcion` varchar(50) NOT NULL,
+  `id_tipo_cargo` int(11) NOT NULL,
+  `orden` int(11) NOT NULL,
   `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -193,23 +195,58 @@ CREATE TABLE `tbl_cargo_empleado` (
 -- Volcado de datos para la tabla `tbl_cargo_empleado`
 --
 
-INSERT INTO `tbl_cargo_empleado` (`id`, `descripcion`, `id_estatus`) VALUES
-(1, 'Contratado', 1),
-(2, 'Pasante', 1),
-(3, 'Asistente I', 1),
-(4, 'Asistente II', 1),
-(5, 'Asistente III', 1),
-(6, 'Semi-Senior I', 1),
-(7, 'Semi-Senior II', 1),
-(8, 'Semi-Senior III', 1),
-(9, 'Senior I', 1),
-(10, 'Senior II', 1),
-(11, 'Senior III', 1),
-(12, 'Supervisor', 1),
-(13, 'Gerente', 1),
-(14, 'Gerente Senior', 1),
-(15, 'Director', 1),
-(16, 'Socio', 1);
+INSERT INTO `tbl_cargo_empleado` (`id`, `descripcion`, `id_tipo_cargo`, `orden`, `id_estatus`) VALUES
+(1, 'Contratado', 1, 8, 1),
+(2, 'Pasante', 1, 8, 1),
+(3, 'Asistente I', 1, 8, 1),
+(4, 'Asistente II', 1, 8, 1),
+(5, 'Asistente III', 1, 8, 1),
+(6, 'Semi-Senior I', 1, 8, 1),
+(7, 'Semi-Senior II', 1, 8, 1),
+(8, 'Semi-Senior III', 1, 8, 1),
+(9, 'Senior I', 1, 8, 1),
+(10, 'Senior II', 1, 8, 1),
+(11, 'Senior III', 1, 8, 1),
+(12, 'Supervisor de Auditoria', 1, 7, 1),
+(13, 'Gerente', 1, 6, 1),
+(14, 'Gerente Senior', 1, 5, 1),
+(15, 'Director', 1, 4, 1),
+(16, 'Socio', 1, 1, 1),
+(17, 'Acting Partner Auditoria', 1, 3, 1),
+(18, 'Asesor Legal', 1, 2, 1),
+(19, 'Director de Capacitación', 2, 0, 1),
+(20, 'Gerente de Facturación y Cobranzas', 2, 0, 1),
+(21, 'Gerente de Capital Humano', 2, 0, 1),
+(22, 'Asistente de Socios', 2, 0, 1),
+(23, 'Analista de Contraloria', 2, 0, 1),
+(24, 'Chofer', 2, 0, 1),
+(25, 'Operaria de Mantenimiento', 2, 0, 1),
+(26, 'Recepcionista', 2, 0, 1),
+(27, 'Asistente a  Socios', 2, 0, 1),
+(28, 'Supervisión Edición', 2, 0, 1),
+(29, 'Editora', 2, 0, 1),
+(30, 'Analista Senior II', 2, 0, 1),
+(31, 'Asistente de  Capital Humano', 2, 0, 1),
+(32, 'Operaria de Mantenimiento', 2, 0, 1),
+(33, 'Editora', 2, 0, 1),
+(34, 'Supervisor Soporte Técnico', 2, 0, 1),
+(35, 'Asistente Administrativo', 2, 0, 1),
+(36, 'Soporte Técnico II', 2, 0, 1),
+(37, 'Asistente de Servicios Generales', 2, 0, 1),
+(38, '', 2, 0, 1),
+(39, 'Asistente de Facturacion y Cobranza', 2, 0, 1),
+(40, 'Recepcionista', 2, 0, 1),
+(41, 'Pasante', 2, 0, 1),
+(42, '', 2, 0, 1),
+(43, 'Chofer', 2, 0, 1),
+(44, 'Supervisor de Mantenimiento', 2, 0, 1),
+(45, 'Operaria de Mantenimiento', 2, 0, 1),
+(46, 'Supervisor de Servicios Generales', 2, 0, 1),
+(47, 'Asistente de Gerentes', 2, 0, 1),
+(48, 'Pasante Inces', 2, 0, 1),
+(49, 'Asistente de Proyecto', 2, 0, 1),
+(50, 'Mensajero', 2, 0, 1),
+(51, 'Trabajador Social', 2, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -295,7 +332,40 @@ INSERT INTO `tbl_cargo_supervisa` (`id`, `id_cargo`, `id_cargo_supervisor`) VALU
 (67, 13, 16),
 (68, 14, 15),
 (69, 14, 16),
-(70, 15, 16);
+(70, 15, 16),
+(71, 17, 16),
+(72, 18, 16),
+(73, 1, 17),
+(74, 2, 17),
+(75, 3, 17),
+(76, 4, 17),
+(77, 5, 17),
+(78, 6, 17),
+(79, 7, 17),
+(80, 8, 17),
+(81, 9, 17),
+(82, 10, 17),
+(83, 11, 17),
+(84, 12, 17),
+(85, 13, 17),
+(86, 14, 17),
+(87, 15, 17),
+(88, 1, 18),
+(89, 2, 18),
+(90, 3, 18),
+(91, 4, 18),
+(92, 5, 18),
+(93, 6, 18),
+(94, 7, 18),
+(95, 8, 18),
+(96, 9, 18),
+(97, 10, 18),
+(98, 11, 18),
+(99, 12, 18),
+(100, 13, 18),
+(101, 14, 18),
+(102, 15, 18),
+(103, 17, 18);
 
 -- --------------------------------------------------------
 
@@ -3022,6 +3092,25 @@ CREATE TABLE `tbl_telefono` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `tbl_tipo_cargo`
+--
+
+CREATE TABLE `tbl_tipo_cargo` (
+  `id` int(11) NOT NULL,
+  `descripcion` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `tbl_tipo_cargo`
+--
+
+INSERT INTO `tbl_tipo_cargo` (`id`, `descripcion`) VALUES
+(1, 'Profesionales'),
+(2, 'Administrativos');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `tbl_tipo_contacto`
 --
 
@@ -3277,13 +3366,13 @@ ALTER TABLE `logs_auditoria`
 -- AUTO_INCREMENT de la tabla `tbl_cargo_empleado`
 --
 ALTER TABLE `tbl_cargo_empleado`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cargo_supervisa`
 --
 ALTER TABLE `tbl_cargo_supervisa`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_ciudades`
