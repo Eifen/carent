@@ -17,9 +17,10 @@
     <body>
 
       <div id="buscarCliente" class="container-fluid" v-on:submit.prevent="buscar">
-        <menu-principal></menu-principal>
+        <loading :loading="loading" v-show="loading"></loading>
+        <menu-principal v-cloak></menu-principal>
 
-        <div class="row align-items-center justify-content-center wrapper-forms">
+        <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
           <div class="col-12 col-sm-11 col-md-10 col-lg-8 col-xl-7">
             <form class="row">
               <div class="form-group col-12 col-md-4">
@@ -86,7 +87,7 @@
             <div class="alert alert-warning text-center" v-html="alert.message"></div>
           </div>
         </div>
-        <div id="modal-detalle-cliente" class="modal fade" tabindex="-1" role="dialog">
+        <div id="modal-detalle-cliente" class="modal fade" tabindex="-1" role="dialog" v-cloak>
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -167,7 +168,7 @@
                     <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.edificio_quinta_fiscal">
                   </div>
                   <div class="form-group col-12 col-sm-6">
-                    <label>Pisó</label>
+                    <label>Piso</label>
                     <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.piso_fiscal">
                   </div>
                   <div class="form-group col-12 col-sm-6">

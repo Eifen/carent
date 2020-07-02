@@ -7,6 +7,7 @@ window.$ = require('jquery');
 var self;
 
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
+Vue.component('loading',require('../components/loading.vue').default);
 //se declaran todas las varibles
 var app = new Vue({
 
@@ -30,6 +31,7 @@ var app = new Vue({
         value: ""
       }
     },
+    loading: true,
     clientes: {
       mostrar: false,
       registros: []
@@ -56,6 +58,8 @@ var app = new Vue({
       self.detalleCliente.error = false;
 
     });
+
+    self.loading = false;
 
   },
   updated: function () {},

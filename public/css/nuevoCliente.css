@@ -5,6 +5,9 @@
 html {
   overflow-x: hidden;
 }
+[v-cloak] {
+  display: none;
+}
 #nuevoCliente {
   background-color: #E9ECEF;
 }

@@ -90,7 +90,7 @@
                   <th scope="col">Estatus</th>
                   <th scope="col"v-if="permisoVer">Ver Empleados</th><!--Socios-->
                   <th scope="col" v-if="permisoActualizar">Horas Contratadas</th><!--Director o encargado del area-->
-                  <th scope="col" v-if="permisoActualizar">Asiganar</th><!--Director o encargado del area-->
+                  <th scope="col" v-if="permisoActualizar">Asignar</th><!--Director o encargado del area-->
                   <th scope="col" v-if="permisoCrear">Cargar Horas</th>
                 </tr>
               </thead>
