@@ -291,7 +291,9 @@ var app = new Vue({
           self.detalleDproyecto.data = response.data.infoDproyecto;
           self.detalleAproyecto.data = response.data.infoAproyecto;
           for (var i = 0; i < self.detalleAproyecto.data.length; i++) {
-            self.horas_cargadas = parseInt(self.detalleAproyecto.data[i].horas_cargadas) + self.horas_cargadas;
+            if (self.detalleAproyecto.data[i].horas_cargadas != null) {
+              self.horas_cargadas = parseInt(self.detalleAproyecto.data[i].horas_cargadas) + self.horas_cargadas;
+            }
           }
 
           $('#modal-detalle-Dproyecto').modal("show");
