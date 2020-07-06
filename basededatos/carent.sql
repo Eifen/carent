@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 02-07-2020 a las 01:37:18
+-- Tiempo de generación: 06-07-2020 a las 00:23:01
 -- Versión del servidor: 8.0.18
 -- Versión de PHP: 7.3.16
 
@@ -175,7 +175,8 @@ INSERT INTO `logs_auditoria` (`id`, `usuario_id`, `fecha`, `direccion_ip`, `acci
 (133, 1, '2020-06-28 19:06:22', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
 (134, 1, '2020-06-28 19:06:41', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
 (135, 1, '2020-06-28 20:11:00', '127.0.0.1', 'Registro de Usuario Codigo:0003'),
-(136, 1, '2020-06-28 20:12:38', '127.0.0.1', 'Registro de Usuario Codigo:0004');
+(136, 1, '2020-06-28 20:12:38', '127.0.0.1', 'Registro de Usuario Codigo:0004'),
+(137, 1, '2020-07-03 18:47:07', '127.0.0.1', 'Inicio de Sesion');
 
 -- --------------------------------------------------------
 
@@ -212,7 +213,7 @@ INSERT INTO `tbl_cargo_empleado` (`id`, `descripcion`, `id_tipo_cargo`, `orden`,
 (14, 'Gerente Senior', 1, 5, 1),
 (15, 'Director', 1, 4, 1),
 (16, 'Socio', 1, 1, 1),
-(17, 'Acting Partner Auditoria', 1, 3, 1),
+(17, 'Acting Partner', 1, 3, 1),
 (18, 'Asesor Legal', 1, 2, 1),
 (19, 'Director de Capacitación', 2, 0, 1),
 (20, 'Gerente de Facturación y Cobranzas', 2, 0, 1),
@@ -233,11 +234,11 @@ INSERT INTO `tbl_cargo_empleado` (`id`, `descripcion`, `id_tipo_cargo`, `orden`,
 (35, 'Asistente Administrativo', 2, 0, 1),
 (36, 'Soporte Técnico II', 2, 0, 1),
 (37, 'Asistente de Servicios Generales', 2, 0, 1),
-(38, '', 2, 0, 1),
+(38, 'Mensajero', 2, 0, 1),
 (39, 'Asistente de Facturacion y Cobranza', 2, 0, 1),
 (40, 'Recepcionista', 2, 0, 1),
 (41, 'Pasante', 2, 0, 1),
-(42, '', 2, 0, 1),
+(42, 'Trabajador Social', 2, 0, 1),
 (43, 'Chofer', 2, 0, 1),
 (44, 'Supervisor de Mantenimiento', 2, 0, 1),
 (45, 'Operaria de Mantenimiento', 2, 0, 1),
@@ -245,8 +246,15 @@ INSERT INTO `tbl_cargo_empleado` (`id`, `descripcion`, `id_tipo_cargo`, `orden`,
 (47, 'Asistente de Gerentes', 2, 0, 1),
 (48, 'Pasante Inces', 2, 0, 1),
 (49, 'Asistente de Proyecto', 2, 0, 1),
-(50, 'Mensajero', 2, 0, 1),
-(51, 'Trabajador Social', 2, 0, 1);
+(50, 'Supervisor de Impuesto', 1, 0, 1),
+(51, 'Supervisor de Outsourcing', 1, 0, 1),
+(52, 'Gerente de Auditoria Interna', 1, 0, 1),
+(53, 'Gerente de Consultoria', 1, 0, 1),
+(54, 'Supervision de Edición', 2, 0, 1),
+(55, 'Analista Senior II Capital Humano', 1, 0, 1),
+(56, 'Gerente de Tecnología', 1, 0, 1),
+(57, 'Supervisor de Auditoria TI', 2, 0, 1),
+(58, 'Supervisor', 2, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -1092,7 +1100,7 @@ INSERT INTO `tbl_division` (`id`, `descripcion`, `id_estatus`) VALUES
 (2, 'Asesoría Tributaria', 1),
 (3, 'Tecnología TI', 1),
 (4, 'Outsourcing', 1),
-(5, 'Auditoría Interna y Procesos', 1),
+(5, 'Consultoria y Auditoría Interna', 1),
 (6, 'Administración/Capital Humano', 1),
 (7, 'Administración/Contabilidad', 1),
 (8, 'Administración/Tesorería', 1),
@@ -1104,7 +1112,8 @@ INSERT INTO `tbl_division` (`id`, `descripcion`, `id_estatus`) VALUES
 (14, 'Pasantes Inces', 1),
 (15, 'Conapdis', 1),
 (16, 'Legal', 1),
-(17, 'Servicios Profesionales (Puerto Ordaz)', 1);
+(17, 'Servicios Profesionales (Puerto Ordaz)', 1),
+(18, 'Administración', 1);
 
 -- --------------------------------------------------------
 
@@ -3360,19 +3369,19 @@ ALTER TABLE `tbl_usuario`
 -- AUTO_INCREMENT de la tabla `logs_auditoria`
 --
 ALTER TABLE `logs_auditoria`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=137;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=138;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cargo_empleado`
 --
 ALTER TABLE `tbl_cargo_empleado`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cargo_supervisa`
 --
 ALTER TABLE `tbl_cargo_supervisa`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_ciudades`
@@ -3414,7 +3423,7 @@ ALTER TABLE `tbl_contacto_usuario`
 -- AUTO_INCREMENT de la tabla `tbl_division`
 --
 ALTER TABLE `tbl_division`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_estados`
