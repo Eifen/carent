@@ -494,6 +494,7 @@ class ProyectoModel extends Model
                         FROM tbl_proyecto p
                         WHERE p.id = (SELECT a.id_proyecto FROM tbl_proyecto_analista a WHERE id_analista = '.$id_usuario.' AND a.id_proyecto = p.id)
                         AND p.id_estatus = 1
+                        AND 1 = (SELECT a.id_estatus FROM tbl_proyecto_analista a WHERE id_analista = '.$id_usuario.' AND a.id_proyecto = p.id)
                         ORDER BY fecha ASC');
     if(count($info) > 0){
       return $info;
@@ -645,6 +646,7 @@ class ProyectoModel extends Model
                                         AND p.id = (SELECT a.id_proyecto FROM tbl_proyecto_analista a WHERE a.id_analista = '.$id_usuario.' AND a.id_proyecto = p.id AND a.id_estatus = 1))permisoCrear
                                FROM tbl_proyecto p
                                WHERE p.id = (SELECT a.id_proyecto FROM tbl_proyecto_analista a WHERE id_analista = '.$id_usuario.' AND a.id_proyecto = p.id)
+                               AND 1 = (SELECT a.id_estatus FROM tbl_proyecto_analista a WHERE id_analista = '.$id_usuario.' AND a.id_proyecto = p.id)
                                '.$sql_proyecto.'
                                '.$sql_estatus.'
                                '.$sql_cliente.'

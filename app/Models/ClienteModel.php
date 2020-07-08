@@ -221,7 +221,7 @@ class ClienteModel extends Model
                   "piso_fiscal" => $parametros["piso_fiscal"],
                   "numero_fiscal" => $parametros["numero_fiscal"],
                   "telefono_fiscal" => $parametros["telefono_fiscal"],
-                  "fax_fiscal" => $parametros["fax_fiscal"],
+                  "pagina_web" => $parametros["pagina_web"],
                   "email_fiscal" => $parametros["email_fiscal"],
                   "id_estatus" => 1);
     $contacto = DB::table('tbl_cliente')->insert($data);
@@ -364,7 +364,7 @@ class ClienteModel extends Model
                                 piso_fiscal,
                                 numero_fiscal,
                                 telefono_fiscal,
-                                fax_fiscal,
+                                pagina_web,
                                 email_fiscal,
                                 (SELECT p.parroquia FROM tbl_parroquias p WHERE p.id = id_parroquia_fiscal) parroquiafi,
                                 (SELECT m.municipio
@@ -388,7 +388,11 @@ class ClienteModel extends Model
 
   function detalleClienteProy($idclienteProy){
 
-    $info = DB::select('SELECT *
+    $info = DB::select('SELECT UPPER(descripcion) AS descripcion,
+                               fecha_contratacion,
+                               id,
+                               id_cliente,
+                               id_estatus
                           FROM tbl_proyecto 
                           WHERE id = '.$idclienteProy.'
                         ');
@@ -462,7 +466,7 @@ class ClienteModel extends Model
                                  piso_fiscal,
                                  numero_fiscal,
                                  telefono_fiscal,
-                                 fax_fiscal,
+                                 pagina_web,
                                  email_fiscal,
                                  id_estatus,
                                  id_parroquia_fiscal,
@@ -561,7 +565,7 @@ class ClienteModel extends Model
                     "piso_fiscal" => $parametros["piso_fiscal"],
                     "numero_fiscal" => $parametros["numero_fiscal"],
                     "telefono_fiscal" => $parametros["telefono_fiscal"],
-                    "fax_fiscal" => $parametros["fax_fiscal"],
+                    "pagina_web" => $parametros["pagina_web"],
                     "email_fiscal" => $parametros["email_fiscal"],
                     "id_estatus" => $parametros["estatus"],);      
         $contacto = DB::table('tbl_cliente')->where("id",$parametros["idCliente"])->update($data);
