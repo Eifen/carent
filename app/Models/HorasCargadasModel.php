@@ -121,11 +121,12 @@ class HorasCargadasModel extends Model
 
       $horasCargadas = DB::table('tbl_horas_cargables')->insertGetId($data);
       if($horasCargadas){
-        $info = db::select('SELECT * FROM tbl_proyecto_analista WHERE id = '.$idProyAnalista.'');
+        $analista = db::select('SELECT u.codigo FROM tbl_usuario u WHERE u.id = (SELECT a.id_analista  FROM tbl_proyecto_analista a WHERE a.id = '.$idProyAnalista.')');
+        $proyecto = db::select('SELECT UPPER(p.descripcion) AS descripcion FROM tbl_proyecto p WHERE p.id = (SELECT a.id_proyecto  FROM tbl_proyecto_analista a WHERE a.id = '.$idProyAnalista.')');
         $data = array("usuario_id" => $usuario_id,
                       "fecha" => $fechab,
                       "direccion_ip" => $direccion_ip,
-                      "accion" => 'Usuario: '.$info[0]->id_analista.' Cargo: '.$horas_trabajadas.' horas en el proyecto:'.$info[0]->id_proyecto.'');
+                      "accion" => 'Analista codigo: '.$analista[0]->codigo.' Cargo: '.$horas_trabajadas.' horas en el proyecto:'.$proyecto[0]->descripcion.'');
         $bit = DB::table('logs_auditoria')->insertGetId($data);
         DB::commit();
         return array("response" => true, "message" => "Horas Cargadas con éxito.");
@@ -169,10 +170,14 @@ class HorasCargadasModel extends Model
 
         DB::commit();
         $info = db::select('SELECT * FROM tbl_proyecto_analista WHERE id = (SELECT id_proy_analista FROM tbl_horas_cargables WHERE id = '.$idHoraCargada.')');
+
+        $analista = db::select('SELECT u.codigo FROM tbl_usuario u WHERE u.id = (SELECT a.id_analista  FROM tbl_proyecto_analista a WHERE a.id = '.$info[0]->id.')');
+
+        $proyecto = db::select('SELECT UPPER(p.descripcion) AS descripcion FROM tbl_proyecto p WHERE p.id = (SELECT a.id_proyecto  FROM tbl_proyecto_analista a WHERE a.id = '.$info[0]->id.')');
         $data = array("usuario_id" => $usuario_id,
                       "fecha" => $fechab,
                       "direccion_ip" => $direccion_ip,
-                      "accion" => 'Modificacion de horas del usuario: '.$info[0]->id_analista.' en el proyecto:'.$info[0]->id_proyecto.'');
+                      "accion" => 'Modificacion de horas del usuario codigo: '.$analista[0]->codigo.' en el proyecto:'.$proyecto[0]->descripcion.'');
         $bit = DB::table('logs_auditoria')->insertGetId($data);
         return array("response" => true, "message" => "Horas cargadas actualizadas con éxito.");
 
@@ -205,13 +210,18 @@ class HorasCargadasModel extends Model
     DB::beginTransaction();
       $horas = DB::select('SELECT * FROM tbl_horas_cargables WHERE id = '.$idHcargadas.'');
       $info = db::select('SELECT * FROM tbl_proyecto_analista WHERE id = (SELECT id_proy_analista FROM tbl_horas_cargables WHERE id = '.$idHcargadas.')');
+
+      $analista = db::select('SELECT u.codigo FROM tbl_usuario u WHERE u.id = (SELECT a.id_analista  FROM tbl_proyecto_analista a WHERE a.id = '.$info[0]->id.')');
+
+      $proyecto = db::select('SELECT UPPER(p.descripcion) AS descripcion FROM tbl_proyecto p WHERE p.id = (SELECT a.id_proyecto  FROM tbl_proyecto_analista a WHERE a.id = '.$info[0]->id.')');
+
       $delete = DB::table('tbl_horas_cargables')->where("id",$idHcargadas)->delete();	
       if($delete){
 
         $data = array("usuario_id" => $usuario_id,
                       "fecha" => $fechab,
                       "direccion_ip" => $direccion_ip,
-                      "accion" => 'Eliminacion de '.$horas[0]->horas_trabajadas.' horas del usuario: '.$info[0]->id_analista.' en el proyecto:'.$info[0]->id_proyecto.'');
+                      "accion" => 'Eliminacion de '.$horas[0]->horas_trabajadas.' horas del usuario codigo: '.$analista[0]->codigo.' en el proyecto:'.$proyecto[0]->descripcion.'');
         $bit = DB::table('logs_auditoria')->insertGetId($data);
         DB::commit();
         return array("response" => true, "message" => "Hora eliminada con exito");
