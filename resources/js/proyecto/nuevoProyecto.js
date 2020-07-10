@@ -50,6 +50,7 @@ var app = new Vue({
         value: ""
       },
       monto:{
+        autonumeric: null,
         disabled: true,
         value: 0
       },
@@ -131,7 +132,7 @@ var app = new Vue({
           modifyValueOnWheel: false
         });
 
-        new AutoNumeric('#monto', {
+        self.form.autonumeric = new AutoNumeric('#monto', {
           decimalPlaces: 4,
           decimalCharacter: ',',
           digitGroupSeparator: '.',
@@ -209,6 +210,8 @@ var app = new Vue({
     },
     monedaSeleccionada: function(e){
 
+      let simbolo = $(e.target).children("option:selected").attr("simbolo");
+      self.form.autonumeric.update({ currencySymbol : simbolo+" "});
       self.form.monto.disabled = (($(e.target).val().trim() !== "") && ($(e.target).val() !== null)) ? false : true;
       self.limpiarMensajeError(e);
 
@@ -268,13 +271,17 @@ var app = new Vue({
           divisiones.push({id:item.id, horas: hora});
         });
 
+        let monto = (self.form.autonumeric === null) ? 0 : self.form.autonumeric.get()
+
         //Obtenemos valores
         let parametros = {
           descripcion:  self.form.descripcion.value,
           cliente: self.form.cliente.value,
           fechaContratacion: self.form.fechaContratacion.value,
           divisiones: divisiones,
-          estatus: self.form.estatus.value
+          estatus: self.form.estatus.value,
+          id_moneda: self.form.montoEn.value,
+          monto: monto
         }
 
         self.submitCrear.content = '<i class="fas fa-cog fa-spin"></i>';

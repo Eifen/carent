@@ -34978,6 +34978,7 @@ var datosIniciales = function datosIniciales() {
           clientes: response.data.clientes,
           divisiones: response.data.divisiones,
           estatus: response.data.estatus,
+          monedas: response.data.monedas,
           response: true
         });
       } else {
@@ -35004,6 +35005,7 @@ var app = new Vue({
     comboClientes: [],
     comboEstatus: [],
     comboDivisiones: [],
+    comboMonedas: [],
     refreshForm: false,
     form: {
       descripcion: {
@@ -35022,6 +35024,16 @@ var app = new Vue({
       fechaContratacion: {
         disabled: true,
         value: ""
+      },
+      montoEn: {
+        disabled: true,
+        value: ""
+      },
+      monto: {
+        autonumeric: null,
+        disabled: true,
+        simbolo: "",
+        value: 0
       },
       estatus: {
         disabled: true,
@@ -35070,9 +35082,13 @@ var app = new Vue({
                 self.form.horas.value = dataInit.info.horas_contratadas;
                 self.form.fechaContratacion.value = dataInit.info.fecha_contratacion;
                 self.form.estatus.value = dataInit.info.id_estatus;
+                self.form.montoEn.value = dataInit.info.id_moneda;
+                self.form.monto.value = dataInit.info.monto;
+                self.form.monto.simbolo = dataInit.info.simbolo;
                 self.comboClientes = dataInit.clientes;
                 self.comboEstatus = dataInit.estatus;
                 self.comboDivisiones = dataInit.divisiones;
+                self.comboMonedas = dataInit.monedas;
                 self.form.descripcion.disabled = false;
                 self.form.cliente.disabled = false;
                 self.form.fechaContratacion.disabled = false;
@@ -35131,6 +35147,15 @@ var app = new Vue({
                   });
                   AutoNumeric.getAutoNumericElement("#horas").set(self.form.horas.value);
                   var indices = ["descripcion", "cliente", "horas", "fechaContratacion", "estatus", "divisiones"];
+                  self.form.autonumeric = new AutoNumeric('#monto', {
+                    currencySymbol: self.form.monto.simbolo + " ",
+                    decimalPlaces: 4,
+                    decimalCharacter: ',',
+                    digitGroupSeparator: '.',
+                    emptyInputBehavior: 0,
+                    minimumValue: 0,
+                    modifyValueOnWheel: false
+                  });
                   indices.forEach(function (indiceObjecto, indice) {
                     if (self.form[indiceObjecto].hasOwnProperty('disabled') && indiceObjecto !== "horas") {
                       self.form[indiceObjecto].disabled = false;
@@ -35390,7 +35415,7 @@ var app = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\proyecto\modificarProyecto.js */"./resources/js/proyecto/modificarProyecto.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\js\proyecto\modificarProyecto.js */"./resources/js/proyecto/modificarProyecto.js");
 
 
 /***/ })

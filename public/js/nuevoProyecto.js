@@ -34230,6 +34230,7 @@ var app = new Vue({
         value: ""
       },
       monto: {
+        autonumeric: null,
         disabled: true,
         value: 0
       },
@@ -34292,7 +34293,7 @@ var app = new Vue({
           minimumValue: 0,
           modifyValueOnWheel: false
         });
-        new AutoNumeric('#monto', {
+        self.form.autonumeric = new AutoNumeric('#monto', {
           decimalPlaces: 4,
           decimalCharacter: ',',
           digitGroupSeparator: '.',
@@ -34353,6 +34354,10 @@ var app = new Vue({
       self.form[e.target.id].validar = self.form[e.target.id].value.length > 0 && self.form[e.target.id].validar === false ? true : false;
     },
     monedaSeleccionada: function monedaSeleccionada(e) {
+      var simbolo = $(e.target).children("option:selected").attr("simbolo");
+      self.form.autonumeric.update({
+        currencySymbol: simbolo + " "
+      });
       self.form.monto.disabled = $(e.target).val().trim() !== "" && $(e.target).val() !== null ? false : true;
       self.limpiarMensajeError(e);
     },
@@ -34401,14 +34406,17 @@ var app = new Vue({
             id: item.id,
             horas: hora
           });
-        }); //Obtenemos valores
+        });
+        var monto = self.form.autonumeric === null ? 0 : self.form.autonumeric.get(); //Obtenemos valores
 
         var parametros = {
           descripcion: self.form.descripcion.value,
           cliente: self.form.cliente.value,
           fechaContratacion: self.form.fechaContratacion.value,
           divisiones: divisiones,
-          estatus: self.form.estatus.value
+          estatus: self.form.estatus.value,
+          id_moneda: self.form.montoEn.value,
+          monto: monto
         };
         self.submitCrear.content = '<i class="fas fa-cog fa-spin"></i>';
         self.submitCrear.disabled = true;
@@ -34519,7 +34527,7 @@ var app = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\proyecto\nuevoProyecto.js */"./resources/js/proyecto/nuevoProyecto.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\js\proyecto\nuevoProyecto.js */"./resources/js/proyecto/nuevoProyecto.js");
 
 
 /***/ })

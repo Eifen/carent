@@ -11,6 +11,12 @@ use Illuminate\Http\RedirectResponse;
 class LoginController extends Controller
 {
 
+    function index(){
+
+      return view('login');
+
+    }
+
     function encryptConfig(Request $request){
 
       $modelo = new LoginModel();
@@ -24,7 +30,7 @@ class LoginController extends Controller
 
       $codigoUsuario = $this->desencriptarCryptoJS($request->input("codigoUsuario"));
       $claveForm = $this->desencriptarCryptoJS($request->input("clave"));
-      $fecha = date("Y-m-d H:i:s"); 
+      $fecha = date("Y-m-d H:i:s");
       if (isset($_SERVER["HTTP_CLIENT_IP"])){
         $direccion = $_SERVER["HTTP_CLIENT_IP"];
       }elseif (isset($_SERVER["HTTP_X_FORWARDED_FOR"])){

@@ -20,14 +20,20 @@ class ProyectoModel extends Model
 
     }// Fin estatusProyectos
 
-    function monedas(){
+    function monedas($activas){
+
+      if($activas){
+        $condicion = " WHERE m.id_estatus = 1";
+      }else{
+        $condicion = "";
+      }
 
       $sql = DB::select('SELECT m.id,
                                 m.moneda,
                                 m.simbolo
                          FROM tbl_monedas m
-                         WHERE m.id_estatus = 1
-                         ORDER BY m.moneda ASC');
+                         '.$condicion.'
+                         ORDER BY m.orden ASC');
 
       return $sql;
 
@@ -57,14 +63,16 @@ class ProyectoModel extends Model
 
     }// Fin clientes
 
-    function crearProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus,$usuario_id,$fecha,$direccion_ip){
+    function crearProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus,$usuario_id,$fecha,$direccion_ip,$id_moneda,$monto){
 
       DB::beginTransaction();
 
       $data = array("descripcion" => $descripcion,
                     "id_cliente" => $cliente,
                     "fecha_contratacion" => $fechaContratacion,
-                    "id_estatus" => $estatus);
+                    "id_estatus" => $estatus,
+                    "id_moneda" => $id_moneda,
+                    "monto" => $monto);
 
       $idProyecto = DB::table('tbl_proyecto')->insertGetId($data);
 
@@ -316,9 +324,13 @@ class ProyectoModel extends Model
 
     function detalleProyectoModificar($id_proyecto){
 
-      $info = DB::select('SELECT p.*, (SELECT SUM(horas_contratadas) FROM tbl_proyecto_divisiones WHERE id_proyecto = p.id) AS horas_contratadas
-                          FROM tbl_proyecto p
-                          WHERE id = '.$id_proyecto.'');
+      $info = DB::select('SELECT p.*,
+                                 (SELECT SUM(horas_contratadas) FROM tbl_proyecto_divisiones WHERE id_proyecto = p.id) AS horas_contratadas,
+                                 m.simbolo
+                          FROM tbl_proyecto p,
+                               tbl_monedas m
+                          WHERE p.id = '.$id_proyecto.'
+                          AND p.id_moneda = m.id');
 
       if(count($info) > 0){
 

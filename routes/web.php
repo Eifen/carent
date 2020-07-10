@@ -11,20 +11,16 @@
 |
 */
 
-Route::middleware('usuario.session')->group(function () {
-    Route::get('/', function () { return view('login'); })->name('loginView');
-    //Route::get('/cargarHorasNoCargables',  function() { return view('horasNoCargables/formHorasNoCargables'); })->name('horasNoCargables');
-});
-
+Route::get('/', 'LoginController@index')->middleware('usuario.session')->name('loginView');
 Route::get('/encryptConfig', 'ConfigsController@encryptConfig');
 Route::post('/login', 'LoginController@login');
 Route::post('/recoverylogin', 'LoginController@recoverylogin');
 Route::get('/inicio', 'InicioController@inicio');
 Route::get('/menUsuario', 'InicioController@menUsuario');
 Route::get('/logout', 'LoginController@logout');
-Route::get('/cambiarClave', 'InicioController@cambiarClave');
+Route::get('/cambiarClave', 'InicioController@cambiarClave')->middleware('usuario.session');
 Route::post('/guardarNuevaClave', 'InicioController@guardarNuevaClave');
-Route::get('/formNuevoUsuario', function() {return view('usuario/nuevoUsuario');});
+Route::get('/formNuevoUsuario', function() {return view('usuario/nuevoUsuario');})->middleware('usuario.session');
 Route::get('/estados', 'UsuarioController@estados');
 Route::get('/municipios', 'UsuarioController@municipios');
 Route::get('/parroquias', 'UsuarioController@parroquias');
@@ -34,19 +30,19 @@ Route::post('/crearUsuario', 'UsuarioController@crearUsuario');
 Route::get('/formBuscarUsuario', function() {return view('usuario/buscarUsuario');});
 Route::get('/buscarUsuarios', 'UsuarioController@buscarUsuarios');
 Route::get('/detalleUsuario', 'UsuarioController@detalleUsuario');
-Route::get('/formModificarUsuario/{idUsuario}', 'UsuarioController@formModificarUsuario')->where('idUsuario', '[0-9]+');//Validamos que solo pase números*/
+Route::get('/formModificarUsuario/{idUsuario}', 'UsuarioController@formModificarUsuario')->middleware('usuario.session')->where('idUsuario', '[0-9]+');//Validamos que solo pase números*/
 Route::get('/detalleUsuarioModificar', 'UsuarioController@detalleUsuarioModificar');
 Route::post('/modificarUsuario', 'UsuarioController@modificarUsuario');
-Route::get('/formNuevoCliente', function() {return view('cliente/nuevoCliente');});
+Route::get('/formNuevoCliente', function() {return view('cliente/nuevoCliente');})->middleware('usuario.session');
 Route::get('/buscarCliente', 'ClienteController@buscarCliente');
 Route::get('/estados', 'ClienteController@estados');
 Route::get('/municipios', 'ClienteController@municipios');
 Route::get('/parroquias', 'ClienteController@parroquias');
 Route::post('/crearCliente', 'ClienteController@crearCliente');
-Route::get('/formBuscarCliente', function() {return view('cliente/buscarCliente');});
+Route::get('/formBuscarCliente', function() {return view('cliente/buscarCliente');})->middleware('usuario.session');
 Route::get('/buscarClientes', 'ClienteController@buscarClientes');
 Route::get('/detalleCliente', 'ClienteController@detalleCliente');
-Route::get('/formDetalleFactCliente', function() {return view('cliente/detalleFactcliente');});
+Route::get('/formDetalleFactCliente', function() {return view('cliente/detalleFactcliente');})->middleware('usuario.session');
 Route::get('/buscarClieProyec', 'ClienteController@buscarClieProyec');
 Route::get('/detalleClienteProy', 'ClienteController@detalleClienteProy');
 Route::post('/actualizarFactCliente', 'ClienteController@actualizarFactCliente');
@@ -54,26 +50,26 @@ Route::post('/crearFactCliente', 'ClienteController@crearFactCliente');
 Route::get('/buscarUsuariosS', 'ClienteController@buscarUsuarios');
 Route::get('/buscarUsuariosG', 'ClienteController@buscarUsuariosG');
 Route::get('/detalleUsuarios', 'ClienteController@detalleUsuario');
-Route::get('/formModificarCliente/{idCliente}', 'ClienteController@formModificarCliente')->where('idCliente', '[0-9]+');//Validamos que solo pase números*/
+Route::get('/formModificarCliente/{idCliente}', 'ClienteController@formModificarCliente')->middleware('usuario.session')->where('idCliente', '[0-9]+');//Validamos que solo pase números*/
 Route::get('/detalleClienteModificar', 'ClienteController@detalleClienteModificar');
 Route::post('/modificarCliente', 'ClienteController@modificarCliente');
-Route::get('/formBuscarRegistro', function() {return view('crea/buscarRegistro');});
+Route::get('/formBuscarRegistro', function() {return view('crea/buscarRegistro');})->middleware('usuario.session');
 Route::get('/buscarRegistro', 'CreaController@buscarRegistro');
 Route::get('/detalleRegistro', 'CreaController@detalleRegistro');
-Route::get('/formNuevoCargo', function() {return view('crea/nuevoCargo');});
+Route::get('/formNuevoCargo', function() {return view('crea/nuevoCargo');})->middleware('usuario.session');
 Route::post('/crearCargo', 'CreaController@crearCargo');
-Route::get('/formNuevaDivision', function() {return view('crea/nuevaDivision');});
+Route::get('/formNuevaDivision', function() {return view('crea/nuevaDivision');})->middleware('usuario.session');
 Route::post('/crearDivision', 'CreaController@crearDivision');
-Route::get('/formNuevoProyecto', function() {return view('proyecto/nuevoProyecto');});
+Route::get('/formNuevoProyecto', function() {return view('proyecto/nuevoProyecto');})->middleware('usuario.session');
 Route::get('/dataInicialNuevoProyecto', 'ProyectoController@dataInicialNuevoProyecto');
 Route::post('/crearProyecto', 'ProyectoController@crearProyecto');
-Route::get('/proyectos', function() {return view('proyecto/formBuscarProyectos');});
+Route::get('/proyectos', function() {return view('proyecto/formBuscarProyectos');})->middleware('usuario.session');
 Route::get('/dataInicialListadoProyectos', 'ProyectoController@dataInicialListadoProyectos');
 Route::get('/buscarProyectos', 'ProyectoController@buscarProyectos');
 Route::get('/formModificarProyecto/{idProyecto}', 'ProyectoController@formModificarProyecto')->where('idProyecto', '[0-9]+');//Validamos que solo pase números*/
 Route::get('/detalleProyectoModificar', 'ProyectoController@detalleProyectoModificar');
 Route::post('/modificarProyecto', 'ProyectoController@modificarProyecto');
-Route::get('/proyectoDivision', function() {return view('proyecto/proyectoDivision');});
+Route::get('/proyectoDivision', function() {return view('proyecto/proyectoDivision');})->middleware('usuario.session');
 Route::get('/asignarProyectos', 'ProyectoController@asignarProyectos');
 Route::get('/buscardiviProyectos', 'ProyectoController@buscardiviProyectos');
 Route::get('/detalleAnalistaProyecto', 'ProyectoController@detalleAnalistaProyecto');
@@ -88,12 +84,12 @@ Route::get('/detalleModHorasCargadas', 'HorasCargadasController@detalleModHorasC
 Route::post('/ModificarHorasCargadas', 'HorasCargadasController@ModificarHorasCargadas');
 Route::get('/detalleHorasEliminar', 'HorasCargadasController@detalleHorasEliminar');
 Route::post('/EliminarHorasCargadas', 'HorasCargadasController@EliminarHorasCargadas');
-Route::get('/formHorasNoCargables',  function() {return view('horasNoCargables/formConceptosHorasNoCargables');});
+Route::get('/formHorasNoCargables',  function() {return view('horasNoCargables/formConceptosHorasNoCargables');})->middleware('usuario.session');
 Route::get('/dataInicialConceptosHorasNoCargables', 'HorasNoCargablesController@dataInicialConceptosHorasNoCargables');
 Route::get('/buscarConceptoHorasNoCargables', 'HorasNoCargablesController@buscarConceptoHorasNoCargables');
 Route::post('/crearConceptoNoCargable', 'HorasNoCargablesController@crearConceptoNoCargable');
 Route::post('/modificarConceptoNoCargable', 'HorasNoCargablesController@modificarConceptoNoCargable');
-Route::get('/cargarHorasNoCargables',  function() {return view('horasNoCargables/formHorasNoCargables');});
+Route::get('/cargarHorasNoCargables',  function() {return view('horasNoCargables/formHorasNoCargables');})->middleware('usuario.session');
 Route::get('/dataInicialHorasNoCargables', 'HorasNoCargablesController@dataInicialHorasNoCargables');
 Route::post('/registrarHorasNoCargables', 'HorasNoCargablesController@registrarHorasNoCargables');
 Route::get('/buscarHorasNoCargableCargadas', 'HorasNoCargablesController@buscarHorasNoCargableCargadas');

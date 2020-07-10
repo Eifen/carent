@@ -38,6 +38,7 @@
                        maxlength="250"
                        v-bind:disabled="form.descripcion.disabled"
                        v-model.trim="form.descripcion.value"
+                       v-on:click="limpiarMensajeError"
                        type="text">
                 <small id="descripcionHelp" class="form-text text-muted">Ejemplo: Auditoria Externa</small>
                 <div class="mensaje"></div>

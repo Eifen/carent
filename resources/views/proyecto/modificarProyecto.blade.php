@@ -95,6 +95,30 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
+                <label for="horas">Monto en <span class="campo-obligatorio">*</span></label>
+                <select aria-describedby="montoEnHelp"
+                        class="form-control"
+                        id="montoEn"
+                        data-validar="true"
+                        v-bind:disabled="form.montoEn.disabled"
+                        v-model="form.montoEn.value">
+                  <option value="" disabled selected>Seleccione...</option>
+                  <option v-bind:value="moneda.id" v-for="moneda in comboMonedas" :simbolo="moneda.simbolo">@{{ moneda.moneda }}</option>
+                </select>
+                <div class="mensaje"></div>
+              </div>
+              <div class="form-group col-12 col-sm-6">
+                <label for="horas">Monto <span class="campo-obligatorio">*</span></label>
+                <input aria-describedby="montoHelp"
+                       class="form-control"
+                       data-validar="true"
+                       id="monto"
+                       v-bind:disabled="form.monto.disabled"
+                       v-model="form.monto.value"
+                       type="text">
+                <div class="mensaje"></div>
+              </div>
+              <div class="form-group col-12 col-sm-6">
                 <!--Selecionador multiple a ir escogiendo una division se habilita un campo para introducir las horas-->
                 <label for="divisiones">Divisiones <span class="campo-obligatorio">*</span></label>
                 <multiselect @Open="limpiarMensajeErrorMultiselect"
