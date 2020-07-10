@@ -239,8 +239,15 @@ var app = new Vue({
           show: false
         };
 
-        if(parseInt(horas_asignadas) < parseInt(horas_cargadas) + parseInt(self.form.horas_trabajadas.value) && self.cargar === 1){
-          var message = "Sobrepasaste el limite de horas asignadas. Si estas seguro volver hacer clic en Cargar Horas";
+        if(parseInt(horas_asignadas) < parseInt(horas_cargadas) + parseInt(self.form.horas_trabajadas.value) && self.permisoActualizar === false){
+          var message = "Sobrepasaste el limite de horas asignadas.";
+          self.alertForm = {
+            class : "alert alert-warning",
+            message : message,
+            show: true
+          };
+        }else if (parseInt(horas_asignadas) < parseInt(horas_cargadas) + parseInt(self.form.horas_trabajadas.value) && self.cargar === 1) {
+          var message = "Sobrepasaste el limite de horas asignadas. Si estas seguro volver hacer clic en Cargar Horas.";
           self.alertForm = {
             class : "alert alert-warning",
             message : message,

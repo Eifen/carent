@@ -86,10 +86,11 @@ class ProyectoModel extends Model
       }
 
       if($divisionCreada){
+        $client = DB::select('SELECT c.razon_social FROM tbl_cliente c WHERE c.id = '.$cliente.'');
         $data = array("usuario_id" => $usuario_id,
                       "fecha" => $fecha,
                       "direccion_ip" => $direccion_ip,
-                      "accion" => 'Registro del proyecto: '.$descripcion.' del cliente:'.$cliente.'');
+                      "accion" => 'Registro del proyecto: '.$descripcion.'. Cliente:'.$client[0]->razon_social.'');
         $bit = DB::table('logs_auditoria')->insertGetId($data);
         DB::commit();
         return array("response" => true, "message" => "Proyecto creado con éxito.");
@@ -398,10 +399,11 @@ class ProyectoModel extends Model
 
       }
         DB::commit();
+        $client = DB::select('SELECT c.razon_social FROM tbl_cliente c WHERE c.id = '.$cliente.'');
         $data = array("usuario_id" => $usuario_id,
                       "fecha" => $fecha,
                       "direccion_ip" => $direccion_ip,
-                      "accion" => 'Modificacion del proyecto: '.$descripcion.' del cliente:'.$cliente.'');
+                      "accion" => 'Modificacion del proyecto: '.$descripcion.'. Cliente:'.$client[0]->razon_social.'');
         $bit = DB::table('logs_auditoria')->insertGetId($data);
         return array("response" => true, "message" => "Proyecto actualizado con éxito.");
 
@@ -507,6 +509,7 @@ class ProyectoModel extends Model
                         FROM tbl_proyecto p
                         WHERE p.id = (SELECT a.id_proyecto FROM tbl_proyecto_analista a WHERE id_analista = '.$id_usuario.' AND a.id_proyecto = p.id)
                         AND p.id_estatus = 1
+                        AND 1 = (SELECT a.id_estatus FROM tbl_proyecto_analista a WHERE id_analista = '.$id_usuario.' AND a.id_proyecto = p.id)
                         ORDER BY fecha ASC');
     if(count($info) > 0){
       return $info;
@@ -658,6 +661,7 @@ class ProyectoModel extends Model
                                         AND p.id = (SELECT a.id_proyecto FROM tbl_proyecto_analista a WHERE a.id_analista = '.$id_usuario.' AND a.id_proyecto = p.id AND a.id_estatus = 1))permisoCrear
                                FROM tbl_proyecto p
                                WHERE p.id = (SELECT a.id_proyecto FROM tbl_proyecto_analista a WHERE id_analista = '.$id_usuario.' AND a.id_proyecto = p.id)
+                               AND 1 = (SELECT a.id_estatus FROM tbl_proyecto_analista a WHERE id_analista = '.$id_usuario.' AND a.id_proyecto = p.id)
                                '.$sql_proyecto.'
                                '.$sql_estatus.'
                                '.$sql_cliente.'
@@ -781,10 +785,12 @@ class ProyectoModel extends Model
       $analistaAgregado = DB::table('tbl_proyecto_analista')->insertGetId($data);
 
       if($analistaAgregado){
+        $proyecto = DB::select('SELECT UPPER(p.descripcion) AS descripcion FROM tbl_proyecto p WHERE p.id = '.$idProyecto.'');
+        $analista = DB::select('SELECT u.codigo FROM tbl_usuario u WHERE u.id = '.$idUsuario.'');
         $data = array("usuario_id" => $usuario_id,
                       "fecha" => $fecha,
                       "direccion_ip" => $direccion_ip,
-                      "accion" => 'Asignacion del analista: '.$idUsuario.' al proyecto: '.$idProyecto.'');
+                      "accion" => 'Asignacion del analista codigo: '.$analista[0]->codigo.'. Al proyecto: '.$proyecto[0]->descripcion.'');
         $bit = DB::table('logs_auditoria')->insertGetId($data);
         DB::commit();
         return array("response" => true, "message" => "Analista agregado con éxito.");
@@ -829,18 +835,20 @@ class ProyectoModel extends Model
 
         DB::commit();
         $info = db::select('SELECT * FROM tbl_proyecto_analista WHERE id = '.$idAnaProy.'');
+        $analista = db::select('SELECT u.codigo FROM tbl_usuario u WHERE u.id = (SELECT a.id_analista  FROM tbl_proyecto_analista a WHERE a.id = '.$idAnaProy.')');
+        $proyecto = DB::select('SELECT UPPER(p.descripcion) AS descripcion FROM tbl_proyecto p WHERE p.id = '.$idProyecto.'');
         if ($info[0]->id_estatus === 1) {
           $data = array("usuario_id" => $usuario_id,
                       "fecha" => $fecha,
                       "direccion_ip" => $direccion_ip,
-                      "accion" => 'Asignacion del analista: '.$info[0]->id_analista.' al proyecto: '.$idProyecto.'');
+                      "accion" => 'Asignacion del analista codigo: '.$analista[0]->codigo.'. Al proyecto: '.$proyecto[0]->descripcion.'');
           $bit = DB::table('logs_auditoria')->insertGetId($data);
         }
         if ($info[0]->id_estatus === 0) {
           $data = array("usuario_id" => $usuario_id,
                       "fecha" => $fecha,
                       "direccion_ip" => $direccion_ip,
-                      "accion" => 'Eliminacion del analista: '.$info[0]->id_analista.' del proyecto: '.$idProyecto.'');
+                      "accion" => 'Eliminacion del analista codigo: '.$analista[0]->codigo.'. Del proyecto: '.$proyecto[0]->descripcion.'');
           $bit = DB::table('logs_auditoria')->insertGetId($data);
         }
 

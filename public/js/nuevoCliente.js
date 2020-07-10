@@ -40719,7 +40719,7 @@ var app = new Vue({
         disabled: false,
         value: ""
       },
-      fax_fiscal: {
+      pagina_web: {
         disabled: false,
         value: ""
       },
@@ -41149,7 +41149,7 @@ var app = new Vue({
           piso_fiscal: self.form.piso_fiscal.value,
           numero_fiscal: AutoNumeric.getAutoNumericElement("#numero_fiscal").getNumber(),
           telefono_fiscal: self.form.telefono_fiscal.value,
-          fax_fiscal: self.form.fax_fiscal.value,
+          pagina_web: self.form.pagina_web.value,
           email_fiscal: self.form.email_fiscal.value
         };
         self.submitCrear.content = '<i class="fas fa-cog fa-spin"></i>';
@@ -41171,7 +41171,7 @@ var app = new Vue({
             throw response.data;
           }
         })["catch"](function (error) {
-          var indices = ["rif", "nit", "razon_social", "ciudad_fiscal", "avenida_calle_fiscal", "edificio_quinta_fiscal", "piso_fiscal", "numero_fiscal", "telefono_fiscal", "fax_fiscal", "email_fiscal", "estadofi", "municipiofi", "parroquiafi"];
+          var indices = ["rif", "nit", "razon_social", "ciudad_fiscal", "avenida_calle_fiscal", "edificio_quinta_fiscal", "piso_fiscal", "numero_fiscal", "telefono_fiscal", "pagina_web", "email_fiscal", "estadofi", "municipiofi", "parroquiafi"];
           indices.forEach(function (indiceObjecto, indice) {
             self.form[indiceObjecto].disabled = false;
           });
@@ -41463,7 +41463,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\js\cliente\nuevoCliente.js */"./resources/js/cliente/nuevoCliente.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\cliente\nuevoCliente.js */"./resources/js/cliente/nuevoCliente.js");
 
 
 /***/ })

@@ -381,16 +381,15 @@
                 <div class="mensaje"></div>
               </div>                        
               <div class="form-group col-12 col-sm-6">
-                <label for="fax_fiscal">Nº de Fax</label>
-                <input aria-describedby="fax_fiscalHelp"
+                <label for="pagina_web">Pagina Web</label>
+                <input aria-describedby="pagina_webHelp"
                        class="form-control"
-                       id="fax_fiscal"
-                       v-bind:disabled="form.fax_fiscal.disabled"
-                       v-model="form.fax_fiscal.value"
-                       v-mask="'(####) - ### ####'"
+                       id="pagina_web"
+                       v-bind:disabled="form.pagina_web.disabled"
+                       v-model="form.pagina_web.value"
                        v-on:keyup="valuesForm"
                        type="text">
-                <small id="fax_fiscalHelp" class="form-text text-muted"></small>
+                <small id="pagina_webHelp" class="form-text text-muted"></small>
                 <div class="mensaje"></div>
               </div>
 

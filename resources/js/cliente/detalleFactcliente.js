@@ -712,11 +712,8 @@ var app = new Vue({
           if(response.status === 200 && response.data.response === true){
              self.refreshForm = true;
              self.permisoActualizar = false;
-            var indices = ["ciudad_factura","avenida_calle_factura","edificio_quinta_factura","piso_factura","numero_factura","telefono_factura","fax_factura","correo_factura"];
+            var indices = ["ciudad_factura","avenida_calle_factura","edificio_quinta_factura","piso_factura","numero_factura","telefono_factura","fax_factura","correo_factura","estadofa","municipiofa","parroquiafa"];
   
-            if(self.form.empleado.checked){
-            indices.push("estadofa","municipiofa","parroquiafa");
-          }
             indices.forEach(function(indiceObjecto, indice) {
               self.form[indiceObjecto].disabled = false;
             });
