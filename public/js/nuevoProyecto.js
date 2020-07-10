@@ -34205,6 +34205,7 @@ var app = new Vue({
     comboClientes: [],
     comboEstatus: [],
     comboDivisiones: [],
+    comboMonedas: [],
     refreshForm: false,
     form: {
       descripcion: {
@@ -34223,6 +34224,15 @@ var app = new Vue({
       fechaContratacion: {
         disabled: true,
         value: ""
+      },
+      montoEn: {
+        disabled: true,
+        value: ""
+      },
+      monto: {
+        autonumeric: null,
+        disabled: true,
+        value: 0
       },
       estatus: {
         disabled: true,
@@ -34249,10 +34259,12 @@ var app = new Vue({
         self.comboClientes = response.data.clientes;
         self.comboEstatus = response.data.estatus;
         self.comboDivisiones = response.data.divisiones;
+        self.comboMonedas = response.data.monedas;
         self.form.descripcion.disabled = false;
         self.form.cliente.disabled = false;
         self.form.fechaContratacion.disabled = false;
         self.form.estatus.disabled = false;
+        self.form.montoEn.disabled = false;
         self.form.divisiones.disabled = false;
         self.form.mostrar = true;
         self.loading = false;
@@ -34277,6 +34289,14 @@ var app = new Vue({
           decimalPlaces: 0,
           decimalCharacter: ',',
           digitGroupSeparator: '',
+          emptyInputBehavior: 0,
+          minimumValue: 0,
+          modifyValueOnWheel: false
+        });
+        self.form.autonumeric = new AutoNumeric('#monto', {
+          decimalPlaces: 4,
+          decimalCharacter: ',',
+          digitGroupSeparator: '.',
           emptyInputBehavior: 0,
           minimumValue: 0,
           modifyValueOnWheel: false
@@ -34333,6 +34353,14 @@ var app = new Vue({
       self.valuesForm(e);
       self.form[e.target.id].validar = self.form[e.target.id].value.length > 0 && self.form[e.target.id].validar === false ? true : false;
     },
+    monedaSeleccionada: function monedaSeleccionada(e) {
+      var simbolo = $(e.target).children("option:selected").attr("simbolo");
+      self.form.autonumeric.update({
+        currencySymbol: simbolo + " "
+      });
+      self.form.monto.disabled = $(e.target).val().trim() !== "" && $(e.target).val() !== null ? false : true;
+      self.limpiarMensajeError(e);
+    },
     crear: function crear() {
       var formValido = true;
       $("form .form-group .mensaje").html("").removeClass("invalid-feedback");
@@ -34378,14 +34406,17 @@ var app = new Vue({
             id: item.id,
             horas: hora
           });
-        }); //Obtenemos valores
+        });
+        var monto = self.form.autonumeric === null ? 0 : self.form.autonumeric.get(); //Obtenemos valores
 
         var parametros = {
           descripcion: self.form.descripcion.value,
           cliente: self.form.cliente.value,
           fechaContratacion: self.form.fechaContratacion.value,
           divisiones: divisiones,
-          estatus: self.form.estatus.value
+          estatus: self.form.estatus.value,
+          id_moneda: self.form.montoEn.value,
+          monto: monto
         };
         self.submitCrear.content = '<i class="fas fa-cog fa-spin"></i>';
         self.submitCrear.disabled = true;
@@ -34496,7 +34527,7 @@ var app = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\proyecto\nuevoProyecto.js */"./resources/js/proyecto/nuevoProyecto.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\js\proyecto\nuevoProyecto.js */"./resources/js/proyecto/nuevoProyecto.js");
 
 
 /***/ })

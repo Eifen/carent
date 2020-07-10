@@ -31,10 +31,6 @@ class InicioController extends Controller
 
     function cambiarClave(Request $request){
 
-      if(!session()->has("usuario_id")) {
-          return redirect()->route('loginView');
-      }
-
       return view('cambiarClave');
 
     }
