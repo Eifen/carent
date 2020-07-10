@@ -310,10 +310,11 @@ class HorasNoCargablesModel extends Model
     function registrarHorasNoCargables($parametros,$usuario_id,$fecha,$direccion_ip){
 
       if(DB::table('tbl_horas_no_cargables')->insert($parametros)){
+        $analista = db::select('SELECT u.codigo FROM tbl_usuario u WHERE u.id ='.$parametros["id_usuario"].' ');
         $data = array("usuario_id" => $usuario_id,
                       "fecha" => $fecha,
                       "direccion_ip" => $direccion_ip,
-                      "accion" => 'Registro de de horas no cargables al usuario: '.$usuario_id.'');
+                      "accion" => 'Registro de de horas no cargables al usuario codigo: '.$analista[0]->codigo.'');
         $bit = DB::table('logs_auditoria')->insertGetId($data);
         return array("respuesta" => true, "mensaje" => "Horas cargadas con éxito!");
       }else{
