@@ -17,11 +17,13 @@ class ProyectoController extends Controller
       $clientes = $modelo->clientes();
       $divisiones = $modelo->divisiones();
       $estatus = $modelo->estatusProyectos();
+      $monedas = $modelo->monedas(true);
 
       return [
         "clientes" => $clientes,
         "divisiones" => $divisiones,
-        "estatus" => $estatus
+        "estatus" => $estatus,
+        "monedas" => $monedas
       ];
 
     }
@@ -37,8 +39,10 @@ class ProyectoController extends Controller
       $usuario_id = $request->session()->get('usuario_id');
       $fecha = date("Y-m-d H:i:s");
       $direccion_ip = $request->session()->get('direccion');
+      $id_moneda = $request->input("id_moneda");
+      $monto = $request->input("monto");
 
-      $response = $modelo->crearProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus,$usuario_id,$fecha,$direccion_ip);
+      $response = $modelo->crearProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus,$usuario_id,$fecha,$direccion_ip,$id_moneda,$monto);
       return $response;
 
     }
@@ -97,6 +101,7 @@ class ProyectoController extends Controller
       $clientes = $modelo->clientes();
       $divisiones = $modelo->divisiones();
       $estatus = $modelo->estatusProyectos();
+      $monedas = $modelo->monedas(false);
 
       if(!empty($infoProyecto)){
 
@@ -105,7 +110,8 @@ class ProyectoController extends Controller
                           "infodivi" => $infoDivProyecto,
                           'clientes' => $clientes,
                           'divisiones' => $divisiones,
-                          "estatus" => $estatus);
+                          "estatus" => $estatus,
+                          "monedas" => $monedas);
       }else{
 
         $response = array("response" => false, "message" => "No se encontraron resultados");
@@ -264,7 +270,7 @@ class ProyectoController extends Controller
       $fecha = date("Y-m-d H:i:s");
       $direccion_ip = $request->session()->get('direccion');
       $analis = $modelo->modAnalistaProy($estado,$idAnaProy,$idProyecto,$usuario_id,$fecha,$direccion_ip);
-      $id_usuario = $request->session()->get('usuario_id');      
+      $id_usuario = $request->session()->get('usuario_id');
       $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
       $datosProyecto = $modelo->datosProyecto($idProyecto,$infoUsuario->id_division);
       $analistas = $modelo->analistasProyecto($id_usuario,11,$idProyecto,$infoUsuario->id_division);

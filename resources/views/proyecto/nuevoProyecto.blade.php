@@ -38,6 +38,7 @@
                        maxlength="250"
                        v-bind:disabled="form.descripcion.disabled"
                        v-model.trim="form.descripcion.value"
+                       v-on:click="limpiarMensajeError"
                        type="text">
                 <small id="descripcionHelp" class="form-text text-muted">Ejemplo: Auditoria Externa</small>
                 <div class="mensaje"></div>
@@ -82,6 +83,31 @@
                        v-model="form.fechaContratacion.value"
                        type="text">
                 <small id="fechaContratacionHelp" class="form-text text-muted">Formato: 00/00/0000</small>
+                <div class="mensaje"></div>
+              </div>
+              <div class="form-group col-12 col-sm-6">
+                <label for="horas">Monto en <span class="campo-obligatorio">*</span></label>
+                <select aria-describedby="montoEnHelp"
+                        class="form-control"
+                        id="montoEn"
+                        data-validar="true"
+                        v-bind:disabled="form.montoEn.disabled"
+                        v-model="form.montoEn.value"
+                        v-on:change="monedaSeleccionada">
+                  <option value="" disabled selected>Seleccione...</option>
+                  <option v-bind:value="moneda.id" v-for="moneda in comboMonedas" :simbolo="moneda.simbolo">@{{ moneda.moneda }}</option>
+                </select>
+                <div class="mensaje"></div>
+              </div>
+              <div class="form-group col-12 col-sm-6">
+                <label for="horas">Monto <span class="campo-obligatorio">*</span></label>
+                <input aria-describedby="montoHelp"
+                       class="form-control"
+                       data-validar="true"
+                       id="monto"
+                       v-bind:disabled="form.monto.disabled"
+                       v-model="form.monto.value"
+                       type="text">
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">

@@ -1,15 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.2
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
-
--- Tiempo de generación: 06-07-2020 a las 00:23:01
+-- Tiempo de generación: 10-07-2020 a las 23:31:42
 -- Versión del servidor: 8.0.18
--- Versión de PHP: 7.3.12
+-- Versión de PHP: 7.3.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -178,7 +176,11 @@ INSERT INTO `logs_auditoria` (`id`, `usuario_id`, `fecha`, `direccion_ip`, `acci
 (134, 1, '2020-06-28 19:06:41', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
 (135, 1, '2020-06-28 20:11:00', '127.0.0.1', 'Registro de Usuario Codigo:0003'),
 (136, 1, '2020-06-28 20:12:38', '127.0.0.1', 'Registro de Usuario Codigo:0004'),
-(137, 1, '2020-07-03 18:47:07', '127.0.0.1', 'Inicio de Sesion');
+(137, 1, '2020-07-03 18:47:07', '127.0.0.1', 'Inicio de Sesion'),
+(138, 1, '2020-07-10 11:43:20', '127.0.0.1', 'Inicio de Sesion'),
+(139, 1, '2020-07-10 15:40:45', '127.0.0.1', 'Inicio de Sesion'),
+(140, 1, '2020-07-10 17:29:28', '127.0.0.1', 'Registro del proyecto: Proyecto con monto. Cliente:BANCO DEL TESORO BANCO UNIVERSAL C.A.'),
+(141, 1, '2020-07-10 18:46:32', '127.0.0.1', 'Inicio de Sesion');
 
 -- --------------------------------------------------------
 
@@ -915,7 +917,7 @@ CREATE TABLE `tbl_cliente` (
   `numero_fiscal` varchar(5) NOT NULL,
   `ciudad_fiscal` varchar(50) NOT NULL,
   `telefono_fiscal` varchar(20) NOT NULL,
-  `fax_fiscal` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `pagina_web` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `email_fiscal` varchar(100) NOT NULL,
   `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -924,7 +926,7 @@ CREATE TABLE `tbl_cliente` (
 -- Volcado de datos para la tabla `tbl_cliente`
 --
 
-INSERT INTO `tbl_cliente` (`id`, `id_usuario_socio`, `id_usuario_gerente`, `codigo`, `rif`, `nit`, `razon_social`, `id_parroquia_fiscal`, `avenida_calle_fiscal`, `edificio_quinta_fiscal`, `piso_fiscal`, `numero_fiscal`, `ciudad_fiscal`, `telefono_fiscal`, `fax_fiscal`, `email_fiscal`, `id_estatus`) VALUES
+INSERT INTO `tbl_cliente` (`id`, `id_usuario_socio`, `id_usuario_gerente`, `codigo`, `rif`, `nit`, `razon_social`, `id_parroquia_fiscal`, `avenida_calle_fiscal`, `edificio_quinta_fiscal`, `piso_fiscal`, `numero_fiscal`, `ciudad_fiscal`, `telefono_fiscal`, `pagina_web`, `email_fiscal`, `id_estatus`) VALUES
 (1, 1, 4, 111, '234', 1221, 'BANCOS. C', 1, 'D', 'DD', '2', '2', 'FD', '(2222) - 222 2222', '2', 'fj@gmail.com', 1),
 (2, 1, 1, 112, '335', 22, 'BANCO H', 1, 'AVENIDA', 'QUINTA', '2', '2', 'CIUDAD', '(2222) - 222 2222', '222', 'kose@gmail.com', 1),
 (3, 1, 1, 113, '9212', 2, 'BANCO I', 26, 'AVENIDA', 'QUINTA', '21', '11', 'CIUDAD', '(0202) - 020 2020', '20020', 'bancoi@gmail.com', 1),
@@ -1004,15 +1006,18 @@ CREATE TABLE `tbl_concepto_horas_no_cargables` (
 
 INSERT INTO `tbl_concepto_horas_no_cargables` (`id`, `descripcion`, `id_estatus`) VALUES
 (1, 'Vacaciones', 1),
-(2, 'Permiso Médico', 2),
-(3, 'Reunión Técnica', 1),
-(4, 'Disponible', 1),
-(5, 'Reunión de Staff', 1),
-(6, 'Capacitación Técnica', 1),
-(7, 'Tareas Administrativas', 1),
+(2, 'Permiso Actividades profesionales captación futuro cliente', 1),
+(3, 'Disponible', 1),
+(4, 'Pandemia', 1),
+(5, 'Permiso', 1),
+(6, 'Permiso Médico', 1),
+(7, 'Permiso Universitario', 1),
 (8, 'Reposo Médico', 1),
-(9, 'Permiso Universitario', 1),
-(10, 'Permiso', 1);
+(9, 'Reunion de staff ', 1),
+(10, 'Reunión de Staff Personal Directivo', 1),
+(11, 'Seminarios Web Vía Zoom', 1),
+(12, 'Talleres de Desarrollo Profesional', 1),
+(13, 'Tareas administrativas Personal Profesional', 1);
 
 -- --------------------------------------------------------
 
@@ -1115,7 +1120,8 @@ INSERT INTO `tbl_division` (`id`, `descripcion`, `id_estatus`) VALUES
 (15, 'Conapdis', 1),
 (16, 'Legal', 1),
 (17, 'Servicios Profesionales (Puerto Ordaz)', 1),
-(18, 'Administración', 1);
+(18, 'Administración', 1),
+(19, 'Auditoria Externa', 1);
 
 -- --------------------------------------------------------
 
@@ -1335,7 +1341,7 @@ INSERT INTO `tbl_menu` (`id`, `id_menu_padre`, `descripcion`, `url`, `orden`, `i
 (8, 0, 'Proyectos', '', 0, 1),
 (9, 8, 'Crear Proyecto', '/formNuevoProyecto', 0, 1),
 (10, 8, 'Lista de Proyectos', '/proyectos', 1, 1),
-(11, 8, 'Asig.Personal/Horas Cargables', '/proyectoDivision', 2, 1),
+(11, 8, 'Asignados/ar Proyectos ', '/proyectoDivision', 2, 1),
 (12, 0, 'Horas No Cargables', '', 0, 1),
 (13, 12, 'Conceptos', '/formHorasNoCargables', 0, 1),
 (14, 12, 'Cargar', '/cargarHorasNoCargables', 1, 1);
@@ -1442,6 +1448,29 @@ INSERT INTO `tbl_menu_usuario` (`id`, `id_usuario`, `id_menu`, `C`, `R`, `U`, `D
 (93, 22, 11, 1, 0, 1, 1),
 (94, 22, 14, 1, 1, 1, 0),
 (95, 15, 11, 1, 0, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_monedas`
+--
+
+CREATE TABLE `tbl_monedas` (
+  `id` int(11) NOT NULL,
+  `moneda` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `simbolo` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `orden` int(1) NOT NULL,
+  `id_estatus` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `tbl_monedas`
+--
+
+INSERT INTO `tbl_monedas` (`id`, `moneda`, `simbolo`, `orden`, `id_estatus`) VALUES
+(1, 'Bolívar', 'Bs', 2, 1),
+(2, 'Dólar', '$', 1, 1),
+(3, 'Euro', '€', 3, 1);
 
 -- --------------------------------------------------------
 
@@ -2963,6 +2992,8 @@ CREATE TABLE `tbl_proyecto` (
   `descripcion` varchar(250) NOT NULL,
   `id_cliente` int(11) NOT NULL,
   `fecha_contratacion` varchar(10) NOT NULL,
+  `monto` decimal(15,2) NOT NULL,
+  `id_moneda` int(11) NOT NULL,
   `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -2970,23 +3001,24 @@ CREATE TABLE `tbl_proyecto` (
 -- Volcado de datos para la tabla `tbl_proyecto`
 --
 
-INSERT INTO `tbl_proyecto` (`id`, `descripcion`, `id_cliente`, `fecha_contratacion`, `id_estatus`) VALUES
-(1, 'Auditoría Banco I', 1, '03/03/2020', 2),
-(2, 'Auditoría Banco II', 1, '04/03/2020', 1),
-(3, 'Certificación de Cursos', 1, '05/03/2020', 1),
-(4, 'Proyecto I', 1, '10/03/2020', 0),
-(5, 'inventario IV', 2, '22/02/2020', 1),
-(8, 'Prueba', 4, '10/10/1001', 1),
-(9, 'Auditoría de vulnerabilidad', 5, '01/01/2020', 1),
-(10, 'Auditoría de TI', 6, '01/02/2020', 1),
-(11, 'Auditoría TI', 7, '01/03/2020', 1),
-(12, 'AUDITORIA FINANCIERA JUNIO', 8, '30/06/2020', 1),
-(13, 'auditoria financiera', 2, '30/06/2020', 1),
-(14, 'auditoría 2019-II', 11, '15/01/2020', 1),
-(15, 'Autitoría TI 2018-II', 12, '03/01/2020', 1),
-(16, 'auditoria financiera junio 2020-I', 8, '15/06/2020', 1),
-(17, 'auditoría 2019-II', 20, '26/06/2020', 1),
-(18, 'Auditoría 2018', 22, '27/06/2020', 1);
+INSERT INTO `tbl_proyecto` (`id`, `descripcion`, `id_cliente`, `fecha_contratacion`, `monto`, `id_moneda`, `id_estatus`) VALUES
+(1, 'Auditoría Banco I', 1, '03/03/2020', '0.00', 2, 2),
+(2, 'Auditoría Banco II', 1, '04/03/2020', '0.00', 2, 1),
+(3, 'Certificación de Cursos', 1, '05/03/2020', '0.00', 2, 1),
+(4, 'Proyecto I', 1, '10/03/2020', '0.00', 2, 0),
+(5, 'inventario IV', 2, '22/02/2020', '0.00', 2, 1),
+(8, 'Prueba', 4, '10/10/1001', '0.00', 2, 1),
+(9, 'Auditoría de vulnerabilidad', 5, '01/01/2020', '0.00', 2, 1),
+(10, 'Auditoría de TI', 6, '01/02/2020', '0.00', 2, 1),
+(11, 'Auditoría TI', 7, '01/03/2020', '0.00', 2, 1),
+(12, 'AUDITORIA FINANCIERA JUNIO', 8, '30/06/2020', '0.00', 2, 1),
+(13, 'auditoria financiera', 2, '30/06/2020', '0.00', 2, 1),
+(14, 'auditoría 2019-II', 11, '15/01/2020', '0.00', 2, 1),
+(15, 'Autitoría TI 2018-II', 12, '03/01/2020', '0.00', 2, 1),
+(16, 'auditoria financiera junio 2020-I', 8, '15/06/2020', '0.00', 2, 1),
+(17, 'auditoría 2019-II', 20, '26/06/2020', '0.00', 2, 1),
+(18, 'Auditoría 2018', 22, '27/06/2020', '0.00', 2, 1),
+(19, 'Proyecto con monto', 8, '10/07/2020', '1000.27', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -3087,7 +3119,9 @@ INSERT INTO `tbl_proyecto_divisiones` (`id`, `id_division`, `id_proyecto`, `hora
 (39, 3, 16, 200),
 (40, 2, 17, 750),
 (41, 3, 17, 750),
-(42, 1, 18, 1000);
+(42, 1, 18, 1000),
+(43, 2, 19, 25),
+(44, 3, 19, 17);
 
 -- --------------------------------------------------------
 
@@ -3108,7 +3142,7 @@ CREATE TABLE `tbl_telefono` (
 
 CREATE TABLE `tbl_tipo_cargo` (
   `id` int(11) NOT NULL,
-  `descripcion` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+  `descripcion` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3308,6 +3342,12 @@ ALTER TABLE `tbl_menu_usuario`
   ADD KEY `id_usuario` (`id_usuario`);
 
 --
+-- Indices de la tabla `tbl_monedas`
+--
+ALTER TABLE `tbl_monedas`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `tbl_municipios`
 --
 ALTER TABLE `tbl_municipios`
@@ -3371,7 +3411,7 @@ ALTER TABLE `tbl_usuario`
 -- AUTO_INCREMENT de la tabla `logs_auditoria`
 --
 ALTER TABLE `logs_auditoria`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=138;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=142;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cargo_empleado`
@@ -3407,7 +3447,7 @@ ALTER TABLE `tbl_cliente_facturacion`
 -- AUTO_INCREMENT de la tabla `tbl_concepto_horas_no_cargables`
 --
 ALTER TABLE `tbl_concepto_horas_no_cargables`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_configuracion`
@@ -3425,7 +3465,7 @@ ALTER TABLE `tbl_contacto_usuario`
 -- AUTO_INCREMENT de la tabla `tbl_division`
 --
 ALTER TABLE `tbl_division`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_estados`
@@ -3464,6 +3504,12 @@ ALTER TABLE `tbl_menu_usuario`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
 
 --
+-- AUTO_INCREMENT de la tabla `tbl_monedas`
+--
+ALTER TABLE `tbl_monedas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT de la tabla `tbl_municipios`
 --
 ALTER TABLE `tbl_municipios`
@@ -3479,7 +3525,7 @@ ALTER TABLE `tbl_parroquias`
 -- AUTO_INCREMENT de la tabla `tbl_proyecto`
 --
 ALTER TABLE `tbl_proyecto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_proyecto_analista`
@@ -3491,7 +3537,7 @@ ALTER TABLE `tbl_proyecto_analista`
 -- AUTO_INCREMENT de la tabla `tbl_proyecto_divisiones`
 --
 ALTER TABLE `tbl_proyecto_divisiones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_telefono`

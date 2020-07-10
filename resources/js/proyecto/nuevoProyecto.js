@@ -25,6 +25,7 @@ var app = new Vue({
     comboClientes: [],
     comboEstatus: [],
     comboDivisiones: [],
+    comboMonedas: [],
     refreshForm: false,
     form: {
       descripcion:{
@@ -43,6 +44,15 @@ var app = new Vue({
       fechaContratacion:{
         disabled: true,
         value: ""
+      },
+      montoEn:{
+        disabled: true,
+        value: ""
+      },
+      monto:{
+        autonumeric: null,
+        disabled: true,
+        value: 0
       },
       estatus: {
         disabled: true,
@@ -74,10 +84,12 @@ var app = new Vue({
         self.comboClientes = response.data.clientes;
         self.comboEstatus = response.data.estatus;
         self.comboDivisiones = response.data.divisiones;
+        self.comboMonedas = response.data.monedas;
         self.form.descripcion.disabled = false;
         self.form.cliente.disabled = false;
         self.form.fechaContratacion.disabled = false;
         self.form.estatus.disabled = false;
+        self.form.montoEn.disabled = false;
         self.form.divisiones.disabled = false;
         self.form.mostrar = true;
 
@@ -115,6 +127,15 @@ var app = new Vue({
           decimalPlaces: 0,
           decimalCharacter: ',',
           digitGroupSeparator: '',
+          emptyInputBehavior: 0,
+          minimumValue: 0,
+          modifyValueOnWheel: false
+        });
+
+        self.form.autonumeric = new AutoNumeric('#monto', {
+          decimalPlaces: 4,
+          decimalCharacter: ',',
+          digitGroupSeparator: '.',
           emptyInputBehavior: 0,
           minimumValue: 0,
           modifyValueOnWheel: false
@@ -187,6 +208,14 @@ var app = new Vue({
       self.form[e.target.id].validar = (self.form[e.target.id].value.length > 0 && self.form[e.target.id].validar === false) ? true : false;
 
     },
+    monedaSeleccionada: function(e){
+
+      let simbolo = $(e.target).children("option:selected").attr("simbolo");
+      self.form.autonumeric.update({ currencySymbol : simbolo+" "});
+      self.form.monto.disabled = (($(e.target).val().trim() !== "") && ($(e.target).val() !== null)) ? false : true;
+      self.limpiarMensajeError(e);
+
+    },
     crear: function(){
 
       var formValido = true;
@@ -242,13 +271,17 @@ var app = new Vue({
           divisiones.push({id:item.id, horas: hora});
         });
 
+        let monto = (self.form.autonumeric === null) ? 0 : self.form.autonumeric.get()
+
         //Obtenemos valores
         let parametros = {
           descripcion:  self.form.descripcion.value,
           cliente: self.form.cliente.value,
           fechaContratacion: self.form.fechaContratacion.value,
           divisiones: divisiones,
-          estatus: self.form.estatus.value
+          estatus: self.form.estatus.value,
+          id_moneda: self.form.montoEn.value,
+          monto: monto
         }
 
         self.submitCrear.content = '<i class="fas fa-cog fa-spin"></i>';
