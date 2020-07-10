@@ -180,13 +180,13 @@
                     <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.telefono_fiscal">
                   </div>
                   <div class="form-group col-12 col-sm-6">
-                    <label>Nº de Fax</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.fax_fiscal">
-                  </div>
-                  <div class="form-group col-12 col-sm-6">
                     <label>Email Cliente</label>
                     <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.email_fiscal">
                   </div>
+                  <div class="form-group col-24 col-sm-12">
+                    <label>Pagina Web</label>
+                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.pagina_web">
+                  </div>                  
                 </form>
               </div>
               <div class="modal-footer">

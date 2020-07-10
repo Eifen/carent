@@ -221,7 +221,7 @@ class ClienteModel extends Model
                   "piso_fiscal" => $parametros["piso_fiscal"],
                   "numero_fiscal" => $parametros["numero_fiscal"],
                   "telefono_fiscal" => $parametros["telefono_fiscal"],
-                  "fax_fiscal" => $parametros["fax_fiscal"],
+                  "pagina_web" => $parametros["pagina_web"],
                   "email_fiscal" => $parametros["email_fiscal"],
                   "id_estatus" => 1);
     $contacto = DB::table('tbl_cliente')->insert($data);
@@ -229,7 +229,7 @@ class ClienteModel extends Model
       $data = array("usuario_id" => $parametros["usuario_id"],
                       "fecha" => $parametros["fecha"],
                       "direccion_ip" => $parametros["direccion_ip"],
-                      "accion" => 'Registro del cliente:'.$parametros["codigoCliente"].'');
+                      "accion" => 'Registro del cliente codigo:'.$parametros["codigoCliente"].'');
       $bit = DB::table('logs_auditoria')->insertGetId($data);
       DB::commit();
       return array("response" => true, "message" => "Cliente Creado con Éxito.");
@@ -364,7 +364,7 @@ class ClienteModel extends Model
                                 piso_fiscal,
                                 numero_fiscal,
                                 telefono_fiscal,
-                                fax_fiscal,
+                                pagina_web,
                                 email_fiscal,
                                 (SELECT p.parroquia FROM tbl_parroquias p WHERE p.id = id_parroquia_fiscal) parroquiafi,
                                 (SELECT m.municipio
@@ -388,7 +388,11 @@ class ClienteModel extends Model
 
   function detalleClienteProy($idclienteProy){
 
-    $info = DB::select('SELECT *
+    $info = DB::select('SELECT UPPER(descripcion) AS descripcion,
+                               fecha_contratacion,
+                               id,
+                               id_cliente,
+                               id_estatus
                           FROM tbl_proyecto 
                           WHERE id = '.$idclienteProy.'
                         ');
@@ -462,7 +466,7 @@ class ClienteModel extends Model
                                  piso_fiscal,
                                  numero_fiscal,
                                  telefono_fiscal,
-                                 fax_fiscal,
+                                 pagina_web,
                                  email_fiscal,
                                  id_estatus,
                                  id_parroquia_fiscal,
@@ -500,11 +504,13 @@ class ClienteModel extends Model
                     "email_factura" => $parametros["correo_factura"],
                     "id_estatus" => 1);
     $contacto = DB::table('tbl_cliente_facturacion')->insert($data);
+    $cliente = DB::select('SELECT c.razon_social FROM tbl_cliente c WHERE c.id = '.$parametros["id_cliente"].'');
+    $proyecto = DB::select('SELECT UPPER(p.descripcion) AS descripcion FROM tbl_proyecto p WHERE p.id = '.$parametros["id_proyecto"].'');
     if($contacto){
       $data = array("usuario_id" => $parametros["usuario_id"],
                       "fecha" => $parametros["fecha"],
                       "direccion_ip" => $parametros["direccion_ip"],
-                      "accion" => 'Registro del detalle de facturacion del cliente:'.$parametros["id_cliente"].' proyecto:'.$parametros["id_proyecto"].'');
+                      "accion" => 'Registro del detalle de facturacion del cliente:'.$cliente[0]->razon_social.'. proyecto:'.$proyecto[0]->descripcion.'');
       $bit = DB::table('logs_auditoria')->insertGetId($data);
       DB::commit();
       return array("response" => true, "message" => "Detalle de Facturacion del Cliente Creada con Éxito.");
@@ -530,11 +536,13 @@ class ClienteModel extends Model
                     "fax_factura" => $parametros["fax_factura"],
                     "email_factura" => $parametros["correo_factura"]);      
         $contacto = DB::table('tbl_cliente_facturacion')->where("id", $parametros["id_fact_cliente"])->update($data);
+        $cliente = DB::select('SELECT c.razon_social FROM tbl_cliente c WHERE c.id = '.$parametros["id_cliente"].'');
+        $proyecto = DB::select('SELECT UPPER(p.descripcion) AS descripcion FROM tbl_proyecto p WHERE p.id = '.$parametros["id_proyecto"].'');
         DB::commit();
         $data = array("usuario_id" => $parametros["usuario_id"],
                       "fecha" => $parametros["fecha"],
                       "direccion_ip" => $parametros["direccion_ip"],
-                      "accion" => 'Modificacion del detalle de facturacion del cliente:'.$parametros["id_cliente"].' proyecto:'.$parametros["id_proyecto"].'');
+                      "accion" => 'Modificacion del detalle de facturacion del cliente:'.$cliente[0]->razon_social.'. proyecto:'.$proyecto[0]->descripcion.'');
       $bit = DB::table('logs_auditoria')->insertGetId($data);
         return array("response" => true, "message" => "Factura Cliente actualizada con Éxito!.");
     } catch(\Illuminate\Database\QueryException $ex){
@@ -561,7 +569,7 @@ class ClienteModel extends Model
                     "piso_fiscal" => $parametros["piso_fiscal"],
                     "numero_fiscal" => $parametros["numero_fiscal"],
                     "telefono_fiscal" => $parametros["telefono_fiscal"],
-                    "fax_fiscal" => $parametros["fax_fiscal"],
+                    "pagina_web" => $parametros["pagina_web"],
                     "email_fiscal" => $parametros["email_fiscal"],
                     "id_estatus" => $parametros["estatus"],);      
         $contacto = DB::table('tbl_cliente')->where("id",$parametros["idCliente"])->update($data);
@@ -569,7 +577,7 @@ class ClienteModel extends Model
         $date = array("usuario_id" => $parametros["usuario_id"],
                       "fecha" => $parametros["fecha"],
                       "direccion_ip" => $parametros["direccion_ip"],
-                      "accion" => 'Creacion de cliente:'.$parametros["codigoCliente"].'');
+                      "accion" => 'Modificacion del cliente:'.$parametros["codigoCliente"].'');
       $bit = DB::table('logs_auditoria')->insertGetId($date);
         return array("response" => true, "message" => "Cliente actualizado con Éxito!.");
     } catch(\Illuminate\Database\QueryException $ex){
