@@ -25,6 +25,7 @@ var app = new Vue({
     comboClientes: [],
     comboEstatus: [],
     comboDivisiones: [],
+    comboMonedas: [],
     refreshForm: false,
     form: {
       descripcion:{
@@ -43,6 +44,14 @@ var app = new Vue({
       fechaContratacion:{
         disabled: true,
         value: ""
+      },
+      montoEn:{
+        disabled: true,
+        value: ""
+      },
+      monto:{
+        disabled: true,
+        value: 0
       },
       estatus: {
         disabled: true,
@@ -74,10 +83,12 @@ var app = new Vue({
         self.comboClientes = response.data.clientes;
         self.comboEstatus = response.data.estatus;
         self.comboDivisiones = response.data.divisiones;
+        self.comboMonedas = response.data.monedas;
         self.form.descripcion.disabled = false;
         self.form.cliente.disabled = false;
         self.form.fechaContratacion.disabled = false;
         self.form.estatus.disabled = false;
+        self.form.montoEn.disabled = false;
         self.form.divisiones.disabled = false;
         self.form.mostrar = true;
 
@@ -115,6 +126,15 @@ var app = new Vue({
           decimalPlaces: 0,
           decimalCharacter: ',',
           digitGroupSeparator: '',
+          emptyInputBehavior: 0,
+          minimumValue: 0,
+          modifyValueOnWheel: false
+        });
+
+        new AutoNumeric('#monto', {
+          decimalPlaces: 4,
+          decimalCharacter: ',',
+          digitGroupSeparator: '.',
           emptyInputBehavior: 0,
           minimumValue: 0,
           modifyValueOnWheel: false
@@ -185,6 +205,12 @@ var app = new Vue({
 
       self.valuesForm(e);
       self.form[e.target.id].validar = (self.form[e.target.id].value.length > 0 && self.form[e.target.id].validar === false) ? true : false;
+
+    },
+    monedaSeleccionada: function(e){
+
+      self.form.monto.disabled = (($(e.target).val().trim() !== "") && ($(e.target).val() !== null)) ? false : true;
+      self.limpiarMensajeError(e);
 
     },
     crear: function(){

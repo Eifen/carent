@@ -20,6 +20,19 @@ class ProyectoModel extends Model
 
     }// Fin estatusProyectos
 
+    function monedas(){
+
+      $sql = DB::select('SELECT m.id,
+                                m.moneda,
+                                m.simbolo
+                         FROM tbl_monedas m
+                         WHERE m.id_estatus = 1
+                         ORDER BY m.moneda ASC');
+
+      return $sql;
+
+    }
+
     function divisiones(){
 
       $divisiones = DB::select('SELECT d.id,
@@ -830,7 +843,7 @@ class ProyectoModel extends Model
                       "accion" => 'Eliminacion del analista: '.$info[0]->id_analista.' del proyecto: '.$idProyecto.'');
           $bit = DB::table('logs_auditoria')->insertGetId($data);
         }
-        
+
         return array("response" => true, "message" => "Analista actualizado con éxito.");
 
       } catch(\Illuminate\Database\QueryException $ex){
@@ -854,8 +867,8 @@ class ProyectoModel extends Model
           if ($horas_asignadas[$i] != $horasComparar[$i]) {
 
             $data = array("horas_asignadas" => $horas_asignadas[$i]);
-            $update = DB::table('tbl_proyecto_analista')->where("id",$idAnaProy)->update($data);        
-          } 
+            $update = DB::table('tbl_proyecto_analista')->where("id",$idAnaProy)->update($data);
+          }
         }
 
         DB::commit();

@@ -17,11 +17,13 @@ class ProyectoController extends Controller
       $clientes = $modelo->clientes();
       $divisiones = $modelo->divisiones();
       $estatus = $modelo->estatusProyectos();
+      $monedas = $modelo->monedas();
 
       return [
         "clientes" => $clientes,
         "divisiones" => $divisiones,
-        "estatus" => $estatus
+        "estatus" => $estatus,
+        "monedas" => $monedas
       ];
 
     }
@@ -264,7 +266,7 @@ class ProyectoController extends Controller
       $fecha = date("Y-m-d H:i:s");
       $direccion_ip = $request->session()->get('direccion');
       $analis = $modelo->modAnalistaProy($estado,$idAnaProy,$idProyecto,$usuario_id,$fecha,$direccion_ip);
-      $id_usuario = $request->session()->get('usuario_id');      
+      $id_usuario = $request->session()->get('usuario_id');
       $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
       $datosProyecto = $modelo->datosProyecto($idProyecto,$infoUsuario->id_division);
       $analistas = $modelo->analistasProyecto($id_usuario,11,$idProyecto,$infoUsuario->id_division);
