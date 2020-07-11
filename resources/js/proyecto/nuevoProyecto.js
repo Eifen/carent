@@ -133,7 +133,7 @@ var app = new Vue({
         });
 
         self.form.autonumeric = new AutoNumeric('#monto', {
-          decimalPlaces: 4,
+          decimalPlaces: 2,
           decimalCharacter: ',',
           digitGroupSeparator: '.',
           emptyInputBehavior: 0,

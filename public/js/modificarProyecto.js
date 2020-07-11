@@ -35149,7 +35149,7 @@ var app = new Vue({
                   var indices = ["descripcion", "cliente", "horas", "fechaContratacion", "estatus", "divisiones"];
                   self.form.autonumeric = new AutoNumeric('#monto', {
                     currencySymbol: self.form.monto.simbolo + " ",
-                    decimalPlaces: 4,
+                    decimalPlaces: 2,
                     decimalCharacter: ',',
                     digitGroupSeparator: '.',
                     emptyInputBehavior: 0,
