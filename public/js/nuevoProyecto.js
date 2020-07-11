@@ -34294,7 +34294,7 @@ var app = new Vue({
           modifyValueOnWheel: false
         });
         self.form.autonumeric = new AutoNumeric('#monto', {
-          decimalPlaces: 4,
+          decimalPlaces: 2,
           decimalCharacter: ',',
           digitGroupSeparator: '.',
           emptyInputBehavior: 0,

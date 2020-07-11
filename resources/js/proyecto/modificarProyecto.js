@@ -204,7 +204,7 @@ var app = new Vue({
 
         self.form.autonumeric = new AutoNumeric('#monto', {
           currencySymbol: self.form.monto.simbolo+" ",
-          decimalPlaces: 4,
+          decimalPlaces: 2,
           decimalCharacter: ',',
           digitGroupSeparator: '.',
           emptyInputBehavior: 0,
