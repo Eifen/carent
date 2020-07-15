@@ -126,7 +126,8 @@ class HorasCargadasModel extends Model
         $data = array("usuario_id" => $usuario_id,
                       "fecha" => $fechab,
                       "direccion_ip" => $direccion_ip,
-                      "accion" => 'Analista codigo: '.$analista[0]->codigo.' Cargo: '.$horas_trabajadas.' horas en el proyecto:'.$proyecto[0]->descripcion.'');
+                      "accion" => 'Analista codigo: '.$analista[0]->codigo.' Cargo: '.$horas_trabajadas.' horas en el proyecto:'.$proyecto[0]->descripcion.'',
+                      "tabla" => 'tbl_horas_cargables');
         $bit = DB::table('logs_auditoria')->insertGetId($data);
         DB::commit();
         return array("response" => true, "message" => "Horas Cargadas con éxito.");
@@ -177,7 +178,8 @@ class HorasCargadasModel extends Model
         $data = array("usuario_id" => $usuario_id,
                       "fecha" => $fechab,
                       "direccion_ip" => $direccion_ip,
-                      "accion" => 'Modificacion de horas del usuario codigo: '.$analista[0]->codigo.' en el proyecto:'.$proyecto[0]->descripcion.'');
+                      "accion" => 'Modificacion de horas del usuario codigo: '.$analista[0]->codigo.' en el proyecto:'.$proyecto[0]->descripcion.'',
+                      "tabla" => 'tbl_horas_cargables');
         $bit = DB::table('logs_auditoria')->insertGetId($data);
         return array("response" => true, "message" => "Horas cargadas actualizadas con éxito.");
 
@@ -221,7 +223,8 @@ class HorasCargadasModel extends Model
         $data = array("usuario_id" => $usuario_id,
                       "fecha" => $fechab,
                       "direccion_ip" => $direccion_ip,
-                      "accion" => 'Eliminacion de '.$horas[0]->horas_trabajadas.' horas del usuario codigo: '.$analista[0]->codigo.' en el proyecto:'.$proyecto[0]->descripcion.'');
+                      "accion" => 'Eliminacion de '.$horas[0]->horas_trabajadas.' horas del usuario codigo: '.$analista[0]->codigo.' en el proyecto:'.$proyecto[0]->descripcion.'',
+                      "tabla" => 'tbl_horas_cargables');
         $bit = DB::table('logs_auditoria')->insertGetId($data);
         DB::commit();
         return array("response" => true, "message" => "Hora eliminada con exito");

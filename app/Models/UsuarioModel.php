@@ -159,7 +159,8 @@ class UsuarioModel extends Model
         $data = array("usuario_id" => $parametros["usuario_id"],
                       "fecha" => $parametros["fecha"],
                       "direccion_ip" => $parametros["direccion_ip"],
-                      "accion" => 'Registro de Usuario Codigo:'.$parametros["codigoUsuario"].'');
+                      "accion" => 'Registro de Usuario Codigo:'.$parametros["codigoUsuario"].'',
+                      "tabla" => 'tbl_usuario');
         $bit = DB::table('logs_auditoria')->insertGetId($data);
 
         DB::commit();
@@ -390,7 +391,8 @@ class UsuarioModel extends Model
         $data = array("usuario_id" => $parametros["usuario_id"],
                       "fecha" => $parametros["fecha"],
                       "direccion_ip" => $parametros["direccion_ip"],
-                      "accion" => 'Modificacion del Usuario Codigo:'.$parametros["codigoUsuario"].'');
+                      "accion" => 'Modificacion del Usuario Codigo:'.$parametros["codigoUsuario"].'',
+                      "tabla" => 'tbl_usuario');
         $bit = DB::table('logs_auditoria')->insertGetId($data);
         return array("response" => true, "message" => "Usuario actualizado con Éxito!.");
 
