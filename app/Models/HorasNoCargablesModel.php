@@ -82,7 +82,8 @@ class HorasNoCargablesModel extends Model
         $data = array("usuario_id" => $usuario_id,
                       "fecha" => $fecha,
                       "direccion_ip" => $direccion_ip,
-                      "accion" => 'Registro del concepto de horas no cargables: '.$concepto.'');
+                      "accion" => 'Registro del concepto de horas no cargables: '.$concepto.'',
+                      "tabla" => 'tbl_concepto_horas_no_cargables');
         $bit = DB::table('logs_auditoria')->insertGetId($data);
         return array("respuesta" => true, "mensaje" => "Concepto creado con éxito!");
       }else{
@@ -94,11 +95,6 @@ class HorasNoCargablesModel extends Model
     function modificarConceptoNoCargable($id,$concepto,$id_estatus,$usuario_id,$fecha,$direccion_ip){
 
       if(DB::table('tbl_concepto_horas_no_cargables')->where("id",$id)->update(array("descripcion" => $concepto, "id_estatus" => $id_estatus))){
-        $data = array("usuario_id" => $usuario_id,
-                      "fecha" => $fecha,
-                      "direccion_ip" => $direccion_ip,
-                      "accion" => 'Modificacion del concepto de horas no cargables: '.$concepto.'');
-        $bit = DB::table('logs_auditoria')->insertGetId($data);
         return array("respuesta" => true, "mensaje" => "Concepto modificado con éxito!");
       }else{
         return array("respuesta" => false, "mensaje" => "Error al modificar el concepto, intente nuevamente!");

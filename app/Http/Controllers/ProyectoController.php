@@ -285,10 +285,13 @@ class ProyectoController extends Controller
       $idAnaProy = $request->input("idAnaProy");
       $horas_asignadas = $request->input("horas_asignadas");
       $horasComparar = $request->input("horasComparar");
-      $analis = $modelo->modHorasAnalistaProy($horas_asignadas,$horasComparar,$idAnaProy);
+      $usuario_id = $request->session()->get('usuario_id');
+      $fecha = date("Y-m-d H:i:s");
+      $direccion_ip = $request->session()->get('direccion');
+      $idProyecto = $request->input("idDproyecto");
+      $analis = $modelo->modHorasAnalistaProy($horas_asignadas,$horasComparar,$idAnaProy, $usuario_id, $fecha, $direccion_ip, $idProyecto);
 
       $id_usuario = $request->session()->get('usuario_id');
-      $idProyecto = $request->input("idDproyecto");
       $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
       $datosProyecto = $modelo->datosProyecto($idProyecto,$infoUsuario->id_division);
       $analistas = $modelo->analistasProyecto($id_usuario,11,$idProyecto,$infoUsuario->id_division);

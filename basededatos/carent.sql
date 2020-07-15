@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 10-07-2020 a las 23:31:42
+-- Tiempo de generación: 15-07-2020 a las 09:34:33
 -- Versión del servidor: 8.0.18
--- Versión de PHP: 7.3.16
+-- Versión de PHP: 7.3.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -32,155 +33,230 @@ CREATE TABLE `logs_auditoria` (
   `usuario_id` int(11) DEFAULT NULL,
   `fecha` datetime DEFAULT NULL,
   `direccion_ip` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `accion` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
+  `accion` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tabla` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `logs_auditoria`
 --
 
-INSERT INTO `logs_auditoria` (`id`, `usuario_id`, `fecha`, `direccion_ip`, `accion`) VALUES
-(1, 1, '2020-06-25 09:15:06', '138.122.7.94', 'Inicio de Sesion'),
-(2, 1, '2020-06-25 09:15:44', '10.81.234.6', 'Inicio de Sesion'),
-(3, 1, '2020-06-25 09:22:25', '201.211.230.66', 'Inicio de Sesion'),
-(4, 15, '2020-06-25 09:23:13', '201.211.230.66', 'Inicio de Sesion'),
-(5, 15, '2020-06-25 09:25:46', '201.211.230.66', 'Registro del cliente:121'),
-(6, 1, '2020-06-25 09:26:27', '201.211.230.66', 'Inicio de Sesion'),
-(7, 15, '2020-06-25 09:27:27', '201.211.230.66', 'Inicio de Sesion'),
-(8, 15, '2020-06-25 09:28:46', '201.211.230.66', 'Registro del proyecto: auditoría 2019-II del cliente:11'),
-(9, 15, '2020-06-25 09:36:24', '201.211.230.66', 'Registro del detalle de facturacion del cliente:11 proyecto:14'),
-(10, 15, '2020-06-25 09:39:31', '186.89.24.197', 'Inicio de Sesion'),
-(11, 15, '2020-06-25 10:02:41', '186.89.24.197', 'Inicio de Sesion'),
-(12, 1, '2020-06-25 11:27:48', '201.211.230.66', 'Inicio de Sesion'),
-(13, 1, '2020-06-25 11:31:35', '201.211.230.66', 'Inicio de Sesion'),
-(14, 1, '2020-06-25 11:36:44', '201.211.230.66', 'Asignacion del analista: 6 al proyecto: 11'),
-(15, 1, '2020-06-25 14:23:07', '186.185.53.225', 'Inicio de Sesion'),
-(16, 1, '2020-06-25 14:23:28', '186.185.53.225', 'Inicio de Sesion'),
-(17, 1, '2020-06-25 14:23:38', '186.89.24.197', 'Inicio de Sesion'),
-(18, 1, '2020-06-25 14:23:39', '186.185.53.225', 'Inicio de Sesion'),
-(19, 1, '2020-06-25 14:25:16', '201.211.230.66', 'Inicio de Sesion'),
-(20, 1, '2020-06-25 14:26:44', '201.211.230.66', 'Inicio de Sesion'),
-(21, 1, '2020-06-25 14:32:15', '201.211.230.66', 'Inicio de Sesion'),
-(22, 15, '2020-06-25 14:32:27', '186.185.53.225', 'Inicio de Sesion'),
-(23, 1, '2020-06-25 14:34:54', '201.211.230.66', 'Registro del cliente:122'),
-(24, 15, '2020-06-25 14:43:51', '186.185.53.225', 'Inicio de Sesion'),
-(25, 1, '2020-06-25 14:46:07', '201.211.230.66', 'Registro del proyecto: Autitoría TI 2018-II del cliente:12'),
-(26, 15, '2020-06-25 14:48:29', '186.185.53.225', 'Registro del proyecto: auditoria financiera junio 2020-I del cliente:8'),
-(27, 15, '2020-06-25 14:52:17', '186.185.53.225', 'Registro del detalle de facturacion del cliente:8 proyecto:16'),
-(28, 1, '2020-06-25 14:56:34', '201.211.230.66', 'Inicio de Sesion'),
-(29, 15, '2020-06-25 15:00:11', '201.211.230.66', 'Inicio de Sesion'),
-(30, 15, '2020-06-25 15:02:35', '201.211.230.66', 'Registro del cliente:123'),
-(31, 1, '2020-06-25 15:03:24', '201.211.230.66', 'Inicio de Sesion'),
-(32, 15, '2020-06-25 15:04:03', '201.211.230.66', 'Inicio de Sesion'),
-(33, 1, '2020-06-25 15:10:20', '201.211.230.66', 'Inicio de Sesion'),
-(34, 15, '2020-06-25 15:10:58', '201.211.230.66', 'Inicio de Sesion'),
-(35, 15, '2020-06-25 15:15:00', '201.211.230.66', 'Registro del cliente:124'),
-(36, 1, '2020-06-25 15:17:11', '201.211.230.66', 'Inicio de Sesion'),
-(37, 15, '2020-06-25 15:17:45', '201.211.230.66', 'Inicio de Sesion'),
-(38, 15, '2020-06-25 15:19:04', '186.89.24.197', 'Inicio de Sesion'),
-(39, 15, '2020-06-25 15:20:59', '186.89.24.197', 'Registro del cliente:125'),
-(40, 15, '2020-06-25 15:26:17', '186.89.24.197', 'Inicio de Sesion'),
-(41, 15, '2020-06-25 15:28:02', '186.89.24.197', 'Registro del cliente:126'),
-(42, 15, '2020-06-25 15:33:23', '201.211.230.66', 'Inicio de Sesion'),
-(43, 15, '2020-06-25 16:05:22', '201.211.230.66', 'Inicio de Sesion'),
-(44, 15, '2020-06-25 16:05:32', '201.211.230.66', 'Inicio de Sesion'),
-(45, 15, '2020-06-25 16:11:22', '201.211.230.66', 'Inicio de Sesion'),
-(46, 15, '2020-06-25 16:58:49', '186.89.24.197', 'Inicio de Sesion'),
-(47, 15, '2020-06-25 17:00:29', '186.89.24.197', 'Registro del cliente:127'),
-(48, 15, '2020-06-25 17:43:47', '186.89.24.197', 'Inicio de Sesion'),
-(49, 15, '2020-06-25 17:46:04', '201.211.230.66', 'Inicio de Sesion'),
-(50, 15, '2020-06-25 17:50:37', '186.89.24.197', 'Registro del cliente:128'),
-(51, 15, '2020-06-25 17:51:29', '201.211.230.66', 'Registro del cliente:129'),
-(52, 1, '2020-06-25 20:01:54', '201.211.230.66', 'Inicio de Sesion'),
-(53, 1, '2020-06-26 08:56:52', '201.211.230.66', 'Inicio de Sesion'),
-(54, 1, '2020-06-26 09:00:21', '201.211.230.66', 'Registro de Usuario Codigo:10572'),
-(55, 1, '2020-06-26 09:03:45', '201.211.230.66', 'Registro de Usuario Codigo:11467'),
-(56, 1, '2020-06-26 09:06:36', '201.211.230.66', 'Registro de Usuario Codigo:10968'),
-(57, 1, '2020-06-26 09:13:39', '201.211.230.66', 'Registro de Usuario Codigo:11401'),
-(58, 1, '2020-06-26 09:24:43', '201.211.230.66', 'Registro del cliente:130'),
-(59, 1, '2020-06-26 09:29:05', '201.211.230.66', 'Registro del proyecto: auditoría 2019-II del cliente:20'),
-(60, 9, '2020-06-26 09:48:51', '201.211.230.66', 'Inicio de Sesion'),
-(61, 1, '2020-06-26 09:51:44', '201.211.230.66', 'Inicio de Sesion'),
-(62, 1, '2020-06-26 09:57:56', '201.211.230.66', 'Modificacion del Usuario Codigo:10863'),
-(63, 9, '2020-06-26 09:58:35', '201.211.230.66', 'Inicio de Sesion'),
-(64, 9, '2020-06-26 10:05:25', '201.211.230.66', 'Inicio de Sesion'),
-(65, 1, '2020-06-26 10:06:30', '201.211.230.66', 'Inicio de Sesion'),
-(66, 19, '2020-06-26 10:11:27', '201.211.230.66', 'Inicio de Sesion'),
-(67, 9, '2020-06-26 10:12:42', '186.89.24.197', 'Inicio de Sesion'),
-(68, 1, '2020-06-26 10:13:42', '186.89.24.197', 'Inicio de Sesion'),
-(69, 9, '2020-06-26 10:15:26', '186.89.24.197', 'Inicio de Sesion'),
-(70, 19, '2020-06-26 10:16:17', '201.211.230.66', 'Asignacion del analista: 9 al proyecto: 17'),
-(71, 19, '2020-06-26 10:16:26', '201.211.230.66', 'Asignacion del analista: 19 al proyecto: 17'),
-(72, 19, '2020-06-26 10:16:34', '201.211.230.66', 'Asignacion del analista: 20 al proyecto: 17'),
-(73, 19, '2020-06-26 10:16:46', '201.211.230.66', 'Asignacion del analista: 21 al proyecto: 17'),
-(74, 19, '2020-06-26 10:16:59', '201.211.230.66', 'Asignacion del analista: 22 al proyecto: 17'),
-(75, 1, '2020-06-26 10:17:43', '201.211.230.66', 'Inicio de Sesion'),
-(76, 9, '2020-06-26 10:39:17', '186.167.250.121', 'Inicio de Sesion'),
-(77, 15, '2020-06-26 10:57:39', '186.185.102.40', 'Inicio de Sesion'),
-(78, 1, '2020-06-26 13:13:31', '186.89.24.197', 'Inicio de Sesion'),
-(79, 1, '2020-06-26 13:14:04', '186.89.24.197', 'Registro del concepto de horas no cargables: Permiso'),
-(80, 15, '2020-06-26 14:03:29', '186.89.24.197', 'Inicio de Sesion'),
-(81, 1, '2020-06-26 17:14:41', '10.81.234.6', 'Inicio de Sesion'),
-(82, 1, '2020-06-26 20:52:54', '10.81.234.6', 'Inicio de Sesion'),
-(83, 1, '2020-06-26 20:53:08', '10.81.234.6', 'Inicio de Sesion'),
-(84, 15, '2020-06-26 20:55:10', '201.211.230.66', 'Inicio de Sesion'),
-(85, 15, '2020-06-26 20:55:24', '201.211.230.66', 'Inicio de Sesion'),
-(86, 15, '2020-06-26 20:57:46', '201.211.230.66', 'Registro del cliente:131'),
-(87, 9, '2020-06-26 21:02:09', '10.81.234.6', 'Inicio de Sesion'),
-(88, 1, '2020-06-26 21:06:08', '10.81.234.6', 'Inicio de Sesion'),
-(89, 9, '2020-06-26 22:16:56', '186.89.24.197', 'Inicio de Sesion'),
-(90, 1, '2020-06-26 22:20:31', '186.89.24.197', 'Inicio de Sesion'),
-(91, 9, '2020-06-26 22:25:29', '186.89.24.197', 'Inicio de Sesion'),
-(92, 1, '2020-06-27 07:48:18', '186.89.24.197', 'Inicio de Sesion'),
-(93, 1, '2020-06-27 09:17:33', '186.89.24.197', 'Inicio de Sesion'),
-(94, 1, '2020-06-27 13:30:34', '201.211.230.66', 'Inicio de Sesion'),
-(95, 1, '2020-06-27 13:38:08', '201.211.230.66', 'Modificacion del Usuario Codigo:10863'),
-(96, 1, '2020-06-27 13:39:27', '201.211.230.66', 'Modificacion del Usuario Codigo:10572'),
-(97, 1, '2020-06-27 13:40:48', '201.211.230.66', 'Modificacion del Usuario Codigo:11467'),
-(98, 1, '2020-06-27 13:42:01', '201.211.230.66', 'Modificacion del Usuario Codigo:10968'),
-(99, 1, '2020-06-27 13:43:23', '201.211.230.66', 'Modificacion del Usuario Codigo:11401'),
-(100, 1, '2020-06-27 13:46:24', '201.211.230.66', 'Modificacion del Usuario Codigo:10589'),
-(101, 15, '2020-06-27 14:01:08', '201.211.230.66', 'Inicio de Sesion'),
-(102, 15, '2020-06-27 14:23:00', '201.211.230.66', 'Registro del cliente:132'),
-(103, 15, '2020-06-27 14:24:59', '201.211.230.66', 'Creacion de cliente:132'),
-(104, 15, '2020-06-27 14:30:29', '201.211.230.66', 'Registro del proyecto: Auditoría 2018 del cliente:22'),
-(105, 15, '2020-06-27 14:35:47', '201.211.230.66', 'Inicio de Sesion'),
-(106, 15, '2020-06-27 14:40:03', '201.211.230.66', 'Registro del detalle de facturacion del cliente:22 proyecto:18'),
-(107, 19, '2020-06-27 14:43:25', '201.211.230.66', 'Inicio de Sesion'),
-(108, 19, '2020-06-27 14:48:02', '201.211.230.66', 'Asignacion del analista: 9 al proyecto: 18'),
-(109, 19, '2020-06-27 14:48:15', '201.211.230.66', 'Asignacion del analista: 22 al proyecto: 18'),
-(110, 19, '2020-06-27 14:48:24', '201.211.230.66', 'Asignacion del analista: 21 al proyecto: 18'),
-(111, 19, '2020-06-27 14:48:30', '201.211.230.66', 'Asignacion del analista: 20 al proyecto: 18'),
-(112, 19, '2020-06-27 14:48:36', '201.211.230.66', 'Asignacion del analista: 19 al proyecto: 18'),
-(113, 19, '2020-06-27 14:49:46', '201.211.230.66', 'Usuario: 19 Cargo: 4 horas en el proyecto:18'),
-(114, 19, '2020-06-27 14:50:07', '201.211.230.66', 'Usuario: 19 Cargo: 4 horas en el proyecto:18'),
-(115, 19, '2020-06-27 14:50:44', '201.211.230.66', 'Eliminacion de 4 horas del usuario: 19 en el proyecto:18'),
-(116, 19, '2020-06-27 15:01:12', '201.211.230.66', 'Inicio de Sesion'),
-(117, 19, '2020-06-27 15:07:54', '201.211.230.66', 'Usuario: 19 Cargo: 4 horas en el proyecto:18'),
-(118, 19, '2020-06-27 15:09:41', '201.211.230.66', 'Modificacion de horas del usuario: 19 en el proyecto:18'),
-(119, 1, '2020-06-27 15:11:57', '201.211.230.66', 'Inicio de Sesion'),
-(120, 1, '2020-06-27 15:55:23', '186.89.24.197', 'Inicio de Sesion'),
-(121, 19, '2020-06-27 16:52:03', '201.211.230.66', 'Inicio de Sesion'),
-(122, 19, '2020-06-27 16:53:05', '201.211.230.66', 'Registro de de horas no cargables al usuario: 19'),
-(123, 9, '2020-06-27 16:53:35', '201.211.230.66', 'Inicio de Sesion'),
-(124, 1, '2020-06-27 17:20:49', '186.89.24.197', 'Inicio de Sesion'),
-(125, 1, '2020-06-27 19:24:19', '186.89.24.197', 'Inicio de Sesion'),
-(126, 1, '2020-06-28 09:48:11', '127.0.0.1', 'Inicio de Sesion'),
-(127, 1, '2020-06-28 15:54:24', '127.0.0.1', 'Registro de Usuario Codigo:0002'),
-(128, 1, '2020-06-28 18:51:41', '127.0.0.1', 'Inicio de Sesion'),
-(129, 1, '2020-06-28 18:55:35', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
-(130, 1, '2020-06-28 18:57:23', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
-(131, 1, '2020-06-28 19:04:48', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
-(132, 1, '2020-06-28 19:06:00', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
-(133, 1, '2020-06-28 19:06:22', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
-(134, 1, '2020-06-28 19:06:41', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
-(135, 1, '2020-06-28 20:11:00', '127.0.0.1', 'Registro de Usuario Codigo:0003'),
-(136, 1, '2020-06-28 20:12:38', '127.0.0.1', 'Registro de Usuario Codigo:0004'),
-(137, 1, '2020-07-03 18:47:07', '127.0.0.1', 'Inicio de Sesion'),
-(138, 1, '2020-07-10 11:43:20', '127.0.0.1', 'Inicio de Sesion'),
-(139, 1, '2020-07-10 15:40:45', '127.0.0.1', 'Inicio de Sesion'),
-(140, 1, '2020-07-10 17:29:28', '127.0.0.1', 'Registro del proyecto: Proyecto con monto. Cliente:BANCO DEL TESORO BANCO UNIVERSAL C.A.'),
-(141, 1, '2020-07-10 18:46:32', '127.0.0.1', 'Inicio de Sesion');
+INSERT INTO `logs_auditoria` (`id`, `usuario_id`, `fecha`, `direccion_ip`, `accion`, `tabla`) VALUES
+(1, 1, '2020-06-25 09:15:06', '138.122.7.94', 'Inicio de Sesion', NULL),
+(2, 1, '2020-06-25 09:15:44', '10.81.234.6', 'Inicio de Sesion', NULL),
+(3, 1, '2020-06-25 09:22:25', '201.211.230.66', 'Inicio de Sesion', NULL),
+(4, 15, '2020-06-25 09:23:13', '201.211.230.66', 'Inicio de Sesion', NULL),
+(5, 15, '2020-06-25 09:25:46', '201.211.230.66', 'Registro del cliente:121', NULL),
+(6, 1, '2020-06-25 09:26:27', '201.211.230.66', 'Inicio de Sesion', NULL),
+(7, 15, '2020-06-25 09:27:27', '201.211.230.66', 'Inicio de Sesion', NULL),
+(8, 15, '2020-06-25 09:28:46', '201.211.230.66', 'Registro del proyecto: auditoría 2019-II del cliente:11', NULL),
+(9, 15, '2020-06-25 09:36:24', '201.211.230.66', 'Registro del detalle de facturacion del cliente:11 proyecto:14', NULL),
+(10, 15, '2020-06-25 09:39:31', '186.89.24.197', 'Inicio de Sesion', NULL),
+(11, 15, '2020-06-25 10:02:41', '186.89.24.197', 'Inicio de Sesion', NULL),
+(12, 1, '2020-06-25 11:27:48', '201.211.230.66', 'Inicio de Sesion', NULL),
+(13, 1, '2020-06-25 11:31:35', '201.211.230.66', 'Inicio de Sesion', NULL),
+(14, 1, '2020-06-25 11:36:44', '201.211.230.66', 'Asignacion del analista: 6 al proyecto: 11', NULL),
+(15, 1, '2020-06-25 14:23:07', '186.185.53.225', 'Inicio de Sesion', NULL),
+(16, 1, '2020-06-25 14:23:28', '186.185.53.225', 'Inicio de Sesion', NULL),
+(17, 1, '2020-06-25 14:23:38', '186.89.24.197', 'Inicio de Sesion', NULL),
+(18, 1, '2020-06-25 14:23:39', '186.185.53.225', 'Inicio de Sesion', NULL),
+(19, 1, '2020-06-25 14:25:16', '201.211.230.66', 'Inicio de Sesion', NULL),
+(20, 1, '2020-06-25 14:26:44', '201.211.230.66', 'Inicio de Sesion', NULL),
+(21, 1, '2020-06-25 14:32:15', '201.211.230.66', 'Inicio de Sesion', NULL),
+(22, 15, '2020-06-25 14:32:27', '186.185.53.225', 'Inicio de Sesion', NULL),
+(23, 1, '2020-06-25 14:34:54', '201.211.230.66', 'Registro del cliente:122', NULL),
+(24, 15, '2020-06-25 14:43:51', '186.185.53.225', 'Inicio de Sesion', NULL),
+(25, 1, '2020-06-25 14:46:07', '201.211.230.66', 'Registro del proyecto: Autitoría TI 2018-II del cliente:12', NULL),
+(26, 15, '2020-06-25 14:48:29', '186.185.53.225', 'Registro del proyecto: auditoria financiera junio 2020-I del cliente:8', NULL),
+(27, 15, '2020-06-25 14:52:17', '186.185.53.225', 'Registro del detalle de facturacion del cliente:8 proyecto:16', NULL),
+(28, 1, '2020-06-25 14:56:34', '201.211.230.66', 'Inicio de Sesion', NULL),
+(29, 15, '2020-06-25 15:00:11', '201.211.230.66', 'Inicio de Sesion', NULL),
+(30, 15, '2020-06-25 15:02:35', '201.211.230.66', 'Registro del cliente:123', NULL),
+(31, 1, '2020-06-25 15:03:24', '201.211.230.66', 'Inicio de Sesion', NULL),
+(32, 15, '2020-06-25 15:04:03', '201.211.230.66', 'Inicio de Sesion', NULL),
+(33, 1, '2020-06-25 15:10:20', '201.211.230.66', 'Inicio de Sesion', NULL),
+(34, 15, '2020-06-25 15:10:58', '201.211.230.66', 'Inicio de Sesion', NULL),
+(35, 15, '2020-06-25 15:15:00', '201.211.230.66', 'Registro del cliente:124', NULL),
+(36, 1, '2020-06-25 15:17:11', '201.211.230.66', 'Inicio de Sesion', NULL),
+(37, 15, '2020-06-25 15:17:45', '201.211.230.66', 'Inicio de Sesion', NULL),
+(38, 15, '2020-06-25 15:19:04', '186.89.24.197', 'Inicio de Sesion', NULL),
+(39, 15, '2020-06-25 15:20:59', '186.89.24.197', 'Registro del cliente:125', NULL),
+(40, 15, '2020-06-25 15:26:17', '186.89.24.197', 'Inicio de Sesion', NULL),
+(41, 15, '2020-06-25 15:28:02', '186.89.24.197', 'Registro del cliente:126', NULL),
+(42, 15, '2020-06-25 15:33:23', '201.211.230.66', 'Inicio de Sesion', NULL),
+(43, 15, '2020-06-25 16:05:22', '201.211.230.66', 'Inicio de Sesion', NULL),
+(44, 15, '2020-06-25 16:05:32', '201.211.230.66', 'Inicio de Sesion', NULL),
+(45, 15, '2020-06-25 16:11:22', '201.211.230.66', 'Inicio de Sesion', NULL),
+(46, 15, '2020-06-25 16:58:49', '186.89.24.197', 'Inicio de Sesion', NULL),
+(47, 15, '2020-06-25 17:00:29', '186.89.24.197', 'Registro del cliente:127', NULL),
+(48, 15, '2020-06-25 17:43:47', '186.89.24.197', 'Inicio de Sesion', NULL),
+(49, 15, '2020-06-25 17:46:04', '201.211.230.66', 'Inicio de Sesion', NULL),
+(50, 15, '2020-06-25 17:50:37', '186.89.24.197', 'Registro del cliente:128', NULL),
+(51, 15, '2020-06-25 17:51:29', '201.211.230.66', 'Registro del cliente:129', NULL),
+(52, 1, '2020-06-25 20:01:54', '201.211.230.66', 'Inicio de Sesion', NULL),
+(53, 1, '2020-06-26 08:56:52', '201.211.230.66', 'Inicio de Sesion', NULL),
+(54, 1, '2020-06-26 09:00:21', '201.211.230.66', 'Registro de Usuario Codigo:10572', NULL),
+(55, 1, '2020-06-26 09:03:45', '201.211.230.66', 'Registro de Usuario Codigo:11467', NULL),
+(56, 1, '2020-06-26 09:06:36', '201.211.230.66', 'Registro de Usuario Codigo:10968', NULL),
+(57, 1, '2020-06-26 09:13:39', '201.211.230.66', 'Registro de Usuario Codigo:11401', NULL),
+(58, 1, '2020-06-26 09:24:43', '201.211.230.66', 'Registro del cliente:130', NULL),
+(59, 1, '2020-06-26 09:29:05', '201.211.230.66', 'Registro del proyecto: auditoría 2019-II del cliente:20', NULL),
+(60, 9, '2020-06-26 09:48:51', '201.211.230.66', 'Inicio de Sesion', NULL),
+(61, 1, '2020-06-26 09:51:44', '201.211.230.66', 'Inicio de Sesion', NULL),
+(62, 1, '2020-06-26 09:57:56', '201.211.230.66', 'Modificacion del Usuario Codigo:10863', NULL),
+(63, 9, '2020-06-26 09:58:35', '201.211.230.66', 'Inicio de Sesion', NULL),
+(64, 9, '2020-06-26 10:05:25', '201.211.230.66', 'Inicio de Sesion', NULL),
+(65, 1, '2020-06-26 10:06:30', '201.211.230.66', 'Inicio de Sesion', NULL),
+(66, 19, '2020-06-26 10:11:27', '201.211.230.66', 'Inicio de Sesion', NULL),
+(67, 9, '2020-06-26 10:12:42', '186.89.24.197', 'Inicio de Sesion', NULL),
+(68, 1, '2020-06-26 10:13:42', '186.89.24.197', 'Inicio de Sesion', NULL),
+(69, 9, '2020-06-26 10:15:26', '186.89.24.197', 'Inicio de Sesion', NULL),
+(70, 19, '2020-06-26 10:16:17', '201.211.230.66', 'Asignacion del analista: 9 al proyecto: 17', NULL),
+(71, 19, '2020-06-26 10:16:26', '201.211.230.66', 'Asignacion del analista: 19 al proyecto: 17', NULL),
+(72, 19, '2020-06-26 10:16:34', '201.211.230.66', 'Asignacion del analista: 20 al proyecto: 17', NULL),
+(73, 19, '2020-06-26 10:16:46', '201.211.230.66', 'Asignacion del analista: 21 al proyecto: 17', NULL),
+(74, 19, '2020-06-26 10:16:59', '201.211.230.66', 'Asignacion del analista: 22 al proyecto: 17', NULL),
+(75, 1, '2020-06-26 10:17:43', '201.211.230.66', 'Inicio de Sesion', NULL),
+(76, 9, '2020-06-26 10:39:17', '186.167.250.121', 'Inicio de Sesion', NULL),
+(77, 15, '2020-06-26 10:57:39', '186.185.102.40', 'Inicio de Sesion', NULL),
+(78, 1, '2020-06-26 13:13:31', '186.89.24.197', 'Inicio de Sesion', NULL),
+(79, 1, '2020-06-26 13:14:04', '186.89.24.197', 'Registro del concepto de horas no cargables: Permiso', NULL),
+(80, 15, '2020-06-26 14:03:29', '186.89.24.197', 'Inicio de Sesion', NULL),
+(81, 1, '2020-06-26 17:14:41', '10.81.234.6', 'Inicio de Sesion', NULL),
+(82, 1, '2020-06-26 20:52:54', '10.81.234.6', 'Inicio de Sesion', NULL),
+(83, 1, '2020-06-26 20:53:08', '10.81.234.6', 'Inicio de Sesion', NULL),
+(84, 15, '2020-06-26 20:55:10', '201.211.230.66', 'Inicio de Sesion', NULL),
+(85, 15, '2020-06-26 20:55:24', '201.211.230.66', 'Inicio de Sesion', NULL),
+(86, 15, '2020-06-26 20:57:46', '201.211.230.66', 'Registro del cliente:131', NULL),
+(87, 9, '2020-06-26 21:02:09', '10.81.234.6', 'Inicio de Sesion', NULL),
+(88, 1, '2020-06-26 21:06:08', '10.81.234.6', 'Inicio de Sesion', NULL),
+(89, 9, '2020-06-26 22:16:56', '186.89.24.197', 'Inicio de Sesion', NULL),
+(90, 1, '2020-06-26 22:20:31', '186.89.24.197', 'Inicio de Sesion', NULL),
+(91, 9, '2020-06-26 22:25:29', '186.89.24.197', 'Inicio de Sesion', NULL),
+(92, 1, '2020-06-27 07:48:18', '186.89.24.197', 'Inicio de Sesion', NULL),
+(93, 1, '2020-06-27 09:17:33', '186.89.24.197', 'Inicio de Sesion', NULL),
+(94, 1, '2020-06-27 13:30:34', '201.211.230.66', 'Inicio de Sesion', NULL),
+(95, 1, '2020-06-27 13:38:08', '201.211.230.66', 'Modificacion del Usuario Codigo:10863', NULL),
+(96, 1, '2020-06-27 13:39:27', '201.211.230.66', 'Modificacion del Usuario Codigo:10572', NULL),
+(97, 1, '2020-06-27 13:40:48', '201.211.230.66', 'Modificacion del Usuario Codigo:11467', NULL),
+(98, 1, '2020-06-27 13:42:01', '201.211.230.66', 'Modificacion del Usuario Codigo:10968', NULL),
+(99, 1, '2020-06-27 13:43:23', '201.211.230.66', 'Modificacion del Usuario Codigo:11401', NULL),
+(100, 1, '2020-06-27 13:46:24', '201.211.230.66', 'Modificacion del Usuario Codigo:10589', NULL),
+(101, 15, '2020-06-27 14:01:08', '201.211.230.66', 'Inicio de Sesion', NULL),
+(102, 15, '2020-06-27 14:23:00', '201.211.230.66', 'Registro del cliente:132', NULL),
+(103, 15, '2020-06-27 14:24:59', '201.211.230.66', 'Creacion de cliente:132', NULL),
+(104, 15, '2020-06-27 14:30:29', '201.211.230.66', 'Registro del proyecto: Auditoría 2018 del cliente:22', NULL),
+(105, 15, '2020-06-27 14:35:47', '201.211.230.66', 'Inicio de Sesion', NULL),
+(106, 15, '2020-06-27 14:40:03', '201.211.230.66', 'Registro del detalle de facturacion del cliente:22 proyecto:18', NULL),
+(107, 19, '2020-06-27 14:43:25', '201.211.230.66', 'Inicio de Sesion', NULL),
+(108, 19, '2020-06-27 14:48:02', '201.211.230.66', 'Asignacion del analista: 9 al proyecto: 18', NULL),
+(109, 19, '2020-06-27 14:48:15', '201.211.230.66', 'Asignacion del analista: 22 al proyecto: 18', NULL),
+(110, 19, '2020-06-27 14:48:24', '201.211.230.66', 'Asignacion del analista: 21 al proyecto: 18', NULL),
+(111, 19, '2020-06-27 14:48:30', '201.211.230.66', 'Asignacion del analista: 20 al proyecto: 18', NULL),
+(112, 19, '2020-06-27 14:48:36', '201.211.230.66', 'Asignacion del analista: 19 al proyecto: 18', NULL),
+(113, 19, '2020-06-27 14:49:46', '201.211.230.66', 'Usuario: 19 Cargo: 4 horas en el proyecto:18', NULL),
+(114, 19, '2020-06-27 14:50:07', '201.211.230.66', 'Usuario: 19 Cargo: 4 horas en el proyecto:18', NULL),
+(115, 19, '2020-06-27 14:50:44', '201.211.230.66', 'Eliminacion de 4 horas del usuario: 19 en el proyecto:18', NULL),
+(116, 19, '2020-06-27 15:01:12', '201.211.230.66', 'Inicio de Sesion', NULL),
+(117, 19, '2020-06-27 15:07:54', '201.211.230.66', 'Usuario: 19 Cargo: 4 horas en el proyecto:18', NULL),
+(118, 19, '2020-06-27 15:09:41', '201.211.230.66', 'Modificacion de horas del usuario: 19 en el proyecto:18', NULL),
+(119, 1, '2020-06-27 15:11:57', '201.211.230.66', 'Inicio de Sesion', NULL),
+(120, 1, '2020-06-27 15:55:23', '186.89.24.197', 'Inicio de Sesion', NULL),
+(121, 19, '2020-06-27 16:52:03', '201.211.230.66', 'Inicio de Sesion', NULL),
+(122, 19, '2020-06-27 16:53:05', '201.211.230.66', 'Registro de de horas no cargables al usuario: 19', NULL),
+(123, 9, '2020-06-27 16:53:35', '201.211.230.66', 'Inicio de Sesion', NULL),
+(124, 1, '2020-06-27 17:20:49', '186.89.24.197', 'Inicio de Sesion', NULL),
+(125, 1, '2020-06-27 19:24:19', '186.89.24.197', 'Inicio de Sesion', NULL),
+(126, 1, '2020-06-28 09:48:11', '127.0.0.1', 'Inicio de Sesion', NULL),
+(127, 1, '2020-06-28 15:54:24', '127.0.0.1', 'Registro de Usuario Codigo:0002', NULL),
+(128, 1, '2020-06-28 18:51:41', '127.0.0.1', 'Inicio de Sesion', NULL),
+(129, 1, '2020-06-28 18:55:35', '127.0.0.1', 'Modificacion del Usuario Codigo:0002', NULL),
+(130, 1, '2020-06-28 18:57:23', '127.0.0.1', 'Modificacion del Usuario Codigo:0002', NULL),
+(131, 1, '2020-06-28 19:04:48', '127.0.0.1', 'Modificacion del Usuario Codigo:0002', NULL),
+(132, 1, '2020-06-28 19:06:00', '127.0.0.1', 'Modificacion del Usuario Codigo:0002', NULL),
+(133, 1, '2020-06-28 19:06:22', '127.0.0.1', 'Modificacion del Usuario Codigo:0002', NULL),
+(134, 1, '2020-06-28 19:06:41', '127.0.0.1', 'Modificacion del Usuario Codigo:0002', NULL),
+(135, 1, '2020-06-28 20:11:00', '127.0.0.1', 'Registro de Usuario Codigo:0003', NULL),
+(136, 1, '2020-06-28 20:12:38', '127.0.0.1', 'Registro de Usuario Codigo:0004', NULL),
+(137, 1, '2020-07-03 18:47:07', '127.0.0.1', 'Inicio de Sesion', NULL),
+(138, 1, '2020-07-10 11:43:20', '127.0.0.1', 'Inicio de Sesion', NULL),
+(139, 1, '2020-07-10 15:40:45', '127.0.0.1', 'Inicio de Sesion', NULL),
+(140, 1, '2020-07-10 17:29:28', '127.0.0.1', 'Registro del proyecto: Proyecto con monto. Cliente:BANCO DEL TESORO BANCO UNIVERSAL C.A.', NULL),
+(141, 1, '2020-07-10 18:46:32', '127.0.0.1', 'Inicio de Sesion', NULL),
+(142, 1, '2020-07-15 09:43:05', '127.0.0.1', 'Registro del proyecto: prueba. Cliente:BANCO H', 'tbl_proyecto'),
+(143, 1, '2020-07-15 09:54:01', '127.0.0.1', 'Modificacion del proyecto: prueba. Cliente:BANCO H', 'tbl_proyecto'),
+(144, 1, '2020-07-15 09:54:37', '127.0.0.1', 'Modificacion del proyecto: pruebas. Cliente:BANCO H', 'tbl_proyecto'),
+(145, 1, '2020-07-15 10:08:37', '127.0.0.1', 'Asignacion del analista codigo: 0001. Al proyecto: AUDITORÍA DE VULNERABILIDAD', 'tbl_proyecto_analista'),
+(146, 1, '2020-07-15 10:10:02', '127.0.0.1', 'Asignacion del analista codigo: 11450. Al proyecto: AUDITORÍA DE VULNERABILIDAD', 'tbl_proyecto_analista'),
+(147, 1, '2020-07-15 10:35:02', '127.0.0.1', 'total de horas asignadas: 60. Al analista codigo: 0001 en el proyecto: AUDITORÍA DE VULNERABILIDAD ', 'tbl_proyecto_analista'),
+(148, 1, '2020-07-15 10:38:40', '127.0.0.1', 'total de horas asignadas: 6. Al analista codigo: 0001 en el proyecto: AUDITORÍA DE VULNERABILIDAD ', 'tbl_proyecto_analista'),
+(149, 1, '2020-07-15 10:55:13', '127.0.0.1', 'Analista codigo: 0001 Cargo: 4 horas en el proyecto:AUDITORÍA DE VULNERABILIDAD', 'tbl_horas_cargables'),
+(150, 1, '2020-07-15 11:03:48', '127.0.0.1', 'Modificacion de horas del usuario codigo: 0001 en el proyecto:AUDITORÍA DE VULNERABILIDAD', 'tbl_horas_cargables'),
+(151, 1, '2020-07-15 11:09:52', '127.0.0.1', 'Modificacion de horas del usuario codigo: 0001 en el proyecto:AUDITORÍA DE VULNERABILIDAD', 'tbl_horas_cargables'),
+(152, 1, '2020-07-15 11:17:30', '127.0.0.1', 'Modificacion de horas del usuario codigo: 0001 en el proyecto:AUDITORÍA DE VULNERABILIDAD', 'tbl_horas_cargables'),
+(153, 1, '2020-07-15 11:34:44', '127.0.0.1', 'Registro del concepto de horas no cargables: prueba', NULL),
+(154, 1, '2020-07-15 11:41:06', '127.0.0.1', 'Registro del concepto de horas no cargables: prueba', 'tbl_concepto_horas_no_cargables'),
+(155, 1, '2020-07-15 12:21:17', '127.0.0.1', 'Registro del detalle de facturacion del cliente:BANCO H. proyecto:PRUEBAS', NULL),
+(156, 1, '2020-07-15 12:29:06', '127.0.0.1', 'Modificacion del detalle de facturacion del cliente:BANCOS. C. proyecto:PROYECTO I', 'tbl_cliente_facturacion'),
+(157, 1, '2020-07-15 12:30:39', '127.0.0.1', 'Modificacion del detalle de facturacion del cliente:BANCOS. C. proyecto:PROYECTO I', 'tbl_cliente_facturacion');
+
+--
+-- Disparadores `logs_auditoria`
+--
+DELIMITER $$
+CREATE TRIGGER `logs_auditoria_AI` AFTER INSERT ON `logs_auditoria` FOR EACH ROW BEGIN
+SET @usu = (SELECT id FROM logs.tbl_usuario ORDER BY id DESC LIMIT 1);
+SET @clie = (SELECT id FROM logs.tbl_cliente ORDER BY id DESC LIMIT 1);
+SET @fact = (SELECT id FROM logs.tbl_cliente_facturacion ORDER BY id DESC LIMIT 1);
+SET @proy = (SELECT id FROM logs.tbl_proyecto ORDER BY id DESC LIMIT 1);
+SET @proya = (SELECT id FROM logs.tbl_proyecto_analista ORDER BY id DESC LIMIT 1);
+SET @horasc = (SELECT id FROM logs.tbl_horas_cargables ORDER BY id DESC LIMIT 1);
+SET @concepto = (SELECT id FROM logs.tbl_concepto_horas_no_cargables ORDER BY id DESC LIMIT 1);
+  IF NEW.accion LIKE '%Registro de Usuario Codigo%' THEN BEGIN
+  	UPDATE logs.tbl_usuario SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @usu;
+    END; END IF;
+   IF NEW.accion LIKE '%Modificacion del Usuario Codigo%' THEN BEGIN
+  	UPDATE logs.tbl_usuario SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @usu;
+    END; END IF;
+    IF NEW.accion LIKE '%Registro del cliente codigo%' THEN BEGIN
+  	UPDATE logs.tbl_cliente SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @clie;
+    END; END IF;
+    IF NEW.accion LIKE '%Modificacion del cliente%' THEN BEGIN
+  	UPDATE logs.tbl_cliente SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @clie;
+    END; END IF;
+    IF NEW.accion LIKE '%Registro del proyecto%' THEN BEGIN
+  	UPDATE logs.tbl_proyecto SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @proy;
+    END; END IF;
+    IF NEW.accion LIKE '%Modificacion del proyecto%' THEN BEGIN
+  	UPDATE logs.tbl_proyecto SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @proy;
+    END; END IF;
+    IF NEW.accion LIKE '%Asignacion del analista codigo%' THEN BEGIN
+  	UPDATE logs.tbl_proyecto_analista SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @proya;
+    END; END IF;
+    IF NEW.accion LIKE '%Eliminacion del analista codigo%' THEN BEGIN
+  	UPDATE logs.tbl_proyecto_analista SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @proya;
+    END; END IF;
+    IF NEW.accion LIKE '%total de horas asignadas%' THEN BEGIN
+  	UPDATE logs.tbl_proyecto_analista SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @proya;
+    END; END IF;
+    IF NEW.accion LIKE '%Analista codigo%' THEN BEGIN
+  	UPDATE logs.tbl_horas_cargables SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @horasc;
+    END; END IF;
+    IF NEW.accion LIKE '%Modificacion de horas del usuario codigo%' THEN BEGIN
+  	UPDATE logs.tbl_horas_cargables SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @horasc;
+    END; END IF;
+    IF NEW.accion LIKE '%Registro del concepto de horas no cargables%' THEN BEGIN
+  	UPDATE logs.tbl_concepto_horas_no_cargables SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @concepto;
+    END; END IF;
+    IF NEW.accion LIKE '%Registro del detalle de facturacion del cliente%' THEN BEGIN
+  	UPDATE logs.tbl_cliente_facturacion SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @fact;
+    END; END IF;
+    IF NEW.accion LIKE '%Modificacion del detalle de facturacion del cliente%' THEN BEGIN
+  	UPDATE logs.tbl_cliente_facturacion SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @fact;
+    END; END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -950,6 +1026,18 @@ INSERT INTO `tbl_cliente` (`id`, `id_usuario_socio`, `id_usuario_gerente`, `codi
 (21, 9, 19, 131, 'J407038389', 0, 'TICKETERA.COM', 1126, 'PRINCIPAL', 'PEAVY', 'PB', '1', 'CARACAS', '(0212) - 698 4554', NULL, 'prueba@gmail.com', 1),
 (22, 16, 19, 132, 'J000063729', 0, 'CERVECERÍA POLAR LOS CORTIJOS C.A.', 647, 'AVENIDA PRINCIPAL DE LOS CORTIJOS', 'CENTRO POLAR', 'PB', '12', 'CARACAS', '(0212) - 239 7841', '(0212) - 239 3232', 'empresaspolar@empresaspolar.com', 1);
 
+--
+-- Disparadores `tbl_cliente`
+--
+DELIMITER $$
+CREATE TRIGGER `tbl_cliente_AI` AFTER INSERT ON `tbl_cliente` FOR EACH ROW INSERT INTO logs.tbl_cliente(codigo, id_usuario_socio_nuevo, id_usuario_gerente_nuevo, rif_nuevo, nit_nuevo, razon_social_nuevo, id_parroquia_fiscal_nuevo, avenida_calle_fiscal_nuevo, edificio_quinta_fiscal_nuevo, piso_fiscal_nuevo, ciudad_fiscal_nuevo, telefono_fiscal_nuevo, pagina_web_nuevo, email_fiscal_nuevo, id_estatus_nuevo) VALUES (NEW.codigo, NEW.id_usuario_socio, NEW.id_usuario_gerente, NEW.rif, NEW.nit, NEW.razon_social, NEW.id_parroquia_fiscal, NEW.avenida_calle_fiscal, NEW.edificio_quinta_fiscal, NEW.piso_fiscal, NEW.ciudad_fiscal, NEW.telefono_fiscal, NEW.pagina_web, NEW.email_fiscal, NEW.id_estatus)
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tbl_cliente_BU` BEFORE UPDATE ON `tbl_cliente` FOR EACH ROW INSERT INTO logs.tbl_cliente(codigo, id_usuario_socio, id_usuario_gerente, rif, nit, razon_social, id_parroquia_fiscal, avenida_calle_fiscal, edificio_quinta_fiscal, piso_fiscal, ciudad_fiscal, telefono_fiscal, pagina_web, email_fiscal, id_estatus, id_usuario_socio_nuevo, id_usuario_gerente_nuevo, rif_nuevo, nit_nuevo, razon_social_nuevo, id_parroquia_fiscal_nuevo, avenida_calle_fiscal_nuevo, edificio_quinta_fiscal_nuevo, piso_fiscal_nuevo, ciudad_fiscal_nuevo, telefono_fiscal_nuevo, pagina_web_nuevo, email_fiscal_nuevo, id_estatus_nuevo) VALUES (NEW.codigo, OLD.id_usuario_socio, OLD.id_usuario_gerente, OLD.rif, OLD.nit, OLD.razon_social, OLD.id_parroquia_fiscal, OLD.avenida_calle_fiscal, OLD.edificio_quinta_fiscal, OLD.piso_fiscal, OLD.ciudad_fiscal, OLD.telefono_fiscal, OLD.pagina_web, OLD.email_fiscal, OLD.id_estatus, NEW.id_usuario_socio, NEW.id_usuario_gerente, NEW.rif, NEW.nit, NEW.razon_social, NEW.id_parroquia_fiscal, NEW.avenida_calle_fiscal, NEW.edificio_quinta_fiscal, NEW.piso_fiscal, NEW.ciudad_fiscal, NEW.telefono_fiscal, NEW.pagina_web, NEW.email_fiscal, NEW.id_estatus)
+$$
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
@@ -986,7 +1074,20 @@ INSERT INTO `tbl_cliente_facturacion` (`id`, `id_cliente`, `id_proyecto`, `id_pa
 (7, 8, 12, 1136, 'AVENIDA URDANETA', 'BANCO DEL TESORO', '13', '13A', 'CARACAS', '(0212) - 414 2185', '0212-414-2185', 'bancodeltesoro@gob.ve', 1),
 (8, 11, 14, 619, 'FRANCISCO', 'TORRE CAVENDES', '1', '1', 'CARACAS', '(0212) - 285 2634', '02122851926', 'presidente@ct.com.ve', 1),
 (9, 8, 16, 1120, 'URDANETA', 'BANCO DEL TESORO', '1', '1', 'CARACAS', '(0212) - 435 2100', '0212-4352101', 'bancodeltesoro@gob.ve', 1),
-(10, 22, 18, 647, 'AVENIDA PRINCIPAL DE LOS CORTIJOS', 'EMPRESAS POLAR', 'PB', '7', 'CARACAS', '(0212) - 239 7418', '(0212) - 239 8147', 'facturacion@empresaspolar.com', 1);
+(10, 22, 18, 647, 'AVENIDA PRINCIPAL DE LOS CORTIJOS', 'EMPRESAS POLAR', 'PB', '7', 'CARACAS', '(0212) - 239 7418', '(0212) - 239 8147', 'facturacion@empresaspolar.com', 1),
+(12, 2, 21, 1, 'AVENIDA', 'QUINTA', '2', '2', 'CIUDAD', '(2222) - 222 2222', '(2222) - 222 2222', 'pruebasasa@gmail.com', 1);
+
+--
+-- Disparadores `tbl_cliente_facturacion`
+--
+DELIMITER $$
+CREATE TRIGGER `tbl_cliente_facturacion_AI` AFTER INSERT ON `tbl_cliente_facturacion` FOR EACH ROW INSERT INTO logs.tbl_cliente_facturacion(id_facturacion, id_cliente_nuevo, id_proyecto_nuevo, id_parroquia_factura_nuevo, avenida_calle_factura_nuevo, edificio_quinta_factura_nuevo, piso_factura_nuevo, numero_factura_nuevo, ciudad_factura_nuevo, telefono_factura_nuevo, fax_factura_nuevo, email_factura_nuevo, id_estatus_nuevo) VALUES (NEW.id, NEW.id_cliente, NEW.id_proyecto, NEW.id_parroquia_factura, NEW.avenida_calle_factura, NEW.edificio_quinta_factura, NEW.piso_factura, NEW.numero_factura, NEW.ciudad_factura, NEW.telefono_factura, NEW.fax_factura, NEW.email_factura, NEW.id_estatus)
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tbl_cliente_facturacion_BU` BEFORE UPDATE ON `tbl_cliente_facturacion` FOR EACH ROW INSERT INTO logs.tbl_cliente_facturacion(id_facturacion, id_cliente, id_proyecto, id_parroquia_factura, avenida_calle_factura, edificio_quinta_factura, piso_factura, numero_factura, ciudad_factura, telefono_factura, fax_factura, email_factura, id_estatus, id_cliente_nuevo, id_proyecto_nuevo, id_parroquia_factura_nuevo, avenida_calle_factura_nuevo, edificio_quinta_factura_nuevo, piso_factura_nuevo, numero_factura_nuevo, ciudad_factura_nuevo, telefono_factura_nuevo, fax_factura_nuevo, email_factura_nuevo, id_estatus_nuevo) VALUES (NEW.id, OLD.id_cliente, OLD.id_proyecto, OLD.id_parroquia_factura, OLD.avenida_calle_factura, OLD.edificio_quinta_factura, OLD.piso_factura, OLD.numero_factura, OLD.ciudad_factura, OLD.telefono_factura, OLD.fax_factura, OLD.email_factura, OLD.id_estatus, NEW.id_cliente, NEW.id_proyecto, NEW.id_parroquia_factura, NEW.avenida_calle_factura, NEW.edificio_quinta_factura, NEW.piso_factura, NEW.numero_factura, NEW.ciudad_factura, NEW.telefono_factura, NEW.fax_factura, NEW.email_factura, NEW.id_estatus)
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -1018,6 +1119,14 @@ INSERT INTO `tbl_concepto_horas_no_cargables` (`id`, `descripcion`, `id_estatus`
 (11, 'Seminarios Web Vía Zoom', 1),
 (12, 'Talleres de Desarrollo Profesional', 1),
 (13, 'Tareas administrativas Personal Profesional', 1);
+
+--
+-- Disparadores `tbl_concepto_horas_no_cargables`
+--
+DELIMITER $$
+CREATE TRIGGER `tbl_concepto_horas_no_cargables_AI` AFTER INSERT ON `tbl_concepto_horas_no_cargables` FOR EACH ROW INSERT INTO logs.tbl_concepto_horas_no_cargables(id_concepto, descripcion_nuevo, id_estatus_nuevo) VALUES (NEW.id, NEW.descripcion, NEW.id_estatus)
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -1258,7 +1367,20 @@ INSERT INTO `tbl_horas_cargables` (`id`, `id_proy_analista`, `fecha`, `descripci
 (12, 15, '2020-06-22', 'REUNIÓN CON GERENCIA', 4),
 (13, 14, '2020-06-01', 'INVERSIONES', 8),
 (15, 26, '2020-06-02', 'REUNIÓN CON EQUIPO DE TRABAJO', 2),
-(16, 26, '2020-06-01', 'REUNIÓN DE ACERCAMIENTO CON EL CLIENTE', 4);
+(16, 26, '2020-06-01', 'REUNIÓN DE ACERCAMIENTO CON EL CLIENTE', 4),
+(20, 28, '2020-07-02', 'PRUEBA', 4);
+
+--
+-- Disparadores `tbl_horas_cargables`
+--
+DELIMITER $$
+CREATE TRIGGER `tbl_horas_cargables_AI` AFTER INSERT ON `tbl_horas_cargables` FOR EACH ROW INSERT INTO logs.tbl_horas_cargables(id_horas_cargables, id_proy_analista_nuevo, fecha_horas_cargables_nuevo, descripcion_nuevo, horas_trabajadas_nuevo) VALUES (NEW.id, NEW.id_proy_analista, NEW.fecha, NEW.descripcion, NEW.horas_trabajadas)
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tbl_horas_cargables_BU` BEFORE UPDATE ON `tbl_horas_cargables` FOR EACH ROW INSERT INTO logs.tbl_horas_cargables(id_horas_cargables, id_proy_analista, fecha_horas_cargables, descripcion, horas_trabajadas, id_proy_analista_nuevo, fecha_horas_cargables_nuevo, descripcion_nuevo, horas_trabajadas_nuevo) VALUES (NEW.id, OLD.id_proy_analista, OLD.fecha, OLD.descripcion, OLD.horas_trabajadas, NEW.id_proy_analista, NEW.fecha, NEW.descripcion, NEW.horas_trabajadas)
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -1341,7 +1463,7 @@ INSERT INTO `tbl_menu` (`id`, `id_menu_padre`, `descripcion`, `url`, `orden`, `i
 (8, 0, 'Proyectos', '', 0, 1),
 (9, 8, 'Crear Proyecto', '/formNuevoProyecto', 0, 1),
 (10, 8, 'Lista de Proyectos', '/proyectos', 1, 1),
-(11, 8, 'Asignados/ar Proyectos ', '/proyectoDivision', 2, 1),
+(11, 8, 'Asig.Personal/Horas Cargables', '/proyectoDivision', 2, 1),
 (12, 0, 'Horas No Cargables', '', 0, 1),
 (13, 12, 'Conceptos', '/formHorasNoCargables', 0, 1),
 (14, 12, 'Cargar', '/cargarHorasNoCargables', 1, 1);
@@ -3018,7 +3140,20 @@ INSERT INTO `tbl_proyecto` (`id`, `descripcion`, `id_cliente`, `fecha_contrataci
 (16, 'auditoria financiera junio 2020-I', 8, '15/06/2020', '0.00', 2, 1),
 (17, 'auditoría 2019-II', 20, '26/06/2020', '0.00', 2, 1),
 (18, 'Auditoría 2018', 22, '27/06/2020', '0.00', 2, 1),
-(19, 'Proyecto con monto', 8, '10/07/2020', '1000.27', 2, 1);
+(19, 'Proyecto con monto', 8, '10/07/2020', '1000.27', 2, 1),
+(21, 'pruebas', 2, '12/06/2020', '500.00', 2, 1);
+
+--
+-- Disparadores `tbl_proyecto`
+--
+DELIMITER $$
+CREATE TRIGGER `tbl_proyecto_AI` AFTER INSERT ON `tbl_proyecto` FOR EACH ROW INSERT INTO logs.tbl_proyecto(id_proyecto, descripcion_nuevo, id_cliente_nuevo, fecha_contratacion_nuevo, monto_nuevo, id_moneda_nuevo,  id_estatus_nuevo) VALUES (NEW.id, NEW.descripcion, NEW.id_cliente, NEW.fecha_contratacion, NEW.monto, NEW.id_moneda, NEW.id_estatus)
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tbl_proyecto_BU` BEFORE UPDATE ON `tbl_proyecto` FOR EACH ROW INSERT INTO logs.tbl_proyecto(id_proyecto, descripcion, id_cliente, fecha_contratacion, monto, id_moneda, id_estatus, descripcion_nuevo, id_cliente_nuevo, fecha_contratacion_nuevo, monto_nuevo, id_moneda_nuevo, id_estatus_nuevo) VALUES (NEW.id, OLD.descripcion, OLD.id_cliente, OLD.fecha_contratacion, OLD.monto, OLD.id_moneda, OLD.id_estatus, NEW.descripcion, NEW.id_cliente, NEW.fecha_contratacion, NEW.monto, NEW.id_moneda, NEW.id_estatus)
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -3065,7 +3200,21 @@ INSERT INTO `tbl_proyecto_analista` (`id`, `id_proyecto`, `id_proyecto_division`
 (23, 18, 42, 22, 250, 1),
 (24, 18, 42, 21, 250, 1),
 (25, 18, 42, 20, 150, 1),
-(26, 18, 42, 19, 100, 1);
+(26, 18, 42, 19, 100, 1),
+(28, 9, 22, 1, 6, 1),
+(29, 9, 22, 3, NULL, 1);
+
+--
+-- Disparadores `tbl_proyecto_analista`
+--
+DELIMITER $$
+CREATE TRIGGER `tbl_proyecto_analista_AI` AFTER INSERT ON `tbl_proyecto_analista` FOR EACH ROW INSERT INTO logs.tbl_proyecto_analista(id_proyecto_analista, id_proyecto_nuevo, id_proyecto_division_nuevo, id_analista_nuevo, horas_asignadas_nuevo, id_estatus_nuevo) VALUES (NEW.id, NEW.id_proyecto, NEW.id_proyecto_division, NEW.id_analista, NEW.horas_asignadas, NEW.id_estatus)
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tbl_proyecto_analista_BU` BEFORE UPDATE ON `tbl_proyecto_analista` FOR EACH ROW INSERT INTO logs.tbl_proyecto_analista(id_proyecto_analista, id_proyecto, id_proyecto_division, id_analista, horas_asignadas, id_estatus, id_proyecto_nuevo, id_proyecto_division_nuevo, id_analista_nuevo, horas_asignadas_nuevo, id_estatus_nuevo) VALUES (NEW.id, OLD.id_proyecto, OLD.id_proyecto_division, OLD.id_analista, OLD.horas_asignadas, OLD.id_estatus, NEW.id_proyecto, NEW.id_proyecto_division, NEW.id_analista, NEW.horas_asignadas, NEW.id_estatus)
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -3121,7 +3270,8 @@ INSERT INTO `tbl_proyecto_divisiones` (`id`, `id_division`, `id_proyecto`, `hora
 (41, 3, 17, 750),
 (42, 1, 18, 1000),
 (43, 2, 19, 25),
-(44, 3, 19, 17);
+(44, 3, 19, 17),
+(46, 3, 21, 100);
 
 -- --------------------------------------------------------
 
@@ -3142,7 +3292,7 @@ CREATE TABLE `tbl_telefono` (
 
 CREATE TABLE `tbl_tipo_cargo` (
   `id` int(11) NOT NULL,
-  `descripcion` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL
+  `descripcion` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3229,6 +3379,18 @@ INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `cedula`, `nombre_1`, `nombr
 (23, '0002', 'eyJpdiI6IkJPSE4xeWtDUFAzaGQwMitPcjJLdGc9PSIsInZhbHVlIjoiaHRwQnU1UGRuSGNpK0xvajJhMnBQZz09IiwibWFjIjoiMmE1NTZjZWU4YmE2MDZhNmEyMjIwNGE0YTk2YjNlYzgyMGRlMGVhODRlZTRkMTQzMzNmN2Y2MWU3MDI5YjgxNyJ9', 17671373, 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '1986-08-05 00:00:00', 1, 13, 2, NULL, '2020-06-30 00:00:00', '2020-07-05 00:00:00', 1),
 (24, '0003', 'eyJpdiI6ImE1eDZKYmpJVXVwYXhweVhURG5WdEE9PSIsInZhbHVlIjoiYTJRcGR0S1VCRTlvejlGY3NDRzczUT09IiwibWFjIjoiNGVhZWEyMWZkYmQ2MWU3NmU1NjAwZTc3Mzg5NGQ1NjhlOTgzZjlmMjIyNGFiY2U5ODRkMWNiZTk2ZjA2YmRiZSJ9', 13900761, 'EMILIA', 'CAROLINA', 'CORONEL', 'MONTERO', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
 (25, '0004', 'eyJpdiI6ImFFR1wvaWgzTXNsSlF2VmVaamhPeEFnPT0iLCJ2YWx1ZSI6IlwvN2JmdXoyOUQ4TXh1cXZSNVlkZG1nPT0iLCJtYWMiOiJmMGIzNzA3NzlmZDQ3ODMwNDE5YTM5OGZjOTgzMmI3N2FjYWMxNGNkNzk5NjRiYzBjMzAxN2FkNTIwODdjMTAyIn0=', 11100000, 'EMILIA', '', 'MONTERO', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+
+--
+-- Disparadores `tbl_usuario`
+--
+DELIMITER $$
+CREATE TRIGGER `tbl_usuario_AI` AFTER INSERT ON `tbl_usuario` FOR EACH ROW INSERT INTO logs.tbl_usuario(codigo, cedula_nuevo, nombre_1_nuevo, nombre_2_nuevo, apellido_1_nuevo, apellido_2_nuevo, fecha_nacimiento_nuevo, id_cargo_nuevo, id_division_nuevo, id_parroquia_nuevo, fecha_ingreso_nuevo, id_estatus_nuevo) VALUES (NEW.codigo, NEW.cedula, NEW.nombre_1, NEW.nombre_2, NEW.apellido_1, NEW.apellido_2, NEW.fecha_nacimiento, NEW.id_cargo, NEW.id_division, NEW.id_parroquia, NEW.fecha_ingreso, NEW.id_estatus)
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tbl_usuario_BU` BEFORE UPDATE ON `tbl_usuario` FOR EACH ROW INSERT INTO logs.tbl_usuario(codigo, cedula, nombre_1, nombre_2, apellido_1, apellido_2, fecha_nacimiento, id_cargo, id_division, id_parroquia, fecha_ingreso, fecha_egreso, id_estatus, cedula_nuevo, nombre_1_nuevo, nombre_2_nuevo, apellido_1_nuevo, apellido_2_nuevo, fecha_nacimiento_nuevo, id_cargo_nuevo, id_division_nuevo, id_parroquia_nuevo, fecha_ingreso_nuevo, fecha_egreso_nuevo, id_estatus_nuevo) VALUES (NEW.codigo, OLD.cedula, OLD.nombre_1, OLD.nombre_2, OLD.apellido_1, OLD.apellido_2, OLD.fecha_nacimiento, OLD.id_cargo, OLD.id_division, OLD.id_parroquia, OLD.fecha_ingreso, OLD.fecha_egreso, OLD.id_estatus, NEW.cedula, NEW.nombre_1, NEW.nombre_2, NEW.apellido_1, NEW.apellido_2, NEW.fecha_nacimiento, NEW.id_cargo, NEW.id_division, NEW.id_parroquia, NEW.fecha_ingreso, NEW.fecha_egreso, NEW.id_estatus)
+$$
+DELIMITER ;
 
 --
 -- Índices para tablas volcadas
@@ -3411,7 +3573,7 @@ ALTER TABLE `tbl_usuario`
 -- AUTO_INCREMENT de la tabla `logs_auditoria`
 --
 ALTER TABLE `logs_auditoria`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=142;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=158;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cargo_empleado`
@@ -3441,13 +3603,13 @@ ALTER TABLE `tbl_cliente`
 -- AUTO_INCREMENT de la tabla `tbl_cliente_facturacion`
 --
 ALTER TABLE `tbl_cliente_facturacion`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_concepto_horas_no_cargables`
 --
 ALTER TABLE `tbl_concepto_horas_no_cargables`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_configuracion`
@@ -3483,7 +3645,7 @@ ALTER TABLE `tbl_estatus`
 -- AUTO_INCREMENT de la tabla `tbl_horas_cargables`
 --
 ALTER TABLE `tbl_horas_cargables`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_horas_no_cargables`
@@ -3525,19 +3687,19 @@ ALTER TABLE `tbl_parroquias`
 -- AUTO_INCREMENT de la tabla `tbl_proyecto`
 --
 ALTER TABLE `tbl_proyecto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_proyecto_analista`
 --
 ALTER TABLE `tbl_proyecto_analista`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_proyecto_divisiones`
 --
 ALTER TABLE `tbl_proyecto_divisiones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_telefono`
