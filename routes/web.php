@@ -21,6 +21,7 @@ Route::get('/logout', 'LoginController@logout');
 Route::get('/cambiarClave', 'InicioController@cambiarClave')->middleware('usuario.session');
 Route::post('/guardarNuevaClave', 'InicioController@guardarNuevaClave');
 Route::get('/formNuevoUsuario', function() {return view('usuario/nuevoUsuario');})->middleware('usuario.session');
+Route::get('/dataInicialNuevoUsuario','UsuarioController@dataInicialNuevoUsuario')->middleware('usuario.session');
 Route::get('/estados', 'UsuarioController@estados');
 Route::get('/municipios', 'UsuarioController@municipios');
 Route::get('/parroquias', 'UsuarioController@parroquias');

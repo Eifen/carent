@@ -79,6 +79,7 @@ const datosIniciales = () => {
                  municipios: response.data.municipios,
                  parroquias: response.data.parroquias,
                  estatus: response.data.estatus,
+                 tipoDocumentos: response.data.tipoDocumentos,
                  response: true
                });
 
@@ -114,6 +115,7 @@ var app = new Vue({
     comboDivisiones: [],
     comboCargos: [],
     comboEstatus: [],
+    comboTipoDocumento: [],
     form: {
       nombre1:{
         disabled: true,
@@ -202,6 +204,13 @@ var app = new Vue({
         disabled: true,
         minValue: "",
         value: ""
+      },
+      tipoDocumento: {
+        disabled: false,
+        value: ""
+      },
+      idUsuarioDocumentoIdentidad: {
+        value: null
       }
     },
     loading: true,
@@ -242,10 +251,13 @@ var app = new Vue({
         self.form.telefono1.value = dataInit.infoUsu.telefono_principal;
         self.form.telefono2.value = dataInit.infoUsu.telefono_secundario;
         self.form.estatus.value = dataInit.infoUsu.id_estatus;
+        self.form.tipoDocumento.value = dataInit.infoUsu.id_tipo_documento;
         self.comboEstados = dataInit.estados;
         self.comboCargos = dataInit.cargos;
         self.comboDivisiones = dataInit.divisiones;
         self.comboEstatus = dataInit.estatus;
+        self.comboTipoDocumento = dataInit.tipoDocumentos;
+        self.form.idUsuarioDocumentoIdentidad.value = dataInit.infoUsu.id_usuario_documento_identidad;
 
         if(dataInit.infoUsu.id_cargo !== null && dataInit.infoUsu.id_division !== null){
 
@@ -546,7 +558,9 @@ var app = new Vue({
           empleado: self.form.empleado.checked,
           estatus: self.form.estatus.value,
           fechaIngreso: self.form.fechaIngreso.value,
-          fechaEngreso: self.form.fechaEgreso.value
+          fechaEngreso: self.form.fechaEgreso.value,
+          tipoDocumento: self.form.tipoDocumento.value,
+          idUsuarioDocumentoIdentidad: self.form.idUsuarioDocumentoIdentidad.value
         }
 
         self.submitActualizar.content = '<i class="fas fa-cog fa-spin"></i>';

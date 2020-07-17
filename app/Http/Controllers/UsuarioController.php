@@ -53,6 +53,27 @@ class UsuarioController extends Controller
 
     }
 
+    function dataInicialNuevoUsuario(){
+
+      $modelo = new UsuarioModel();
+      $modeloConfig = new ConfigsModel();
+
+      $cargos = $modelo->cargos();
+      $divisiones = $modelo->divisiones();
+      $encryptConfig = $modeloConfig->encryptConfig();
+      $estados = $modelo->estados();
+      $tipoDocumentos = $modelo->tipoDocumentos();
+
+      return [
+        "cargos" => $cargos,
+        "divisiones" => $divisiones,
+        "encryptConfig" => $encryptConfig,
+        "estados" => $estados,
+        "tipoDocumentos" => $tipoDocumentos
+      ];
+
+    }
+
     function crearUsuario(Request $request){
 
       $modelo = new UsuarioModel();
@@ -88,7 +109,8 @@ class UsuarioController extends Controller
               "usuario_id" => $request->session()->get('usuario_id'),
               "fecha" => date("Y-m-d H:i:s"),
               "direccion_ip" => $request->session()->get('direccion'),
-              "fechaIngreso" => $fecha_ingreso
+              "fechaIngreso" => $fecha_ingreso,
+              "tipoDocumento" => $request->input("tipoDocumento")
             );
 
             $response = $modelo->crearUsuario($parametros);
@@ -170,6 +192,7 @@ class UsuarioController extends Controller
       $divisiones = $this->divisiones();
       $cargos = $this->cargos();
       $estados = $modelo->estados();
+      $tipoDocumentos = $modelo->tipoDocumentos();
 
       if($infoUsuario->id_estado !== NULL){
         $municipios = $modelo->municipios($infoUsuario->id_estado);
@@ -188,7 +211,8 @@ class UsuarioController extends Controller
                           "estados" => $estados,
                           "municipios" => $municipios,
                           "parroquias" => $parroquias,
-                          "estatus" => $estatus);
+                          "estatus" => $estatus,
+                          "tipoDocumentos" => $tipoDocumentos);
 
       }else{
 
@@ -229,7 +253,9 @@ class UsuarioController extends Controller
         "fecha" => date("Y-m-d H:i:s"),
         "direccion_ip" => $request->session()->get('direccion'),
         "fechaIngreso" => $fecha_ingreso,
-        "fechaEgreso" => $fecha_egreso
+        "fechaEgreso" => $fecha_egreso,
+        "tipoDocumento" => $request->input("tipoDocumento"),
+        "idUsuarioDocumentoIdentidad" => $request->input("idUsuarioDocumentoIdentidad")
       );
 
       $response = $modelo->modificarUsuario($parametros);
