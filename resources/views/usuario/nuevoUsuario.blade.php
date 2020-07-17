@@ -87,6 +87,20 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
+                <label for="estado">Documento de Identidad <span class="campo-obligatorio">*</span></label>
+                <select aria-describedby="tipoDocumentoHelp"
+                        class="form-control"
+                        id="tipoDocumento"
+                        data-validar="true"
+                        v-bind:disabled="form.tipoDocumento.disabled"
+                        v-model="form.tipoDocumento.value"
+                        v-on:click="limpiarMensajeError">
+                  <option value="" disabled selected>Seleccione...</option>
+                  <option v-bind:value="tipoDocumento.id" v-for="tipoDocumento in comboTipoDocumento">@{{ tipoDocumento.descripcion }}</option>
+                </select>
+                <div class="mensaje"></div>
+              </div>
+              <div class="form-group col-12 col-sm-6">
                 <label for="cedula">Cédula de Identidad <span class="campo-obligatorio">*</span></label>
                 <input class="form-control"
                        data-formated-number="true"

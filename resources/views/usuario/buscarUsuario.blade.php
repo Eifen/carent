@@ -130,6 +130,12 @@
                     <input class="form-control" type="text" disabled v-bind:value="detalleUsuario.data.apellido_2">
                   </div>
                   <div class="form-group col-12 col-sm-6">
+                    <label>Documento de Identidad</label>
+                    <select class="form-control">
+                      <option>@{{ detalleUsuario.data.tipo_documento_identidad }}</option>
+                    </select>
+                  </div>
+                  <div class="form-group col-12 col-sm-6">
                     <label>Cédula de Identidad</label>
                     <input class="form-control" type="text" disabled v-bind:value="detalleUsuario.data.cedula">
                   </div>
@@ -165,23 +171,41 @@
                 <form class="row" v-if="!detalleUsuario.error">
                   <div class="form-group col-12 col-sm-6">
                     <label>Estado</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleUsuario.data.estado">
+                    <select class="form-control">
+                      <option>@{{ detalleUsuario.data.estado }}</option>
+                    </select>
                   </div>
                   <div class="form-group col-12 col-sm-6">
                     <label>Municipio</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleUsuario.data.municipio">
+                    <select class="form-control">
+                      <option>@{{ detalleUsuario.data.municipio }}</option>
+                    </select>
                   </div>
                   <div class="form-group col-12 col-sm-6">
                     <label>Parroquia</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleUsuario.data.parroquia">
+                    <select class="form-control">
+                      <option>@{{ detalleUsuario.data.parroquia }}</option>
+                    </select>
                   </div>
                   <div class="form-group col-12 col-sm-6">
                     <label>División</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleUsuario.data.division">
+                    <select class="form-control">
+                      <option>@{{ detalleUsuario.data.division }}</option>
+                    </select>
                   </div>
                   <div class="form-group col-12 col-sm-6">
                     <label>Cargo</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleUsuario.data.cargo">
+                    <select class="form-control">
+                      <option>@{{ detalleUsuario.data.cargo }}</option>
+                    </select>
+                  </div>
+                  <div class="form-group col-12 col-sm-6">
+                    <label>Fecha de Ingreso</label>
+                    <input class="form-control" type="text" disabled v-bind:value="detalleUsuario.data.fecha_ingreso">
+                  </div>
+                  <div class="form-group col-12 col-sm-6">
+                    <label>Fecha de Egreso</label>
+                    <input class="form-control" type="text" disabled v-bind:value="detalleUsuario.data.fecha_egreso">
                   </div>
                 </form>
               </div>

@@ -15,7 +15,7 @@ class ClienteModel extends Model
         $condicion = "WHERE u.codigo LIKE '%".$dato."%'";
       break;
       case 2:
-        $condicion = "WHERE u.cedula LIKE '%".$dato."%'";
+        $condicion = "WHERE udi.documento LIKE '%".$dato."%'";
       break;
       case 3:
         $condicion = "WHERE (u.nombre_1 LIKE '%".$dato."%' OR u.nombre_2 LIKE '%".$dato."%')";
@@ -24,25 +24,28 @@ class ClienteModel extends Model
         $condicion = "WHERE (u.apellido_1 LIKE '%".$dato."%' OR u.apellido_2 LIKE '%".$dato."%')";
       break;
       default:
-        $condicion = "WHERE u.codigo LIKE %'".$dato."'%";
+        $condicion = "WHERE u.codigo LIKE '%".$dato."%'";
       break;
     }
     $usuarios = DB::select('SELECT u.id,
                                    u.codigo,
                                    u.avatar,
-                                   u.cedula,
+                                   udi.id_tipo_documento_identidad AS id_tipo_documento,
+                                   udi.documento AS cedula,
                                    u.id_cargo,
                                    CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS nombre,
                                    e.descripcion AS estatus,
                                    cu.correo_principal
                             FROM tbl_usuario u,
                                  tbl_estatus e,
-                                 tbl_contacto_usuario cu
+                                 tbl_contacto_usuario cu,
+                                 tbl_usuario_documento_identidad udi
                             '.$condicion.'
                             AND u.id_cargo = '.$cargo.'
                             AND e.tabla = "tbl_usuario"
                             AND e.valor = u.id_estatus
-                            AND u.id = cu.id_usuario');
+                            AND u.id = cu.id_usuario
+                            AND u.id = udi.id_usuario');
     if(count($usuarios) > 0){
       return $usuarios;
     }else{
@@ -56,7 +59,7 @@ class ClienteModel extends Model
         $condicion = "WHERE u.codigo LIKE '%".$dato."%'";
       break;
       case 2:
-        $condicion = "WHERE u.cedula LIKE '%".$dato."%'";
+        $condicion = "WHERE udi.documento LIKE '%".$dato."%'";
       break;
       case 3:
         $condicion = "WHERE (u.nombre_1 LIKE '%".$dato."%' OR u.nombre_2 LIKE '%".$dato."%')";
@@ -65,13 +68,15 @@ class ClienteModel extends Model
         $condicion = "WHERE (u.apellido_1 LIKE '%".$dato."%' OR u.apellido_2 LIKE '%".$dato."%')";
       break;
       default:
-        $condicion = "WHERE u.codigo LIKE %'".$dato."'%";
+        $condicion = "WHERE u.codigo LIKE '%".$dato."%'";
       break;
     }
+
     $usuariosG = DB::select('SELECT u.id,
                                    u.codigo,
                                    u.avatar,
-                                   u.cedula,
+                                   udi.id_tipo_documento_identidad AS id_tipo_documento,
+                                   udi.documento AS cedula,
                                    u.id_cargo,
                                    (SELECT ce.descripcion FROM tbl_cargo_empleado ce WHERE ce.id = u.id_cargo) cargo,
                                    CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS nombre,
@@ -79,12 +84,15 @@ class ClienteModel extends Model
                                    cu.correo_principal
                             FROM tbl_usuario u,
                                  tbl_estatus e,
-                                 tbl_contacto_usuario cu
+                                 tbl_contacto_usuario cu,
+                                 tbl_usuario_documento_identidad udi
                             '.$condicion.'
                             AND u.id_cargo > '.$cargo.'
                             AND e.tabla = "tbl_usuario"
                             AND e.valor = u.id_estatus
-                            AND u.id = cu.id_usuario');
+                            AND u.id = cu.id_usuario
+                            AND u.id = udi.id_usuario');
+
     if(count($usuariosG) > 0){
       return $usuariosG;
     }else{
@@ -97,7 +105,8 @@ class ClienteModel extends Model
     $info = DB::select('SELECT u.id,
                                u.codigo,
                                u.avatar,
-                               u.cedula,
+                               udi.id_tipo_documento_identidad AS id_tipo_documento,
+                               udi.documento AS cedula,
                                CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS nombre,
                                u.fecha_nacimiento,
                                e.descripcion AS estatus,
@@ -118,11 +127,13 @@ class ClienteModel extends Model
                                                 WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = u.id_parroquia))) estado
                         FROM tbl_usuario u,
                              tbl_estatus e,
-                             tbl_contacto_usuario cu
+                             tbl_contacto_usuario cu,
+                             tbl_usuario_documento_identidad udi
                         WHERE u.id = '.$id_usuario.'
                         AND e.tabla = "tbl_usuario"
                         AND e.valor = u.id_estatus
-                        AND u.id = cu.id_usuario');
+                        AND u.id = cu.id_usuario
+                        AND u.id = udi.id_usuario');
 
     if(count($info) > 0){
       return $info[0];
@@ -130,7 +141,7 @@ class ClienteModel extends Model
       return array();
     }
   }
-    
+
   function estados(){
 
     $estados = DB::select('SELECT e.id,
@@ -176,7 +187,7 @@ class ClienteModel extends Model
   function buscarCliente($codigo){
 
     $cliente = DB::select('SELECT id,
-                                  codigo,                                    
+                                  codigo,
                                   email_fiscal
                            FROM tbl_cliente
                            WHERE codigo = "'.$codigo.'"');
@@ -304,7 +315,7 @@ class ClienteModel extends Model
     }
     $clientes = DB::select('SELECT c.id,
                                    c.codigo,
-                                   c.razon_social,                    
+                                   c.razon_social,
                                    c.email_fiscal,
                                    c.rif
                             FROM tbl_cliente c
@@ -376,7 +387,7 @@ class ClienteModel extends Model
                                  WHERE e.id = (SELECT m.id_estado
                                                FROM tbl_municipios m
                                                WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = id_parroquia_fiscal))) estadofi
-                          FROM tbl_cliente 
+                          FROM tbl_cliente
                           WHERE id = '.$id_cliente.'
                         ');
     if(count($info) > 0)
@@ -394,7 +405,7 @@ class ClienteModel extends Model
                                id,
                                id_cliente,
                                id_estatus
-                          FROM tbl_proyecto 
+                          FROM tbl_proyecto
                           WHERE id = '.$idclienteProy.'
                         ');
     if(count($info) > 0)
@@ -418,12 +429,12 @@ class ClienteModel extends Model
                                 email_factura,
                                 id_parroquia_factura,
                                  (SELECT id
-                                  FROM tbl_municipios 
+                                  FROM tbl_municipios
                                   WHERE id = (SELECT id_municipio FROM tbl_parroquias WHERE id =id_parroquia_factura)) id_municipio_factura,
                                  (SELECT id
                                   FROM tbl_estados
                                   WHERE id = (SELECT id_estado
-                                                FROM tbl_municipios 
+                                                FROM tbl_municipios
                                                 WHERE id = (SELECT id_municipio FROM tbl_parroquias WHERE id = id_parroquia_factura))) id_estado_factura
                           FROM tbl_cliente_facturacion
                           WHERE id_cliente = '.$id_cliente.'
@@ -447,7 +458,7 @@ class ClienteModel extends Model
       return $estatus;
 
     }
-  
+
   function detalleClienteModificar($id_cliente){
 
     $info = DB::select('SELECT id,
@@ -472,12 +483,12 @@ class ClienteModel extends Model
                                  id_estatus,
                                  id_parroquia_fiscal,
                                  (SELECT id
-                                  FROM tbl_municipios 
+                                  FROM tbl_municipios
                                   WHERE id = (SELECT id_municipio FROM tbl_parroquias WHERE id =id_parroquia_fiscal)) id_municipio_fiscal,
                                  (SELECT id
                                   FROM tbl_estados
                                   WHERE id = (SELECT id_estado
-                                                FROM tbl_municipios 
+                                                FROM tbl_municipios
                                                 WHERE id = (SELECT id_municipio FROM tbl_parroquias WHERE id = id_parroquia_fiscal))) id_estado_fiscal
                           FROM tbl_cliente
                           WHERE id = '.$id_cliente.'');
@@ -537,7 +548,7 @@ class ClienteModel extends Model
                     "numero_factura" => $parametros["numero_factura"],
                     "telefono_factura" => $parametros["telefono_factura"],
                     "fax_factura" => $parametros["fax_factura"],
-                    "email_factura" => $parametros["correo_factura"]);      
+                    "email_factura" => $parametros["correo_factura"]);
         $contacto = DB::table('tbl_cliente_facturacion')->where("id", $parametros["id_fact_cliente"])->update($data);
         $cliente = DB::select('SELECT c.razon_social FROM tbl_cliente c WHERE c.id = '.$parametros["id_cliente"].'');
         $proyecto = DB::select('SELECT UPPER(p.descripcion) AS descripcion FROM tbl_proyecto p WHERE p.id = '.$parametros["id_proyecto"].'');
@@ -553,8 +564,8 @@ class ClienteModel extends Model
       DB::rollBack();
       return array("response" => false, "message" => "Error al tratar de actualizar la información la factura del cliente.");
     }
-  }// Fin 
-  
+  }// Fin
+
   function modificarCliente($parametros){
 
     DB::beginTransaction();
@@ -575,7 +586,7 @@ class ClienteModel extends Model
                     "telefono_fiscal" => $parametros["telefono_fiscal"],
                     "pagina_web" => $parametros["pagina_web"],
                     "email_fiscal" => $parametros["email_fiscal"],
-                    "id_estatus" => $parametros["estatus"],);      
+                    "id_estatus" => $parametros["estatus"],);
         $contacto = DB::table('tbl_cliente')->where("id",$parametros["idCliente"])->update($data);
         DB::commit();
         $date = array("usuario_id" => $parametros["usuario_id"],
