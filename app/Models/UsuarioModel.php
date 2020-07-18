@@ -67,6 +67,18 @@ class UsuarioModel extends Model
 
     }// Fin cargos
 
+    function tipoDocumentos(){
+
+      $sql = DB::select('SELECT tdi.id,
+                                tdi.descripcion
+                         FROM tbl_tipo_documento_identidad tdi
+                         WHERE tdi.id_estatus = 1
+                         ORDER BY tdi.id ASC');
+
+      return $sql;
+
+    }
+
     function buscarUsuario($codigo){
 
       $usuario = DB::select('SELECT u.id,
@@ -141,29 +153,42 @@ class UsuarioModel extends Model
                     "id_parroquia" => $parametros["parroquia"],
                     "id_estatus" => 1,
                     "clave" => $parametros["clave"],
-                    "cedula" => $parametros["cedula"],
                     "fecha_ingreso" => $parametros["fechaIngreso"]);
 
       $idUsuario = DB::table('tbl_usuario')->insertGetId($data);
 
       $data = array("id_usuario" => $idUsuario,
-                    "correo_principal" => $parametros["correoPrincipal"],
-                    "correo_secundario" => $parametros["correoSecundario"],
-                    "telefono_principal" => $parametros["telefono1"],
-                    "telefono_secundario" => $parametros["telefono2"]);
+                    "id_tipo_documento_identidad" => $parametros["tipoDocumento"],
+                    "documento" => $parametros["cedula"]);
 
-      $contacto = DB::table('tbl_contacto_usuario')->insert($data);
+      if(DB::table('tbl_usuario_documento_identidad')->insert($data)){
 
-      if($contacto){
+        $data = array("id_usuario" => $idUsuario,
+                      "correo_principal" => $parametros["correoPrincipal"],
+                      "correo_secundario" => $parametros["correoSecundario"],
+                      "telefono_principal" => $parametros["telefono1"],
+                      "telefono_secundario" => $parametros["telefono2"]);
 
-        $data = array("usuario_id" => $parametros["usuario_id"],
-                      "fecha" => $parametros["fecha"],
-                      "direccion_ip" => $parametros["direccion_ip"],
-                      "accion" => 'Registro de Usuario Codigo:'.$parametros["codigoUsuario"].'');
-        $bit = DB::table('logs_auditoria')->insertGetId($data);
+        $contacto = DB::table('tbl_contacto_usuario')->insert($data);
 
-        DB::commit();
-        return array("response" => true, "message" => "Usuario Creado con Éxito; la contraseña es la misma cédula, se recomienda cambiarla al inicio de sesión.");
+        if($contacto){
+
+          $data = array("usuario_id" => $parametros["usuario_id"],
+                        "fecha" => $parametros["fecha"],
+                        "direccion_ip" => $parametros["direccion_ip"],
+                        "accion" => 'Registro de Usuario Codigo:'.$parametros["codigoUsuario"].'',
+                        "tabla" => 'tbl_usuario');
+          $bit = DB::table('logs_auditoria')->insert($data);
+
+          DB::commit();
+          return array("response" => true, "message" => "Usuario Creado con Éxito; la contraseña es la misma cédula, se recomienda cambiarla al inicio de sesión.");
+
+        }else{
+
+          DB::rollBack();
+          return array("response" => false, "message" => "Error al tratar de crear el usuario.");
+
+        }
 
       }else{
 
@@ -181,7 +206,7 @@ class UsuarioModel extends Model
           $condicion = "WHERE u.codigo LIKE '%".$dato."%'";
           break;
         case 2:
-            $condicion = "WHERE u.cedula LIKE '%".$dato."%'";
+            $condicion = "WHERE udi.documento LIKE '%".$dato."%'";
             break;
         case 3:
             $condicion = "WHERE cu.correo_principal LIKE '%".$dato."%'";
@@ -193,24 +218,28 @@ class UsuarioModel extends Model
             $condicion = "WHERE (u.apellido_1 LIKE '%".$dato."%' OR u.apellido_2 LIKE '%".$dato."%')";
             break;
         default:
-          $condicion = "WHERE u.codigo LIKE %'".$dato."'%";
+          $condicion = "WHERE u.codigo LIKE '%".$dato."%'";
           break;
       }
 
       $usuarios = DB::select('SELECT u.id,
                                      u.codigo,
                                      u.avatar,
-                                     u.cedula,
+                                     CONCAT(tdi.abreviatura,"-",udi.documento) cedula,
                                      CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS nombre,
                                      e.descripcion AS estatus,
                                      cu.correo_principal
                              FROM tbl_usuario u,
                                   tbl_estatus e,
-                                  tbl_contacto_usuario cu
+                                  tbl_contacto_usuario cu,
+                                  tbl_usuario_documento_identidad udi,
+                                  tbl_tipo_documento_identidad tdi
                              '.$condicion.'
                              AND e.tabla = "tbl_usuario"
                              AND e.valor = u.id_estatus
-                             AND u.id = cu.id_usuario');
+                             AND u.id = cu.id_usuario
+                             AND u.id = udi.id_usuario
+                             AND udi.id_tipo_documento_identidad = tdi.id');
 
       if(count($usuarios) > 0){
 
@@ -252,17 +281,21 @@ class UsuarioModel extends Model
       $info = DB::select('SELECT u.id,
                                  u.codigo,
                                  u.avatar,
-                                 u.cedula,
+                                 udi.id AS id_tipo_documento,
+                                 udi.documento AS cedula,
                                  u.nombre_1,
                                  u.nombre_2,
                                  u.apellido_1,
                                  u.apellido_2,
-                                 u.fecha_nacimiento,
+                                 DATE_FORMAT(u.fecha_nacimiento,"%d/%m/%Y") fecha_nacimiento,
+                                 DATE_FORMAT(u.fecha_ingreso,"%d/%m/%Y") fecha_ingreso,
+                                 DATE_FORMAT(u.fecha_egreso,"%d/%m/%Y") fecha_egreso,
                                  e.descripcion AS estatus,
                                  cu.correo_principal,
                                  cu.correo_secundario,
                                  cu.telefono_principal,
                                  cu.telefono_secundario,
+                                 tdi.descripcion tipo_documento_identidad,
                                  (SELECT d.descripcion FROM tbl_division d WHERE d.id = u.id_division) division,
                                  (SELECT ce.descripcion FROM tbl_cargo_empleado ce WHERE ce.id = u.id_cargo) cargo,
                                  (SELECT p.parroquia FROM tbl_parroquias p WHERE p.id = u.id_parroquia) parroquia,
@@ -276,11 +309,15 @@ class UsuarioModel extends Model
                                                 WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = u.id_parroquia))) estado
                           FROM tbl_usuario u,
                                tbl_estatus e,
-                               tbl_contacto_usuario cu
+                               tbl_contacto_usuario cu,
+                               tbl_usuario_documento_identidad udi,
+                               tbl_tipo_documento_identidad tdi
                           WHERE u.id = '.$id_usuario.'
                           AND e.tabla = "tbl_usuario"
                           AND e.valor = u.id_estatus
-                          AND u.id = cu.id_usuario');
+                          AND u.id = cu.id_usuario
+                          AND u.id = udi.id_usuario
+                          AND udi.id_tipo_documento_identidad = tdi.id');
 
       if(count($info) > 0){
 
@@ -299,7 +336,9 @@ class UsuarioModel extends Model
       $info = DB::select("SELECT u.id,
                                  u.codigo,
                                  u.avatar,
-                                 u.cedula,
+                                 udi.id AS id_usuario_documento_identidad,
+                                 udi.id_tipo_documento_identidad AS id_tipo_documento,
+                                 udi.documento AS cedula,
                                  u.nombre_1,
                                  u.nombre_2,
                                  u.apellido_1,
@@ -328,11 +367,13 @@ class UsuarioModel extends Model
                                                 WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = u.id_parroquia))) id_estado
                           FROM tbl_usuario u,
                                tbl_estatus e,
-                               tbl_contacto_usuario cu
+                               tbl_contacto_usuario cu,
+                               tbl_usuario_documento_identidad udi
                           WHERE u.id = ".$id_usuario."
                           AND e.tabla = 'tbl_usuario'
                           AND e.valor = u.id_estatus
-                          AND u.id = cu.id_usuario");
+                          AND u.id = cu.id_usuario
+                          AND u.id = udi.id_usuario");
 
       if(count($info) > 0){
 
@@ -373,26 +414,38 @@ class UsuarioModel extends Model
                       "id_division" => $parametros["division"],
                       "id_parroquia" => $parametros["parroquia"],
                       "id_estatus" => $parametros["estatus"],
-                      "cedula" => $parametros["cedula"],
                       "fecha_ingreso" => $parametros["fechaIngreso"],
                       "fecha_egreso" => $parametros["fechaEgreso"]);
 
         $update = DB::table('tbl_usuario')->where("id",$parametros["idUsuario"])->update($data);
 
-        $data = array("correo_principal" => $parametros["correoPrincipal"],
-                      "correo_secundario" => $parametros["correoSecundario"],
-                      "telefono_principal" => $parametros["telefono1"],
-                      "telefono_secundario" => $parametros["telefono2"]);
+        $data = array("id_tipo_documento_identidad" => $parametros["tipoDocumento"],
+                      "documento" => $parametros["cedula"]);
 
-        $contacto = DB::table('tbl_contacto_usuario')->where("id_usuario",$parametros["idUsuario"])->update($data);
+        if(DB::table('tbl_usuario_documento_identidad')->where("id",$parametros["idUsuarioDocumentoIdentidad"])->update($data)){
 
-        DB::commit();
-        $data = array("usuario_id" => $parametros["usuario_id"],
-                      "fecha" => $parametros["fecha"],
-                      "direccion_ip" => $parametros["direccion_ip"],
-                      "accion" => 'Modificacion del Usuario Codigo:'.$parametros["codigoUsuario"].'');
-        $bit = DB::table('logs_auditoria')->insertGetId($data);
-        return array("response" => true, "message" => "Usuario actualizado con Éxito!.");
+          $data = array("correo_principal" => $parametros["correoPrincipal"],
+                        "correo_secundario" => $parametros["correoSecundario"],
+                        "telefono_principal" => $parametros["telefono1"],
+                        "telefono_secundario" => $parametros["telefono2"]);
+
+          $contacto = DB::table('tbl_contacto_usuario')->where("id_usuario",$parametros["idUsuario"])->update($data);
+
+          DB::commit();
+          $data = array("usuario_id" => $parametros["usuario_id"],
+                        "fecha" => $parametros["fecha"],
+                        "direccion_ip" => $parametros["direccion_ip"],
+                        "accion" => 'Modificacion del Usuario Codigo:'.$parametros["codigoUsuario"].'',
+                        "tabla" => 'tbl_usuario');
+          $bit = DB::table('logs_auditoria')->insertGetId($data);
+          return array("response" => true, "message" => "Usuario actualizado con Éxito!.");
+
+        }else{
+
+          DB::rollBack();
+          return array("response" => false, "message" => "Error al tratar de actualizar el usuario.");
+
+        }
 
       } catch(\Illuminate\Database\QueryException $ex){
 
@@ -401,7 +454,7 @@ class UsuarioModel extends Model
 
       }
 
-    }// Fin crearUsuario
+    }// Fin modificarUsuario
 
     function detalleMenu($id_usuario){
 

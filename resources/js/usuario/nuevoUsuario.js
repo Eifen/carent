@@ -29,6 +29,7 @@ var app = new Vue({
     comboParroquias: [],
     comboDivisiones: [],
     comboCargos: [],
+    comboTipoDocumento: [],
     refreshForm: false,
     form: {
       nombre1:{
@@ -109,6 +110,10 @@ var app = new Vue({
       fechaIngreso:{
         disabled: true,
         value: ""
+      },
+      tipoDocumento: {
+        disabled: false,
+        value: ""
       }
     },
     loading: true,
@@ -124,13 +129,18 @@ var app = new Vue({
 
     self = this;
 
-    axios.get('/encryptConfig')
+    axios.get('/dataInicialNuevoUsuario')
     .then(function (response) {
 
-      if(response.status === 200 && response.data.key && response.data.iv){
+      if(response.status === 200 && response.data.encryptConfig.key && response.data.encryptConfig.iv){
 
-        self.key = response.data.key;
-        self.iv = response.data.iv;
+        self.key = response.data.encryptConfig.key;
+        self.iv = response.data.encryptConfig.iv;
+        self.comboCargos = response.data.cargos;
+        self.comboDivisiones = response.data.divisiones;
+        self.form.municipio.help = 'Municipio de la oficina en donde se desempeña';
+        self.comboEstados = response.data.estados;
+        self.comboTipoDocumento = response.data.tipoDocumentos;
         self.loading = false;
 
       }else{
@@ -161,13 +171,7 @@ var app = new Vue({
     });
 
   },
-  created: function () {
-
-    self.cargos();
-    self.divisiones();
-    self.estados();
-
-  },
+  created: function () {},
   mounted: function () {
 
     new AutoNumeric('#codigoUsuario', {
@@ -175,14 +179,16 @@ var app = new Vue({
       decimalCharacter: ',',
       digitGroupSeparator: '',
       leadingZero: 'keep',
-      minimumValue: 0
+      minimumValue: 0,
+      modifyValueOnWheel: false
     });
 
     new AutoNumeric('#cedula', {
       decimalPlaces: 0,
       decimalCharacter: ',',
       digitGroupSeparator: '.',
-      minimumValue: 0
+      minimumValue: 0,
+      modifyValueOnWheel: false
     });
 
     $('[data-toggle="tooltip"]').tooltip();
@@ -190,116 +196,7 @@ var app = new Vue({
   },
   updated: function () {},
   methods:{
-    cargos: function(){
 
-      axios.get('/cargos')
-      .then(function (response) {
-
-        if(response.status === 200 && response.data.length > 0){
-
-          self.comboCargos = response.data;
-
-        }else{
-
-          throw "error";
-
-        }
-
-      })
-      .catch(error => {
-
-        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-
-          self.form[indiceObjecto].disabled = true;
-
-        });
-
-        self.submitCrear.disabled = true;
-
-        self.alertForm = {
-          class : "alert alert-warning",
-          message : "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-
-      });
-
-    },
-    divisiones: function(){
-
-      axios.get('/divisiones')
-      .then(function (response) {
-
-        if(response.status === 200 && response.data.length > 0){
-
-          self.comboDivisiones = response.data;
-
-        }else{
-
-          throw "error";
-
-        }
-
-      })
-      .catch(error => {
-
-        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-
-          self.form[indiceObjecto].disabled = true;
-
-        });
-
-        self.submitCrear.disabled = true;
-
-        self.alertForm = {
-          class : "alert alert-warning",
-          message : "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-
-      });
-
-    },
-    estados: function(){
-
-      self.form.municipio.help = '<i class="fas fa-cog fa-spin"></i> buscando';
-
-      axios.get('/estados')
-      .then(function (response) {
-
-        if(response.status === 200 && response.data.length > 0){
-
-          self.form.municipio.help = 'Municipio de la oficina en donde se desempeña';
-          self.comboEstados = response.data;
-
-        }else{
-
-          throw "error";
-
-        }
-
-      })
-      .catch(error => {
-
-        self.form.municipio.help = 'Municipio de la oficina en donde se desempeña';
-
-        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-
-          self.form[indiceObjecto].disabled = true;
-
-        });
-
-        self.submitCrear.disabled = true;
-
-        self.alertForm = {
-          class : "alert alert-warning",
-          message : "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-
-      });
-
-    },
     municipios: function(){
 
       self.form.municipio.value = ""
@@ -524,7 +421,8 @@ var app = new Vue({
           telefono1: self.form.telefono1.value,
           telefono2: self.form.telefono2.value,
           empleado: self.form.empleado.checked,
-          fechaIngreso: self.form.fechaIngreso.value
+          fechaIngreso: self.form.fechaIngreso.value,
+          tipoDocumento: self.form.tipoDocumento.value
         }
 
         self.submitCrear.content = '<i class="fas fa-cog fa-spin"></i>';

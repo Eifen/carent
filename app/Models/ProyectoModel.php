@@ -98,7 +98,8 @@ class ProyectoModel extends Model
         $data = array("usuario_id" => $usuario_id,
                       "fecha" => $fecha,
                       "direccion_ip" => $direccion_ip,
-                      "accion" => 'Registro del proyecto: '.$descripcion.'. Cliente:'.$client[0]->razon_social.'');
+                      "accion" => 'Registro del proyecto: '.$descripcion.'. Cliente:'.$client[0]->razon_social.'',
+                      "tabla" => 'tbl_proyecto');
         $bit = DB::table('logs_auditoria')->insertGetId($data);
         DB::commit();
         return array("response" => true, "message" => "Proyecto creado con éxito.");
@@ -415,7 +416,8 @@ class ProyectoModel extends Model
         $data = array("usuario_id" => $usuario_id,
                       "fecha" => $fecha,
                       "direccion_ip" => $direccion_ip,
-                      "accion" => 'Modificacion del proyecto: '.$descripcion.'. Cliente:'.$client[0]->razon_social.'');
+                      "accion" => 'Modificacion del proyecto: '.$descripcion.'. Cliente:'.$client[0]->razon_social.'',
+                      "tabla" => 'tbl_proyecto');
         $bit = DB::table('logs_auditoria')->insertGetId($data);
         return array("response" => true, "message" => "Proyecto actualizado con éxito.");
 
@@ -802,7 +804,8 @@ class ProyectoModel extends Model
         $data = array("usuario_id" => $usuario_id,
                       "fecha" => $fecha,
                       "direccion_ip" => $direccion_ip,
-                      "accion" => 'Asignacion del analista codigo: '.$analista[0]->codigo.'. Al proyecto: '.$proyecto[0]->descripcion.'');
+                      "accion" => 'Asignacion del analista codigo: '.$analista[0]->codigo.'. Al proyecto: '.$proyecto[0]->descripcion.'',
+                      "tabla" => 'tbl_proyecto_analista');
         $bit = DB::table('logs_auditoria')->insertGetId($data);
         DB::commit();
         return array("response" => true, "message" => "Analista agregado con éxito.");
@@ -853,14 +856,16 @@ class ProyectoModel extends Model
           $data = array("usuario_id" => $usuario_id,
                       "fecha" => $fecha,
                       "direccion_ip" => $direccion_ip,
-                      "accion" => 'Asignacion del analista codigo: '.$analista[0]->codigo.'. Al proyecto: '.$proyecto[0]->descripcion.'');
+                      "accion" => 'Asignacion del analista codigo: '.$analista[0]->codigo.'. Al proyecto: '.$proyecto[0]->descripcion.'',
+                      "tabla" => 'tbl_proyecto_analista');
           $bit = DB::table('logs_auditoria')->insertGetId($data);
         }
         if ($info[0]->id_estatus === 0) {
           $data = array("usuario_id" => $usuario_id,
                       "fecha" => $fecha,
                       "direccion_ip" => $direccion_ip,
-                      "accion" => 'Eliminacion del analista codigo: '.$analista[0]->codigo.'. Del proyecto: '.$proyecto[0]->descripcion.'');
+                      "accion" => 'Eliminacion del analista codigo: '.$analista[0]->codigo.'. Del proyecto: '.$proyecto[0]->descripcion.'',
+                      "tabla" => 'tbl_proyecto_analista');
           $bit = DB::table('logs_auditoria')->insertGetId($data);
         }
 
@@ -876,18 +881,25 @@ class ProyectoModel extends Model
     }
 
 
-    function modHorasAnalistaProy($horas_asignadas,$horasComparar,$idAnaProy){
+    function modHorasAnalistaProy($horas_asignadas,$horasComparar,$idAnaProy, $usuario_id, $fecha, $direccion_ip, $idProyecto){
 
       DB::beginTransaction();
 
       try{
-
+        $analista = db::select('SELECT u.codigo FROM tbl_usuario u WHERE u.id = (SELECT a.id_analista  FROM tbl_proyecto_analista a WHERE a.id = '.$idAnaProy.')');
+        $proyecto = DB::select('SELECT UPPER(p.descripcion) AS descripcion FROM tbl_proyecto p WHERE p.id = '.$idProyecto.'');
         for($i = 0; $i < count($horas_asignadas); $i++){
 
           if ($horas_asignadas[$i] != $horasComparar[$i]) {
 
             $data = array("horas_asignadas" => $horas_asignadas[$i]);
             $update = DB::table('tbl_proyecto_analista')->where("id",$idAnaProy)->update($data);
+            $data = array("usuario_id" => $usuario_id,
+                          "fecha" => $fecha,
+                          "direccion_ip" => $direccion_ip,
+                          "accion" => 'total de horas asignadas: '.$horas_asignadas[$i].'. Al analista codigo: '.$analista[0]->codigo.' en el proyecto: '.$proyecto[0]->descripcion.' ',
+                          "tabla" => 'tbl_proyecto_analista');
+            $bit = DB::table('logs_auditoria')->insertGetId($data);
           }
         }
 

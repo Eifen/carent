@@ -33,7 +33,8 @@ class LoginModel extends Model
         $data = array("usuario_id" => $usuario[0]->id,
                       "fecha" => $fecha,
                       "direccion_ip" => $direccion,
-                      "accion" => 'Inicio de Sesion');
+                      "accion" => 'Inicio de Sesion',
+                      "tabla" => 'inicio');
         $bit = DB::table('logs_auditoria')->insertGetId($data);
         return $usuario[0];
 
