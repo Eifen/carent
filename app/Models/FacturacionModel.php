@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
-class LoginModel extends Model
+class FacturacionModel extends Model
 {
 
     function buscarUsuario($codigo,$fecha,$direccion){

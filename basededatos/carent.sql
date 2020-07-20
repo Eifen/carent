@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 10-07-2020 a las 23:31:42
+-- Tiempo de generación: 17-07-2020 a las 20:42:44
 -- Versión del servidor: 8.0.18
 -- Versión de PHP: 7.3.16
 
@@ -32,155 +32,89 @@ CREATE TABLE `logs_auditoria` (
   `usuario_id` int(11) DEFAULT NULL,
   `fecha` datetime DEFAULT NULL,
   `direccion_ip` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `accion` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
+  `accion` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tabla` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `logs_auditoria`
 --
 
-INSERT INTO `logs_auditoria` (`id`, `usuario_id`, `fecha`, `direccion_ip`, `accion`) VALUES
-(1, 1, '2020-06-25 09:15:06', '138.122.7.94', 'Inicio de Sesion'),
-(2, 1, '2020-06-25 09:15:44', '10.81.234.6', 'Inicio de Sesion'),
-(3, 1, '2020-06-25 09:22:25', '201.211.230.66', 'Inicio de Sesion'),
-(4, 15, '2020-06-25 09:23:13', '201.211.230.66', 'Inicio de Sesion'),
-(5, 15, '2020-06-25 09:25:46', '201.211.230.66', 'Registro del cliente:121'),
-(6, 1, '2020-06-25 09:26:27', '201.211.230.66', 'Inicio de Sesion'),
-(7, 15, '2020-06-25 09:27:27', '201.211.230.66', 'Inicio de Sesion'),
-(8, 15, '2020-06-25 09:28:46', '201.211.230.66', 'Registro del proyecto: auditoría 2019-II del cliente:11'),
-(9, 15, '2020-06-25 09:36:24', '201.211.230.66', 'Registro del detalle de facturacion del cliente:11 proyecto:14'),
-(10, 15, '2020-06-25 09:39:31', '186.89.24.197', 'Inicio de Sesion'),
-(11, 15, '2020-06-25 10:02:41', '186.89.24.197', 'Inicio de Sesion'),
-(12, 1, '2020-06-25 11:27:48', '201.211.230.66', 'Inicio de Sesion'),
-(13, 1, '2020-06-25 11:31:35', '201.211.230.66', 'Inicio de Sesion'),
-(14, 1, '2020-06-25 11:36:44', '201.211.230.66', 'Asignacion del analista: 6 al proyecto: 11'),
-(15, 1, '2020-06-25 14:23:07', '186.185.53.225', 'Inicio de Sesion'),
-(16, 1, '2020-06-25 14:23:28', '186.185.53.225', 'Inicio de Sesion'),
-(17, 1, '2020-06-25 14:23:38', '186.89.24.197', 'Inicio de Sesion'),
-(18, 1, '2020-06-25 14:23:39', '186.185.53.225', 'Inicio de Sesion'),
-(19, 1, '2020-06-25 14:25:16', '201.211.230.66', 'Inicio de Sesion'),
-(20, 1, '2020-06-25 14:26:44', '201.211.230.66', 'Inicio de Sesion'),
-(21, 1, '2020-06-25 14:32:15', '201.211.230.66', 'Inicio de Sesion'),
-(22, 15, '2020-06-25 14:32:27', '186.185.53.225', 'Inicio de Sesion'),
-(23, 1, '2020-06-25 14:34:54', '201.211.230.66', 'Registro del cliente:122'),
-(24, 15, '2020-06-25 14:43:51', '186.185.53.225', 'Inicio de Sesion'),
-(25, 1, '2020-06-25 14:46:07', '201.211.230.66', 'Registro del proyecto: Autitoría TI 2018-II del cliente:12'),
-(26, 15, '2020-06-25 14:48:29', '186.185.53.225', 'Registro del proyecto: auditoria financiera junio 2020-I del cliente:8'),
-(27, 15, '2020-06-25 14:52:17', '186.185.53.225', 'Registro del detalle de facturacion del cliente:8 proyecto:16'),
-(28, 1, '2020-06-25 14:56:34', '201.211.230.66', 'Inicio de Sesion'),
-(29, 15, '2020-06-25 15:00:11', '201.211.230.66', 'Inicio de Sesion'),
-(30, 15, '2020-06-25 15:02:35', '201.211.230.66', 'Registro del cliente:123'),
-(31, 1, '2020-06-25 15:03:24', '201.211.230.66', 'Inicio de Sesion'),
-(32, 15, '2020-06-25 15:04:03', '201.211.230.66', 'Inicio de Sesion'),
-(33, 1, '2020-06-25 15:10:20', '201.211.230.66', 'Inicio de Sesion'),
-(34, 15, '2020-06-25 15:10:58', '201.211.230.66', 'Inicio de Sesion'),
-(35, 15, '2020-06-25 15:15:00', '201.211.230.66', 'Registro del cliente:124'),
-(36, 1, '2020-06-25 15:17:11', '201.211.230.66', 'Inicio de Sesion'),
-(37, 15, '2020-06-25 15:17:45', '201.211.230.66', 'Inicio de Sesion'),
-(38, 15, '2020-06-25 15:19:04', '186.89.24.197', 'Inicio de Sesion'),
-(39, 15, '2020-06-25 15:20:59', '186.89.24.197', 'Registro del cliente:125'),
-(40, 15, '2020-06-25 15:26:17', '186.89.24.197', 'Inicio de Sesion'),
-(41, 15, '2020-06-25 15:28:02', '186.89.24.197', 'Registro del cliente:126'),
-(42, 15, '2020-06-25 15:33:23', '201.211.230.66', 'Inicio de Sesion'),
-(43, 15, '2020-06-25 16:05:22', '201.211.230.66', 'Inicio de Sesion'),
-(44, 15, '2020-06-25 16:05:32', '201.211.230.66', 'Inicio de Sesion'),
-(45, 15, '2020-06-25 16:11:22', '201.211.230.66', 'Inicio de Sesion'),
-(46, 15, '2020-06-25 16:58:49', '186.89.24.197', 'Inicio de Sesion'),
-(47, 15, '2020-06-25 17:00:29', '186.89.24.197', 'Registro del cliente:127'),
-(48, 15, '2020-06-25 17:43:47', '186.89.24.197', 'Inicio de Sesion'),
-(49, 15, '2020-06-25 17:46:04', '201.211.230.66', 'Inicio de Sesion'),
-(50, 15, '2020-06-25 17:50:37', '186.89.24.197', 'Registro del cliente:128'),
-(51, 15, '2020-06-25 17:51:29', '201.211.230.66', 'Registro del cliente:129'),
-(52, 1, '2020-06-25 20:01:54', '201.211.230.66', 'Inicio de Sesion'),
-(53, 1, '2020-06-26 08:56:52', '201.211.230.66', 'Inicio de Sesion'),
-(54, 1, '2020-06-26 09:00:21', '201.211.230.66', 'Registro de Usuario Codigo:10572'),
-(55, 1, '2020-06-26 09:03:45', '201.211.230.66', 'Registro de Usuario Codigo:11467'),
-(56, 1, '2020-06-26 09:06:36', '201.211.230.66', 'Registro de Usuario Codigo:10968'),
-(57, 1, '2020-06-26 09:13:39', '201.211.230.66', 'Registro de Usuario Codigo:11401'),
-(58, 1, '2020-06-26 09:24:43', '201.211.230.66', 'Registro del cliente:130'),
-(59, 1, '2020-06-26 09:29:05', '201.211.230.66', 'Registro del proyecto: auditoría 2019-II del cliente:20'),
-(60, 9, '2020-06-26 09:48:51', '201.211.230.66', 'Inicio de Sesion'),
-(61, 1, '2020-06-26 09:51:44', '201.211.230.66', 'Inicio de Sesion'),
-(62, 1, '2020-06-26 09:57:56', '201.211.230.66', 'Modificacion del Usuario Codigo:10863'),
-(63, 9, '2020-06-26 09:58:35', '201.211.230.66', 'Inicio de Sesion'),
-(64, 9, '2020-06-26 10:05:25', '201.211.230.66', 'Inicio de Sesion'),
-(65, 1, '2020-06-26 10:06:30', '201.211.230.66', 'Inicio de Sesion'),
-(66, 19, '2020-06-26 10:11:27', '201.211.230.66', 'Inicio de Sesion'),
-(67, 9, '2020-06-26 10:12:42', '186.89.24.197', 'Inicio de Sesion'),
-(68, 1, '2020-06-26 10:13:42', '186.89.24.197', 'Inicio de Sesion'),
-(69, 9, '2020-06-26 10:15:26', '186.89.24.197', 'Inicio de Sesion'),
-(70, 19, '2020-06-26 10:16:17', '201.211.230.66', 'Asignacion del analista: 9 al proyecto: 17'),
-(71, 19, '2020-06-26 10:16:26', '201.211.230.66', 'Asignacion del analista: 19 al proyecto: 17'),
-(72, 19, '2020-06-26 10:16:34', '201.211.230.66', 'Asignacion del analista: 20 al proyecto: 17'),
-(73, 19, '2020-06-26 10:16:46', '201.211.230.66', 'Asignacion del analista: 21 al proyecto: 17'),
-(74, 19, '2020-06-26 10:16:59', '201.211.230.66', 'Asignacion del analista: 22 al proyecto: 17'),
-(75, 1, '2020-06-26 10:17:43', '201.211.230.66', 'Inicio de Sesion'),
-(76, 9, '2020-06-26 10:39:17', '186.167.250.121', 'Inicio de Sesion'),
-(77, 15, '2020-06-26 10:57:39', '186.185.102.40', 'Inicio de Sesion'),
-(78, 1, '2020-06-26 13:13:31', '186.89.24.197', 'Inicio de Sesion'),
-(79, 1, '2020-06-26 13:14:04', '186.89.24.197', 'Registro del concepto de horas no cargables: Permiso'),
-(80, 15, '2020-06-26 14:03:29', '186.89.24.197', 'Inicio de Sesion'),
-(81, 1, '2020-06-26 17:14:41', '10.81.234.6', 'Inicio de Sesion'),
-(82, 1, '2020-06-26 20:52:54', '10.81.234.6', 'Inicio de Sesion'),
-(83, 1, '2020-06-26 20:53:08', '10.81.234.6', 'Inicio de Sesion'),
-(84, 15, '2020-06-26 20:55:10', '201.211.230.66', 'Inicio de Sesion'),
-(85, 15, '2020-06-26 20:55:24', '201.211.230.66', 'Inicio de Sesion'),
-(86, 15, '2020-06-26 20:57:46', '201.211.230.66', 'Registro del cliente:131'),
-(87, 9, '2020-06-26 21:02:09', '10.81.234.6', 'Inicio de Sesion'),
-(88, 1, '2020-06-26 21:06:08', '10.81.234.6', 'Inicio de Sesion'),
-(89, 9, '2020-06-26 22:16:56', '186.89.24.197', 'Inicio de Sesion'),
-(90, 1, '2020-06-26 22:20:31', '186.89.24.197', 'Inicio de Sesion'),
-(91, 9, '2020-06-26 22:25:29', '186.89.24.197', 'Inicio de Sesion'),
-(92, 1, '2020-06-27 07:48:18', '186.89.24.197', 'Inicio de Sesion'),
-(93, 1, '2020-06-27 09:17:33', '186.89.24.197', 'Inicio de Sesion'),
-(94, 1, '2020-06-27 13:30:34', '201.211.230.66', 'Inicio de Sesion'),
-(95, 1, '2020-06-27 13:38:08', '201.211.230.66', 'Modificacion del Usuario Codigo:10863'),
-(96, 1, '2020-06-27 13:39:27', '201.211.230.66', 'Modificacion del Usuario Codigo:10572'),
-(97, 1, '2020-06-27 13:40:48', '201.211.230.66', 'Modificacion del Usuario Codigo:11467'),
-(98, 1, '2020-06-27 13:42:01', '201.211.230.66', 'Modificacion del Usuario Codigo:10968'),
-(99, 1, '2020-06-27 13:43:23', '201.211.230.66', 'Modificacion del Usuario Codigo:11401'),
-(100, 1, '2020-06-27 13:46:24', '201.211.230.66', 'Modificacion del Usuario Codigo:10589'),
-(101, 15, '2020-06-27 14:01:08', '201.211.230.66', 'Inicio de Sesion'),
-(102, 15, '2020-06-27 14:23:00', '201.211.230.66', 'Registro del cliente:132'),
-(103, 15, '2020-06-27 14:24:59', '201.211.230.66', 'Creacion de cliente:132'),
-(104, 15, '2020-06-27 14:30:29', '201.211.230.66', 'Registro del proyecto: Auditoría 2018 del cliente:22'),
-(105, 15, '2020-06-27 14:35:47', '201.211.230.66', 'Inicio de Sesion'),
-(106, 15, '2020-06-27 14:40:03', '201.211.230.66', 'Registro del detalle de facturacion del cliente:22 proyecto:18'),
-(107, 19, '2020-06-27 14:43:25', '201.211.230.66', 'Inicio de Sesion'),
-(108, 19, '2020-06-27 14:48:02', '201.211.230.66', 'Asignacion del analista: 9 al proyecto: 18'),
-(109, 19, '2020-06-27 14:48:15', '201.211.230.66', 'Asignacion del analista: 22 al proyecto: 18'),
-(110, 19, '2020-06-27 14:48:24', '201.211.230.66', 'Asignacion del analista: 21 al proyecto: 18'),
-(111, 19, '2020-06-27 14:48:30', '201.211.230.66', 'Asignacion del analista: 20 al proyecto: 18'),
-(112, 19, '2020-06-27 14:48:36', '201.211.230.66', 'Asignacion del analista: 19 al proyecto: 18'),
-(113, 19, '2020-06-27 14:49:46', '201.211.230.66', 'Usuario: 19 Cargo: 4 horas en el proyecto:18'),
-(114, 19, '2020-06-27 14:50:07', '201.211.230.66', 'Usuario: 19 Cargo: 4 horas en el proyecto:18'),
-(115, 19, '2020-06-27 14:50:44', '201.211.230.66', 'Eliminacion de 4 horas del usuario: 19 en el proyecto:18'),
-(116, 19, '2020-06-27 15:01:12', '201.211.230.66', 'Inicio de Sesion'),
-(117, 19, '2020-06-27 15:07:54', '201.211.230.66', 'Usuario: 19 Cargo: 4 horas en el proyecto:18'),
-(118, 19, '2020-06-27 15:09:41', '201.211.230.66', 'Modificacion de horas del usuario: 19 en el proyecto:18'),
-(119, 1, '2020-06-27 15:11:57', '201.211.230.66', 'Inicio de Sesion'),
-(120, 1, '2020-06-27 15:55:23', '186.89.24.197', 'Inicio de Sesion'),
-(121, 19, '2020-06-27 16:52:03', '201.211.230.66', 'Inicio de Sesion'),
-(122, 19, '2020-06-27 16:53:05', '201.211.230.66', 'Registro de de horas no cargables al usuario: 19'),
-(123, 9, '2020-06-27 16:53:35', '201.211.230.66', 'Inicio de Sesion'),
-(124, 1, '2020-06-27 17:20:49', '186.89.24.197', 'Inicio de Sesion'),
-(125, 1, '2020-06-27 19:24:19', '186.89.24.197', 'Inicio de Sesion'),
-(126, 1, '2020-06-28 09:48:11', '127.0.0.1', 'Inicio de Sesion'),
-(127, 1, '2020-06-28 15:54:24', '127.0.0.1', 'Registro de Usuario Codigo:0002'),
-(128, 1, '2020-06-28 18:51:41', '127.0.0.1', 'Inicio de Sesion'),
-(129, 1, '2020-06-28 18:55:35', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
-(130, 1, '2020-06-28 18:57:23', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
-(131, 1, '2020-06-28 19:04:48', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
-(132, 1, '2020-06-28 19:06:00', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
-(133, 1, '2020-06-28 19:06:22', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
-(134, 1, '2020-06-28 19:06:41', '127.0.0.1', 'Modificacion del Usuario Codigo:0002'),
-(135, 1, '2020-06-28 20:11:00', '127.0.0.1', 'Registro de Usuario Codigo:0003'),
-(136, 1, '2020-06-28 20:12:38', '127.0.0.1', 'Registro de Usuario Codigo:0004'),
-(137, 1, '2020-07-03 18:47:07', '127.0.0.1', 'Inicio de Sesion'),
-(138, 1, '2020-07-10 11:43:20', '127.0.0.1', 'Inicio de Sesion'),
-(139, 1, '2020-07-10 15:40:45', '127.0.0.1', 'Inicio de Sesion'),
-(140, 1, '2020-07-10 17:29:28', '127.0.0.1', 'Registro del proyecto: Proyecto con monto. Cliente:BANCO DEL TESORO BANCO UNIVERSAL C.A.'),
-(141, 1, '2020-07-10 18:46:32', '127.0.0.1', 'Inicio de Sesion');
+INSERT INTO `logs_auditoria` (`id`, `usuario_id`, `fecha`, `direccion_ip`, `accion`, `tabla`) VALUES
+(1, 1, '2020-07-15 20:40:00', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(2, 1, '2020-07-16 07:40:42', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(3, 1, '2020-07-16 07:41:33', '127.0.0.1', 'Registro de Usuario Codigo:0002', 'tbl_usuario'),
+(4, 1, '2020-07-16 17:33:07', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(5, 1, '2020-07-16 17:34:02', '127.0.0.1', 'Registro de Usuario Codigo:222222', 'tbl_usuario'),
+(6, 1, '2020-07-16 22:12:08', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(7, 1, '2020-07-16 22:56:31', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(8, 1, '2020-07-16 23:44:59', '127.0.0.1', 'Registro de Usuario Codigo:0002', 'tbl_usuario'),
+(9, 1, '2020-07-16 23:46:12', '127.0.0.1', 'Registro de Usuario Codigo:0003', 'tbl_usuario'),
+(10, 1, '2020-07-16 23:57:06', '127.0.0.1', 'Registro de Usuario Codigo:22222', 'tbl_usuario'),
+(11, 1, '2020-07-17 08:31:47', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(12, 3, '2020-07-17 09:09:31', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(13, 1, '2020-07-17 09:10:29', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(14, 1, '2020-07-17 13:10:35', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(15, 1, '2020-07-17 13:18:36', '127.0.0.1', 'Registro de Usuario Codigo:0002', 'tbl_usuario'),
+(16, 1, '2020-07-17 15:36:05', '127.0.0.1', 'Modificacion del Usuario Codigo:0002', 'tbl_usuario');
+
+--
+-- Disparadores `logs_auditoria`
+--
+DELIMITER $$
+CREATE TRIGGER `logs_auditoria_AI` AFTER INSERT ON `logs_auditoria` FOR EACH ROW BEGIN
+SET @usu = (SELECT id FROM logs.tbl_usuario ORDER BY id DESC LIMIT 1);
+SET @clie = (SELECT id FROM logs.tbl_cliente ORDER BY id DESC LIMIT 1);
+SET @fact = (SELECT id FROM logs.tbl_cliente_facturacion ORDER BY id DESC LIMIT 1);
+SET @proy = (SELECT id FROM logs.tbl_proyecto ORDER BY id DESC LIMIT 1);
+SET @proya = (SELECT id FROM logs.tbl_proyecto_analista ORDER BY id DESC LIMIT 1);
+SET @horasc = (SELECT id FROM logs.tbl_horas_cargables ORDER BY id DESC LIMIT 1);
+SET @concepto = (SELECT id FROM logs.tbl_concepto_horas_no_cargables ORDER BY id DESC LIMIT 1);
+  IF NEW.accion LIKE '%Registro de Usuario Codigo%' THEN BEGIN
+  	UPDATE logs.tbl_usuario SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @usu;
+    END; END IF;
+   IF NEW.accion LIKE '%Modificacion del Usuario Codigo%' THEN BEGIN
+  	UPDATE logs.tbl_usuario SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @usu;
+    END; END IF;
+    IF NEW.accion LIKE '%Registro del cliente codigo%' THEN BEGIN
+  	UPDATE logs.tbl_cliente SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @clie;
+    END; END IF;
+    IF NEW.accion LIKE '%Modificacion del cliente%' THEN BEGIN
+  	UPDATE logs.tbl_cliente SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @clie;
+    END; END IF;
+    IF NEW.accion LIKE '%Registro del proyecto%' THEN BEGIN
+  	UPDATE logs.tbl_proyecto SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @proy;
+    END; END IF;
+    IF NEW.accion LIKE '%Modificacion del proyecto%' THEN BEGIN
+  	UPDATE logs.tbl_proyecto SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @proy;
+    END; END IF;
+    IF NEW.accion LIKE '%Asignacion del analista codigo%' THEN BEGIN
+  	UPDATE logs.tbl_proyecto_analista SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @proya;
+    END; END IF;
+    IF NEW.accion LIKE '%Eliminacion del analista codigo%' THEN BEGIN
+  	UPDATE logs.tbl_proyecto_analista SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @proya;
+    END; END IF;
+    IF NEW.accion LIKE '%total de horas asignadas%' THEN BEGIN
+  	UPDATE logs.tbl_proyecto_analista SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @proya;
+    END; END IF;
+    IF NEW.accion LIKE '%Analista codigo%' THEN BEGIN
+  	UPDATE logs.tbl_horas_cargables SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @horasc;
+    END; END IF;
+    IF NEW.accion LIKE '%Modificacion de horas del usuario codigo%' THEN BEGIN
+  	UPDATE logs.tbl_horas_cargables SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @horasc;
+    END; END IF;
+    IF NEW.accion LIKE '%Registro del concepto de horas no cargables%' THEN BEGIN
+  	UPDATE logs.tbl_concepto_horas_no_cargables SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @concepto;
+    END; END IF;
+    IF NEW.accion LIKE '%Registro del detalle de facturacion del cliente%' THEN BEGIN
+  	UPDATE logs.tbl_cliente_facturacion SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @fact;
+    END; END IF;
+    IF NEW.accion LIKE '%Modificacion del detalle de facturacion del cliente%' THEN BEGIN
+  	UPDATE logs.tbl_cliente_facturacion SET usuario_id = NEW.usuario_id, fecha = NEW.fecha, direccion_ip = NEW.direccion_ip WHERE id = @fact;
+    END; END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -201,64 +135,48 @@ CREATE TABLE `tbl_cargo_empleado` (
 --
 
 INSERT INTO `tbl_cargo_empleado` (`id`, `descripcion`, `id_tipo_cargo`, `orden`, `id_estatus`) VALUES
-(1, 'Contratado', 1, 8, 1),
-(2, 'Pasante', 1, 8, 1),
-(3, 'Asistente I', 1, 8, 1),
-(4, 'Asistente II', 1, 8, 1),
-(5, 'Asistente III', 1, 8, 1),
-(6, 'Semi-Senior I', 1, 8, 1),
-(7, 'Semi-Senior II', 1, 8, 1),
-(8, 'Semi-Senior III', 1, 8, 1),
-(9, 'Senior I', 1, 8, 1),
-(10, 'Senior II', 1, 8, 1),
-(11, 'Senior III', 1, 8, 1),
-(12, 'Supervisor de Auditoria', 1, 7, 1),
-(13, 'Gerente', 1, 6, 1),
-(14, 'Gerente Senior', 1, 5, 1),
-(15, 'Director', 1, 4, 1),
-(16, 'Socio', 1, 1, 1),
-(17, 'Acting Partner', 1, 3, 1),
-(18, 'Asesor Legal', 1, 2, 1),
-(19, 'Director de Capacitación', 2, 0, 1),
-(20, 'Gerente de Facturación y Cobranzas', 2, 0, 1),
-(21, 'Gerente de Capital Humano', 2, 0, 1),
-(22, 'Asistente de Socios', 2, 0, 1),
-(23, 'Analista de Contraloria', 2, 0, 1),
-(24, 'Chofer', 2, 0, 1),
-(25, 'Operaria de Mantenimiento', 2, 0, 1),
-(26, 'Recepcionista', 2, 0, 1),
-(27, 'Asistente a  Socios', 2, 0, 1),
-(28, 'Supervisión Edición', 2, 0, 1),
-(29, 'Editora', 2, 0, 1),
-(30, 'Analista Senior II', 2, 0, 1),
-(31, 'Asistente de  Capital Humano', 2, 0, 1),
-(32, 'Operaria de Mantenimiento', 2, 0, 1),
-(33, 'Editora', 2, 0, 1),
-(34, 'Supervisor Soporte Técnico', 2, 0, 1),
-(35, 'Asistente Administrativo', 2, 0, 1),
-(36, 'Soporte Técnico II', 2, 0, 1),
-(37, 'Asistente de Servicios Generales', 2, 0, 1),
-(38, 'Mensajero', 2, 0, 1),
-(39, 'Asistente de Facturacion y Cobranza', 2, 0, 1),
-(40, 'Recepcionista', 2, 0, 1),
-(41, 'Pasante', 2, 0, 1),
-(42, 'Trabajador Social', 2, 0, 1),
-(43, 'Chofer', 2, 0, 1),
-(44, 'Supervisor de Mantenimiento', 2, 0, 1),
-(45, 'Operaria de Mantenimiento', 2, 0, 1),
-(46, 'Supervisor de Servicios Generales', 2, 0, 1),
-(47, 'Asistente de Gerentes', 2, 0, 1),
-(48, 'Pasante Inces', 2, 0, 1),
-(49, 'Asistente de Proyecto', 2, 0, 1),
-(50, 'Supervisor de Impuesto', 1, 0, 1),
-(51, 'Supervisor de Outsourcing', 1, 0, 1),
-(52, 'Gerente de Auditoria Interna', 1, 0, 1),
-(53, 'Gerente de Consultoria', 1, 0, 1),
-(54, 'Supervision de Edición', 2, 0, 1),
-(55, 'Analista Senior II Capital Humano', 1, 0, 1),
-(56, 'Gerente de Tecnología', 1, 0, 1),
-(57, 'Supervisor de Auditoria TI', 2, 0, 1),
-(58, 'Supervisor', 2, 0, 1);
+(1, 'Contratado por horas', 1, 0, 1),
+(2, 'Pasantes', 1, 0, 1),
+(3, 'Asistente I', 1, 0, 1),
+(4, 'Asistente II', 1, 0, 1),
+(5, 'Asistente III', 1, 0, 1),
+(6, 'Semi-Senior I', 1, 0, 1),
+(7, 'Semi-Senior II', 1, 0, 1),
+(8, 'Semi-Senior III', 1, 0, 1),
+(9, 'Senior I', 1, 0, 1),
+(10, 'Senior II', 1, 0, 1),
+(11, 'Senior III', 1, 0, 1),
+(12, 'Supervisor', 3, 0, 1),
+(13, 'Gerente', 3, 0, 1),
+(14, 'Gerente Senior', 3, 0, 1),
+(15, 'Director', 3, 0, 1),
+(16, 'Socio', 3, 0, 1),
+(17, 'Acting Partner', 1, 0, 1),
+(18, 'Asesor Legal', 1, 0, 1),
+(19, 'Asistente de Socios', 2, 0, 1),
+(20, 'Asistente de Gerentes', 2, 0, 1),
+(21, 'Analista', 2, 0, 1),
+(22, 'Chofer', 2, 0, 1),
+(23, 'Supervisor de Mantenimiento', 2, 0, 1),
+(24, 'Operaria de Mantenimiento', 2, 0, 1),
+(25, 'Recepcionista', 2, 0, 1),
+(26, 'Editora', 2, 0, 1),
+(27, 'Analista Senior I', 2, 0, 1),
+(28, 'Analista Senior II', 2, 0, 1),
+(29, 'Analista Senior III', 2, 0, 1),
+(30, 'Editora', 2, 0, 2),
+(31, 'Asistente', 2, 0, 1),
+(32, 'Asistente de Facturación y Cobranza', 2, 0, 1),
+(33, 'Asistente Administrativo', 2, 0, 1),
+(34, 'Soporte Técnico I', 2, 0, 1),
+(35, 'Soporte Técnico II', 2, 0, 1),
+(36, 'Soporte Técnico III', 2, 0, 1),
+(37, 'Mensajero', 2, 0, 1),
+(38, 'Recepcionista', 2, 0, 2),
+(39, 'Pasante', 2, 0, 1),
+(40, 'Trabajador Social', 2, 0, 1),
+(41, 'Pasante Inces', 2, 0, 1),
+(42, 'Asistente de Proyecto', 2, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -277,107 +195,47 @@ CREATE TABLE `tbl_cargo_supervisa` (
 --
 
 INSERT INTO `tbl_cargo_supervisa` (`id`, `id_cargo`, `id_cargo_supervisor`) VALUES
-(1, 1, 13),
-(2, 1, 14),
-(3, 1, 16),
-(4, 1, 15),
-(5, 1, 12),
-(6, 3, 15),
-(7, 3, 13),
-(8, 3, 14),
-(9, 3, 16),
-(10, 3, 12),
-(11, 4, 15),
-(13, 4, 13),
-(14, 4, 14),
-(15, 4, 16),
-(16, 4, 12),
-(17, 5, 15),
-(18, 5, 13),
-(19, 5, 14),
-(20, 5, 16),
-(21, 5, 12),
-(22, 1, 15),
-(23, 1, 13),
-(24, 1, 14),
-(26, 1, 12),
-(27, 2, 15),
-(28, 2, 13),
-(29, 2, 14),
-(30, 2, 16),
-(31, 2, 12),
-(32, 6, 15),
-(33, 6, 13),
-(34, 6, 14),
-(35, 6, 16),
-(36, 6, 12),
-(37, 7, 15),
-(38, 7, 13),
-(39, 7, 14),
-(40, 7, 16),
-(41, 7, 12),
-(42, 8, 15),
-(43, 8, 13),
-(44, 8, 14),
-(45, 8, 16),
-(46, 8, 12),
-(47, 9, 15),
-(48, 9, 13),
-(49, 9, 14),
-(50, 9, 16),
-(51, 9, 12),
-(52, 10, 15),
-(53, 10, 13),
-(54, 10, 14),
-(55, 10, 16),
-(56, 10, 12),
-(57, 11, 15),
-(58, 11, 13),
-(59, 11, 14),
-(60, 11, 16),
-(61, 11, 12),
-(62, 12, 13),
-(63, 12, 14),
-(64, 12, 16),
-(65, 12, 15),
-(66, 13, 15),
-(67, 13, 16),
-(68, 14, 15),
-(69, 14, 16),
-(70, 15, 16),
-(71, 17, 16),
-(72, 18, 16),
-(73, 1, 17),
-(74, 2, 17),
-(75, 3, 17),
-(76, 4, 17),
-(77, 5, 17),
-(78, 6, 17),
-(79, 7, 17),
-(80, 8, 17),
-(81, 9, 17),
-(82, 10, 17),
-(83, 11, 17),
-(84, 12, 17),
-(85, 13, 17),
-(86, 14, 17),
-(87, 15, 17),
-(88, 1, 18),
-(89, 2, 18),
-(90, 3, 18),
-(91, 4, 18),
-(92, 5, 18),
-(93, 6, 18),
-(94, 7, 18),
-(95, 8, 18),
-(96, 9, 18),
-(97, 10, 18),
-(98, 11, 18),
-(99, 12, 18),
-(100, 13, 18),
-(101, 14, 18),
-(102, 15, 18),
-(103, 17, 18);
+(1, 1, 15),
+(2, 2, 15),
+(3, 3, 15),
+(4, 4, 15),
+(5, 5, 15),
+(6, 6, 15),
+(7, 7, 15),
+(8, 8, 15),
+(9, 9, 15),
+(10, 10, 15),
+(11, 11, 15),
+(12, 12, 15),
+(13, 13, 15),
+(14, 14, 15),
+(15, 16, 15),
+(16, 17, 15),
+(17, 18, 15),
+(18, 19, 15),
+(19, 20, 15),
+(20, 21, 15),
+(21, 22, 15),
+(22, 23, 15),
+(23, 24, 15),
+(24, 25, 15),
+(25, 26, 15),
+(26, 27, 15),
+(27, 28, 15),
+(28, 29, 15),
+(29, 30, 15),
+(30, 31, 15),
+(31, 32, 15),
+(32, 33, 15),
+(33, 34, 15),
+(34, 35, 15),
+(35, 36, 15),
+(36, 37, 15),
+(37, 38, 15),
+(38, 39, 15),
+(39, 40, 15),
+(40, 41, 15),
+(41, 42, 15);
 
 -- --------------------------------------------------------
 
@@ -923,32 +781,16 @@ CREATE TABLE `tbl_cliente` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Volcado de datos para la tabla `tbl_cliente`
+-- Disparadores `tbl_cliente`
 --
-
-INSERT INTO `tbl_cliente` (`id`, `id_usuario_socio`, `id_usuario_gerente`, `codigo`, `rif`, `nit`, `razon_social`, `id_parroquia_fiscal`, `avenida_calle_fiscal`, `edificio_quinta_fiscal`, `piso_fiscal`, `numero_fiscal`, `ciudad_fiscal`, `telefono_fiscal`, `pagina_web`, `email_fiscal`, `id_estatus`) VALUES
-(1, 1, 4, 111, '234', 1221, 'BANCOS. C', 1, 'D', 'DD', '2', '2', 'FD', '(2222) - 222 2222', '2', 'fj@gmail.com', 1),
-(2, 1, 1, 112, '335', 22, 'BANCO H', 1, 'AVENIDA', 'QUINTA', '2', '2', 'CIUDAD', '(2222) - 222 2222', '222', 'kose@gmail.com', 1),
-(3, 1, 1, 113, '9212', 2, 'BANCO I', 26, 'AVENIDA', 'QUINTA', '21', '11', 'CIUDAD', '(0202) - 020 2020', '20020', 'bancoi@gmail.com', 1),
-(4, 1, 1, 114, 'V12', 1, 'BANCO J', 28, 'AVENIDAD', 'QUINTA', '1', '1', 'CIUDAD', '(2002) - 022 0020', NULL, 'bancoj@gmail.com', 1),
-(5, 9, 6, 115, 'J123456789', 0, 'EMPRESAS UNIDAS JAMAS SERAN VENCIDAS S.A.C.A.', 619, 'AVENIDA GUAICAIPURO', 'DANTE GUALPIERI', 'PH', '1', 'CARACASA', '(0212) - 265 5555', '02122657777', 'eujsv.facturacion@eujsv.com.ve', 1),
-(6, 10, 6, 116, 'J987654321', 0, 'LAS PIEDRAS SPA EXÓTICO C.A.', 209, 'AVENIDA Nº 1', 'LAS PIEDRAS SPA EXÓTICO', 'PB', '0', 'PUERTO ORDÁZ', '(0424) - 963 8574', '04269638574', 'laspierdasspa.direccion@laspierdasspa.com.ve', 1),
-(7, 10, 6, 117, 'J741852963', 0, 'INVERSIONES LA NATA S.A.', 647, 'LOS LABORATORIOS', 'EDIFICIO OFINCA', '1', '111', 'CARACAS', '(0212) - 239 1592', '02122399215', 'direccion.lanata@lanata.com', 1),
-(8, 9, 6, 118, 'G2000517845', 0, 'BANCO DEL TESORO BANCO UNIVERSAL C.A.', 619, 'GUAICAIPURO', 'TORRE BT', 'PH', '1', 'CARACAS', '(0212) - 263 8574', NULL, 'presidente@bt.gob.ve', 1),
-(9, 10, 6, 119, 'J7418529632', 0, 'PEROLITO & ESCVARLATA C.A.', 619, 'FCO DE MIRANDA', 'CENTRO PERÚ', '10', '10', 'CARACAS', '(0212) - 263 5478', '02122635489', 'eldueno@pyeca.com', 1),
-(10, 16, 18, 120, 'V123456789', 0, 'PRUEBA', 226, 'AVENIDA', 'QUINTA', '24', '2', 'CIUDAD', '(0212) - 123 4567', NULL, 'pruebaer@gmail.com', 1),
-(11, 16, 0, 121, 'J159263487', 951623847, 'INVERSIONES EL CONTROL TOTAL', 619, 'FRANCISCO DE MIRANDA', 'TORRE CAVENDES', '1', '1', 'CARACAS', '(0212) - 285 4679', '02122859764', 'presidente@ct.com.ve', 1),
-(12, 16, 15, 122, 'G200000123', 741852963, 'FUNDAPAIMA', 619, 'FRANCISCO DE MIRANDA', 'TORRE CAVENDES', 'PB', '1', 'CARACAS', '(0212) - 285 9515', '02122859764', 'presidente@ct.com.ve', 1),
-(13, 16, 0, 123, 'G95162378', 741, 'JUNDACIÓN DEPORTE JUVENI', 619, 'FRANCISCO DE MIRANDA', 'TORRE EUROPA', '5', '55', 'CARACAS', '(0212) - 999 7845', '02129998754', 'presidencia@fundacion.com.ve', 1),
-(14, 16, 6, 124, 'J407038389', 0, 'MITICKERA C.A.', 1135, 'AVENIDA PRICIPAL', 'PEAVY', 'PB', '0', 'CARACAS', '(0212) - 662 8745', '02126624578', 'prueba@gmail.com', 1),
-(15, 16, 18, 125, 'V123654', 0, 'PRUEBA CLIENTE', 163, 'AVENIDA', 'QUINTA', '1', '1', 'CIUDAD', '(0202) - 020 2020', NULL, 'pruebacliente@gmail.com', 1),
-(16, 10, 18, 126, 'V76543', 0, 'PRUEBA CLIENTE 2', 1, 'AVENIDA', 'QUINRA', '11', '0', 'CIUDAD', '(0212) - 123 4567', NULL, 'pruebacliente2@gmail.com', 1),
-(17, 16, 18, 127, 'E12345', 0, 'PRUEBA CLIENTE 2', 1, 'AVENIDA', 'QUINTA', '24', '0', 'CIUDAD', '(1234) - 567 8900', NULL, 'pruebacliente2@gmail.com', 1),
-(18, 16, 18, 128, 'V65432', 0, 'PRUEBA CLIENTE 3', 87, 'AVENIDA', 'QUINTA', '24', '0', 'CIUDAD', '(0212) - 123 4567', NULL, 'pruebacliente3@gmail.com', 1),
-(19, 16, 18, 129, 'J951623847', 951623847, 'INVERSIONES VALLETY PARKING', 619, 'FRANCISCO DE MIRANDA', 'TORRE EUROPA', '10', '10', 'CARACAS', '(0212) - 263 3333', NULL, 'prueba@valletparking.com', 1),
-(20, 9, 19, 130, 'J000082766', 0, 'GRUPO SAMBIL C.A.', 619, 'FRANCISCO DE MIRANDA', 'CENTRO LIDO', '7', '70', 'CARACAS', '(0212) - 740 0200', NULL, 'contacto@constructorasambil.com.ve', 1),
-(21, 9, 19, 131, 'J407038389', 0, 'TICKETERA.COM', 1126, 'PRINCIPAL', 'PEAVY', 'PB', '1', 'CARACAS', '(0212) - 698 4554', NULL, 'prueba@gmail.com', 1),
-(22, 16, 19, 132, 'J000063729', 0, 'CERVECERÍA POLAR LOS CORTIJOS C.A.', 647, 'AVENIDA PRINCIPAL DE LOS CORTIJOS', 'CENTRO POLAR', 'PB', '12', 'CARACAS', '(0212) - 239 7841', '(0212) - 239 3232', 'empresaspolar@empresaspolar.com', 1);
+DELIMITER $$
+CREATE TRIGGER `tbl_cliente_AI` AFTER INSERT ON `tbl_cliente` FOR EACH ROW INSERT INTO logs.tbl_cliente(codigo, id_usuario_socio_nuevo, id_usuario_gerente_nuevo, rif_nuevo, nit_nuevo, razon_social_nuevo, id_parroquia_fiscal_nuevo, avenida_calle_fiscal_nuevo, edificio_quinta_fiscal_nuevo, piso_fiscal_nuevo, ciudad_fiscal_nuevo, telefono_fiscal_nuevo, pagina_web_nuevo, email_fiscal_nuevo, id_estatus_nuevo) VALUES (NEW.codigo, NEW.id_usuario_socio, NEW.id_usuario_gerente, NEW.rif, NEW.nit, NEW.razon_social, NEW.id_parroquia_fiscal, NEW.avenida_calle_fiscal, NEW.edificio_quinta_fiscal, NEW.piso_fiscal, NEW.ciudad_fiscal, NEW.telefono_fiscal, NEW.pagina_web, NEW.email_fiscal, NEW.id_estatus)
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tbl_cliente_BU` BEFORE UPDATE ON `tbl_cliente` FOR EACH ROW INSERT INTO logs.tbl_cliente(codigo, id_usuario_socio, id_usuario_gerente, rif, nit, razon_social, id_parroquia_fiscal, avenida_calle_fiscal, edificio_quinta_fiscal, piso_fiscal, ciudad_fiscal, telefono_fiscal, pagina_web, email_fiscal, id_estatus, id_usuario_socio_nuevo, id_usuario_gerente_nuevo, rif_nuevo, nit_nuevo, razon_social_nuevo, id_parroquia_fiscal_nuevo, avenida_calle_fiscal_nuevo, edificio_quinta_fiscal_nuevo, piso_fiscal_nuevo, ciudad_fiscal_nuevo, telefono_fiscal_nuevo, pagina_web_nuevo, email_fiscal_nuevo, id_estatus_nuevo) VALUES (NEW.codigo, OLD.id_usuario_socio, OLD.id_usuario_gerente, OLD.rif, OLD.nit, OLD.razon_social, OLD.id_parroquia_fiscal, OLD.avenida_calle_fiscal, OLD.edificio_quinta_fiscal, OLD.piso_fiscal, OLD.ciudad_fiscal, OLD.telefono_fiscal, OLD.pagina_web, OLD.email_fiscal, OLD.id_estatus, NEW.id_usuario_socio, NEW.id_usuario_gerente, NEW.rif, NEW.nit, NEW.razon_social, NEW.id_parroquia_fiscal, NEW.avenida_calle_fiscal, NEW.edificio_quinta_fiscal, NEW.piso_fiscal, NEW.ciudad_fiscal, NEW.telefono_fiscal, NEW.pagina_web, NEW.email_fiscal, NEW.id_estatus)
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -973,20 +815,16 @@ CREATE TABLE `tbl_cliente_facturacion` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Volcado de datos para la tabla `tbl_cliente_facturacion`
+-- Disparadores `tbl_cliente_facturacion`
 --
-
-INSERT INTO `tbl_cliente_facturacion` (`id`, `id_cliente`, `id_proyecto`, `id_parroquia_factura`, `avenida_calle_factura`, `edificio_quinta_factura`, `piso_factura`, `numero_factura`, `ciudad_factura`, `telefono_factura`, `fax_factura`, `email_factura`, `id_estatus`) VALUES
-(1, 1, 1, 226, 'ALA', 'QUINTA', '33', '33', 'BACA', '(5654) - 020 2020', '32', 'vjd5@gmail.com', 1),
-(2, 1, 2, 259, 'AVENIDA', 'QUINTA', '21', '2', 'CIUDAD', '(0202) - 020 2020', '20', 'preubas@gmail.com', 1),
-(3, 5, 9, 619, 'GUAICAIPURO', 'DANTE GUALTIERI', 'PH', '1', 'CARACAS', '(0212) - 265 555', '02122657777', 'eujsv.facturacion@eujsv.com.ve', 1),
-(4, 1, 4, 1134, 'AVENIDA', 'QUINTA', '23', '2', 'CIUDAD', '(0212) - 123 4556', NULL, 'pruebas1@gmail.com', 1),
-(5, 6, 10, 647, 'LOS LABORATORIOS', 'EDIFICIO OFINCA', '4', '44', 'CARACAS', '(0212) - 239 7418', '02122398147', 'laspiedrasspa.facruracion@laspiedrasspa.com', 1),
-(6, 7, 11, 647, 'LOS LABORATORIOS', 'EDIFICIO OFINCA', '1', '111', 'CARACAS', '(0212) - 239 7418', '02122398147', 'facturacion.lanata@lanata.com', 1),
-(7, 8, 12, 1136, 'AVENIDA URDANETA', 'BANCO DEL TESORO', '13', '13A', 'CARACAS', '(0212) - 414 2185', '0212-414-2185', 'bancodeltesoro@gob.ve', 1),
-(8, 11, 14, 619, 'FRANCISCO', 'TORRE CAVENDES', '1', '1', 'CARACAS', '(0212) - 285 2634', '02122851926', 'presidente@ct.com.ve', 1),
-(9, 8, 16, 1120, 'URDANETA', 'BANCO DEL TESORO', '1', '1', 'CARACAS', '(0212) - 435 2100', '0212-4352101', 'bancodeltesoro@gob.ve', 1),
-(10, 22, 18, 647, 'AVENIDA PRINCIPAL DE LOS CORTIJOS', 'EMPRESAS POLAR', 'PB', '7', 'CARACAS', '(0212) - 239 7418', '(0212) - 239 8147', 'facturacion@empresaspolar.com', 1);
+DELIMITER $$
+CREATE TRIGGER `tbl_cliente_facturacion_AI` AFTER INSERT ON `tbl_cliente_facturacion` FOR EACH ROW INSERT INTO logs.tbl_cliente_facturacion(id_facturacion, id_cliente_nuevo, id_proyecto_nuevo, id_parroquia_factura_nuevo, avenida_calle_factura_nuevo, edificio_quinta_factura_nuevo, piso_factura_nuevo, numero_factura_nuevo, ciudad_factura_nuevo, telefono_factura_nuevo, fax_factura_nuevo, email_factura_nuevo, id_estatus_nuevo) VALUES (NEW.id, NEW.id_cliente, NEW.id_proyecto, NEW.id_parroquia_factura, NEW.avenida_calle_factura, NEW.edificio_quinta_factura, NEW.piso_factura, NEW.numero_factura, NEW.ciudad_factura, NEW.telefono_factura, NEW.fax_factura, NEW.email_factura, NEW.id_estatus)
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tbl_cliente_facturacion_BU` BEFORE UPDATE ON `tbl_cliente_facturacion` FOR EACH ROW INSERT INTO logs.tbl_cliente_facturacion(id_facturacion, id_cliente, id_proyecto, id_parroquia_factura, avenida_calle_factura, edificio_quinta_factura, piso_factura, numero_factura, ciudad_factura, telefono_factura, fax_factura, email_factura, id_estatus, id_cliente_nuevo, id_proyecto_nuevo, id_parroquia_factura_nuevo, avenida_calle_factura_nuevo, edificio_quinta_factura_nuevo, piso_factura_nuevo, numero_factura_nuevo, ciudad_factura_nuevo, telefono_factura_nuevo, fax_factura_nuevo, email_factura_nuevo, id_estatus_nuevo) VALUES (NEW.id, OLD.id_cliente, OLD.id_proyecto, OLD.id_parroquia_factura, OLD.avenida_calle_factura, OLD.edificio_quinta_factura, OLD.piso_factura, OLD.numero_factura, OLD.ciudad_factura, OLD.telefono_factura, OLD.fax_factura, OLD.email_factura, OLD.id_estatus, NEW.id_cliente, NEW.id_proyecto, NEW.id_parroquia_factura, NEW.avenida_calle_factura, NEW.edificio_quinta_factura, NEW.piso_factura, NEW.numero_factura, NEW.ciudad_factura, NEW.telefono_factura, NEW.fax_factura, NEW.email_factura, NEW.id_estatus)
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -1018,6 +856,14 @@ INSERT INTO `tbl_concepto_horas_no_cargables` (`id`, `descripcion`, `id_estatus`
 (11, 'Seminarios Web Vía Zoom', 1),
 (12, 'Talleres de Desarrollo Profesional', 1),
 (13, 'Tareas administrativas Personal Profesional', 1);
+
+--
+-- Disparadores `tbl_concepto_horas_no_cargables`
+--
+DELIMITER $$
+CREATE TRIGGER `tbl_concepto_horas_no_cargables_AI` AFTER INSERT ON `tbl_concepto_horas_no_cargables` FOR EACH ROW INSERT INTO logs.tbl_concepto_horas_no_cargables(id_concepto, descripcion_nuevo, id_estatus_nuevo) VALUES (NEW.id, NEW.descripcion, NEW.id_estatus)
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -1061,30 +907,148 @@ CREATE TABLE `tbl_contacto_usuario` (
 
 INSERT INTO `tbl_contacto_usuario` (`id`, `id_usuario`, `correo_principal`, `correo_secundario`, `telefono_principal`, `telefono_secundario`) VALUES
 (1, 1, 'dmolina101@gmail.com', '', '(0000) - 000 0000', '(0000) - 000 0002'),
-(2, 2, 'josearturo0706@gmail.com', '', '(0202) - 020 2020', NULL),
-(3, 3, 'ana.blandin@crowe.com.ve', '', '(2020) - 020 2020', NULL),
-(4, 4, 'dq@l.com', '', NULL, NULL),
-(5, 5, 'prueba@gmail.com', '', '(0202) - 020 2020', NULL),
-(6, 6, 'gustavo.puchi@crowe.com.ve', 'gapuchi@gmail.com', '(0412) - 220 6492', NULL),
-(7, 7, 'alfio.saglimbeni@crowe.com.ve', '', '(0416) - 827 2679', NULL),
-(8, 8, 'arianna.matos@crowe.com.ve', '', '(0424) - 123 4567', NULL),
-(9, 9, 'sergio.marquez@crowe.com.ve', 'sergiofmarquezt@gmail.com', '(0414) - 907 0900', NULL),
-(10, 10, 'mirlangela.salaya@crowe.com.ve', 'mirlangela.salaya@gmail.com', '(0416) - 123 5968', '(0414) - 123 5968'),
-(11, 11, 'pedro.machado@crowe.com.ve', 'pedro.machado@gmail.com', '(0426) - 123 4578', '(0212) - 123 5689'),
-(12, 12, 'recursos.humanos@crowe.com.ve', 'recursos.humanos@gmail.com', '(0416) - 987 5423', '(0414) - 987 5423'),
-(13, 13, 'siloes.alejos@crowe.com.ve', 'siloes.alejos@gmail.com', '(0416) - 310 9740', '(0212) - 263 6735'),
-(14, 14, 'yolimer.mendoza@crowe.com.ve', 'mendozayolymer@gmail.com', '(0414) - 901 8276', NULL),
-(15, 15, 'jose.machado@crowe.com.ve', 'jsemachado67@hotmail.com', '(0414) - 250 1932', '(0212) - 235 7418'),
-(16, 16, 'jesus.perez@crowe.com.ve', '', '(0414) - 020 1452', NULL),
-(17, 17, 'ignayari.mendoza@crowe.com.ve', '', '(0424) - 277 9397', NULL),
-(18, 18, 'machado@crowe.com.ve', 'jose@gmail.com', '(0414) - 741 8596', '(0416) - 369 2514'),
-(19, 19, 'oliver.paez@crowe.com.ve', '', '(0414) - 246 0953', NULL),
-(20, 20, 'ladymar.morett@crowe.com.ve', 'ladymar_01@hotmail.com', '(0426) - 119 7245', NULL),
-(21, 21, 'yodelina.torres@crowe.com.ve', '', '(0424) - 244 1557', NULL),
-(22, 22, 'jonathan.azocar@crowe.com.ve', 'jonathanzoncar24@gmail.com', '(0426) - 637 3419', NULL),
-(23, 23, 'dmolina102@gmail.com', '', NULL, NULL),
-(24, 24, 'carolina.coronel3@gmail.com', '', NULL, NULL),
-(25, 25, 'ek@dd.com', '', NULL, NULL);
+(2, 2, 'nathalie.lopez@crowe.com.ve', '', '', ''),
+(3, 3, 'yesenia.martinez@crowe.com.ve', '', '', ''),
+(4, 4, 'jesus.perez@crowe.com.ve', '', '', ''),
+(5, 5, 'carol.lopez@crowe.com.ve', '', '', ''),
+(6, 6, 'luz.fonseca@crowe.com.ve', '', '', ''),
+(7, 7, 'arturo.madriz@crowe.com.ve', '', '', ''),
+(8, 8, 'roman.scott@crowe.com.ve', '', '', ''),
+(9, 9, 'oliver.paez@crowe.com.ve', '', '', ''),
+(10, 10, 'jorge.gonzalez@crowe.com.ve', '', '', ''),
+(11, 11, 'maria.sequeda@crowe.com.ve', '', '', ''),
+(12, 12, 'yodelina.torres@crowe.com.ve', '', '', ''),
+(13, 13, 'katherine.zurita@crowe.com.ve', '', '04241907404', '04243170363'),
+(14, 14, 'mileidis.moreno@crowe.com.ve', '', '04241718118', ''),
+(15, 15, 'francia.medina@crowe.com.ve', '', '04166947046', ''),
+(16, 16, 'astrid.mendoza@crowe.com.ve', '', '04241652571', ''),
+(17, 17, 'maria.tovar@crowe.com.ve', '', '02124829623', '04242473031'),
+(18, 18, 'mariana.brito@crowe.com.ve', '', '04242902167', ''),
+(19, 19, 'belkis.cortina@crowe.com.ve', '', '02124159553', '04164079713'),
+(20, 20, 'lucrecia.silva@crowe.com.ve', '', '04264199217', ''),
+(21, 21, 'normedy.parra@crowe.com.ve', '', '02125241716', '04120125384'),
+(22, 22, 'josvelis.castillo@crowe.com.ve', '', '04148350920', '02123440542'),
+(23, 23, 'luis.russian@crowe.com.ve', '', '04242602227', '02123395206'),
+(24, 24, 'jonathan.azocar@crowe.com.ve', '', '02123774758', '04266373419'),
+(25, 25, 'yerlenis.valderrama@crowe.com.ve', '', '04242950201', ''),
+(26, 26, 'kleiver.corro@crowe.com.ve', '', '02124190028', '04129496868'),
+(27, 27, 'maryuri.barazarte@crowe.com.ve', '', '02122444894', '04241839221'),
+(28, 28, 'pedro.benitez@crowe.com.ve', '', '', ''),
+(29, 29, 'dennys.flores@crowe.com.ve', '', '04160192302', ''),
+(30, 30, 'genesis.marcano@crowe.com.ve', '', '02392482117', '04140209137'),
+(31, 31, 'keilimar.suarez@crowe.com.ve', '', '04169281259', '02127459838'),
+(32, 32, 'johanne.muñoz@crowe.com.ve', '', '04143155147', ''),
+(33, 33, 'alfredo.hernandez@crowe.com.ve', '', '04127116777', ''),
+(34, 34, 'raul.vargas@crowe.com.ve', '', '', ''),
+(35, 35, 'shelcie.paz@crowe.com.ve', '', '02122583241', '04149084285'),
+(36, 36, 'ladymar.morett@crowe.com.ve', '', '02124512556', '04261197245'),
+(37, 37, 'anthony.garcia@crowe.com.ve', '', '04262130363', '04123840786'),
+(38, 38, 'solmary.martinez@crowe.com.ve', '', '02123397992', '04129904281'),
+(39, 39, 'jackeline.ramos@crowe.com.ve', '', '02126412375', '04168233236'),
+(40, 40, 'belkis.vazquez@crowe.com.ve', '', '04262157178', ''),
+(41, 41, 'yuzleibby.maldonado@crowe.com.ve', '', '04242194508', '02128703102'),
+(42, 42, 'giovanni.corredor@crowe.com.ve', '', '04120102693', '02123472038'),
+(43, 43, 'kleiver.cadenas@crowe.com.ve', '', '04143196616', '02122678468'),
+(44, 44, 'ivette.orozco@crowe.com.ve', '', '04242613215', '02124341107'),
+(45, 45, 'zunaya.wilches@crowe.com.ve', '', '04140316013', '02126135612'),
+(46, 46, 'jesus.abraham@crowe.com.ve', '', '02123727075', '04242147829'),
+(47, 47, 'jose.perozo@crowe.com.ve', '', '04262539113', ''),
+(48, 48, 'roberto.villegas@crowe.com.ve', '', '02128703830', '04241762670'),
+(49, 49, 'sandro.mayora@crowe.com.ve', '', '04123675678', '02125163034'),
+(50, 50, 'eduardo.bastos@crowe.com.ve', '', '02129875898', '04241304353'),
+(51, 51, 'vanessa.rojas@crowe.com.ve', '', '04147826035', ''),
+(52, 52, 'carlos.revete@crowe.com.ve', '', '04242591419', ''),
+(53, 53, 'vianney.rugeles@crowe.com.ve', '', '02124434371', '04129987473'),
+(54, 54, 'edwin.burgos@crowe.com.ve', '', '04142871671', ''),
+(55, 55, 'nombre.apellido@dominio.com', '', '02123637192', '04128584022'),
+(56, 56, 'freddy.vargas@crowe.com.ve', '', '04241292285', ''),
+(57, 57, 'yorman.rangel@crowe.com.ve', '', '', ''),
+(58, 58, 'jose.utrera@crowe.com.ve', '', '', ''),
+(59, 59, 'alejandro.lira@crowe.com.ve', '', '02126724819', '04142460103'),
+(60, 60, 'yordalis.echarrys@crowe.com.ve', '', '04122932692', ''),
+(61, 61, 'eliana.ponce@crowe.com.ve', '', '02125761138', '04149113335'),
+(62, 62, 'stefany.gonzalez@crowe.com.ve', '', '04242085444', ''),
+(63, 63, 'naivelys.altuve@crowe.com.ve', '', '04147914010', ''),
+(64, 64, 'gabriela.gil@crowe.com.ve', '', '02126621812', '04262874127'),
+(65, 65, 'orianna.alejos@crowe.com.ve', '', '02126689284', '04263158428'),
+(66, 66, 'marynes.gonzalez@crowe.com.ve', '', '02124929084', '04242628459'),
+(67, 67, 'eligio.mendoza@crowe.com.ve', '', '', ''),
+(68, 68, 'marielvi.oller@crowe.com.ve', '', '', ''),
+(69, 69, 'alba.navia@crowe.com.ve', '', '02127625333', '04242984865'),
+(70, 70, 'nombre.apellido@dominio.com', '', '04141266489', '02128614414'),
+(71, 71, 'yessica.rivas@crowe.com.ve', '', '02128750733', '04242677331'),
+(72, 72, 'nombre.apellido@dominio.com', '', '04142119162', ''),
+(73, 73, 'yda.chirinos@crowe.com.ve', '', '02125159794', '04241360393'),
+(74, 74, 'nombre.apellido@dominio.com', '', '02126149790', '04143260002'),
+(75, 75, 'nombre.apellido@dominio.com', '', '02123243797', '04122493721'),
+(76, 76, 'nombre.apellido@dominio.com', '', '04125746284', ''),
+(77, 77, 'nombre.apellido@dominio.com', '', '04122564514', ''),
+(78, 78, 'nombre.apellido@dominio.com', '', '04142678216', ''),
+(79, 79, 'nahomy.quintero@crowe.com.ve', '', '02127446051', '04241743888'),
+(80, 80, 'maria.espina@crowe.com.ve', '', '0127304196', '04265131381'),
+(81, 81, 'nombre.apellido@dominio.com', '', '04242696996', '04129217899'),
+(82, 82, 'nombre.apellido@dominio.com', '', '04127098992', ''),
+(83, 83, 'glender.cortez@crowe.com.ve', '', '04142190677', '02125321810'),
+(84, 84, 'alberto.evies@crowe.com.ve', '', '02124335180', '04141057605'),
+(85, 85, 'angela.aranea@crowe.com.ve', '', '02125153658', '04263046685'),
+(86, 86, 'arturo.sosa@crowe.com.ve', '', '04241340102', ''),
+(87, 87, 'adrian.perez@crowe.com.ve', '', '02128613428', '04128045133'),
+(88, 88, 'elisa.pasero@crowe.com.ve', '', '04123688968', ''),
+(89, 89, 'omar.marquez@crowe.com.ve', '', '', ''),
+(90, 90, 'angelica.funes@crowe.com.ve', '', '02128583253', '04262905898'),
+(91, 91, 'eslyn.rojas@crowe.com.ve', '', '04243443594', '02128084209'),
+(92, 92, 'carmen.ochoa@crowe.com.ve', '', '04241495523', ''),
+(93, 93, 'laura.rojas@crowe.com.ve', '', '', ''),
+(94, 94, 'nombre.apellido@dominio.com', '', '04242258139', ''),
+(95, 95, 'nombre.apellido@dominio.com', '', '', ''),
+(96, 96, 'nombre.apellido@dominio.com', '', '04169397195', ''),
+(97, 97, 'jose.machado@crowe.com.ve', '', '', ''),
+(98, 98, 'nombre.apellido@dominio.com', '', '', ''),
+(99, 99, 'nombre.apellido@dominio.com', '', '', ''),
+(100, 100, 'ana.castaño@crowe.com.ve', '', '02125716504', ''),
+(101, 101, 'amayoisbi.garcia@crowe.com.ve', '', '04127013435', ''),
+(102, 102, 'jennifer.chacon@crowe.com.ve', '', '04125897240', ''),
+(103, 103, 'ignayari.mendoza@crowe.com.ve', '', '04129289923', ''),
+(104, 104, 'reina.fajardo@crowe.com.ve', '', '04164269965', ''),
+(105, 105, 'yolymer.mendoza@crowe.com.ve', '', '04149018276', '02126813348'),
+(106, 106, 'nombre.apellido@dominio.com', '', '04129762870', ''),
+(107, 107, 'adriana.guzman@crowe.com.ve', '', '02129412882', '04144549562'),
+(108, 108, 'jose.estaba@crowe.com.ve', '', '02128602803', '04243389487'),
+(109, 109, 'karina.perez@crowe.com.ve', '', '04265920655', ''),
+(110, 110, 'zonny.garcia@crowe.com.ve', '', '04243138868', '02392252293'),
+(111, 111, 'nombre.apellido@dominio.com', '', '04268870548', ''),
+(112, 112, 'nombre.apellido@dominio.com', '', '04262166223', ''),
+(113, 113, 'leonardo.lopez@crowe.com.ve', '', '04142598750', ''),
+(114, 114, 'nombre.apellido@dominio.com', '', '02124818970', '04128259076'),
+(115, 115, 'nombre.apellido@dominio.com', '', '02124518087', '04129576671'),
+(116, 116, 'antonio.reyes@crowe.com.ve', '', '02122425335', '04141626367'),
+(117, 117, 'nombre.apellido@dominio.com', '', '04241842688', ''),
+(118, 118, 'freddy.perdomo@crowe.com.ve', '', '02129766425', '04144466147'),
+(119, 119, 'fernando.rangel@crowe.com.ve', '', '04141782596', ''),
+(120, 120, 'gelen.cardenas@crowe.com.ve', '', '02125767453', '04164654993'),
+(121, 121, 'nombre.apellido@dominio.com', '', '02122373113', ''),
+(122, 122, 'nombre.apellido@dominio.com', '', '02122373113', '04142081976'),
+(123, 123, 'nombre.apellido@dominio.com', '', '04169322811', ''),
+(124, 124, 'amelia.diaz@crowe.com.ve', '', '', ''),
+(125, 125, 'emilio.leon@crowe.com.ve', '', '04166084971', '04241180197'),
+(126, 126, 'gustavo.puchi@crowe.com.ve', '', '02124834655', '04122206492'),
+(127, 127, 'alfio.saglimbeni@crowe.com.ve', '', '04168272679', ''),
+(128, 128, 'arianna.matos@crowe.com.ve', '', '02123238208', '04169155523'),
+(129, 129, 'ana.blandin@crowe.com.ve', '', '02124329839', '04241624237'),
+(130, 130, 'oscar.piña@crowe.com.ve', '', '', ''),
+(131, 131, 'nombre.apellido@dominio.com', '', '02128084742', '05247042110'),
+(132, 132, 'duglimar.mendez@crowe.com.ve', '', '04162062192', ''),
+(133, 133, 'sol.viana@crowe.com.ve', '', '02126316797', '04241469101'),
+(134, 134, 'douglas.torrealba@crowe.com.ve', '', '04162094874', '04168000868'),
+(135, 135, 'nombre.apellido@dominio.com', '', '04267528235', '02128715756'),
+(136, 136, 'nombre.apellido@dominio.com', '', '04261396926', ''),
+(137, 137, 'nombre.apellido@dominio.com', '', '04126305629', ''),
+(138, 138, 'nombre.apellido@dominio.com', '', '04162139037', '02124909126'),
+(139, 139, 'nombre.apellido@dominio.com', '', '02124329566', '04168175614'),
+(140, 140, 'fredy.bautista@crowe.com.ve', '', '', ''),
+(141, 141, 'nombre.apellido@dominio.com', '', '', ''),
+(142, 142, 'barbara.zambrano@crowe.com.ve', '', '', ''),
+(143, 143, 'mary.cruz@crowe.com.ve', '', '04249686614', '02869341430');
 
 -- --------------------------------------------------------
 
@@ -1103,25 +1067,25 @@ CREATE TABLE `tbl_division` (
 --
 
 INSERT INTO `tbl_division` (`id`, `descripcion`, `id_estatus`) VALUES
-(1, 'Auditoría', 1),
+(1, 'Auditoría Externa', 1),
 (2, 'Asesoría Tributaria', 1),
-(3, 'Tecnología TI', 1),
+(3, 'Auditoría TI', 1),
 (4, 'Outsourcing', 1),
 (5, 'Consultoria y Auditoría Interna', 1),
-(6, 'Administración/Capital Humano', 1),
-(7, 'Administración/Contabilidad', 1),
-(8, 'Administración/Tesorería', 1),
-(9, 'Administración/Contraloría', 1),
-(10, 'Administración/Servicios Generales', 1),
-(11, 'Administración/Edición', 1),
-(12, 'Administración/Soporte Técnico', 1),
-(13, 'Adiestramiento', 1),
-(14, 'Pasantes Inces', 1),
-(15, 'Conapdis', 1),
-(16, 'Legal', 1),
-(17, 'Servicios Profesionales (Puerto Ordaz)', 1),
-(18, 'Administración', 1),
-(19, 'Auditoria Externa', 1);
+(6, 'Business and Process Consulting', 1),
+(7, 'Administración/Capital Humano', 1),
+(8, 'Administración/Contabilidad', 1),
+(9, 'Administración/Tesorería', 1),
+(10, 'Administración/Contraloría', 1),
+(11, 'Administración/Servicios Generales', 1),
+(12, 'Administración/Edición', 1),
+(13, 'Administración/Soporte Técnico', 1),
+(14, 'Adiestramiento', 1),
+(15, 'Pasantes Inces', 1),
+(16, 'Conapdis', 1),
+(17, 'Legal', 1),
+(18, 'Servicios Profesionales (Puerto Ordaz)', 1),
+(19, 'Administración', 1);
 
 -- --------------------------------------------------------
 
@@ -1240,25 +1204,16 @@ CREATE TABLE `tbl_horas_cargables` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Volcado de datos para la tabla `tbl_horas_cargables`
+-- Disparadores `tbl_horas_cargables`
 --
-
-INSERT INTO `tbl_horas_cargables` (`id`, `id_proy_analista`, `fecha`, `descripcion`, `horas_trabajadas`) VALUES
-(1, 4, '2020-06-15', 'TRABAJO TRABAJO Y MÁS TRABAJO', 8),
-(2, 4, '2020-06-16', 'MAS TRABAJA', 8),
-(3, 12, '2020-03-09', 'INICIO DE ACTIVIDADES ADMINISTRATIVAS DEL PROYECTO', 8),
-(4, 15, '2020-06-01', 'REUNION CON CLIENTE', 4),
-(5, 15, '2020-06-02', 'ACTIVIDAD 01', 4),
-(6, 15, '2020-06-03', 'REUNIÓN CON EQUIPO DE TRABAJO', 8),
-(7, 15, '2020-06-10', 'SPRING 1', 1),
-(8, 15, '2020-06-11', 'SPING 2', 1),
-(9, 15, '2020-06-12', 'SPRING 3', 1),
-(10, 15, '2020-06-15', 'EVALUACIÓN DE AVANCE', 4),
-(11, 15, '2020-06-26', 'REUNIÓN CON TI', 3),
-(12, 15, '2020-06-22', 'REUNIÓN CON GERENCIA', 4),
-(13, 14, '2020-06-01', 'INVERSIONES', 8),
-(15, 26, '2020-06-02', 'REUNIÓN CON EQUIPO DE TRABAJO', 2),
-(16, 26, '2020-06-01', 'REUNIÓN DE ACERCAMIENTO CON EL CLIENTE', 4);
+DELIMITER $$
+CREATE TRIGGER `tbl_horas_cargables_AI` AFTER INSERT ON `tbl_horas_cargables` FOR EACH ROW INSERT INTO logs.tbl_horas_cargables(id_horas_cargables, id_proy_analista_nuevo, fecha_horas_cargables_nuevo, descripcion_nuevo, horas_trabajadas_nuevo) VALUES (NEW.id, NEW.id_proy_analista, NEW.fecha, NEW.descripcion, NEW.horas_trabajadas)
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tbl_horas_cargables_BU` BEFORE UPDATE ON `tbl_horas_cargables` FOR EACH ROW INSERT INTO logs.tbl_horas_cargables(id_horas_cargables, id_proy_analista, fecha_horas_cargables, descripcion, horas_trabajadas, id_proy_analista_nuevo, fecha_horas_cargables_nuevo, descripcion_nuevo, horas_trabajadas_nuevo) VALUES (NEW.id, OLD.id_proy_analista, OLD.fecha, OLD.descripcion, OLD.horas_trabajadas, NEW.id_proy_analista, NEW.fecha, NEW.descripcion, NEW.horas_trabajadas)
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -1278,38 +1233,6 @@ CREATE TABLE `tbl_horas_no_cargables` (
   `observacion` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Volcado de datos para la tabla `tbl_horas_no_cargables`
---
-
-INSERT INTO `tbl_horas_no_cargables` (`id`, `id_concepto`, `id_usuario`, `id_division`, `aprobado_por`, `fecha_desde`, `fecha_hasta`, `fecha_aprobacion`, `observacion`, `id_estatus`) VALUES
-(1, 2, 3, 3, NULL, '2020-06-03 18:30:00', '2020-06-03 19:00:00', NULL, 'sfsdfsf', 1),
-(2, 1, 1, 3, 1, '2020-06-08 00:00:00', '2020-06-09 01:00:00', '2020-06-07 18:21:31', 'desde las 8pm hasta las 9pmd', 2),
-(3, 2, 1, 3, NULL, '2020-06-03 20:00:00', '2020-06-05 20:30:00', NULL, NULL, 3),
-(4, 2, 1, 3, NULL, '2020-06-03 20:00:00', '2020-06-03 20:30:00', NULL, 'sad', 1),
-(5, 1, 1, 3, NULL, '2020-06-03 20:00:00', '2020-06-03 20:30:00', NULL, NULL, 1),
-(6, 1, 5, 8, NULL, '2020-06-12 20:00:00', '2020-06-12 20:30:00', NULL, NULL, 1),
-(7, 3, 1, 3, NULL, '2020-06-07 00:00:00', '2020-06-08 00:30:00', NULL, 'prueba de 8pm a 8:30 pm', 1),
-(8, 1, 3, 3, 1, '2020-06-08 00:00:00', '2020-06-08 01:00:00', '2020-06-07 18:53:09', 'desde las 8pm hasta las 9pm', 2),
-(9, 1, 1, 3, NULL, '2020-06-07 01:00:00', '2020-06-07 02:00:00', NULL, '9 a 10 pm', 1),
-(10, 3, 1, 3, NULL, '2020-06-09 18:30:00', '2020-06-09 19:00:00', NULL, 'prueba David', 1),
-(11, 1, 1, 3, 1, '2020-06-10 18:30:00', '2020-06-12 19:00:00', '2020-06-07 18:38:06', 'ddddd', 2),
-(12, 1, 1, 3, NULL, '2020-06-14 18:30:00', '2020-06-30 19:00:00', NULL, 'ddddfffttgg', 1),
-(13, 3, 8, 3, 9, '2020-06-10 15:00:00', '2020-06-11 15:00:00', '2020-06-26 10:57:24', NULL, 2),
-(14, 2, 8, 3, 9, '2020-06-26 23:30:00', '2020-06-28 00:00:00', '2020-06-26 10:57:49', NULL, 3),
-(15, 3, 6, 3, 6, '2020-06-16 12:00:00', '2020-06-16 21:00:00', '2020-06-20 18:53:39', 'Reunión con personal de Central Madeirense C.A.', 2),
-(16, 7, 14, 6, 9, '2020-06-22 08:00:00', '2020-06-26 17:00:00', '2020-06-26 10:51:02', 'Tareas administrativas de la Gerencvia de Recursos humanos', 2),
-(17, 7, 11, 9, NULL, '2020-06-16 12:00:00', '2020-06-30 21:00:00', NULL, 'Trabajo administrativo diario', 2),
-(18, 7, 15, 9, NULL, '2020-06-16 12:00:00', '2020-06-30 21:00:00', NULL, 'TRABAJO ADMINISTRATIVO DIARIO', 2),
-(19, 7, 11, 9, 15, '2020-06-01 12:00:00', '2020-06-15 21:00:00', '2020-06-23 20:08:58', 'aprueba esta horas machado', 2),
-(20, 7, 17, 6, 14, '2020-06-01 12:00:00', '2020-06-15 21:00:00', '2020-06-24 02:34:22', NULL, 2),
-(21, 7, 17, 6, 14, '2020-06-16 12:00:00', '2020-06-30 21:00:00', '2020-06-24 02:33:58', NULL, 2),
-(22, 3, 1, 3, NULL, '2020-06-08 12:00:00', '2020-06-08 15:00:00', NULL, NULL, 1),
-(23, 3, 14, 6, NULL, '2020-06-08 12:00:00', '2020-06-08 15:00:00', NULL, 'Reunido con Alfio de Tecnología Pruebas Sistema Nuevo', 2),
-(24, 4, 1, 3, NULL, '2020-05-04 14:00:00', '2020-06-24 14:00:00', NULL, NULL, 1),
-(25, 9, 8, 3, 6, '2020-06-23 14:00:00', '2020-06-24 14:00:00', '2020-06-24 14:17:25', 'inscripción en la universidad', 2),
-(26, 2, 19, 1, 9, '2020-06-12 04:00:00', '2020-06-12 13:00:00', '2020-06-27 16:54:01', 'Evaluación médica pre vacaciones', 2);
 
 -- --------------------------------------------------------
 
@@ -1376,78 +1299,7 @@ INSERT INTO `tbl_menu_usuario` (`id`, `id_usuario`, `id_menu`, `C`, `R`, `U`, `D
 (7, 1, 10, 1, 1, 1, 0),
 (8, 1, 11, 1, 1, 1, 1),
 (9, 1, 13, 1, 1, 1, 1),
-(10, 1, 14, 1, 1, 1, 0),
-(11, 9, 7, 0, 1, 0, 0),
-(12, 9, 11, 1, 1, 1, 1),
-(13, 9, 13, 1, 1, 1, 1),
-(14, 9, 14, 1, 1, 1, 0),
-(15, 8, 11, 1, 0, 0, 0),
-(16, 10, 7, 0, 1, 0, 0),
-(17, 10, 11, 1, 0, 1, 1),
-(18, 10, 13, 1, 1, 1, 1),
-(19, 10, 14, 1, 1, 1, 0),
-(20, 8, 14, 1, 1, 1, 0),
-(22, 2, 14, 1, 1, 1, 0),
-(23, 2, 11, 1, 0, 0, 1),
-(24, 11, 7, 1, 1, 1, 0),
-(25, 11, 11, 1, 0, 1, 1),
-(26, 11, 13, 1, 1, 1, 1),
-(27, 11, 13, 1, 1, 1, 1),
-(28, 11, 14, 1, 1, 1, 0),
-(29, 11, 5, 0, 0, 0, 0),
-(30, 11, 6, 0, 1, 1, 0),
-(31, 11, 9, 0, 0, 0, 0),
-(32, 11, 10, 0, 1, 1, 0),
-(33, 6, 7, 0, 1, 0, 0),
-(34, 6, 11, 1, 0, 1, 1),
-(35, 6, 13, 1, 1, 1, 1),
-(36, 6, 14, 1, 1, 1, 0),
-(37, 12, 2, 0, 0, 0, 0),
-(38, 12, 3, 0, 1, 1, 0),
-(39, 12, 11, 1, 0, 0, 0),
-(41, 12, 14, 1, 1, 1, 0),
-(42, 13, 11, 1, 0, 1, 1),
-(43, 13, 13, 1, 1, 1, 1),
-(44, 13, 14, 1, 1, 1, 0),
-(45, 14, 2, 0, 0, 0, 0),
-(46, 14, 3, 0, 1, 1, 0),
-(47, 14, 11, 1, 0, 0, 0),
-(48, 14, 13, 1, 1, 1, 1),
-(49, 14, 14, 1, 1, 1, 0),
-(59, 16, 7, 0, 1, 0, 0),
-(60, 16, 11, 1, 0, 1, 1),
-(61, 16, 13, 1, 1, 1, 1),
-(62, 16, 14, 1, 1, 1, 0),
-(63, 17, 2, 0, 0, 0, 0),
-(64, 17, 3, 0, 1, 1, 0),
-(68, 17, 14, 1, 1, 1, 0),
-(69, 15, 5, 0, 0, 0, 0),
-(70, 15, 6, 0, 1, 1, 0),
-(71, 15, 7, 1, 1, 1, 0),
-(72, 15, 13, 1, 1, 1, 1),
-(73, 15, 14, 1, 1, 1, 0),
-(74, 18, 5, 0, 0, 0, 0),
-(75, 18, 6, 0, 1, 1, 0),
-(76, 18, 9, 0, 0, 0, 0),
-(77, 18, 10, 0, 1, 1, 0),
-(78, 18, 7, 1, 1, 1, 0),
-(79, 18, 13, 1, 1, 1, 1),
-(80, 18, 14, 1, 1, 1, 0),
-(81, 15, 9, 0, 0, 0, 0),
-(82, 15, 10, 0, 1, 1, 0),
-(83, 19, 7, 0, 1, 0, 0),
-(84, 19, 11, 1, 0, 1, 1),
-(85, 19, 14, 1, 1, 1, 0),
-(86, 20, 7, 0, 1, 0, 0),
-(87, 20, 11, 1, 0, 1, 1),
-(88, 20, 14, 1, 1, 1, 0),
-(89, 21, 7, 0, 1, 0, 0),
-(90, 21, 11, 1, 0, 1, 1),
-(91, 21, 14, 1, 1, 1, 0),
-(92, 22, 7, 0, 1, 0, 0),
-(93, 22, 11, 1, 0, 1, 1),
-(94, 22, 14, 1, 1, 1, 0),
-(95, 15, 11, 1, 0, 1, 1);
+(10, 1, 14, 1, 1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -2998,27 +2850,16 @@ CREATE TABLE `tbl_proyecto` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Volcado de datos para la tabla `tbl_proyecto`
+-- Disparadores `tbl_proyecto`
 --
-
-INSERT INTO `tbl_proyecto` (`id`, `descripcion`, `id_cliente`, `fecha_contratacion`, `monto`, `id_moneda`, `id_estatus`) VALUES
-(1, 'Auditoría Banco I', 1, '03/03/2020', '0.00', 2, 2),
-(2, 'Auditoría Banco II', 1, '04/03/2020', '0.00', 2, 1),
-(3, 'Certificación de Cursos', 1, '05/03/2020', '0.00', 2, 1),
-(4, 'Proyecto I', 1, '10/03/2020', '0.00', 2, 0),
-(5, 'inventario IV', 2, '22/02/2020', '0.00', 2, 1),
-(8, 'Prueba', 4, '10/10/1001', '0.00', 2, 1),
-(9, 'Auditoría de vulnerabilidad', 5, '01/01/2020', '0.00', 2, 1),
-(10, 'Auditoría de TI', 6, '01/02/2020', '0.00', 2, 1),
-(11, 'Auditoría TI', 7, '01/03/2020', '0.00', 2, 1),
-(12, 'AUDITORIA FINANCIERA JUNIO', 8, '30/06/2020', '0.00', 2, 1),
-(13, 'auditoria financiera', 2, '30/06/2020', '0.00', 2, 1),
-(14, 'auditoría 2019-II', 11, '15/01/2020', '0.00', 2, 1),
-(15, 'Autitoría TI 2018-II', 12, '03/01/2020', '0.00', 2, 1),
-(16, 'auditoria financiera junio 2020-I', 8, '15/06/2020', '0.00', 2, 1),
-(17, 'auditoría 2019-II', 20, '26/06/2020', '0.00', 2, 1),
-(18, 'Auditoría 2018', 22, '27/06/2020', '0.00', 2, 1),
-(19, 'Proyecto con monto', 8, '10/07/2020', '1000.27', 2, 1);
+DELIMITER $$
+CREATE TRIGGER `tbl_proyecto_AI` AFTER INSERT ON `tbl_proyecto` FOR EACH ROW INSERT INTO logs.tbl_proyecto(id_proyecto, descripcion_nuevo, id_cliente_nuevo, fecha_contratacion_nuevo, monto_nuevo, id_moneda_nuevo,  id_estatus_nuevo) VALUES (NEW.id, NEW.descripcion, NEW.id_cliente, NEW.fecha_contratacion, NEW.monto, NEW.id_moneda, NEW.id_estatus)
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tbl_proyecto_BU` BEFORE UPDATE ON `tbl_proyecto` FOR EACH ROW INSERT INTO logs.tbl_proyecto(id_proyecto, descripcion, id_cliente, fecha_contratacion, monto, id_moneda, id_estatus, descripcion_nuevo, id_cliente_nuevo, fecha_contratacion_nuevo, monto_nuevo, id_moneda_nuevo, id_estatus_nuevo) VALUES (NEW.id, OLD.descripcion, OLD.id_cliente, OLD.fecha_contratacion, OLD.monto, OLD.id_moneda, OLD.id_estatus, NEW.descripcion, NEW.id_cliente, NEW.fecha_contratacion, NEW.monto, NEW.id_moneda, NEW.id_estatus)
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -3027,7 +2868,7 @@ INSERT INTO `tbl_proyecto` (`id`, `descripcion`, `id_cliente`, `fecha_contrataci
 --
 
 CREATE TABLE `tbl_proyecto_analista` (
-  `id` bigint(20) UNSIGNED NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
   `id_proyecto` int(11) NOT NULL,
   `id_proyecto_division` int(11) DEFAULT NULL,
   `id_analista` int(11) NOT NULL,
@@ -3036,36 +2877,16 @@ CREATE TABLE `tbl_proyecto_analista` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Volcado de datos para la tabla `tbl_proyecto_analista`
+-- Disparadores `tbl_proyecto_analista`
 --
-
-INSERT INTO `tbl_proyecto_analista` (`id`, `id_proyecto`, `id_proyecto_division`, `id_analista`, `horas_asignadas`, `id_estatus`) VALUES
-(1, 5, 13, 1, NULL, 1),
-(2, 9, 22, 6, 0, 0),
-(3, 9, 22, 7, 0, 0),
-(4, 9, 22, 8, 0, 0),
-(5, 9, 22, 2, 0, 0),
-(6, 10, 24, 8, 250, 1),
-(7, 10, 24, 2, NULL, 0),
-(8, 10, 24, 7, 160, 1),
-(9, 10, 24, 6, 80, 1),
-(10, 10, 24, 10, 10, 1),
-(11, 11, 25, 10, 0, 0),
-(12, 11, 25, 6, 100, 1),
-(13, 11, 25, 7, 0, 0),
-(14, 11, 25, 8, 250, 1),
-(15, 9, 22, 13, 0, 0),
-(16, 11, 25, 1, 300, 1),
-(17, 17, 40, 9, 10, 1),
-(18, 17, 40, 19, 25, 1),
-(19, 17, 40, 20, 50, 1),
-(20, 17, 40, 21, 75, 1),
-(21, 17, 40, 22, 75, 1),
-(22, 18, 42, 9, 50, 1),
-(23, 18, 42, 22, 250, 1),
-(24, 18, 42, 21, 250, 1),
-(25, 18, 42, 20, 150, 1),
-(26, 18, 42, 19, 100, 1);
+DELIMITER $$
+CREATE TRIGGER `tbl_proyecto_analista_AI` AFTER INSERT ON `tbl_proyecto_analista` FOR EACH ROW INSERT INTO logs.tbl_proyecto_analista(id_proyecto_analista, id_proyecto_nuevo, id_proyecto_division_nuevo, id_analista_nuevo, horas_asignadas_nuevo, id_estatus_nuevo) VALUES (NEW.id, NEW.id_proyecto, NEW.id_proyecto_division, NEW.id_analista, NEW.horas_asignadas, NEW.id_estatus)
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tbl_proyecto_analista_BU` BEFORE UPDATE ON `tbl_proyecto_analista` FOR EACH ROW INSERT INTO logs.tbl_proyecto_analista(id_proyecto_analista, id_proyecto, id_proyecto_division, id_analista, horas_asignadas, id_estatus, id_proyecto_nuevo, id_proyecto_division_nuevo, id_analista_nuevo, horas_asignadas_nuevo, id_estatus_nuevo) VALUES (NEW.id, OLD.id_proyecto, OLD.id_proyecto_division, OLD.id_analista, OLD.horas_asignadas, OLD.id_estatus, NEW.id_proyecto, NEW.id_proyecto_division, NEW.id_analista, NEW.horas_asignadas, NEW.id_estatus)
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -3080,60 +2901,6 @@ CREATE TABLE `tbl_proyecto_divisiones` (
   `horas_contratadas` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Volcado de datos para la tabla `tbl_proyecto_divisiones`
---
-
-INSERT INTO `tbl_proyecto_divisiones` (`id`, `id_division`, `id_proyecto`, `horas_contratadas`) VALUES
-(1, 10, 1, 20),
-(2, 11, 1, 10),
-(3, 10, 2, 20),
-(4, 6, 2, 20),
-(5, 10, 3, 20),
-(6, 7, 3, 20),
-(7, 10, 4, 20),
-(8, 5, 4, 20),
-(9, 4, 4, 20),
-(10, 10, 5, 20),
-(13, 2, 5, 20),
-(14, 10, 8, 21),
-(19, 8, 8, 22),
-(20, 6, 8, 23),
-(22, 3, 9, 500),
-(23, 2, 9, 500),
-(24, 3, 10, 500),
-(25, 3, 11, 1000),
-(26, 2, 12, 400),
-(27, 5, 12, 200),
-(28, 4, 12, 200),
-(29, 3, 12, 200),
-(30, 2, 13, 400),
-(31, 5, 13, 400),
-(32, 3, 13, 400),
-(33, 4, 13, 400),
-(34, 3, 14, 500),
-(35, 3, 15, 1500),
-(36, 2, 16, 400),
-(37, 5, 16, 200),
-(38, 9, 16, 200),
-(39, 3, 16, 200),
-(40, 2, 17, 750),
-(41, 3, 17, 750),
-(42, 1, 18, 1000),
-(43, 2, 19, 25),
-(44, 3, 19, 17);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `tbl_telefono`
---
-
-CREATE TABLE `tbl_telefono` (
-  `id` int(11) NOT NULL,
-  `numero` varchar(15) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 -- --------------------------------------------------------
 
 --
@@ -3142,7 +2909,7 @@ CREATE TABLE `tbl_telefono` (
 
 CREATE TABLE `tbl_tipo_cargo` (
   `id` int(11) NOT NULL,
-  `descripcion` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL
+  `descripcion` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3150,8 +2917,9 @@ CREATE TABLE `tbl_tipo_cargo` (
 --
 
 INSERT INTO `tbl_tipo_cargo` (`id`, `descripcion`) VALUES
-(1, 'Profesionales'),
-(2, 'Administrativos');
+(1, 'Profesional'),
+(2, 'Administrativo'),
+(3, 'Profesional y Administrativo');
 
 -- --------------------------------------------------------
 
@@ -3177,6 +2945,27 @@ INSERT INTO `tbl_tipo_contacto` (`id`, `descripcion`, `estatus`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `tbl_tipo_documento_identidad`
+--
+
+CREATE TABLE `tbl_tipo_documento_identidad` (
+  `id` int(11) NOT NULL,
+  `abreviatura` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `descripcion` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_estatus` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `tbl_tipo_documento_identidad`
+--
+
+INSERT INTO `tbl_tipo_documento_identidad` (`id`, `abreviatura`, `descripcion`, `id_estatus`) VALUES
+(1, 'V', 'Cédula Venezolana', 1),
+(2, 'E', 'Cédula Extranjera', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `tbl_usuario`
 --
 
@@ -3184,7 +2973,6 @@ CREATE TABLE `tbl_usuario` (
   `id` int(11) NOT NULL,
   `codigo` varchar(6) NOT NULL,
   `clave` text NOT NULL,
-  `cedula` int(11) NOT NULL,
   `nombre_1` varchar(20) NOT NULL,
   `nombre_2` varchar(20) DEFAULT NULL,
   `apellido_1` varchar(20) NOT NULL,
@@ -3203,32 +2991,324 @@ CREATE TABLE `tbl_usuario` (
 -- Volcado de datos para la tabla `tbl_usuario`
 --
 
-INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `cedula`, `nombre_1`, `nombre_2`, `apellido_1`, `apellido_2`, `fecha_nacimiento`, `id_cargo`, `id_division`, `id_parroquia`, `avatar`, `fecha_ingreso`, `fecha_egreso`, `id_estatus`) VALUES
-(1, '0001', 'eyJpdiI6IjB5dnJXUUswTEdZenNcLzRHbTRWXC9HUT09IiwidmFsdWUiOiJwbUpkdURFdGhoc3FOSFpGQU1yaU5RPT0iLCJtYWMiOiI2ZDY1NTVlMTBkYmQ4NGNiNWM0MWRkMTllMjcxZjkxOTM5MmFhZmMxYTIwNmFiMzM4MjRmYTgwYjEwYTQ0NTY0In0=', 17671370, 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', NULL, 11, 3, 1131, '', NULL, NULL, 1),
-(2, '11525', 'eyJpdiI6IjkwZkVzUVRiMXVZcXZlZDMwM2dXdHc9PSIsInZhbHVlIjoiZFAxQjFLMVZZT2VsVDBNSkJIN0JJZz09IiwibWFjIjoiMWNhNWYxMGM4MDdhOWNjZTM1N2MxZmMyNjE3MDJlYTM1YTMwZDU4NDU0ZTNhYmQzZWUxZTViNTQxNTM0YmZiZCJ9', 27279090, 'JOSE', 'ARTURO', 'MADRIZ', 'MALAVE', NULL, 8, 3, 1123, '', NULL, NULL, 1),
-(3, '11450', 'eyJpdiI6Im5MWkhxSEVKV2N3ZkhJZ01XZTU2eFE9PSIsInZhbHVlIjoiZ2N3a2l2Nm1DNHFKMGtPYkp4ZmdzQT09IiwibWFjIjoiMTNmNTllMGNjNTc0MjNlMWMwYzkwYTA0NGYyNzQ5ZmU5YTg4M2YzMDIzZGMyNzVhNjllNmRhNDYzOWQ3Yzc1NyJ9', 14245244, 'ANA', '', 'BLANDIN', '', NULL, 11, 3, 26, '', NULL, NULL, 1),
-(4, '2209', 'eyJpdiI6IiswWVJuYXJsbVwvRkg0OGdxdGI4dW1RPT0iLCJ2YWx1ZSI6ImdFbWJYZGRWVEtNWFZcL3ZUdlNHY0JnPT0iLCJtYWMiOiI1NTUyMDg1Y2RkMWE4MTViYWM5MWM4YjAyOGJiZTAwYWQ0ZTc1NGE5Zjg4ZDlhNmRjYWU3OTZmNTU4YTIxMDZkIn0=', 13900761, 'CAROLINA', '', 'CORONEL', '', NULL, 9, 3, NULL, NULL, NULL, NULL, 1),
-(5, '22522', 'eyJpdiI6InlXdnhIMkZHYnBrczRGQTlRdGVIeUE9PSIsInZhbHVlIjoiWmJqNFd4c09Fd05JRGxZdTBmenUyQT09IiwibWFjIjoiOTYwNTVmNWJiMDFhOWU0ZDE2NTJiZWMwY2Y2OGY1YzllZjY5NTg0OGU4NzQzNWU1ZGFjZTdiYTg1NTQwM2RmYSJ9', 22522626, 'PRUEBA', '', 'PROGRAMA', '', NULL, 15, 8, 233, NULL, NULL, NULL, 1),
-(6, '0010', 'eyJpdiI6Ik1IK21ZSWlubytsMmU3dDV1aHdIa0E9PSIsInZhbHVlIjoiQXlvUytpTzF5c1haZkl3TXRDUWRMZz09IiwibWFjIjoiNDdmMGE4Yzg1ZGE2YTA0OTExOTJkMTI5ZDYwMDhmMWJjMmEzYWVlZjZhYjE1YzgyNDc2NWFkZjE4OTk0OTViYSJ9', 6823447, 'GUSTAVO', 'ADOLFO', 'PUCHI', 'MEDINA', NULL, 14, 3, 1130, NULL, NULL, NULL, 1),
-(7, '0011', 'eyJpdiI6ImJiQktSUnJPY1dHcVhoSmtESTg2bHc9PSIsInZhbHVlIjoibGFZMTdQWk5uUHllMytnOUR4VVJqQT09IiwibWFjIjoiNzFkMDY4OTgzZjVlZDVhNjhiMjNhNzVmMjhlODE0OWJjOTM1NDBkZGE3ZDgxNWMyOTNiZTQyN2JiZWQyNGM3ZCJ9', 6823443, 'ALFIO', 'FILIPPO', 'SAGLIMBENI', 'MUSCOLINO', NULL, 12, 3, 619, NULL, NULL, NULL, 1),
-(8, '0012', 'eyJpdiI6InpEaU9aQU56TCtHZlhRWkhtY0VlZnc9PSIsInZhbHVlIjoiXC9ZNXBQXC8wUFYxXC9tZzF5a1U2WkJjUT09IiwibWFjIjoiNzZjNzRiM2Y1ZmUyZGZmMzI1MGYwOTUyZWRjYTQ4Mzc0ODk5NzY2OTZkODA1ZWQ1Yjc4MmJmOTRkZTdjYTQ2ZSJ9', 6823444, 'ARIANNA', 'ELENA', 'MATOS', 'YACOBELLIS', NULL, 6, 3, 625, NULL, NULL, NULL, 1),
-(9, '10863', 'eyJpdiI6IlphVGpuenJLdEprSVVaTXIxMzNyV1E9PSIsInZhbHVlIjoicDR0ZlRLUTMyVWRvRTR4cExadFVwdz09IiwibWFjIjoiYjBhYjE2ZjA2MDk2NTgxM2U0YTczNTIzYzQ3OWUzMmFkZjI3NjU5MTBkY2M1NWQwOTQ4MTllMDU1ZTY0MzRiMiJ9', 10785418, 'SERGIO', 'FREDDYS', 'MÁRQUEZ', 'TOVAR', NULL, 16, 1, 612, NULL, NULL, NULL, 1),
-(10, '0019', 'eyJpdiI6ImNLM21JVmtxVkJobk1IWU9lWWFDRGc9PSIsInZhbHVlIjoiVysyS0k0K0g1eWxyRFwvOGFLUUd2bFE9PSIsIm1hYyI6IjFhYjc3OTIyMWNmNDk4MTRmZjIyZjIzNTVmYzEwZTZmZjNhNDlhNDQwMjkzZjU3YmRiNTNhZGJjNTVmMmVhNjQifQ==', 6823448, 'MIRLANGELA', 'MARIA', 'SALAYA', 'PÉREZ', NULL, 16, 3, 1131, NULL, NULL, NULL, 1),
-(11, '0100', 'eyJpdiI6IjltXC81dm43OUNBUGVPYUpcL2VCSjRRUT09IiwidmFsdWUiOiJFcWNzU2pQM3ZKbHdzMStTTHY3UVJBPT0iLCJtYWMiOiI5MWYxOWMxZjYwZWY1MzcxYjhkOTg1NTAyNWExZWQ3N2IyNjY1MDk2YmQ3MDY1NDE5ZmUxN2QxNGU0NjIzZmI5In0=', 6823400, 'PEDRO', 'LUIS', 'MACHADO', 'FLORES', NULL, 14, 9, 1117, NULL, NULL, NULL, 1),
-(12, '0101', 'eyJpdiI6InQxckZzNFBKRTd4MDFBNUN6R3BYbFE9PSIsInZhbHVlIjoiQmpNMklLU0gyT204czdBQ0d1cHZBZz09IiwibWFjIjoiZTIzYTIwZDk1YmI0ZGFiOGU4YThlMzA4NmVhZWQyZjJmM2I3MDVlNDJmZGZkYzY3NDA2ZGQxMWQ0MzYwYjEwYyJ9', 6823440, 'RECURSOS', '', 'HUMANOS', '', NULL, 14, 6, 619, NULL, NULL, NULL, 1),
-(13, '0202', 'eyJpdiI6InMwUFMrMEo0QVdpU1NZVDFVNnJXY0E9PSIsInZhbHVlIjoiUUVkUnA1OUxvR2VQVXNOVUdhZnF2dz09IiwibWFjIjoiZGNmMzdlMWEzMTY1MDhkZTM1OGFkOTM0NjU5NDUwZjNhYjJkOTYyY2U0MDRkM2ExMDk4NzdhMzU5ZDc3ZDBkYSJ9', 8513452, 'SILOES', 'DEL CARMEN', 'ALEJOS', 'PEÑA', NULL, 15, 3, 619, NULL, NULL, NULL, 1),
-(14, '11559', 'eyJpdiI6ImhBY0poMjhqeDl2WnhOOW9TN0hKU2c9PSIsInZhbHVlIjoiR0NlN1czTHpUUDNcL2pGV05mbmlIeVE9PSIsIm1hYyI6ImI4Zjg0NmYxM2VmYzdkZDE2NGYxMzhiYmZjMTY2NDQ2MDE4ZTYwZmIxZDMzYTYxYzQzMTliMzg4ZjdiZDM5N2EifQ==', 10812350, 'YOLYMER', 'ALICIA', 'MENDOZA', 'GARCÍA', NULL, 13, 6, 647, NULL, NULL, NULL, 1),
-(15, '10589', 'eyJpdiI6ImN1OVRzTkVBTkdHbjZCN3hmMnhEa2c9PSIsInZhbHVlIjoiVzl5NzlrcFdzR1IzNTFLbEh3Ulwvdnc9PSIsIm1hYyI6ImE1OTJlYzIwNmYzYTY4MjQwYzc4NDhlZGM1ZDIxZmFiMDA3MTljOGE2OTMxOWE2OWM0MmI0MjRiYmRkODM3ODAifQ==', 6270987, 'JOSE', 'ANTONIO', 'MACHADO', 'PEREZ', NULL, 14, 9, 647, NULL, NULL, NULL, 1),
-(16, '10141', 'eyJpdiI6Inh4bjRnM0pLZDdWcENQMU1DOTVwOGc9PSIsInZhbHVlIjoicjQ5c3RLaUpmTTVMbDNrXC9jTG43MWc9PSIsIm1hYyI6ImZhNTRkMTlmYTYxMWU3M2Y1MjkwNWZkOWUyMTg0Mzc4NzM2OWY3NzBhMTI5OTM0MzEwMjU1NDMzNDk1YWE4ZTgifQ==', 5597044, 'JESUS', 'ERASMO', 'PÉREZ', 'RAVELO', NULL, 16, 2, 647, NULL, NULL, NULL, 1),
-(17, '11558', 'eyJpdiI6IjBzSXlIWVlmNjQ2V0l4Z0FqSGxjZWc9PSIsInZhbHVlIjoiNjhKYVdaNGRMaDlzM2JzR0s0d0haZz09IiwibWFjIjoiMGYxNjJkYjYxNjA5ZmVlOTgyZTZjNjM0MTBmMjVkMmViNDY1MjA5ZjJjNDI0Yzg0YjE5NTUyNTljODRlZGRlNCJ9', 10812351, 'IGNAYARI', 'KATHERINE', 'MENDOZA', 'LUZARDO', NULL, 7, 6, 647, NULL, NULL, NULL, 1),
-(18, '10666', 'eyJpdiI6IjdhYlluNzNBZWtVemZkSDlOamk2OVE9PSIsInZhbHVlIjoiT2lMYmtFT0ViOEN1OWtWZXlrWlNoQT09IiwibWFjIjoiNzU3MmY3ZjQ1OWUzNjdlYzI2NjE1YjIxNGY2MDVmYWVhMTZkOTFhNzc0MmRjOWJiODUzNjMwZmUxNzBjZjE3YiJ9', 9876543, 'JOSE', 'ANTONIO', 'MACHADO', 'PEREZ', NULL, 14, 9, 619, NULL, NULL, NULL, 1),
-(19, '10572', 'eyJpdiI6InBQSndlcUZDaWxielIwY1Z3emZtOVE9PSIsInZhbHVlIjoiR3pSM25aYkhYeXZkWnNsZDN3aDM2UT09IiwibWFjIjoiMjJjNzk5YjJlZDM1MTM0ZGEwNGRiNDYxNzJkNGNkOTg1NTQ0YmViZGU2MmVhODI0NmQ4MWUxY2M4N2M3YWRiYSJ9', 15304238, 'OLIVER', 'JOSÉ', 'PAÉZ', 'RANGEL', NULL, 14, 1, 647, NULL, NULL, NULL, 1),
-(20, '11467', 'eyJpdiI6IkdDM0JIN2VuSDlZTWY0bWxxajZsamc9PSIsInZhbHVlIjoiSmJWdElJT1FpUGFZam85OUZmcGtPdz09IiwibWFjIjoiMGE0MjYwNjFjMjk5ZDAzMzcxMDcwN2Q1OTliZGM0ZTgxOGU1YmJhOGNiMTI1Zjk0MzU3OWJmMzUyYTJhMjQzOCJ9', 15235084, 'LADYMAR', '', 'MORETT', 'RONDÓN', NULL, 12, 1, 647, NULL, NULL, NULL, 1),
-(21, '10968', 'eyJpdiI6IkIyRk5TZjhmXC9IWnIwZ2U2NHZITzBRPT0iLCJ2YWx1ZSI6IjRaaFgzaHJwV3J4SG5ucFwvMTFLa29BPT0iLCJtYWMiOiJlZWMxNmIwM2E1Y2ZlZDg1ZDc1N2IwNDJlMDkwYWY1M2QzODQ2NzAwNTEyOGEzYjBhYzA5MTgxOTkwZTExZjFkIn0=', 22025009, 'YODELINA', '', 'TORRES', 'MORALES', NULL, 11, 1, 647, NULL, NULL, NULL, 1),
-(22, '11401', 'eyJpdiI6IkFUWlFBWDl2UVA1MUhFUnFPQXlUNXc9PSIsInZhbHVlIjoiZnpHRlZGVEV2WTN1ejFuMThGenlnZz09IiwibWFjIjoiNjA3NGE2ZmE3YTVjNWRkMjgwMjE4YmZiYzAzZmUyYzJhMmM0NmI3NDBjMjc4ZDViODA4MWE2Y2M1NjgzOTJhMiJ9', 22964636, 'JONATHAN', 'JOSÉ', 'AZOCAR', 'RODRÍGUEZ', NULL, 8, 1, 647, NULL, NULL, NULL, 1),
-(23, '0002', 'eyJpdiI6IkJPSE4xeWtDUFAzaGQwMitPcjJLdGc9PSIsInZhbHVlIjoiaHRwQnU1UGRuSGNpK0xvajJhMnBQZz09IiwibWFjIjoiMmE1NTZjZWU4YmE2MDZhNmEyMjIwNGE0YTk2YjNlYzgyMGRlMGVhODRlZTRkMTQzMzNmN2Y2MWU3MDI5YjgxNyJ9', 17671373, 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '1986-08-05 00:00:00', 1, 13, 2, NULL, '2020-06-30 00:00:00', '2020-07-05 00:00:00', 1),
-(24, '0003', 'eyJpdiI6ImE1eDZKYmpJVXVwYXhweVhURG5WdEE9PSIsInZhbHVlIjoiYTJRcGR0S1VCRTlvejlGY3NDRzczUT09IiwibWFjIjoiNGVhZWEyMWZkYmQ2MWU3NmU1NjAwZTc3Mzg5NGQ1NjhlOTgzZjlmMjIyNGFiY2U5ODRkMWNiZTk2ZjA2YmRiZSJ9', 13900761, 'EMILIA', 'CAROLINA', 'CORONEL', 'MONTERO', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1),
-(25, '0004', 'eyJpdiI6ImFFR1wvaWgzTXNsSlF2VmVaamhPeEFnPT0iLCJ2YWx1ZSI6IlwvN2JmdXoyOUQ4TXh1cXZSNVlkZG1nPT0iLCJtYWMiOiJmMGIzNzA3NzlmZDQ3ODMwNDE5YTM5OGZjOTgzMmI3N2FjYWMxNGNkNzk5NjRiYzBjMzAxN2FkNTIwODdjMTAyIn0=', 11100000, 'EMILIA', '', 'MONTERO', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `nombre_1`, `nombre_2`, `apellido_1`, `apellido_2`, `fecha_nacimiento`, `id_cargo`, `id_division`, `id_parroquia`, `avatar`, `fecha_ingreso`, `fecha_egreso`, `id_estatus`) VALUES
+(1, '0001', 'eyJpdiI6IjB5dnJXUUswTEdZenNcLzRHbTRWXC9HUT09IiwidmFsdWUiOiJwbUpkdURFdGhoc3FOSFpGQU1yaU5RPT0iLCJtYWMiOiI2ZDY1NTVlMTBkYmQ4NGNiNWM0MWRkMTllMjcxZjkxOTM5MmFhZmMxYTIwNmFiMzM4MjRmYTgwYjEwYTQ0NTY0In0=', 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', NULL, 11, 3, 1131, '', NULL, NULL, 1),
+(2, '10', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'NATHALIE', 'YAMILET', 'LOPEZ', 'TREJO', '1972-08-20 00:00:00', 15, 1, 1131, NULL, '2000-02-21 00:00:00', NULL, 1),
+(3, '10092', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'YESENIA', 'BEATRIZ', 'MARTINEZ', 'GALLARDO', '1979-06-01 00:00:00', 14, 1, 1131, NULL, '2004-09-01 00:00:00', NULL, 1),
+(4, '10141', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'JESUS', 'ERASMO', 'PEREZ', 'ERASMO', '1959-11-09 00:00:00', 17, 1, 1131, NULL, '2005-02-02 00:00:00', NULL, 1),
+(5, '10168', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'CAROL', 'JOSEFINA', 'LOPEZ', 'CAMPOS', '1962-11-07 00:00:00', 15, 1, 1131, NULL, '2005-06-06 00:00:00', NULL, 1),
+(6, '10367', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'LUZ', 'AMANDA', 'FONSECA', 'GARCIA', '1985-01-13 00:00:00', 14, 1, 1131, NULL, '2007-10-29 00:00:00', NULL, 1),
+(7, '10473', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ARTURO', 'LORENZO', 'MADRIZ', 'VARGAS', '1954-12-16 00:00:00', 17, 1, 1131, NULL, '2008-10-14 00:00:00', NULL, 1),
+(8, '10509', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ROMAN', 'ALBERTO', 'SCOTT', '', '1975-07-16 00:00:00', 12, 1, 1131, NULL, '2009-05-06 00:00:00', NULL, 1),
+(9, '10572', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'OLIVER', 'JOSE', 'PAEZ', 'RANGEL', '1982-10-16 00:00:00', 14, 1, 1131, NULL, '2010-01-18 00:00:00', NULL, 1),
+(10, '10721', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'JORGE', 'ALEJANDRO', 'GONZALEZ', 'MORALES', '1990-05-19 00:00:00', 12, 1, 1131, NULL, '2011-11-15 00:00:00', NULL, 1),
+(11, '10786', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'MARIA', 'ANDREINA', 'SEQUEDA', 'BANDES', '1990-05-30 00:00:00', 12, 1, 1131, NULL, '2012-07-20 00:00:00', NULL, 1),
+(12, '10968', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'YODELINA', '', 'TORRES', 'MORALES', '1994-09-15 00:00:00', 11, 1, 1131, NULL, '2014-02-24 00:00:00', NULL, 1),
+(13, '11030', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'KATHERINE', 'BETHZABEL', 'ZURITA', 'CHACON', '1989-06-08 00:00:00', 12, 1, 1131, NULL, '2015-01-13 00:00:00', NULL, 1),
+(14, '11044', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'MILEIDIS', 'ALEXANDRA', 'MORENO', 'MATUZALEM', '1992-05-30 00:00:00', 9, 1, 1131, NULL, '2015-01-21 00:00:00', NULL, 1),
+(15, '11116', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'FRANCIA', 'CAROLINA', 'MEDINA', 'TINEDO', '1987-03-15 00:00:00', 9, 1, 1131, NULL, '2015-11-04 00:00:00', NULL, 1),
+(16, '11220', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ASTRID', 'CAROLINA', 'MENDOZA', 'GIL', '1992-07-31 00:00:00', 8, 1, 1131, NULL, '2016-04-25 00:00:00', NULL, 1),
+(17, '11314', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'MARIA', 'GABRIELA', 'TOVAR', 'CARDENAS', '1991-11-28 00:00:00', 8, 1, 1131, NULL, '2017-03-27 00:00:00', NULL, 1),
+(18, '11352', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'MARIANA', 'ALEXANDRA', 'BRITO', 'SIFONTES', '1995-02-19 00:00:00', 7, 1, 1131, NULL, '2017-11-13 00:00:00', NULL, 1),
+(19, '11354', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'BELKIS', 'KATERIN', 'CORTINA', 'RUIZ', '1996-12-08 00:00:00', 6, 1, 1131, NULL, '2017-11-13 00:00:00', NULL, 1),
+(20, '11364', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'LUCRECIA', 'DISNORA', 'SILVA', 'APONTE', '1989-03-15 00:00:00', 7, 1, 1131, NULL, '2017-12-04 00:00:00', NULL, 1),
+(21, '11369', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'NORMEDY', 'ZORIBETH', 'PARRA', 'TOVAR', '1986-08-22 00:00:00', 6, 1, 1131, NULL, '2017-12-04 00:00:00', NULL, 1),
+(22, '11371', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'JOSVELIS', 'YETSIMAR', 'CASTILLO', 'GIL', '1997-07-14 00:00:00', 7, 1, 1131, NULL, '2017-12-04 00:00:00', NULL, 1),
+(23, '11391', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'LUIS', 'ANTONIO', 'RUSSIAN', 'REQUENA', '1996-01-10 00:00:00', 8, 1, 1131, NULL, '2018-02-15 00:00:00', NULL, 1),
+(24, '11401', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'JONATHAN', 'JOSE', 'AZOCAR', 'RODRIGUEZ', '1994-08-24 00:00:00', 6, 1, 1131, NULL, '2018-02-26 00:00:00', NULL, 1),
+(25, '11403', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'YERLENIS', 'DELYET', 'VALDERRAMA', 'ROSALES', '1998-09-14 00:00:00', 7, 1, 1131, NULL, '2018-03-06 00:00:00', NULL, 1),
+(26, '11410', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'KLEIVER', 'JOHANA', 'CORRO', 'GUDIÑO', '1991-02-13 00:00:00', 6, 1, 1131, NULL, '2018-03-06 00:00:00', NULL, 1),
+(27, '11421', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'MARYURI', 'NAILET', 'BARAZARTE', 'VALERA', '1979-09-13 00:00:00', 7, 1, 1131, NULL, '2018-03-26 00:00:00', NULL, 1),
+(28, '11437', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'PEDRO', 'ALEXANDER', 'BENITEZ', 'MELENDEZ', '1968-06-05 00:00:00', 15, 1, 1131, NULL, '2018-07-01 00:00:00', NULL, 1),
+(29, '11440', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'DENNYS', 'RAMON', 'FLORES', 'MORALES', '1981-04-20 00:00:00', 5, 1, 1131, NULL, '2018-07-17 00:00:00', NULL, 1),
+(30, '11446', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'GENESIS', 'VANESSA', 'MARCANO', 'RANGEL', '1997-10-05 00:00:00', 5, 1, 1131, NULL, '2018-07-25 00:00:00', NULL, 1),
+(31, '11448', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'KEILIMAR', 'YULISET', 'SUAREZ', 'LARES', '1996-05-12 00:00:00', 5, 1, 1131, NULL, '2018-07-31 00:00:00', NULL, 1),
+(32, '11452', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'JOHANNE', 'FRANCIS', 'MUÑOZ', 'MARTINEZ', '1981-07-22 00:00:00', 12, 1, 1131, NULL, '2018-08-15 00:00:00', NULL, 1),
+(33, '11453', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ALFREDO', 'JOSE', 'HERNANDEZ', 'TORO', '1969-03-14 00:00:00', 7, 1, 1131, NULL, '2018-08-14 00:00:00', NULL, 1),
+(34, '11457', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'RAUL', 'IGNACIO', 'VARGAS', 'FREITES', '1976-01-29 00:00:00', 15, 1, 1131, NULL, '2018-10-18 00:00:00', NULL, 1),
+(35, '11466', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'SHELCIE', 'ESTHER', 'PAZ', '', '1997-03-22 00:00:00', 5, 1, 1131, NULL, '2018-11-08 00:00:00', NULL, 1),
+(36, '11467', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'LADYMAR', '', 'MORETT', 'RONDON', '1983-03-18 00:00:00', 12, 1, 1131, NULL, '2018-11-20 00:00:00', NULL, 1),
+(37, '11469', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ANTHONY', 'ROBERT', 'GARCIA', 'CHAPARRO', '1991-06-26 00:00:00', 7, 1, 1131, NULL, '2018-11-12 00:00:00', NULL, 1),
+(38, '11480', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'SOLMARY', 'DEL VALLE', 'MARTINEZ', 'MARCHAN', '1983-08-03 00:00:00', 12, 1, 1131, NULL, '2018-12-17 00:00:00', NULL, 1),
+(39, '11481', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'JACKELINE', 'ZULEYMA MILAGROS', 'RAMOS', 'PEÑA', '1989-06-02 00:00:00', 4, 1, 1131, NULL, '2018-12-18 00:00:00', NULL, 1),
+(40, '11484', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'BELKIS', 'EDICTA', 'VAZQUEZ', 'MORALES', '1984-07-17 00:00:00', 6, 1, 1131, NULL, '2019-01-07 00:00:00', NULL, 1),
+(41, '11487', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'YUZLEIBBY', 'ANGELICA', 'MALDONADO', 'ROSALES', '1996-10-08 00:00:00', 4, 1, 1131, NULL, '2019-01-21 00:00:00', NULL, 1),
+(42, '11490', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'GIOVANNI', 'JESUS', 'CORREDOR', 'SANOJA', '1996-07-07 00:00:00', 5, 1, 1131, NULL, '2019-01-24 00:00:00', NULL, 1),
+(43, '11493', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'KLEIVER', 'JOSE', 'CADENAS', 'QUIÑONEZ', '1995-05-02 00:00:00', 4, 1, 1131, NULL, '2019-02-04 00:00:00', NULL, 1),
+(44, '11494', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'IVETTE', 'ALEJANDRA', 'OROZCO', 'FLORES', '1994-02-23 00:00:00', 12, 1, 1131, NULL, '2019-02-04 00:00:00', NULL, 1),
+(45, '11497', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ZUNAYA', 'ESTHER', 'WILCHES', 'OLAVE', '1996-12-05 00:00:00', 4, 1, 1131, NULL, '2019-02-07 00:00:00', NULL, 1),
+(46, '11499', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'JESUS', 'ALBERTO', 'ABRAHAM', 'CORONADO', '1994-06-21 00:00:00', 6, 1, 1131, NULL, '2019-02-21 00:00:00', NULL, 1),
+(47, '11503', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'JOSE', 'MIGUEL', 'PEROZO', 'HERRERA', '1994-10-04 00:00:00', 8, 1, 1131, NULL, '2019-03-07 00:00:00', NULL, 1),
+(48, '11504', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ROBERTO', 'RAFAEL', 'VILLEGAS', 'GONZALEZ', '1988-09-26 00:00:00', 7, 1, 1131, NULL, '2019-03-20 00:00:00', NULL, 1),
+(49, '11507', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'SANDRO', 'YOEL', 'MAYORA', '', '1973-09-17 00:00:00', 10, 1, 1131, NULL, '2019-04-01 00:00:00', NULL, 1),
+(50, '11519', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'EDUARDO', '', 'BASTOS', 'RICCIO', '1989-06-27 00:00:00', 3, 1, 1131, NULL, '2019-07-10 00:00:00', NULL, 1),
+(51, '11520', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'VANESSA', 'VALENTINA', 'ROJAS', 'MORALES', '1987-12-23 00:00:00', 3, 1, 1131, NULL, '2019-07-16 00:00:00', NULL, 1),
+(52, '11527', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'CARLOS', 'ALBERTO', 'REVETE', 'CARVALLO', '1994-09-18 00:00:00', 4, 1, 1131, NULL, '2019-12-09 00:00:00', NULL, 1),
+(53, '11528', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'VIANNEY', 'DEL VALLE', 'RUGELES', 'MANTILLA', '1972-01-08 00:00:00', 4, 1, 1131, NULL, '2019-12-09 00:00:00', NULL, 1),
+(54, '11529', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'EDWIN', 'JESUS', 'BURGOS', 'GOMEZ', '1987-12-06 00:00:00', 4, 1, 1131, NULL, '2019-12-09 00:00:00', NULL, 1),
+(55, '11535', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ENIL', 'ALEJANDRO', 'MOLINA', 'YDROGO', '2002-02-16 00:00:00', 2, 1, 1131, NULL, '2020-03-09 00:00:00', NULL, 1),
+(56, '22', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'FREDDY', 'RODOLFO', 'VARGAS', 'HERNANDEZ', '1969-10-22 00:00:00', 15, 1, 1131, NULL, '2000-08-01 00:00:00', NULL, 1),
+(57, '6060', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'YORMAN', 'ISMAEL', 'RANGEL', 'GONZALEZ', '1983-08-15 00:00:00', 14, 1, 1131, NULL, '2014-07-01 00:00:00', NULL, 1),
+(58, '10783', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'JOSE', 'MIGUEL', 'UTRERA', 'ROJAS', '1975-04-02 00:00:00', 17, 2, 1131, NULL, '2012-07-16 00:00:00', NULL, 1),
+(59, '11485', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ALEJANDRO', 'ENRIQUE', 'LIRA', 'TOVAR', '1995-06-27 00:00:00', 6, 2, 1131, NULL, '2019-01-09 00:00:00', NULL, 1),
+(60, '11505', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'YORDALIS', 'GABRIELA', 'ECHARRYS', 'CABRILES', '1993-08-02 00:00:00', 4, 2, 1131, NULL, '2019-04-01 00:00:00', NULL, 1),
+(61, '11506', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ELIANA', 'MARIA', 'PONCE', 'VARGAS', '1971-03-14 00:00:00', 14, 2, 1131, NULL, '2019-04-08 00:00:00', NULL, 1),
+(62, '11514', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'STEFANY', 'YANETH', 'GONZALEZ', 'MIJARES', '1995-02-22 00:00:00', 4, 2, 1131, NULL, '2019-06-03 00:00:00', NULL, 1),
+(63, '11521', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'NAIVELYS', 'GABRIELA', 'ALTUVE', 'TORRES', '1991-06-20 00:00:00', 12, 2, 1131, NULL, '2019-09-02 00:00:00', NULL, 1),
+(64, '11522', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'GABRIELA', 'DEL VALLE', 'GIL', 'LA PIETRA', '1996-05-09 00:00:00', 3, 2, 1131, NULL, '2019-09-02 00:00:00', NULL, 1),
+(65, '11526', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ORIANNA', 'DESSIREE', 'ALEJOS', 'FIGUEREDO', '1996-05-23 00:00:00', 3, 2, 1131, NULL, '2019-11-18 00:00:00', NULL, 1),
+(66, '11533', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'MARYNES', 'DEL VALLE', 'GONZALEZ', 'MENDOZA', '1997-03-06 00:00:00', 3, 2, 1131, NULL, '2020-03-09 00:00:00', NULL, 1),
+(67, '10794', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ELIGIO', 'HORACIO', 'MENDOZA', 'ODREMAN', '1970-10-23 00:00:00', 15, 4, 1131, NULL, '2012-08-01 00:00:00', NULL, 1),
+(68, '10838', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'MARIELVI', '', 'OLLER', 'MENDOZA', '1986-07-11 00:00:00', 12, 4, 1131, NULL, '2013-01-23 00:00:00', NULL, 1),
+(69, '111426', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ALBA', 'JEANNETH', 'NAVIA', 'BERMUDEZ', '1976-07-22 00:00:00', 12, 4, 1131, NULL, '2018-05-01 00:00:00', NULL, 1),
+(70, '11344', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'NATHASHA', 'ESTEFANIA', 'FRANCO', 'BERMUDEZ', '1996-02-03 00:00:00', 9, 4, 1131, NULL, '2017-10-13 00:00:00', NULL, 1),
+(71, '11353', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'YESSICA', 'LAURA', 'RIVAS', 'TURMERO', '1990-11-26 00:00:00', 10, 4, 1131, NULL, '2017-11-13 00:00:00', NULL, 1),
+(72, '11366', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'FRAYNER', 'ALEXANDER', 'RANGEL', 'VALERO', '1993-04-17 00:00:00', 8, 4, 1131, NULL, '2017-12-04 00:00:00', NULL, 1),
+(73, '11374', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'YDA', 'MERCEDES', 'CHIRINOS', 'VILORIA', '1983-09-28 00:00:00', 9, 4, 1131, NULL, '2017-12-04 00:00:00', NULL, 1),
+(74, '11411', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'GENESIS', 'GABRIELA', 'BARRIOS', 'VILORIA', '1998-07-25 00:00:00', 9, 4, 1131, NULL, '2018-03-06 00:00:00', NULL, 1),
+(75, '11458', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'RUDDY', 'ISAMAR', 'PINTO', 'COLMENARES', '1990-05-06 00:00:00', 8, 4, 1131, NULL, '2018-10-16 00:00:00', NULL, 1),
+(76, '11459', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'CARLOS', 'EDUARDO', 'RODRIGUEZ', '', '1966-03-15 00:00:00', 9, 4, 1131, NULL, '2018-10-16 00:00:00', NULL, 1),
+(77, '11471', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'CARMEN', 'ELENA', 'BERRIOS', 'BASTIDAS', '1989-07-16 00:00:00', 8, 4, 1131, NULL, '2018-11-15 00:00:00', NULL, 1),
+(78, '11472', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'GERALDINE', 'DESIREE', 'RUIZ', 'HENRIQUEZ', '1975-10-09 00:00:00', 11, 4, 1131, NULL, '2018-11-26 00:00:00', NULL, 1),
+(79, '11482', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'NAHOMY', 'NAZARETH', 'QUINTERO', 'MARTINEZ', '1998-08-13 00:00:00', 7, 4, 1131, NULL, '2018-12-17 00:00:00', NULL, 1),
+(80, '11510', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'MARIA', 'ISABEL', 'ESPINA', 'URBINA', '1966-12-09 00:00:00', 9, 4, 1131, NULL, '2019-04-29 00:00:00', NULL, 1),
+(81, '11513', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ANGELO', 'ALFONSO', 'MARTINEZ', 'BERROTERAN', '1990-02-05 00:00:00', 6, 4, 1131, NULL, '2019-06-03 00:00:00', NULL, 1),
+(82, '11523', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'MANUEL', 'ALEJANDRO', 'DA SILVA', 'VILLAMISIL', '1984-12-04 00:00:00', 8, 4, 1131, NULL, '2019-10-01 00:00:00', NULL, 1),
+(83, '111431', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'GLENDER', 'JESUS', 'CORTEZ', '', '1990-11-05 00:00:00', 9, 5, 1131, NULL, '2018-06-25 00:00:00', NULL, 1),
+(84, '11267', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ALBERTO', 'JOSE', 'EVIES', 'GONZALEZ', '1965-11-04 00:00:00', 13, 5, 1131, NULL, '2016-10-03 00:00:00', NULL, 1),
+(85, '11291', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ANGELA', 'LEONOR', 'ARANEA', 'CHICA', '1976-01-30 00:00:00', 13, 5, 1131, NULL, '2016-12-12 00:00:00', NULL, 1),
+(86, '11346', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ARTURO', 'ARMANDO', 'SOSA', 'HERRERA', '1962-08-27 00:00:00', 12, 5, 1131, NULL, '2017-11-01 00:00:00', NULL, 1),
+(87, '11414', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ADRIAN', 'ALEXANDER', 'PEREZ', 'RODRIGUEZ', '1994-04-19 00:00:00', 7, 5, 1131, NULL, '2018-03-16 00:00:00', NULL, 1),
+(88, '11443', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ELISA', 'MARIBEL', 'PASERO', 'MARIÑO', '1979-08-25 00:00:00', 6, 5, 1131, NULL, '2018-07-19 00:00:00', NULL, 1),
+(89, '11463', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'OMAR', 'ALFONSO', 'MARQUEZ', 'RODRIGUEZ', '2000-03-04 00:00:00', 4, 5, 1131, NULL, '2018-11-05 00:00:00', NULL, 1),
+(90, '11474', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ANGELICA', 'ESTEFANIA', 'FUNES', 'OLOYOLA', '1995-06-27 00:00:00', 4, 5, 1131, NULL, '2018-11-26 00:00:00', NULL, 1),
+(91, '11492', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ESLYN', 'MILEYDIS', 'ROJAS', 'ROMERO', '1989-03-25 00:00:00', 6, 5, 1131, NULL, '2019-02-11 00:00:00', NULL, 1),
+(92, '10135', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'CARMEN', 'VESTALIA', 'OCHOA', '', '1941-01-09 00:00:00', 19, 18, 1131, NULL, '2005-01-24 00:00:00', NULL, 1),
+(93, '10446', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'LAURA', 'YAMILET', 'ROJAS', 'LIZARRAGA', '1974-09-28 00:00:00', 21, 10, 1131, NULL, '2008-07-23 00:00:00', NULL, 1),
+(94, '10466', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ANTONIO', 'JOSE', 'RUBIO', 'HERNANDEZ', '1967-12-11 00:00:00', 22, 19, 1131, NULL, '2008-10-03 00:00:00', NULL, 1),
+(95, '10559', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'RUBEN', 'DARIO', 'VERA', 'PATIÑO', '1983-01-19 00:00:00', 37, 19, 1131, NULL, '2010-01-18 00:00:00', NULL, 1),
+(96, '10568', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'LUISA', 'ESTHER', 'TOVAR', '', '1964-04-09 00:00:00', 24, 11, 1131, NULL, '2010-01-18 00:00:00', NULL, 1),
+(97, '10589', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'JOSE', 'ANTONIO', 'MACHADO', 'PEREZ', '1967-08-19 00:00:00', 13, 19, 1131, NULL, '2010-02-22 00:00:00', NULL, 1),
+(98, '10775', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'DULY', 'YOSMILA', 'RINCONES', '', '1980-09-12 00:00:00', 38, 19, 1131, NULL, '2012-04-30 00:00:00', NULL, 1),
+(99, '10776', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'YENNIFER', 'MARIANA', 'VILLA', 'ANGEL', '1988-11-24 00:00:00', 19, 19, 1131, NULL, '2012-05-08 00:00:00', NULL, 1),
+(100, '10777', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ANA', 'CECILIA', 'CASTAÑO', 'ESCOBAR', '1946-10-10 00:00:00', 19, 19, 1131, NULL, '2012-05-16 00:00:00', NULL, 1),
+(101, '10896', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'AMAYOISBI', 'LIDSAY', 'GARCIA', 'CHACIN', '1972-07-12 00:00:00', 12, 12, 1131, NULL, '2013-08-08 00:00:00', NULL, 1),
+(102, '10897', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'JENNIFER', 'LETICIA', 'CHACON', 'ZAMBRANO', '1985-02-21 00:00:00', 26, 12, 1131, NULL, '2013-08-19 00:00:00', NULL, 1),
+(103, '10977', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'IGNAYARI', 'KATHERINE', 'MENDOZA', 'LUZARDO', '1991-06-11 00:00:00', 28, 7, 1131, NULL, '2014-06-05 00:00:00', NULL, 1),
+(104, '11145', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'REINA', 'MARIA', 'FAJARDO', 'GUERRERO', '1998-03-10 00:00:00', 31, 7, 1131, NULL, '2015-11-25 00:00:00', NULL, 1),
+(105, '11159', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'YOLYMER', 'ALICIA', 'MENDOZA', 'GARCIA', '1973-10-29 00:00:00', 13, 7, 1131, NULL, '2015-12-18 00:00:00', NULL, 1),
+(106, '11208', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ROSA', 'ESMERALDA', 'LUZARDO', 'CARDENAS', '1965-08-28 00:00:00', 24, 11, 1131, NULL, '2016-03-14 00:00:00', NULL, 1),
+(107, '11292', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ADRIANA', '', 'GUZMAN', 'LA CRUZ', '1982-06-18 00:00:00', 26, 12, 1131, NULL, '2016-12-12 00:00:00', NULL, 1),
+(108, '11423', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'JOSE', 'LUZARDO', 'ESTABA', 'MOTA', '1988-04-08 00:00:00', 12, 13, 1131, NULL, '2018-04-09 00:00:00', NULL, 1),
+(109, '11438', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'KARINA', '', 'PEREZ', 'MARQUES', '1993-08-09 00:00:00', 33, 19, 1131, NULL, '2018-07-09 00:00:00', NULL, 1),
+(110, '11455', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ZONNY', 'EDUARDO', 'GARCIA', 'OJEDA', '1993-08-30 00:00:00', 35, 13, 1131, NULL, '2018-08-21 00:00:00', NULL, 1),
+(111, '11473', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'YAINE', 'ALEXANDER', 'MACHADO', 'PEREZ', '1981-06-12 00:00:00', 31, 11, 1131, NULL, '2018-11-26 00:00:00', NULL, 1),
+(112, '11498', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ANTONIO', 'ALEXANDER', 'FARIA', 'EXPOSITO', '1983-08-28 00:00:00', 31, 11, 1131, NULL, '2019-02-18 00:00:00', NULL, 1),
+(113, '11524', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'LEONARDO', 'ANTONIO', 'LOPEZ', 'AGURTO', '2001-10-29 00:00:00', 32, 19, 1131, NULL, '2019-10-01 00:00:00', NULL, 1),
+(114, '11525', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'JOSE', 'ARTURO', 'MADRIZ', 'MALAVE', '1996-06-07 00:00:00', 2, 19, 1131, NULL, '2019-11-04 00:00:00', NULL, 1),
+(115, '11530', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'LILIANA', 'IBETH', 'PARRA', 'PEREZ', '1980-05-21 00:00:00', 25, 19, 1131, NULL, '2020-01-29 00:00:00', NULL, 1),
+(116, '11531', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ANTONIO', 'JOSE', 'REYES', 'SEQUERA', '1959-12-31 00:00:00', 15, 19, 1131, NULL, '2020-02-03 00:00:00', NULL, 1),
+(117, '11532', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'DUVAN', 'RAFAEL', 'PINTO', 'JAIMES', '2000-02-07 00:00:00', 2, 19, 1131, NULL, '2020-02-26 00:00:00', NULL, 1),
+(118, '11534', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'FREDDY', 'FRANCISCO', 'PERDOMO', 'MOLINA', '1986-03-03 00:00:00', 22, 19, 1131, NULL, '2020-03-01 00:00:00', NULL, 1),
+(119, '11536', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'FERNANDO', 'JOSE', 'RANGEL', 'KUIPPERS', '1992-12-12 00:00:00', 28, 19, 1131, NULL, '2020-03-16 00:00:00', NULL, 1),
+(120, '11537', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'GELEN', 'DEL ROSARIO', 'CARDENAS', 'MARQUEZ', '1958-03-08 00:00:00', 23, 11, 1131, NULL, '2020-06-01 00:00:00', NULL, 1),
+(121, '11538', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'FREDDY', 'ANTONIO', 'BORRERO', 'CONTRERAS', '1989-08-09 00:00:00', 24, 11, 1131, NULL, '2020-06-01 00:00:00', NULL, 1),
+(122, '11539', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'AURA', 'MARIA', 'CONTRERAS', 'PASTRAN', '1968-07-01 00:00:00', 24, 11, 1131, NULL, '2020-06-01 00:00:00', NULL, 1),
+(123, '36', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'JESUS', 'SALVADOR', 'MORILLO', 'QUINTANA', '1960-03-02 00:00:00', 12, 11, 1131, NULL, '2000-01-17 00:00:00', NULL, 1),
+(124, '49', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'AMELIA', 'JOSEFINA', 'DIAZ', 'MENDOZA', '1956-03-19 00:00:00', 20, 19, 1131, NULL, '2004-11-01 00:00:00', NULL, 1),
+(125, '10195', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'EMILIO', 'JOSE', 'LEON', 'FARIAS', '1965-06-28 00:00:00', 15, 3, 1131, NULL, '2005-11-01 00:00:00', NULL, 1),
+(126, '11265', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'GUSTAVO', 'ADOLFO', 'PUCHI', 'MEDINA', '1963-09-12 00:00:00', 13, 3, 1131, NULL, '2016-10-03 00:00:00', NULL, 1),
+(127, '11376', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ALFIO', 'FILIPPO', 'SAGLIMBENI', 'MUSCOLINO', '1967-08-03 00:00:00', 12, 3, 1131, NULL, '2017-12-20 00:00:00', NULL, 1),
+(128, '11397', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ARIANNA', 'ELENA', 'MATOS', 'IACOBELLIS', '1995-08-21 00:00:00', 9, 3, 1131, NULL, '2018-02-20 00:00:00', NULL, 1),
+(129, '11450', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ANA', 'VIRGINIA', 'BLANDIN', 'ARZOLA', '1981-04-08 00:00:00', 12, 3, 1131, NULL, '2018-08-07 00:00:00', NULL, 1),
+(130, '10262', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'OSCAR', 'AUGUSTO', 'PIÑA', 'ALBUJAR', '1946-01-06 00:00:00', 15, 14, 1131, NULL, '2006-01-02 00:00:00', NULL, 1),
+(131, '11278', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'YOSBER', 'ALEJANDRO', 'GOMEZ', 'LANDAETA', '1997-12-02 00:00:00', 41, 15, 1131, NULL, '2016-11-01 00:00:00', NULL, 1),
+(132, '11280', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'DUGLIMAR', 'YOLEIDA', 'MENDEZ', 'RIVAS', '1999-07-02 00:00:00', 41, 15, 1131, NULL, '2016-11-16 00:00:00', NULL, 1),
+(133, '11312', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'SOL', 'PATRICIA', 'VIANA', 'CONSUEGRA', '1997-09-23 00:00:00', 41, 15, 1131, NULL, '2017-03-20 00:00:00', NULL, 1),
+(134, '11063', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'DOUGLAS', 'EDUARDO', 'TORREALBA', 'SANCHEZ', '1975-10-28 00:00:00', 42, 16, 1131, NULL, '2015-06-02 00:00:00', NULL, 1),
+(135, '11064', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'DARWING', 'JOSE', 'CORDOVA', '', '1980-08-04 00:00:00', 40, 16, 1131, NULL, '2015-06-02 00:00:00', NULL, 1),
+(136, '11066', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'JEFERSON', 'JESUS', 'YANEZ', 'VILLEGAS', '1995-10-12 00:00:00', 40, 16, 1131, NULL, '2015-06-02 00:00:00', NULL, 1),
+(137, '11068', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'JOSE', 'ANTONIO', 'ARAUJO', 'RODRIGUEZ', '1989-05-30 00:00:00', 40, 16, 1131, NULL, '2015-06-02 00:00:00', NULL, 1),
+(138, '11236', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ANGEL', 'EDUARDO', 'APARICIO', 'ROMERO', '1970-08-02 00:00:00', 40, 16, 1131, NULL, '2016-05-20 00:00:00', NULL, 1),
+(139, '11237', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'JESUS', 'ANTONIO', 'ROJAS', 'CRUZ', '1984-07-18 00:00:00', 40, 16, 1131, NULL, '2016-05-20 00:00:00', NULL, 1),
+(140, '10508', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'FREDY', 'SAMUEL', 'BAUTISTA', 'VILLEGAS', '1950-05-14 00:00:00', 18, 17, 1131, NULL, '2005-08-01 00:00:00', NULL, 1),
+(141, '10689', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ELLEN', 'KATIUSKA', 'FUENTES', 'RIOS', '1966-03-16 00:00:00', 33, 18, 1131, NULL, '2007-02-26 00:00:00', NULL, 1),
+(142, '11451', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'BARBARA', 'CAROLINA', 'ZAMBRANO', 'AGUINALDE', '1996-11-19 00:00:00', 6, 18, 1131, NULL, '2018-08-01 00:00:00', NULL, 1),
+(143, '11476', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'MARY', '', 'CRUZ', 'SALAZAR', '1989-09-20 00:00:00', 12, 18, 1131, NULL, '2018-12-03 00:00:00', NULL, 1);
+
+--
+-- Disparadores `tbl_usuario`
+--
+DELIMITER $$
+CREATE TRIGGER `tbl_usuario_AI` AFTER INSERT ON `tbl_usuario` FOR EACH ROW INSERT INTO logs.tbl_usuario(codigo, nombre_1_nuevo, nombre_2_nuevo, apellido_1_nuevo, apellido_2_nuevo, fecha_nacimiento_nuevo, id_cargo_nuevo, id_division_nuevo, id_parroquia_nuevo, fecha_ingreso_nuevo, id_estatus_nuevo) VALUES (NEW.codigo, NEW.nombre_1, NEW.nombre_2, NEW.apellido_1, NEW.apellido_2, NEW.fecha_nacimiento, NEW.id_cargo, NEW.id_division, NEW.id_parroquia, NEW.fecha_ingreso, NEW.id_estatus)
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tbl_usuario_BU` BEFORE UPDATE ON `tbl_usuario` FOR EACH ROW INSERT INTO logs.tbl_usuario(codigo, nombre_1, nombre_2, apellido_1, apellido_2, fecha_nacimiento, id_cargo, id_division, id_parroquia, fecha_ingreso, fecha_egreso, id_estatus,  nombre_1_nuevo, nombre_2_nuevo, apellido_1_nuevo, apellido_2_nuevo, fecha_nacimiento_nuevo, id_cargo_nuevo, id_division_nuevo, id_parroquia_nuevo, fecha_ingreso_nuevo, fecha_egreso_nuevo, id_estatus_nuevo) VALUES (NEW.codigo, OLD.nombre_1, OLD.nombre_2, OLD.apellido_1, OLD.apellido_2, OLD.fecha_nacimiento, OLD.id_cargo, OLD.id_division, OLD.id_parroquia, OLD.fecha_ingreso, OLD.fecha_egreso, OLD.id_estatus, NEW.nombre_1, NEW.nombre_2, NEW.apellido_1, NEW.apellido_2, NEW.fecha_nacimiento, NEW.id_cargo, NEW.id_division, NEW.id_parroquia, NEW.fecha_ingreso, NEW.fecha_egreso, NEW.id_estatus)
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_usuario_documento_identidad`
+--
+
+CREATE TABLE `tbl_usuario_documento_identidad` (
+  `id` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `id_tipo_documento_identidad` int(11) NOT NULL,
+  `documento` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `tbl_usuario_documento_identidad`
+--
+
+INSERT INTO `tbl_usuario_documento_identidad` (`id`, `id_usuario`, `id_tipo_documento_identidad`, `documento`) VALUES
+(1, 1, 1, '17671373'),
+(2, 2, 1, '10380904'),
+(3, 3, 1, '14451068'),
+(4, 4, 1, '5597044'),
+(5, 5, 1, '6550673'),
+(6, 6, 1, '16430295'),
+(7, 7, 1, '4166638'),
+(8, 8, 1, '13161322'),
+(9, 9, 1, '15394238'),
+(10, 10, 1, '18934893'),
+(11, 11, 1, '19227558'),
+(12, 12, 1, '22025009'),
+(13, 13, 1, '18760647'),
+(14, 14, 1, '21281041'),
+(15, 15, 1, '19156081'),
+(16, 16, 1, '22904461'),
+(17, 17, 1, '20756114'),
+(18, 18, 1, '21582423'),
+(19, 19, 1, '25304811'),
+(20, 20, 1, '19852149'),
+(21, 21, 1, '17693239'),
+(22, 22, 1, '25518550'),
+(23, 23, 1, '24314826'),
+(24, 24, 1, '22964636'),
+(25, 25, 1, '26774496'),
+(26, 26, 1, '21131036'),
+(27, 27, 1, '13950180'),
+(28, 28, 1, '9968146'),
+(29, 29, 1, '15074166'),
+(30, 30, 1, '25839093'),
+(31, 31, 1, '24205870'),
+(32, 32, 1, '15040556'),
+(33, 33, 1, '7884245'),
+(34, 34, 1, '12749844'),
+(35, 35, 1, '25231809'),
+(36, 36, 1, '15235084'),
+(37, 37, 1, '20114596'),
+(38, 38, 1, '16661412'),
+(39, 39, 2, '83024489'),
+(40, 40, 1, '16316832'),
+(41, 41, 1, '25504426'),
+(42, 42, 1, '26252073'),
+(43, 43, 1, '25327986'),
+(44, 44, 1, '21115694'),
+(45, 45, 1, '25533060'),
+(46, 46, 1, '25037878'),
+(47, 47, 1, '23817163'),
+(48, 48, 1, '18329799'),
+(49, 49, 1, '12067262'),
+(50, 50, 1, '20229883'),
+(51, 51, 1, '18366468'),
+(52, 52, 1, '25019411'),
+(53, 53, 1, '10801033'),
+(54, 54, 1, '18898447'),
+(55, 55, 1, '30776341'),
+(56, 56, 1, '11072019'),
+(57, 57, 1, '15759106'),
+(58, 58, 1, '12377736'),
+(59, 59, 1, '23607795'),
+(60, 60, 1, '20780395'),
+(61, 61, 1, '6730914'),
+(62, 62, 1, '24367675'),
+(63, 63, 1, '21090653'),
+(64, 64, 1, '24981788'),
+(65, 65, 1, '25203717'),
+(66, 66, 1, '25367199'),
+(67, 67, 1, '9961190'),
+(68, 68, 1, '17498402'),
+(69, 69, 1, '13586696'),
+(70, 70, 1, '24999590'),
+(71, 71, 1, '20629350'),
+(72, 72, 1, '22350446'),
+(73, 73, 1, '17482637'),
+(74, 74, 1, '26217602'),
+(75, 75, 1, '20026779'),
+(76, 76, 1, '6310314'),
+(77, 77, 1, '19185045'),
+(78, 78, 1, '11899658'),
+(79, 79, 1, '26396073'),
+(80, 80, 1, '6868874'),
+(81, 81, 1, '20638141'),
+(82, 82, 1, '16472039'),
+(83, 83, 1, '19966508'),
+(84, 84, 1, '6168455'),
+(85, 85, 1, '12831730'),
+(86, 86, 1, '7219655'),
+(87, 87, 1, '21283384'),
+(88, 88, 1, '14048174'),
+(89, 89, 1, '26902642'),
+(90, 90, 1, '24723575'),
+(91, 91, 1, '18485819'),
+(92, 92, 1, '2898759'),
+(93, 93, 1, '12161715'),
+(94, 94, 1, '6793120'),
+(95, 95, 1, '15574739'),
+(96, 96, 1, '6243475'),
+(97, 97, 1, '6270987'),
+(98, 98, 1, '16512408'),
+(99, 99, 1, '18460301'),
+(100, 100, 1, '6294031'),
+(101, 101, 1, '11487234'),
+(102, 102, 1, '17139681'),
+(103, 103, 1, '19581420'),
+(104, 104, 1, '26911669'),
+(105, 105, 1, '10812350'),
+(106, 106, 1, '6182144'),
+(107, 107, 1, '16461316'),
+(108, 108, 1, '18406483'),
+(109, 109, 1, '20493477'),
+(110, 110, 1, '22041443'),
+(111, 111, 1, '14742504'),
+(112, 112, 1, '16413136'),
+(113, 113, 1, '28484899'),
+(114, 114, 1, '25209317'),
+(115, 115, 1, '13884698'),
+(116, 116, 1, '5597900'),
+(117, 117, 1, '27120587'),
+(118, 118, 1, '18190765'),
+(119, 119, 1, '22776760'),
+(120, 120, 1, '6009195'),
+(121, 121, 1, '19371690'),
+(122, 122, 1, '10178751'),
+(123, 123, 1, '5894672'),
+(124, 124, 1, '4085309'),
+(125, 125, 1, '3979230'),
+(126, 126, 1, '6826643'),
+(127, 127, 1, '6823443'),
+(128, 128, 1, '24069076'),
+(129, 129, 1, '14471989'),
+(130, 130, 1, '3157447'),
+(131, 131, 1, '26282952'),
+(132, 132, 1, '27344553'),
+(133, 133, 1, '25915845'),
+(134, 134, 1, '13823055'),
+(135, 135, 1, '15150576'),
+(136, 136, 1, '25225060'),
+(137, 137, 1, '19753133'),
+(138, 138, 1, '10351263'),
+(139, 139, 1, '16474809'),
+(140, 140, 1, '3180748'),
+(141, 141, 1, '8957263'),
+(142, 142, 1, '26332830'),
+(143, 143, 1, '18514042');
 
 --
 -- Índices para tablas volcadas
@@ -3272,7 +3352,7 @@ ALTER TABLE `tbl_cliente`
 --
 ALTER TABLE `tbl_cliente_facturacion`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD KEY `id_cliente` (`id_cliente`);
 
 --
 -- Indices de la tabla `tbl_concepto_horas_no_cargables`
@@ -3315,7 +3395,8 @@ ALTER TABLE `tbl_estatus`
 -- Indices de la tabla `tbl_horas_cargables`
 --
 ALTER TABLE `tbl_horas_cargables`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_proy_analista` (`id_proy_analista`);
 
 --
 -- Indices de la tabla `tbl_horas_no_cargables`
@@ -3372,7 +3453,7 @@ ALTER TABLE `tbl_proyecto`
 --
 ALTER TABLE `tbl_proyecto_analista`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `id` (`id`);
+  ADD KEY `id_proyecto` (`id_proyecto`);
 
 --
 -- Indices de la tabla `tbl_proyecto_divisiones`
@@ -3383,15 +3464,15 @@ ALTER TABLE `tbl_proyecto_divisiones`
   ADD KEY `id_proyecto` (`id_proyecto`);
 
 --
--- Indices de la tabla `tbl_telefono`
---
-ALTER TABLE `tbl_telefono`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indices de la tabla `tbl_tipo_contacto`
 --
 ALTER TABLE `tbl_tipo_contacto`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `tbl_tipo_documento_identidad`
+--
+ALTER TABLE `tbl_tipo_documento_identidad`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -3404,6 +3485,14 @@ ALTER TABLE `tbl_usuario`
   ADD KEY `id_parroquia` (`id_parroquia`);
 
 --
+-- Indices de la tabla `tbl_usuario_documento_identidad`
+--
+ALTER TABLE `tbl_usuario_documento_identidad`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_usuario` (`id_usuario`),
+  ADD KEY `id_tipo_documento_identidad` (`id_tipo_documento_identidad`);
+
+--
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
@@ -3411,19 +3500,19 @@ ALTER TABLE `tbl_usuario`
 -- AUTO_INCREMENT de la tabla `logs_auditoria`
 --
 ALTER TABLE `logs_auditoria`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=142;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cargo_empleado`
 --
 ALTER TABLE `tbl_cargo_empleado`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cargo_supervisa`
 --
 ALTER TABLE `tbl_cargo_supervisa`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_ciudades`
@@ -3435,13 +3524,13 @@ ALTER TABLE `tbl_ciudades`
 -- AUTO_INCREMENT de la tabla `tbl_cliente`
 --
 ALTER TABLE `tbl_cliente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cliente_facturacion`
 --
 ALTER TABLE `tbl_cliente_facturacion`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_concepto_horas_no_cargables`
@@ -3459,7 +3548,7 @@ ALTER TABLE `tbl_configuracion`
 -- AUTO_INCREMENT de la tabla `tbl_contacto_usuario`
 --
 ALTER TABLE `tbl_contacto_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_division`
@@ -3483,13 +3572,13 @@ ALTER TABLE `tbl_estatus`
 -- AUTO_INCREMENT de la tabla `tbl_horas_cargables`
 --
 ALTER TABLE `tbl_horas_cargables`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_horas_no_cargables`
 --
 ALTER TABLE `tbl_horas_no_cargables`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_menu`
@@ -3501,7 +3590,7 @@ ALTER TABLE `tbl_menu`
 -- AUTO_INCREMENT de la tabla `tbl_menu_usuario`
 --
 ALTER TABLE `tbl_menu_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_monedas`
@@ -3525,24 +3614,18 @@ ALTER TABLE `tbl_parroquias`
 -- AUTO_INCREMENT de la tabla `tbl_proyecto`
 --
 ALTER TABLE `tbl_proyecto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_proyecto_analista`
 --
 ALTER TABLE `tbl_proyecto_analista`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_proyecto_divisiones`
 --
 ALTER TABLE `tbl_proyecto_divisiones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
-
---
--- AUTO_INCREMENT de la tabla `tbl_telefono`
---
-ALTER TABLE `tbl_telefono`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -3552,10 +3635,22 @@ ALTER TABLE `tbl_tipo_contacto`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT de la tabla `tbl_tipo_documento_identidad`
+--
+ALTER TABLE `tbl_tipo_documento_identidad`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT de la tabla `tbl_usuario`
 --
 ALTER TABLE `tbl_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
+
+--
+-- AUTO_INCREMENT de la tabla `tbl_usuario_documento_identidad`
+--
+ALTER TABLE `tbl_usuario_documento_identidad`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=256;
 
 --
 -- Restricciones para tablas volcadas
@@ -3575,10 +3670,22 @@ ALTER TABLE `tbl_ciudades`
   ADD CONSTRAINT `tbl_ciudades_ibfk_1` FOREIGN KEY (`id_estado`) REFERENCES `tbl_estados` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Filtros para la tabla `tbl_cliente_facturacion`
+--
+ALTER TABLE `tbl_cliente_facturacion`
+  ADD CONSTRAINT `tbl_cliente_facturacion_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `tbl_cliente` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
 -- Filtros para la tabla `tbl_contacto_usuario`
 --
 ALTER TABLE `tbl_contacto_usuario`
   ADD CONSTRAINT `FK_ID_USUARIO` FOREIGN KEY (`id_usuario`) REFERENCES `tbl_usuario` (`id`);
+
+--
+-- Filtros para la tabla `tbl_horas_cargables`
+--
+ALTER TABLE `tbl_horas_cargables`
+  ADD CONSTRAINT `tbl_horas_cargables_ibfk_1` FOREIGN KEY (`id_proy_analista`) REFERENCES `tbl_usuario` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Filtros para la tabla `tbl_horas_no_cargables`
@@ -3609,6 +3716,12 @@ ALTER TABLE `tbl_parroquias`
   ADD CONSTRAINT `tbl_parroquias_ibfk_1` FOREIGN KEY (`id_municipio`) REFERENCES `tbl_municipios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Filtros para la tabla `tbl_proyecto_analista`
+--
+ALTER TABLE `tbl_proyecto_analista`
+  ADD CONSTRAINT `tbl_proyecto_analista_ibfk_1` FOREIGN KEY (`id_proyecto`) REFERENCES `tbl_proyecto` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
 -- Filtros para la tabla `tbl_proyecto_divisiones`
 --
 ALTER TABLE `tbl_proyecto_divisiones`
@@ -3622,6 +3735,13 @@ ALTER TABLE `tbl_usuario`
   ADD CONSTRAINT `tbl_usuario_ibfk_1` FOREIGN KEY (`id_cargo`) REFERENCES `tbl_cargo_empleado` (`id`),
   ADD CONSTRAINT `tbl_usuario_ibfk_2` FOREIGN KEY (`id_division`) REFERENCES `tbl_division` (`id`),
   ADD CONSTRAINT `tbl_usuario_ibfk_3` FOREIGN KEY (`id_parroquia`) REFERENCES `tbl_parroquias` (`id`);
+
+--
+-- Filtros para la tabla `tbl_usuario_documento_identidad`
+--
+ALTER TABLE `tbl_usuario_documento_identidad`
+  ADD CONSTRAINT `tbl_usuario_documento_identidad_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `tbl_usuario` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `tbl_usuario_documento_identidad_ibfk_2` FOREIGN KEY (`id_tipo_documento_identidad`) REFERENCES `tbl_tipo_documento_identidad` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -31,6 +31,7 @@ const mix = require('laravel-mix');
     .js('resources/js/horasCargables/cargarHoras.js', 'public/js/cargarHoras.js')
     .js('resources/js/horasNoCargables/formConceptosHorasNoCargables.js', 'public/js/formConceptosHorasNoCargables.js')
     .js('resources/js/horasNoCargables/formHorasNoCargables.js', 'public/js/formHorasNoCargables.js')
+    .js('resources/js/facturacion/ingresosGastos.js', 'public/js/ingresosGastos.js')
     .less('resources/less/login.less', 'public/css/login.css')
     .less('resources/less/inicio.less', 'public/css/inicio.css')
     .less('resources/less/cambiarClave.less', 'public/css/cambiarClave.css')
@@ -51,5 +52,6 @@ const mix = require('laravel-mix');
     .less('resources/less/horasCargables/cargarHoras.less', 'public/css/cargarHoras.css')
     .less('resources/less/horasNoCargables/formConceptosHorasNoCargables.less', 'public/css/formConceptosHorasNoCargables.css')
     .less('resources/less/horasNoCargables/formHorasNoCargables.less', 'public/css/formHorasNoCargables.css')
+    .less('resources/less/facturacion/ingresosGastos.less', 'public/css/ingresosGastos.css')
     .styles('resources/css/bootstrap-4.5.0/bootstrap.min.css','public/css/bootstrap.min.css')
     .styles('resources/css/fontawesome-free-5.12.0/all.min.css','public/css/fontawesome-free-5.12.0.css');
