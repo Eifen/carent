@@ -157,7 +157,7 @@
             <h5>Datos de contacto</h5>
             <form class="row">
               <div class="form-group col-12 col-sm-6">
-                <label for="correo_principal">Correó Principal <span class="campo-obligatorio">*</span></label>
+                <label for="correo_principal">Correo Principal <span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="correoPrincipalHelp"
                        class="form-control text-lowercase"
                        data-validar="true"

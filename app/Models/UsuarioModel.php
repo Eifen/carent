@@ -422,30 +422,23 @@ class UsuarioModel extends Model
         $data = array("id_tipo_documento_identidad" => $parametros["tipoDocumento"],
                       "documento" => $parametros["cedula"]);
 
-        if(DB::table('tbl_usuario_documento_identidad')->where("id",$parametros["idUsuarioDocumentoIdentidad"])->update($data)){
+        DB::table('tbl_usuario_documento_identidad')->where("id",$parametros["idUsuarioDocumentoIdentidad"])->update($data);
 
-          $data = array("correo_principal" => $parametros["correoPrincipal"],
-                        "correo_secundario" => $parametros["correoSecundario"],
-                        "telefono_principal" => $parametros["telefono1"],
-                        "telefono_secundario" => $parametros["telefono2"]);
+        $data = array("correo_principal" => $parametros["correoPrincipal"],
+                      "correo_secundario" => $parametros["correoSecundario"],
+                      "telefono_principal" => $parametros["telefono1"],
+                      "telefono_secundario" => $parametros["telefono2"]);
 
-          $contacto = DB::table('tbl_contacto_usuario')->where("id_usuario",$parametros["idUsuario"])->update($data);
+        $contacto = DB::table('tbl_contacto_usuario')->where("id_usuario",$parametros["idUsuario"])->update($data);
 
-          DB::commit();
-          $data = array("usuario_id" => $parametros["usuario_id"],
-                        "fecha" => $parametros["fecha"],
-                        "direccion_ip" => $parametros["direccion_ip"],
-                        "accion" => 'Modificacion del Usuario Codigo:'.$parametros["codigoUsuario"].'',
-                        "tabla" => 'tbl_usuario');
-          $bit = DB::table('logs_auditoria')->insertGetId($data);
-          return array("response" => true, "message" => "Usuario actualizado con Éxito!.");
-
-        }else{
-
-          DB::rollBack();
-          return array("response" => false, "message" => "Error al tratar de actualizar el usuario.");
-
-        }
+        DB::commit();
+        $data = array("usuario_id" => $parametros["usuario_id"],
+                      "fecha" => $parametros["fecha"],
+                      "direccion_ip" => $parametros["direccion_ip"],
+                      "accion" => 'Modificacion del Usuario Codigo:'.$parametros["codigoUsuario"].'',
+                      "tabla" => 'tbl_usuario');
+        $bit = DB::table('logs_auditoria')->insertGetId($data);
+        return array("response" => true, "message" => "Usuario actualizado con Éxito!.");
 
       } catch(\Illuminate\Database\QueryException $ex){
 
