@@ -422,9 +422,9 @@ var app = new Vue({
           self.usuario.data = response.data.id_usuario;
           self.infoUsuario = response.data.datosUsuario;
           self.division.data = response.data.datosUsuario.id_division;
-          if (self.division.data === 6) {
+          if (self.division.data === 7) {
             self.permisoRRHH = true;
-          }else if (self.division.data === 9) {
+          }else if (self.division.data === 10) {
             self.permisoContraloria = true;
           }
           self.cargo.data = response.data.datosUsuario.id_cargo;

@@ -34467,9 +34467,9 @@ var app = new Vue({
           self.infoUsuario = response.data.datosUsuario;
           self.division.data = response.data.datosUsuario.id_division;
 
-          if (self.division.data === 6) {
+          if (self.division.data === 7) {
             self.permisoRRHH = true;
-          } else if (self.division.data === 9) {
+          } else if (self.division.data === 10) {
             self.permisoContraloria = true;
           }
 
@@ -35776,7 +35776,7 @@ var app = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\js\usuario\buscarUsuario.js */"./resources/js/usuario/buscarUsuario.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\usuario\buscarUsuario.js */"./resources/js/usuario/buscarUsuario.js");
 
 
 /***/ })
