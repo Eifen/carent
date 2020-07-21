@@ -17,9 +17,9 @@
 
       <div id="app" class="container-fluid">
 
-        <h1>Mi nombre es: @{{ nombre }} @{{ apellido }}</h1>
-        <h1>Mi dirección es: @{{ direccion.calle }} @{{ direccion.apto }}</h1>
-        <button v-on:click="cambiarNombre">Cambiar nombre</button>
+        <loading :loading="loading" v-show="loading"></loading>
+
+        <menu-principal></menu-principal>
 
       </div>
 

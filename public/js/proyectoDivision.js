@@ -21718,30 +21718,36 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _vm.loading
     ? _c(
-        "div",
+        "b-row",
         {
-          staticClass: "row align-items-center justify-content-center",
-          attrs: { id: "wrapper-loading" }
+          attrs: {
+            "align-h": "center",
+            "align-v": "center",
+            id: "wrapper-loading"
+          }
         },
-        [_vm._m(0)]
+        [
+          _c(
+            "b-col",
+            {
+              staticClass: "text-center wrapper-images",
+              attrs: { cols: "12" }
+            },
+            [
+              _c("img", { attrs: { src: "/images/loading-1.png" } }),
+              _vm._v(" "),
+              _c("img", {
+                staticClass: "efecto",
+                attrs: { src: "/images/loading-2.png" }
+              })
+            ]
+          )
+        ],
+        1
       )
     : _vm._e()
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-12 text-center wrapper-images" }, [
-      _c("img", {
-        staticClass: "efecto",
-        attrs: { src: "/images/loading-1.png" }
-      }),
-      _vm._v(" "),
-      _c("img", { attrs: { src: "/images/loading-2.png" } })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -35039,7 +35045,7 @@ var app = new Vue({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.12-0\apache2\htdocs\carent\resources\js\proyecto\proyectoDivision.js */"./resources/js/proyecto/proyectoDivision.js");
+module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\js\proyecto\proyectoDivision.js */"./resources/js/proyecto/proyectoDivision.js");
 
 
 /***/ })
