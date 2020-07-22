@@ -1,4 +1,36 @@
 <template>
+  <b-navbar id="nav-menu-principal" toggleable="lg" type="light" variant="light">
+
+    <b-navbar-brand href="/">
+      <b-img src="/images/logo-brand-expandido.png" fluid alt="SETA"></b-img>
+    </b-navbar-brand>
+
+    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+    <b-collapse id="menu-principal" is-nav>
+
+      <b-navbar-nav id="wrapper-menu-items">
+        <menuItem v-for="(item, index) in menu"
+                  :descripcion="item.descripcion"
+                  :id="index"
+                  :hasSubmenu="(Object.keys(item.submenu).length > 0) ? true : false"
+                  :key="index"
+                  :submenus="item.submenu"
+                  :url="item.url"></menuItem>
+      </b-navbar-nav>
+
+      <b-navbar-nav class="ml-auto" id="ul-opciones-cuenta">
+        <b-nav-item-dropdown text="Mi Cuenta" right>
+          <b-dropdown-item href="/cambiarClave">Cambiar Contraseña</b-dropdown-item>
+          <b-dropdown-item href="/logout">Salir</b-dropdown-item>
+        </b-nav-item-dropdown>
+      </b-navbar-nav>
+
+    </b-collapse>
+
+  </b-navbar>
+
+
   <nav id="wrapper-menu-principal" class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="/">
       <img src="/images/logo-carent-menu-expandido.png">
