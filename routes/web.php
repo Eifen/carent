@@ -99,3 +99,4 @@ Route::get('/detalleMenu', 'UsuarioController@detalleMenu');
 Route::get('/agregarMenUsu', 'UsuarioController@agregarMenUsu');
 Route::get('/quitarMenUsu', 'UsuarioController@quitarMenUsu');
 Route::get('/modificarMenUsu', 'UsuarioController@modificarMenUsu');
+Route::get('/formIngresosGastos', 'FacturacionController@formIngresosGastos');
