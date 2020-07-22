@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 17-07-2020 a las 20:42:44
+-- Tiempo de generación: 22-07-2020 a las 02:12:54
 -- Versión del servidor: 8.0.18
 -- Versión de PHP: 7.3.16
 
@@ -56,7 +56,13 @@ INSERT INTO `logs_auditoria` (`id`, `usuario_id`, `fecha`, `direccion_ip`, `acci
 (13, 1, '2020-07-17 09:10:29', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
 (14, 1, '2020-07-17 13:10:35', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
 (15, 1, '2020-07-17 13:18:36', '127.0.0.1', 'Registro de Usuario Codigo:0002', 'tbl_usuario'),
-(16, 1, '2020-07-17 15:36:05', '127.0.0.1', 'Modificacion del Usuario Codigo:0002', 'tbl_usuario');
+(16, 1, '2020-07-17 15:36:05', '127.0.0.1', 'Modificacion del Usuario Codigo:0002', 'tbl_usuario'),
+(17, 1, '2020-07-19 17:17:22', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(18, 1, '2020-07-19 20:51:51', '127.0.0.1', 'Modificacion del Usuario Codigo:10589', 'tbl_usuario'),
+(19, 1, '2020-07-19 20:52:07', '127.0.0.1', 'Modificacion del Usuario Codigo:10589', 'tbl_usuario'),
+(20, 1, '2020-07-20 09:58:28', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(21, 1, '2020-07-20 15:01:08', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(22, 1, '2020-07-20 20:34:53', '127.0.0.1', 'Inicio de Sesion', 'inicio');
 
 --
 -- Disparadores `logs_auditoria`
@@ -1002,7 +1008,7 @@ INSERT INTO `tbl_contacto_usuario` (`id`, `id_usuario`, `correo_principal`, `cor
 (94, 94, 'nombre.apellido@dominio.com', '', '04242258139', ''),
 (95, 95, 'nombre.apellido@dominio.com', '', '', ''),
 (96, 96, 'nombre.apellido@dominio.com', '', '04169397195', ''),
-(97, 97, 'jose.machado@crowe.com.ve', '', '', ''),
+(97, 97, 'jose.machado@crowe.com.ve', '', NULL, NULL),
 (98, 98, 'nombre.apellido@dominio.com', '', '', ''),
 (99, 99, 'nombre.apellido@dominio.com', '', '', ''),
 (100, 100, 'ana.castaño@crowe.com.ve', '', '02125716504', ''),
@@ -1124,7 +1130,7 @@ INSERT INTO `tbl_estados` (`id`, `estado`, `iso_3166-2`) VALUES
 (18, 'Sucre', 'VE-R'),
 (19, 'Táchira', 'VE-S'),
 (20, 'Trujillo', 'VE-T'),
-(21, 'Vargas', 'VE-W'),
+(21, 'La Guaira', 'VE-W'),
 (22, 'Yaracuy', 'VE-U'),
 (23, 'Zulia', 'VE-V'),
 (24, 'Distrito Capital', 'VE-A'),
@@ -1267,7 +1273,9 @@ INSERT INTO `tbl_menu` (`id`, `id_menu_padre`, `descripcion`, `url`, `orden`, `i
 (11, 8, 'Asignados/ar Proyectos ', '/proyectoDivision', 2, 1),
 (12, 0, 'Horas No Cargables', '', 0, 1),
 (13, 12, 'Conceptos', '/formHorasNoCargables', 0, 1),
-(14, 12, 'Cargar', '/cargarHorasNoCargables', 1, 1);
+(14, 12, 'Cargar', '/cargarHorasNoCargables', 1, 1),
+(15, 0, 'Facturación', '', 0, 1),
+(16, 15, 'Ingresos y Gastos', '/formIngresosGastos', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -1299,7 +1307,8 @@ INSERT INTO `tbl_menu_usuario` (`id`, `id_usuario`, `id_menu`, `C`, `R`, `U`, `D
 (7, 1, 10, 1, 1, 1, 0),
 (8, 1, 11, 1, 1, 1, 1),
 (9, 1, 13, 1, 1, 1, 1),
-(10, 1, 14, 1, 1, 1, 0);
+(10, 1, 14, 1, 1, 1, 0),
+(11, 1, 16, 1, 1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -3088,7 +3097,7 @@ INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `nombre_1`, `nombre_2`, `ape
 (94, '10466', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ANTONIO', 'JOSE', 'RUBIO', 'HERNANDEZ', '1967-12-11 00:00:00', 22, 19, 1131, NULL, '2008-10-03 00:00:00', NULL, 1),
 (95, '10559', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'RUBEN', 'DARIO', 'VERA', 'PATIÑO', '1983-01-19 00:00:00', 37, 19, 1131, NULL, '2010-01-18 00:00:00', NULL, 1),
 (96, '10568', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'LUISA', 'ESTHER', 'TOVAR', '', '1964-04-09 00:00:00', 24, 11, 1131, NULL, '2010-01-18 00:00:00', NULL, 1),
-(97, '10589', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'JOSE', 'ANTONIO', 'MACHADO', 'PEREZ', '1967-08-19 00:00:00', 13, 19, 1131, NULL, '2010-02-22 00:00:00', NULL, 1),
+(97, '10589', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'JOSE', 'ANTONIO', 'MACHADO', 'PEREZ', '1967-08-19 00:00:00', 13, 10, 1131, NULL, '2010-02-22 00:00:00', NULL, 1),
 (98, '10775', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'DULY', 'YOSMILA', 'RINCONES', '', '1980-09-12 00:00:00', 38, 19, 1131, NULL, '2012-04-30 00:00:00', NULL, 1),
 (99, '10776', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'YENNIFER', 'MARIANA', 'VILLA', 'ANGEL', '1988-11-24 00:00:00', 19, 19, 1131, NULL, '2012-05-08 00:00:00', NULL, 1),
 (100, '10777', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ANA', 'CECILIA', 'CASTAÑO', 'ESCOBAR', '1946-10-10 00:00:00', 19, 19, 1131, NULL, '2012-05-16 00:00:00', NULL, 1),
@@ -3500,7 +3509,7 @@ ALTER TABLE `tbl_usuario_documento_identidad`
 -- AUTO_INCREMENT de la tabla `logs_auditoria`
 --
 ALTER TABLE `logs_auditoria`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cargo_empleado`
@@ -3584,13 +3593,13 @@ ALTER TABLE `tbl_horas_no_cargables`
 -- AUTO_INCREMENT de la tabla `tbl_menu`
 --
 ALTER TABLE `tbl_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_menu_usuario`
 --
 ALTER TABLE `tbl_menu_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_monedas`
@@ -3650,7 +3659,7 @@ ALTER TABLE `tbl_usuario`
 -- AUTO_INCREMENT de la tabla `tbl_usuario_documento_identidad`
 --
 ALTER TABLE `tbl_usuario_documento_identidad`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=256;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
 
 --
 -- Restricciones para tablas volcadas
