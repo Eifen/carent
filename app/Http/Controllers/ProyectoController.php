@@ -150,7 +150,7 @@ class ProyectoController extends Controller
       $id_usuario = $request->session()->get('usuario_id');
       $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
       $estatus = $modelo->estatusProyectos();
-      if ($infoUsuario->id_cargo === 16) {
+      if ($infoUsuario->id_cargo === 16 || $infoUsuario->id_cargo === 17) {
         $infoProyectos = $modelo->proyectoUDivision($id_usuario, 11);
         $permisoVer = $modelo->permisoVer(session("usuario_id"), 11);
         return [
@@ -186,7 +186,7 @@ class ProyectoController extends Controller
       $cliente = $request->input("cliente");
       $proyecto = $request->input("proyecto");
       $estatus = $request->input("estatus");
-      if ($infoUsuario->id_cargo === 16) {
+      if ($infoUsuario->id_cargo === 16 || $infoUsuario->id_cargo === 17) {
         $proyectos = $modelo->proyectosUdivi($id_usuario,11,$proyecto, $cliente, $estatus);
 
         return array("proyectos" => $proyectos);
