@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ClienteModel extends Model
 {
 
-  function buscarUsuarios($opcionBusqueda, $dato, $cargo){
+  function buscarUsuarios($opcionBusqueda, $dato){
 
     switch ((int) $opcionBusqueda) {
       case 1:
@@ -27,7 +27,7 @@ class ClienteModel extends Model
         $condicion = "WHERE u.codigo LIKE '%".$dato."%'";
       break;
     }
-    $usuarios = DB::select('SELECT u.id,
+    $usuario = DB::select('SELECT u.id,
                                    u.codigo,
                                    u.avatar,
                                    udi.id_tipo_documento_identidad AS id_tipo_documento,
@@ -41,11 +41,16 @@ class ClienteModel extends Model
                                  tbl_contacto_usuario cu,
                                  tbl_usuario_documento_identidad udi
                             '.$condicion.'
-                            AND u.id_cargo = '.$cargo.'
                             AND e.tabla = "tbl_usuario"
                             AND e.valor = u.id_estatus
                             AND u.id = cu.id_usuario
                             AND u.id = udi.id_usuario');
+
+    for($i = 0; $i < count($usuario); $i++){
+      if ($usuario[$i]->id_cargo === 16 || $usuario[$i]->id_cargo === 17) {
+        $usuarios[$i] = $usuario[$i];
+      }
+    }
     if(count($usuarios) > 0){
       return $usuarios;
     }else{
