@@ -20,6 +20,8 @@ new Vue({
     this.loading = false;
   },
   updated: function () {},
-  methods:{}
+  methods:{
+    
+  }
 
 });
