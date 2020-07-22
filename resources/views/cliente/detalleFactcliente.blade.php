@@ -9,7 +9,6 @@
 
         <title>.: CARENT :.</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
-        <link href="{{ mix('/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ mix('/css/fontawesome-free-5.12.0.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ mix('/css/detalleFactcliente.css') }}" rel="stylesheet" type="text/css">
 
@@ -47,7 +46,7 @@
                         type="button"
                         v-bind:disabled="formSearch.submit.disabled"
                         v-html="formSearch.submit.html"
-                        v-on:click="buscar">                          
+                        v-on:click="buscar">
                 </button>
               </div>
               <div id="modal-detalle-cliente" class="modal fade" tabindex="-1" role="dialog" v-cloak>
@@ -97,7 +96,7 @@
                 type="button"
                 v-bind:disabled="formSearchP.submit.disabled"
                 v-html="formSearchP.submit.html"
-                v-on:click="Selecionar">                        
+                v-on:click="Selecionar">
               </button>
             </div>
             <div id="modal-detalle-clienteProy" class="modal fade" tabindex="-1" role="dialog" v-cloak>
@@ -266,7 +265,7 @@
                 <small id="telefono_facturaHelp" class="form-text text-muted">Ejemplo: 0424-1234567</small>
                 <div class="mensaje"></div>
               </div>
-                        
+
               <div class="form-group col-12 col-sm-6">
                 <label for="fax_factura">Nº de Fax</label>
                 <input aria-describedby="fax_facturaHelp"
