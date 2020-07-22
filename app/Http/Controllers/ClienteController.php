@@ -36,9 +36,10 @@ class ClienteController extends Controller
   function buscarUsuarios(Request $request){
 
     $modelo = new ClienteModel();
+    $cargo = 16;
     $buscarPor = (int) $request->input("buscarPor");
     $dato = strtolower($request->input("dato"));
-    $usuarios = $modelo->buscarUsuarios($buscarPor, $dato);     
+    $usuarios = $modelo->buscarUsuarios($buscarPor, $dato, $cargo);     
     if(!empty($usuarios)){
       $response = array("response" => true, "usuarios" => $usuarios);
     }else{
