@@ -75,6 +75,7 @@ new Vue({
   beforeCreate: function(){
 
     self = this;
+    
     //Se utiliza el metodo get para obtener los valores inciales
     axios.get('/dataInicialListadoProyectos')
     .then(function (response) {

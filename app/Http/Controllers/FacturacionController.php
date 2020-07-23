@@ -13,6 +13,12 @@ class FacturacionController extends Controller
 
     }
 
+    function dataInicialIngresosGastos(){
+
+      
+
+    }
+
     function login(Request $request){
 
       $codigoUsuario = $this->desencriptarCryptoJS($request->input("codigoUsuario"));
