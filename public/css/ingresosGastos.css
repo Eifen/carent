@@ -42,17 +42,56 @@ html {
 #app .wrapper-forms form > div.form-group label {
   color: #091F40;
 }
-#app .wrapper-forms form > div.form-group .invalid-feedback {
-  display: block !important;
-}
 #app .wrapper-forms form > div.form-group .form-control {
   border-radius: 2px;
 }
-#app .wrapper-forms form > div.form-group .form-control.error {
-  border-color: #dc3545;
-}
 #app .wrapper-forms form > div.form-group .form-control:disabled {
   cursor: not-allowed;
+}
+#app .wrapper-forms form > div.form-group .multiselect.multiselect--disabled {
+  background-color: transparent;
+}
+#app .wrapper-forms form > div.form-group .multiselect.multiselect--disabled .multiselect__select {
+  background-color: transparent;
+}
+#app .wrapper-forms form > div.form-group .multiselect .multiselect__select {
+  height: calc(1.5em + 0.5rem + 2px);
+  min-height: calc(1.5em + 0.5rem + 2px);
+}
+#app .wrapper-forms form > div.form-group .multiselect .multiselect__select:before {
+  border-color: #343A40 transparent transparent;
+}
+#app .wrapper-forms form > div.form-group .multiselect .multiselect__tags {
+  border: 1px solid #ced4da;
+  height: calc(1.5em + 0.5rem + 2px);
+  min-height: calc(1.5em + 0.5rem + 2px);
+  padding: 2px 40px 0 8px;
+}
+#app .wrapper-forms form > div.form-group .multiselect .multiselect__tags .multiselect__tag {
+  margin-top: 1px;
+}
+#app .wrapper-forms form > div.form-group .multiselect .multiselect__tags .multiselect__placeholder {
+  color: #495057;
+}
+#app .wrapper-forms form > div.form-group .multiselect .multiselect__tags .multiselect__input {
+  font-size: 0.875rem;
+  height: calc(1.5em + 0.5rem + 2px);
+  min-height: calc(1.5em + 0.5rem + 2px);
+}
+#app .wrapper-forms form > div.form-group .multiselect .multiselect__tags .multiselect__input::-webkit-input-placeholder {
+  color: #495057;
+}
+#app .wrapper-forms form > div.form-group .multiselect .multiselect__tags .multiselect__input::-moz-placeholder {
+  color: #495057;
+}
+#app .wrapper-forms form > div.form-group .multiselect .multiselect__tags .multiselect__input:-ms-input-placeholder {
+  color: #495057;
+}
+#app .wrapper-forms form > div.form-group .multiselect .multiselect__tags .multiselect__input::-ms-input-placeholder {
+  color: #495057;
+}
+#app .wrapper-forms form > div.form-group .multiselect .multiselect__tags .multiselect__input::placeholder {
+  color: #495057;
 }
 #app .wrapper-forms .table {
   background-color: white;
@@ -133,6 +172,7 @@ html {
   color: #ffffff;
 }
 #app .wrapper-forms .btn.limpiar_filtro {
+  background-color: transparent;
   color: #091F40;
 }
 #app .wrapper-forms .wrapper-alert {

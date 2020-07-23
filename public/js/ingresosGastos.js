@@ -77125,7 +77125,7 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
         disabled: true,
         value: ""
       },
-      descripcion: {
+      proyecto: {
         disabled: true,
         value: ""
       },
@@ -77147,22 +77147,26 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
     axios__WEBPACK_IMPORTED_MODULE_6___default.a.get('/dataInicialIngresosGastos').then(function (response) {
       if (response.status === 200) {
         //Le asignamos los valores a las variables
-
-        /*  self.comboEstatus = response.data.estatus;
-          self.comboDivisiones = response.data.divisiones;
-          self.formFiltro.descripcion.disabled = false;
-          self.formFiltro.cliente.disabled = false;
-          self.formFiltro.estatus.disabled = false;
-          self.formFiltro.divisiones.disabled = false;
-          self.formFiltro.mostrar = true;
-          self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
-          self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
-            self.proyectos = response.data.proyectos;
-          self.permisoActualizar = response.data.permisoActualizar;
-            self.paginador.numPaginas = response.data.numero_paginas;
-          self.paginador.max = parseInt(response.data.numero_paginas);
-          self.paginador.paginar = response.data.paginar;*/
+        self.comboDivisiones = response.data.divisiones;
+        self.formFiltro.proyecto.disabled = false;
+        self.formFiltro.cliente.disabled = false;
+        self.formFiltro.estatus.disabled = false;
+        self.formFiltro.divisiones.disabled = false;
         self.formFiltro.mostrar = true;
+        self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
+        self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
+        response.data.estatus.forEach(function (item, i) {
+          self.comboEstatus.push({
+            descripcion: item.descripcion,
+            id: item.valor
+          });
+        });
+        /*self.proyectos = response.data.proyectos;
+        self.permisoActualizar = response.data.permisoActualizar;
+          self.paginador.numPaginas = response.data.numero_paginas;
+        self.paginador.max = parseInt(response.data.numero_paginas);
+        self.paginador.paginar = response.data.paginar;*/
+
         self.loading = false;
       } else {
         throw "error";

@@ -20,50 +20,62 @@
 
         <menu-principal></menu-principal>
 
-        <b-row align-h="center" align-v="center" v-if="alert.mostrar === false && formFiltro.mostrar" class="wrapper-forms" v-cloak>
-          <div class="col-12 col-sm-11 col-md-9 wrapper-form" v-if="formFiltro.mostrar">
+        <b-row align-h="center" align-v="center" v-if="alert.mostrar === false && formFiltro.mostrar" v-cloak>
+          <b-col cols="12" sm="11" md="9" v-if="formFiltro.mostrar" class="wrapper-forms">
             <h5>Filtros de búsqueda</h5>
-            <form class="row">
-              <div class="form-group col-12 col-sm-4">
-                <label for="descripcion">Proyecto</label>
-                <input aria-describedby="descripcionHelp"
-                       class="form-control form-control-sm"
-                       id="descripcion"
-                       maxlength="250"
-                       v-bind:disabled="formFiltro.descripcion.disabled"
-                       v-model.trim="formFiltro.descripcion.value"
-                       type="text">
-                <small id="descripcionHelp" class="form-text text-muted">Nombre que se le dío la proyecto</small>
-                <div class="mensaje"></div>
-              </div>
-              <div class="form-group col-12 col-sm-4">
-                <label for="cliente">Cliente</label>
-                <input aria-describedby="clienteHelp"
-                       class="form-control form-control-sm"
-                       id="cliente"
-                       maxlength="250"
-                       v-bind:disabled="formFiltro.cliente.disabled"
-                       v-model.trim="formFiltro.cliente.value"
-                       type="text">
-                <small id="clienteHelp" class="form-text text-muted">Razón Social del cliente</small>
-                <div class="mensaje"></div>
-              </div>
-              <div class="form-group col-12 col-sm-4">
-                <label for="estatus">Estatus</label>
-                <select aria-describedby="estatusHelp"
-                        class="form-control form-control-sm"
-                        id="estatus"
-                        data-validar="true"
-                        v-bind:disabled="formFiltro.estatus.disabled"
-                        v-model="formFiltro.estatus.value"
-                        v-on:click="limpiarMensajeError">
-                  <option value="" selected>Seleccione...</option>
-                  <option v-bind:value="estatus.id" v-for="estatus in comboEstatus">@{{ estatus.descripcion }}</option>
-                </select>
-                <div class="mensaje"></div>
-              </div>
-              <div class="form-group col-12 col-sm-6">
-                <label for="divisiones">Divisiones</label>
+            <b-form class="row">
+              <b-form-group
+                class="form-group col-12 col-sm-4"
+                label="Proyecto"
+                label-for="proyecto"
+                id="group-proyecto">
+                <b-form-input
+                  :disabled="formFiltro.proyecto.disabled"
+                  id="proyecto"
+                  ref="proyecto"
+                  size="sm"
+                  type="text"
+                  v-model.trim="formFiltro.proyecto.value"></b-form-input>
+                <b-form-text id="proyecto-help">Nombre que se le dío la proyecto</b-form-text>
+              </b-form-group>
+              <b-form-group
+                class="form-group col-12 col-sm-4"
+                label="Cliente"
+                label-for="cliente"
+                id="group-cliente">
+                <b-form-input
+                  :disabled="formFiltro.cliente.disabled"
+                  id="cliente"
+                  ref="cliente"
+                  size="sm"
+                  type="text"
+                  v-model.trim="formFiltro.cliente.value"></b-form-input>
+                <small id="cliente-Help" class="form-text text-muted">Razón Social del Cliente</small>
+              </b-form-group>
+              <b-form-group
+                class="form-group col-12 col-sm-4"
+                label="Estatus"
+                label-for="estatus"
+                id="group-estatus">
+                <b-form-select
+                  :disabled="formFiltro.estatus.disabled"
+                  :value="null"
+                  :options="comboEstatus"
+                  id="estatus"
+                  ref="estatus"
+                  size="sm"
+                  v-model="formFiltro.estatus.value">
+                  <template v-slot:first>
+                    <option :value="null" disabled="true">Seleccione...</option>
+                  </template>
+                </b-form-select>
+                <small id="estatus-Help" class="form-text text-muted">Estatus del proyecto</small>
+              </b-form-group>
+              <b-form-group
+                class="form-group col-12 col-sm-4"
+                label="Divisiones"
+                label-for="divisiones"
+                id="group-divisiones">
                 <multiselect @Open="limpiarMensajeErrorMultiselect"
                              :clear-on-select="false"
                              :close-on-select="false"
@@ -78,27 +90,31 @@
                              placeholder="Seleccione..."
                              track-by="descripcion"
                              v-model="formFiltro.divisiones.value"></multiselect>
-                <div class="mensaje"></div>
-              </div>
-              <div class="form-group col-12 col-sm-3">
+                <small id="divisiones-Help" class="form-text text-muted">Cuando seleccione divisiones aparecerán los proyectos asociados</small>
+              </b-form-group>
+              <b-form-group class="col-12 col-sm-3">
                 <label>&nbsp;</label>
-                <button class="btn filtrar"
-                        type="button"
-                        v-on:click="buscar"
-                        v-bind:disabled="formFiltro.btn.filtrar.disabled"
-                        v-html="formFiltro.btn.filtrar.html"></button>
-              </div>
-              <div class="form-group col-12 col-sm-3">
+                <b-button
+                  :disabled="formFiltro.btn.filtrar.disabled"
+                  block
+                  class="filtrar"
+                  size="sm"
+                  v-html="formFiltro.btn.filtrar.html"
+                  v-on:click="buscar">
+              </b-form-group>
+              <b-form-group class="col-12 col-sm-3">
                 <label>&nbsp;</label>
-                <button class="btn limpiar_filtro"
-                        type="button"limpiarFiltro
-                        v-on:click="limpiarFiltro"
-                        v-bind:disabled="formFiltro.btn.limpiarFiltro.disabled"
-                        v-html="formFiltro.btn.limpiarFiltro.html"></button>
-              </div>
-            </form>
+                <b-button
+                  :disabled="formFiltro.btn.limpiarFiltro.disabled"
+                  block
+                  class="limpiar_filtro"
+                  size="sm"
+                  v-html="formFiltro.btn.limpiarFiltro.html"
+                  v-on:click="limpiarFiltro">
+              </b-form-group>
+            </b-form>
 
-          </div>
+          </b-col>
 
         </b-row>
 

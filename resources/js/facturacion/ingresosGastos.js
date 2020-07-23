@@ -42,7 +42,7 @@ new Vue({
         disabled: true,
         value: ""
       },
-      descripcion:{
+      proyecto:{
         disabled: true,
         value: ""
       },
@@ -69,9 +69,8 @@ new Vue({
       if(response.status === 200){
 
         //Le asignamos los valores a las variables
-      /*  self.comboEstatus = response.data.estatus;
         self.comboDivisiones = response.data.divisiones;
-        self.formFiltro.descripcion.disabled = false;
+        self.formFiltro.proyecto.disabled = false;
         self.formFiltro.cliente.disabled = false;
         self.formFiltro.estatus.disabled = false;
         self.formFiltro.divisiones.disabled = false;
@@ -79,14 +78,17 @@ new Vue({
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
         self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
 
-        self.proyectos = response.data.proyectos;
+        response.data.estatus.forEach((item, i) => {
+          self.comboEstatus.push({descripcion : item.descripcion, id : item.valor});
+        });
+
+        /*self.proyectos = response.data.proyectos;
         self.permisoActualizar = response.data.permisoActualizar;
 
         self.paginador.numPaginas = response.data.numero_paginas;
         self.paginador.max = parseInt(response.data.numero_paginas);
         self.paginador.paginar = response.data.paginar;*/
 
-        self.formFiltro.mostrar = true;
         self.loading = false;
 
       }else{
