@@ -34475,7 +34475,7 @@ var app = new Vue({
 
           self.cargo.data = response.data.datosUsuario.id_cargo;
 
-          if (self.cargo.data === 16) {
+          if (self.cargo.data === 16 || self.cargo.data === 17) {
             self.permisoSocio = true;
             self.permisoEncargado = false;
           }
