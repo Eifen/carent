@@ -71669,12 +71669,12 @@ var render = function() {
               attrs: { cols: "12" }
             },
             [
-              _c("img", { attrs: { src: "/images/loading-1.png" } }),
-              _vm._v(" "),
               _c("img", {
                 staticClass: "efecto",
-                attrs: { src: "/images/loading-2.png" }
-              })
+                attrs: { src: "/images/loading-1.png" }
+              }),
+              _vm._v(" "),
+              _c("img", { attrs: { src: "/images/loading-2.png" } })
             ]
           )
         ],

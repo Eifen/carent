@@ -64445,12 +64445,12 @@ var render = function() {
               attrs: { cols: "12" }
             },
             [
-              _c("img", { attrs: { src: "/images/loading-1.png" } }),
-              _vm._v(" "),
               _c("img", {
                 staticClass: "efecto",
-                attrs: { src: "/images/loading-2.png" }
-              })
+                attrs: { src: "/images/loading-1.png" }
+              }),
+              _vm._v(" "),
+              _c("img", { attrs: { src: "/images/loading-2.png" } })
             ]
           )
         ],
@@ -77139,14 +77139,60 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
       },
       mostrar: false
     },
-    loading: true
+    loading: true,
+    tabla: {
+      alert: {
+        contador: false,
+        iconCerrar: false,
+        mensaje: "",
+        mostrar: false,
+        ocultarSeg: 0,
+        variante: ""
+      },
+      cargando: true,
+      encabezado: [],
+      registros: []
+    }
   },
   beforeCreate: function beforeCreate() {
     self = this; //Se utiliza el metodo get para obtener los valores inciales
 
     axios__WEBPACK_IMPORTED_MODULE_6___default.a.get('/dataInicialIngresosGastos').then(function (response) {
-      if (response.status === 200) {
-        //Le asignamos los valores a las variables
+      if (response.status === 200 && response.data.response === true) {
+        if (response.data.permisos.permiso_actualizar) {
+          self.tabla.encabezado = [{
+            key: 'numero',
+            label: '#'
+          }, {
+            key: 'proyecto',
+            label: 'Proyecto'
+          }, {
+            key: 'division',
+            label: 'División'
+          }, 'estatus', {
+            key: 'opciones',
+            label: ' '
+          }, {
+            key: 'editar',
+            label: ' '
+          }];
+        } else {
+          self.tabla.encabezado = [{
+            key: 'numero',
+            label: '#'
+          }, {
+            key: 'proyecto',
+            label: 'Proyecto'
+          }, {
+            key: 'division',
+            label: 'División'
+          }, 'estatus', {
+            key: 'opciones',
+            label: ' '
+          }];
+        } //Le asignamos los valores a las variables
+
+
         self.comboDivisiones = response.data.divisiones;
         self.formFiltro.proyecto.disabled = false;
         self.formFiltro.cliente.disabled = false;

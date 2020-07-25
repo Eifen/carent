@@ -8,6 +8,35 @@ use Illuminate\Database\Eloquent\Model;
 class FacturacionModel extends Model
 {
 
+    function permisosMenu($id_usuario, $id_menu){
+
+      $permisos = DB::select('SELECT
+                               (SELECT COUNT(1)
+                                FROM tbl_menu_usuario
+                                WHERE id_usuario = '.$id_usuario.'
+                                AND id_menu = '.$id_menu.'
+                                AND r = 1
+                                LIMIT 1
+                               ) AS permiso_ver,
+                               (SELECT COUNT(1)
+                                FROM tbl_menu_usuario
+                                WHERE id_usuario = '.$id_usuario.'
+                                AND id_menu = '.$id_menu.'
+                                AND c = 1
+                                LIMIT 1
+                               ) AS permiso_crear,
+                               (SELECT COUNT(1)
+                                FROM tbl_menu_usuario
+                                WHERE id_usuario = '.$id_usuario.'
+                                AND id_menu = '.$id_menu.'
+                                AND u = 1
+                                LIMIT 1
+                               ) AS permiso_actualizar');
+
+      return $permisos[0];
+
+    }// Fin permisosMenu
+
     function divisiones(){
 
       $sql = DB::select('SELECT d.id,

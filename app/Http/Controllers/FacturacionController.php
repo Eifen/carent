@@ -17,12 +17,15 @@ class FacturacionController extends Controller
 
       $modelo = new FacturacionModel();
 
+      $permisos = $modelo->permisosMenu(session("usuario_id"), 16);
       $divisiones = $modelo->divisiones();
       $estatus = $modelo->estatusProyectos();
 
       return [
         "divisiones" => $divisiones,
-        "estatus" => $estatus
+        "estatus" => $estatus,
+        "permisos" => $permisos,
+        "response" => true
       ];
 
     }

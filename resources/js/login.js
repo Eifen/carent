@@ -1,5 +1,8 @@
 require('bootstrap');
-window.Vue = require('vue');
+import Vue from 'vue';
+import { BootstrapVue } from 'bootstrap-vue';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
 window.$ = require('jquery');
 window.zenscroll = require('zenscroll');
 window.axios = require('axios');
@@ -8,6 +11,7 @@ const CryptoJS = require("crypto-js");
 const AES = require("crypto-js/aes");
 var self;
 
+Vue.use(BootstrapVue);
 Vue.component('loading',require('./components/loading.vue').default);
 
 //se declaran todas las varibles

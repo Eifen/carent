@@ -56,7 +56,20 @@ new Vue({
       },
       mostrar: false
     },
-    loading: true
+    loading: true,
+    tabla: {
+      alert:{
+        contador: false,
+        iconCerrar: false,
+        mensaje: "",
+        mostrar: false,
+        ocultarSeg: 0,
+        variante: ""
+      },
+      cargando: true,
+      encabezado: [],
+      registros: []
+    }
   },
   beforeCreate: function(){
 
@@ -66,7 +79,26 @@ new Vue({
     axios.get('/dataInicialIngresosGastos')
     .then(function (response) {
 
-      if(response.status === 200){
+      if(response.status === 200 && response.data.response === true){
+
+        if(response.data.permisos.permiso_actualizar){
+          self.tabla.encabezado = [
+            { key: 'numero', label: '#' },
+            { key: 'proyecto', label: 'Proyecto' },
+            { key: 'division', label: 'División' },
+            'estatus',
+            { key: 'opciones', label: ' ' },
+            { key: 'editar', label: ' ' }
+          ];
+        }else{
+          self.tabla.encabezado = [
+           { key: 'numero', label: '#' },
+           { key: 'proyecto', label: 'Proyecto' },
+           { key: 'division', label: 'División' },
+           'estatus',
+           { key: 'opciones', label: ' ' }
+          ];
+        }
 
         //Le asignamos los valores a las variables
         self.comboDivisiones = response.data.divisiones;

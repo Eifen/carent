@@ -103,5 +103,5 @@ Route::get('/modificarMenUsu', 'UsuarioController@modificarMenUsu');
 /*
   Módulo Facturación
 */
-Route::get('/formIngresosGastos', 'FacturacionController@formIngresosGastos');
+Route::get('/formIngresosGastos', 'FacturacionController@formIngresosGastos')->middleware('usuario.session');
 Route::get('/dataInicialIngresosGastos', 'FacturacionController@dataInicialIngresosGastos');
