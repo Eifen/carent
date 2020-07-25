@@ -100,6 +100,14 @@ new Vue({
           ];
         }
 
+        var mostrar = false;
+        var mensaje = "";
+        var variante = "";
+
+        self.mostrarAlert(self.tabla.alert, mostrar, variante, mensaje, false, false, 0);
+
+        self.tabla.registros = self.registroTabla(response.data.proyectos);
+
         //Le asignamos los valores a las variables
         self.comboDivisiones = response.data.divisiones;
         self.formFiltro.proyecto.disabled = false;
@@ -122,6 +130,7 @@ new Vue({
         self.paginador.paginar = response.data.paginar;*/
 
         self.loading = false;
+        self.tabla.cargando = false;
 
       }else{
 
@@ -144,6 +153,60 @@ new Vue({
   mounted: function () {},
   updated: function () {},
   methods:{
+    registroTabla: function(datos){
+
+      const registros = [];
+      datos.forEach((item, i) => {
+
+        var variante;
+
+        switch (item.id_estatus) {
+          case 1: variante = "success"; break;
+          case 2: variante = "danger"; break;
+          case 3: variante = "warning"; break;
+          case 4: variante = "warning"; break;
+          default: variante = "light";
+        }
+
+        const mostrarBtn = {
+          href: "/cajaPagarMulta/"+item.id,
+          mostrar: false,
+          texto: "",
+          variante: ""
+        }
+
+        if(item.id_estatus === 1 && item.caja_abierta === 0){
+          mostrarBtn.mostrar = true;
+          mostrarBtn.texto = "Abrir Caja";
+          mostrarBtn.variante = "outline-success";
+        }else if(item.id_estatus === 3 && item.caja_abierta === 1 && item.entrar_en_caja === 1){
+          mostrarBtn.mostrar = true;
+          mostrarBtn.texto = "Entrar en la Caja";
+          mostrarBtn.variante = "success";
+        }
+
+        const proyecto = {
+          numero: (i + 1),
+          descripcion: item.descripcion,
+          sucursal: item.sucursal,
+          municipio: item.municipio,
+          parroquia: item.parroquia,
+          estatus: item.estatus,
+          id: item.id,
+          id_estatus: item.id_estatus,
+          variante: variante,
+          btn: mostrarBtn,
+          cajero: item.cajero,
+          caja_abierta: item.caja_abierta
+        };
+
+        registros.push(proyecto);
+
+      });
+
+      return registros;
+
+    },
     buscar: function(){
 
       self.formFiltro.descripcion.disabled = true;
@@ -225,6 +288,22 @@ new Vue({
       if (e.keyCode === 13){
         e.preventDefault();
       }
+
+    },
+    mostrarAlert: function(alert, mostrar = false, variante = "", mensaje = "", iconCerrar = false, contador = false, ocultarSeg = 0){
+
+      return new Promise(resolve => {
+
+        alert.contador = contador;
+        alert.iconCerrar = iconCerrar;
+        alert.mensaje = mensaje;
+        alert.mostrar = mostrar;
+        alert.ocultarSeg = ocultarSeg;
+        alert.variante = variante;
+
+        resolve(true);
+
+      });
 
     }
   }

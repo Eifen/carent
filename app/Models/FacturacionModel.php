@@ -60,4 +60,18 @@ class FacturacionModel extends Model
 
     }// Fin estatusProyectos
 
+    function proyectosFacturacion(){
+
+      /*$sql = DB::select('SELECT e.valor,
+                                e.descripcion
+                         FROM tbl_estatus e
+                         WHERE e.tabla = "tbl_proyecto"
+                         ORDER BY e.descripcion ASC');
+
+      return $sql;*/
+
+      return [];
+
+    }
+
 }

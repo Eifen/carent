@@ -77190,8 +77190,13 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
             key: 'opciones',
             label: ' '
           }];
-        } //Le asignamos los valores a las variables
+        }
 
+        var mostrar = false;
+        var mensaje = "";
+        var variante = "";
+        self.mostrarAlert(self.tabla.alert, mostrar, variante, mensaje, false, false, 0);
+        self.tabla.registros = self.registroTabla(response.data.proyectos); //Le asignamos los valores a las variables
 
         self.comboDivisiones = response.data.divisiones;
         self.formFiltro.proyecto.disabled = false;
@@ -77214,6 +77219,7 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
         self.paginador.paginar = response.data.paginar;*/
 
         self.loading = false;
+        self.tabla.cargando = false;
       } else {
         throw "error";
       }
@@ -77228,6 +77234,67 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   mounted: function mounted() {},
   updated: function updated() {},
   methods: {
+    registroTabla: function registroTabla(datos) {
+      var registros = [];
+      datos.forEach(function (item, i) {
+        var variante;
+
+        switch (item.id_estatus) {
+          case 1:
+            variante = "success";
+            break;
+
+          case 2:
+            variante = "danger";
+            break;
+
+          case 3:
+            variante = "warning";
+            break;
+
+          case 4:
+            variante = "warning";
+            break;
+
+          default:
+            variante = "light";
+        }
+
+        var mostrarBtn = {
+          href: "/cajaPagarMulta/" + item.id,
+          mostrar: false,
+          texto: "",
+          variante: ""
+        };
+
+        if (item.id_estatus === 1 && item.caja_abierta === 0) {
+          mostrarBtn.mostrar = true;
+          mostrarBtn.texto = "Abrir Caja";
+          mostrarBtn.variante = "outline-success";
+        } else if (item.id_estatus === 3 && item.caja_abierta === 1 && item.entrar_en_caja === 1) {
+          mostrarBtn.mostrar = true;
+          mostrarBtn.texto = "Entrar en la Caja";
+          mostrarBtn.variante = "success";
+        }
+
+        var proyecto = {
+          numero: i + 1,
+          descripcion: item.descripcion,
+          sucursal: item.sucursal,
+          municipio: item.municipio,
+          parroquia: item.parroquia,
+          estatus: item.estatus,
+          id: item.id,
+          id_estatus: item.id_estatus,
+          variante: variante,
+          btn: mostrarBtn,
+          cajero: item.cajero,
+          caja_abierta: item.caja_abierta
+        };
+        registros.push(proyecto);
+      });
+      return registros;
+    },
     buscar: function buscar() {
       self.formFiltro.descripcion.disabled = true;
       self.formFiltro.cliente.disabled = true;
@@ -77301,6 +77368,23 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
       if (e.keyCode === 13) {
         e.preventDefault();
       }
+    },
+    mostrarAlert: function mostrarAlert(alert) {
+      var mostrar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      var variante = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "";
+      var mensaje = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "";
+      var iconCerrar = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+      var contador = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : false;
+      var ocultarSeg = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 0;
+      return new Promise(function (resolve) {
+        alert.contador = contador;
+        alert.iconCerrar = iconCerrar;
+        alert.mensaje = mensaje;
+        alert.mostrar = mostrar;
+        alert.ocultarSeg = ocultarSeg;
+        alert.variante = variante;
+        resolve(true);
+      });
     }
   }
 });
