@@ -1,3 +1,4 @@
+alert ("hola")
 require('bootstrap');
 window.Vue = require('vue');
 window.$ = require('jquery');
