@@ -77135,11 +77135,17 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
       },
       estatus: {
         disabled: true,
-        value: ""
+        value: null
       },
       mostrar: false
     },
     loading: true,
+    paginador: {
+      max: 0,
+      numPaginas: 0,
+      pagina: 1,
+      paginar: 0
+    },
     tabla: {
       alert: {
         contador: false,
@@ -77195,6 +77201,13 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
         var mostrar = false;
         var mensaje = "";
         var variante = "";
+
+        if (response.data.proyectos.length === 0) {
+          mostrar = true;
+          mensaje = "No hay proyectos por facturar";
+          variante = "warning";
+        }
+
         self.mostrarAlert(self.tabla.alert, mostrar, variante, mensaje, false, false, 0);
         self.tabla.registros = self.registroTabla(response.data.proyectos); //Le asignamos los valores a las variables
 
@@ -77208,16 +77221,16 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
         self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
         response.data.estatus.forEach(function (item, i) {
           self.comboEstatus.push({
-            descripcion: item.descripcion,
-            id: item.valor
+            text: item.descripcion,
+            value: item.valor
           });
         });
         /*self.proyectos = response.data.proyectos;
-        self.permisoActualizar = response.data.permisoActualizar;
-          self.paginador.numPaginas = response.data.numero_paginas;
-        self.paginador.max = parseInt(response.data.numero_paginas);
-        self.paginador.paginar = response.data.paginar;*/
+        self.permisoActualizar = response.data.permisoActualizar;*/
 
+        self.paginador.numPaginas = response.data.numero_paginas;
+        self.paginador.max = parseInt(response.data.numero_paginas);
+        self.paginador.paginar = response.data.paginar;
         self.loading = false;
         self.tabla.cargando = false;
       } else {

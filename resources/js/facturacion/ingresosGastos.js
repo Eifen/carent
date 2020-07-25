@@ -52,11 +52,17 @@ new Vue({
       },
       estatus: {
         disabled: true,
-        value: ""
+        value: null
       },
       mostrar: false
     },
     loading: true,
+    paginador: {
+      max: 0,
+      numPaginas: 0,
+      pagina:1,
+      paginar: 0
+    },
     tabla: {
       alert:{
         contador: false,
@@ -104,6 +110,12 @@ new Vue({
         var mensaje = "";
         var variante = "";
 
+        if(response.data.proyectos.length === 0){
+          mostrar = true;
+          mensaje = "No hay proyectos por facturar";
+          variante = "warning";
+        }
+
         self.mostrarAlert(self.tabla.alert, mostrar, variante, mensaje, false, false, 0);
 
         self.tabla.registros = self.registroTabla(response.data.proyectos);
@@ -119,15 +131,15 @@ new Vue({
         self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
 
         response.data.estatus.forEach((item, i) => {
-          self.comboEstatus.push({descripcion : item.descripcion, id : item.valor});
+          self.comboEstatus.push({text : item.descripcion, value : item.valor});
         });
 
         /*self.proyectos = response.data.proyectos;
-        self.permisoActualizar = response.data.permisoActualizar;
+        self.permisoActualizar = response.data.permisoActualizar;*/
 
         self.paginador.numPaginas = response.data.numero_paginas;
         self.paginador.max = parseInt(response.data.numero_paginas);
-        self.paginador.paginar = response.data.paginar;*/
+        self.paginador.paginar = response.data.paginar;
 
         self.loading = false;
         self.tabla.cargando = false;

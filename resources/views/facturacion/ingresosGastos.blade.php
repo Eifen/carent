@@ -122,7 +122,7 @@
           </b-col>
 
           <b-col cols="12" sm="11">
-            <h4>Proyectos Disponibles</h4>
+            <h5>Proyectos Disponibles</h5>
           </b-col>
 
           <b-col cols="12" sm="11">
@@ -162,6 +162,30 @@
                 <b-tooltip :target="'editar-'+data.item.id" triggers="hover">
                   Editar
                 </b-tooltip>
+              </template>
+              <template v-slot:custom-foot v-if="tabla.registros.length > 0">
+                <b-tr>
+                  <b-td colspan="7">
+                    <div>
+                      <div><b>Página</b></div>
+                      <div class="wrapper-input" v-on:keyup="numeroPagina">
+                        <vue-numeric :max="paginador.max"
+                                     :min="1"
+                                     :precision="0"
+                                     class="form-control text-center"
+                                     type="text"
+                                     v-model="paginador.pagina"></vue-numeric>
+                      </div>
+                      <div><b>de @{{ paginador.numPaginas }}</b></div>
+                      <div>
+                        <b-icon-chevron-compact-left class="icono border rounded" v-on:click="paginaAnterior"></b-icon-chevron-compact-left>
+                      </div>
+                      <div>
+                        <b-icon-chevron-compact-right class="icono border rounded" v-on:click="paginaSiguiente"></b-icon-chevron-compact-right>
+                      </div>
+                    </div>
+                  </b-td>
+                </b-tr>
               </template>
             </b-table>
           </b-col>
