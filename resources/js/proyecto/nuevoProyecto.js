@@ -3,12 +3,14 @@ import Vue from 'vue';
 import { BootstrapVue } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
-window.zenscroll = require('zenscroll');
-window.axios = require('axios');
-window.AutoNumeric = require('autonumeric');
+import zenscroll from 'zenscroll';
+import axios from 'axios';
+import AutoNumeric from 'autonumeric';
 import VueTheMask from 'vue-the-mask';
 import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
+import Vuelidate from 'vuelidate';
+import { required, minLength, email } from 'vuelidate/lib/validators';
 var self;
 
 Vue.use(VueTheMask);
@@ -16,6 +18,7 @@ Vue.component('multiselect', Multiselect);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
 Vue.component('loading',require('../components/loading.vue').default);
 Vue.use(BootstrapVue);
+Vue.use(Vuelidate);
 
 new Vue({
 
@@ -26,19 +29,36 @@ new Vue({
       message: "",
       show: false
     },
-    comboClientes: [],
     comboEstatus: [],
     comboDivisiones: [],
     comboMonedas: [],
     refreshForm: false,
     form: {
-      descripcion:{
-        disabled: true,
-        value: ""
+      campos: {
+        descripcion: null,
+        cliente: null
       },
-      cliente:{
-        disabled: true,
-        value: ""
+      camposAtributos: {
+        descripcion:{
+          disabled: false,
+          invalidFeedback: "",
+          state: null
+        },
+        cliente: {
+          disabled: true,
+          help: "",
+          helpInit: "Cliente que esta asociado al proyecto",
+          helpLoading: '<i class="fas fa-cog fa-spin"></i> buscando',
+          invalidFeedback: "",
+          listaDropdown: {
+            listado: [],
+            noResultado: false
+          },
+          state: null,
+          valor: null,
+          valorBlur: null,
+          valorFocus: null
+        }
       },
       horas:{
         asignar: false,
@@ -76,6 +96,18 @@ new Vue({
       show:true
     }
   },
+  validations: {
+    form:{
+      campos:{
+        descripcion: {
+          required
+        },
+        cliente: {
+          required
+        }
+      }
+    }
+  },
   beforeCreate: function(){
 
     self = this;
@@ -85,12 +117,14 @@ new Vue({
 
       if(response.status === 200){
 
-        self.comboClientes = response.data.clientes;
         self.comboEstatus = response.data.estatus;
         self.comboDivisiones = response.data.divisiones;
         self.comboMonedas = response.data.monedas;
-        self.form.descripcion.disabled = false;
-        self.form.cliente.disabled = false;
+        self.form.camposAtributos.descripcion.disabled = false;
+        self.form.camposAtributos.cliente.disabled = false;
+        self.form.camposAtributos.cliente.help = self.form.camposAtributos.cliente.helpInit;
+
+
         self.form.fechaContratacion.disabled = false;
         self.form.estatus.disabled = false;
         self.form.montoEn.disabled = false;
@@ -419,6 +453,83 @@ new Vue({
     },
     refreshView: function(){
       window.location.href = "/formNuevoProyecto";
+    },
+    limpiarErrorCampo: function(formulario,indice){
+
+      self[formulario].camposAtributos[indice].invalidFeedback = "";
+      self[formulario].camposAtributos[indice].state = null;
+
+    },
+    buscarCliente: function(){
+
+      self.limpiarErrorCampo("form","cliente");
+      self.$refs["ref-lista-cliente"].hide();
+      self.form.camposAtributos.cliente.listaDropdown.listado = [];
+      self.form.camposAtributos.cliente.listaDropdown.noResultado = false;
+      self.form.campos.cliente = null;
+      self.form.camposAtributos.cliente.valorFocus = null;
+      self.form.camposAtributos.cliente.valorBlur = null;
+
+      if(self.form.camposAtributos.cliente.valor !== ''){
+
+        self.form.camposAtributos.cliente.help = self.form.camposAtributos.cliente.helpLoading;
+
+        axios.get('/buscarClienteProyecto',{
+          params: {
+            nombreCliente: self.form.camposAtributos.cliente.valor
+          }
+        })
+        .then(function (response) {
+
+          self.form.camposAtributos.cliente.help = self.form.camposAtributos.cliente.helpInit;
+
+          if(response.status === 200 && response.data.response === true){
+
+            self.form.camposAtributos.cliente.listaDropdown.listado = response.data.clientes;
+
+            if(response.data.clientes.length === 0){
+              self.form.camposAtributos.cliente.listaDropdown.noResultado = true;
+            }
+
+            self.mostrarListado("ref-lista-cliente");
+
+          }else{
+
+            throw "error";
+
+          }
+
+        })
+        .catch(error => {
+
+          self.form.camposAtributos.cliente.help = self.form.camposAtributos.cliente.helpInit;
+          self.form.camposAtributos.cliente.invalidFeedback = "Ocurrio un error, intenta nuevamente; con este error no podrás generar la multa.";
+          self.form.camposAtributos.cliente.state = false;
+
+        });
+
+      }// Fin if
+
+    },
+    valorBlur: function(indice){
+
+      if(self.form.camposAtributos[indice].valorBlur !== null){
+        self.form.camposAtributos[indice].valor = self.form.camposAtributos[indice].valorBlur;
+      }
+
+    },
+    valorFocus: function(indice){
+
+      if(self.form.camposAtributos[indice].valorFocus !== null){
+        self.form.camposAtributos[indice].valor = self.form.camposAtributos[indice].valorFocus;
+      }
+
+    },
+    listadoNoValido: function(indice){
+
+      self.form.camposAtributos[indice].state = false;
+      self.form.camposAtributos[indice].invalidFeedback = "Debe seleccionar una opción válida";
+
     }
 
   }// Fin methods

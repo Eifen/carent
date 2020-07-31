@@ -15,47 +15,63 @@
     </head>
     <body>
 
-      <div id="app" class="container-fluid" v-on:keypress="keyboard">
+      <b-container fluid id="app" v-on:keypress="keyboard">
 
         <loading :loading="loading" v-show="loading"></loading>
         <menu-principal v-cloak></menu-principal>
 
-        <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
-          <div class="col-12 col-sm-11 col-md-9 col-lg-8" v-if="form.mostrar">
-            <h3>Estas creando un nuevo Proyecto</h3>
-            <form class="row">
-              <div class="col-12 wrapper-required-legend">
-                <b>Campos obligatorios (<span class="campo-obligatorio">*</span>)</b>
-              </div>
-              <div class="form-group col-12 col-sm-6">
-                <label for="descripcion">Descripción <span class="campo-obligatorio">*</span></label>
-                <input aria-describedby="descripcionHelp"
-                       class="form-control"
-                       data-min="3"
-                       data-validar="true"
-                       id="descripcion"
-                       maxlength="250"
-                       v-bind:disabled="form.descripcion.disabled"
-                       v-model.trim="form.descripcion.value"
-                       v-on:click="limpiarMensajeError"
-                       type="text">
-                <small id="descripcionHelp" class="form-text text-muted">Ejemplo: Auditoria Externa</small>
-                <div class="mensaje"></div>
-              </div>
-              <div class="form-group col-12 col-sm-6">
-                <label for="cliente">Cliente</label>
-                <select aria-describedby="clienteHelp"
-                        class="form-control"
-                        id="cliente"
-                        data-validar="true"
-                        v-bind:disabled="form.cliente.disabled"
-                        v-model="form.cliente.value"
-                        v-on:click="limpiarMensajeError">
-                  <option value="" disabled selected>Seleccione...</option>
-                  <option v-bind:value="cliente.id" v-for="cliente in comboClientes">@{{ cliente.razon_social }}</option>
-                </select>
-                <div class="mensaje"></div>
-              </div>
+        <b-row align-h="center" align-v="center" class="wrapper-forms" v-cloak v-if="form.mostrar">
+          <b-col cols="12" sm="11" md="9" lg="8">
+            <h4>Estas creando un nuevo Proyecto</h4>
+            <b-form class="row">
+              <b-form-group
+                :invalid-feedback="form.camposAtributos.descripcion.invalidFeedback"
+                class="col-12 col-sm-6"
+                description="Ejemplo: Proyecto 1"
+                label="Descripcion"
+                label-for="descripcion"
+                id="group-descripcion">
+                <b-form-input
+                  :disabled="form.camposAtributos.descripcion.disabled"
+                  :state="form.camposAtributos.descripcion.state"
+                  autocomplete="off"
+                  id="descripcion"
+                  ref="descripcion"
+                  size="sm"
+                  type="text"
+                  v-on:keyup="limpiarMensajeError"
+                  v-model="$v.form.campos.descripcion.$model"></b-form-input>
+              </b-form-group>
+              <b-form-group
+                :invalid-feedback="form.camposAtributos.cliente.invalidFeedback"
+                class="col-12 col-sm-6"
+                label="Cliente"
+                label-for="cliente"
+                id="group-cliente">
+                <b-form-input
+                  @blur="valorBlur('cliente')"
+                  @input="buscarCliente"
+                  :disabled="form.camposAtributos.cliente.disabled"
+                  :state="form.camposAtributos.cliente.state"
+                  autocomplete="off"
+                  id="cliente"
+                  ref="cliente"
+                  size="sm"
+                  type="text"
+                  v-on:focus="valorFocus('cliente')"
+                  v-model.trim="form.camposAtributos.cliente.valor"></b-form-input>
+                <b-dropdown id="lista-cliente" variant="link" no-caret block ref="ref-lista-cliente">
+                  <b-dropdown-item-button
+                    :key="key"
+                    v-for="(cliente, key) in form.camposAtributos.cliente.listaDropdown.listado"
+                    v-if="form.camposAtributos.cliente.listaDropdown.listado.length > 0"
+                    v-on:click="elegirFuncionario(cliente)"> @{{ cliente.nombre }} </b-dropdown-item-button>
+                  <b-dropdown-item-button
+                    v-if="form.camposAtributos.cliente.listaDropdown.noResultado"
+                    v-on:click="listadoNoValido('cliente')">No se encontrarón clientes, intente con otro nombre!</b-dropdown-item-button>
+                </b-dropdown>
+                <b-form-text id="cliente-help" v-html="form.camposAtributos.cliente.help"></b-form-text>
+              </b-form-group>
               <div class="form-group col-12 col-sm-6">
                 <label for="estatus">Estatus <span class="campo-obligatorio">*</span></label>
                 <select aria-describedby="estatusHelp"
@@ -153,13 +169,15 @@
                     <label>Horas</label>
                     <input @keypress="formatoHoraAsignada"
                            @keyup="horasTotales"
+                           :disabled="form.divisiones.disabled"
                            :ref="'asignar-'+division.id"
                            class="form-control hora-asignada"
                            type="text">
                   </div>
                 </div>
               </div>
-            </form>
+            </b-form>
+
              <!--Al hacer clic se invoca el metodo crear de nuevoProyecto.js y envia los valores de las variables para su modificacion-->
             <div class="row justify-content-center wrapper-subtmit">
               <div class="col-12 col-md-6 col-lg-4">
@@ -180,7 +198,7 @@
               </div>
             </div>
 
-          </div>
+          </b-col>
 
           <div class="col-12 col-sm-11 col-md-9 col-lg-8" v-cloak>
             <div class="row wrapper-alert">
@@ -190,9 +208,9 @@
             </div>
           </div>
 
-        </div>
+        </b-row>
 
-      </div>
+      </b-container>
 
       <script src="{{ mix('/js/nuevoProyecto.js') }}"></script>
 
