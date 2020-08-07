@@ -51408,6 +51408,7 @@ var app = new Vue({
       },
       fechaIngreso: {
         disabled: true,
+        validar: false,
         value: ""
       },
       fechaEgreso: {
@@ -51509,8 +51510,9 @@ var app = new Vue({
                   self.form.fechaIngreso.value = dataInit.infoUsu.fecha_ingreso_utc;
                   self.form.fechaEgreso.value = dataInit.infoUsu.fecha_egreso_utc;
                   self.fechaMinima(dataInit.infoUsu.fecha_ingreso_utc, dataInit.infoUsu.fecha_egreso_utc);
-                  self.loading = false;
                 }
+
+                self.loading = false;
               } else {
                 errorInit();
               }
@@ -51675,6 +51677,7 @@ var app = new Vue({
         self.form.parroquia.validar = true;
         self.form.division.validar = true;
         self.form.cargo.validar = true;
+        self.form.fechaIngreso.validar = true;
         self.form.estado.value = "";
       } else {
         $(e.target).parents("form").find(".form-group .mensaje").html("").removeClass("invalid-feedback");
@@ -51684,16 +51687,19 @@ var app = new Vue({
         self.form.parroquia.disabled = true;
         self.form.division.disabled = true;
         self.form.cargo.disabled = true;
+        self.form.fechaIngreso.validar = true;
         self.form.estado.validar = false;
         self.form.municipio.validar = false;
         self.form.parroquia.validar = false;
         self.form.division.validar = false;
         self.form.cargo.validar = false;
+        self.form.fechaIngreso.validar = false;
         self.form.estado.value = "";
         self.form.municipio.value = "";
         self.form.parroquia.value = "";
         self.form.division.value = "";
         self.form.cargo.value = "";
+        self.form.fechaIngreso.value = "";
       }
     },
     encriptar: function encriptar(valor) {
