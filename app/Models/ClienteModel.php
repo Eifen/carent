@@ -92,7 +92,7 @@ class ClienteModel extends Model
                                  tbl_contacto_usuario cu,
                                  tbl_usuario_documento_identidad udi
                             '.$condicion.'
-                            AND u.id_cargo > '.$cargo.'
+                            AND u.id_cargo > 12 AND u.id_cargo < 16
                             AND e.tabla = "tbl_usuario"
                             AND e.valor = u.id_estatus
                             AND u.id = cu.id_usuario
