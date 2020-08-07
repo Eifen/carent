@@ -33,10 +33,9 @@ class ClienteController extends Controller
     return $parroquias;
   }
 
-  function buscarUsuarios(Request $request){
+  function buscarUsuariosS(Request $request){
 
     $modelo = new ClienteModel();
-    $cargo = 16;
     $buscarPor = (int) $request->input("buscarPor");
     $dato = strtolower($request->input("dato"));
     $usuarios = $modelo->buscarUsuarios($buscarPor, $dato, $cargo);

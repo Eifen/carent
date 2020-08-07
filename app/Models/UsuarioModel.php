@@ -460,6 +460,7 @@ class UsuarioModel extends Model
 
       $info = DB::select('SELECT u.id_division,
                                  u.id_cargo,
+                                 u.codigo,
                                  CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)nombre,
                                  (SELECT d.descripcion FROM tbl_division d WHERE d.id = u.id_division)Ddivision,
                                  (SELECT ce.descripcion FROM tbl_cargo_empleado ce WHERE ce.id = u.id_cargo)Dcargo

@@ -48,7 +48,7 @@ Route::get('/buscarClieProyec', 'ClienteController@buscarClieProyec');
 Route::get('/detalleClienteProy', 'ClienteController@detalleClienteProy');
 Route::post('/actualizarFactCliente', 'ClienteController@actualizarFactCliente');
 Route::post('/crearFactCliente', 'ClienteController@crearFactCliente');
-Route::get('/buscarUsuariosS', 'ClienteController@buscarUsuarios');
+Route::get('/buscarUsuariosS', 'ClienteController@buscarUsuariosS');
 Route::get('/buscarUsuariosG', 'ClienteController@buscarUsuariosG');
 Route::get('/detalleUsuarios', 'ClienteController@detalleUsuario');
 Route::get('/formModificarCliente/{idCliente}', 'ClienteController@formModificarCliente')->middleware('usuario.session')->where('idCliente', '[0-9]+');//Validamos que solo pase números*/
