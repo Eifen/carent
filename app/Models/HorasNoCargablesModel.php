@@ -79,15 +79,12 @@ class HorasNoCargablesModel extends Model
 
       if(DB::table('tbl_concepto_horas_no_cargables')->insert(array("descripcion" => $concepto, "id_estatus" => 1))){
 
-        $data = array("usuario_id" => $usuario_id,
-                      "fecha" => $fecha,
-                      "direccion_ip" => $direccion_ip,
-                      "accion" => 'Registro del concepto de horas no cargables: '.$concepto.'',
-                      "tabla" => 'tbl_concepto_horas_no_cargables');
-        $bit = DB::table('logs_auditoria')->insertGetId($data);
         return array("respuesta" => true, "mensaje" => "Concepto creado con éxito!");
+
       }else{
+
         return array("respuesta" => false, "mensaje" => "Error al crear el concepto, intente nuevamente!");
+
       }
 
     }// Fin crearConceptoNoCargable
@@ -306,13 +303,15 @@ class HorasNoCargablesModel extends Model
     function registrarHorasNoCargables($parametros,$usuario_id,$fecha,$direccion_ip){
 
       if(DB::table('tbl_horas_no_cargables')->insert($parametros)){
+
         $analista = db::select('SELECT u.codigo FROM tbl_usuario u WHERE u.id ='.$parametros["id_usuario"].' ');
-        $data = array("usuario_id" => $usuario_id,
-                      "fecha" => $fecha,
-                      "direccion_ip" => $direccion_ip,
-                      "accion" => 'Registro de de horas no cargables al usuario codigo: '.$analista[0]->codigo.'');
-        $bit = DB::table('logs_auditoria')->insertGetId($data);
-        return array("respuesta" => true, "mensaje" => "Horas cargadas con éxito!");
+
+        return array(
+          "analista" => $analista[0]->codigo,
+          "respuesta" => true,
+          "mensaje" => "Horas cargadas con éxito!"
+        );
+        
       }else{
         return array("respuesta" => false, "mensaje" => "Error al tratar de cargar las horas, intente nuevamente!");
       }

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class LoginModel extends Model
 {
 
-    function buscarUsuario($codigo,$fecha,$direccion){
+    function buscarUsuario($codigo){
 
       $usuario = DB::select('SELECT u.id,
                                     u.clave,
@@ -30,12 +30,7 @@ class LoginModel extends Model
                              AND u.id = cu.id_usuario');
 
       if(count($usuario) > 0){
-        $data = array("usuario_id" => $usuario[0]->id,
-                      "fecha" => $fecha,
-                      "direccion_ip" => $direccion,
-                      "accion" => 'Inicio de Sesion',
-                      "tabla" => 'inicio');
-        $bit = DB::table('logs_auditoria')->insertGetId($data);
+
         return $usuario[0];
 
       }else{

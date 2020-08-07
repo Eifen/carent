@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\ConfigsModel;
 use App\Models\UsuarioModel;
+use App\Models\AuditoriaLogModel;
 use Illuminate\Http\RedirectResponse;
 
 class UsuarioController extends Controller
@@ -106,14 +107,26 @@ class UsuarioController extends Controller
               "parroquia" => $request->input("parroquia"),
               "division" => $request->input("division"),
               "cargo" => $request->input("cargo"),
-              "usuario_id" => $request->session()->get('usuario_id'),
-              "fecha" => date("Y-m-d H:i:s"),
-              "direccion_ip" => $request->session()->get('direccion'),
               "fechaIngreso" => $fecha_ingreso,
               "tipoDocumento" => $request->input("tipoDocumento")
             );
 
             $response = $modelo->crearUsuario($parametros);
+
+            if($response["response"]){
+
+              $parametros = [
+                "accion" => 'Registro de Usuario Codigo: '.$codigoUsuario,
+                "direccion_ip" => $request->session()->get('direccion_ip'),
+                "fecha" => date("Y-m-d H:i:s"),
+                "tabla" => 'tbl_usuario',
+                "usuario_id" => $request->session()->get('usuario_id')
+              ];
+
+              $modeloAudit = new AuditoriaLogModel();
+              $modeloAudit->logs_auditoria($parametros);
+
+            }
 
         }else{
 
@@ -259,6 +272,21 @@ class UsuarioController extends Controller
       );
 
       $response = $modelo->modificarUsuario($parametros);
+
+      if($response["response"]){
+
+        $parametros = [
+          "accion" => 'Modificacion del Usuario Codigo: '.$parametros["codigoUsuario"],
+          "direccion_ip" => $request->session()->get('direccion_ip'),
+          "fecha" => date("Y-m-d H:i:s"),
+          "tabla" => 'tbl_usuario',
+          "usuario_id" => $request->session()->get('usuario_id')
+        ];
+
+        $modeloAudit = new AuditoriaLogModel();
+        $modeloAudit->logs_auditoria($parametros);
+
+      }
 
       return $response;
 
