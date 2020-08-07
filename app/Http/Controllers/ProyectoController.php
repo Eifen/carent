@@ -177,6 +177,7 @@ class ProyectoController extends Controller
       $id_usuario = $request->session()->get('usuario_id');
       $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
       $estatus = $modelo->estatusProyectos();
+
       if ($infoUsuario->id_cargo === 16 || $infoUsuario->id_cargo === 17) {
         $infoProyectos = $modelo->proyectoUDivision($id_usuario, 11);
         $permisoVer = $modelo->permisoVer(session("usuario_id"), 11);
@@ -187,15 +188,17 @@ class ProyectoController extends Controller
         "permisoCrear" => $permisoCrear
       ];
       }
-      if ($infoUsuario->id_cargo === 15 || $permisoActualizar === "true") {
+
+      if ($infoUsuario->id_cargo === 15 && $permisoActualizar === "true") {
         $infoProyectos = $modelo->proyectoDDivision($infoUsuario->id_division,$id_usuario, 11);
-        return [
-          "estatus" => $estatus,
-          "proyectos" => $infoProyectos,
-          "permisoActualizar" => $permisoActualizar,
-          "permisoCrear" => $permisoCrear
-      ];
+          return [
+            "estatus" => $estatus,
+            "proyectos" => $infoProyectos,
+            "permisoActualizar" => $permisoActualizar,
+            "permisoCrear" => $permisoCrear
+        ];
       }
+
       $infoProyectos = $modelo->proyectoUDivision($id_usuario, 11);
       return [
         "estatus" => $estatus,
