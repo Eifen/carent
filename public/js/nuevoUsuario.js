@@ -50585,6 +50585,7 @@ var app = new Vue({
       },
       fechaIngreso: {
         disabled: true,
+        validar: false,
         value: ""
       },
       tipoDocumento: {
@@ -50739,6 +50740,7 @@ var app = new Vue({
         self.form.parroquia.value = "";
         self.form.division.value = "";
         self.form.cargo.value = "";
+        self.form.fechaIngreso.value = "";
       }
     },
     encriptar: function encriptar(valor) {
