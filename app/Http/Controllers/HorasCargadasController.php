@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\ConfigsModel;
 use App\Models\HorasCargadasModel;
+use App\Models\AuditoriaLogModel;
 use Illuminate\Http\RedirectResponse;
 
 class HorasCargadasController extends Controller
@@ -47,10 +48,24 @@ class HorasCargadasController extends Controller
       $fecha = date('Y-m-d', strtotime($fechaC));
       $descripcion = mb_strtoupper($request->input("descripcion"));
       $horas_trabajadas = $request->input("horas_trabajadas");
-      $usuario_id = $request->session()->get('usuario_id');
-      $fechab = date("Y-m-d H:i:s");
-      $direccion_ip = $request->session()->get('direccion');
-      $response = $modelo->cargarHoras($idProyAnalista,$fecha,$descripcion,$horas_trabajadas,$usuario_id,$fechab,$direccion_ip);
+
+      $response = $modelo->cargarHoras($idProyAnalista,$fecha,$descripcion,$horas_trabajadas);
+
+      if($response["response"]){
+
+        $parametros = [
+          "accion" => 'Analista codigo: '.$response["analista"].' Cargo: '.$horas_trabajadas.' horas en el proyecto: '.$response["proyecto"],
+          "direccion_ip" => $request->session()->get('direccion_ip'),
+          "fecha" => date("Y-m-d H:i:s"),
+          "tabla" => 'tbl_horas_cargables',
+          "usuario_id" => $request->session()->get('usuario_id')
+        ];
+
+        $modeloAudit = new AuditoriaLogModel();
+        $modeloAudit->logs_auditoria($parametros);
+
+      }
+
       return $response;
 
     }
@@ -58,7 +73,7 @@ class HorasCargadasController extends Controller
     function detalleModHorasCargadas(Request $request){
 
       $modelo = new HorasCargadasModel();
-      $idHcargadas = $request->input("idHcargadas");      
+      $idHcargadas = $request->input("idHcargadas");
       $infoModHorasCargadas = $modelo->detalleModHorasCargadas($idHcargadas);
       $response = array(
         				"infoModHorasCargadas" => $infoModHorasCargadas,
@@ -76,11 +91,24 @@ class HorasCargadasController extends Controller
       $fecha = date('Y-m-d', strtotime("$fechaC -1 day"));
       $descripcion = mb_strtoupper($request->input("descripcion"));
       $horas_trabajadas = $request->input("horas_trabajadas");
-      $usuario_id = $request->session()->get('usuario_id');
-      $fechab = date("Y-m-d H:i:s");
-      $direccion_ip = $request->session()->get('direccion');
-      
-      $response = $modelo->ModificarHorasCargadas($idHoraCargada,$fecha,$descripcion,$horas_trabajadas,$usuario_id,$fechab,$direccion_ip);
+
+      $response = $modelo->ModificarHorasCargadas($idHoraCargada,$fecha,$descripcion,$horas_trabajadas);
+
+      if($response["response"]){
+
+        $parametros = [
+          "accion" => 'Modificacion de horas del usuario codigo: '.$response["analista"].' en el proyecto: '.$response["proyecto"],
+          "direccion_ip" => $request->session()->get('direccion_ip'),
+          "fecha" => date("Y-m-d H:i:s"),
+          "tabla" => 'tbl_horas_cargables',
+          "usuario_id" => $request->session()->get('usuario_id')
+        ];
+
+        $modeloAudit = new AuditoriaLogModel();
+        $modeloAudit->logs_auditoria($parametros);
+
+      }
+
       return $response;
 
     }
@@ -88,7 +116,7 @@ class HorasCargadasController extends Controller
     function detalleHorasEliminar(Request $request){
 
       $modelo = new HorasCargadasModel();
-      $idHcargadas = $request->input("idHcargadas");      
+      $idHcargadas = $request->input("idHcargadas");
       $infoeliHorasCargadas = $modelo->detalleEliHorasCargadas($idHcargadas);
       $response = array(
         				"infoeliHorasCargadas" => $infoeliHorasCargadas,
@@ -101,10 +129,23 @@ class HorasCargadasController extends Controller
 
       $modelo = new HorasCargadasModel();
       $idHoraCargada = $request->input("id");
-      $usuario_id = $request->session()->get('usuario_id');
-      $fechab = date("Y-m-d H:i:s");
-      $direccion_ip = $request->session()->get('direccion');      
       $response = $modelo->EliminarHorasCargadas($idHoraCargada,$usuario_id,$fechab,$direccion_ip);
+
+      if($response["response"]){
+
+        $parametros = [
+          "accion" => 'Eliminacion de '.$response["horas_trabajadas"].' horas del usuario codigo: '.$response["analista"].' en el proyecto:'.$response["proyecto"],
+          "direccion_ip" => $request->session()->get('direccion_ip'),
+          "fecha" => date("Y-m-d H:i:s"),
+          "tabla" => 'tbl_horas_cargables',
+          "usuario_id" => $request->session()->get('usuario_id')
+        ];
+
+        $modeloAudit = new AuditoriaLogModel();
+        $modeloAudit->logs_auditoria($parametros);
+
+      }
+
       return $response;
 
     }
