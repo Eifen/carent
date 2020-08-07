@@ -343,7 +343,7 @@ class ProyectoController extends Controller
       $horas_asignadas = $request->input("horas_asignadas");
       $horasComparar = $request->input("horasComparar");
       $usuario_id = $request->session()->get('usuario_id');
-      $analis = $modelo->modHorasAnalistaProy($horas_asignadas, $horasComparar, $idAnaProy $idProyecto);
+      $analis = $modelo->modHorasAnalistaProy($horas_asignadas, $horasComparar, $idAnaProy, $idProyecto);
 
       if($analis["response"]){
 
