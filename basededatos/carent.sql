@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 22-07-2020 a las 02:12:54
+-- Tiempo de generación: 07-08-2020 a las 08:04:57
 -- Versión del servidor: 8.0.18
--- Versión de PHP: 7.3.16
+-- Versión de PHP: 7.3.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -62,7 +63,13 @@ INSERT INTO `logs_auditoria` (`id`, `usuario_id`, `fecha`, `direccion_ip`, `acci
 (19, 1, '2020-07-19 20:52:07', '127.0.0.1', 'Modificacion del Usuario Codigo:10589', 'tbl_usuario'),
 (20, 1, '2020-07-20 09:58:28', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
 (21, 1, '2020-07-20 15:01:08', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
-(22, 1, '2020-07-20 20:34:53', '127.0.0.1', 'Inicio de Sesion', 'inicio');
+(22, 1, '2020-07-20 20:34:53', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(23, 1, '2020-08-07 10:17:30', '127.0.0.1', 'Registro de Usuario Codigo: 2351', 'tbl_usuario'),
+(24, 1, '2020-08-07 10:20:48', '127.0.0.1', 'Modificacion del Usuario Codigo: 0001', 'tbl_usuario'),
+(25, 1, '2020-08-07 10:38:57', '127.0.0.1', 'Registro del cliente codigo: 1000', 'tbl_cliente'),
+(26, 1, '2020-08-07 10:39:54', '127.0.0.1', 'Modificación del cliente: 1000', 'tbl_cliente'),
+(27, 1, '2020-08-07 10:41:43', '127.0.0.1', 'Registro del proyecto: PRUEBA. Cliente: NOMBRE', 'tbl_proyecto'),
+(28, 1, '2020-08-07 10:42:23', '127.0.0.1', 'Modificacion del proyecto: PRUEBA. Cliente: NOMBRE', 'tbl_proyecto');
 
 --
 -- Disparadores `logs_auditoria`
@@ -769,7 +776,7 @@ INSERT INTO `tbl_ciudades` (`id_ciudad`, `id_estado`, `ciudad`, `capital`) VALUE
 CREATE TABLE `tbl_cliente` (
   `id` int(11) NOT NULL,
   `id_usuario_socio` int(11) NOT NULL,
-  `id_usuario_gerente` int(11) NOT NULL,
+  `id_usuario_gerente` int(11) DEFAULT NULL,
   `codigo` int(11) NOT NULL,
   `rif` varchar(15) NOT NULL,
   `nit` int(11) NOT NULL,
@@ -1270,7 +1277,7 @@ INSERT INTO `tbl_menu` (`id`, `id_menu_padre`, `descripcion`, `url`, `orden`, `i
 (8, 0, 'Proyectos', '', 0, 1),
 (9, 8, 'Crear Proyecto', '/formNuevoProyecto', 0, 1),
 (10, 8, 'Lista de Proyectos', '/proyectos', 1, 1),
-(11, 8, 'Asignados/ar Proyectos ', '/proyectoDivision', 2, 1),
+(11, 8, 'Asig.Personal/Horas Cargables', '/proyectoDivision', 2, 1),
 (12, 0, 'Horas No Cargables', '', 0, 1),
 (13, 12, 'Conceptos', '/formHorasNoCargables', 0, 1),
 (14, 12, 'Cargar', '/cargarHorasNoCargables', 1, 1),
@@ -2959,8 +2966,8 @@ INSERT INTO `tbl_tipo_contacto` (`id`, `descripcion`, `estatus`) VALUES
 
 CREATE TABLE `tbl_tipo_documento_identidad` (
   `id` int(11) NOT NULL,
-  `abreviatura` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `descripcion` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `abreviatura` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `descripcion` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -3001,7 +3008,7 @@ CREATE TABLE `tbl_usuario` (
 --
 
 INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `nombre_1`, `nombre_2`, `apellido_1`, `apellido_2`, `fecha_nacimiento`, `id_cargo`, `id_division`, `id_parroquia`, `avatar`, `fecha_ingreso`, `fecha_egreso`, `id_estatus`) VALUES
-(1, '0001', 'eyJpdiI6IjB5dnJXUUswTEdZenNcLzRHbTRWXC9HUT09IiwidmFsdWUiOiJwbUpkdURFdGhoc3FOSFpGQU1yaU5RPT0iLCJtYWMiOiI2ZDY1NTVlMTBkYmQ4NGNiNWM0MWRkMTllMjcxZjkxOTM5MmFhZmMxYTIwNmFiMzM4MjRmYTgwYjEwYTQ0NTY0In0=', 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', NULL, 11, 3, 1131, '', NULL, NULL, 1),
+(1, '0001', 'eyJpdiI6IjB5dnJXUUswTEdZenNcLzRHbTRWXC9HUT09IiwidmFsdWUiOiJwbUpkdURFdGhoc3FOSFpGQU1yaU5RPT0iLCJtYWMiOiI2ZDY1NTVlMTBkYmQ4NGNiNWM0MWRkMTllMjcxZjkxOTM5MmFhZmMxYTIwNmFiMzM4MjRmYTgwYjEwYTQ0NTY0In0=', 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', NULL, 11, 3, 1131, '', '2020-08-07 00:00:00', NULL, 1),
 (2, '10', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'NATHALIE', 'YAMILET', 'LOPEZ', 'TREJO', '1972-08-20 00:00:00', 15, 1, 1131, NULL, '2000-02-21 00:00:00', NULL, 1),
 (3, '10092', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'YESENIA', 'BEATRIZ', 'MARTINEZ', 'GALLARDO', '1979-06-01 00:00:00', 14, 1, 1131, NULL, '2004-09-01 00:00:00', NULL, 1),
 (4, '10141', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'JESUS', 'ERASMO', 'PEREZ', 'ERASMO', '1959-11-09 00:00:00', 17, 1, 1131, NULL, '2005-02-02 00:00:00', NULL, 1),
@@ -3167,7 +3174,7 @@ CREATE TABLE `tbl_usuario_documento_identidad` (
   `id` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
   `id_tipo_documento_identidad` int(11) NOT NULL,
-  `documento` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL
+  `documento` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3318,6 +3325,24 @@ INSERT INTO `tbl_usuario_documento_identidad` (`id`, `id_usuario`, `id_tipo_docu
 (141, 141, 1, '8957263'),
 (142, 142, 1, '26332830'),
 (143, 143, 1, '18514042');
+
+--
+-- Disparadores `tbl_usuario_documento_identidad`
+--
+DELIMITER $$
+CREATE TRIGGER `tbl_usuario_documento_identidad_AI` AFTER INSERT ON `tbl_usuario_documento_identidad` FOR EACH ROW BEGIN
+SET @usu = (SELECT id FROM logs.tbl_usuario ORDER BY id DESC LIMIT 1);
+  	UPDATE logs.tbl_usuario SET cedula_nuevo = NEW.documento WHERE id = @usu;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tbl_usuario_documento_identidad_BU` BEFORE UPDATE ON `tbl_usuario_documento_identidad` FOR EACH ROW BEGIN
+SET @usu = (SELECT id FROM logs.tbl_usuario ORDER BY id DESC LIMIT 1);
+  	UPDATE logs.tbl_usuario SET cedula_nuevo = NEW.documento, cedula = old.documento WHERE id = @usu;
+END
+$$
+DELIMITER ;
 
 --
 -- Índices para tablas volcadas
@@ -3509,7 +3534,7 @@ ALTER TABLE `tbl_usuario_documento_identidad`
 -- AUTO_INCREMENT de la tabla `logs_auditoria`
 --
 ALTER TABLE `logs_auditoria`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cargo_empleado`
@@ -3557,7 +3582,7 @@ ALTER TABLE `tbl_configuracion`
 -- AUTO_INCREMENT de la tabla `tbl_contacto_usuario`
 --
 ALTER TABLE `tbl_contacto_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=145;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_division`
@@ -3653,13 +3678,13 @@ ALTER TABLE `tbl_tipo_documento_identidad`
 -- AUTO_INCREMENT de la tabla `tbl_usuario`
 --
 ALTER TABLE `tbl_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=145;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_usuario_documento_identidad`
 --
 ALTER TABLE `tbl_usuario_documento_identidad`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=145;
 
 --
 -- Restricciones para tablas volcadas
