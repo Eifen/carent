@@ -341,7 +341,7 @@
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="coProyecto"></label>
                     </div>
                   </div>
-                  <div class="custom-control custom-switch" v-if="permisoContraloria">
+                  <div class="custom-control custom-switch" v-if="permisoSergio">
                     <label>Modificar Proyectos</label>
                     <div class="form-group form-check col-12">
                       <input class="custom-control-input"

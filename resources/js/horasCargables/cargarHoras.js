@@ -125,8 +125,10 @@ new Vue({
         self.horas_asignadas = self.infoProyAnalista.horas_asignadas;
         for (var i = 0; i < self.infoHorasCargadas.length; i++) {
               self.horas_cargadas = self.infoHorasCargadas[i].horas_trabajadas + self.horas_cargadas;
-        }
-
+        };
+        if (self.permisoActualizar === false) {
+          self.cargar = 0;
+        };
         self.loading = false;
 
       }else{
@@ -250,6 +252,13 @@ new Vue({
             message : message,
             show: true
           };
+          setTimeout(function(){
+              self.alertForm = {
+              class: "",
+              message: "",
+              show: false
+              };
+            }, 2000);
         }else if (parseInt(horas_asignadas) < parseInt(horas_cargadas) + parseInt(self.form.horas_trabajadas.value) && self.cargar === 1) {
           var message = "Sobrepasaste el limite de horas asignadas. Si estas seguro volver hacer clic en Cargar Horas.";
           self.alertForm = {
@@ -265,6 +274,13 @@ new Vue({
             message : message,
             show: true
           };
+          setTimeout(function(){
+              self.alertForm = {
+              class: "",
+              message: "",
+              show: false
+              };
+            }, 2000);
         }else if (fechaN < "06/01/2010") {
           var message = "Debe introducir una fecha valida";
           self.alertForm = {

@@ -173,13 +173,6 @@ class UsuarioModel extends Model
 
         if($contacto){
 
-          $data = array("usuario_id" => $parametros["usuario_id"],
-                        "fecha" => $parametros["fecha"],
-                        "direccion_ip" => $parametros["direccion_ip"],
-                        "accion" => 'Registro de Usuario Codigo:'.$parametros["codigoUsuario"].'',
-                        "tabla" => 'tbl_usuario');
-          $bit = DB::table('logs_auditoria')->insert($data);
-
           DB::commit();
           return array("response" => true, "message" => "Usuario Creado con Éxito; la contraseña es la misma cédula, se recomienda cambiarla al inicio de sesión.");
 
@@ -432,12 +425,7 @@ class UsuarioModel extends Model
         $contacto = DB::table('tbl_contacto_usuario')->where("id_usuario",$parametros["idUsuario"])->update($data);
 
         DB::commit();
-        $data = array("usuario_id" => $parametros["usuario_id"],
-                      "fecha" => $parametros["fecha"],
-                      "direccion_ip" => $parametros["direccion_ip"],
-                      "accion" => 'Modificacion del Usuario Codigo:'.$parametros["codigoUsuario"].'',
-                      "tabla" => 'tbl_usuario');
-        $bit = DB::table('logs_auditoria')->insertGetId($data);
+        
         return array("response" => true, "message" => "Usuario actualizado con Éxito!.");
 
       } catch(\Illuminate\Database\QueryException $ex){
@@ -472,6 +460,7 @@ class UsuarioModel extends Model
 
       $info = DB::select('SELECT u.id_division,
                                  u.id_cargo,
+                                 u.codigo,
                                  CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)nombre,
                                  (SELECT d.descripcion FROM tbl_division d WHERE d.id = u.id_division)Ddivision,
                                  (SELECT ce.descripcion FROM tbl_cargo_empleado ce WHERE ce.id = u.id_cargo)Dcargo

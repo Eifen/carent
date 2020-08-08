@@ -169,7 +169,7 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
-                <label for="correo_principal">Correó Secundario</label>
+                <label for="correo_principal">Correo Secundario</label>
                 <input aria-describedby="correoSecundariolHelp"
                        class="form-control text-lowercase"
                        id="correoSecundario"

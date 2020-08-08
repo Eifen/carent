@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\ConfigsModel;
 use App\Models\LoginModel;
+use App\Models\AuditoriaLogModel;
 use Illuminate\Http\RedirectResponse;
 
 class LoginController extends Controller
@@ -30,22 +31,9 @@ class LoginController extends Controller
 
       $codigoUsuario = $this->desencriptarCryptoJS($request->input("codigoUsuario"));
       $claveForm = $this->desencriptarCryptoJS($request->input("clave"));
-      $fecha = date("Y-m-d H:i:s");
-      if (isset($_SERVER["HTTP_CLIENT_IP"])){
-        $direccion = $_SERVER["HTTP_CLIENT_IP"];
-      }elseif (isset($_SERVER["HTTP_X_FORWARDED_FOR"])){
-        $direccion = $_SERVER["HTTP_X_FORWARDED_FOR"];
-      }elseif (isset($_SERVER["HTTP_X_FORWARDED"])){
-        $direccion = $_SERVER["HTTP_X_FORWARDED"];
-      }elseif (isset($_SERVER["HTTP_FORWARDED_FOR"])){
-        $direccion = $_SERVER["HTTP_FORWARDED_FOR"];
-      }elseif (isset($_SERVER["HTTP_FORWARDED"])){
-        $direccion = $_SERVER["HTTP_FORWARDED"];
-      }else{
-        $direccion = $_SERVER["REMOTE_ADDR"];
-      }
+
       $modelo = new LoginModel();
-      $usuario = $modelo->buscarUsuario($codigoUsuario,$fecha,$direccion);
+      $usuario = $modelo->buscarUsuario($codigoUsuario);
       $loginDenegado = $modelo->estatusLoginDenegado($usuario->id_estatus);
 
       if(!empty($usuario)){
@@ -57,11 +45,15 @@ class LoginController extends Controller
 
           if($claveDB === $claveForm){
 
+            $ip = $this->mi_ip();
+
             //Se crean las variables de sessión
             $request->session()->put('usuario_id', $usuario->id);
             $request->session()->put('division_id', $usuario->id_division);
             $request->session()->put('cargo_id', $usuario->id_cargo);
-            $request->session()->put('direccion', $direccion);
+            $request->session()->put('direccion_ip', $ip);
+
+            $log_auditoria = $this->logs($usuario->id, "inicio", "Inicio de Sesion", $ip);
 
             $response = array("login" => true, "message" => "Bienvenido!, espere unos segundo mientras mientras es redireccionado.");
 
@@ -157,6 +149,42 @@ class LoginController extends Controller
       $request->session()->flush();
 
       return redirect()->route('loginView');
+
+    }
+
+    private function mi_ip(){
+
+      if (isset($_SERVER["HTTP_CLIENT_IP"])){
+        $direccion = $_SERVER["HTTP_CLIENT_IP"];
+      }elseif (isset($_SERVER["HTTP_X_FORWARDED_FOR"])){
+        $direccion = $_SERVER["HTTP_X_FORWARDED_FOR"];
+      }elseif (isset($_SERVER["HTTP_X_FORWARDED"])){
+        $direccion = $_SERVER["HTTP_X_FORWARDED"];
+      }elseif (isset($_SERVER["HTTP_FORWARDED_FOR"])){
+        $direccion = $_SERVER["HTTP_FORWARDED_FOR"];
+      }elseif (isset($_SERVER["HTTP_FORWARDED"])){
+        $direccion = $_SERVER["HTTP_FORWARDED"];
+      }else{
+        $direccion = $_SERVER["REMOTE_ADDR"];
+      }
+
+      return $direccion;
+
+    }
+
+    private function logs($id_usuario, $tabla, $accion, $ip){
+
+      $modelo = new AuditoriaLogModel();
+
+      $parametros = [
+        "accion" => $accion,
+        "direccion_ip" => $ip,
+        "fecha" => date("Y-m-d H:i:s"),
+        "tabla" => $tabla,
+        "usuario_id" => $id_usuario
+      ];
+
+      return $modelo->logs_auditoria($parametros);
 
     }
 

@@ -68,7 +68,7 @@ class ProyectoModel extends Model
 
     }// Fin clientes
 
-    function crearProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus,$usuario_id,$fecha,$direccion_ip,$id_moneda,$monto){
+    function crearProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto){
 
       DB::beginTransaction();
 
@@ -99,15 +99,15 @@ class ProyectoModel extends Model
       }
 
       if($divisionCreada){
+
         $client = DB::select('SELECT c.razon_social FROM tbl_cliente c WHERE c.id = '.$cliente.'');
-        $data = array("usuario_id" => $usuario_id,
-                      "fecha" => $fecha,
-                      "direccion_ip" => $direccion_ip,
-                      "accion" => 'Registro del proyecto: '.$descripcion.'. Cliente:'.$client[0]->razon_social.'',
-                      "tabla" => 'tbl_proyecto');
-        $bit = DB::table('logs_auditoria')->insertGetId($data);
+
         DB::commit();
-        return array("response" => true, "message" => "Proyecto creado con éxito.");
+        return array(
+          "cliente" => $client[0]->razon_social,
+          "response" => true,
+          "message" => "Proyecto creado con éxito."
+        );
 
       }else{
 
@@ -366,65 +366,65 @@ class ProyectoModel extends Model
       }
     }
 
-    function modificarProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus,$idProyecto,$divisiones_v,$usuario_id,$fecha,$direccion_ip){
+    function modificarProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus,$idProyecto,$divisiones_v){
 
       DB::beginTransaction();
 
       try{
 
-      $data = array("descripcion" => $descripcion,
-                    "id_cliente" => $cliente,
-                    "fecha_contratacion" => $fechaContratacion,
-                    "id_estatus" => $estatus);
+        $data = array("descripcion" => $descripcion,
+                      "id_cliente" => $cliente,
+                      "fecha_contratacion" => $fechaContratacion,
+                      "id_estatus" => $estatus);
 
-      $update = DB::table('tbl_proyecto')->where("id",$idProyecto)->update($data);
+        $update = DB::table('tbl_proyecto')->where("id",$idProyecto)->update($data);
 
-      for($i = 0; $i < count($divisiones); $i++){
-        $si = 0;
-        for($j = 0; $j < count($divisiones_v); $j++){
-          if ($divisiones[$i]["id"] === $divisiones_v[$j]->id_division) {
-            $si=1;
+        for($i = 0; $i < count($divisiones); $i++){
+          $si = 0;
+          for($j = 0; $j < count($divisiones_v); $j++){
+            if ($divisiones[$i]["id"] === $divisiones_v[$j]->id_division) {
+              $si=1;
+            }
           }
-        }
-        if ($si === 0) {
+          if ($si === 0) {
 
-          $data = array(
-                        "id_proyecto" => $idProyecto,
-                        "id_division" => $divisiones[$i]["id"],
-                        "horas_contratadas" => $divisiones[$i]["horas"]
-                        );
-          $div = DB::table('tbl_proyecto_divisiones')->insert($data);
+            $data = array(
+                          "id_proyecto" => $idProyecto,
+                          "id_division" => $divisiones[$i]["id"],
+                          "horas_contratadas" => $divisiones[$i]["horas"]
+                          );
+            $div = DB::table('tbl_proyecto_divisiones')->insert($data);
 
-        }else{
+          }else{
 
-          $data = array("horas_contratadas" => $divisiones[$i]["horas"]);
-          $div = DB::table('tbl_proyecto_divisiones')->where([['id_proyecto', '=', $idProyecto],['id_division', '=', $divisiones_v[$i]->id_division]])->update($data);
+            $data = array("horas_contratadas" => $divisiones[$i]["horas"]);
+            $div = DB::table('tbl_proyecto_divisiones')->where([['id_proyecto', '=', $idProyecto],['id_division', '=', $divisiones_v[$i]->id_division]])->update($data);
 
-        }
-
-      }
-
-      for($i = 0; $i < count($divisiones_v); $i++){
-        $no = 0;
-        for($j = 0; $j < count($divisiones); $j++){
-          if ($divisiones_v[$i]->id_division === $divisiones[$j]["id"]) {
-            $no=1;
-          }
-        }
-        if ($no === 0) {
-          $delete = DB::table('tbl_proyecto_divisiones')->where([['id_proyecto', '=', $idProyecto],['id_division', '=', $divisiones_v[$i]->id_division]])->delete();
           }
 
-      }
-        DB::commit();
-        $client = DB::select('SELECT c.razon_social FROM tbl_cliente c WHERE c.id = '.$cliente.'');
-        $data = array("usuario_id" => $usuario_id,
-                      "fecha" => $fecha,
-                      "direccion_ip" => $direccion_ip,
-                      "accion" => 'Modificacion del proyecto: '.$descripcion.'. Cliente:'.$client[0]->razon_social.'',
-                      "tabla" => 'tbl_proyecto');
-        $bit = DB::table('logs_auditoria')->insertGetId($data);
-        return array("response" => true, "message" => "Proyecto actualizado con éxito.");
+        }
+
+        for($i = 0; $i < count($divisiones_v); $i++){
+          $no = 0;
+          for($j = 0; $j < count($divisiones); $j++){
+            if ($divisiones_v[$i]->id_division === $divisiones[$j]["id"]) {
+              $no=1;
+            }
+          }
+          if ($no === 0) {
+            $delete = DB::table('tbl_proyecto_divisiones')->where([['id_proyecto', '=', $idProyecto],['id_division', '=', $divisiones_v[$i]->id_division]])->delete();
+            }
+
+        }
+
+          DB::commit();
+          $client = DB::select('SELECT c.razon_social FROM tbl_cliente c WHERE c.id = '.$cliente.'');
+
+          return array(
+            "cliente" => $client[0]->razon_social,
+            "response" => true,
+            "message" => "Proyecto actualizado con éxito."
+          );
 
       } catch(\Illuminate\Database\QueryException $ex){
 
@@ -792,7 +792,7 @@ class ProyectoModel extends Model
 
     }
 
-    function agregarAnalistaProy($estado,$idUsuario,$idProyecto,$id_proyecto_division,$usuario_id,$fecha,$direccion_ip){
+    function agregarAnalistaProy($estado,$idUsuario,$idProyecto,$id_proyecto_division){
 
       DB::beginTransaction();
 
@@ -804,16 +804,18 @@ class ProyectoModel extends Model
       $analistaAgregado = DB::table('tbl_proyecto_analista')->insertGetId($data);
 
       if($analistaAgregado){
+
         $proyecto = DB::select('SELECT UPPER(p.descripcion) AS descripcion FROM tbl_proyecto p WHERE p.id = '.$idProyecto.'');
         $analista = DB::select('SELECT u.codigo FROM tbl_usuario u WHERE u.id = '.$idUsuario.'');
-        $data = array("usuario_id" => $usuario_id,
-                      "fecha" => $fecha,
-                      "direccion_ip" => $direccion_ip,
-                      "accion" => 'Asignacion del analista codigo: '.$analista[0]->codigo.'. Al proyecto: '.$proyecto[0]->descripcion.'',
-                      "tabla" => 'tbl_proyecto_analista');
-        $bit = DB::table('logs_auditoria')->insertGetId($data);
+
         DB::commit();
-        return array("response" => true, "message" => "Analista agregado con éxito.");
+
+        return array(
+          "analista" => $analista[0]->codigo,
+          "proyecto" => $proyecto[0]->descripcion,
+          "response" => true,
+          "message" => "Analista agregado con éxito."
+        );
 
       }else{
 
@@ -842,39 +844,32 @@ class ProyectoModel extends Model
 
     }
 
-    function modAnalistaProy($estado,$idAnaProy,$idProyecto,$usuario_id,$fecha,$direccion_ip){
+    function modAnalistaProy($estado,$idAnaProy,$idProyecto){
 
       DB::beginTransaction();
 
       try{
 
-      $data = array("id_estatus" => $estado);
+        $data = array("id_estatus" => $estado);
 
-      $update = DB::table('tbl_proyecto_analista')->where("id",$idAnaProy)->update($data);
-
+        $update = DB::table('tbl_proyecto_analista')->where("id",$idAnaProy)->update($data);
 
         DB::commit();
         $info = db::select('SELECT * FROM tbl_proyecto_analista WHERE id = '.$idAnaProy.'');
         $analista = db::select('SELECT u.codigo FROM tbl_usuario u WHERE u.id = (SELECT a.id_analista  FROM tbl_proyecto_analista a WHERE a.id = '.$idAnaProy.')');
         $proyecto = DB::select('SELECT UPPER(p.descripcion) AS descripcion FROM tbl_proyecto p WHERE p.id = '.$idProyecto.'');
+
         if ($info[0]->id_estatus === 1) {
-          $data = array("usuario_id" => $usuario_id,
-                      "fecha" => $fecha,
-                      "direccion_ip" => $direccion_ip,
-                      "accion" => 'Asignacion del analista codigo: '.$analista[0]->codigo.'. Al proyecto: '.$proyecto[0]->descripcion.'',
-                      "tabla" => 'tbl_proyecto_analista');
-          $bit = DB::table('logs_auditoria')->insertGetId($data);
-        }
-        if ($info[0]->id_estatus === 0) {
-          $data = array("usuario_id" => $usuario_id,
-                      "fecha" => $fecha,
-                      "direccion_ip" => $direccion_ip,
-                      "accion" => 'Eliminacion del analista codigo: '.$analista[0]->codigo.'. Del proyecto: '.$proyecto[0]->descripcion.'',
-                      "tabla" => 'tbl_proyecto_analista');
-          $bit = DB::table('logs_auditoria')->insertGetId($data);
+          $accion = 'Asignacion del analista codigo: '.$analista[0]->codigo.'. Al proyecto: '.$proyecto[0]->descripcion;
+        }else if($info[0]->id_estatus === 0){
+          $accion = 'Eliminacion del analista codigo: '.$analista[0]->codigo.'. Del proyecto: '.$proyecto[0]->descripcion;
         }
 
-        return array("response" => true, "message" => "Analista actualizado con éxito.");
+        return array(
+          "accion" => $accion,
+          "response" => true,
+          "message" => "Analista actualizado con éxito."
+        );
 
       } catch(\Illuminate\Database\QueryException $ex){
 
@@ -886,30 +881,35 @@ class ProyectoModel extends Model
     }
 
 
-    function modHorasAnalistaProy($horas_asignadas,$horasComparar,$idAnaProy, $usuario_id, $fecha, $direccion_ip, $idProyecto){
+    function modHorasAnalistaProy($horas_asignadas,$horasComparar,$idAnaProy, $idProyecto){
 
       DB::beginTransaction();
 
       try{
+
         $analista = db::select('SELECT u.codigo FROM tbl_usuario u WHERE u.id = (SELECT a.id_analista  FROM tbl_proyecto_analista a WHERE a.id = '.$idAnaProy.')');
         $proyecto = DB::select('SELECT UPPER(p.descripcion) AS descripcion FROM tbl_proyecto p WHERE p.id = '.$idProyecto.'');
+        $horas = [];
+
         for($i = 0; $i < count($horas_asignadas); $i++){
 
           if ($horas_asignadas[$i] != $horasComparar[$i]) {
 
             $data = array("horas_asignadas" => $horas_asignadas[$i]);
             $update = DB::table('tbl_proyecto_analista')->where("id",$idAnaProy)->update($data);
-            $data = array("usuario_id" => $usuario_id,
-                          "fecha" => $fecha,
-                          "direccion_ip" => $direccion_ip,
-                          "accion" => 'total de horas asignadas: '.$horas_asignadas[$i].'. Al analista codigo: '.$analista[0]->codigo.' en el proyecto: '.$proyecto[0]->descripcion.' ',
-                          "tabla" => 'tbl_proyecto_analista');
-            $bit = DB::table('logs_auditoria')->insertGetId($data);
+
+            $horas[$i] = 'total de horas asignadas: '.$horas_asignadas[$i].'. Al analista codigo: '.$analista[0]->codigo.' en el proyecto: '.$proyecto[0]->descripcion;
+
           }
+
         }
 
         DB::commit();
-        return array("response" => true, "message" => "Analista actualizado con éxito.");
+        return array(
+          "horas" => $horas,
+          "response" => true,
+          "message" => "Analista actualizado con éxito."
+        );
 
       } catch(\Illuminate\Database\QueryException $ex){
 

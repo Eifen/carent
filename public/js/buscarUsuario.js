@@ -77279,6 +77279,7 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
     permisoContraloria: false,
     permisoSocio: false,
     permisoEncargado: false,
+    permisoSergio: false,
     infoUsuario: []
   },
   beforeCreate: function beforeCreate() {
@@ -77399,6 +77400,7 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
       self.permisoRRHH = false;
       self.permisoContraloria = false;
       self.permisoSocio = false;
+      self.permisoSergio = false;
       self.permisoEncargado = true;
       self.detalleMenu.error = false;
       self.crUsuario.checked = false;
@@ -77475,13 +77477,17 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
 
           if (self.division.data === 7) {
             self.permisoRRHH = true;
-          } else if (self.division.data === 10) {
+          } else if (self.division.data === 10 || self.infoUsuario.codigo === "10863") {
             self.permisoContraloria = true;
+          }
+
+          if (self.infoUsuario.codigo === "10863") {
+            self.permisoSergio = true;
           }
 
           self.cargo.data = response.data.datosUsuario.id_cargo;
 
-          if (self.cargo.data === 16) {
+          if (self.cargo.data === 16 || self.cargo.data === 17) {
             self.permisoSocio = true;
             self.permisoEncargado = false;
           }

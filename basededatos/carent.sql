@@ -3,7 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 26-07-2020 a las 21:43:06
+
+-- Tiempo de generación: 08-08-2020 a las 01:13:51
 -- Versión del servidor: 8.0.18
 -- Versión de PHP: 7.3.16
 
@@ -41,33 +42,18 @@ CREATE TABLE `logs_auditoria` (
 --
 
 INSERT INTO `logs_auditoria` (`id`, `usuario_id`, `fecha`, `direccion_ip`, `accion`, `tabla`) VALUES
-(1, 1, '2020-07-15 20:40:00', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
-(2, 1, '2020-07-16 07:40:42', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
-(3, 1, '2020-07-16 07:41:33', '127.0.0.1', 'Registro de Usuario Codigo:0002', 'tbl_usuario'),
-(4, 1, '2020-07-16 17:33:07', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
-(5, 1, '2020-07-16 17:34:02', '127.0.0.1', 'Registro de Usuario Codigo:222222', 'tbl_usuario'),
-(6, 1, '2020-07-16 22:12:08', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
-(7, 1, '2020-07-16 22:56:31', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
-(8, 1, '2020-07-16 23:44:59', '127.0.0.1', 'Registro de Usuario Codigo:0002', 'tbl_usuario'),
-(9, 1, '2020-07-16 23:46:12', '127.0.0.1', 'Registro de Usuario Codigo:0003', 'tbl_usuario'),
-(10, 1, '2020-07-16 23:57:06', '127.0.0.1', 'Registro de Usuario Codigo:22222', 'tbl_usuario'),
-(11, 1, '2020-07-17 08:31:47', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
-(12, 3, '2020-07-17 09:09:31', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
-(13, 1, '2020-07-17 09:10:29', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
-(14, 1, '2020-07-17 13:10:35', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
-(15, 1, '2020-07-17 13:18:36', '127.0.0.1', 'Registro de Usuario Codigo:0002', 'tbl_usuario'),
-(16, 1, '2020-07-17 15:36:05', '127.0.0.1', 'Modificacion del Usuario Codigo:0002', 'tbl_usuario'),
-(17, 1, '2020-07-19 17:17:22', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
-(18, 1, '2020-07-19 20:51:51', '127.0.0.1', 'Modificacion del Usuario Codigo:10589', 'tbl_usuario'),
-(19, 1, '2020-07-19 20:52:07', '127.0.0.1', 'Modificacion del Usuario Codigo:10589', 'tbl_usuario'),
-(20, 1, '2020-07-20 09:58:28', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
-(21, 1, '2020-07-20 15:01:08', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
-(22, 1, '2020-07-20 20:34:53', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
-(23, 1, '2020-07-22 14:19:29', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
-(24, 1, '2020-07-23 15:14:12', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
-(25, 1, '2020-07-24 18:23:36', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
-(26, 1, '2020-07-25 12:03:53', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
-(27, 1, '2020-07-26 17:03:13', '127.0.0.1', 'Inicio de Sesion', 'inicio');
+(1, 1, '2020-08-06 14:51:23', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(2, 1, '2020-08-06 18:51:09', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(3, 1, '2020-08-06 20:37:39', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(4, 1, '2020-08-06 23:14:18', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(5, 1, '2020-08-06 23:35:38', '127.0.0.1', 'Modificacion del Usuario Codigo: 0001', 'tbl_usuario'),
+(6, 1, '2020-08-06 23:38:27', '127.0.0.1', 'Modificacion del Usuario Codigo: 0001', 'tbl_usuario'),
+(7, 1, '2020-08-06 23:40:11', '127.0.0.1', 'Registro de Usuario Codigo: 0002', 'tbl_usuario'),
+(8, 1, '2020-08-06 23:40:45', '127.0.0.1', 'Registro de Usuario Codigo: 0003', 'tbl_usuario'),
+(9, 1, '2020-08-06 23:41:23', '127.0.0.1', 'Modificacion del Usuario Codigo: 0002', 'tbl_usuario'),
+(10, 1, '2020-08-06 23:43:51', '127.0.0.1', 'Modificacion del Usuario Codigo: 0003', 'tbl_usuario'),
+(11, 1, '2020-08-07 18:05:53', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(12, 1, '2020-08-07 18:53:53', '127.0.0.1', 'Inicio de Sesion', 'inicio');
 
 --
 -- Disparadores `logs_auditoria`
@@ -924,7 +910,7 @@ INSERT INTO `tbl_ciudades` (`id_ciudad`, `id_estado`, `ciudad`, `capital`) VALUE
 CREATE TABLE `tbl_cliente` (
   `id` int(11) NOT NULL,
   `id_usuario_socio` int(11) NOT NULL,
-  `id_usuario_gerente` int(11) NOT NULL,
+  `id_usuario_gerente` int(11) DEFAULT NULL,
   `codigo` int(11) NOT NULL,
   `rif` varchar(15) NOT NULL,
   `nit` int(11) NOT NULL,
@@ -940,6 +926,14 @@ CREATE TABLE `tbl_cliente` (
   `email_fiscal` varchar(100) NOT NULL,
   `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `tbl_cliente`
+--
+
+INSERT INTO `tbl_cliente` (`id`, `id_usuario_socio`, `id_usuario_gerente`, `codigo`, `rif`, `nit`, `razon_social`, `id_parroquia_fiscal`, `avenida_calle_fiscal`, `edificio_quinta_fiscal`, `piso_fiscal`, `numero_fiscal`, `ciudad_fiscal`, `telefono_fiscal`, `pagina_web`, `email_fiscal`, `id_estatus`) VALUES
+(1, 0, 0, 1000, 'J00001', 0, 'CLIENTE 1', 1138, 'CALLE 1', 'EDIFICIO 1', '1', '-1', 'CARACAS', '(0212) - 123 4567', NULL, '1@gmail.com', 1),
+(2, 0, 0, 1001, 'J222222', 0, 'CLIENTE 2', 1123, 'CALLE 1', 'EDIF 1', '1', '1', 'CARACAS', '(0424) - 222 2222', NULL, '2@g.com', 1);
 
 --
 -- Disparadores `tbl_cliente`
@@ -1067,7 +1061,7 @@ CREATE TABLE `tbl_contacto_usuario` (
 --
 
 INSERT INTO `tbl_contacto_usuario` (`id`, `id_usuario`, `correo_principal`, `correo_secundario`, `telefono_principal`, `telefono_secundario`) VALUES
-(1, 1, 'dmolina101@gmail.com', '', '(0000) - 000 0000', '(0000) - 000 0002'),
+(1, 1, 'dmolina101@gmail.com', '', '(0424) - 446 3739', NULL),
 (2, 2, 'nathalie.lopez@crowe.com.ve', '', '', ''),
 (3, 3, 'yesenia.martinez@crowe.com.ve', '', '', ''),
 (4, 4, 'jesus.perez@crowe.com.ve', '', '', ''),
@@ -1209,7 +1203,16 @@ INSERT INTO `tbl_contacto_usuario` (`id`, `id_usuario`, `correo_principal`, `cor
 (140, 140, 'fredy.bautista@crowe.com.ve', '', '', ''),
 (141, 141, 'nombre.apellido@dominio.com', '', '', ''),
 (142, 142, 'barbara.zambrano@crowe.com.ve', '', '', ''),
-(143, 143, 'mary.cruz@crowe.com.ve', '', '04249686614', '02869341430');
+(143, 143, 'mary.cruz@crowe.com.ve', '', '04249686614', '02869341430'),
+(144, 144, 'sergio.marquez@crowe.com.ve', 'sergiofmarquezt@gmail.com', '(0414) - 907 0900', NULL),
+(145, 145, 'nelson.marcano@crowe.com.ve', '', '(0412) - 019 5573', NULL),
+(146, 146, 'samuel.marquez@crowe.com', 'smarquezt66@gmail.com', NULL, NULL),
+(147, 147, 'antonio.dugarte@crowe.com.ve', '', '(0424) - 226 5723', NULL),
+(148, 148, 'mirnangela.salaya@crowe.com.ve', '', '(0424) - 151 1028', NULL),
+(149, 149, 'jose.marquez@crowe.com.ve', '', '(0414) - 255 4850', NULL),
+(150, 150, 'freddy.perdomo2@crowe.com.ve', '', NULL, NULL),
+(151, 151, 'robinson.aranguren@crowe.com.ve', '', '(0414) - 134 9727', NULL),
+(152, 152, 'joseecker51@gmail.com', '', '(0414) - 101 7189', '(0414) - 263 8949');
 
 -- --------------------------------------------------------
 
@@ -1425,7 +1428,7 @@ INSERT INTO `tbl_menu` (`id`, `id_menu_padre`, `descripcion`, `url`, `orden`, `i
 (8, 0, 'Proyectos', '', 0, 1),
 (9, 8, 'Crear Proyecto', '/formNuevoProyecto', 0, 1),
 (10, 8, 'Lista de Proyectos', '/proyectos', 1, 1),
-(11, 8, 'Asignados/ar Proyectos ', '/proyectoDivision', 2, 1),
+(11, 8, 'Asig. Personal/Horas Cargables', '/proyectoDivision', 2, 1),
 (12, 0, 'Horas No Cargables', '', 0, 1),
 (13, 12, 'Conceptos', '/formHorasNoCargables', 0, 1),
 (14, 12, 'Cargar', '/cargarHorasNoCargables', 1, 1),
@@ -3014,6 +3017,14 @@ CREATE TABLE `tbl_proyecto` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
+-- Volcado de datos para la tabla `tbl_proyecto`
+--
+
+INSERT INTO `tbl_proyecto` (`id`, `descripcion`, `id_cliente`, `fecha_contratacion`, `monto`, `id_moneda`, `id_estatus`) VALUES
+(1, 'proyecto 1', 1, '30/07/2020', '10500.00', 2, 1),
+(2, 'proyecto 2', 2, '30/07/2020', '5235.52', 2, 1);
+
+--
 -- Disparadores `tbl_proyecto`
 --
 DELIMITER $$
@@ -3064,6 +3075,17 @@ CREATE TABLE `tbl_proyecto_divisiones` (
   `id_proyecto` int(11) NOT NULL,
   `horas_contratadas` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `tbl_proyecto_divisiones`
+--
+
+INSERT INTO `tbl_proyecto_divisiones` (`id`, `id_division`, `id_proyecto`, `horas_contratadas`) VALUES
+(1, 3, 1, 80),
+(2, 5, 1, 45),
+(3, 4, 2, 15),
+(4, 5, 2, 20),
+(5, 2, 2, 30);
 
 -- --------------------------------------------------------
 
@@ -3156,7 +3178,7 @@ CREATE TABLE `tbl_usuario` (
 --
 
 INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `nombre_1`, `nombre_2`, `apellido_1`, `apellido_2`, `fecha_nacimiento`, `id_cargo`, `id_division`, `id_parroquia`, `avatar`, `fecha_ingreso`, `fecha_egreso`, `id_estatus`) VALUES
-(1, '0001', 'eyJpdiI6IjB5dnJXUUswTEdZenNcLzRHbTRWXC9HUT09IiwidmFsdWUiOiJwbUpkdURFdGhoc3FOSFpGQU1yaU5RPT0iLCJtYWMiOiI2ZDY1NTVlMTBkYmQ4NGNiNWM0MWRkMTllMjcxZjkxOTM5MmFhZmMxYTIwNmFiMzM4MjRmYTgwYjEwYTQ0NTY0In0=', 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', NULL, 11, 3, 1131, '', NULL, NULL, 1),
+(1, '0001', 'eyJpdiI6IjB5dnJXUUswTEdZenNcLzRHbTRWXC9HUT09IiwidmFsdWUiOiJwbUpkdURFdGhoc3FOSFpGQU1yaU5RPT0iLCJtYWMiOiI2ZDY1NTVlMTBkYmQ4NGNiNWM0MWRkMTllMjcxZjkxOTM5MmFhZmMxYTIwNmFiMzM4MjRmYTgwYjEwYTQ0NTY0In0=', 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '1986-08-05 00:00:00', 16, 16, 1131, '', NULL, NULL, 1),
 (2, '10', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'NATHALIE', 'YAMILET', 'LOPEZ', 'TREJO', '1972-08-20 00:00:00', 15, 1, 1131, NULL, '2000-02-21 00:00:00', NULL, 1),
 (3, '10092', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'YESENIA', 'BEATRIZ', 'MARTINEZ', 'GALLARDO', '1979-06-01 00:00:00', 14, 1, 1131, NULL, '2004-09-01 00:00:00', NULL, 1),
 (4, '10141', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'JESUS', 'ERASMO', 'PEREZ', 'ERASMO', '1959-11-09 00:00:00', 17, 1, 1131, NULL, '2005-02-02 00:00:00', NULL, 1),
@@ -3298,7 +3320,16 @@ INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `nombre_1`, `nombre_2`, `ape
 (140, '10508', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'FREDY', 'SAMUEL', 'BAUTISTA', 'VILLEGAS', '1950-05-14 00:00:00', 18, 17, 1131, NULL, '2005-08-01 00:00:00', NULL, 1),
 (141, '10689', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'ELLEN', 'KATIUSKA', 'FUENTES', 'RIOS', '1966-03-16 00:00:00', 33, 18, 1131, NULL, '2007-02-26 00:00:00', NULL, 1),
 (142, '11451', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'BARBARA', 'CAROLINA', 'ZAMBRANO', 'AGUINALDE', '1996-11-19 00:00:00', 6, 18, 1131, NULL, '2018-08-01 00:00:00', NULL, 1),
-(143, '11476', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'MARY', '', 'CRUZ', 'SALAZAR', '1989-09-20 00:00:00', 12, 18, 1131, NULL, '2018-12-03 00:00:00', NULL, 1);
+(143, '11476', 'eyJpdiI6IktFQWRPTFdWRjBkRzRuR2hUSlwvV1hBPT0iLCJ2YWx1ZSI6Iktza04wQytPRnlLbmRETWJHQmdxaHc9PSIsIm1hYyI6IjExMTAzMTU4YjY3MDQzMDA4NjI2NjZjZDNiYjlmNzJkYmY2N2JiYmZlZjQwODVmMzE2ZjUxMWMwYjYyMmM1ZjcifQ==', 'MARY', '', 'CRUZ', 'SALAZAR', '1989-09-20 00:00:00', 12, 18, 1131, NULL, '2018-12-03 00:00:00', NULL, 1),
+(144, '10863', 'eyJpdiI6IlVqUXNkY0JObmVKTTRKMEZZZ1BMVUE9PSIsInZhbHVlIjoiOHJKUVJBdXRJK09WQTFwVWFSMGNYQT09IiwibWFjIjoiNjRkYTVjMWYzMGU1NzcyN2NkMWUwZTlmMjkzNjI2ODA1MTcwYmNjN2ExYTc3NDE5OTc1M2NiNmNkNzZmNzZlYyJ9', 'SERGIO', 'FREDDYS', 'MÁRQUEZ', 'TOVAR', '1971-12-31 00:00:00', 16, 16, 1131, NULL, '2013-05-02 00:00:00', NULL, 1),
+(145, '29', 'eyJpdiI6IjlKR3pOd2RDNnVNTEdjcjN4OUljWnc9PSIsInZhbHVlIjoiNUtWbkRoOUZMZzFTQm13N0RuNGNYQT09IiwibWFjIjoiMWU1NTdiOGUwYTZiMzMzNDc5YjhmOTZiM2M1ZWQzMjE2Zjk3YTExOGU0MTRkZDI4ZGJkNTBkNmY4MGRiNjk5ZCJ9', 'NELSON', 'JOSE', 'MARCANO', '', '1969-09-20 00:00:00', 16, 16, 1131, NULL, '2000-10-26 00:00:00', NULL, 1),
+(146, '5002', 'eyJpdiI6IjErN3lGaGJCQlU1em1NNHJ0cjAybmc9PSIsInZhbHVlIjoiSVI4V1ZZUVI2TXdWdnU4b1EyNllyQT09IiwibWFjIjoiMjg2MDJjNzRkMzFjYWVmZTU3NmRmZTVjOWY2NDI3NzRiMmMxYWQ1NzNlZTc3MjViNThhNzFjZjg4NWEyZGRlMCJ9', 'SAMUEL', 'ALEJANDRO', 'MARQUEZ', 'TOVAR', '1966-06-26 00:00:00', 16, 16, 1131, NULL, '1999-07-01 00:00:00', NULL, 1),
+(147, '538', 'eyJpdiI6ImZ2WVNjVThIdFRRVDF6UmNCakc2QUE9PSIsInZhbHVlIjoiOW1aNm56aHUrcDFUKzJxTVVKRXB5dz09IiwibWFjIjoiYWNiNzY2MWFkNjY0ZjNhN2NkZTAwNTIwYmVlMWE4NTY2MjMxYmI3MmEyNDcyZTRlMzcyMWYyYTE2ZDAxZDUzZCJ9', 'ANTONIO', 'JOSE', 'DUGARTE', 'LOBO', '1964-07-23 00:00:00', 16, 16, 1131, NULL, '2011-03-16 00:00:00', NULL, 1),
+(148, '107', 'eyJpdiI6IkNoZzUwN1hFTmdXVkhWcjBLTUJtQWc9PSIsInZhbHVlIjoidDNUeGpiaWRhWUlHM2hDVkZEK2dmZz09IiwibWFjIjoiODQzNTQyNGFkMDE0NmFkOWUyYzMwZmZlMzA2OWU4NTE4YmVmNDkyZjkzOTRlM2U5ZTA4ZjI3ZTk1MGY3Y2UxMyJ9', 'MIRNANGELA', 'LARISKA', 'SALAYA', 'GARCIA', '1977-11-08 00:00:00', 16, 16, 1131, NULL, '2000-08-08 00:00:00', NULL, 1),
+(149, '5003', 'eyJpdiI6InJXeVMwWStQYkNNdytVaFd5UjVETFE9PSIsInZhbHVlIjoiM002N05WYm1TM1JnWEVKdGVQXC9UcHc9PSIsIm1hYyI6IjQyMzM5ZTYwYjA1ZmRiZmJlYjBmMzgzMDhiMThlN2VjNmEwODY0MjA1NDdjYWNiMTdkZTNhM2RjNWY5ZjEwNmUifQ==', 'JOSE', 'NICOLAS', 'MARQUEZ', 'CEJAS', '1962-02-11 00:00:00', 16, 16, 1131, NULL, '2007-08-01 00:00:00', NULL, 1),
+(150, '5007', 'eyJpdiI6IjlhK1daXC9iZzNUeGxtb3g1MDkxa01BPT0iLCJ2YWx1ZSI6IndGUUw4SEJIdEx2eXVOVE9oQlRqMnc9PSIsIm1hYyI6Ijg4NDA0YWRhNDJlMzZmMjdmMTI2Y2UzMTRiNWJmNGM0ZmIxOTU1NWM2YWI2NzhjZDk1ZTU2NDE1N2I5ZTIyODIifQ==', 'FREDDY', 'FRANCISCO', 'PERDOMO', '', '1949-05-17 00:00:00', 16, 16, 1131, NULL, '2008-08-01 00:00:00', NULL, 1),
+(151, '6146', 'eyJpdiI6InNzY0g1S0g5b0JTUkdPNitaZU1GcGc9PSIsInZhbHVlIjoiWWd1eHZvQ1N5YXE1TWxYbE9MMndBQT09IiwibWFjIjoiNjBiNDZjN2YzNTc0ZGE1MTI4NGViNTA3ZjYwMzE2MDIzMzdhZDQ4NGIwNGJiMjQzMzBmZTcyZTJjOWE2OWIxNyJ9', 'ROBISON', 'JOSE', 'ARANGUREN', 'MAESTRE', '1970-11-15 00:00:00', 16, 16, 1131, NULL, '2019-09-02 00:00:00', NULL, 1),
+(152, '6128', 'eyJpdiI6IlV6MU8zaWFCVWRXYTRNOWFSd25ib1E9PSIsInZhbHVlIjoiNHYyT0ZnZCtiVVFUU0R4SElIaTU1dz09IiwibWFjIjoiZTg4YzkxMWMwNTk5MGVlODk5ZDYwNWQ2MzRmMjdjNzBhZTZiZDMxNzQ1YjdjYjZkMWVhYjAwY2Q3MmZjYjEyNCJ9', 'JOSE', 'ANTONIO', 'ECKER', 'RANGEL', '1968-10-19 00:00:00', 16, 16, 1131, NULL, '2018-07-02 00:00:00', NULL, 1);
 
 --
 -- Disparadores `tbl_usuario`
@@ -3472,7 +3503,34 @@ INSERT INTO `tbl_usuario_documento_identidad` (`id`, `id_usuario`, `id_tipo_docu
 (140, 140, 1, '3180748'),
 (141, 141, 1, '8957263'),
 (142, 142, 1, '26332830'),
-(143, 143, 1, '18514042');
+(143, 143, 1, '18514042'),
+(144, 144, 1, '10785418'),
+(145, 145, 1, '10199496'),
+(146, 146, 1, '6155020'),
+(147, 147, 1, '6848046'),
+(148, 148, 1, '12563973'),
+(149, 149, 1, '6469179'),
+(150, 150, 1, '3627393'),
+(151, 151, 1, '10793321'),
+(152, 152, 1, '7927670');
+
+--
+-- Disparadores `tbl_usuario_documento_identidad`
+--
+DELIMITER $$
+CREATE TRIGGER `tbl_usuario_documento_identidad_AI` AFTER INSERT ON `tbl_usuario_documento_identidad` FOR EACH ROW BEGIN
+SET @usu = (SELECT id FROM logs.tbl_usuario ORDER BY id DESC LIMIT 1);
+  	UPDATE logs.tbl_usuario SET cedula_nuevo = NEW.documento WHERE id = @usu;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `tbl_usuario_documento_identidad_BU` BEFORE UPDATE ON `tbl_usuario_documento_identidad` FOR EACH ROW BEGIN
+SET @usu = (SELECT id FROM logs.tbl_usuario ORDER BY id DESC LIMIT 1);
+  	UPDATE logs.tbl_usuario SET cedula_nuevo = NEW.documento, cedula = old.documento WHERE id = @usu;
+END
+$$
+DELIMITER ;
 
 --
 -- Índices para tablas volcadas
@@ -3664,7 +3722,7 @@ ALTER TABLE `tbl_usuario_documento_identidad`
 -- AUTO_INCREMENT de la tabla `logs_auditoria`
 --
 ALTER TABLE `logs_auditoria`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cargo_empleado`
@@ -3676,7 +3734,7 @@ ALTER TABLE `tbl_cargo_empleado`
 -- AUTO_INCREMENT de la tabla `tbl_cargo_supervisa`
 --
 ALTER TABLE `tbl_cargo_supervisa`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=316;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=289;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_ciudades`
@@ -3688,7 +3746,7 @@ ALTER TABLE `tbl_ciudades`
 -- AUTO_INCREMENT de la tabla `tbl_cliente`
 --
 ALTER TABLE `tbl_cliente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cliente_facturacion`
@@ -3712,7 +3770,7 @@ ALTER TABLE `tbl_configuracion`
 -- AUTO_INCREMENT de la tabla `tbl_contacto_usuario`
 --
 ALTER TABLE `tbl_contacto_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=153;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_division`
@@ -3778,7 +3836,7 @@ ALTER TABLE `tbl_parroquias`
 -- AUTO_INCREMENT de la tabla `tbl_proyecto`
 --
 ALTER TABLE `tbl_proyecto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_proyecto_analista`
@@ -3790,7 +3848,7 @@ ALTER TABLE `tbl_proyecto_analista`
 -- AUTO_INCREMENT de la tabla `tbl_proyecto_divisiones`
 --
 ALTER TABLE `tbl_proyecto_divisiones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_tipo_contacto`
@@ -3808,13 +3866,13 @@ ALTER TABLE `tbl_tipo_documento_identidad`
 -- AUTO_INCREMENT de la tabla `tbl_usuario`
 --
 ALTER TABLE `tbl_usuario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=153;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_usuario_documento_identidad`
 --
 ALTER TABLE `tbl_usuario_documento_identidad`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=153;
 
 --
 -- Restricciones para tablas volcadas

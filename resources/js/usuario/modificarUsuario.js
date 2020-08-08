@@ -202,6 +202,7 @@ new Vue({
       },
       fechaIngreso:{
         disabled: true,
+        validar: false,
         value: ""
       },
       fechaEgreso:{
@@ -295,9 +296,9 @@ new Vue({
 
           self.fechaMinima(dataInit.infoUsu.fecha_ingreso_utc, dataInit.infoUsu.fecha_egreso_utc);
 
-          self.loading = false;
-
         }
+
+        self.loading = false;
 
       }else{
         errorInit();
@@ -442,12 +443,15 @@ new Vue({
         self.form.estado.disabled = false;
         self.form.division.disabled = false;
         self.form.cargo.disabled = false;
+        self.form.fechaIngreso.disabled = false;
+        self.form.fechaEgreso.disabled = false;
 
         self.form.estado.validar = true;
         self.form.municipio.validar = true;
         self.form.parroquia.validar = true;
         self.form.division.validar = true;
         self.form.cargo.validar = true;
+        self.form.fechaIngreso.validar = true;
 
         self.form.estado.value = "";
 
@@ -461,18 +465,23 @@ new Vue({
         self.form.parroquia.disabled = true;
         self.form.division.disabled = true;
         self.form.cargo.disabled = true;
+        self.form.fechaIngreso.validar = true;
+        self.form.fechaEgreso.disabled = true;
 
         self.form.estado.validar = false;
         self.form.municipio.validar = false;
         self.form.parroquia.validar = false;
         self.form.division.validar = false;
         self.form.cargo.validar = false;
+        self.form.fechaIngreso.validar = false;
+
 
         self.form.estado.value = "";
         self.form.municipio.value = "";
         self.form.parroquia.value = "";
         self.form.division.value = "";
         self.form.cargo.value = "";
+        self.form.fechaIngreso.value = "";
 
       }
 

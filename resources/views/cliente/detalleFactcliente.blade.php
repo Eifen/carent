@@ -266,20 +266,6 @@
                 <div class="mensaje"></div>
               </div>
 
-              <div class="form-group col-12 col-sm-6">
-                <label for="fax_factura">Nº de Fax</label>
-                <input aria-describedby="fax_facturaHelp"
-                       class="form-control"
-                       id="fax_factura"
-                       v-bind:disabled="form.fax_factura.disabled"
-                       v-model="form.fax_factura.value"
-                       v-mask="'(####) - ### ####'"
-                       v-on:keyup="valuesForm"
-                       type="text">
-                <small id="fax_facturaHelp" class="form-text text-muted"></small>
-                <div class="mensaje"></div>
-              </div>
-
                <div class="form-group col-12 col-sm-6">
                 <label for="correo_factura">Email De Factura<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="correo_facturaHelp"
