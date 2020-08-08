@@ -65,27 +65,38 @@
                     :key="key"
                     v-for="(cliente, key) in form.camposAtributos.cliente.listaDropdown.listado"
                     v-if="form.camposAtributos.cliente.listaDropdown.listado.length > 0"
-                    v-on:click="elegirFuncionario(cliente)"> @{{ cliente.nombre }} </b-dropdown-item-button>
+                    v-on:click="elegirCliente(cliente.id, cliente.razon_social)"> @{{ cliente.razon_social }} </b-dropdown-item-button>
                   <b-dropdown-item-button
                     v-if="form.camposAtributos.cliente.listaDropdown.noResultado"
                     v-on:click="listadoNoValido('cliente')">No se encontrarón clientes, intente con otro nombre!</b-dropdown-item-button>
                 </b-dropdown>
                 <b-form-text id="cliente-help" v-html="form.camposAtributos.cliente.help"></b-form-text>
               </b-form-group>
-              <div class="form-group col-12 col-sm-6">
-                <label for="estatus">Estatus <span class="campo-obligatorio">*</span></label>
-                <select aria-describedby="estatusHelp"
-                        class="form-control"
-                        id="estatus"
-                        data-validar="true"
-                        v-bind:disabled="form.estatus.disabled"
-                        v-model="form.estatus.value"
-                        v-on:click="limpiarMensajeError">
-                  <option value="" disabled selected>Seleccione...</option>
-                  <option v-bind:value="estatus.id" v-for="estatus in comboEstatus">@{{ estatus.descripcion }}</option>
-                </select>
-                <div class="mensaje"></div>
-              </div>
+              <b-form-group
+                :invalid-feedback="form.camposAtributos.estatus.invalidFeedback"
+                class="col-12 col-sm-6"
+                label="Estatus:"
+                label-for="estatus"
+                id="group-estatus">
+                <b-form-select
+                  :disabled="form.camposAtributos.estatus.disabled"
+                  :options="comboEstatus"
+                  :state="form.camposAtributos.estatus.state"
+                  :value="null"
+                  id="estatus"
+                  ref="estatus"
+                  size="sm"
+                  v-model="$v.form.campos.estatus.$model">
+                  <template v-slot:first>
+                    <option :value="null" disabled="true">Seleccione una opción</option>
+                  </template>
+                </b-form-select>
+              </b-form-group>
+
+
+
+
+
               <div class="form-group col-12 col-sm-6">
                 <label for="fechaContratacion">Fecha de Contratación</label>
                 <input aria-describedby="fechaContratacionHelp"

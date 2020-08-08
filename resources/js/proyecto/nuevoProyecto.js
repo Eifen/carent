@@ -36,7 +36,8 @@ new Vue({
     form: {
       campos: {
         descripcion: null,
-        cliente: null
+        cliente: null,
+        estatus: null
       },
       camposAtributos: {
         descripcion:{
@@ -58,6 +59,11 @@ new Vue({
           valor: null,
           valorBlur: null,
           valorFocus: null
+        },
+        estatus: {
+          disabled: true,
+          invalidFeedback: "",
+          state: null,
         }
       },
       horas:{
@@ -104,6 +110,9 @@ new Vue({
         },
         cliente: {
           required
+        },
+        estatus: {
+          required
         }
       }
     }
@@ -117,12 +126,16 @@ new Vue({
 
       if(response.status === 200){
 
-        self.comboEstatus = response.data.estatus;
+        response.data.estatus.forEach((item, i) => {
+          self.comboEstatus.push({text:item.descripcion, value: item.id});
+        });
+
         self.comboDivisiones = response.data.divisiones;
         self.comboMonedas = response.data.monedas;
         self.form.camposAtributos.descripcion.disabled = false;
         self.form.camposAtributos.cliente.disabled = false;
         self.form.camposAtributos.cliente.help = self.form.camposAtributos.cliente.helpInit;
+        self.form.camposAtributos.estatus.disabled = false;
 
 
         self.form.fechaContratacion.disabled = false;
@@ -509,6 +522,21 @@ new Vue({
         });
 
       }// Fin if
+
+    },
+    mostrarListado: function(indice){
+
+      self.$refs[indice].visibleChangePrevented = true;
+      self.$refs[indice].show();
+
+    },
+    elegirCliente: function(id, razon_social){
+
+      self.form.campos.funcionario = id;
+      self.form.camposAtributos.cliente.valor = razon_social;
+      self.form.camposAtributos.cliente.valorFocus = razon_social;
+      self.form.camposAtributos.cliente.valorBlur = razon_social;
+      self.form.camposAtributos.cliente.state = true;
 
     },
     valorBlur: function(indice){

@@ -101,7 +101,7 @@ Route::get('/DetalleDivProyecto', 'ProyectoController@DetalleDivProyecto');
 Route::get('/modAnalistaProy', 'ProyectoController@modAnalistaProy');
 Route::get('/asigHorasAnalistaProy', 'ProyectoController@asigHorasAnalistaProy');
 Route::get('/formCargarHoras/{idProyAnalista}', 'ProyectoController@formCargarHoras');
-Route::get('/buscarClienteProyecto/{nombreCliente}', 'ProyectoController@buscarClienteProyecto');
+Route::get('/buscarClienteProyecto', 'ProyectoController@buscarClienteProyecto');
 
 Route::post('/crearProyecto', 'ProyectoController@crearProyecto');
 Route::post('/modificarProyecto', 'ProyectoController@modificarProyecto');

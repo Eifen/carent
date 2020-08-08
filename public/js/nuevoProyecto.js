@@ -79171,7 +79171,8 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
     form: {
       campos: {
         descripcion: null,
-        cliente: null
+        cliente: null,
+        estatus: null
       },
       camposAtributos: {
         descripcion: {
@@ -79193,6 +79194,11 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
           valor: null,
           valorBlur: null,
           valorFocus: null
+        },
+        estatus: {
+          disabled: true,
+          invalidFeedback: "",
+          state: null
         }
       },
       horas: {
@@ -79239,6 +79245,9 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
         },
         cliente: {
           required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_11__["required"]
+        },
+        estatus: {
+          required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_11__["required"]
         }
       }
     }
@@ -79247,12 +79256,18 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
     self = this;
     axios__WEBPACK_IMPORTED_MODULE_5___default.a.get('/dataInicialNuevoProyecto').then(function (response) {
       if (response.status === 200) {
-        self.comboEstatus = response.data.estatus;
+        response.data.estatus.forEach(function (item, i) {
+          self.comboEstatus.push({
+            text: item.descripcion,
+            value: item.id
+          });
+        });
         self.comboDivisiones = response.data.divisiones;
         self.comboMonedas = response.data.monedas;
         self.form.camposAtributos.descripcion.disabled = false;
         self.form.camposAtributos.cliente.disabled = false;
         self.form.camposAtributos.cliente.help = self.form.camposAtributos.cliente.helpInit;
+        self.form.camposAtributos.estatus.disabled = false;
         self.form.fechaContratacion.disabled = false;
         self.form.estatus.disabled = false;
         self.form.montoEn.disabled = false;
@@ -79545,6 +79560,17 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
         });
       } // Fin if
 
+    },
+    mostrarListado: function mostrarListado(indice) {
+      self.$refs[indice].visibleChangePrevented = true;
+      self.$refs[indice].show();
+    },
+    elegirCliente: function elegirCliente(id, razon_social) {
+      self.form.campos.funcionario = id;
+      self.form.camposAtributos.cliente.valor = razon_social;
+      self.form.camposAtributos.cliente.valorFocus = razon_social;
+      self.form.camposAtributos.cliente.valorBlur = razon_social;
+      self.form.camposAtributos.cliente.state = true;
     },
     valorBlur: function valorBlur(indice) {
       if (self.form.camposAtributos[indice].valorBlur !== null) {

@@ -26,10 +26,12 @@ class ProyectoController extends Controller
 
     }
 
-    function buscarClienteProyecto($nombreCliente){
+    function buscarClienteProyecto(Request $request){
 
       $modelo = new ProyectoModel();
-      $clientes = $modelo->clientes($nombreCliente);
+      $dato = $request["nombreCliente"];
+
+      $clientes = $modelo->clientes($dato);
 
       return [
         "response" => true,
