@@ -15,16 +15,28 @@ class ProyectoController extends Controller
     function dataInicialNuevoProyecto(){
 
       $modelo = new ProyectoModel();
-      $clientes = $modelo->clientes();
       $divisiones = $modelo->divisiones();
       $estatus = $modelo->estatusProyectos();
       $monedas = $modelo->monedas(true);
 
       return [
-        "clientes" => $clientes,
         "divisiones" => $divisiones,
         "estatus" => $estatus,
         "monedas" => $monedas
+      ];
+
+    }
+
+    function buscarClienteProyecto(Request $request){
+
+      $modelo = new ProyectoModel();
+      $dato = $request["nombreCliente"];
+
+      $clientes = $modelo->clientes($dato);
+
+      return [
+        "response" => true,
+        "clientes" => $clientes
       ];
 
     }

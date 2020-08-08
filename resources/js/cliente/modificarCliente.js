@@ -1,5 +1,8 @@
 require('bootstrap');
-window.Vue = require('vue');
+import Vue from 'vue';
+import { BootstrapVue } from 'bootstrap-vue';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
 window.zenscroll = require('zenscroll');
 window.axios = require('axios');
 window.AutoNumeric = require('autonumeric');
@@ -11,6 +14,8 @@ var self;
 Vue.use(VueTheMask);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
 Vue.component('loading',require('../components/loading.vue').default);
+Vue.use(BootstrapVue);
+
 const errorInit = () => {
 
   Object.keys(self.form).forEach(function(indiceObjecto, indice) {
@@ -38,7 +43,7 @@ const datosIniciales = () => {
 
       if(response.status === 200 && response.data.response === true){
 
-        resolve({                 
+        resolve({
                  infoClie: response.data.info,
                  detalleUsuario: response.data.info,
                  detalleUsuarioG: response.data.info,
@@ -65,7 +70,7 @@ const datosIniciales = () => {
 
 }
 // Se declaran las variables
-var app = new Vue({
+new Vue({
 
   el: '#modificarCliente',
   data: {
@@ -139,7 +144,7 @@ var app = new Vue({
       edificio_quinta_fiscal: {
         disabled: false,
         value: ""
-      },      
+      },
       piso_fiscal: {
         disabled: false,
         value: ""
@@ -245,7 +250,7 @@ var app = new Vue({
         self.form.razon_social.value = dataInit.infoClie.razon_social;
         self.form.ciudad_fiscal.value = dataInit.infoClie.ciudad_fiscal;
         self.form.avenida_calle_fiscal.value = dataInit.infoClie.avenida_calle_fiscal;
-        self.form.edificio_quinta_fiscal.value = dataInit.infoClie.edificio_quinta_fiscal;        
+        self.form.edificio_quinta_fiscal.value = dataInit.infoClie.edificio_quinta_fiscal;
         self.form.piso_fiscal.value = dataInit.infoClie.piso_fiscal;
         self.form.numero_fiscal.value = dataInit.infoClie.numero_fiscal;
         self.form.telefono_fiscal.value = dataInit.infoClie.telefono_fiscal;
@@ -313,7 +318,7 @@ var app = new Vue({
 
 
         var indices = ["rif","nit","razon_social","ciudad_fiscal","avenida_calle_fiscal","edificio_quinta_fiscal","piso_fiscal","numero_fiscal","telefono_fiscal","pagina_web","email_fiscal","estatus"];
-  
+
         indices.forEach(function(indiceObjecto, indice) {
           self.form[indiceObjecto].disabled = false;
         });
@@ -770,7 +775,7 @@ var app = new Vue({
           if(response.status === 200 && response.data.response === true){
 
             var indices = ["rif","nit","razon_social","ciudad_fiscal","avenida_calle_fiscal","edificio_quinta_fiscal","piso_fiscal","numero_fiscal","telefono_fiscal","pagina_web","email_fiscal", "estadofi","parroquiafi","municipiofi","estatus"];
-  
+
             indices.forEach(function(indiceObjecto, indice) {
               self.form[indiceObjecto].disabled = false;
             });
@@ -795,7 +800,7 @@ var app = new Vue({
         .catch(error => {
 
           var indices = ["rif","nit","razon_social","ciudad_fiscal","avenida_calle_fiscal","edificio_quinta_fiscal","piso_fiscal","numero_fiscal","telefono_fiscal","pagina_web","email_fiscal","estadofi","parroquiafi","municipiofi","estatus"];
-  
+
           indices.forEach(function(indiceObjecto, indice) {
             self.form[indiceObjecto].disabled = false;
           });

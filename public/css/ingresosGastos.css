@@ -1,0 +1,189 @@
+html {
+  overflow-x: hidden;
+}
+[v-cloak] {
+  display: none;
+}
+#app {
+  background-color: #E9ECEF;
+}
+#app .wrapper-forms {
+  min-height: calc(100vh - 62px);
+  padding-bottom: 50px;
+  padding-top: 100px;
+}
+@media (max-width: 575px) {
+  #app .wrapper-forms {
+    padding-bottom: 0px;
+    padding-top: 50px;
+  }
+}
+#app .wrapper-forms form {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.13);
+  border-radius: 3px;
+  margin-bottom: 50px;
+  padding: 15px;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+#app .wrapper-forms form:hover {
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+}
+#app .wrapper-forms form > div.logo {
+  margin-bottom: 40px;
+  margin-top: 30px;
+  text-align: center;
+}
+#app .wrapper-forms form > div.logo img {
+  height: 90px;
+  width: auto;
+}
+#app .wrapper-forms form > div.form-group label {
+  color: #091F40;
+}
+#app .wrapper-forms form > div.form-group .form-control {
+  border-radius: 2px;
+}
+#app .wrapper-forms form > div.form-group .form-control:disabled {
+  cursor: not-allowed;
+}
+#app .wrapper-forms form > div.form-group .multiselect.multiselect--disabled {
+  background-color: transparent;
+}
+#app .wrapper-forms form > div.form-group .multiselect.multiselect--disabled .multiselect__select {
+  background-color: transparent;
+}
+#app .wrapper-forms form > div.form-group .multiselect .multiselect__select {
+  height: calc(1.5em + 0.5rem + 2px);
+  min-height: calc(1.5em + 0.5rem + 2px);
+}
+#app .wrapper-forms form > div.form-group .multiselect .multiselect__select:before {
+  border-color: #343A40 transparent transparent;
+}
+#app .wrapper-forms form > div.form-group .multiselect .multiselect__tags {
+  border: 1px solid #ced4da;
+  height: calc(1.5em + 0.5rem + 2px);
+  min-height: calc(1.5em + 0.5rem + 2px);
+  padding: 2px 40px 0 8px;
+}
+#app .wrapper-forms form > div.form-group .multiselect .multiselect__tags .multiselect__tag {
+  margin-top: 1px;
+}
+#app .wrapper-forms form > div.form-group .multiselect .multiselect__tags .multiselect__placeholder {
+  color: #495057;
+}
+#app .wrapper-forms form > div.form-group .multiselect .multiselect__tags .multiselect__input {
+  font-size: 0.875rem;
+  height: calc(1.5em + 0.5rem + 2px);
+  min-height: calc(1.5em + 0.5rem + 2px);
+}
+#app .wrapper-forms form > div.form-group .multiselect .multiselect__tags .multiselect__input::-webkit-input-placeholder {
+  color: #495057;
+}
+#app .wrapper-forms form > div.form-group .multiselect .multiselect__tags .multiselect__input::-moz-placeholder {
+  color: #495057;
+}
+#app .wrapper-forms form > div.form-group .multiselect .multiselect__tags .multiselect__input:-ms-input-placeholder {
+  color: #495057;
+}
+#app .wrapper-forms form > div.form-group .multiselect .multiselect__tags .multiselect__input::-ms-input-placeholder {
+  color: #495057;
+}
+#app .wrapper-forms form > div.form-group .multiselect .multiselect__tags .multiselect__input::placeholder {
+  color: #495057;
+}
+#app .wrapper-forms .table {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.13);
+  border-radius: 3px;
+  margin-bottom: 50px;
+  padding: 15px;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+#app .wrapper-forms .table:hover {
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+}
+#app .wrapper-forms .table thead tr th {
+  background-color: #091F40;
+  color: white;
+  text-align: center;
+}
+#app .wrapper-forms .table tbody tr {
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+#app .wrapper-forms .table tbody tr:hover {
+  background-color: rgba(246, 168, 28, 0.5);
+}
+#app .wrapper-forms .table tbody tr th {
+  text-align: center;
+}
+#app .wrapper-forms .table tbody tr td {
+  text-align: center;
+}
+#app .wrapper-forms .table tbody tr td a {
+  color: #212529 !important;
+}
+#app .wrapper-forms .table tbody tr td .fas:hover,
+#app .wrapper-forms .table tbody tr td .far:hover {
+  cursor: pointer;
+}
+#app .wrapper-forms .table tfoot tr td > div {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+}
+#app .wrapper-forms .table tfoot tr td > div > div {
+  display: table-cell;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: middle;
+}
+#app .wrapper-forms .table tfoot tr td > div > div .form-control {
+  max-width: 70px;
+}
+#app .wrapper-forms .table tfoot tr td > div > div .icono {
+  color: #091F40;
+  font-size: 1.5rem;
+}
+#app .wrapper-forms .table tfoot tr td > div > div .icono:hover {
+  color: #000000;
+  cursor: pointer;
+}
+#app .wrapper-forms .btn {
+  border: 2px solid #091F40;
+  border-radius: 2px;
+  font-weight: 600;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  width: 100%;
+}
+#app .wrapper-forms .btn:hover {
+  background-color: #F6A81C !important;
+  color: #091F40 !important;
+}
+#app .wrapper-forms .btn:disabled {
+  cursor: not-allowed;
+}
+#app .wrapper-forms .btn.filtrar {
+  background-color: #091F40;
+  color: #ffffff;
+}
+#app .wrapper-forms .btn.limpiar_filtro {
+  background-color: transparent;
+  color: #091F40;
+}
+#app .wrapper-forms .wrapper-alert {
+  margin-top: 15px;
+}
+#app .wrapper-forms .wrapper-alert > div {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+#app .wrapper-forms .wrapper-alert > div .alert {
+  margin-bottom: 0px;
+  text-align: center;
+  width: 100%;
+}

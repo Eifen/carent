@@ -1,36 +1,323 @@
+require('bootstrap');
 import Vue from 'vue';
+import { BootstrapVue } from 'bootstrap-vue';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
+import Multiselect from 'vue-multiselect';
+import 'vue-multiselect/dist/vue-multiselect.min.css';
+import axios from 'axios';
+
+Vue.component('loading', require('../components/loading.vue').default);
+Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
+Vue.component('alert',require('../components/alert.vue').default);
+Vue.use(BootstrapVue);
+Vue.component('multiselect', Multiselect);
 
 new Vue({
 
   el: '#app',
   data: {
-    nombre: "Alexander",
-    apellido: "Guilarte",
-    direccion: {
-      calle: "calle 1",
-      apto: "apto 5"
+    alert:{
+      message: "",
+      mostrar: false
+    },
+    comboEstatus: [],
+    comboDivisiones: [],
+    formFiltro: {
+      btn: {
+        filtrar: {
+          disabled: false,
+          html: "",
+          htmlInit: "Aplicar Filtro",
+          htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
+        },
+        limpiarFiltro: {
+          disabled: false,
+          html: "",
+          htmlInit: "Limpiar Filtro",
+          htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
+        }
+      },
+      cliente:{
+        disabled: true,
+        value: ""
+      },
+      proyecto:{
+        disabled: true,
+        value: ""
+      },
+      divisiones: {
+        disabled: true,
+        value: ""
+      },
+      estatus: {
+        disabled: true,
+        value: null
+      },
+      mostrar: false
+    },
+    loading: true,
+    paginador: {
+      max: 0,
+      numPaginas: 0,
+      pagina:1,
+      paginar: 0
+    },
+    tabla: {
+      alert:{
+        contador: false,
+        iconCerrar: false,
+        mensaje: "",
+        mostrar: false,
+        ocultarSeg: 0,
+        variante: ""
+      },
+      cargando: true,
+      encabezado: [],
+      registros: []
     }
   },
   beforeCreate: function(){
 
+    self = this;
 
+    //Se utiliza el metodo get para obtener los valores inciales
+    axios.get('/dataInicialIngresosGastos')
+    .then(function (response) {
+
+      if(response.status === 200 && response.data.response === true){
+
+        if(response.data.permisos.permiso_actualizar){
+          self.tabla.encabezado = [
+            { key: 'numero', label: '#' },
+            { key: 'proyecto', label: 'Proyecto' },
+            { key: 'division', label: 'División' },
+            'estatus',
+            { key: 'opciones', label: ' ' },
+            { key: 'editar', label: ' ' }
+          ];
+        }else{
+          self.tabla.encabezado = [
+           { key: 'numero', label: '#' },
+           { key: 'proyecto', label: 'Proyecto' },
+           { key: 'division', label: 'División' },
+           'estatus',
+           { key: 'opciones', label: ' ' }
+          ];
+        }
+
+        var mostrar = false;
+        var mensaje = "";
+        var variante = "";
+
+        if(response.data.proyectos.length === 0){
+          mostrar = true;
+          mensaje = "No hay proyectos por facturar";
+          variante = "warning";
+        }
+
+        self.mostrarAlert(self.tabla.alert, mostrar, variante, mensaje, false, false, 0);
+
+        self.tabla.registros = self.registroTabla(response.data.proyectos);
+
+        //Le asignamos los valores a las variables
+        self.comboDivisiones = response.data.divisiones;
+        self.formFiltro.proyecto.disabled = false;
+        self.formFiltro.cliente.disabled = false;
+        self.formFiltro.estatus.disabled = false;
+        self.formFiltro.divisiones.disabled = false;
+        self.formFiltro.mostrar = true;
+        self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
+        self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
+
+        response.data.estatus.forEach((item, i) => {
+          self.comboEstatus.push({text : item.descripcion, value : item.valor});
+        });
+
+        /*self.proyectos = response.data.proyectos;
+        self.permisoActualizar = response.data.permisoActualizar;*/
+
+        self.paginador.numPaginas = response.data.numero_paginas;
+        self.paginador.max = parseInt(response.data.numero_paginas);
+        self.paginador.paginar = response.data.paginar;
+
+        self.loading = false;
+        self.tabla.cargando = false;
+
+      }else{
+
+        throw "error";
+
+      }
+
+    })
+    .catch(error => {
+
+      self.alert.mostrar = true;
+      self.alert.message = (error.data.message) ? error.data.message : "Ocurrió un error!, por favor intente recargando la página.";
+      self.loading = false;
+      self.tabla.cargando = false;
+
+    });
 
   },
   created: function () {},
-  mounted: function () {
-
-
-
-  },
+  mounted: function () {},
+  updated: function () {},
   methods:{
+    registroTabla: function(datos){
 
-    cambiarNombre: function(){
+      const registros = [];
+      datos.forEach((item, i) => {
 
-      this.nombre = "David";
-      this.apellido = "Molina";
+        var variante;
+
+        switch (item.id_estatus) {
+          case 1: variante = "success"; break;
+          case 2: variante = "danger"; break;
+          case 3: variante = "warning"; break;
+          case 4: variante = "warning"; break;
+          default: variante = "light";
+        }
+
+        const mostrarBtn = {
+          href: "/cajaPagarMulta/"+item.id,
+          mostrar: false,
+          texto: "",
+          variante: ""
+        }
+
+        if(item.id_estatus === 1 && item.caja_abierta === 0){
+          mostrarBtn.mostrar = true;
+          mostrarBtn.texto = "Abrir Caja";
+          mostrarBtn.variante = "outline-success";
+        }else if(item.id_estatus === 3 && item.caja_abierta === 1 && item.entrar_en_caja === 1){
+          mostrarBtn.mostrar = true;
+          mostrarBtn.texto = "Entrar en la Caja";
+          mostrarBtn.variante = "success";
+        }
+
+        const proyecto = {
+          numero: (i + 1),
+          descripcion: item.descripcion,
+          sucursal: item.sucursal,
+          municipio: item.municipio,
+          parroquia: item.parroquia,
+          estatus: item.estatus,
+          id: item.id,
+          id_estatus: item.id_estatus,
+          variante: variante,
+          btn: mostrarBtn,
+          cajero: item.cajero,
+          caja_abierta: item.caja_abierta
+        };
+
+        registros.push(proyecto);
+
+      });
+
+      return registros;
+
+    },
+    buscar: function(){
+
+      self.formFiltro.descripcion.disabled = true;
+      self.formFiltro.cliente.disabled = true;
+      self.formFiltro.divisiones.disabled = true;
+      self.formFiltro.estatus.disabled = true;
+      self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
+      self.formFiltro.btn.filtrar.disabled = true;
+      self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlLoading;
+      self.formFiltro.btn.limpiarFiltro.disabled = true;
+
+      let idsDivisiones = [];
+      if(self.formFiltro.divisiones.value.length > 0){
+        self.formFiltro.divisiones.value.forEach((item, i) => {
+          idsDivisiones.push(item.id);
+        });
+      }
+
+      //Obtenemos los valores
+      let desde = (self.paginador.pagina - 1) * self.paginador.paginar;
+      let parametros = {
+        cliente: self.formFiltro.cliente.value,
+        divisiones: idsDivisiones,
+        proyecto: self.formFiltro.descripcion.value,
+        desde: desde,
+        estatus: self.formFiltro.estatus.value,
+        paginar: self.paginador.paginar
+      };
+      //Se utiliza el metodo get para su busqueda y se envian con los parametros
+      axios.get('/buscarProyectos', {params: parametros})
+      .then(function (response) {
+
+        self.formFiltro.descripcion.disabled = false;
+        self.formFiltro.cliente.disabled = false;
+        self.formFiltro.divisiones.disabled = false;
+        self.formFiltro.estatus.disabled = false;
+        self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
+        self.formFiltro.btn.filtrar.disabled = false;
+        self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
+        self.formFiltro.btn.limpiarFiltro.disabled = false;
+        // Se le asigna los valores a las variables
+        self.proyectos = response.data.proyectos;
+        self.paginador.numPaginas = response.data.paginas;
+        self.paginador.max = parseInt(response.data.paginas);
+
+      }).catch(error => {
+
+        self.formFiltro.descripcion.disabled = false;
+        self.formFiltro.cliente.disabled = false;
+        self.formFiltro.divisiones.disabled = false;
+        self.formFiltro.estatus.disabled = false;
+        self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
+        self.formFiltro.btn.filtrar.disabled = false;
+        self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
+        self.formFiltro.btn.limpiarFiltro.disabled = false;
+
+      });
+
+    },
+    limpiarFiltro: function(){
+
+      self.formFiltro.descripcion.value = "";
+      self.formFiltro.cliente.value = "";
+      self.formFiltro.divisiones.value = "";
+      self.formFiltro.estatus.value = "";
+      self.buscar();
+
+    },
+    limpiarMensajeError: function(e){
+      $(e.target).removeClass("error");
+      $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
+    },
+    limpiarMensajeErrorMultiselect: function(){
+      $(".multiselect").parent().find(".mensaje").html("").removeClass("invalid-feedback");
+      $(".multiselect").removeClass("error");
+    },
+    keyboard: function(e){
+
+      if (e.keyCode === 13){
+        e.preventDefault();
+      }
+
+    },
+    mostrarAlert: function(alert, mostrar = false, variante = "", mensaje = "", iconCerrar = false, contador = false, ocultarSeg = 0){
+
+      return new Promise(resolve => {
+
+        alert.contador = contador;
+        alert.iconCerrar = iconCerrar;
+        alert.mensaje = mensaje;
+        alert.mostrar = mostrar;
+        alert.ocultarSeg = ocultarSeg;
+        alert.variante = variante;
+
+        resolve(true);
+
+      });
 
     }
-
-  }// Fin methods
+  }
 
 });
