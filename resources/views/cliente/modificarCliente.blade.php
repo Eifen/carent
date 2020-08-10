@@ -9,7 +9,6 @@
 
         <title>.: CARENT :.</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
-        <link href="{{ mix('/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ mix('/css/fontawesome-free-5.12.0.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ mix('/css/modificarCliente.css') }}" rel="stylesheet" type="text/css">
 
@@ -100,8 +99,8 @@
                     <label>Nombre</label>
                     <input class="form-control" type="text" disabled v-bind:value="detalleUsuario.data.nombre">
                   </div>
-            </form> 
-            </form> 
+            </form>
+            </form>
             <form class="row">
               <div class="form-group col-12 col-md-4">
                 <select class="form-control"
@@ -130,7 +129,7 @@
                         type="button"
                         v-bind:disabled="formSearchG.submitG.disabled"
                         v-html="formSearchG.submitG.html"
-                        v-on:click="buscarG">                          
+                        v-on:click="buscarG">
                 </button>
               </div>
               <div id="modal-detalle-usuarioG" class="modal fade" tabindex="-1" role="dialog" v-cloak>
@@ -193,7 +192,7 @@
               </div>
               <div class="form-group col-12 col-sm-6">
                 <label for="rif">Rif<span class="campo-obligatorio">*</span> </label>
-                <the-mask mask="F- NNNNNNNNNN" :tokens="hexTokens" 
+                <the-mask mask="F- NNNNNNNNNN" :tokens="hexTokens"
                           class="form-control"
                           id="rif"
                           v-bind:disabled="form.rif.disabled"
@@ -301,7 +300,7 @@
               <div class="form-group col-12 col-sm-6">
                 <label for="ciudad_fiscal">Ciudad<span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="ciudad_fiscalHelp"
-                       class="form-control text-lowercase"                       
+                       class="form-control text-lowercase"
                        data-validar="true"
                        id="ciudad_fiscal"
                        v-bind:disabled="form.ciudad_fiscal.disabled"
@@ -379,7 +378,7 @@
                        type="text">
                 <small id="telefono_fiscalHelp" class="form-text text-muted">Ejemplo: 0424-1234567</small>
                 <div class="mensaje"></div>
-              </div>                        
+              </div>
               <div class="form-group col-12 col-sm-6">
                 <label for="pagina_web">Pagina Web</label>
                 <input aria-describedby="pagina_webHelp"
@@ -405,7 +404,7 @@
                        type="email">
                 <small id="email_fiscalHelp" class="form-text text-muted">Ejemplo: correo@dominio.com</small>
                 <div class="mensaje"></div>
-              </div>            
+              </div>
             </form>
             <div class="row justify-content-center wrapper-subtmit">
               <div class="col-12 col-md-6 col-lg-4">

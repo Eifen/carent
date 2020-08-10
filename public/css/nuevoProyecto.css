@@ -45,6 +45,17 @@ html {
 #app .wrapper-forms form > div.wrapper-required-legend .campo-obligatorio {
   color: #cc0000;
 }
+#app .wrapper-forms form > div #lista-cliente .btn {
+  border: none;
+  padding: 0px !important;
+}
+#app .wrapper-forms form > div #lista-cliente .dropdown-menu {
+  width: 100%;
+}
+#app .wrapper-forms form > div #lista-cliente .dropdown-menu .dropdown-item {
+  padding: 0.25rem 0.7rem;
+  white-space: normal;
+}
 #app .wrapper-forms form > div.form-group .titulo-indicar-horas {
   color: #cc0000;
   margin-top: 30px;

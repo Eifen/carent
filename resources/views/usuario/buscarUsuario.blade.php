@@ -9,7 +9,6 @@
 
         <title>.: CARENT :.</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
-        <link href="{{ mix('/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ mix('/css/fontawesome-free-5.12.0.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ mix('/css/buscarUsuario.css') }}" rel="stylesheet" type="text/css">
 
@@ -342,7 +341,7 @@
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label class="custom-control-label" for="coProyecto"></label>
                     </div>
                   </div>
-                  <div class="custom-control custom-switch" v-if="permisoContraloria">
+                  <div class="custom-control custom-switch" v-if="permisoSergio">
                     <label>Modificar Proyectos</label>
                     <div class="form-group form-check col-12">
                       <input class="custom-control-input"

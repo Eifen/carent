@@ -48,7 +48,7 @@ Route::get('/buscarClieProyec', 'ClienteController@buscarClieProyec');
 Route::get('/detalleClienteProy', 'ClienteController@detalleClienteProy');
 Route::post('/actualizarFactCliente', 'ClienteController@actualizarFactCliente');
 Route::post('/crearFactCliente', 'ClienteController@crearFactCliente');
-Route::get('/buscarUsuariosS', 'ClienteController@buscarUsuarios');
+Route::get('/buscarUsuariosS', 'ClienteController@buscarUsuariosS');
 Route::get('/buscarUsuariosG', 'ClienteController@buscarUsuariosG');
 Route::get('/detalleUsuarios', 'ClienteController@detalleUsuario');
 Route::get('/formModificarCliente/{idCliente}', 'ClienteController@formModificarCliente')->middleware('usuario.session')->where('idCliente', '[0-9]+');//Validamos que solo pase números*/
@@ -61,24 +61,6 @@ Route::get('/formNuevoCargo', function() {return view('crea/nuevoCargo');})->mid
 Route::post('/crearCargo', 'CreaController@crearCargo');
 Route::get('/formNuevaDivision', function() {return view('crea/nuevaDivision');})->middleware('usuario.session');
 Route::post('/crearDivision', 'CreaController@crearDivision');
-Route::get('/formNuevoProyecto', function() {return view('proyecto/nuevoProyecto');})->middleware('usuario.session');
-Route::get('/dataInicialNuevoProyecto', 'ProyectoController@dataInicialNuevoProyecto');
-Route::post('/crearProyecto', 'ProyectoController@crearProyecto');
-Route::get('/proyectos', function() {return view('proyecto/formBuscarProyectos');})->middleware('usuario.session');
-Route::get('/dataInicialListadoProyectos', 'ProyectoController@dataInicialListadoProyectos');
-Route::get('/buscarProyectos', 'ProyectoController@buscarProyectos');
-Route::get('/formModificarProyecto/{idProyecto}', 'ProyectoController@formModificarProyecto')->where('idProyecto', '[0-9]+');//Validamos que solo pase números*/
-Route::get('/detalleProyectoModificar', 'ProyectoController@detalleProyectoModificar');
-Route::post('/modificarProyecto', 'ProyectoController@modificarProyecto');
-Route::get('/proyectoDivision', function() {return view('proyecto/proyectoDivision');})->middleware('usuario.session');
-Route::get('/asignarProyectos', 'ProyectoController@asignarProyectos');
-Route::get('/buscardiviProyectos', 'ProyectoController@buscardiviProyectos');
-Route::get('/detalleAnalistaProyecto', 'ProyectoController@detalleAnalistaProyecto');
-Route::get('/agregarAnalistaProy', 'ProyectoController@agregarAnalistaProy');
-Route::get('/DetalleDivProyecto', 'ProyectoController@DetalleDivProyecto');
-Route::get('/modAnalistaProy', 'ProyectoController@modAnalistaProy');
-Route::get('/asigHorasAnalistaProy', 'ProyectoController@asigHorasAnalistaProy');
-Route::get('/formCargarHoras/{idProyAnalista}', 'ProyectoController@formCargarHoras');
 Route::get('/datosHorasProyecto', 'HorasCargadasController@datosHorasProyecto');
 Route::post('/cargarHoras', 'HorasCargadasController@cargarHoras');
 Route::get('/detalleModHorasCargadas', 'HorasCargadasController@detalleModHorasCargadas');
@@ -99,4 +81,34 @@ Route::get('/detalleMenu', 'UsuarioController@detalleMenu');
 Route::get('/agregarMenUsu', 'UsuarioController@agregarMenUsu');
 Route::get('/quitarMenUsu', 'UsuarioController@quitarMenUsu');
 Route::get('/modificarMenUsu', 'UsuarioController@modificarMenUsu');
-Route::get('/formIngresosGastos', 'FacturacionController@formIngresosGastos');
+
+/*
+  Módulo de Proyectos
+*/
+Route::get('/formNuevoProyecto', function() {return view('proyecto/nuevoProyecto');})->middleware('usuario.session');
+Route::get('/dataInicialNuevoProyecto', 'ProyectoController@dataInicialNuevoProyecto');
+Route::get('/proyectos', function() {return view('proyecto/formBuscarProyectos');})->middleware('usuario.session');
+Route::get('/dataInicialListadoProyectos', 'ProyectoController@dataInicialListadoProyectos');
+Route::get('/buscarProyectos', 'ProyectoController@buscarProyectos');
+Route::get('/formModificarProyecto/{idProyecto}', 'ProyectoController@formModificarProyecto')->where('idProyecto', '[0-9]+');
+Route::get('/detalleProyectoModificar', 'ProyectoController@detalleProyectoModificar');
+Route::get('/proyectoDivision', function() {return view('proyecto/proyectoDivision');})->middleware('usuario.session');
+Route::get('/asignarProyectos', 'ProyectoController@asignarProyectos');
+Route::get('/buscardiviProyectos', 'ProyectoController@buscardiviProyectos');
+Route::get('/detalleAnalistaProyecto', 'ProyectoController@detalleAnalistaProyecto');
+Route::get('/agregarAnalistaProy', 'ProyectoController@agregarAnalistaProy');
+Route::get('/DetalleDivProyecto', 'ProyectoController@DetalleDivProyecto');
+Route::get('/modAnalistaProy', 'ProyectoController@modAnalistaProy');
+Route::get('/asigHorasAnalistaProy', 'ProyectoController@asigHorasAnalistaProy');
+Route::get('/formCargarHoras/{idProyAnalista}', 'ProyectoController@formCargarHoras');
+Route::get('/buscarClienteProyecto', 'ProyectoController@buscarClienteProyecto');
+
+Route::post('/crearProyecto', 'ProyectoController@crearProyecto');
+Route::post('/modificarProyecto', 'ProyectoController@modificarProyecto');
+
+
+/*
+  Módulo Facturación
+*/
+Route::get('/formIngresosGastos', 'FacturacionController@formIngresosGastos')->middleware('usuario.session');
+Route::get('/dataInicialIngresosGastos', 'FacturacionController@dataInicialIngresosGastos');

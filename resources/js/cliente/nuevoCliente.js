@@ -1,5 +1,8 @@
 require('bootstrap');
-window.Vue = require('vue');
+import Vue from 'vue';
+import { BootstrapVue } from 'bootstrap-vue';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
 window.zenscroll = require('zenscroll');
 window.axios = require('axios');
 window.AutoNumeric = require('autonumeric');
@@ -11,8 +14,9 @@ var self;
 Vue.use(VueTheMask);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
 Vue.component('loading',require('../components/loading.vue').default);
-//Declaramos las variables
-var app = new Vue({
+Vue.use(BootstrapVue);
+
+new Vue({
 
   el: '#nuevoCliente',
   data: {
@@ -78,7 +82,7 @@ var app = new Vue({
       edificio_quinta_fiscal: {
         disabled: false,
         value: ""
-      },      
+      },
       piso_fiscal: {
         disabled: false,
         value: ""
@@ -243,7 +247,7 @@ var app = new Vue({
 
           if(response.status === 200 && response.data.response === true){
 
-            
+
             self.usuarios.registros = response.data.usuarios;
             $('#modal-detalle-usuario').modal("show");
 
@@ -615,7 +619,7 @@ var app = new Vue({
 
     },
 
-    
+
 
     valuesForm: function(e){
 
@@ -718,7 +722,7 @@ var app = new Vue({
         .catch(error => {
 
           var indices = ["rif","nit","razon_social","ciudad_fiscal","avenida_calle_fiscal","edificio_quinta_fiscal","piso_fiscal","numero_fiscal","telefono_fiscal","pagina_web","email_fiscal","estadofi","municipiofi","parroquiafi"];
-  
+
           indices.forEach(function(indiceObjecto, indice) {
             self.form[indiceObjecto].disabled = false;
           });

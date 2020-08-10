@@ -1,5 +1,8 @@
 require('bootstrap');
-window.Vue = require('vue');
+import Vue from 'vue';
+import { BootstrapVue } from 'bootstrap-vue';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
 window.axios = require('axios');
 window.AutoNumeric = require('autonumeric');
 window.zenscroll = require('zenscroll');
@@ -8,8 +11,9 @@ var self;
 
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
 Vue.component('loading',require('../components/loading.vue').default);
+Vue.use(BootstrapVue);
 
-var app = new Vue({
+new Vue({
 
   el: '#buscarUsuario',
   data: {
@@ -172,6 +176,7 @@ var app = new Vue({
     permisoContraloria: false,
     permisoSocio: false,
     permisoEncargado: false,
+    permisoSergio: false,
     infoUsuario: [],
   },
   beforeCreate: function(){
@@ -345,6 +350,7 @@ var app = new Vue({
       self.permisoRRHH = false;
       self.permisoContraloria = false;
       self.permisoSocio = false;
+      self.permisoSergio = false;
       self.permisoEncargado = true;
       self.detalleMenu.error = false;
       self.crUsuario.checked = false;
@@ -424,11 +430,14 @@ var app = new Vue({
           self.division.data = response.data.datosUsuario.id_division;
           if (self.division.data === 7) {
             self.permisoRRHH = true;
-          }else if (self.division.data === 10) {
+          }else if (self.division.data === 10 || self.infoUsuario.codigo === "10863") {
             self.permisoContraloria = true;
           }
+          if (self.infoUsuario.codigo === "10863") {
+            self.permisoSergio = true
+          }
           self.cargo.data = response.data.datosUsuario.id_cargo;
-          if (self.cargo.data === 16) {
+          if (self.cargo.data === 16 || self.cargo.data === 17) {
             self.permisoSocio = true;
             self.permisoEncargado = false;
           }
