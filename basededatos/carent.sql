@@ -3,8 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
-
--- Tiempo de generación: 08-08-2020 a las 01:13:51
+-- Tiempo de generación: 11-08-2020 a las 14:01:51
 -- Versión del servidor: 8.0.18
 -- Versión de PHP: 7.3.16
 
@@ -53,7 +52,11 @@ INSERT INTO `logs_auditoria` (`id`, `usuario_id`, `fecha`, `direccion_ip`, `acci
 (9, 1, '2020-08-06 23:41:23', '127.0.0.1', 'Modificacion del Usuario Codigo: 0002', 'tbl_usuario'),
 (10, 1, '2020-08-06 23:43:51', '127.0.0.1', 'Modificacion del Usuario Codigo: 0003', 'tbl_usuario'),
 (11, 1, '2020-08-07 18:05:53', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
-(12, 1, '2020-08-07 18:53:53', '127.0.0.1', 'Inicio de Sesion', 'inicio');
+(12, 1, '2020-08-07 18:53:53', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(13, 1, '2020-08-08 20:27:35', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(14, 1, '2020-08-10 20:36:53', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(15, 1, '2020-08-10 20:38:28', '127.0.0.1', 'Registro del cliente codigo: 1000', 'tbl_cliente'),
+(16, 1, '2020-08-11 09:49:36', '127.0.0.1', 'Inicio de Sesion', 'inicio');
 
 --
 -- Disparadores `logs_auditoria`
@@ -911,14 +914,14 @@ CREATE TABLE `tbl_cliente` (
   `id` int(11) NOT NULL,
   `id_usuario_socio` int(11) NOT NULL,
   `id_usuario_gerente` int(11) DEFAULT NULL,
-  `codigo` int(11) NOT NULL,
+  `codigo` int(11) DEFAULT NULL,
   `rif` varchar(15) NOT NULL,
-  `nit` int(11) NOT NULL,
+  `nit` int(11) DEFAULT NULL,
   `razon_social` varchar(500) NOT NULL,
   `id_parroquia_fiscal` int(11) NOT NULL,
   `avenida_calle_fiscal` varchar(250) NOT NULL,
-  `edificio_quinta_fiscal` varchar(25) NOT NULL,
-  `piso_fiscal` varchar(3) NOT NULL,
+  `edificio_quinta_fiscal` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `piso_fiscal` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `numero_fiscal` varchar(5) NOT NULL,
   `ciudad_fiscal` varchar(50) NOT NULL,
   `telefono_fiscal` varchar(20) NOT NULL,
@@ -932,8 +935,19 @@ CREATE TABLE `tbl_cliente` (
 --
 
 INSERT INTO `tbl_cliente` (`id`, `id_usuario_socio`, `id_usuario_gerente`, `codigo`, `rif`, `nit`, `razon_social`, `id_parroquia_fiscal`, `avenida_calle_fiscal`, `edificio_quinta_fiscal`, `piso_fiscal`, `numero_fiscal`, `ciudad_fiscal`, `telefono_fiscal`, `pagina_web`, `email_fiscal`, `id_estatus`) VALUES
-(1, 0, 0, 1000, 'J00001', 0, 'CLIENTE 1', 1138, 'CALLE 1', 'EDIFICIO 1', '1', '-1', 'CARACAS', '(0212) - 123 4567', NULL, '1@gmail.com', 1),
-(2, 0, 0, 1001, 'J222222', 0, 'CLIENTE 2', 1123, 'CALLE 1', 'EDIF 1', '1', '1', 'CARACAS', '(0424) - 222 2222', NULL, '2@g.com', 1);
+(1, 7, 9, NULL, 'G2000232325', NULL, 'Corporación CASA C.A.', 1124, 'Andrés Bello', 'Ministerio de Alimentación', '11', '', 'CARACAS', '(0212) - 255 5555', '', 'presidente@corporacioncasa.gob.ve', 1),
+(2, 67, 67, NULL, 'J312692740', NULL, 'Transporte Pakplaza,C.A.', 622, 'Av. Principal de la  Lomas Lagunita,  Irb. Lomas de la Lagunita', 'C.C. Lomas de la Lagunita', 'Piso 1', '', 'Caracas', '(0414) - 335 5077', '', 'pakplaza@gmail.com', 1),
+(3, 67, 67, NULL, 'J00019575', NULL, 'Industrias Farcometicas Asociados (Indufaras)', 611, 'Calle las Vegas, Zona Industrial  la Trinidad', 'Edificio Industrias Farcosmeticas', 'Piso 3', '', 'Caracas', '(0212) - 9454 711', '', 'indufaras@gmail.com', 1),
+(4, 67, 67, NULL, 'J000900957', NULL, 'Distribuidora IFA, C.A.', 762, 'Calle Marcano E/ Narvaez y Amador Hernandez ', 'Edificio Ezesot ', 'PB', '', 'Caracas', '(0412) - 3234 132', '', 'ifamercadeo@gmail.com', 1),
+(5, 67, 67, NULL, 'J400065399', NULL, 'Representaciones Cosper', 611, 'Calle las Vegas, Zona Industrial la Trinidad', 'Edificio IFA', 'Piso 3', '', 'Caracas', '(0412) - 3234 132', '', 'ifamercadeo@gmail.com', 1),
+(6, 67, 67, NULL, 'J400518008', NULL, 'Fondo Global de la Contruccion, C.A.', 619, 'Av. Tamanaco y Francisco de Miranda, El Rosal', 'Edificio Galipan torre B', 'Piso 4', '', 'Caracas', '(0212) - 9572 005', '', 'aguillermo@fgdcve.com', 1),
+(7, 67, 67, NULL, 'J401501001', NULL, 'M2 Paneles de Construccion, C.A.', 285, 'Carretera Nacional Los Guayos Sector Mozanquita, Valencia', 'Galpon 33', '-', '', 'Valencia', '(0212) - 9572 005', '', 'aguillermo@fgdcve.com', 1),
+(8, 67, 67, NULL, 'J400626412', NULL, 'Constructora Jaar, C.A.', 619, 'Av. Tamanaco y Francisco de Miranda, El Rosal', 'Edificio Galipan torre B', 'Piso 4', '', 'Caracas', '(0212) - 9572 005', '', 'aguillermo@fgdcve.com', 1),
+(9, 67, 67, NULL, 'J402997655', NULL, 'Consorcio Estructora Metalicas Modernas', 619, 'Av. Tamanaco y Francisco de Miranda, El Rosal', 'Edificio Galipan torre B', 'Piso 4', '', 'Caracas', '(0212) - 9572 005', '', 'aguillermo@fgdcve.com', 1),
+(10, 67, 67, NULL, 'J313550388', NULL, 'Nidec Motors Venezuela, S.A.', 526, 'Zona Industrial los Tanques, parcela 1, Villa de Cura', 'Edificio Nidec Motors Venezuela', 'PB', '', 'Caracas', '(0414) - 1267 638', '', 'ricardo.reyes@nidec-motor.com', 1),
+(11, 67, 67, NULL, 'J306842675', NULL, 'MercadoLibre Venezuela, S.R.L.', 619, 'AV. Eugenio Mendoza de la Castellana', 'Torre La Castellana', 'Piso 8', '', 'Caracas', '(0212) - 6306 000', '', 'ext_gbarrio@mercadolibre.com', 1),
+(12, 67, 67, NULL, 'J294782914', NULL, 'Venproca Venezolana de Proyectos, C.A.', 619, 'Av. Francisco de Miranda, El Rosal', 'Edificio Torre la Primera', 'Piso 13', '', 'Caracas', '(0416) - 2392 655', '', 'jgil@venproca.com', 1),
+(13, 67, 67, NULL, 'J411660752', NULL, 'Importadora Divinos & Destilados, C.A.', 611, 'Calle Bolivar, Urb. Baruta', 'Edificio Galpones', 'PB', '', 'Caracas', '(0414) - 2708 935', '', 'divinosydestilados@gmail.com', 1);
 
 --
 -- Disparadores `tbl_cliente`
@@ -3722,7 +3736,7 @@ ALTER TABLE `tbl_usuario_documento_identidad`
 -- AUTO_INCREMENT de la tabla `logs_auditoria`
 --
 ALTER TABLE `logs_auditoria`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cargo_empleado`
@@ -3746,7 +3760,7 @@ ALTER TABLE `tbl_ciudades`
 -- AUTO_INCREMENT de la tabla `tbl_cliente`
 --
 ALTER TABLE `tbl_cliente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cliente_facturacion`
