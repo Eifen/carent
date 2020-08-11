@@ -51,12 +51,17 @@ class ProyectoModel extends Model
 
     }// Fin divisiones
 
-    function clientes(){
+    function clientes($nombre_cliente = null){
+
+      if($nombre_cliente != null){
+        $sql_condicion = " AND UPPER(c.razon_social) LIKE UPPER('".$nombre_cliente."%')";
+      }
 
       $clientes = DB::select('SELECT c.id,
                                      c.razon_social
                               FROM tbl_cliente c
                               WHERE c.id_estatus = 1
+                              '.$sql_condicion.'
                               ORDER BY c.razon_social ASC');
 
       return $clientes;

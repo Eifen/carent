@@ -9,7 +9,6 @@
 
         <title>.: CARENT :.</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
-        <link href="{{ mix('/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ mix('/css/fontawesome-free-5.12.0.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ mix('/css/buscarCliente.css') }}" rel="stylesheet" type="text/css">
 
@@ -38,7 +37,7 @@
                        ref="inputSearch"
                        type="text"
                        v-bind:disabled="formSearch.inputSearch.disabled"
-                       v-on:keyup="evaluarCampo('inputSearch', $event)" 
+                       v-on:keyup="evaluarCampo('inputSearch', $event)"
                        v-model="formSearch.inputSearch.value">
                 <div class="mensaje"></div>
               </div>
@@ -186,7 +185,7 @@
                   <div class="form-group col-24 col-sm-12">
                     <label>Pagina Web</label>
                     <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.pagina_web">
-                  </div>                  
+                  </div>
                 </form>
               </div>
               <div class="modal-footer">

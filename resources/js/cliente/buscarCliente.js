@@ -1,5 +1,8 @@
 require('bootstrap');
-window.Vue = require('vue');
+import Vue from 'vue';
+import { BootstrapVue } from 'bootstrap-vue';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
 window.axios = require('axios');
 window.AutoNumeric = require('autonumeric');
 window.zenscroll = require('zenscroll');
@@ -8,8 +11,9 @@ var self;
 
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
 Vue.component('loading',require('../components/loading.vue').default);
-//se declaran todas las varibles
-var app = new Vue({
+Vue.use(BootstrapVue);
+
+new Vue({
 
   el: '#buscarCliente',
   data: {

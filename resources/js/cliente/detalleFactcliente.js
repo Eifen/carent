@@ -1,5 +1,8 @@
 require('bootstrap');
-window.Vue = require('vue');
+import Vue from 'vue';
+import { BootstrapVue } from 'bootstrap-vue';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
 window.zenscroll = require('zenscroll');
 window.axios = require('axios');
 window.AutoNumeric = require('autonumeric');
@@ -11,9 +14,9 @@ var self;
 Vue.use(VueTheMask);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
 Vue.component('loading',require('../components/loading.vue').default);
+Vue.use(BootstrapVue);
 
-var app = new Vue({
-  // se declaran las variables
+new Vue({
   el: '#detalleFactcliente',
   data: {
     alertForm: {
@@ -467,7 +470,7 @@ var app = new Vue({
           self.detalleFactcliente.data = response.data.infoFactCliente;
           self.form.ciudad_factura.value =  self.detalleFactcliente.data.ciudad_factura;
           self.form.avenida_calle_factura.value = self.detalleFactcliente.data.avenida_calle_factura;
-          self.form.edificio_quinta_factura.value = self.detalleFactcliente.data.edificio_quinta_factura;        
+          self.form.edificio_quinta_factura.value = self.detalleFactcliente.data.edificio_quinta_factura;
           self.form.piso_factura.value = self.detalleFactcliente.data.piso_factura;
           self.form.numero_factura.value = self.detalleFactcliente.data.numero_factura;
           self.form.telefono_factura.value = self.detalleFactcliente.data.telefono_factura;
@@ -478,7 +481,7 @@ var app = new Vue({
           self.comboParroquiasfa = response.data.parroquiasfa;
 
           var indices = ["ciudad_factura","avenida_calle_factura","edificio_quinta_factura","piso_factura","numero_factura","telefono_factura","fax_factura","correo_factura","estadofa","municipiofa","parroquiafa"];
-  
+
             indices.forEach(function(indiceObjecto, indice) {
               self.form[indiceObjecto].disabled = false;
             });
@@ -497,7 +500,7 @@ var app = new Vue({
 
           if (self.permisoCrear === false && self.permisoActualizar === false) {
             var indices = ["ciudad_factura","avenida_calle_factura","edificio_quinta_factura","piso_factura","numero_factura","telefono_factura","fax_factura","correo_factura","estadofa","municipiofa","parroquiafa"];
-  
+
             indices.forEach(function(indiceObjecto, indice) {
               self.form[indiceObjecto].disabled = true;
             });
@@ -506,7 +509,7 @@ var app = new Vue({
           if (respose.data.permisoCrear) {
             var message = "No Puedes Crear Detalles de Facturacion";
           }
-        
+
 
         }else{
 
@@ -713,7 +716,7 @@ var app = new Vue({
              self.refreshForm = true;
              self.permisoActualizar = false;
             var indices = ["ciudad_factura","avenida_calle_factura","edificio_quinta_factura","piso_factura","numero_factura","telefono_factura","fax_factura","correo_factura","estadofa","municipiofa","parroquiafa"];
-  
+
             indices.forEach(function(indiceObjecto, indice) {
               self.form[indiceObjecto].disabled = false;
             });
@@ -738,7 +741,7 @@ var app = new Vue({
         .catch(error => {
 
           var indices = ["ciudad_factura","avenida_calle_factura","edificio_quinta_factura","piso_factura","numero_factura","telefono_factura","fax_factura","correo_factura"];
-  
+
            if(self.form.empleado.checked){
             indices.push("estadofa","municipiofa","parroquiafa");
           }
@@ -850,7 +853,7 @@ var app = new Vue({
         .catch(error => {
 
          var indices = ["ciudad_factura","avenida_calle_factura","edificio_quinta_factura","piso_factura","numero_factura","telefono_factura","fax_factura","correo_factura"];
-  
+
           if(self.form.empleado.checked){
             indices.push("estadofa","municipiofa","parroquiafa");
           }

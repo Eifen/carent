@@ -5,11 +5,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <meta name="robots" content="{{ env('META_ROBOT') }}">
 
         <title>.: CARENT :. | Inicio</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
-        <link href="{{ mix('/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ mix('/css/fontawesome-free-5.12.0.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ mix('/css/inicio.css') }}" rel="stylesheet" type="text/css">
 
