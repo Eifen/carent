@@ -78419,7 +78419,7 @@ new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Bitnami\wampstack-7.3.16-0\apache2\htdocs\sofguar\carent\resources\js\proyecto\modificarProyecto.js */"./resources/js/proyecto/modificarProyecto.js");
+module.exports = __webpack_require__(/*! c:\Bitnami\wampstack-7.4.7-0\apache2\htdocs\carent\resources\js\proyecto\modificarProyecto.js */"./resources/js/proyecto/modificarProyecto.js");
 
 
 /***/ })
