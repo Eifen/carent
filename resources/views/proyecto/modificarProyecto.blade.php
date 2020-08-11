@@ -9,7 +9,6 @@
 
         <title>.: CARENT :.</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
-        <link href="{{ mix('/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ mix('/css/fontawesome-free-5.12.0.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ mix('/css/modificarProyecto.css') }}" rel="stylesheet" type="text/css">
 
@@ -41,7 +40,7 @@
               <div class="form-group col-12 col-sm-6">
                 <label for="descripcion">Descripción <span class="campo-obligatorio">*</span></label>
                 <input aria-describedby="descripcionHelp"
-                       class="form-control"
+                       class="form-control text-uppercase"
                        data-min="3"
                        data-validar="true"
                        id="descripcion"

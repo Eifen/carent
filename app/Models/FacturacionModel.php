@@ -8,58 +8,70 @@ use Illuminate\Database\Eloquent\Model;
 class FacturacionModel extends Model
 {
 
-    function buscarUsuario($codigo,$fecha,$direccion){
+    function permisosMenu($id_usuario, $id_menu){
 
-      $usuario = DB::select('SELECT u.id,
-                                    u.clave,
-                                    u.avatar,
-                                    u.id_estatus,
-                                    e.descripcion AS estatus,
-                                    cu.correo_principal,
-                                    cu.correo_secundario,
-                                    cu.telefono_principal,
-                                    cu.telefono_secundario,
-                                    u.id_division,
-                                    u.id_cargo
-                             FROM tbl_usuario u,
-                                  tbl_estatus e,
-                                  tbl_contacto_usuario cu
-                             WHERE codigo = "'.$codigo.'"
-                             AND e.tabla = "tbl_usuario"
-                             AND e.valor = u.id_estatus
-                             AND u.id = cu.id_usuario');
+      $permisos = DB::select('SELECT
+                               (SELECT COUNT(1)
+                                FROM tbl_menu_usuario
+                                WHERE id_usuario = '.$id_usuario.'
+                                AND id_menu = '.$id_menu.'
+                                AND r = 1
+                                LIMIT 1
+                               ) AS permiso_ver,
+                               (SELECT COUNT(1)
+                                FROM tbl_menu_usuario
+                                WHERE id_usuario = '.$id_usuario.'
+                                AND id_menu = '.$id_menu.'
+                                AND c = 1
+                                LIMIT 1
+                               ) AS permiso_crear,
+                               (SELECT COUNT(1)
+                                FROM tbl_menu_usuario
+                                WHERE id_usuario = '.$id_usuario.'
+                                AND id_menu = '.$id_menu.'
+                                AND u = 1
+                                LIMIT 1
+                               ) AS permiso_actualizar');
 
-      if(count($usuario) > 0){
-        $data = array("usuario_id" => $usuario[0]->id,
-                      "fecha" => $fecha,
-                      "direccion_ip" => $direccion,
-                      "accion" => 'Inicio de Sesion',
-                      "tabla" => 'inicio');
-        $bit = DB::table('logs_auditoria')->insertGetId($data);
-        return $usuario[0];
+      return $permisos[0];
 
-      }else{
+    }// Fin permisosMenu
 
-        return array();
+    function divisiones(){
 
-      }
+      $sql = DB::select('SELECT d.id,
+                                d.descripcion
+                         FROM tbl_division d
+                         ORDER BY d.descripcion ASC');
 
-    }// Fin buscarUsuario
+      return $sql;
 
-    function estatusLoginDenegado($id_estatus){
+    }// Fin divisiones
 
-      $estatus = DB::select('SELECT * FROM tbl_estatus_login_denegado WHERE id_estatus = '.$id_estatus);
+    function estatusProyectos(){
 
-      if(count($estatus) > 0){
+      $sql = DB::select('SELECT e.valor,
+                                e.descripcion
+                         FROM tbl_estatus e
+                         WHERE e.tabla = "tbl_proyecto"
+                         ORDER BY e.descripcion ASC');
 
-        return true;
+      return $sql;
 
-      }else{
+    }// Fin estatusProyectos
 
-        return false;
+    function proyectosFacturacion(){
 
-      }
+      /*$sql = DB::select('SELECT e.valor,
+                                e.descripcion
+                         FROM tbl_estatus e
+                         WHERE e.tabla = "tbl_proyecto"
+                         ORDER BY e.descripcion ASC');
 
-    }// Fin estatusLoginDenegado
+      return $sql;*/
+
+      return [];
+
+    }
 
 }

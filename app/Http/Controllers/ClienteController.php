@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 use Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
-use App\Models\ConfigsModel;
 use App\Models\ClienteModel;
+use App\Models\AuditoriaLogModel;
 use Illuminate\Http\RedirectResponse;
 
 class ClienteController extends Controller
@@ -33,13 +33,12 @@ class ClienteController extends Controller
     return $parroquias;
   }
 
-  function buscarUsuarios(Request $request){
+  function buscarUsuariosS(Request $request){
 
     $modelo = new ClienteModel();
-    $cargo = 16;
     $buscarPor = (int) $request->input("buscarPor");
     $dato = strtolower($request->input("dato"));
-    $usuarios = $modelo->buscarUsuarios($buscarPor, $dato, $cargo);     
+    $usuarios = $modelo->buscarUsuarios($buscarPor, $dato);
     if(!empty($usuarios)){
       $response = array("response" => true, "usuarios" => $usuarios);
     }else{
@@ -83,7 +82,7 @@ class ClienteController extends Controller
     $cargo = 11;
     $buscarPor = (int) $request->input("buscarPor");
     $dato = strtolower($request->input("dato"));
-    $usuariosG = $modelo->buscarUsuariosG($buscarPor, $dato, $cargo);     
+    $usuariosG = $modelo->buscarUsuariosG($buscarPor, $dato, $cargo);
     if(!empty($usuariosG)){
       $response = array("response" => true, "usuariosG" => $usuariosG);
     }else{
@@ -109,55 +108,54 @@ class ClienteController extends Controller
 
     $modelo = new ClienteModel();
     $codigo = $modelo->agregarCodigoCliente();
+
     if(!empty($codigo)){
+
       $codigoCliente = $codigo->codigo + 1;
-        $parametros = array(
-          "idUsuario" => (int) $request->input("idUsuario"),
-          "idUsuario2" => (int) $request->input("idUsuario2"),
-          "codigoCliente" => $codigoCliente,
-          "rif" => $request->input("rif"),
-          "nit" => $request->input("nit"),
-          "razon_social" => mb_strtoupper ($request->input("razon_social")),
-          "parroquiafi" => $request->input("parroquiafi"),
-          "ciudad_fiscal" => mb_strtoupper($request->input("ciudad_fiscal")),
-          "avenida_calle_fiscal" => mb_strtoupper($request->input("avenida_calle_fiscal")),
-          "edificio_quinta_fiscal" => mb_strtoupper($request->input("edificio_quinta_fiscal")),
-          "piso_fiscal" => mb_strtoupper($request->input("piso_fiscal")),
-          "numero_fiscal" => $request->input("numero_fiscal"),
-          "telefono_fiscal" => $request->input("telefono_fiscal"),
-          "pagina_web" => $request->input("pagina_web"),
-          "email_fiscal" => strtolower($request->input("email_fiscal")),
-          "usuario_id" => $request->session()->get('usuario_id'),
-          "fecha" => date("Y-m-d H:i:s"),
-          "direccion_ip" => $request->session()->get('direccion'),
-        );
-         $response = $modelo->crearCliente($parametros);
 
     }else{
+
       $codigoCliente = 1000;
-        $parametros = array(
-          "idUsuario" => (int) $request->input("idUsuario"),
-          "idUsuario2" => (int) $request->input("idUsuario2"),
-          "codigoCliente" => $codigoCliente,
-          "rif" => $request->input("rif"),
-          "nit" => $request->input("nit"),
-          "razon_social" => mb_strtoupper ($request->input("razon_social")),
-          "parroquiafi" => $request->input("parroquiafi"),
-          "ciudad_fiscal" => mb_strtoupper($request->input("ciudad_fiscal")),
-          "avenida_calle_fiscal" => mb_strtoupper($request->input("avenida_calle_fiscal")),
-          "edificio_quinta_fiscal" => mb_strtoupper($request->input("edificio_quinta_fiscal")),
-          "piso_fiscal" => mb_strtoupper($request->input("piso_fiscal")),
-          "numero_fiscal" => $request->input("numero_fiscal"),
-          "telefono_fiscal" => $request->input("telefono_fiscal"),
-          "pagina_web" => $request->input("pagina_web"),
-          "email_fiscal" => strtolower($request->input("email_fiscal")),
-          "usuario_id" => $request->session()->get('usuario_id'),
-          "fecha" => date("Y-m-d H:i:s"),
-          "direccion_ip" => $request->session()->get('direccion'),
-        );
-         $response = $modelo->crearCliente($parametros);
+
     }
-      return $response;
+
+    $parametros = array(
+        "idUsuario" => (int) $request->input("idUsuario"),
+        "idUsuario2" => (int) $request->input("idUsuario2"),
+        "codigoCliente" => $codigoCliente,
+        "rif" => $request->input("rif"),
+        "nit" => $request->input("nit"),
+        "razon_social" => mb_strtoupper ($request->input("razon_social")),
+        "parroquiafi" => $request->input("parroquiafi"),
+        "ciudad_fiscal" => mb_strtoupper($request->input("ciudad_fiscal")),
+        "avenida_calle_fiscal" => mb_strtoupper($request->input("avenida_calle_fiscal")),
+        "edificio_quinta_fiscal" => mb_strtoupper($request->input("edificio_quinta_fiscal")),
+        "piso_fiscal" => mb_strtoupper($request->input("piso_fiscal")),
+        "numero_fiscal" => $request->input("numero_fiscal"),
+        "telefono_fiscal" => $request->input("telefono_fiscal"),
+        "pagina_web" => $request->input("pagina_web"),
+        "email_fiscal" => strtolower($request->input("email_fiscal"))
+    );
+
+    $response = $modelo->crearCliente($parametros);
+
+    if($response["response"]){
+
+      $parametros = [
+        "accion" => 'Registro del cliente codigo: '.$codigoCliente,
+        "direccion_ip" => $request->session()->get('direccion_ip'),
+        "fecha" => date("Y-m-d H:i:s"),
+        "tabla" => 'tbl_cliente',
+        "usuario_id" => $request->session()->get('usuario_id')
+      ];
+
+      $modeloAudit = new AuditoriaLogModel();
+      $modeloAudit->logs_auditoria($parametros);
+
+    }
+
+    return $response;
+
   }
 
   function buscarClientes(Request $request){
@@ -197,7 +195,7 @@ class ClienteController extends Controller
     $infoClienteProy = $modelo->detalleClienteProy($idclienteProy);
     $infoFactCliente = $modelo->detalleFactCliente($infoClienteProy->id, $infoClienteProy->id_cliente);
     $estados_factura = $modelo->estados();
-    if (!empty($infoFactCliente)) {    
+    if (!empty($infoFactCliente)) {
       if($infoFactCliente->id_estado_factura !== NULL){
         $municipios_factura = $modelo->municipios($infoFactCliente->id_estado_factura);
         $parroquias_factura = $modelo->parroquias($infoFactCliente->id_municipio_factura);
@@ -208,11 +206,11 @@ class ClienteController extends Controller
     }
 
     if(!empty($infoClienteProy)){
-      $response = array("response" => true, 
-                        "infoproy" => $infoClienteProy, 
-                        "infoFactCliente" => $infoFactCliente, 
+      $response = array("response" => true,
+                        "infoproy" => $infoClienteProy,
+                        "infoFactCliente" => $infoFactCliente,
                         "estadosfa" => $estados_factura,
-                        "municipiosfa" => $municipios_factura, 
+                        "municipiosfa" => $municipios_factura,
                         "parroquiasfa" => $parroquias_factura,
                         "permisoActualizar" => $permisoActualizar,
                         "permisoCrear" => $permisoCrear);
@@ -258,24 +256,40 @@ class ClienteController extends Controller
   function crearFactCliente(Request $request){
 
     $modelo = new ClienteModel();
-      $parametros = array(
-        "id_cliente" => (int) $request->input("id_cliente"),
-        "id_proyecto" => (int) $request->input("id_proyecto"),
-        "parroquiafa" => $request->input("parroquiafa"),
-        "ciudad_factura" => mb_strtoupper($request->input("ciudad_factura")),
-        "avenida_calle_factura" => mb_strtoupper($request->input("avenida_calle_factura")),
-        "edificio_quinta_factura" => mb_strtoupper($request->input("edificio_quinta_factura")),
-        "piso_factura" => mb_strtoupper($request->input("piso_factura")),
-        "numero_factura" => $request->input("numero_factura"),
-        "telefono_factura" => $request->input("telefono_factura"),
-        "fax_factura" => $request->input("fax_factura"),
-        "correo_factura" => strtolower($request->input("correo_factura")),
-        "usuario_id" => $request->session()->get('usuario_id'),
+
+    $parametros = array(
+      "id_cliente" => (int) $request->input("id_cliente"),
+      "id_proyecto" => (int) $request->input("id_proyecto"),
+      "parroquiafa" => $request->input("parroquiafa"),
+      "ciudad_factura" => mb_strtoupper($request->input("ciudad_factura")),
+      "avenida_calle_factura" => mb_strtoupper($request->input("avenida_calle_factura")),
+      "edificio_quinta_factura" => mb_strtoupper($request->input("edificio_quinta_factura")),
+      "piso_factura" => mb_strtoupper($request->input("piso_factura")),
+      "numero_factura" => $request->input("numero_factura"),
+      "telefono_factura" => $request->input("telefono_factura"),
+      "fax_factura" => $request->input("fax_factura"),
+      "correo_factura" => strtolower($request->input("correo_factura"))
+    );
+
+    $response = $modelo->CrearFactCliente($parametros);
+
+    if($response["response"]){
+
+      $parametros = [
+        "accion" => 'Registro del detalle de facturacion del cliente: '. $response["razon_social"] .'. proyecto: '.$response["proyecto"],
+        "direccion_ip" => $request->session()->get('direccion_ip'),
         "fecha" => date("Y-m-d H:i:s"),
-        "direccion_ip" => $request->session()->get('direccion'),
-      );
-      $response = $modelo->CrearFactCliente($parametros);
-      return $response;    
+        "tabla" => 'tbl_cliente_facturacion',
+        "usuario_id" => $request->session()->get('usuario_id')
+      ];
+
+      $modeloAudit = new AuditoriaLogModel();
+      $modeloAudit->logs_auditoria($parametros);
+
+    }
+
+    return $response;
+
   }
 
   function actualizarFactCliente(Request $request){
@@ -293,12 +307,25 @@ class ClienteController extends Controller
         "numero_factura" => $request->input("numero_factura"),
         "telefono_factura" => $request->input("telefono_factura"),
         "fax_factura" => $request->input("fax_factura"),
-        "correo_factura" => strtolower($request->input("correo_factura")),
-        "usuario_id" => $request->session()->get('usuario_id'),
-        "fecha" => date("Y-m-d H:i:s"),
-        "direccion_ip" => $request->session()->get('direccion'),
+        "correo_factura" => strtolower($request->input("correo_factura"))
       );
       $response = $modelo->actualizarFactCliente($parametros);
+
+      if($response["response"]){
+
+        $parametros = [
+          "accion" => 'Modificacion del detalle de facturacion del cliente: '. $response["razon_social"] .'. proyecto: '.$response["proyecto"],
+          "direccion_ip" => $request->session()->get('direccion_ip'),
+          "fecha" => date("Y-m-d H:i:s"),
+          "tabla" => 'tbl_cliente_facturacion',
+          "usuario_id" => $request->session()->get('usuario_id')
+        ];
+
+        $modeloAudit = new AuditoriaLogModel();
+        $modeloAudit->logs_auditoria($parametros);
+
+      }
+
       return $response;
   }
 
@@ -327,7 +354,25 @@ class ClienteController extends Controller
       "fecha" => date("Y-m-d H:i:s"),
       "direccion_ip" => $request->session()->get('direccion'),
     );
+
     $response = $modelo->modificarCliente($parametros);
+
+    if($response["response"]){
+
+      $parametros = [
+        "accion" => 'Modificación del cliente: '. $request->input("codigoCliente"),
+        "direccion_ip" => $request->session()->get('direccion_ip'),
+        "fecha" => date("Y-m-d H:i:s"),
+        "tabla" => 'tbl_cliente',
+        "usuario_id" => $request->session()->get('usuario_id')
+      ];
+
+      $modeloAudit = new AuditoriaLogModel();
+      $modeloAudit->logs_auditoria($parametros);
+
+    }
+
     return $response;
+
   }
 }

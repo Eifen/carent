@@ -5,6 +5,7 @@ use Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\HorasNoCargablesModel;
+use App\Models\AuditoriaLogModel;
 use Illuminate\Http\RedirectResponse;
 
 class HorasNoCargablesController extends Controller
@@ -45,11 +46,25 @@ class HorasNoCargablesController extends Controller
 
       $modelo = new HorasNoCargablesModel();
       $concepto = $request->input("concepto");
-      $usuario_id = $request->session()->get('usuario_id');
-      $fecha = date("Y-m-d H:i:s");
-      $direccion_ip = $request->session()->get('direccion');
 
-      return $modelo->crearConceptoNoCargable($concepto,$usuario_id,$fecha,$direccion_ip);
+      $response = $modelo->crearConceptoNoCargable($concepto);
+
+      if($response["response"]){
+
+        $parametros = [
+          "accion" => 'Registro del concepto de horas no cargables: '.$concepto,
+          "direccion_ip" => $request->session()->get('direccion_ip'),
+          "fecha" => date("Y-m-d H:i:s"),
+          "tabla" => 'tbl_concepto_horas_no_cargables',
+          "usuario_id" => $request->session()->get('usuario_id')
+        ];
+
+        $modeloAudit = new AuditoriaLogModel();
+        $modeloAudit->logs_auditoria($parametros);
+
+      }
+
+      return $response;
 
     }
 
@@ -124,10 +139,6 @@ class HorasNoCargablesController extends Controller
 
       $modelo = new HorasNoCargablesModel();
 
-      $usuario_id = $request->session()->get('usuario_id');
-      $fecha = date("Y-m-d H:i:s");
-      $direccion_ip = $request->session()->get('direccion');
-
       $parametrosInsert = array(
         "id_concepto" => $request->input("concepto"),
         "id_usuario" => session("usuario_id"),
@@ -138,7 +149,22 @@ class HorasNoCargablesController extends Controller
         "id_estatus"  => (($request->input("estatus") == "") ? 1 : $request->input("estatus")),
       );
 
-      $resgitrarHora = $modelo->registrarHorasNoCargables($parametrosInsert,$usuario_id,$fecha,$direccion_ip);
+      $resgitrarHora = $modelo->registrarHorasNoCargables($parametrosInsert);
+
+      if($response["response"]){
+
+        $parametros = [
+          "accion" => 'Registro de de horas no cargables al usuario codigo: '.$resgitrarHora["analista"],
+          "direccion_ip" => $request->session()->get('direccion_ip'),
+          "fecha" => date("Y-m-d H:i:s"),
+          "tabla" => 'tbl_horas_no_cargables',
+          "usuario_id" => $request->session()->get('usuario_id')
+        ];
+
+        $modeloAudit = new AuditoriaLogModel();
+        $modeloAudit->logs_auditoria($parametros);
+
+      }
 
       return $resgitrarHora;
 
