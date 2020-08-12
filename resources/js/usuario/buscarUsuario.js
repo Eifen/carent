@@ -346,7 +346,7 @@ new Vue({
     },
     mostrarDetalleMenu: function(idUsuario,e){
 
-      infoUsuario = [];
+      self.infoUsuario = [];
       self.permisoRRHH = false;
       self.permisoContraloria = false;
       self.permisoSocio = false;
@@ -1474,7 +1474,7 @@ new Vue({
 
     actualizarDetalleMenu: function(idUsuario){
 
-      infoUsuario = [];
+      self.infoUsuario = [];
 
       self.crUsuario.checked = false;
       self.crUsuario.c = 0;
