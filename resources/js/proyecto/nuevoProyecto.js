@@ -9,7 +9,7 @@ import AutoNumeric from 'autonumeric';
 import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 import Vuelidate from 'vuelidate';
-import { required, minLength, email } from 'vuelidate/lib/validators';
+import { required, minLength, minValue } from 'vuelidate/lib/validators';
 var self;
 
 Vue.component('multiselect', Multiselect);
@@ -43,7 +43,8 @@ new Vue({
         fechaContratacion: null,
         montoEn: null,
         monto: null,
-        divisiones: null
+        divisiones: null,
+        horas: 0
       },
       camposAtributos: {
         descripcion:{
@@ -95,8 +96,7 @@ new Vue({
         horas:{
           asignar: false,
           disabled: true,
-          state: null,
-          value: 0
+          state: null
         }
       },
       mostrar: false
@@ -112,7 +112,8 @@ new Vue({
     form:{
       campos:{
         descripcion: {
-          required
+          required,
+          minLength: minLength(5)
         },
         cliente: {
           required
@@ -131,6 +132,10 @@ new Vue({
         },
         divisiones: {
           required
+        },
+        horas: {
+          required,
+          minValue: minValue(1)
         }
       }
     }
@@ -221,17 +226,16 @@ new Vue({
 
       if(!self.form.camposAtributos.horas.asignar){
         self.form.camposAtributos.horas.value = 0;
-        $("#horas").parent().find(".mensaje").html("").removeClass("invalid-feedback");
-        $("#horas").removeClass("error");
+        self.form.camposAtributos.horas.invalidFeedback = "";
+        self.form.camposAtributos.horas.state = null;
       }
 
     },
     formatoHoraAsignada: function(input){
-      console.log("input");
-console.log(input);
-      let regex = /^\d+$/;
 
-      if(!regex.test(input.key)){
+      let regex = /^(?:[1-9][0-9]*|0)$/;
+    
+      if(!regex.test(input.target.value)){
         input.preventDefault();
         self.horasTotales();
       }
@@ -244,17 +248,21 @@ console.log(input);
 
       var total = 0;
 
-      $(".hora-asignada").each(function(index,item){
+      const horas = document.getElementsByClassName("hora-asignada");
+
+      for(var i = 0; i < horas.length; i++){
+
+        console.log(parseInt(self.$refs["asignar-"+i][0].$el.value))
+
+      }
+
+      /*$(".hora-asignada").each(function(index,item){
         let hora = ($(item).val().trim() === "") ? 0 : parseInt($(item).val());
         total = parseInt(total) + hora;
       });
 
-      self.form.horas.value = total;
+      self.form.horas.value = total;*/
 
-    },
-    limpiarMensajeErrorMultiselect: function(){
-      $(".multiselect").parent().find(".mensaje").html("").removeClass("invalid-feedback");
-      $(".multiselect").removeClass("error");
     },
     limpiarMensajeError: function(refName){
 
@@ -336,27 +344,6 @@ console.log(input);
       console.log("crear");
 
       return;
-
-      $("form .form-group .mensaje").html("").removeClass("invalid-feedback");
-      $("form .form-group .form-control").removeClass("error");
-
-      $("form .form-group").each(function(index, elemento) {
-
-        if($(elemento).find(".form-control").length > 0){
-
-          var input = $(elemento).find(".form-control")[0];
-          var valido = self.validarValor(input);
-
-          if(!valido.respuesta){
-            $(elemento).find(".mensaje").html(valido.mensaje).addClass("invalid-feedback");
-            $(elemento).find(".form-control").addClass("error");
-            formValido = valido.respuesta;
-            return false;
-          }
-
-        }
-
-      });
 
       if(formValido){
 
@@ -478,6 +465,11 @@ console.log(input);
       }else if(!campo[indice] && indice === "email"){
         mensaje = "Correo inválido!";
         respuesta = false;
+      }else if(!campo[indice] && indice === "minValue"){
+        let minChar = campo.$params[indice].min;
+        mensaje = "El valor mínimo es "+minChar+"!";
+        console.log(campo.$params[indice])
+        respuesta = false;
       }else{
         mensaje = "";
       }
@@ -554,12 +546,11 @@ console.log(input);
     },
     elegirCliente: function(id, razon_social){
 
-      self.form.campos.funcionario = id;
       self.form.camposAtributos.cliente.valor = razon_social;
       self.form.camposAtributos.cliente.valorFocus = razon_social;
       self.form.camposAtributos.cliente.valorBlur = razon_social;
       self.form.camposAtributos.cliente.state = true;
-      self.form.campos.cliente = razon_social;
+      self.form.campos.cliente = id;
 
     },
     valorBlur: function(indice){

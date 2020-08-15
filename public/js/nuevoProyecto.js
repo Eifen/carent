@@ -80212,7 +80212,8 @@ new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
         fechaContratacion: null,
         montoEn: null,
         monto: null,
-        divisiones: null
+        divisiones: null,
+        horas: 0
       },
       camposAtributos: {
         descripcion: {
@@ -80264,8 +80265,7 @@ new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
         horas: {
           asignar: false,
           disabled: true,
-          state: null,
-          value: 0
+          state: null
         }
       },
       mostrar: false
@@ -80281,7 +80281,8 @@ new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
     form: {
       campos: {
         descripcion: {
-          required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_11__["required"]
+          required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_11__["required"],
+          minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_11__["minLength"])(5)
         },
         cliente: {
           required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_11__["required"]
@@ -80300,6 +80301,10 @@ new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
         },
         divisiones: {
           required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_11__["required"]
+        },
+        horas: {
+          required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_11__["required"],
+          minValue: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_11__["minValue"])(1)
         }
       }
     }
@@ -80372,16 +80377,14 @@ new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
 
       if (!self.form.camposAtributos.horas.asignar) {
         self.form.camposAtributos.horas.value = 0;
-        $("#horas").parent().find(".mensaje").html("").removeClass("invalid-feedback");
-        $("#horas").removeClass("error");
+        self.form.camposAtributos.horas.invalidFeedback = "";
+        self.form.camposAtributos.horas.state = null;
       }
     },
     formatoHoraAsignada: function formatoHoraAsignada(input) {
-      console.log("input");
-      console.log(input);
-      var regex = /^\d+$/;
+      var regex = /^(?:[1-9][0-9]*|0)$/;
 
-      if (!regex.test(input.key)) {
+      if (!regex.test(input.target.value)) {
         input.preventDefault();
         self.horasTotales();
       }
@@ -80391,15 +80394,17 @@ new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
     },
     horasTotales: function horasTotales() {
       var total = 0;
-      $(".hora-asignada").each(function (index, item) {
-        var hora = $(item).val().trim() === "" ? 0 : parseInt($(item).val());
+      var horas = document.getElementsByClassName("hora-asignada");
+
+      for (var i = 0; i < horas.length; i++) {
+        console.log(parseInt(self.$refs["asignar-" + i][0].$el.value));
+      }
+      /*$(".hora-asignada").each(function(index,item){
+        let hora = ($(item).val().trim() === "") ? 0 : parseInt($(item).val());
         total = parseInt(total) + hora;
       });
-      self.form.horas.value = total;
-    },
-    limpiarMensajeErrorMultiselect: function limpiarMensajeErrorMultiselect() {
-      $(".multiselect").parent().find(".mensaje").html("").removeClass("invalid-feedback");
-      $(".multiselect").removeClass("error");
+        self.form.horas.value = total;*/
+
     },
     limpiarMensajeError: function limpiarMensajeError(refName) {
       self.form.camposAtributos[refName].invalidFeedback = "";
@@ -80504,7 +80509,7 @@ new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
                 console.log("crear");
                 return _context.abrupt("return");
 
-              case 37:
+              case 34:
               case "end":
                 return _context.stop();
             }
@@ -80531,6 +80536,11 @@ new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
         respuesta = false;
       } else if (!campo[indice] && indice === "email") {
         mensaje = "Correo inválido!";
+        respuesta = false;
+      } else if (!campo[indice] && indice === "minValue") {
+        var _minChar = campo.$params[indice].min;
+        mensaje = "El valor mínimo es " + _minChar + "!";
+        console.log(campo.$params[indice]);
         respuesta = false;
       } else {
         mensaje = "";
@@ -80591,12 +80601,11 @@ new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
       self.$refs[indice].show();
     },
     elegirCliente: function elegirCliente(id, razon_social) {
-      self.form.campos.funcionario = id;
       self.form.camposAtributos.cliente.valor = razon_social;
       self.form.camposAtributos.cliente.valorFocus = razon_social;
       self.form.camposAtributos.cliente.valorBlur = razon_social;
       self.form.camposAtributos.cliente.state = true;
-      self.form.campos.cliente = razon_social;
+      self.form.campos.cliente = id;
     },
     valorBlur: function valorBlur(indice) {
       if (self.form.camposAtributos[indice].valorBlur !== null) {

@@ -157,20 +157,18 @@
                   v-model="$v.form.campos.monto.$model"></b-form-input>
               </b-form-group>
               <b-form-group
-                :invalid-feedback="form.camposAtributos.divisiones.invalidFeedback"
                 class="col-12 col-sm-6"
                 label="Divisiones"
                 label-for="divisiones"
                 id="group-divisiones">
                 <multiselect @input="asignarHoras"
-                             @Open="limpiarMensajeErrorMultiselect"
+                             @Open="limpiarMensajeError('divisiones')"
                              :clear-on-select="false"
                              :disabled="form.camposAtributos.divisiones.disabled"
                              :multiple="true"
                              :options="comboDivisiones"
                              :show-labels="false"
                              clase="form-control form-control-sm"
-                             data-validar="true"
                              id="divisiones"
                              label="descripcion"
                              placeholder="Seleccione..."
@@ -178,6 +176,9 @@
                              track-by="descripcion"
                              v-model="$v.form.campos.divisiones.$model">
                 </multiselect>
+                <b-form-invalid-feedback :state="form.camposAtributos.divisiones.state">
+                  @{{ form.camposAtributos.divisiones.invalidFeedback }}
+                </b-form-invalid-feedback>
               </b-form-group>
               <b-form-group
                 :invalid-feedback="form.camposAtributos.horas.invalidFeedback"
@@ -221,9 +222,10 @@
                       @keypress="formatoHoraAsignada"
                       @keyup="horasTotales"
                       :disabled="form.camposAtributos.divisiones.disabled"
-                      :ref="'asignar-'+division.id"
+                      :ref="'asignar-'+index"
                       class="form-control hora-asignada"
-                      size="sm"></b-form-input>
+                      size="sm"
+                      value="0"></b-form-input>
                   </b-form-group>
                 </b-row>
               </b-form-group>
