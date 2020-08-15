@@ -97,7 +97,7 @@ new Vue({
     },
     loading: true,
     submitCrear: {
-      content: "Crear nuevo Proyecto",
+      content: "Crear Nuevo Proyecto",
       disabled: false,
       show:true
     }
@@ -373,7 +373,7 @@ new Vue({
             }
           });
 
-          self.submitCrear.content = 'Crear nuevo Proyecto';
+          self.submitCrear.content = 'Crear Nuevo Proyecto';
           self.submitCrear.disabled = false;
 
           if(error.response){
