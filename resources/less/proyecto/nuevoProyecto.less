@@ -33,27 +33,6 @@ html{
 
       > div{
 
-        &.logo{
-          margin-bottom: 40px;
-          margin-top: 30px;
-          text-align: center;
-
-          img{
-            height: 90px;
-            width: auto;
-          }
-
-        }
-
-        &.wrapper-required-legend{
-          margin-bottom: 20px;
-
-          .campo-obligatorio{
-            color:#cc0000;
-          }
-
-        }
-
         #lista-cliente{
 
           .btn{
@@ -81,10 +60,6 @@ html{
             text-decoration: underline;
           }
 
-          .campo-obligatorio{
-            color:#cc0000;
-          }
-
           label{
             color:#091F40;
 
@@ -94,16 +69,16 @@ html{
 
           }
 
-          .invalid-feedback{
+          /*.invalid-feedback{
             display: block !important;
-          }
+          }*/
 
           .form-control{
             border-radius: 2px;
 
-            &.error{
+            /*&.error{
               border-color: #dc3545;
-            }
+            }*/
 
             &:disabled{
               cursor: not-allowed;
@@ -118,6 +93,56 @@ html{
         }// Fin .form-group
 
       }
+
+      .multiselect{
+
+        &.multiselect--disabled{
+          background-color: transparent;
+
+          .multiselect__select{
+            background-color: transparent;
+          }
+
+        }
+
+        .multiselect__select{
+          height: calc(1.5em + 0.5rem + 2px);
+          min-height: calc(1.5em + 0.5rem + 2px);
+
+          &:before{
+            border-color: #343A40 transparent transparent;
+          }
+
+        }// Fin .multiselect__select
+
+        .multiselect__tags{
+          border: 1px solid #ced4da;
+          height: calc(1.5em + 0.5rem + 2px);
+          min-height: calc(1.5em + 0.5rem + 2px);
+          padding: 2px 40px 0 8px;
+
+          .multiselect__tag{
+            margin-top: 1px;
+          }
+
+          .multiselect__placeholder{
+            color:#495057;
+          }
+
+          .multiselect__input{
+            font-size: 0.875rem;
+            height: calc(1.5em + 0.5rem + 2px);
+            min-height: calc(1.5em + 0.5rem + 2px);
+
+            &::placeholder {
+              color: #495057;
+            }
+
+          }
+
+        }// Fin .multiselect__tags
+
+      }// Fin .multiselect
 
     }// Fin form
 
