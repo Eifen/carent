@@ -157,7 +157,7 @@ new Vue({
     },
     loading: true,
     submitCrear: {
-      content: "Crear nuevo Cliente",
+      content: "Crear Nuevo Cliente",
       disabled: false,
       show:true
     },
@@ -726,7 +726,7 @@ new Vue({
           indices.forEach(function(indiceObjecto, indice) {
             self.form[indiceObjecto].disabled = false;
           });
-          self.submitCrear.content = 'Crear nuevo Cliente';
+          self.submitCrear.content = 'Crear Nuevo Cliente';
           self.submitCrear.disabled = false;
 
           if(error.response){
