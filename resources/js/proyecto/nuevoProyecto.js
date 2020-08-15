@@ -6,17 +6,16 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 import zenscroll from 'zenscroll';
 import axios from 'axios';
 import AutoNumeric from 'autonumeric';
-import VueTheMask from 'vue-the-mask';
 import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 import Vuelidate from 'vuelidate';
-import { required, minLength, email } from 'vuelidate/lib/validators';
+import { required, minLength, minValue } from 'vuelidate/lib/validators';
 var self;
 
-Vue.use(VueTheMask);
 Vue.component('multiselect', Multiselect);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
 Vue.component('loading',require('../components/loading.vue').default);
+Vue.component('alert',require('../components/alert.vue').default);
 Vue.use(BootstrapVue);
 Vue.use(Vuelidate);
 
@@ -24,10 +23,13 @@ new Vue({
 
   el: '#app',
   data: {
-    alertForm: {
-      class: "",
-      message: "",
-      show: false
+    alertGeneral: {
+      contador: false,
+      iconCerrar: false,
+      mensaje: "",
+      mostrar: false,
+      ocultarSeg: 0,
+      variante: ""
     },
     comboEstatus: [],
     comboDivisiones: [],
@@ -37,11 +39,16 @@ new Vue({
       campos: {
         descripcion: null,
         cliente: null,
-        estatus: null
+        estatus: null,
+        fechaContratacion: null,
+        montoEn: null,
+        monto: null,
+        divisiones: null,
+        horas: 0
       },
       camposAtributos: {
         descripcion:{
-          disabled: false,
+          disabled: true,
           invalidFeedback: "",
           state: null
         },
@@ -63,42 +70,41 @@ new Vue({
         estatus: {
           disabled: true,
           invalidFeedback: "",
-          state: null,
+          state: null
+        },
+        fechaContratacion: {
+          disabled: true,
+          invalidFeedback: "",
+          state: null
+        },
+        montoEn: {
+          disabled: true,
+          invalidFeedback: "",
+          simbolo: "",
+          state: null
+        },
+        monto: {
+          disabled: true,
+          invalidFeedback: "",
+          state: null
+        },
+        divisiones: {
+          disabled: true,
+          invalidFeedback: "",
+          state: null
+        },
+        horas:{
+          asignar: false,
+          disabled: true,
+          state: null
         }
-      },
-      horas:{
-        asignar: false,
-        disabled: true,
-        value: 0
-      },
-      fechaContratacion:{
-        disabled: true,
-        value: ""
-      },
-      montoEn:{
-        disabled: true,
-        value: ""
-      },
-      monto:{
-        autonumeric: null,
-        disabled: true,
-        value: 0
-      },
-      estatus: {
-        disabled: true,
-        value: ""
-      },
-      divisiones: {
-        disabled: true,
-        validar: false,
-        value: ""
       },
       mostrar: false
     },
     loading: true,
     submitCrear: {
       content: "Crear nuevo Proyecto",
-      disabled: false,
+      disabled: true,
       show:true
     }
   },
@@ -106,13 +112,30 @@ new Vue({
     form:{
       campos:{
         descripcion: {
-          required
+          required,
+          minLength: minLength(5)
         },
         cliente: {
           required
         },
         estatus: {
           required
+        },
+        fechaContratacion: {
+          required
+        },
+        montoEn: {
+          required
+        },
+        monto: {
+          required
+        },
+        divisiones: {
+          required
+        },
+        horas: {
+          required,
+          minValue: minValue(1)
         }
       }
     }
@@ -130,20 +153,21 @@ new Vue({
           self.comboEstatus.push({text:item.descripcion, value: item.id});
         });
 
+        response.data.monedas.forEach((item, i) => {
+          self.comboMonedas.push({text:item.moneda, value: item.id, simbolo: item.simbolo});
+        });
+
         self.comboDivisiones = response.data.divisiones;
-        self.comboMonedas = response.data.monedas;
         self.form.camposAtributos.descripcion.disabled = false;
         self.form.camposAtributos.cliente.disabled = false;
         self.form.camposAtributos.cliente.help = self.form.camposAtributos.cliente.helpInit;
         self.form.camposAtributos.estatus.disabled = false;
+        self.form.camposAtributos.fechaContratacion.disabled = false;
+        self.form.camposAtributos.montoEn.disabled = false;
+        self.form.camposAtributos.divisiones.disabled = false;
+        self.submitCrear.disabled = false;
 
-
-        self.form.fechaContratacion.disabled = false;
-        self.form.estatus.disabled = false;
-        self.form.montoEn.disabled = false;
-        self.form.divisiones.disabled = false;
         self.form.mostrar = true;
-
         self.loading = false;
 
       }else{
@@ -155,13 +179,9 @@ new Vue({
     })
     .catch(error => {
 
-      self.alertForm = {
-        class : "alert alert-warning",
-        message : "Existe un error!, consulte con el administrador del sistema.",
-        show: true
-      };
-
+      self.mostrarAlertForm(self.alertGeneral, true, "warning", "Existe un error!, consulte con el administrador del sistema.", false, false, 0);
       self.loading = false;
+      self.form.mostrar = true;
 
     });
 
@@ -183,7 +203,7 @@ new Vue({
           modifyValueOnWheel: false
         });
 
-        self.form.autonumeric = new AutoNumeric('#monto', {
+        self.form.camposAtributos.monto.autonumeric = new AutoNumeric('#monto', {
           decimalPlaces: 2,
           decimalCharacter: ',',
           digitGroupSeparator: '.',
@@ -202,95 +222,128 @@ new Vue({
 
     asignarHoras: function(valor){
 
-      self.form.horas.asignar = (valor.length > 0) ? true : false;
+      self.form.camposAtributos.horas.asignar = (valor.length > 0) ? true : false;
 
-      if(!self.form.horas.asignar){
-        self.form.horas.value = 0;
-        $("#horas").parent().find(".mensaje").html("").removeClass("invalid-feedback");
-        $("#horas").removeClass("error");
+      if(!self.form.camposAtributos.horas.asignar){
+        self.form.camposAtributos.horas.value = 0;
+        self.form.camposAtributos.horas.invalidFeedback = "";
+        self.form.camposAtributos.horas.state = null;
       }
 
     },
     formatoHoraAsignada: function(input){
 
-      let regex = /^\d+$/;
-
-      if(!regex.test(input.key)){
+      let regex = /^(?:[1-9][0-9]*|0)$/;
+    
+      if(!regex.test(input.target.value)){
         input.preventDefault();
         self.horasTotales();
       }
 
-      $("#horas").parent().find(".mensaje").html("").removeClass("invalid-feedback");
-      $("#horas").removeClass("error");
+      self.form.camposAtributos.horas.invalidFeedback = "";
+      self.form.camposAtributos.horas.state = null;
 
     },
     horasTotales: function(){
 
       var total = 0;
 
-      $(".hora-asignada").each(function(index,item){
+      const horas = document.getElementsByClassName("hora-asignada");
+
+      for(var i = 0; i < horas.length; i++){
+
+        console.log(parseInt(self.$refs["asignar-"+i][0].$el.value))
+
+      }
+
+      /*$(".hora-asignada").each(function(index,item){
         let hora = ($(item).val().trim() === "") ? 0 : parseInt($(item).val());
         total = parseInt(total) + hora;
       });
 
-      self.form.horas.value = total;
+      self.form.horas.value = total;*/
 
     },
-    valuesForm: function(e){
+    limpiarMensajeError: function(refName){
 
-      if(e.target.type === 'text' || e.target.type === 'textarea' || e.target.type === 'email'){
-        self.form[e.target.id].value = (e.target.value.trim() === "") ? "" : $(e.target).val();
+      self.form.camposAtributos[refName].invalidFeedback = "";
+      self.form.camposAtributos[refName].state = null;
+
+    },
+    monedaSeleccionada: function(){
+
+      let valor = self.$refs["montoEn"].$el.value;
+
+      if((valor.trim() !== "") && (valor !== null)){
+
+        self.form.camposAtributos.monto.autonumeric.update({ currencySymbol : self.form.camposAtributos.montoEn.simbolo+" "});
+        self.form.camposAtributos.monto.disabled = false;
+
+      }else{
+
+        self.form.camposAtributos.monto.autonumeric.update({ currencySymbol : ""});
+        self.form.camposAtributos.monto.disabled = true;
+
       }
 
-      self.limpiarMensajeError(e);
+      self.limpiarMensajeError("montoEn");
 
     },
-    limpiarMensajeErrorMultiselect: function(){
-      $(".multiselect").parent().find(".mensaje").html("").removeClass("invalid-feedback");
-      $(".multiselect").removeClass("error");
-    },
-    limpiarMensajeError: function(e){
-      $(e.target).removeClass("error");
-      $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
-    },
-    campoOpcionalARequerido: function(e){
-
-      self.valuesForm(e);
-      self.form[e.target.id].validar = (self.form[e.target.id].value.length > 0 && self.form[e.target.id].validar === false) ? true : false;
-
-    },
-    monedaSeleccionada: function(e){
-
-      let simbolo = $(e.target).children("option:selected").attr("simbolo");
-      self.form.autonumeric.update({ currencySymbol : simbolo+" "});
-      self.form.monto.disabled = (($(e.target).val().trim() !== "") && ($(e.target).val() !== null)) ? false : true;
-      self.limpiarMensajeError(e);
-
-    },
-    crear: function(){
+    crear: async function(){
 
       var formValido = true;
 
-      $("form .form-group .mensaje").html("").removeClass("invalid-feedback");
-      $("form .form-group .form-control").removeClass("error");
+      await self.mostrarAlertForm(self.alertGeneral);
 
-      $("form .form-group").each(function(index, elemento) {
+      Object.keys(self.form.camposAtributos).forEach((indice, i) => {
 
-        if($(elemento).find(".form-control").length > 0){
+        if(self.form.camposAtributos[indice].hasOwnProperty("state")){
+          self.form.camposAtributos[indice].state = (self.form.camposAtributos[indice].state === true) ? true : null;
+        }
 
-          var input = $(elemento).find(".form-control")[0];
-          var valido = self.validarValor(input);
-
-          if(!valido.respuesta){
-            $(elemento).find(".mensaje").html(valido.mensaje).addClass("invalid-feedback");
-            $(elemento).find(".form-control").addClass("error");
-            formValido = valido.respuesta;
-            return false;
-          }
-
+        if(self.form.camposAtributos[indice].hasOwnProperty("invalidFeedback")){
+          self.form.camposAtributos[indice].invalidFeedback = "";
         }
 
       });
+
+      var formValido = true;
+
+      const arrayCampos = Object.keys(self.form.campos);
+      for(var i = 0; i <= (arrayCampos.length - 1); i++){
+
+        let indice = arrayCampos[i];
+        const campo = self.$v.form.campos[indice];
+        campo.$touch();
+
+        if(campo.$invalid){
+
+          self.form.camposAtributos[indice].state = false;
+          const valorCampo = self.$v.form.campos[indice].$model;
+
+          const arrayParams = Object.keys(campo.$params);
+          for(var j = 0; j <= (arrayParams.length - 1); j++){
+
+            let mensajeError = self.validadorMensajes(arrayParams[j], campo);
+            self.form.camposAtributos[indice].invalidFeedback = mensajeError.mensaje;
+
+            if(!mensajeError.respuesta){
+              break
+            }
+
+          }
+
+          zenscroll.toY(self.$refs[indice].$el);
+          formValido = false;
+          break;
+
+        }
+
+      }
+
+      console.log("crear");
+
+      return;
 
       if(formValido){
 
@@ -322,7 +375,7 @@ new Vue({
           divisiones.push({id:item.id, horas: hora});
         });
 
-        let monto = (self.form.autonumeric === null) ? 0 : self.form.autonumeric.get()
+        let monto = (self.form.camposAtributos.monto.autonumeric === null) ? 0 : self.form.camposAtributos.monto.autonumeric.get()
 
         //Obtenemos valores
         let parametros = {
@@ -397,64 +450,31 @@ new Vue({
       }// Fin if
 
     },
-    validarValor: function(input) {
+    validadorMensajes: function(indice,campo){
 
-      var respuesta = true;
-      var mensaje   = '';
+      var mensaje,
+          respuesta = true;
 
-      if(input.hasAttribute("data-validar")){
-
-        if(input.getAttribute("data-validar") === "true"){
-
-          if(input.type === 'text'){
-
-            if(input.getAttribute("data-min")){
-
-              let minChar = input.getAttribute("data-min");
-              let numChar = input.value.length
-              let regexName = /^[A-Za-zÀ-ÖØ-öø-ÿ 0-9 -]+$/;
-
-              if(numChar < minChar){
-
-                respuesta = false;
-                mensaje   = "El campo debe contener al menos "+minChar+" caracteres!";
-                zenscroll.toY($(input).offset().top - 100);
-
-              }else if(!regexName.test(input.value)){
-
-                respuesta = false;
-                mensaje = "Solo se permiten letras y este caracter (',´,0-9)!";
-                zenscroll.toY($(input).offset().top - 100);
-
-              }
-
-            }else if(input.getAttribute("data-date")){
-
-              let numChar = input.value.length
-
-              if(numChar < 10){
-                respuesta = false;
-                mensaje   = "Fecha incorrecta!";
-                zenscroll.toY($(input).offset().top - 100);
-              }
-
-            }
-
-          }else if(input.type === "select-one"){
-
-            if(input.value === ""){
-              respuesta = false;
-              mensaje = "Debe seleccionar una opción!";
-              zenscroll.toY($(input).offset().top - 100);
-            }
-
-          }
-
-        }
-
+      if(!campo[indice] && indice === "required"){
+        mensaje = "Este campo es requerido!";
+        respuesta = false;
+      }else if(!campo[indice] && indice === "minLength"){
+        let minChar = campo.$params[indice].min;
+        mensaje = "Debe contener al menos "+minChar+" Caracteres!";
+        respuesta = false;
+      }else if(!campo[indice] && indice === "email"){
+        mensaje = "Correo inválido!";
+        respuesta = false;
+      }else if(!campo[indice] && indice === "minValue"){
+        let minChar = campo.$params[indice].min;
+        mensaje = "El valor mínimo es "+minChar+"!";
+        console.log(campo.$params[indice])
+        respuesta = false;
+      }else{
+        mensaje = "";
       }
 
-      return {respuesta: respuesta, mensaje: mensaje};
+      return {mensaje:mensaje, respuesta:respuesta};
 
     },
     keyboard: function(e){
@@ -467,15 +487,9 @@ new Vue({
     refreshView: function(){
       window.location.href = "/formNuevoProyecto";
     },
-    limpiarErrorCampo: function(formulario,indice){
-
-      self[formulario].camposAtributos[indice].invalidFeedback = "";
-      self[formulario].camposAtributos[indice].state = null;
-
-    },
     buscarCliente: function(){
 
-      self.limpiarErrorCampo("form","cliente");
+      self.limpiarMensajeError("cliente");
       self.$refs["ref-lista-cliente"].hide();
       self.form.camposAtributos.cliente.listaDropdown.listado = [];
       self.form.camposAtributos.cliente.listaDropdown.noResultado = false;
@@ -532,11 +546,11 @@ new Vue({
     },
     elegirCliente: function(id, razon_social){
 
-      self.form.campos.funcionario = id;
       self.form.camposAtributos.cliente.valor = razon_social;
       self.form.camposAtributos.cliente.valorFocus = razon_social;
       self.form.camposAtributos.cliente.valorBlur = razon_social;
       self.form.camposAtributos.cliente.state = true;
+      self.form.campos.cliente = id;
 
     },
     valorBlur: function(indice){
@@ -557,6 +571,22 @@ new Vue({
 
       self.form.camposAtributos[indice].state = false;
       self.form.camposAtributos[indice].invalidFeedback = "Debe seleccionar una opción válida";
+
+    },
+    mostrarAlertForm: function(alert, mostrar = false, variante = "", mensaje = "", iconCerrar = false, contador = false, ocultarSeg = 0){
+
+      return new Promise(resolve => {
+
+        alert.contador = contador;
+        alert.iconCerrar = iconCerrar;
+        alert.mensaje = mensaje;
+        alert.mostrar = mostrar;
+        alert.ocultarSeg = ocultarSeg;
+        alert.variante = variante;
+
+        resolve(true);
+
+      });
 
     }
 
