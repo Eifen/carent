@@ -53,13 +53,8 @@ class ProyectoModel extends Model
 
     function clientes($nombre_cliente = null, $limite = null){
 
-      if($nombre_cliente != null){
-        $sql_condicion = " AND UPPER(c.razon_social) LIKE UPPER('".$nombre_cliente."%')";
-      }
-
-      if($limite != null){
-        $sql_limit = " LIMIT ".$limite;
-      }
+      $sql_condicion = ($nombre_cliente != null) ? " AND UPPER(c.razon_social) LIKE UPPER('".$nombre_cliente."%')" : "";
+      $sql_limit = ($limite != null) ? " LIMIT ".$limite : "";
 
       $clientes = DB::select('SELECT c.id,
                                      UPPER(c.razon_social) as razon_social
@@ -171,7 +166,7 @@ class ProyectoModel extends Model
       $proyectos = DB::select('SELECT p.id,
                                       p.descripcion,
                                       (SELECT SUM(horas_contratadas) FROM tbl_proyecto_divisiones WHERE id_proyecto = p.id) AS horas_contratadas,
-                                      p.fecha_contratacion,
+                                      DATE_FORMAT(p.fecha_contratacion, "%d/%m/%Y") AS fecha_contratacion,
                                       e.descripcion AS estatus,
                                       c.razon_social as cliente
                                FROM tbl_proyecto p,
