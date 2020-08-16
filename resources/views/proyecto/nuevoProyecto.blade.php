@@ -28,7 +28,7 @@
                 :invalid-feedback="form.camposAtributos.descripcion.invalidFeedback"
                 class="col-12 col-sm-6"
                 description="Ejemplo: Proyecto 1"
-                label="Descripcion"
+                label="Descripción"
                 label-for="descripcion"
                 id="group-descripcion">
                 <b-form-input
@@ -103,6 +103,7 @@
                   @input="limpiarMensajeError('fechaContratacion')"
                   :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
                   :disabled="form.camposAtributos.fechaContratacion.disabled"
+                  :max="form.camposAtributos.fechaContratacion.max"
                   :state="form.camposAtributos.fechaContratacion.state"
                   id="fechaContratacion"
                   label-help="Use las teclas del cursor para navegar por las fechas del calendario"
@@ -164,6 +165,7 @@
                 <multiselect @input="asignarHoras"
                              @Open="limpiarMensajeError('divisiones')"
                              :clear-on-select="false"
+                             :close-on-select="false"
                              :disabled="form.camposAtributos.divisiones.disabled"
                              :multiple="true"
                              :options="comboDivisiones"
@@ -175,6 +177,10 @@
                              ref="divisiones"
                              track-by="descripcion"
                              v-model="$v.form.campos.divisiones.$model">
+                   <template slot="selection"
+                             slot-scope="{ values, search, isOpen }">
+                     <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">@{{ values.length }} Seleccionadas</span>
+                   </template>
                 </multiselect>
                 <b-form-invalid-feedback :state="form.camposAtributos.divisiones.state">
                   @{{ form.camposAtributos.divisiones.invalidFeedback }}
@@ -194,8 +200,7 @@
                   ref="horas"
                   size="sm"
                   type="text"
-                  v-on:keyup="limpiarMensajeError"
-                  v-model="form.camposAtributos.horas.value"></b-form-input>
+                  v-model="form.campos.horas"></b-form-input>
               </b-form-group>
               <b-form-group class="col-12" v-if="form.camposAtributos.horas.asignar">
                 <h6 class="titulo-indicar-horas">Indica la cantidad de horas por división</h6>
@@ -219,13 +224,15 @@
                     label-for="division"
                     id="group-division">
                     <b-form-input
-                      @keypress="formatoHoraAsignada"
-                      @keyup="horasTotales"
+                      @input="horasTotales"
                       :disabled="form.camposAtributos.divisiones.disabled"
+                      :formatter="cantidadHora"
+                      :id-division="division.id"
+                      :number="true"
                       :ref="'asignar-'+index"
                       class="form-control hora-asignada"
-                      size="sm"
-                      value="0"></b-form-input>
+                      placeholder="0"
+                      size="sm"></b-form-input>
                   </b-form-group>
                 </b-row>
               </b-form-group>
@@ -236,17 +243,18 @@
               <b-col sm="12" md="6" lg="4">
                 <b-button
                   @click="crear"
-                  :disabled="submitCrear.disabled"
+                  :disabled="form.botones.submit.disabled"
                   class="btn"
                   size="sm"
-                  v-html="submitCrear.content"
-                  v-if="submitCrear.show"></b-button>
+                  v-html="form.botones.submit.html"
+                  v-if="form.botones.submit.show"></b-button>
               </b-col>
             </b-row>
 
             <b-row align-h="center" align-v="center" class="wrapper-refrescar" v-if="refreshForm">
               <b-col sm="12" md="6" lg="4">
                 <b-button
+                  @click="refreshView"
                   class="btn"
                   size="sm"
                   v-on:click="refreshView">Crear un nuevo proyecto</b-button>

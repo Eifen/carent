@@ -65,20 +65,26 @@
                 </select>
                 <div class="mensaje"></div>
               </div>
-              <div class="form-group col-12 col-sm-6">
-                <label for="fechaContratacion">Fecha de Contratación</label>
-                <input aria-describedby="fechaContratacionHelp"
-                       class="form-control text-lowercase"
-                       data-date="true"
-                       data-validar="true"
-                       id="fechaContratacion"
-                       v-bind:disabled="form.fechaContratacion.disabled"
-                       v-mask="'##/##/####'"
-                       v-model="form.fechaContratacion.value"
-                       type="text">
-                <small id="fechaContratacionHelp" class="form-text text-muted">Formato: 00/00/0000</small>
-                <div class="mensaje"></div>
-              </div>
+              <b-form-group
+                :invalid-feedback="form.camposAtributos.fechaContratacion.invalidFeedback"
+                class="col-12 col-sm-6"
+                label="Fecha de Contratación:"
+                label-for="fechaContratacion"
+                id="group-fechaContratacion">
+                <b-form-datepicker
+                  @input="limpiarMensajeError('fechaContratacion')"
+                  :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+                  :disabled="form.camposAtributos.fechaContratacion.disabled"
+                  :max="form.camposAtributos.fechaContratacion.max"
+                  :state="form.camposAtributos.fechaContratacion.state"
+                  id="fechaContratacion"
+                  label-help="Use las teclas del cursor para navegar por las fechas del calendario"
+                  label-no-date-selected="Ninguna fecha seleccionada"
+                  locale="es-ES"
+                  placeholder="Seleccione una fecha"
+                  ref="fechaContratacion"
+                  v-model="$v.form.campos.fechaContratacion.$model"></b-form-datepicker>
+              </b-form-group>
               <div class="form-group col-12 col-sm-6">
                 <label for="estatus">Estatus <span class="campo-obligatorio">*</span></label>
                 <select aria-describedby="estatusHelp"
@@ -133,7 +139,12 @@
                              label="descripcion"
                              placeholder="Seleccione..."
                              track-by="descripcion"
-                             v-model="form.divisiones.value"></multiselect>
+                             v-model="form.divisiones.value">
+                   <template slot="selection"
+                             slot-scope="{ values, search, isOpen }">
+                     <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">@{{ values.length }} Seleccionadas</span>
+                   </template>
+                </multiselect>
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">

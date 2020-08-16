@@ -108,7 +108,7 @@ new Vue({
     formSearchP: {
       submit: {
         disabled: true,
-        html: "Selecionar Proyecto"
+        html: "Seleccionar Proyecto"
       }
     },
     clientes: {
@@ -396,7 +396,7 @@ new Vue({
         axios.get('/buscarClieProyec', {params: parametros})
         .then(function (response) {
 
-          self.formSearchP.submit.html = 'Selecionar Proyecto';
+          self.formSearchP.submit.html = 'Seleccionar Proyecto';
           self.formSearchP.submit.disabled = false;
 
           if(response.status === 200 && response.data.response === true){
@@ -426,7 +426,7 @@ new Vue({
         })
         .catch(error => {
 
-          self.formSearchP.submit.html = 'Selecionar Proyecto';
+          self.formSearchP.submit.html = 'Seleccionar Proyecto';
           self.formSearchP.submit.disabled = false;
 
           self.alert.mostrar = true;
