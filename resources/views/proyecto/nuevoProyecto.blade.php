@@ -28,7 +28,7 @@
                 :invalid-feedback="form.camposAtributos.descripcion.invalidFeedback"
                 class="col-12 col-sm-6"
                 description="Ejemplo: Proyecto 1"
-                label="Descripcion"
+                label="Descripción"
                 label-for="descripcion"
                 id="group-descripcion">
                 <b-form-input
