@@ -103,6 +103,7 @@
                   @input="limpiarMensajeError('fechaContratacion')"
                   :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
                   :disabled="form.camposAtributos.fechaContratacion.disabled"
+                  :max="form.camposAtributos.fechaContratacion.max"
                   :state="form.camposAtributos.fechaContratacion.state"
                   id="fechaContratacion"
                   label-help="Use las teclas del cursor para navegar por las fechas del calendario"
@@ -253,6 +254,7 @@
             <b-row align-h="center" align-v="center" class="wrapper-refrescar" v-if="refreshForm">
               <b-col sm="12" md="6" lg="4">
                 <b-button
+                  @click="refreshView"
                   class="btn"
                   size="sm"
                   v-on:click="refreshView">Crear un nuevo proyecto</b-button>

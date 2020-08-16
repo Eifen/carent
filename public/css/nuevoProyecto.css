@@ -41,11 +41,6 @@ html {
   padding: 0.25rem 0.7rem;
   white-space: normal;
 }
-#app .wrapper-forms form > div.form-group {
-  /*.invalid-feedback{
-            display: block !important;
-          }*/
-}
 #app .wrapper-forms form > div.form-group .titulo-indicar-horas {
   color: #cc0000;
   margin-top: 30px;
@@ -59,9 +54,6 @@ html {
 }
 #app .wrapper-forms form > div.form-group .form-control {
   border-radius: 2px;
-  /*&.error{
-              border-color: #dc3545;
-            }*/
 }
 #app .wrapper-forms form > div.form-group .form-control:disabled {
   cursor: not-allowed;

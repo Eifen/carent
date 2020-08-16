@@ -84,6 +84,7 @@ new Vue({
         fechaContratacion: {
           disabled: true,
           invalidFeedback: "",
+          max: null,
           state: null
         },
         montoEn: {
@@ -152,6 +153,10 @@ new Vue({
     .then(function (response) {
 
       if(response.status === 200){
+
+        const ahora = new Date()
+        const hoy = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate())
+        self.form.camposAtributos.fechaContratacion.max = hoy;
 
         response.data.estatus.forEach((item, i) => {
           self.comboEstatus.push({text:item.descripcion, value: item.id});
@@ -365,16 +370,15 @@ new Vue({
           monto: monto
         }
 
-        console.log(parametros);
-        return;
+        self.form.botones.submit.disabled = true;
+        self.form.botones.submit.html = self.form.botones.submit.htmlLoading;
 
-        self.submitCrear.content = '<i class="fas fa-cog fa-spin"></i>';
-        self.submitCrear.disabled = true;
+        Object.keys(self.form.camposAtributos).forEach((indice, i) => {
 
-        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-          if(self.form[indiceObjecto].hasOwnProperty('disabled') && indiceObjecto !== "horas"){
-            self.form[indiceObjecto].disabled = true;
+          if(self.form.camposAtributos[indice].hasOwnProperty("disabled") && indice !== "horas"){
+            self.form.camposAtributos[indice].disabled = true;
           }
+
         });
 
         axios.post('/crearProyecto', parametros)
@@ -382,14 +386,10 @@ new Vue({
 
           if(response.status === 200 && response.data.response === true){
 
-            self.submitCrear.show = false;
+            self.form.botones.submit.show = false;
             self.refreshForm = true;
 
-            self.alertForm = {
-              class : "alert alert-success",
-              message : response.data.message,
-              show: true
-            };
+            self.mostrarAlertForm(self.alertGeneral, true, "success", response.data.message, false, false, 0);
 
           }else{
 
@@ -400,30 +400,30 @@ new Vue({
         })
         .catch(error => {
 
-          Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-            if(self.form[indiceObjecto].hasOwnProperty('disabled') && indiceObjecto !== "horas"){
-              self.form[indiceObjecto].disabled = false;
+          Object.keys(self.form.camposAtributos).forEach((indice, i) => {
+
+            if(self.form.camposAtributos[indice].hasOwnProperty("disabled") && indice !== "horas"){
+              self.form.camposAtributos[indice].disabled = false;
             }
+
           });
 
-          self.submitCrear.content = 'Crear nuevo Proyecto';
-          self.submitCrear.disabled = false;
+          self.form.botones.submit.disabled = false;
+          self.form.botones.submit.html = self.form.botones.submit.htmlInit
 
           if(error.response){
 
-            var message = "Existe un error!, consulte con el administrador del sistema.";
+            var mensaje = "Existe un error!, consulte con el administrador del sistema.";
+            var variante = "warning";
 
           }else{
 
-            var message = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+            var mensaje = error.message;
+            var variante = "danger";
 
           }
 
-          self.alertForm = {
-            class : "alert alert-warning",
-            message : message,
-            show: true
-          };
+          self.mostrarAlertForm(self.alertGeneral, true, variante, mensaje, true, true, 10);
 
         });
 
