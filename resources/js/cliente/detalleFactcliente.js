@@ -108,7 +108,7 @@ new Vue({
     formSearchP: {
       submit: {
         disabled: true,
-        html: "Selecionar Proyecto"
+        html: "Seleccionar Proyecto"
       }
     },
     clientes: {
