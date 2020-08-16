@@ -9,6 +9,8 @@ window.AutoNumeric = require('autonumeric');
 import VueTheMask from 'vue-the-mask';
 import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
+import Vuelidate from 'vuelidate';
+import { required, minLength, minValue } from 'vuelidate/lib/validators';
 var self;
 
 Vue.use(VueTheMask);
@@ -16,6 +18,7 @@ Vue.component('multiselect', Multiselect);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
 Vue.component('loading',require('../components/loading.vue').default);
 Vue.use(BootstrapVue);
+Vue.use(Vuelidate);
 
 const errorInit = () => {
 
@@ -91,6 +94,17 @@ new Vue({
     comboMonedas: [],
     refreshForm: false,
     form: {
+      campos: {
+        fechaContratacion: null
+      },
+      camposAtributos: {
+        fechaContratacion: {
+          disabled: true,
+          invalidFeedback: "",
+          max: null,
+          state: null
+        }
+      },
       descripcion:{
         disabled: true,
         value: ""
@@ -141,7 +155,15 @@ new Vue({
     },
     dataInicial: false
   },
-
+  validations: {
+    form:{
+      campos:{
+        fechaContratacion: {
+          required
+        }
+      }
+    }
+  },
   beforeCreate: async function(){
 
     self = this;
@@ -150,42 +172,46 @@ new Vue({
 
     if(dataInit.response){
 
-        self.idProyecto = dataInit.info.id;
-        self.divisiones_v = dataInit.infodivi;
-        self.form.descripcion.value = dataInit.info.descripcion;
-        self.form.cliente.value = dataInit.info.id_cliente;
-        self.form.horas.value = dataInit.info.horas_contratadas;
-        self.form.fechaContratacion.value = dataInit.info.fecha_contratacion;
-        self.form.estatus.value = dataInit.info.id_estatus;
-        self.form.montoEn.value = dataInit.info.id_moneda;
-        self.form.monto.value = dataInit.info.monto;
-        self.form.monto.simbolo = dataInit.info.simbolo;
-        self.comboClientes = dataInit.clientes;
-        self.comboEstatus = dataInit.estatus;
-        self.comboDivisiones = dataInit.divisiones;
-        self.comboMonedas = dataInit.monedas;
-        self.form.descripcion.disabled = false;
-        self.form.cliente.disabled = false;
-        self.form.fechaContratacion.disabled = false;
-        self.form.estatus.disabled = false;
-        self.form.mostrar = true;
+      const ahora = new Date()
+      const hoy = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate())
+      self.form.camposAtributos.fechaContratacion.max = hoy;
 
-        var data = [];
-        for (var i = 0; i < dataInit.infodivi.length; i++) {
-          for (var j = 0; j < self.comboDivisiones.length; j++) {
-            if (dataInit.infodivi[i].id_division === self.comboDivisiones[j].id) {
-              data[i] = self.comboDivisiones[j];
-            }
+      self.idProyecto = dataInit.info.id;
+      self.divisiones_v = dataInit.infodivi;
+      self.form.descripcion.value = dataInit.info.descripcion;
+      self.form.cliente.value = dataInit.info.id_cliente;
+      self.form.horas.value = dataInit.info.horas_contratadas;
+      self.form.campos.fechaContratacion = dataInit.info.fecha_contratacion;
+      self.form.estatus.value = dataInit.info.id_estatus;
+      self.form.montoEn.value = dataInit.info.id_moneda;
+      self.form.monto.value = dataInit.info.monto;
+      self.form.monto.simbolo = dataInit.info.simbolo;
+      self.comboClientes = dataInit.clientes;
+      self.comboEstatus = dataInit.estatus;
+      self.comboDivisiones = dataInit.divisiones;
+      self.comboMonedas = dataInit.monedas;
+      self.form.descripcion.disabled = false;
+      self.form.cliente.disabled = false;
+      self.form.camposAtributos.fechaContratacion.disabled = false;
+      self.form.estatus.disabled = false;
+      self.form.mostrar = true;
+
+      var data = [];
+      for (var i = 0; i < dataInit.infodivi.length; i++) {
+        for (var j = 0; j < self.comboDivisiones.length; j++) {
+          if (dataInit.infodivi[i].id_division === self.comboDivisiones[j].id) {
+            data[i] = self.comboDivisiones[j];
           }
         }
-        self.form.divisiones.value = data;
-        self.form.divisiones.disabled = false;
-
-        self.loading = false;
-
-      }else{
-        errorInit();
       }
+      self.form.divisiones.value = data;
+      self.form.divisiones.disabled = false;
+
+      self.loading = false;
+
+    }else{
+      errorInit();
+    }
 
   },
   created: async function () {
@@ -291,6 +317,12 @@ new Vue({
       $(e.target).removeClass("error");
       $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
     },
+    limpiarMensajeError2: function(refName){
+
+      self.form.camposAtributos[refName].invalidFeedback = "";
+      self.form.camposAtributos[refName].state = null;
+
+    },
     campoOpcionalARequerido: function(e){
 
       self.valuesForm(e);
@@ -359,7 +391,7 @@ new Vue({
           idProyecto: self.idProyecto,
           descripcion:  self.form.descripcion.value,
           cliente: self.form.cliente.value,
-          fechaContratacion: self.form.fechaContratacion.value,
+          fechaContratacion: self.form.campos.fechaContratacion,
           divisiones: divisiones,
           estatus: self.form.estatus.value
         }

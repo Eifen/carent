@@ -42,7 +42,7 @@ class ProyectoModel extends Model
     function divisiones(){
 
       $divisiones = DB::select('SELECT d.id,
-                                       d.descripcion
+                                       UPPER(d.descripcion) AS descripcion
                                 FROM tbl_division d
                                 WHERE d.id_estatus = 1
                                 ORDER BY d.id ASC');
@@ -51,18 +51,18 @@ class ProyectoModel extends Model
 
     }// Fin divisiones
 
-    function clientes($nombre_cliente = null){
+    function clientes($nombre_cliente = null, $limite = null){
 
-      if($nombre_cliente != null){
-        $sql_condicion = " AND UPPER(c.razon_social) LIKE UPPER('".$nombre_cliente."%')";
-      }
+      $sql_condicion = ($nombre_cliente != null) ? " AND UPPER(c.razon_social) LIKE UPPER('".$nombre_cliente."%')" : "";
+      $sql_limit = ($limite != null) ? " LIMIT ".$limite : "";
 
       $clientes = DB::select('SELECT c.id,
-                                     c.razon_social
+                                     UPPER(c.razon_social) as razon_social
                               FROM tbl_cliente c
                               WHERE c.id_estatus = 1
                               '.$sql_condicion.'
-                              ORDER BY c.razon_social ASC');
+                              ORDER BY c.razon_social ASC'.
+                              $sql_limit);
 
       return $clientes;
 
@@ -166,7 +166,7 @@ class ProyectoModel extends Model
       $proyectos = DB::select('SELECT p.id,
                                       p.descripcion,
                                       (SELECT SUM(horas_contratadas) FROM tbl_proyecto_divisiones WHERE id_proyecto = p.id) AS horas_contratadas,
-                                      p.fecha_contratacion,
+                                      DATE_FORMAT(p.fecha_contratacion, "%d/%m/%Y") AS fecha_contratacion,
                                       e.descripcion AS estatus,
                                       c.razon_social as cliente
                                FROM tbl_proyecto p,
