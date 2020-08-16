@@ -38,7 +38,7 @@ new Vue({
         filtrar: {
           disabled: false,
           html: "",
-          htmlInit: "buscar proyecto",
+          htmlInit: "Buscar Proyecto",
           htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
         }
       },
