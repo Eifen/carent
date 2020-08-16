@@ -40,7 +40,7 @@ new Vue({
         submit:{
           disabled: false,
           html: "",
-          htmlInit: "Crear nuevo Proyecto",
+          htmlInit: "Crear Nuevo Proyecto",
           htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
           show: true
         }
