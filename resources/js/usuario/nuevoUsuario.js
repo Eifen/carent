@@ -123,7 +123,7 @@ new Vue({
     },
     loading: true,
     submitCrear: {
-      content: "Crear nuevo Usuario",
+      content: "Crear Nuevo Usuario",
       disabled: false,
       show:true
     },
@@ -470,7 +470,7 @@ new Vue({
           indices.forEach(function(indiceObjecto, indice) {
             self.form[indiceObjecto].disabled = false;
           });
-          self.submitCrear.content = 'Crear nuevo Usuario';
+          self.submitCrear.content = 'Crear Nuevo Usuario';
           self.submitCrear.disabled = false;
 
           if(error.response){
