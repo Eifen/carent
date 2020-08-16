@@ -36,6 +36,15 @@ new Vue({
     comboMonedas: [],
     refreshForm: false,
     form: {
+      botones: {
+        submit:{
+          disabled: false,
+          html: "",
+          htmlInit: "Crear nuevo Proyecto",
+          htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
+          show: true
+        }
+      },
       campos: {
         descripcion: null,
         cliente: null,
@@ -101,12 +110,7 @@ new Vue({
       },
       mostrar: false
     },
-    loading: true,
-    submitCrear: {
-      content: "Crear nuevo Proyecto",
-      disabled: true,
-      show:true
-    }
+    loading: true
   },
   validations: {
     form:{
@@ -165,7 +169,9 @@ new Vue({
         self.form.camposAtributos.fechaContratacion.disabled = false;
         self.form.camposAtributos.montoEn.disabled = false;
         self.form.camposAtributos.divisiones.disabled = false;
-        self.submitCrear.disabled = false;
+
+        self.form.botones.submit.html = self.form.botones.submit.htmlInit;
+        self.form.botones.submit.disabled = false;
 
         self.form.mostrar = true;
         self.loading = false;
@@ -225,23 +231,21 @@ new Vue({
       self.form.camposAtributos.horas.asignar = (valor.length > 0) ? true : false;
 
       if(!self.form.camposAtributos.horas.asignar){
-        self.form.camposAtributos.horas.value = 0;
+        self.form.campos.horas = 0;
         self.form.camposAtributos.horas.invalidFeedback = "";
         self.form.camposAtributos.horas.state = null;
       }
 
     },
-    formatoHoraAsignada: function(input){
+    cantidadHora(value) {
 
-      let regex = /^(?:[1-9][0-9]*|0)$/;
-    
-      if(!regex.test(input.target.value)){
-        input.preventDefault();
-        self.horasTotales();
+      let regex = /^(?:[1-9][0-9]*)$/;
+
+      if(regex.test(value)){
+        return value;
+      }else{
+        return "";
       }
-
-      self.form.camposAtributos.horas.invalidFeedback = "";
-      self.form.camposAtributos.horas.state = null;
 
     },
     horasTotales: function(){
@@ -252,16 +256,15 @@ new Vue({
 
       for(var i = 0; i < horas.length; i++){
 
-        console.log(parseInt(self.$refs["asignar-"+i][0].$el.value))
+        total = total + parseInt(self.$refs["asignar-"+i][0].$el.value);
 
       }
 
-      /*$(".hora-asignada").each(function(index,item){
-        let hora = ($(item).val().trim() === "") ? 0 : parseInt($(item).val());
-        total = parseInt(total) + hora;
-      });
+      total = (isNaN(total)) ? 0 : total;
 
-      self.form.horas.value = total;*/
+      self.form.campos.horas = total;
+
+      self.limpiarMensajeError('horas');
 
     },
     limpiarMensajeError: function(refName){
@@ -341,52 +344,29 @@ new Vue({
 
       }
 
-      console.log("crear");
-
-      return;
-
       if(formValido){
-
-        if(self.form.divisiones.value.length === 0){
-          formValido = false;
-          $(".multiselect").parent().find(".mensaje").html("Seleccione una opción").addClass("invalid-feedback");
-          $(".multiselect").addClass("error");
-          zenscroll.toY($("#divisiones").offset().top - 100);
-        }else if(parseInt(self.form.horas.value) === 0){
-          formValido = false;
-          $("#horas").parent().find(".mensaje").html("Debe ser mayor a 0").addClass("invalid-feedback");
-          $("#horas").addClass("error");
-          zenscroll.toY($("#horas").offset().top - 100);
-        }
-
-      }
-
-      if(formValido){
-
-        self.alertForm = {
-          class : "",
-          message : "",
-          show: false
-        };
 
         const divisiones = [];
-        self.form.divisiones.value.forEach((item, i) => {
-          let hora = (self.$refs["asignar-"+item.id][0].value.trim() === "") ? 0 : parseInt(self.$refs["asignar-"+item.id][0].value);
-          divisiones.push({id:item.id, horas: hora});
+        self.form.campos.divisiones.forEach((item, i) => {
+          let hora = (self.$refs["asignar-"+i][0].$el.value.trim() === "") ? 0 : parseInt(self.$refs["asignar-"+i][0].$el.value);
+          divisiones.push({id:self.$refs["asignar-"+i][0].$attrs["id-division"], horas: hora});
         });
 
         let monto = (self.form.camposAtributos.monto.autonumeric === null) ? 0 : self.form.camposAtributos.monto.autonumeric.get()
 
         //Obtenemos valores
         let parametros = {
-          descripcion:  self.form.descripcion.value,
-          cliente: self.form.cliente.value,
-          fechaContratacion: self.form.fechaContratacion.value,
+          descripcion:  self.form.campos.descripcion,
+          cliente: self.form.campos.cliente,
+          fechaContratacion: self.form.campos.fechaContratacion,
           divisiones: divisiones,
-          estatus: self.form.estatus.value,
-          id_moneda: self.form.montoEn.value,
+          estatus: self.form.campos.estatus,
+          id_moneda: self.form.campos.montoEn,
           monto: monto
         }
+
+        console.log(parametros);
+        return;
 
         self.submitCrear.content = '<i class="fas fa-cog fa-spin"></i>';
         self.submitCrear.disabled = true;
@@ -468,7 +448,6 @@ new Vue({
       }else if(!campo[indice] && indice === "minValue"){
         let minChar = campo.$params[indice].min;
         mensaje = "El valor mínimo es "+minChar+"!";
-        console.log(campo.$params[indice])
         respuesta = false;
       }else{
         mensaje = "";

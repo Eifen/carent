@@ -32,7 +32,7 @@ class ProyectoController extends Controller
       $modelo = new ProyectoModel();
       $dato = $request["nombreCliente"];
 
-      $clientes = $modelo->clientes($dato);
+      $clientes = $modelo->clientes($dato,5);
 
       return [
         "response" => true,
