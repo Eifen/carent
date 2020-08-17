@@ -233,7 +233,7 @@ class ProyectoController extends Controller
 
         return array("proyectos" => $proyectos);
       }
-      if ($infoUsuario->id_cargo === 15 || $permisoActualizar === "true") {
+      if ($permisoActualizar === "true") {
         $proyectos = $modelo->proyectosDdivi($id_usuario,11,$infoUsuario->id_division,$proyecto, $cliente, $estatus);
         if ($estatus === "1" || empty($estatus)) {
           return array("proyectos" => $proyectos, "permisoActualizar" => $permisoActualizar, "estatus" => $estatus);
