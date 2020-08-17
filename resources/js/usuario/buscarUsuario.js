@@ -1474,8 +1474,6 @@ new Vue({
 
     actualizarDetalleMenu: function(idUsuario){
 
-      self.infoUsuario = [];
-
       self.crUsuario.checked = false;
       self.crUsuario.c = 0;
       self.coUsuario.checked = false;
