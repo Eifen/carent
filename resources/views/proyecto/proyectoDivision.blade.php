@@ -154,7 +154,7 @@
                 <tr>
                   <th scope="col">Empleado</th>
                   <th scope="col">División</th>
-                  <th scope="col">Cargó</th>
+                  <th scope="col">Cargo</th>
                   <th scope="col">Horas Cargadas</th>
                 </tr>
               </thead>
