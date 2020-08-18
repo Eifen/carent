@@ -33,7 +33,7 @@
                        v-bind:disabled="formFiltro.descripcion.disabled"
                        v-model.trim="formFiltro.descripcion.value"
                        type="text">
-                <small id="descripcionHelp" class="form-text text-muted">Nombre que se le dío la proyecto</small>
+                <small id="descripcionHelp" class="form-text text-muted">Nombre que se le dío al proyecto</small>
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-4">
