@@ -355,6 +355,7 @@ class ProyectoController extends Controller
 
       $modelo = new ProyectoModel();
       $idAnaProy = $request->input("idAnaProy");
+      $idProyecto = $request->input("idDproyecto");
       $horas_asignadas = $request->input("horas_asignadas");
       $horasComparar = $request->input("horasComparar");
       $usuario_id = $request->session()->get('usuario_id');
@@ -364,10 +365,8 @@ class ProyectoController extends Controller
 
         $modeloAudit = new AuditoriaLogModel();
 
-        for($i = 0; $i < count($analis["horas"]); $i++){
-
           $parametros = [
-            "accion" => $analis["horas"][$i],
+            "accion" => $analis["horas"],
             "direccion_ip" => $request->session()->get('direccion_ip'),
             "fecha" => date("Y-m-d H:i:s"),
             "tabla" => 'tbl_proyecto_analista',
@@ -376,7 +375,7 @@ class ProyectoController extends Controller
 
           $modeloAudit->logs_auditoria($parametros);
 
-        }
+        
 
       }
 

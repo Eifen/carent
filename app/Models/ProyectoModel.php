@@ -898,7 +898,7 @@ class ProyectoModel extends Model
             $data = array("horas_asignadas" => $horas_asignadas[$i]);
             $update = DB::table('tbl_proyecto_analista')->where("id",$idAnaProy)->update($data);
 
-            $horas[$i] = 'total de horas asignadas: '.$horas_asignadas[$i].'. Al analista codigo: '.$analista[0]->codigo.' en el proyecto: '.$proyecto[0]->descripcion;
+            $horas = 'total de horas asignadas: '.$horas_asignadas[$i].'. Al analista codigo: '.$analista[0]->codigo.' en el proyecto: '.$proyecto[0]->descripcion;
 
           }
 
