@@ -302,7 +302,7 @@ new Vue({
 
     },
     limpiarMensajeError: function(refName){
-console.log(refName)
+
       self.form.camposAtributos[refName].invalidFeedback = "";
       self.form.camposAtributos[refName].state = null;
 
