@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import zenscroll from 'zenscroll';
 import axios from 'axios';
-import AutoNumeric from 'autonumeric';
+import VueMask from 'v-mask';
 import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 import Vuelidate from 'vuelidate';
@@ -18,6 +18,20 @@ Vue.component('loading',require('../components/loading.vue').default);
 Vue.component('alert',require('../components/alert.vue').default);
 Vue.use(BootstrapVue);
 Vue.use(Vuelidate);
+Vue.use(VueMask);
+
+import createNumberMask from 'text-mask-addons/dist/createNumberMask';
+const currencyMask = createNumberMask({
+  allowDecimal: true,
+  allowNegative: false,
+  decimalLimit: 2,
+  decimalSymbol: ',',
+  includeThousandsSeparator: true,
+  integerLimit: 20,
+  prefix: '',
+  requireDecimal: true,
+  thousandsSeparatorSymbol:'.'
+});
 
 new Vue({
 
@@ -50,6 +64,8 @@ new Vue({
         cliente: null,
         estatus: null,
         fechaContratacion: null,
+        socio: null,
+        gerente: null,
         montoEn: null,
         monto: null,
         divisiones: null,
@@ -87,6 +103,36 @@ new Vue({
           max: null,
           state: null
         },
+        socio: {
+          disabled: true,
+          help: "",
+          helpInit: "Socio que lleva el proyecto",
+          helpLoading: '<i class="fas fa-cog fa-spin"></i> buscando',
+          invalidFeedback: "",
+          listaDropdown: {
+            listado: [],
+            noResultado: false
+          },
+          state: null,
+          valor: null,
+          valorBlur: null,
+          valorFocus: null
+        },
+        gerente: {
+          disabled: true,
+          help: "",
+          helpInit: "Quien gerencia el proyecto",
+          helpLoading: '<i class="fas fa-cog fa-spin"></i> buscando',
+          invalidFeedback: "",
+          listaDropdown: {
+            listado: [],
+            noResultado: false
+          },
+          state: null,
+          valor: null,
+          valorBlur: null,
+          valorFocus: null
+        },
         montoEn: {
           disabled: true,
           invalidFeedback: "",
@@ -96,7 +142,9 @@ new Vue({
         monto: {
           disabled: true,
           invalidFeedback: "",
-          state: null
+          mask: currencyMask,
+          state: null,
+          valueWhenIsEmpty: null
         },
         divisiones: {
           disabled: true,
@@ -127,6 +175,12 @@ new Vue({
           required
         },
         fechaContratacion: {
+          required
+        },
+        socio: {
+          required
+        },
+        gerente: {
           required
         },
         montoEn: {
@@ -172,6 +226,10 @@ new Vue({
         self.form.camposAtributos.cliente.help = self.form.camposAtributos.cliente.helpInit;
         self.form.camposAtributos.estatus.disabled = false;
         self.form.camposAtributos.fechaContratacion.disabled = false;
+        self.form.camposAtributos.socio.disabled = false;
+        self.form.camposAtributos.socio.help = self.form.camposAtributos.socio.helpInit;
+        self.form.camposAtributos.gerente.disabled = false;
+        self.form.camposAtributos.gerente.help = self.form.camposAtributos.gerente.helpInit;
         self.form.camposAtributos.montoEn.disabled = false;
         self.form.camposAtributos.divisiones.disabled = false;
 
@@ -198,36 +256,7 @@ new Vue({
 
   },
   created: function () {},
-  mounted: function () {
-
-    let checkDataInitReady = setInterval(() => {
-
-      if (self.form.mostrar) {
-
-        clearInterval(checkDataInitReady);
-        new AutoNumeric('#horas', {
-          decimalPlaces: 0,
-          decimalCharacter: ',',
-          digitGroupSeparator: '',
-          emptyInputBehavior: 0,
-          minimumValue: 0,
-          modifyValueOnWheel: false
-        });
-
-        self.form.camposAtributos.monto.autonumeric = new AutoNumeric('#monto', {
-          decimalPlaces: 2,
-          decimalCharacter: ',',
-          digitGroupSeparator: '.',
-          emptyInputBehavior: 0,
-          minimumValue: 0,
-          modifyValueOnWheel: false
-        });
-
-      }
-
-    }, 1000);
-
-  },
+  mounted: function () {},
   updated: function () {},
   methods:{
 
@@ -273,7 +302,7 @@ new Vue({
 
     },
     limpiarMensajeError: function(refName){
-
+console.log(refName)
       self.form.camposAtributos[refName].invalidFeedback = "";
       self.form.camposAtributos[refName].state = null;
 
@@ -284,12 +313,12 @@ new Vue({
 
       if((valor.trim() !== "") && (valor !== null)){
 
-        self.form.camposAtributos.monto.autonumeric.update({ currencySymbol : self.form.camposAtributos.montoEn.simbolo+" "});
+        //self.form.camposAtributos.monto.options.prefix = self.form.camposAtributos.montoEn.simbolo+" ";
         self.form.camposAtributos.monto.disabled = false;
 
       }else{
 
-        self.form.camposAtributos.monto.autonumeric.update({ currencySymbol : ""});
+        //self.form.camposAtributos.monto.options.prefix = "";
         self.form.camposAtributos.monto.disabled = true;
 
       }
@@ -357,19 +386,19 @@ new Vue({
           divisiones.push({id:self.$refs["asignar-"+i][0].$attrs["id-division"], horas: hora});
         });
 
-        let monto = (self.form.camposAtributos.monto.autonumeric === null) ? 0 : self.form.camposAtributos.monto.autonumeric.get()
-
         //Obtenemos valores
         let parametros = {
           descripcion:  self.form.campos.descripcion,
           cliente: self.form.campos.cliente,
           fechaContratacion: self.form.campos.fechaContratacion,
+          socio: self.form.campos.socio,
+          gerente: self.form.campos.gerente,
           divisiones: divisiones,
           estatus: self.form.campos.estatus,
           id_moneda: self.form.campos.montoEn,
-          monto: monto
+          monto: self.form.campos.monto
         }
-
+console.log(parametros);return;
         self.form.botones.submit.disabled = true;
         self.form.botones.submit.html = self.form.botones.submit.htmlLoading;
 
@@ -550,6 +579,126 @@ new Vue({
 
       self.form.camposAtributos[indice].state = false;
       self.form.camposAtributos[indice].invalidFeedback = "Debe seleccionar una opción válida";
+
+    },
+    buscarSocio: function(){
+
+      self.limpiarMensajeError("socio");
+      self.$refs["ref-lista-socio"].hide();
+      self.form.camposAtributos.socio.listaDropdown.listado = [];
+      self.form.camposAtributos.socio.listaDropdown.noResultado = false;
+      self.form.campos.socio = null;
+      self.form.camposAtributos.socio.valorFocus = null;
+      self.form.camposAtributos.socio.valorBlur = null;
+
+      if(self.form.camposAtributos.socio.valor !== ''){
+
+        self.form.camposAtributos.socio.help = self.form.camposAtributos.socio.helpLoading;
+
+        axios.get('/buscarSocioProyecto',{
+          params: {
+            nombreSocio: self.form.camposAtributos.socio.valor
+          }
+        })
+        .then(function (response) {
+
+          self.form.camposAtributos.socio.help = self.form.camposAtributos.socio.helpInit;
+
+          if(response.status === 200 && response.data.response === true){
+
+            self.form.camposAtributos.socio.listaDropdown.listado = response.data.socios;
+
+            if(response.data.socios.length === 0){
+              self.form.camposAtributos.socio.listaDropdown.noResultado = true;
+            }
+
+            self.mostrarListado("ref-lista-socio");
+
+          }else{
+
+            throw "error";
+
+          }
+
+        })
+        .catch(error => {
+
+          self.form.camposAtributos.socio.help = self.form.camposAtributos.socio.helpInit;
+          self.form.camposAtributos.socio.invalidFeedback = "Ocurrio un error, intenta nuevamente; con este error no podrás generar la multa.";
+          self.form.camposAtributos.socio.state = false;
+
+        });
+
+      }// Fin if
+
+    },
+    elegirSocio: function(id, nombre){
+
+      self.form.camposAtributos.socio.valor = nombre;
+      self.form.camposAtributos.socio.valorFocus = nombre;
+      self.form.camposAtributos.socio.valorBlur = nombre;
+      self.form.camposAtributos.socio.state = true;
+      self.form.campos.socio = id;
+
+    },
+    buscarGerente: function(){
+
+      self.limpiarMensajeError("gerente");
+      self.$refs["ref-lista-gerente"].hide();
+      self.form.camposAtributos.gerente.listaDropdown.listado = [];
+      self.form.camposAtributos.gerente.listaDropdown.noResultado = false;
+      self.form.campos.gerente = null;
+      self.form.camposAtributos.gerente.valorFocus = null;
+      self.form.camposAtributos.gerente.valorBlur = null;
+
+      if(self.form.camposAtributos.gerente.valor !== ''){
+
+        self.form.camposAtributos.gerente.help = self.form.camposAtributos.gerente.helpLoading;
+
+        axios.get('/buscarGerenteProyecto',{
+          params: {
+            nombreGerente: self.form.camposAtributos.gerente.valor
+          }
+        })
+        .then(function (response) {
+
+          self.form.camposAtributos.gerente.help = self.form.camposAtributos.gerente.helpInit;
+
+          if(response.status === 200 && response.data.response === true){
+
+            self.form.camposAtributos.gerente.listaDropdown.listado = response.data.gerentes;
+
+            if(response.data.gerentes.length === 0){
+              self.form.camposAtributos.gerente.listaDropdown.noResultado = true;
+            }
+
+            self.mostrarListado("ref-lista-gerente");
+
+          }else{
+
+            throw "error";
+
+          }
+
+        })
+        .catch(error => {
+
+          self.form.camposAtributos.gerente.help = self.form.camposAtributos.gerente.helpInit;
+          self.form.camposAtributos.gerente.invalidFeedback = "Ocurrio un error, intenta nuevamente; con este error no podrás generar la multa.";
+          self.form.camposAtributos.gerente.state = false;
+
+        });
+
+      }// Fin if
+
+    },
+    elegirGerente: function(id, nombre){
+
+      self.form.camposAtributos.gerente.valor = nombre;
+      self.form.camposAtributos.gerente.valorFocus = nombre;
+      self.form.camposAtributos.gerente.valorBlur = nombre;
+      self.form.camposAtributos.gerente.state = true;
+      self.form.campos.gerente = id;
 
     },
     mostrarAlertForm: function(alert, mostrar = false, variante = "", mensaje = "", iconCerrar = false, contador = false, ocultarSeg = 0){

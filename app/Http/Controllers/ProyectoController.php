@@ -41,6 +41,34 @@ class ProyectoController extends Controller
 
     }
 
+    function buscarSocioProyecto(Request $request){
+
+      $modelo = new ProyectoModel();
+      $dato = $request["nombreSocio"];
+
+      $socios = $modelo->socios($dato,5);
+
+      return [
+        "response" => true,
+        "socios" => $socios
+      ];
+
+    }
+
+    function buscarGerenteProyecto(Request $request){
+
+      $modelo = new ProyectoModel();
+      $dato = $request["nombreGerente"];
+
+      $gerentes = $modelo->gerentes($dato,5);
+
+      return [
+        "response" => true,
+        "gerentes" => $gerentes
+      ];
+
+    }
+
     function crearProyecto(Request $request){
 
       $modelo = new ProyectoModel();
@@ -375,7 +403,7 @@ class ProyectoController extends Controller
 
           $modeloAudit->logs_auditoria($parametros);
 
-        
+
 
       }
 
