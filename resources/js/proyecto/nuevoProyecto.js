@@ -314,6 +314,7 @@ new Vue({
       if((valor.trim() !== "") && (valor !== null)){
 
         //self.form.camposAtributos.monto.options.prefix = self.form.camposAtributos.montoEn.simbolo+" ";
+        self.form.camposAtributos.monto.mask.prefix = "R";
         self.form.camposAtributos.monto.disabled = false;
 
       }else{
