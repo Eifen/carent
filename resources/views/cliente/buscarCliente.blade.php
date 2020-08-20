@@ -110,17 +110,6 @@
                     <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.nombre">
                   </div>
                 </form>
-                <h5 v-if="!detalleCliente.error">Gerente Encargado</h5>
-                <form class="row" v-if="!detalleCliente.error">
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Código</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.codigoG">
-                  </div>
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Nombre</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.nombreG">
-                  </div>
-                </form>
                 <h5 v-if="!detalleCliente.error">Datos del Cliente</h5>
                 <form class="row" v-if="!detalleCliente.error">
                   <div class="form-group col-12 col-sm-6">

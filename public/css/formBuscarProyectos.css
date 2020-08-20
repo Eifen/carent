@@ -70,6 +70,7 @@ html {
   background-color: #091F40;
   color: white;
   text-align: center;
+  vertical-align: middle;
 }
 #app .wrapper-forms .table tbody tr {
   -webkit-transition: all 0.3s;

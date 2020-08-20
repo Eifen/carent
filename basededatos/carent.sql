@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 16-08-2020 a las 02:49:56
+-- Tiempo de generación: 20-08-2020 a las 18:09:56
 -- Versión del servidor: 8.0.18
 -- Versión de PHP: 7.3.16
 
@@ -71,7 +71,28 @@ INSERT INTO `logs_auditoria` (`id`, `usuario_id`, `fecha`, `direccion_ip`, `acci
 (28, 1, '2020-08-14 14:23:45', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
 (29, 1, '2020-08-15 15:06:55', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
 (30, 1, '2020-08-15 15:46:38', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
-(31, 1, '2020-08-15 21:39:58', '127.0.0.1', 'Inicio de Sesion', 'inicio');
+(31, 1, '2020-08-15 21:39:58', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(32, 1, '2020-08-16 11:21:03', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(33, 1, '2020-08-16 12:02:02', '127.0.0.1', 'Registro del proyecto: DDDDDDD. Cliente: DISTRIBUIDORA AMAZONIA 1134, C.A.', 'tbl_proyecto'),
+(34, 1, '2020-08-16 12:03:28', '127.0.0.1', 'Registro del proyecto: DDDDD4. Cliente: CALIFORNIA HOME FASHION, C.A.', 'tbl_proyecto'),
+(35, 1, '2020-08-16 12:05:44', '127.0.0.1', 'Registro del proyecto: PROYECTO 1. Cliente: DISTRIBUIDORA AMAZONIA 1134, C.A.', 'tbl_proyecto'),
+(36, 1, '2020-08-16 12:38:01', '127.0.0.1', 'Registro del proyecto: PROYECTO 2. Cliente: DISTRIBUIDORA BIGOTT C.A.', 'tbl_proyecto'),
+(37, 1, '2020-08-16 12:59:37', '127.0.0.1', 'Registro del proyecto: PROYECTO 1. Cliente: DISTRIBUIDORA MACONDO 333, C.A.', 'tbl_proyecto'),
+(38, 1, '2020-08-16 13:26:12', '127.0.0.1', 'Modificacion del proyecto: PROYECTO 1. Cliente: DISTRIBUIDORA MACONDO 333, C.A.', 'tbl_proyecto'),
+(39, 144, '2020-08-17 16:51:02', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(40, 144, '2020-08-17 16:52:30', '127.0.0.1', 'Registro del proyecto: PROYECTO 1 SERGIO. Cliente: POLICLINICA LAS MERCEDES, C.A.', 'tbl_proyecto'),
+(41, 144, '2020-08-17 16:53:11', '127.0.0.1', 'Registro del proyecto: PROYECTO 2 SERGIO. Cliente: POLICLINICA LAS MERCEDES, C.A.', 'tbl_proyecto'),
+(42, 144, '2020-08-17 16:56:23', '127.0.0.1', 'Registro del proyecto: PROYECTO 3 SERGIO. Cliente: POLICLINICA LAS MERCEDES, C.A.', 'tbl_proyecto'),
+(43, 144, '2020-08-17 17:01:27', '127.0.0.1', 'Registro del proyecto: PROYECTO 4 SERGIO. Cliente: POLICLINICA LAS MERCEDES, C.A.', 'tbl_proyecto'),
+(44, 1, '2020-08-18 21:45:05', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(45, 1, '2020-08-19 07:24:53', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(46, 1, '2020-08-19 15:20:55', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(47, 1, '2020-08-19 21:38:39', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(48, 1, '2020-08-20 07:54:57', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(49, 1, '2020-08-20 08:36:07', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(50, 1, '2020-08-20 13:33:19', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(51, 1, '2020-08-20 13:39:24', '127.0.0.1', 'Registro del proyecto: PROYECTO 1. Cliente: C. A. VENEZOLANA DE INDUSTRIAS MILITARES, CAVIM', 'tbl_proyecto'),
+(52, 1, '2020-08-20 13:56:27', '127.0.0.1', 'Registro del proyecto: PROYECTO 2. Cliente: DISTRIBUIDORA BIGOTT C.A.', 'tbl_proyecto');
 
 --
 -- Disparadores `logs_auditoria`
@@ -928,7 +949,6 @@ INSERT INTO `tbl_ciudades` (`id_ciudad`, `id_estado`, `ciudad`, `capital`) VALUE
 CREATE TABLE `tbl_cliente` (
   `id` int(11) NOT NULL,
   `id_usuario_socio` int(11) NOT NULL,
-  `id_usuario_gerente` int(11) DEFAULT NULL,
   `codigo` int(11) DEFAULT NULL,
   `rif` varchar(15) NOT NULL,
   `nit` int(11) DEFAULT NULL,
@@ -949,118 +969,118 @@ CREATE TABLE `tbl_cliente` (
 -- Volcado de datos para la tabla `tbl_cliente`
 --
 
-INSERT INTO `tbl_cliente` (`id`, `id_usuario_socio`, `id_usuario_gerente`, `codigo`, `rif`, `nit`, `razon_social`, `id_parroquia_fiscal`, `avenida_calle_fiscal`, `edificio_quinta_fiscal`, `piso_fiscal`, `numero_fiscal`, `ciudad_fiscal`, `telefono_fiscal`, `pagina_web`, `email_fiscal`, `id_estatus`) VALUES
-(1, 7, 9, NULL, 'G2000232325', NULL, 'Corporación CASA C.A.', 1124, 'Andrés Bello', 'Ministerio de Alimentación', '11', '', 'CARACAS', '(0212) - 255 5555', '', 'presidente@corporacioncasa.gob.ve', 1),
-(2, 67, 67, NULL, 'J312692740', NULL, 'Transporte Pakplaza,C.A.', 622, 'Av. Principal de la  Lomas Lagunita,  Irb. Lomas de la Lagunita', 'C.C. Lomas de la Lagunita', 'Piso 1', '', 'Caracas', '(0414) - 335 5077', '', 'pakplaza@gmail.com', 1),
-(3, 67, 67, NULL, 'J00019575', NULL, 'Industrias Farcometicas Asociados (Indufaras)', 611, 'Calle las Vegas, Zona Industrial  la Trinidad', 'Edificio Industrias Farcosmeticas', 'Piso 3', '', 'Caracas', '(0212) - 9454 711', '', 'indufaras@gmail.com', 1),
-(4, 67, 67, NULL, 'J000900957', NULL, 'Distribuidora IFA, C.A.', 762, 'Calle Marcano E/ Narvaez y Amador Hernandez ', 'Edificio Ezesot ', 'PB', '', 'Caracas', '(0412) - 3234 132', '', 'ifamercadeo@gmail.com', 1),
-(5, 67, 67, NULL, 'J400065399', NULL, 'Representaciones Cosper', 611, 'Calle las Vegas, Zona Industrial la Trinidad', 'Edificio IFA', 'Piso 3', '', 'Caracas', '(0412) - 3234 132', '', 'ifamercadeo@gmail.com', 1),
-(6, 67, 67, NULL, 'J400518008', NULL, 'Fondo Global de la Contruccion, C.A.', 619, 'Av. Tamanaco y Francisco de Miranda, El Rosal', 'Edificio Galipan torre B', 'Piso 4', '', 'Caracas', '(0212) - 9572 005', '', 'aguillermo@fgdcve.com', 1),
-(7, 67, 67, NULL, 'J401501001', NULL, 'M2 Paneles de Construccion, C.A.', 285, 'Carretera Nacional Los Guayos Sector Mozanquita, Valencia', 'Galpon 33', '-', '', 'Valencia', '(0212) - 9572 005', '', 'aguillermo@fgdcve.com', 1),
-(8, 67, 67, NULL, 'J400626412', NULL, 'Constructora Jaar, C.A.', 619, 'Av. Tamanaco y Francisco de Miranda, El Rosal', 'Edificio Galipan torre B', 'Piso 4', '', 'Caracas', '(0212) - 9572 005', '', 'aguillermo@fgdcve.com', 1),
-(9, 67, 67, NULL, 'J402997655', NULL, 'Consorcio Estructora Metalicas Modernas', 619, 'Av. Tamanaco y Francisco de Miranda, El Rosal', 'Edificio Galipan torre B', 'Piso 4', '', 'Caracas', '(0212) - 9572 005', '', 'aguillermo@fgdcve.com', 1),
-(10, 67, 67, NULL, 'J313550388', NULL, 'Nidec Motors Venezuela, S.A.', 526, 'Zona Industrial los Tanques, parcela 1, Villa de Cura', 'Edificio Nidec Motors Venezuela', 'PB', '', 'Caracas', '(0414) - 1267 638', '', 'ricardo.reyes@nidec-motor.com', 1),
-(11, 67, 67, NULL, 'J306842675', NULL, 'MercadoLibre Venezuela, S.R.L.', 619, 'AV. Eugenio Mendoza de la Castellana', 'Torre La Castellana', 'Piso 8', '', 'Caracas', '(0212) - 6306 000', '', 'ext_gbarrio@mercadolibre.com', 1),
-(12, 67, 67, NULL, 'J294782914', NULL, 'Venproca Venezolana de Proyectos, C.A.', 619, 'Av. Francisco de Miranda, El Rosal', 'Edificio Torre la Primera', 'Piso 13', '', 'Caracas', '(0416) - 2392 655', '', 'jgil@venproca.com', 1),
-(13, 67, 67, NULL, 'J411660752', NULL, 'Importadora Divinos & Destilados, C.A.', 611, 'Calle Bolivar, Urb. Baruta', 'Edificio Galpones', 'PB', '', 'Caracas', '(0414) - 2708 935', '', 'divinosydestilados@gmail.com', 1),
-(14, 5002, 10473, 1451, 'J314087754', NULL, 'A.C. CONSULTORES UCAB', 1131, 'Avenida Intercomunal Antimano', 'Universidad Católica Andrés Bello Centro Loyola', '2', '', 'Caracas', '', '', '', 1),
-(15, 5007, 6060, 1534, 'J000998345', NULL, 'ADMINISTRADORA CCCT', 229, 'Av. La Estancia con Calle Ernesto Blohm Chuao', 'Centro Comercial Ciudad Tamanaco', 'PB', '', 'Miranda', '', '', '', 1),
-(16, 5002, 22, 1020, 'J0002474327', NULL, 'ADMINISTRADORA CENTRO FINANCIERO LATINO, C.A.', 462, 'Av. Urdaneta Esquina de Animas a Plaza España', 'Edficio Centro Financiero Latino', '8', '', 'Caracas', '', '', '', 1),
-(17, 5003, 10473, 1164, 'J002639632', NULL, 'ADMINISTRADORA HOTAL', 1131, 'Av. Washintong', 'Hotel Avila', 'PB', '', 'Caracas', '', '', '', 1),
-(18, 5003, 10572, 2188, 'J308240486', NULL, 'AEROCLOSET, C.A.', 229, 'Av. La Estancia con Calle Ernesto Blohm Chuao', 'Centro Comercial Ciudad Tamanaco', '2', '', 'Miranda', '', '', '', 1),
-(19, 5003, 10572, 2131, 'J075433548', NULL, 'AGENCIA GENERALES CONAVEN, C.A.', 151, 'Av- Orinoco', 'Edificio Torre Uno', '4', '', 'Miranda', '', '', '', 1),
-(20, 5014, 10783, 2184, 'J312492414', NULL, 'AGROBIGOTT,C.A.', 1131, 'Av. Francisco de Miranda', 'Edificio BIGOTT', 'PB', '', 'Miranda', '', '', '', 1),
-(21, 5002, 22, 1868, 'J000599009', NULL, 'ANAYANSI, C.A.', 243, 'Calle Final calle 4 ', 'Urbanización Terrica Galpon', '3', '', 'Miranda', '', '', '', 1),
-(22, 5007, 10, 1906, 'J306991719', NULL, 'ARROBA SEGUROS SOCIEDAD DE CORRETAJE DE SEGUROS,C.A.', 1131, 'Av.Don Diego Cisneros ', 'Edifcio Siemens Torre Norte', '4', '', 'Miranda', '', '', '', 1),
-(23, 5002, 6060, 1618, 'J001256970', NULL, 'AVICOLA DEL CENTRO C.A.', 46, 'Carretera Cua-San Casimiro ', 'Local', '49', '', 'Aragua', '', '', '', 1),
-(24, 5002, 6060, 1617, 'J306515933', NULL, 'AVICOLA SANTA CRUZ, C.A. ', 40, 'Avenida 3', 'Urbanización Industrial Santa Cruz ', 'A5-1', '', 'Aragua', '', '', '', 1),
-(25, 5007, 6087, 1064, 'J001708472', NULL, 'AVILA RAYOS X, C.A.', 142, 'Av. San Juan Bosco Con Sexta Tranversal', 'Edificio Clinica el Avila', '2', '', 'Miranda', '', '', '', 1),
-(26, 5007, 6087, 1065, 'J000121940', NULL, 'AVILA SERVICIOS MEDICOS, C.A.', 142, 'Av. San Juan Bosco Con Sexta Tranversal', 'Edificio Clinica el Avila', '2', '', 'Miranda', '', '', '', 1),
-(27, 29, 29, 1409, 'J080066227', NULL, 'BANCO ACTIVO BANCO UNIVERSAL', 229, 'Av. Francisco de Miranda', 'Torre Europa', '12', '', 'Miranda', '', '', '', 1),
-(28, 5002, 10092, 1738, 'G200057955', NULL, 'BANCO AGRICOLA DE VENEZUELA', 229, 'Av. Francisco de Miranda', 'Torre CAVENDES', '17', '', 'Miranda', '', '', '', 1),
-(29, 5002, 10369, 1266, 'J304742029', NULL, 'BANCO DE COMERCIO EXTERIOR, C.A.', 1131, 'Calle Los Chaguaramos', 'Centro Gerencial Mohedano', '1', '', 'Miranda', '', '', '', 1),
-(30, 5002, 10369, 1448, 'J313413615', NULL, 'BANCO DE EXPORTACION Y COMERCIO', 1131, 'Av. Casanova con Av. Las Acacias ', 'Torre Banhoriente', '11', '', 'Caracas', '', '', '', 1),
-(31, 5002, 107, 1654, 'G200099976', NULL, 'BANCO DE VENEZUELA, BANCO UNIVERSAL', 462, 'A. Universidad Esquina de Sociedad', 'Edificio Banco de Venezuela', '7', '', 'Caracas', '', '', '', 1),
-(32, 5002, 10369, 1359, 'G200051876', NULL, 'BANCO DEL TESORO, C.A.', 1131, 'Calle Guaicaipuro', 'Torre Banco del Tesoro', '', '', 'Caracas', '', '', '', 1),
-(33, 29, 29, 1375, 'J002853018', NULL, 'BANESCO HOLDING, C.A.', 1131, 'Av. Principal de Bello Monte entre Calle Lincoln y Sorbona', 'Edifcio Ciudad Banesco', '3', '', 'Caracas', '', '', '', 1),
-(34, 5007, 10369, 2138, 'G200096772', NULL, 'BOLSA PUBLICA DE VALORES BICENTENARIA', 229, 'Av. Francisco de Miranda', 'Torre Europa', 'Nivel C', '', 'Caracas', '', '', '', 1),
-(35, 5014, 10783, 2182, 'J000067481', NULL, 'C.A. CIGARRERA BIGOTT SUCS', 1131, 'Av. Francisco de Miranda', 'Edificio BIGOTT', 'PB', '', 'Miranda', '', '', '', 1),
-(36, 5002, 22, 1874, 'J000048398', NULL, 'CAJA DE AHORRO BANVENEZ', 462, 'Av. Urdaneta Esquina de Veroes a Santa Capilla', 'Edificio Veros ', '4', '', 'Caracas', '', '', '', 1),
-(37, 5002, 10863, 1962, 'J294280986', NULL, 'CALIFORNIA HOME FASHION, C.A.', 1131, 'Av. Andres Calle 4 con Calle 5', 'Quinta Vera', 'S/N', '', 'Caracas', '', '', '', 1),
-(38, 5007, 10053, 1158, 'J001168281', NULL, 'CENTRO MEDICO LOIRA, C.A. ', 1131, 'Avenida Loira', 'Edificio Centro Médico Loira', 'PB', '', 'Caracas', '', '', '', 1),
-(39, 5003, 10572, 2187, 'J001147853', NULL, 'CERAMICAS CARIBE, C.A.', 1131, 'Chivacoa  Ctra.Autopista Centro Occidental,Dtb Chivacoa Vía Nirgua', 'Local', 'S/N', '', 'Yaracuy', '', '', '', 1),
-(40, 5002, 22, 1019, 'J002726598', NULL, 'CONDOMINIO CENTRO FINANCIERO LATINO ', 462, 'Av. Urdaneta Esquina de Animas a Plaza España', 'Edficio Centro Financiero Latino', '8', '', 'Caracas', '', '', '', 1),
-(41, 5014, 10783, 2109, 'J095003264', NULL, 'CONPROIND', 1131, 'Av. Rio Caura Con Rio Paragua', 'Edificio Piramide', '3', '', 'Miranda', '', '', '', 1),
-(42, 5014, 5014, 2154, 'J003636916', NULL, 'CONSTRUCTORA NORBERTO ODEBRECHT, S.A', 1131, 'Avenida Rio Caura ', 'Edifcio Torre Humboldt', '10', '', 'Miranda', '', '', '', 1),
-(43, 5003, 10572, 1978, 'J000963142', NULL, 'CONTINENTAL DE SISTEMAS Y MAQUINAS. C.A., CONTIMACA', 1131, 'Avenida Milan', 'Edificio CONTIMACA', '1', '', 'Miranda', '', '', '', 1),
-(44, 5007, 10053, 1689, 'J001340769', NULL, 'CORAL', 1131, 'Calle la Limonera', 'Edicio LARCO', '1', '', 'Miranda', '', '', '', 1),
-(45, 5014, 10783, 2166, 'J003082902', NULL, 'CORPORACION DELCOP, C.A.', 1131, 'Calle Las Vegas', 'Edificio DELCOP', '1', '', 'Miranda', '', '', '', 1),
-(46, 5014, 10783, 2189, 'J409590577', NULL, 'DISTRIBUIDORA AMAZONIA 1134, C.A.', 1131, 'Calle Santa Ana', 'Edificio Centro Empresarial Boleita', '5', '', 'Miranda', '', '', '', 1),
-(47, 5014, 10783, 2183, 'J302385490', NULL, 'DISTRIBUIDORA BIGOTT C.A.', 1131, 'Av. Francisco de Miranda', 'Edificio BIGOTT', 'PB', '', 'Miranda', '', '', '', 1),
-(48, 5014, 10783, 2151, 'J409554635', NULL, 'DISTRIBUIDORA MACONDO 333, C.A.', 1131, 'Calle Santa Ana', 'Edificio Centro Empresarial Boleita', '5', '', 'Miranda', '', '', '', 1),
-(49, 5002, 10572, 2178, 'J407514571', NULL, 'DP DELTA SERVICIOS, C.A.', 1131, 'Avenida Blandin', 'Edificio Torre Digitel', '15', '', 'Miranda', '', '', '', 1),
-(50, 5002, 6060, 1983, 'J300388840', NULL, 'ESTUDIO MEDICO TOMOGRAF, C.A.', 1131, 'AvenidaLos Samanes Final Norte', 'Edificio Instituto Clinico la Florida', 'PB', '', 'Caracas', '', '', '', 1),
-(51, 5002, 10053, 2171, 'J302455413', NULL, 'FARMACIA MEDITOTAL, C.A.', 1131, 'Avenida Costanera', 'Centro Empresarial Athenas', 'PB', '', 'Anzoategui', '', '', '', 1),
-(52, 5014, 10092, 1018, 'J002901322', NULL, 'FINANCORP VALORES CASA DE BOLSA, C.A.', 1131, 'Av: Mohedano y Los Chaguaramos', 'Centro Comercial Mohedano', '12', '', 'Miranda', '', '', '', 1),
-(53, 5014, 10783, 2097, 'J000143676', NULL, 'FSVEN INDUSTRIAL SOLUTIONS, S.A', 1131, 'Av.  Rio Paragua', 'Edificio Piramide', '3', '', 'Miranda', '', '', '', 1),
-(54, 5002, 6060, 2181, 'J315820439', NULL, 'FUNDACIÓN ESPAÑA SALUD', 1131, 'Av. El Parque con Av. Andres Bello', 'Edificio Oficentro', 'PB', '', 'Caracas', '', '', '', 1),
-(55, 5007, 6087, 2159, 'J000762627', NULL, 'GENIA CARE PHARMACEUTICAL, S.A', 1131, 'Calle Callejon Gutierrez ', 'Edificio EUROCIENCIA ', '1', '', 'Miranda', '', '', '', 1),
-(56, 5007, 6087, 2160, 'J000681716', NULL, 'GENIA CARE, C.A.', 229, 'Av. Francisco de Miranda esquina con Av. El Parque', 'Torre Country', '4 y 5', '', 'Miranda', '', '', '', 1),
-(57, 5007, 10053, 1648, 'J309264613', NULL, 'GLOBAL LEASING, C.A.', 1131, 'Calle Los Laboratorios', 'Edificio OFINCA', '5', '', 'Miranda', '', '', '', 1),
-(58, 5002, 10168, 2186, 'J401443001', NULL, 'GPB NEFTEGAZ SERVICES B.V. SUCURSAL, C.A.', 1131, 'Av. Venezuela con Calle Sorocaima', 'Edificio ATRIUM', '3', '', 'Miranda', '', '', '', 1),
-(59, 5002, 6060, 1614, 'J075168186', NULL, 'GRANJA ALCONCA, C.A.', 1131, 'Avenida 3', 'Urbanización Industrial Santa Cruz ', 'A5-1', '', 'Aragua', '', '', '', 1),
-(60, 5002, 6060, 1615, 'J303834817', NULL, 'GRANJA MUCURITA, C.A. ', 1131, 'Avenida 3', 'Urbanización Industrial Santa Cruz ', 'A5-1', '', 'Aragua', '', '', '', 1),
-(61, 5002, 6060, 1616, 'J075791215', NULL, 'GRUPO AVICOLA INTEGRADO DEL CENTRO,C.A.', 1131, 'Avenida 3', 'Urbanización Industrial Santa Cruz ', 'A5-1', '', 'Aragua', '', '', '', 1),
-(62, 5007, 10, 1283, 'J000683778', NULL, 'GRUPO MEDICO VARGAS, C.A.', 1131, 'Avenida Principal del Cafetal', 'Quinta Los Abuelos ', 'S/N', '', 'Miranda', '', '', '', 1),
-(63, 5002, 10794, 1675, 'J296479461', NULL, 'GRUPO TUTICKET.COM,VE, C.A.', 1131, 'Avenida Sur ', 'Centro Empresarial Lagunita', '2', '', 'Miranda', '', '', '', 1),
-(64, 5014, 10783, 1920, 'J295320795', NULL, 'IMAN GROUP, C.A.', 1131, 'Av.Don Diego Cisneros ', 'Edifcio Siemens Torre Norte', '4', '', 'Miranda', '', '', '', 1),
-(65, 5007, 6060, 1996, 'J301183185', NULL, 'IMPORTADORA ACIPROSALUD, C.A.', 1131, 'Calle Alameda entre Av. Venezuela', 'Edificio FOLGANA', '1', '', 'Miranda', '', '', '', 1),
-(66, 5002, 22, 1496, 'J312605316', NULL, 'INDUSTRIA CONSOLIDADAS DE GASES ICG C,A', 243, 'Avenida Principal ', 'Urbanización Industrial Terninca Galpon', 'PB', '', 'Miranda', '', '', '', 1),
-(67, 5002, 10092, 1179, 'J300706206', NULL, 'INDUSTRIAS CORPAÑAL,C.A.', 243, 'Avenida Principal ', 'Urbanización Industrial Guayabal Edificio Corpañal ', '12 y 13', '', 'Miranda', '', '', '', 1),
-(68, 5014, 10947, 2091, 'J296507570', NULL, 'INDUSTRIAS DE CARTONAJE CRD, C.A.', 1131, ' Av. San Antonio', 'Sector Turmuso Galpon', 'C-2A', '', 'Miranda', '', '', '', 1),
-(69, 5007, 6060, 1948, 'J000003890', NULL, 'INSTITUTO CLINICO LA FLORIDA ', 1131, 'AvenidaLos Samanes Final Norte', 'Edificio Instituto Clinico la Florida', 'PB', '', 'Caracas', '', '', '', 1),
-(70, 5007, 6087, 1127, 'J307107030', NULL, 'INVERSIONES SERCAVILA 51, C.A.', 142, 'Av. San Juan Bosco Con Sexta Tranversal', 'Edificio Clinica el Avila', '2', '', 'Miranda', '', '', '', 1),
-(71, 5003, 10572, 1554, 'J313305278', NULL, 'INVERSIONES VISTALPARQUE, C.A.', 1131, '1era Av. Urb.Santa Eduvigis ', 'Hotel Pestana', 'PB', '', 'Miranda', '', '', '', 1),
-(72, 5007, 6087, 1066, 'J001798170', NULL, 'LABORATORIO AVILAB, C.A.', 142, 'Av. San Juan Bosco Con Sexta Tranversal', 'Edificio Clinica el Avila', '2', '', 'Miranda', '', '', '', 1),
-(73, 5007, 6060, 1982, 'J003240001', NULL, 'LABORATORIO INSTITUTO CLINICO LA FLORIDA, C.A.', 1131, 'AvenidaLos Samanes Final Norte', 'Edificio Instituto Clinico la Florida', 'PB', '', 'Caracas', '', '', '', 1),
-(74, 5002, 10783, 1873, 'J312694491', NULL, 'LACTEOS ANANKE, C.A.', 1131, 'Calle Bolivar ', 'Edificio QueneTyl', 'PB', '', 'Miranda', '', '', '', 1),
-(75, 5002, 10863, 1960, 'J313169986', NULL, 'LENCERIA EL RECREO, C.A.', 1131, 'Av. Venezuela con Av. Bracamonte y Av. Crispulo Benites ', 'CC SAMBIL Sector Este', 'PB', '', 'Lara', '', '', '', 1),
-(76, 5002, 10863, 1954, 'J400129346', NULL, 'LENCERIA HOGAR TORBES, C.A.', 1131, 'Av. Antonio José de Sucre  Sector Las Lomas ', 'CC SAMBIL ', 'Nivel Feria Forum Shops', '', 'Tachira', '', '', '', 1),
-(77, 5002, 10863, 1956, 'J299204846', NULL, 'LENCERIA VIÑA VALENCIA, C.A.', 1131, 'Av. Carabobo con calle Uslar', 'Urbanización La Viña Quinta Chispita', 'PB', '', 'Carabobo', '', '', '', 1),
-(78, 5007, 10, 1904, 'J312911972', NULL, 'MAKLER ADMINISTRADORA DE RIESGOS, S.A.', 1131, 'Av.Don Diego Cisneros ', 'Edifcio Siemens Torre Norte', '4', '', 'Miranda', '', '', '', 1),
-(79, 5007, 10, 1905, 'J302911478', NULL, 'MAKLER SOCIEDAD DE CORRETAJE DE SEGUROS, C.A.', 1131, 'Av.Don Diego Cisneros ', 'Edifcio Siemens Torre Norte', '4', '', 'Miranda', '', '', '', 1),
-(80, 5003, 10572, 1881, 'J300254925', NULL, 'MAXIMIZA CASA DE BOLSA, C.A.', 1131, 'Avenida Francisco de Miranda', 'Torre Europa', '3', '', 'Miranda', '', '', '', 1),
-(81, 5007, 10794, 2165, 'J306842675', NULL, 'MERCADOLIBRE DE VENEZUELA', 1131, 'AV. Eugenio Mendoza de la Castellana', 'Torre La Castella', '8', '', 'Miranda', '', '', '', 1),
-(82, 5002, 6060, 1357, 'G200035919', NULL, 'MERCADOS DE ALIMENTOS , C.A.(MERCAL)', 1131, 'AVENIDA FUERZAS ARMADAS', 'Edificio CVAL', '2', '', 'Caracas', '', '', '', 1),
-(83, 5002, 10794, 1729, 'J313550388', NULL, 'NIDEC MOTOR VENEZUELA, S.A.', 1131, 'CR Zona Industrial Los Tanques ', 'Edificio Nidec Motor de Venezuela, S.A.', 'PB', '', 'Aragua', '', '', '', 1),
-(84, 5002, 10092, 1530, 'J001097449', NULL, 'OPTICA CARONI, C.A.', 1131, ' calle Santa Clara', 'Edificio Bertolin', '2', '', 'Miranda', '', '', '', 1),
-(85, 5002, 10863, 1505, 'J000950369', NULL, 'PETROLEOS DE VENEZUELA, S.A.', 1131, 'Av. Libertador con calle El Empalme ', 'Urb. La Campiña Edificio Petroleos de Venezuela Torres Este', 'PB', '', 'Caracas', '', '', '', 1),
-(86, 5007, 6060, 1604, 'J000297908', NULL, 'POLICLINICA LAS MERCEDES, C.A.', 151, 'Avenida Principal de Las Merecedes', 'Edificio Policlinica las Mercedes', 'PB', '', 'Miranda', '', '', '', 1),
-(87, 5014, 10783, 1817, 'J302202531', NULL, 'PROSEGUROS, S.A.', 1131, 'Avenida Francisco de Miranda con 4ta Avenida ', 'Edificio Torre PROSEGUROS', '6', '', 'Miranda', '', '', '', 1),
-(88, 5007, 6060, 1984, 'J003390062', NULL, 'RADIODIAGNOSTICO LA FLORIDA, C.A.', 1131, 'AvenidaLos Samanes Final Norte', 'Edificio Instituto Clinico la Florida', 'PB', '', 'Caracas', '', '', '', 1),
-(89, 5007, 10053, 1690, 'J000908320', NULL, 'REFRIMET INDUSTRIAL,C.A.', 1131, 'Calle la Limonera', 'Edicio LARCO', '1', '', 'Miranda', '', '', '', 1),
-(90, 5003, 10572, 2114, 'J003285536', NULL, 'REPRESENTACIONES LABIN VE, S.A.', 1131, 'Calle Los Laboratorios ', 'Edifcio Beta', '1', '', 'Miranda', '', '', '', 1),
-(91, 5003, 10572, 1285, 'J306649590', NULL, 'SERVICIOS GZ', 1131, 'Calle  LOS LABORATORIOS', 'Edificio OFINCA', '2', '', 'Miranda', '', '', '', 1),
-(92, 5003, 10572, 1938, 'J403483302', NULL, 'SETA NAVIERA, C.A.', 1131, 'Esquina Puente Yanez ', 'Edificio BECO', '8', '', 'Caracas', '', '', '', 1),
-(93, 5002, 10063, 1095, 'G200041315', NULL, 'SOCIEDAD NACIONAL DE GARANTIAS RECIPROCAS PARA LA MEDIANA Y PEQUEÑA INDUSTRIA, S.A. (SOGAMPI)', 1131, 'AVENIDA PRINCIPAL DE LOS CORTIJOS DE LOURDES', 'Centro Los Cortijos', 'PH', '', 'Miranda', '', '', '', 1),
-(94, 5002, 10092, 2083, 'J300766454', NULL, 'STATERA CASA DE BOLSA', 1131, 'Av. Las Mercedes entre Guaicaipuro y Carabobo ', 'Torre FORUM', '15', '', 'Miranda', '', '', '', 1),
-(95, 5007, 6060, 1613, 'J314853813', NULL, 'SUPER MAX, C.A.', 1131, 'Calle Santa Ana  Urb. Boleita Sur ', 'Edificio Centro Empresarial Boleita', '5', '', 'Miranda', '', '', '', 1),
-(96, 5003, 10572, 1439, 'J000359148', NULL, 'TAUREL & CÍA SUCRS', 1131, 'Ciudad Center Calle Sanatorio del Avila', 'Torre F ', '2', '', 'Miranda', '', '', '', 1),
-(97, 5002, 10863, 1605, 'J000122555', NULL, 'UNIVERSIDAD CATOLICA ANDRES BELLO', 462, 'Av. Intercomunal de Antimano', 'Edificios Centrales', '2', '', 'Caracas', '', '', '', 1),
-(98, 5002, 10092, 1936, 'J312309385', NULL, 'VALORALTA CASA DE BOLSA ', 1131, 'AV ROMULO GALLEGOS CON AV EL SAMAN', 'Edificio Torre VALORALTA II', 'PB', '', 'Miranda', '', '', '', 1),
-(99, 5007, 6087, 1067, 'J000381976', NULL, 'VEN AMERICAN, C.A.', 1131, 'AVENIDA SUR 4 ', 'Edificio VEN AMERICAN', 'PB', '', 'Caracas', '', '', '', 1),
-(100, 5002, 10863, 1958, 'J315056429', NULL, 'VENEZUELAN HOME FASHION HQ C.A.', 1131, 'Calle principal de Caricuao ', 'Edificio Telares de Palo Grande', 'PB', '', 'Caracas', '', '', '', 1),
-(101, 5002, 10863, 1454, 'G200109963', NULL, 'C. A. VENEZOLANA DE INDUSTRIAS MILITARES, CAVIM', 151, 'Calle Jalisco', 'Edificio CAVIM', 'PB', '', 'Miranda', '', '', '', 1);
+INSERT INTO `tbl_cliente` (`id`, `id_usuario_socio`, `codigo`, `rif`, `nit`, `razon_social`, `id_parroquia_fiscal`, `avenida_calle_fiscal`, `edificio_quinta_fiscal`, `piso_fiscal`, `numero_fiscal`, `ciudad_fiscal`, `telefono_fiscal`, `pagina_web`, `email_fiscal`, `id_estatus`) VALUES
+(1, 7, NULL, 'G2000232325', NULL, 'Corporación CASA C.A.', 1124, 'Andrés Bello', 'Ministerio de Alimentación', '11', '', 'CARACAS', '(0212) - 255 5555', '', 'presidente@corporacioncasa.gob.ve', 1),
+(2, 67, NULL, 'J312692740', NULL, 'Transporte Pakplaza,C.A.', 622, 'Av. Principal de la  Lomas Lagunita,  Irb. Lomas de la Lagunita', 'C.C. Lomas de la Lagunita', 'Piso 1', '', 'Caracas', '(0414) - 335 5077', '', 'pakplaza@gmail.com', 1),
+(3, 67, NULL, 'J00019575', NULL, 'Industrias Farcometicas Asociados (Indufaras)', 611, 'Calle las Vegas, Zona Industrial  la Trinidad', 'Edificio Industrias Farcosmeticas', 'Piso 3', '', 'Caracas', '(0212) - 9454 711', '', 'indufaras@gmail.com', 1),
+(4, 67, NULL, 'J000900957', NULL, 'Distribuidora IFA, C.A.', 762, 'Calle Marcano E/ Narvaez y Amador Hernandez ', 'Edificio Ezesot ', 'PB', '', 'Caracas', '(0412) - 3234 132', '', 'ifamercadeo@gmail.com', 1),
+(5, 67, NULL, 'J400065399', NULL, 'Representaciones Cosper', 611, 'Calle las Vegas, Zona Industrial la Trinidad', 'Edificio IFA', 'Piso 3', '', 'Caracas', '(0412) - 3234 132', '', 'ifamercadeo@gmail.com', 1),
+(6, 67, NULL, 'J400518008', NULL, 'Fondo Global de la Contruccion, C.A.', 619, 'Av. Tamanaco y Francisco de Miranda, El Rosal', 'Edificio Galipan torre B', 'Piso 4', '', 'Caracas', '(0212) - 9572 005', '', 'aguillermo@fgdcve.com', 1),
+(7, 67, NULL, 'J401501001', NULL, 'M2 Paneles de Construccion, C.A.', 285, 'Carretera Nacional Los Guayos Sector Mozanquita, Valencia', 'Galpon 33', '-', '', 'Valencia', '(0212) - 9572 005', '', 'aguillermo@fgdcve.com', 1),
+(8, 67, NULL, 'J400626412', NULL, 'Constructora Jaar, C.A.', 619, 'Av. Tamanaco y Francisco de Miranda, El Rosal', 'Edificio Galipan torre B', 'Piso 4', '', 'Caracas', '(0212) - 9572 005', '', 'aguillermo@fgdcve.com', 1),
+(9, 67, NULL, 'J402997655', NULL, 'Consorcio Estructora Metalicas Modernas', 619, 'Av. Tamanaco y Francisco de Miranda, El Rosal', 'Edificio Galipan torre B', 'Piso 4', '', 'Caracas', '(0212) - 9572 005', '', 'aguillermo@fgdcve.com', 1),
+(10, 67, NULL, 'J313550388', NULL, 'Nidec Motors Venezuela, S.A.', 526, 'Zona Industrial los Tanques, parcela 1, Villa de Cura', 'Edificio Nidec Motors Venezuela', 'PB', '', 'Caracas', '(0414) - 1267 638', '', 'ricardo.reyes@nidec-motor.com', 1),
+(11, 67, NULL, 'J306842675', NULL, 'MercadoLibre Venezuela, S.R.L.', 619, 'AV. Eugenio Mendoza de la Castellana', 'Torre La Castellana', 'Piso 8', '', 'Caracas', '(0212) - 6306 000', '', 'ext_gbarrio@mercadolibre.com', 1),
+(12, 67, NULL, 'J294782914', NULL, 'Venproca Venezolana de Proyectos, C.A.', 619, 'Av. Francisco de Miranda, El Rosal', 'Edificio Torre la Primera', 'Piso 13', '', 'Caracas', '(0416) - 2392 655', '', 'jgil@venproca.com', 1),
+(13, 67, NULL, 'J411660752', NULL, 'Importadora Divinos & Destilados, C.A.', 611, 'Calle Bolivar, Urb. Baruta', 'Edificio Galpones', 'PB', '', 'Caracas', '(0414) - 2708 935', '', 'divinosydestilados@gmail.com', 1),
+(14, 5002, 1451, 'J314087754', NULL, 'A.C. CONSULTORES UCAB', 1131, 'Avenida Intercomunal Antimano', 'Universidad Católica Andrés Bello Centro Loyola', '2', '', 'Caracas', '', '', '', 1),
+(15, 5007, 1534, 'J000998345', NULL, 'ADMINISTRADORA CCCT', 229, 'Av. La Estancia con Calle Ernesto Blohm Chuao', 'Centro Comercial Ciudad Tamanaco', 'PB', '', 'Miranda', '', '', '', 1),
+(16, 5002, 1020, 'J0002474327', NULL, 'ADMINISTRADORA CENTRO FINANCIERO LATINO, C.A.', 462, 'Av. Urdaneta Esquina de Animas a Plaza España', 'Edficio Centro Financiero Latino', '8', '', 'Caracas', '', '', '', 1),
+(17, 5003, 1164, 'J002639632', NULL, 'ADMINISTRADORA HOTAL', 1131, 'Av. Washintong', 'Hotel Avila', 'PB', '', 'Caracas', '', '', '', 1),
+(18, 5003, 2188, 'J308240486', NULL, 'AEROCLOSET, C.A.', 229, 'Av. La Estancia con Calle Ernesto Blohm Chuao', 'Centro Comercial Ciudad Tamanaco', '2', '', 'Miranda', '', '', '', 1),
+(19, 5003, 2131, 'J075433548', NULL, 'AGENCIA GENERALES CONAVEN, C.A.', 151, 'Av- Orinoco', 'Edificio Torre Uno', '4', '', 'Miranda', '', '', '', 1),
+(20, 5014, 2184, 'J312492414', NULL, 'AGROBIGOTT,C.A.', 1131, 'Av. Francisco de Miranda', 'Edificio BIGOTT', 'PB', '', 'Miranda', '', '', '', 1),
+(21, 5002, 1868, 'J000599009', NULL, 'ANAYANSI, C.A.', 243, 'Calle Final calle 4 ', 'Urbanización Terrica Galpon', '3', '', 'Miranda', '', '', '', 1),
+(22, 5007, 1906, 'J306991719', NULL, 'ARROBA SEGUROS SOCIEDAD DE CORRETAJE DE SEGUROS,C.A.', 1131, 'Av.Don Diego Cisneros ', 'Edifcio Siemens Torre Norte', '4', '', 'Miranda', '', '', '', 1),
+(23, 5002, 1618, 'J001256970', NULL, 'AVICOLA DEL CENTRO C.A.', 46, 'Carretera Cua-San Casimiro ', 'Local', '49', '', 'Aragua', '', '', '', 1),
+(24, 5002, 1617, 'J306515933', NULL, 'AVICOLA SANTA CRUZ, C.A. ', 40, 'Avenida 3', 'Urbanización Industrial Santa Cruz ', 'A5-1', '', 'Aragua', '', '', '', 1),
+(25, 5007, 1064, 'J001708472', NULL, 'AVILA RAYOS X, C.A.', 142, 'Av. San Juan Bosco Con Sexta Tranversal', 'Edificio Clinica el Avila', '2', '', 'Miranda', '', '', '', 1),
+(26, 5007, 1065, 'J000121940', NULL, 'AVILA SERVICIOS MEDICOS, C.A.', 142, 'Av. San Juan Bosco Con Sexta Tranversal', 'Edificio Clinica el Avila', '2', '', 'Miranda', '', '', '', 1),
+(27, 29, 1409, 'J080066227', NULL, 'BANCO ACTIVO BANCO UNIVERSAL', 229, 'Av. Francisco de Miranda', 'Torre Europa', '12', '', 'Miranda', '', '', '', 1),
+(28, 5002, 1738, 'G200057955', NULL, 'BANCO AGRICOLA DE VENEZUELA', 229, 'Av. Francisco de Miranda', 'Torre CAVENDES', '17', '', 'Miranda', '', '', '', 1),
+(29, 5002, 1266, 'J304742029', NULL, 'BANCO DE COMERCIO EXTERIOR, C.A.', 1131, 'Calle Los Chaguaramos', 'Centro Gerencial Mohedano', '1', '', 'Miranda', '', '', '', 1),
+(30, 5002, 1448, 'J313413615', NULL, 'BANCO DE EXPORTACION Y COMERCIO', 1131, 'Av. Casanova con Av. Las Acacias ', 'Torre Banhoriente', '11', '', 'Caracas', '', '', '', 1),
+(31, 5002, 1654, 'G200099976', NULL, 'BANCO DE VENEZUELA, BANCO UNIVERSAL', 462, 'A. Universidad Esquina de Sociedad', 'Edificio Banco de Venezuela', '7', '', 'Caracas', '', '', '', 1),
+(32, 5002, 1359, 'G200051876', NULL, 'BANCO DEL TESORO, C.A.', 1131, 'Calle Guaicaipuro', 'Torre Banco del Tesoro', '', '', 'Caracas', '', '', '', 1),
+(33, 29, 1375, 'J002853018', NULL, 'BANESCO HOLDING, C.A.', 1131, 'Av. Principal de Bello Monte entre Calle Lincoln y Sorbona', 'Edifcio Ciudad Banesco', '3', '', 'Caracas', '', '', '', 1),
+(34, 5007, 2138, 'G200096772', NULL, 'BOLSA PUBLICA DE VALORES BICENTENARIA', 229, 'Av. Francisco de Miranda', 'Torre Europa', 'Nivel C', '', 'Caracas', '', '', '', 1),
+(35, 5014, 2182, 'J000067481', NULL, 'C.A. CIGARRERA BIGOTT SUCS', 1131, 'Av. Francisco de Miranda', 'Edificio BIGOTT', 'PB', '', 'Miranda', '', '', '', 1),
+(36, 5002, 1874, 'J000048398', NULL, 'CAJA DE AHORRO BANVENEZ', 462, 'Av. Urdaneta Esquina de Veroes a Santa Capilla', 'Edificio Veros ', '4', '', 'Caracas', '', '', '', 1),
+(37, 5002, 1962, 'J294280986', NULL, 'CALIFORNIA HOME FASHION, C.A.', 1131, 'Av. Andres Calle 4 con Calle 5', 'Quinta Vera', 'S/N', '', 'Caracas', '', '', '', 1),
+(38, 5007, 1158, 'J001168281', NULL, 'CENTRO MEDICO LOIRA, C.A. ', 1131, 'Avenida Loira', 'Edificio Centro Médico Loira', 'PB', '', 'Caracas', '', '', '', 1),
+(39, 5003, 2187, 'J001147853', NULL, 'CERAMICAS CARIBE, C.A.', 1131, 'Chivacoa  Ctra.Autopista Centro Occidental,Dtb Chivacoa Vía Nirgua', 'Local', 'S/N', '', 'Yaracuy', '', '', '', 1),
+(40, 5002, 1019, 'J002726598', NULL, 'CONDOMINIO CENTRO FINANCIERO LATINO ', 462, 'Av. Urdaneta Esquina de Animas a Plaza España', 'Edficio Centro Financiero Latino', '8', '', 'Caracas', '', '', '', 1),
+(41, 5014, 2109, 'J095003264', NULL, 'CONPROIND', 1131, 'Av. Rio Caura Con Rio Paragua', 'Edificio Piramide', '3', '', 'Miranda', '', '', '', 1),
+(42, 5014, 2154, 'J003636916', NULL, 'CONSTRUCTORA NORBERTO ODEBRECHT, S.A', 1131, 'Avenida Rio Caura ', 'Edifcio Torre Humboldt', '10', '', 'Miranda', '', '', '', 1),
+(43, 5003, 1978, 'J000963142', NULL, 'CONTINENTAL DE SISTEMAS Y MAQUINAS. C.A., CONTIMACA', 1131, 'Avenida Milan', 'Edificio CONTIMACA', '1', '', 'Miranda', '', '', '', 1),
+(44, 5007, 1689, 'J001340769', NULL, 'CORAL', 1131, 'Calle la Limonera', 'Edicio LARCO', '1', '', 'Miranda', '', '', '', 1),
+(45, 5014, 2166, 'J003082902', NULL, 'CORPORACION DELCOP, C.A.', 1131, 'Calle Las Vegas', 'Edificio DELCOP', '1', '', 'Miranda', '', '', '', 1),
+(46, 5014, 2189, 'J409590577', NULL, 'DISTRIBUIDORA AMAZONIA 1134, C.A.', 1131, 'Calle Santa Ana', 'Edificio Centro Empresarial Boleita', '5', '', 'Miranda', '', '', '', 1),
+(47, 5014, 2183, 'J302385490', NULL, 'DISTRIBUIDORA BIGOTT C.A.', 1131, 'Av. Francisco de Miranda', 'Edificio BIGOTT', 'PB', '', 'Miranda', '', '', '', 1),
+(48, 5014, 2151, 'J409554635', NULL, 'DISTRIBUIDORA MACONDO 333, C.A.', 1131, 'Calle Santa Ana', 'Edificio Centro Empresarial Boleita', '5', '', 'Miranda', '', '', '', 1),
+(49, 5002, 2178, 'J407514571', NULL, 'DP DELTA SERVICIOS, C.A.', 1131, 'Avenida Blandin', 'Edificio Torre Digitel', '15', '', 'Miranda', '', '', '', 1),
+(50, 5002, 1983, 'J300388840', NULL, 'ESTUDIO MEDICO TOMOGRAF, C.A.', 1131, 'AvenidaLos Samanes Final Norte', 'Edificio Instituto Clinico la Florida', 'PB', '', 'Caracas', '', '', '', 1),
+(51, 5002, 2171, 'J302455413', NULL, 'FARMACIA MEDITOTAL, C.A.', 1131, 'Avenida Costanera', 'Centro Empresarial Athenas', 'PB', '', 'Anzoategui', '', '', '', 1),
+(52, 5014, 1018, 'J002901322', NULL, 'FINANCORP VALORES CASA DE BOLSA, C.A.', 1131, 'Av: Mohedano y Los Chaguaramos', 'Centro Comercial Mohedano', '12', '', 'Miranda', '', '', '', 1),
+(53, 5014, 2097, 'J000143676', NULL, 'FSVEN INDUSTRIAL SOLUTIONS, S.A', 1131, 'Av.  Rio Paragua', 'Edificio Piramide', '3', '', 'Miranda', '', '', '', 1),
+(54, 5002, 2181, 'J315820439', NULL, 'FUNDACIÓN ESPAÑA SALUD', 1131, 'Av. El Parque con Av. Andres Bello', 'Edificio Oficentro', 'PB', '', 'Caracas', '', '', '', 1),
+(55, 5007, 2159, 'J000762627', NULL, 'GENIA CARE PHARMACEUTICAL, S.A', 1131, 'Calle Callejon Gutierrez ', 'Edificio EUROCIENCIA ', '1', '', 'Miranda', '', '', '', 1),
+(56, 5007, 2160, 'J000681716', NULL, 'GENIA CARE, C.A.', 229, 'Av. Francisco de Miranda esquina con Av. El Parque', 'Torre Country', '4 y 5', '', 'Miranda', '', '', '', 1),
+(57, 5007, 1648, 'J309264613', NULL, 'GLOBAL LEASING, C.A.', 1131, 'Calle Los Laboratorios', 'Edificio OFINCA', '5', '', 'Miranda', '', '', '', 1),
+(58, 5002, 2186, 'J401443001', NULL, 'GPB NEFTEGAZ SERVICES B.V. SUCURSAL, C.A.', 1131, 'Av. Venezuela con Calle Sorocaima', 'Edificio ATRIUM', '3', '', 'Miranda', '', '', '', 1),
+(59, 5002, 1614, 'J075168186', NULL, 'GRANJA ALCONCA, C.A.', 1131, 'Avenida 3', 'Urbanización Industrial Santa Cruz ', 'A5-1', '', 'Aragua', '', '', '', 1),
+(60, 5002, 1615, 'J303834817', NULL, 'GRANJA MUCURITA, C.A. ', 1131, 'Avenida 3', 'Urbanización Industrial Santa Cruz ', 'A5-1', '', 'Aragua', '', '', '', 1),
+(61, 5002, 1616, 'J075791215', NULL, 'GRUPO AVICOLA INTEGRADO DEL CENTRO,C.A.', 1131, 'Avenida 3', 'Urbanización Industrial Santa Cruz ', 'A5-1', '', 'Aragua', '', '', '', 1),
+(62, 5007, 1283, 'J000683778', NULL, 'GRUPO MEDICO VARGAS, C.A.', 1131, 'Avenida Principal del Cafetal', 'Quinta Los Abuelos ', 'S/N', '', 'Miranda', '', '', '', 1),
+(63, 5002, 1675, 'J296479461', NULL, 'GRUPO TUTICKET.COM,VE, C.A.', 1131, 'Avenida Sur ', 'Centro Empresarial Lagunita', '2', '', 'Miranda', '', '', '', 1),
+(64, 5014, 1920, 'J295320795', NULL, 'IMAN GROUP, C.A.', 1131, 'Av.Don Diego Cisneros ', 'Edifcio Siemens Torre Norte', '4', '', 'Miranda', '', '', '', 1),
+(65, 5007, 1996, 'J301183185', NULL, 'IMPORTADORA ACIPROSALUD, C.A.', 1131, 'Calle Alameda entre Av. Venezuela', 'Edificio FOLGANA', '1', '', 'Miranda', '', '', '', 1),
+(66, 5002, 1496, 'J312605316', NULL, 'INDUSTRIA CONSOLIDADAS DE GASES ICG C,A', 243, 'Avenida Principal ', 'Urbanización Industrial Terninca Galpon', 'PB', '', 'Miranda', '', '', '', 1),
+(67, 5002, 1179, 'J300706206', NULL, 'INDUSTRIAS CORPAÑAL,C.A.', 243, 'Avenida Principal ', 'Urbanización Industrial Guayabal Edificio Corpañal ', '12 y 13', '', 'Miranda', '', '', '', 1),
+(68, 5014, 2091, 'J296507570', NULL, 'INDUSTRIAS DE CARTONAJE CRD, C.A.', 1131, ' Av. San Antonio', 'Sector Turmuso Galpon', 'C-2A', '', 'Miranda', '', '', '', 1),
+(69, 5007, 1948, 'J000003890', NULL, 'INSTITUTO CLINICO LA FLORIDA ', 1131, 'AvenidaLos Samanes Final Norte', 'Edificio Instituto Clinico la Florida', 'PB', '', 'Caracas', '', '', '', 1),
+(70, 5007, 1127, 'J307107030', NULL, 'INVERSIONES SERCAVILA 51, C.A.', 142, 'Av. San Juan Bosco Con Sexta Tranversal', 'Edificio Clinica el Avila', '2', '', 'Miranda', '', '', '', 1),
+(71, 5003, 1554, 'J313305278', NULL, 'INVERSIONES VISTALPARQUE, C.A.', 1131, '1era Av. Urb.Santa Eduvigis ', 'Hotel Pestana', 'PB', '', 'Miranda', '', '', '', 1),
+(72, 5007, 1066, 'J001798170', NULL, 'LABORATORIO AVILAB, C.A.', 142, 'Av. San Juan Bosco Con Sexta Tranversal', 'Edificio Clinica el Avila', '2', '', 'Miranda', '', '', '', 1),
+(73, 5007, 1982, 'J003240001', NULL, 'LABORATORIO INSTITUTO CLINICO LA FLORIDA, C.A.', 1131, 'AvenidaLos Samanes Final Norte', 'Edificio Instituto Clinico la Florida', 'PB', '', 'Caracas', '', '', '', 1),
+(74, 5002, 1873, 'J312694491', NULL, 'LACTEOS ANANKE, C.A.', 1131, 'Calle Bolivar ', 'Edificio QueneTyl', 'PB', '', 'Miranda', '', '', '', 1),
+(75, 5002, 1960, 'J313169986', NULL, 'LENCERIA EL RECREO, C.A.', 1131, 'Av. Venezuela con Av. Bracamonte y Av. Crispulo Benites ', 'CC SAMBIL Sector Este', 'PB', '', 'Lara', '', '', '', 1),
+(76, 5002, 1954, 'J400129346', NULL, 'LENCERIA HOGAR TORBES, C.A.', 1131, 'Av. Antonio José de Sucre  Sector Las Lomas ', 'CC SAMBIL ', 'Nivel Feria Forum Shops', '', 'Tachira', '', '', '', 1),
+(77, 5002, 1956, 'J299204846', NULL, 'LENCERIA VIÑA VALENCIA, C.A.', 1131, 'Av. Carabobo con calle Uslar', 'Urbanización La Viña Quinta Chispita', 'PB', '', 'Carabobo', '', '', '', 1),
+(78, 5007, 1904, 'J312911972', NULL, 'MAKLER ADMINISTRADORA DE RIESGOS, S.A.', 1131, 'Av.Don Diego Cisneros ', 'Edifcio Siemens Torre Norte', '4', '', 'Miranda', '', '', '', 1),
+(79, 5007, 1905, 'J302911478', NULL, 'MAKLER SOCIEDAD DE CORRETAJE DE SEGUROS, C.A.', 1131, 'Av.Don Diego Cisneros ', 'Edifcio Siemens Torre Norte', '4', '', 'Miranda', '', '', '', 1),
+(80, 5003, 1881, 'J300254925', NULL, 'MAXIMIZA CASA DE BOLSA, C.A.', 1131, 'Avenida Francisco de Miranda', 'Torre Europa', '3', '', 'Miranda', '', '', '', 1),
+(81, 5007, 2165, 'J306842675', NULL, 'MERCADOLIBRE DE VENEZUELA', 1131, 'AV. Eugenio Mendoza de la Castellana', 'Torre La Castella', '8', '', 'Miranda', '', '', '', 1),
+(82, 5002, 1357, 'G200035919', NULL, 'MERCADOS DE ALIMENTOS , C.A.(MERCAL)', 1131, 'AVENIDA FUERZAS ARMADAS', 'Edificio CVAL', '2', '', 'Caracas', '', '', '', 1),
+(83, 5002, 1729, 'J313550388', NULL, 'NIDEC MOTOR VENEZUELA, S.A.', 1131, 'CR Zona Industrial Los Tanques ', 'Edificio Nidec Motor de Venezuela, S.A.', 'PB', '', 'Aragua', '', '', '', 1),
+(84, 5002, 1530, 'J001097449', NULL, 'OPTICA CARONI, C.A.', 1131, ' calle Santa Clara', 'Edificio Bertolin', '2', '', 'Miranda', '', '', '', 1),
+(85, 5002, 1505, 'J000950369', NULL, 'PETROLEOS DE VENEZUELA, S.A.', 1131, 'Av. Libertador con calle El Empalme ', 'Urb. La Campiña Edificio Petroleos de Venezuela Torres Este', 'PB', '', 'Caracas', '', '', '', 1),
+(86, 5007, 1604, 'J000297908', NULL, 'POLICLINICA LAS MERCEDES, C.A.', 151, 'Avenida Principal de Las Merecedes', 'Edificio Policlinica las Mercedes', 'PB', '', 'Miranda', '', '', '', 1),
+(87, 5014, 1817, 'J302202531', NULL, 'PROSEGUROS, S.A.', 1131, 'Avenida Francisco de Miranda con 4ta Avenida ', 'Edificio Torre PROSEGUROS', '6', '', 'Miranda', '', '', '', 1),
+(88, 5007, 1984, 'J003390062', NULL, 'RADIODIAGNOSTICO LA FLORIDA, C.A.', 1131, 'AvenidaLos Samanes Final Norte', 'Edificio Instituto Clinico la Florida', 'PB', '', 'Caracas', '', '', '', 1),
+(89, 5007, 1690, 'J000908320', NULL, 'REFRIMET INDUSTRIAL,C.A.', 1131, 'Calle la Limonera', 'Edicio LARCO', '1', '', 'Miranda', '', '', '', 1),
+(90, 5003, 2114, 'J003285536', NULL, 'REPRESENTACIONES LABIN VE, S.A.', 1131, 'Calle Los Laboratorios ', 'Edifcio Beta', '1', '', 'Miranda', '', '', '', 1),
+(91, 5003, 1285, 'J306649590', NULL, 'SERVICIOS GZ', 1131, 'Calle  LOS LABORATORIOS', 'Edificio OFINCA', '2', '', 'Miranda', '', '', '', 1),
+(92, 5003, 1938, 'J403483302', NULL, 'SETA NAVIERA, C.A.', 1131, 'Esquina Puente Yanez ', 'Edificio BECO', '8', '', 'Caracas', '', '', '', 1),
+(93, 5002, 1095, 'G200041315', NULL, 'SOCIEDAD NACIONAL DE GARANTIAS RECIPROCAS PARA LA MEDIANA Y PEQUEÑA INDUSTRIA, S.A. (SOGAMPI)', 1131, 'AVENIDA PRINCIPAL DE LOS CORTIJOS DE LOURDES', 'Centro Los Cortijos', 'PH', '', 'Miranda', '', '', '', 1),
+(94, 5002, 2083, 'J300766454', NULL, 'STATERA CASA DE BOLSA', 1131, 'Av. Las Mercedes entre Guaicaipuro y Carabobo ', 'Torre FORUM', '15', '', 'Miranda', '', '', '', 1),
+(95, 5007, 1613, 'J314853813', NULL, 'SUPER MAX, C.A.', 1131, 'Calle Santa Ana  Urb. Boleita Sur ', 'Edificio Centro Empresarial Boleita', '5', '', 'Miranda', '', '', '', 1),
+(96, 5003, 1439, 'J000359148', NULL, 'TAUREL & CÍA SUCRS', 1131, 'Ciudad Center Calle Sanatorio del Avila', 'Torre F ', '2', '', 'Miranda', '', '', '', 1),
+(97, 5002, 1605, 'J000122555', NULL, 'UNIVERSIDAD CATOLICA ANDRES BELLO', 462, 'Av. Intercomunal de Antimano', 'Edificios Centrales', '2', '', 'Caracas', '', '', '', 1),
+(98, 5002, 1936, 'J312309385', NULL, 'VALORALTA CASA DE BOLSA ', 1131, 'AV ROMULO GALLEGOS CON AV EL SAMAN', 'Edificio Torre VALORALTA II', 'PB', '', 'Miranda', '', '', '', 1),
+(99, 5007, 1067, 'J000381976', NULL, 'VEN AMERICAN, C.A.', 1131, 'AVENIDA SUR 4 ', 'Edificio VEN AMERICAN', 'PB', '', 'Caracas', '', '', '', 1),
+(100, 5002, 1958, 'J315056429', NULL, 'VENEZUELAN HOME FASHION HQ C.A.', 1131, 'Calle principal de Caricuao ', 'Edificio Telares de Palo Grande', 'PB', '', 'Caracas', '', '', '', 1),
+(101, 5002, 1454, 'G200109963', NULL, 'C. A. VENEZOLANA DE INDUSTRIAS MILITARES, CAVIM', 151, 'Calle Jalisco', 'Edificio CAVIM', 'PB', '', 'Miranda', '', '', '', 1);
 
 --
 -- Disparadores `tbl_cliente`
 --
 DELIMITER $$
-CREATE TRIGGER `tbl_cliente_AI` AFTER INSERT ON `tbl_cliente` FOR EACH ROW INSERT INTO logs.tbl_cliente(codigo, id_usuario_socio_nuevo, id_usuario_gerente_nuevo, rif_nuevo, nit_nuevo, razon_social_nuevo, id_parroquia_fiscal_nuevo, avenida_calle_fiscal_nuevo, edificio_quinta_fiscal_nuevo, piso_fiscal_nuevo, ciudad_fiscal_nuevo, telefono_fiscal_nuevo, pagina_web_nuevo, email_fiscal_nuevo, id_estatus_nuevo) VALUES (NEW.codigo, NEW.id_usuario_socio, NEW.id_usuario_gerente, NEW.rif, NEW.nit, NEW.razon_social, NEW.id_parroquia_fiscal, NEW.avenida_calle_fiscal, NEW.edificio_quinta_fiscal, NEW.piso_fiscal, NEW.ciudad_fiscal, NEW.telefono_fiscal, NEW.pagina_web, NEW.email_fiscal, NEW.id_estatus)
+CREATE TRIGGER `tbl_cliente_AI` AFTER INSERT ON `tbl_cliente` FOR EACH ROW INSERT INTO logs.tbl_cliente(codigo, id_usuario_socio_nuevo, rif_nuevo, nit_nuevo, razon_social_nuevo, id_parroquia_fiscal_nuevo, avenida_calle_fiscal_nuevo, edificio_quinta_fiscal_nuevo, piso_fiscal_nuevo, ciudad_fiscal_nuevo, telefono_fiscal_nuevo, pagina_web_nuevo, email_fiscal_nuevo, id_estatus_nuevo) VALUES (NEW.codigo, NEW.id_usuario_socio,  NEW.rif, NEW.nit, NEW.razon_social, NEW.id_parroquia_fiscal, NEW.avenida_calle_fiscal, NEW.edificio_quinta_fiscal, NEW.piso_fiscal, NEW.ciudad_fiscal, NEW.telefono_fiscal, NEW.pagina_web, NEW.email_fiscal, NEW.id_estatus)
 $$
 DELIMITER ;
 DELIMITER $$
-CREATE TRIGGER `tbl_cliente_BU` BEFORE UPDATE ON `tbl_cliente` FOR EACH ROW INSERT INTO logs.tbl_cliente(codigo, id_usuario_socio, id_usuario_gerente, rif, nit, razon_social, id_parroquia_fiscal, avenida_calle_fiscal, edificio_quinta_fiscal, piso_fiscal, ciudad_fiscal, telefono_fiscal, pagina_web, email_fiscal, id_estatus, id_usuario_socio_nuevo, id_usuario_gerente_nuevo, rif_nuevo, nit_nuevo, razon_social_nuevo, id_parroquia_fiscal_nuevo, avenida_calle_fiscal_nuevo, edificio_quinta_fiscal_nuevo, piso_fiscal_nuevo, ciudad_fiscal_nuevo, telefono_fiscal_nuevo, pagina_web_nuevo, email_fiscal_nuevo, id_estatus_nuevo) VALUES (NEW.codigo, OLD.id_usuario_socio, OLD.id_usuario_gerente, OLD.rif, OLD.nit, OLD.razon_social, OLD.id_parroquia_fiscal, OLD.avenida_calle_fiscal, OLD.edificio_quinta_fiscal, OLD.piso_fiscal, OLD.ciudad_fiscal, OLD.telefono_fiscal, OLD.pagina_web, OLD.email_fiscal, OLD.id_estatus, NEW.id_usuario_socio, NEW.id_usuario_gerente, NEW.rif, NEW.nit, NEW.razon_social, NEW.id_parroquia_fiscal, NEW.avenida_calle_fiscal, NEW.edificio_quinta_fiscal, NEW.piso_fiscal, NEW.ciudad_fiscal, NEW.telefono_fiscal, NEW.pagina_web, NEW.email_fiscal, NEW.id_estatus)
+CREATE TRIGGER `tbl_cliente_BU` BEFORE UPDATE ON `tbl_cliente` FOR EACH ROW INSERT INTO logs.tbl_cliente(codigo, id_usuario_socio, rif, nit, razon_social, id_parroquia_fiscal, avenida_calle_fiscal, edificio_quinta_fiscal, piso_fiscal, ciudad_fiscal, telefono_fiscal, pagina_web, email_fiscal, id_estatus, id_usuario_socio_nuevo, rif_nuevo, nit_nuevo, razon_social_nuevo, id_parroquia_fiscal_nuevo, avenida_calle_fiscal_nuevo, edificio_quinta_fiscal_nuevo, piso_fiscal_nuevo, ciudad_fiscal_nuevo, telefono_fiscal_nuevo, pagina_web_nuevo, email_fiscal_nuevo, id_estatus_nuevo) VALUES (NEW.codigo, OLD.id_usuario_socio, OLD.rif, OLD.nit, OLD.razon_social, OLD.id_parroquia_fiscal, OLD.avenida_calle_fiscal, OLD.edificio_quinta_fiscal, OLD.piso_fiscal, OLD.ciudad_fiscal, OLD.telefono_fiscal, OLD.pagina_web, OLD.email_fiscal, OLD.id_estatus, NEW.id_usuario_socio, NEW.rif, NEW.nit, NEW.razon_social, NEW.id_parroquia_fiscal, NEW.avenida_calle_fiscal, NEW.edificio_quinta_fiscal, NEW.piso_fiscal, NEW.ciudad_fiscal, NEW.telefono_fiscal, NEW.pagina_web, NEW.email_fiscal, NEW.id_estatus)
 $$
 DELIMITER ;
 
@@ -3487,10 +3507,12 @@ INSERT INTO `tbl_parroquias` (`id`, `id_municipio`, `parroquia`) VALUES
 
 CREATE TABLE `tbl_proyecto` (
   `id` int(11) NOT NULL,
-  `descripcion` varchar(250) NOT NULL,
+  `descripcion` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `id_cliente` int(11) NOT NULL,
+  `id_socio` int(11) NOT NULL,
+  `id_gerente` int(11) NOT NULL,
   `fecha_contratacion` varchar(10) NOT NULL,
-  `monto` decimal(15,2) NOT NULL,
+  `monto` decimal(25,2) NOT NULL,
   `id_moneda` int(11) NOT NULL,
   `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -3546,17 +3568,6 @@ CREATE TABLE `tbl_proyecto_divisiones` (
   `id_proyecto` int(11) NOT NULL,
   `horas_contratadas` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Volcado de datos para la tabla `tbl_proyecto_divisiones`
---
-
-INSERT INTO `tbl_proyecto_divisiones` (`id`, `id_division`, `id_proyecto`, `horas_contratadas`) VALUES
-(1, 3, 1, 80),
-(2, 5, 1, 45),
-(3, 4, 2, 15),
-(4, 5, 2, 20),
-(5, 2, 2, 30);
 
 -- --------------------------------------------------------
 
@@ -4195,7 +4206,7 @@ ALTER TABLE `tbl_usuario_documento_identidad`
 -- AUTO_INCREMENT de la tabla `logs_auditoria`
 --
 ALTER TABLE `logs_auditoria`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cargo_empleado`
@@ -4321,7 +4332,7 @@ ALTER TABLE `tbl_proyecto_analista`
 -- AUTO_INCREMENT de la tabla `tbl_proyecto_divisiones`
 --
 ALTER TABLE `tbl_proyecto_divisiones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_tipo_contacto`
