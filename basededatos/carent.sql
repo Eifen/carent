@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 19-08-2020 a las 19:40:02
+-- Tiempo de generación: 20-08-2020 a las 18:09:56
 -- Versión del servidor: 8.0.18
 -- Versión de PHP: 7.3.16
 
@@ -86,7 +86,13 @@ INSERT INTO `logs_auditoria` (`id`, `usuario_id`, `fecha`, `direccion_ip`, `acci
 (43, 144, '2020-08-17 17:01:27', '127.0.0.1', 'Registro del proyecto: PROYECTO 4 SERGIO. Cliente: POLICLINICA LAS MERCEDES, C.A.', 'tbl_proyecto'),
 (44, 1, '2020-08-18 21:45:05', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
 (45, 1, '2020-08-19 07:24:53', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
-(46, 1, '2020-08-19 15:20:55', '127.0.0.1', 'Inicio de Sesion', 'inicio');
+(46, 1, '2020-08-19 15:20:55', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(47, 1, '2020-08-19 21:38:39', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(48, 1, '2020-08-20 07:54:57', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(49, 1, '2020-08-20 08:36:07', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(50, 1, '2020-08-20 13:33:19', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(51, 1, '2020-08-20 13:39:24', '127.0.0.1', 'Registro del proyecto: PROYECTO 1. Cliente: C. A. VENEZOLANA DE INDUSTRIAS MILITARES, CAVIM', 'tbl_proyecto'),
+(52, 1, '2020-08-20 13:56:27', '127.0.0.1', 'Registro del proyecto: PROYECTO 2. Cliente: DISTRIBUIDORA BIGOTT C.A.', 'tbl_proyecto');
 
 --
 -- Disparadores `logs_auditoria`
@@ -4200,7 +4206,7 @@ ALTER TABLE `tbl_usuario_documento_identidad`
 -- AUTO_INCREMENT de la tabla `logs_auditoria`
 --
 ALTER TABLE `logs_auditoria`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cargo_empleado`

@@ -74,13 +74,15 @@ class ProyectoController extends Controller
       $modelo = new ProyectoModel();
       $descripcion = strtoupper($request->input("descripcion"));
       $cliente = $request->input("cliente");
+      $socio = $request->input("socio");
+      $gerente = $request->input("gerente");
       $fechaContratacion = $request->input("fechaContratacion");
       $divisiones = $request->input("divisiones");
       $estatus = $request->input("estatus");
       $id_moneda = $request->input("id_moneda");
       $monto = $request->input("monto");
 
-      $response = $modelo->crearProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto);
+      $response = $modelo->crearProyecto($descripcion,$cliente,$socio,$gerente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto);
 
       if($response["response"]){
 
