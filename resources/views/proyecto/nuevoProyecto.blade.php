@@ -201,47 +201,22 @@
                 </b-form-select>
               </b-form-group>
               <b-form-group
+                :invalid-feedback="form.camposAtributos.monto.invalidFeedback"
                 class="col-12 col-sm-6"
                 label="Monto"
                 label-for="monto"
                 id="group-monto">
-                <b-form-input
-                  @input="limpiarMensajeError('monto')"
-                  :disabled="form.camposAtributos.monto.disabled"
-                  :state="form.camposAtributos.monto.state"
-                  autocomplete="off"
-                  id="monto"
-                  ref="monto"
-                  size="sm"
-                  type="text"
-                  v-mask="form.camposAtributos.monto.mask"
-                  v-model.trim="$v.form.campos.monto.$model"></b-form-input>
-                <!--<input
-                  type="text"
-                  v-mask="form.camposAtributos.monto.mask"
-                  v-model="$v.form.campos.monto.$model"
-                  placeholder="0">-->
-                <!--<vuetify-money
-                  @input="limpiarMensajeError('monto')"
-                  :options="form.camposAtributos.monto.options"
-                  :valueWhenIsEmpty="form.camposAtributos.monto.valueWhenIsEmpty"
-                  v-model="$v.form.campos.monto.$model"/>-->
-
-
-                <!--<currency-input
-                  @input="limpiarMensajeError('monto')"
-                  :auto-decimal-mode="true"
-                  :currency="form.camposAtributos.monto.options.currency"
-                  :distraction-free="true"
-                  :precision="form.camposAtributos.monto.options.precision"
-                  :value-range="form.camposAtributos.monto.options.rango"
-                  class="form-control form-control-sm"
-                  id="monto"
-                  ref="monto"
-                  v-model="$v.form.campos.monto.$model"/>-->
-                <b-form-invalid-feedback :state="form.camposAtributos.monto.state">
-                  @{{ form.camposAtributos.monto.invalidFeedback }}
-                </b-form-invalid-feedback>
+                <b-input-group :prepend="form.camposAtributos.montoEn.simbolo" size="sm">
+                  <b-form-input
+                    @input="limpiarMensajeError('monto')"
+                    :disabled="form.camposAtributos.monto.disabled"
+                    :state="form.camposAtributos.monto.state"
+                    autocomplete="off"
+                    id="monto"
+                    ref="monto"
+                    type="text"
+                    v-model.trim="$v.form.campos.monto.$model"></b-form-input>
+                </b-input-group>
               </b-form-group>
               <b-form-group
                 class="col-12 col-sm-6"

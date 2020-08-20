@@ -5,10 +5,10 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import zenscroll from 'zenscroll';
 import axios from 'axios';
-import VueMask from 'v-mask';
 import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 import Vuelidate from 'vuelidate';
+import AutoNumeric from 'autonumeric';
 import { required, minLength, minValue } from 'vuelidate/lib/validators';
 var self;
 
@@ -18,20 +18,6 @@ Vue.component('loading',require('../components/loading.vue').default);
 Vue.component('alert',require('../components/alert.vue').default);
 Vue.use(BootstrapVue);
 Vue.use(Vuelidate);
-Vue.use(VueMask);
-
-import createNumberMask from 'text-mask-addons/dist/createNumberMask';
-const currencyMask = createNumberMask({
-  allowDecimal: true,
-  allowNegative: false,
-  decimalLimit: 2,
-  decimalSymbol: ',',
-  includeThousandsSeparator: true,
-  integerLimit: 20,
-  prefix: '',
-  requireDecimal: true,
-  thousandsSeparatorSymbol:'.'
-});
 
 new Vue({
 
@@ -140,11 +126,13 @@ new Vue({
           state: null
         },
         monto: {
+          autonumeric: null,
+          decPlace: 2,
+          decString: ",",
           disabled: true,
           invalidFeedback: "",
-          mask: currencyMask,
           state: null,
-          valueWhenIsEmpty: null
+          thouSep: "."
         },
         divisiones: {
           disabled: true,
@@ -256,7 +244,31 @@ new Vue({
 
   },
   created: function () {},
-  mounted: function () {},
+  mounted: function () {
+
+    let checkDataInitReady = setInterval(() => {
+
+      if(self.form.mostrar) {
+
+        clearInterval(checkDataInitReady);
+
+        let monto = self.$refs["monto"].$el
+
+        self.form.camposAtributos.monto.autonumeric = new AutoNumeric(monto, {
+          decimalPlaces: 2,
+          decimalCharacter: ',',
+          digitGroupSeparator: '.',
+          emptyInputBehavior: 0,
+          maximumValue: '99999999999999999999.99',
+          minimumValue: 0,
+          modifyValueOnWheel: false
+        });
+
+      }
+
+    }, 1000);
+
+  },
   updated: function () {},
   methods:{
 
@@ -271,7 +283,7 @@ new Vue({
       }
 
     },
-    cantidadHora(value) {
+    cantidadHora(value){
 
       let regex = /^(?:[1-9][0-9]*)$/;
 
@@ -312,16 +324,9 @@ new Vue({
       let valor = self.$refs["montoEn"].$el.value;
 
       if((valor.trim() !== "") && (valor !== null)){
-
-        //self.form.camposAtributos.monto.options.prefix = self.form.camposAtributos.montoEn.simbolo+" ";
-        self.form.camposAtributos.monto.mask.prefix = "R";
         self.form.camposAtributos.monto.disabled = false;
-
       }else{
-
-        //self.form.camposAtributos.monto.options.prefix = "";
         self.form.camposAtributos.monto.disabled = true;
-
       }
 
       self.limpiarMensajeError("montoEn");
@@ -397,9 +402,9 @@ new Vue({
           divisiones: divisiones,
           estatus: self.form.campos.estatus,
           id_moneda: self.form.campos.montoEn,
-          monto: self.form.campos.monto
+          monto: self.form.camposAtributos.monto.autonumeric.get()
         }
-console.log(parametros);return;
+
         self.form.botones.submit.disabled = true;
         self.form.botones.submit.html = self.form.botones.submit.htmlLoading;
 
