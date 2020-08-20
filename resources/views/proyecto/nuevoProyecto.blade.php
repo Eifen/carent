@@ -115,6 +115,66 @@
                   v-model="$v.form.campos.fechaContratacion.$model"></b-form-datepicker>
               </b-form-group>
               <b-form-group
+                :invalid-feedback="form.camposAtributos.socio.invalidFeedback"
+                class="col-12 col-sm-6"
+                label="Socio"
+                label-for="socio"
+                id="group-socio">
+                <b-form-input
+                  @blur="valorBlur('socio')"
+                  @input="buscarSocio"
+                  :disabled="form.camposAtributos.socio.disabled"
+                  :state="form.camposAtributos.socio.state"
+                  autocomplete="off"
+                  id="socio"
+                  ref="socio"
+                  size="sm"
+                  type="text"
+                  v-on:focus="valorFocus('socio')"
+                  v-model.trim="form.camposAtributos.socio.valor"></b-form-input>
+                <b-dropdown id="lista-socio" variant="link" no-caret block ref="ref-lista-socio">
+                  <b-dropdown-item-button
+                    :key="key"
+                    v-for="(socio, key) in form.camposAtributos.socio.listaDropdown.listado"
+                    v-if="form.camposAtributos.socio.listaDropdown.listado.length > 0"
+                    v-on:click="elegirSocio(socio.id, socio.nombre)"> @{{ socio.nombre }} </b-dropdown-item-button>
+                  <b-dropdown-item-button
+                    v-if="form.camposAtributos.socio.listaDropdown.noResultado"
+                    v-on:click="listadoNoValido('socio')">No se encontrarón socios, intente con otro nombre!</b-dropdown-item-button>
+                </b-dropdown>
+                <b-form-text id="socio-help" v-html="form.camposAtributos.socio.help"></b-form-text>
+              </b-form-group>
+              <b-form-group
+                :invalid-feedback="form.camposAtributos.gerente.invalidFeedback"
+                class="col-12 col-sm-6"
+                label="Gerente"
+                label-for="gerente"
+                id="group-gerente">
+                <b-form-input
+                  @blur="valorBlur('gerente')"
+                  @input="buscarGerente"
+                  :disabled="form.camposAtributos.gerente.disabled"
+                  :state="form.camposAtributos.gerente.state"
+                  autocomplete="off"
+                  id="gerente"
+                  ref="gerente"
+                  size="sm"
+                  type="text"
+                  v-on:focus="valorFocus('gerente')"
+                  v-model.trim="form.camposAtributos.gerente.valor"></b-form-input>
+                <b-dropdown id="lista-gerente" variant="link" no-caret block ref="ref-lista-gerente">
+                  <b-dropdown-item-button
+                    :key="key"
+                    v-for="(gerente, key) in form.camposAtributos.gerente.listaDropdown.listado"
+                    v-if="form.camposAtributos.gerente.listaDropdown.listado.length > 0"
+                    v-on:click="elegirGerente(gerente.id, gerente.nombre)"> @{{ gerente.nombre }} </b-dropdown-item-button>
+                  <b-dropdown-item-button
+                    v-if="form.camposAtributos.gerente.listaDropdown.noResultado"
+                    v-on:click="listadoNoValido('gerente')">No se encontrarón gerentes, intente con otro nombre!</b-dropdown-item-button>
+                </b-dropdown>
+                <b-form-text id="gerente-help" v-html="form.camposAtributos.gerente.help"></b-form-text>
+              </b-form-group>
+              <b-form-group
                 :invalid-feedback="form.camposAtributos.montoEn.invalidFeedback"
                 class="col-12 col-sm-6"
                 label="Monto en:"
@@ -146,16 +206,17 @@
                 label="Monto"
                 label-for="monto"
                 id="group-monto">
-                <b-form-input
-                  @input="limpiarMensajeError('monto')"
-                  :disabled="form.camposAtributos.monto.disabled"
-                  :state="form.camposAtributos.monto.state"
-                  autocomplete="off"
-                  id="monto"
-                  ref="monto"
-                  size="sm"
-                  type="text"
-                  v-model="$v.form.campos.monto.$model"></b-form-input>
+                <b-input-group :prepend="form.camposAtributos.montoEn.simbolo" size="sm">
+                  <b-form-input
+                    @input="limpiarMensajeError('monto')"
+                    :disabled="form.camposAtributos.monto.disabled"
+                    :state="form.camposAtributos.monto.state"
+                    autocomplete="off"
+                    id="monto"
+                    ref="monto"
+                    type="text"
+                    v-model.trim="$v.form.campos.monto.$model"></b-form-input>
+                </b-input-group>
               </b-form-group>
               <b-form-group
                 class="col-12 col-sm-6"

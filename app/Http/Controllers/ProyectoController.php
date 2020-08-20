@@ -41,18 +41,48 @@ class ProyectoController extends Controller
 
     }
 
+    function buscarSocioProyecto(Request $request){
+
+      $modelo = new ProyectoModel();
+      $dato = $request["nombreSocio"];
+
+      $socios = $modelo->socios($dato,5);
+
+      return [
+        "response" => true,
+        "socios" => $socios
+      ];
+
+    }
+
+    function buscarGerenteProyecto(Request $request){
+
+      $modelo = new ProyectoModel();
+      $dato = $request["nombreGerente"];
+
+      $gerentes = $modelo->gerentes($dato,5);
+
+      return [
+        "response" => true,
+        "gerentes" => $gerentes
+      ];
+
+    }
+
     function crearProyecto(Request $request){
 
       $modelo = new ProyectoModel();
       $descripcion = strtoupper($request->input("descripcion"));
       $cliente = $request->input("cliente");
+      $socio = $request->input("socio");
+      $gerente = $request->input("gerente");
       $fechaContratacion = $request->input("fechaContratacion");
       $divisiones = $request->input("divisiones");
       $estatus = $request->input("estatus");
       $id_moneda = $request->input("id_moneda");
       $monto = $request->input("monto");
 
-      $response = $modelo->crearProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto);
+      $response = $modelo->crearProyecto($descripcion,$cliente,$socio,$gerente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto);
 
       if($response["response"]){
 
@@ -375,7 +405,7 @@ class ProyectoController extends Controller
 
           $modeloAudit->logs_auditoria($parametros);
 
-        
+
 
       }
 

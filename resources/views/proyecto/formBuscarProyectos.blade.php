@@ -108,6 +108,8 @@
                   <th scope="col">Horas Contratadas</th>
                   <th scope="col">Fecha Contratación</th>
                   <th scope="col">Clientes</th>
+                  <th scope="col">Socio</th>
+                  <th scope="col">Gerente</th>
                   <th scope="col">Estatus</th>
                   <th scope="col" v-if="permisoActualizar"></th>
                 </tr>
@@ -118,6 +120,8 @@
                   <td>@{{ proyecto.horas_contratadas }}</td>
                   <td>@{{ proyecto.fecha_contratacion }}</td>
                   <td>@{{ proyecto.cliente }}</td>
+                  <td>@{{ proyecto.socio }}</td>
+                  <td>@{{ proyecto.gerente }}</td>
                   <td>@{{ proyecto.estatus }}</td>
                   <td v-if="permisoActualizar">
                     <a v-bind:href="'/formModificarProyecto/'+proyecto.id" target="_self">
@@ -126,7 +130,7 @@
                   </td>
                 </tr>
                 <tr v-if="proyectos.length < 1">
-                  <td colspan="6">
+                  <td colspan="8">
                     <div class="alert alert-warning text-center" role="alert">
                       La busqueda no arrojó resultado!
                     </div>
@@ -135,7 +139,7 @@
               </tbody>
               <tfoot v-if="proyectos.length > 0">
                 <tr>
-                  <td colspan="6">
+                  <td colspan="8">
                     <div>
                       <div><b>Página</b></div>
                       <div class="wrapper-input">

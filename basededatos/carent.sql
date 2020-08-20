@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.2
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 17-08-2020 a las 17:08:29
+-- Tiempo de generación: 20-08-2020 a las 18:09:56
 -- Versión del servidor: 8.0.18
--- Versión de PHP: 7.3.12
+-- Versión de PHP: 7.3.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -73,8 +72,27 @@ INSERT INTO `logs_auditoria` (`id`, `usuario_id`, `fecha`, `direccion_ip`, `acci
 (29, 1, '2020-08-15 15:06:55', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
 (30, 1, '2020-08-15 15:46:38', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
 (31, 1, '2020-08-15 21:39:58', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
-(32, 1, '2020-08-17 19:45:50', '127.0.0.1', 'Registro del cliente codigo: 2190', 'tbl_cliente'),
-(33, 1, '2020-08-17 20:00:14', '127.0.0.1', 'Modificación del cliente: 2190', 'tbl_cliente');
+(32, 1, '2020-08-16 11:21:03', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(33, 1, '2020-08-16 12:02:02', '127.0.0.1', 'Registro del proyecto: DDDDDDD. Cliente: DISTRIBUIDORA AMAZONIA 1134, C.A.', 'tbl_proyecto'),
+(34, 1, '2020-08-16 12:03:28', '127.0.0.1', 'Registro del proyecto: DDDDD4. Cliente: CALIFORNIA HOME FASHION, C.A.', 'tbl_proyecto'),
+(35, 1, '2020-08-16 12:05:44', '127.0.0.1', 'Registro del proyecto: PROYECTO 1. Cliente: DISTRIBUIDORA AMAZONIA 1134, C.A.', 'tbl_proyecto'),
+(36, 1, '2020-08-16 12:38:01', '127.0.0.1', 'Registro del proyecto: PROYECTO 2. Cliente: DISTRIBUIDORA BIGOTT C.A.', 'tbl_proyecto'),
+(37, 1, '2020-08-16 12:59:37', '127.0.0.1', 'Registro del proyecto: PROYECTO 1. Cliente: DISTRIBUIDORA MACONDO 333, C.A.', 'tbl_proyecto'),
+(38, 1, '2020-08-16 13:26:12', '127.0.0.1', 'Modificacion del proyecto: PROYECTO 1. Cliente: DISTRIBUIDORA MACONDO 333, C.A.', 'tbl_proyecto'),
+(39, 144, '2020-08-17 16:51:02', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(40, 144, '2020-08-17 16:52:30', '127.0.0.1', 'Registro del proyecto: PROYECTO 1 SERGIO. Cliente: POLICLINICA LAS MERCEDES, C.A.', 'tbl_proyecto'),
+(41, 144, '2020-08-17 16:53:11', '127.0.0.1', 'Registro del proyecto: PROYECTO 2 SERGIO. Cliente: POLICLINICA LAS MERCEDES, C.A.', 'tbl_proyecto'),
+(42, 144, '2020-08-17 16:56:23', '127.0.0.1', 'Registro del proyecto: PROYECTO 3 SERGIO. Cliente: POLICLINICA LAS MERCEDES, C.A.', 'tbl_proyecto'),
+(43, 144, '2020-08-17 17:01:27', '127.0.0.1', 'Registro del proyecto: PROYECTO 4 SERGIO. Cliente: POLICLINICA LAS MERCEDES, C.A.', 'tbl_proyecto'),
+(44, 1, '2020-08-18 21:45:05', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(45, 1, '2020-08-19 07:24:53', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(46, 1, '2020-08-19 15:20:55', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(47, 1, '2020-08-19 21:38:39', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(48, 1, '2020-08-20 07:54:57', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(49, 1, '2020-08-20 08:36:07', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(50, 1, '2020-08-20 13:33:19', '127.0.0.1', 'Inicio de Sesion', 'inicio'),
+(51, 1, '2020-08-20 13:39:24', '127.0.0.1', 'Registro del proyecto: PROYECTO 1. Cliente: C. A. VENEZOLANA DE INDUSTRIAS MILITARES, CAVIM', 'tbl_proyecto'),
+(52, 1, '2020-08-20 13:56:27', '127.0.0.1', 'Registro del proyecto: PROYECTO 2. Cliente: DISTRIBUIDORA BIGOTT C.A.', 'tbl_proyecto');
 
 --
 -- Disparadores `logs_auditoria`
@@ -3489,10 +3507,12 @@ INSERT INTO `tbl_parroquias` (`id`, `id_municipio`, `parroquia`) VALUES
 
 CREATE TABLE `tbl_proyecto` (
   `id` int(11) NOT NULL,
-  `descripcion` varchar(250) NOT NULL,
+  `descripcion` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `id_cliente` int(11) NOT NULL,
+  `id_socio` int(11) NOT NULL,
+  `id_gerente` int(11) NOT NULL,
   `fecha_contratacion` varchar(10) NOT NULL,
-  `monto` decimal(15,2) NOT NULL,
+  `monto` decimal(25,2) NOT NULL,
   `id_moneda` int(11) NOT NULL,
   `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -3549,17 +3569,6 @@ CREATE TABLE `tbl_proyecto_divisiones` (
   `horas_contratadas` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Volcado de datos para la tabla `tbl_proyecto_divisiones`
---
-
-INSERT INTO `tbl_proyecto_divisiones` (`id`, `id_division`, `id_proyecto`, `horas_contratadas`) VALUES
-(1, 3, 1, 80),
-(2, 5, 1, 45),
-(3, 4, 2, 15),
-(4, 5, 2, 20),
-(5, 2, 2, 30);
-
 -- --------------------------------------------------------
 
 --
@@ -3609,8 +3618,8 @@ INSERT INTO `tbl_tipo_contacto` (`id`, `descripcion`, `estatus`) VALUES
 
 CREATE TABLE `tbl_tipo_documento_identidad` (
   `id` int(11) NOT NULL,
-  `abreviatura` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `descripcion` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `abreviatura` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `descripcion` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -3827,7 +3836,7 @@ CREATE TABLE `tbl_usuario_documento_identidad` (
   `id` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
   `id_tipo_documento_identidad` int(11) NOT NULL,
-  `documento` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+  `documento` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -4197,7 +4206,7 @@ ALTER TABLE `tbl_usuario_documento_identidad`
 -- AUTO_INCREMENT de la tabla `logs_auditoria`
 --
 ALTER TABLE `logs_auditoria`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cargo_empleado`
@@ -4221,7 +4230,7 @@ ALTER TABLE `tbl_ciudades`
 -- AUTO_INCREMENT de la tabla `tbl_cliente`
 --
 ALTER TABLE `tbl_cliente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cliente_facturacion`
@@ -4323,7 +4332,7 @@ ALTER TABLE `tbl_proyecto_analista`
 -- AUTO_INCREMENT de la tabla `tbl_proyecto_divisiones`
 --
 ALTER TABLE `tbl_proyecto_divisiones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_tipo_contacto`
@@ -4419,12 +4428,26 @@ ALTER TABLE `tbl_proyecto_analista`
   ADD CONSTRAINT `tbl_proyecto_analista_ibfk_1` FOREIGN KEY (`id_proyecto`) REFERENCES `tbl_proyecto` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
+-- Filtros para la tabla `tbl_proyecto_divisiones`
+--
+ALTER TABLE `tbl_proyecto_divisiones`
+  ADD CONSTRAINT `tbl_proyecto_divisiones_ibfk_1` FOREIGN KEY (`id_division`) REFERENCES `tbl_division` (`id`),
+  ADD CONSTRAINT `tbl_proyecto_divisiones_ibfk_2` FOREIGN KEY (`id_proyecto`) REFERENCES `tbl_proyecto` (`id`);
+
+--
 -- Filtros para la tabla `tbl_usuario`
 --
 ALTER TABLE `tbl_usuario`
   ADD CONSTRAINT `tbl_usuario_ibfk_1` FOREIGN KEY (`id_cargo`) REFERENCES `tbl_cargo_empleado` (`id`),
   ADD CONSTRAINT `tbl_usuario_ibfk_2` FOREIGN KEY (`id_division`) REFERENCES `tbl_division` (`id`),
   ADD CONSTRAINT `tbl_usuario_ibfk_3` FOREIGN KEY (`id_parroquia`) REFERENCES `tbl_parroquias` (`id`);
+
+--
+-- Filtros para la tabla `tbl_usuario_documento_identidad`
+--
+ALTER TABLE `tbl_usuario_documento_identidad`
+  ADD CONSTRAINT `tbl_usuario_documento_identidad_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `tbl_usuario` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `tbl_usuario_documento_identidad_ibfk_2` FOREIGN KEY (`id_tipo_documento_identidad`) REFERENCES `tbl_tipo_documento_identidad` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -68,7 +68,53 @@ class ProyectoModel extends Model
 
     }// Fin clientes
 
-    function crearProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto){
+    function socios($nombre_socio = null, $limite = null){
+
+      $sql_condicion = ($nombre_socio != null) ? " WHERE UPPER(nombre) LIKE UPPER('".$nombre_socio."%')" : "";
+      $sql_limit = ($limite != null) ? " LIMIT ".$limite : "";
+
+      $socios = DB::select("SELECT *
+                            FROM(
+
+                                SELECT u.id,
+                                       CONCAT(u.nombre_1,' ',u.nombre_2,' ',u.apellido_1,' ',u.apellido_2) AS nombre
+                                FROM tbl_usuario u
+                                WHERE u.id_estatus = 1
+                                AND u.id_cargo IN(16,17)
+
+                            )t
+                            ".$sql_condicion."
+                            ORDER BY nombre ASC".
+                            $sql_limit);
+
+      return $socios;
+
+    }// Fin socios
+
+    function gerentes($nombre_gerente = null, $limite = null){
+
+      $sql_condicion = ($nombre_gerente != null) ? " WHERE UPPER(nombre) LIKE UPPER('".$nombre_gerente."%')" : "";
+      $sql_limit = ($limite != null) ? " LIMIT ".$limite : "";
+
+      $gerentes = DB::select("SELECT *
+                              FROM(
+
+                                SELECT u.id,
+                                       CONCAT(u.nombre_1,' ',u.nombre_2,' ',u.apellido_1,' ',u.apellido_2) AS nombre
+                                FROM tbl_usuario u
+                                WHERE u.id_estatus = 1
+                                AND u.id_cargo IN(12,13,14,15,16,17)
+
+                            )t
+                            ".$sql_condicion."
+                            ORDER BY nombre ASC".
+                            $sql_limit);
+
+      return $gerentes;
+
+    }// Fin gerentes
+
+    function crearProyecto($descripcion,$cliente,$socio,$gerente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto){
 
       DB::beginTransaction();
 
@@ -77,7 +123,9 @@ class ProyectoModel extends Model
                     "fecha_contratacion" => $fechaContratacion,
                     "id_estatus" => $estatus,
                     "id_moneda" => $id_moneda,
-                    "monto" => $monto);
+                    "monto" => $monto,
+                    "id_socio" => $socio,
+                    "id_gerente" => $gerente);
 
       $idProyecto = DB::table('tbl_proyecto')->insertGetId($data);
 
@@ -168,7 +216,17 @@ class ProyectoModel extends Model
                                       (SELECT SUM(horas_contratadas) FROM tbl_proyecto_divisiones WHERE id_proyecto = p.id) AS horas_contratadas,
                                       DATE_FORMAT(p.fecha_contratacion, "%d/%m/%Y") AS fecha_contratacion,
                                       e.descripcion AS estatus,
-                                      c.razon_social as cliente
+                                      c.razon_social as cliente,
+                                      (
+                                        SELECT CONCAT(u2.nombre_1," ",u2.nombre_2," ",u2.apellido_1," ",u2.apellido_2)
+                                        FROM tbl_usuario u2
+                                        WHERE u2.id = p.id_socio
+                                      ) AS socio,
+                                      (
+                                        SELECT CONCAT(u3.nombre_1," ",u3.nombre_2," ",u3.apellido_1," ",u3.apellido_2)
+                                        FROM tbl_usuario u3
+                                        WHERE u3.id = p.id_gerente
+                                      ) AS gerente
                                FROM tbl_proyecto p,
                                     tbl_estatus e,
                                     tbl_cliente c
