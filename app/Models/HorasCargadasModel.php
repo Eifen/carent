@@ -209,7 +209,7 @@ class HorasCargadasModel extends Model
     }
     }
 
-    function EliminarHorasCargadas($idHcargadas,$usuario_id,$fechab,$direccion_ip){
+    function EliminarHorasCargadas($idHcargadas){
 
       DB::beginTransaction();
       $horas = DB::select('SELECT * FROM tbl_horas_cargables WHERE id = '.$idHcargadas.'');
