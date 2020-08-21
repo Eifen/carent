@@ -218,7 +218,7 @@
               <thead>
                 <tr>
                   <th scope="col">Nombre</th>
-                  <th scope="col">Cargó</th>
+                  <th scope="col">Cargo</th>
                   <th scope="col">Estatus</th>
                   <th scope="col">Asignar horas</th>
                   <th scope="col">Horas Cargadas</th>
