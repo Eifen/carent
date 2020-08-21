@@ -129,7 +129,7 @@ class HorasCargadasController extends Controller
 
       $modelo = new HorasCargadasModel();
       $idHoraCargada = $request->input("id");
-      $response = $modelo->EliminarHorasCargadas($idHoraCargada,$usuario_id,$fechab,$direccion_ip);
+      $response = $modelo->EliminarHorasCargadas($idHoraCargada);
 
       if($response["response"]){
 
