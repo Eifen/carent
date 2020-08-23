@@ -62,15 +62,27 @@ class FacturacionModel extends Model
 
     function proyectosFacturacion(){
 
-      /*$sql = DB::select('SELECT e.valor,
-                                e.descripcion
-                         FROM tbl_estatus e
-                         WHERE e.tabla = "tbl_proyecto"
-                         ORDER BY e.descripcion ASC');
+      $sql = DB::select('SELECT p.id,
+                                p.descripcion AS proyecto,
+                                CONCAT(so.nombre_1," ",so.nombre_2," ",so.apellido_1," ",so.apellido_2) AS socio,
+                                CONCAT(ge.nombre_1," ",ge.nombre_2," ",ge.apellido_1," ",ge.apellido_2) AS gerente,
+                                DATE_FORMAT(p.fecha_contratacion, "%d/%m/%Y") AS fecha_contratacion,
+                                FORMAT(p.monto,2,"de_DE") AS monto_contratado,
+                                mo.simbolo AS simbolo_moneda,
+                                e.descripcion estatus
+                         FROM tbl_proyecto p,
+                              tbl_usuario so,
+                              tbl_usuario ge,
+                              tbl_monedas mo,
+                              tbl_estatus e
+                         WHERE p.id_socio = so.id
+                         AND p.id_gerente = ge.id
+                         AND p.id_moneda = mo.id
+                         AND p.id_estatus = e.valor
+                         AND e.tabla = "tbl_proyecto"
+                         ORDER BY p.descripcion ASC');
 
-      return $sql;*/
-
-      return [];
+      return $sql;
 
     }
 

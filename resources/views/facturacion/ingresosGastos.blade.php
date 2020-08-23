@@ -126,7 +126,7 @@
           </b-col>
 
           <b-col cols="12" sm="11">
-            <b-table hover :fields="tabla.encabezado" :items="tabla.registros" responsive show-empty :busy="tabla.cargando">
+            <b-table hover :fields="tabla.encabezado" :items="tabla.registros" responsive show-empty :busy="tabla.cargando" :small="true">
               <template v-slot:table-busy>
                 <div class="text-center text-primary">
                   <b-spinner class="align-middle"></b-spinner>
@@ -156,7 +156,7 @@
                   :variant="data.item.btn.variante">@{{ data.item.btn.texto }}</b-button>
               </template>
               <template v-slot:cell(editar)="data">
-                <a :href="'/formModificarCaja/'+data.item.id" target="_self" :id="'editar-'+data.item.id" v-if="permisos.actualizar">
+                <a :href="'/formModificarCaja/'+data.item.id" target="_self" :id="'editar-'+data.item.id" v-if="permisos.permiso_actualizar">
                    <b-icon-gear class="icono"></b-icon-gear>
                 </a>
                 <b-tooltip :target="'editar-'+data.item.id" triggers="hover">
@@ -172,7 +172,7 @@
                         <vue-numeric :max="paginador.max"
                                      :min="1"
                                      :precision="0"
-                                     class="form-control text-center"
+                                     class="form-control text-center form-control-sm"
                                      type="text"
                                      v-model="paginador.pagina"></vue-numeric>
                       </div>
