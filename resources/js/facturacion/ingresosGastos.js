@@ -187,19 +187,6 @@ new Vue({
           default: variante = "light";
         }
 
-        const mostrarBtn = {
-          href: "/cajaPagarMulta/"+item.id,
-          mostrar: false,
-          texto: "",
-          variante: ""
-        }
-
-        if(item.id_estatus === 1){
-          mostrarBtn.mostrar = true;
-          mostrarBtn.texto = "Abrir Caja";
-          mostrarBtn.variante = "outline-success";
-        }
-
         const proyecto = {
           numero: (i + 1),
           proyecto: item.proyecto,
@@ -208,8 +195,7 @@ new Vue({
           estatus: item.estatus,
           id: item.id,
           id_estatus: item.id_estatus,
-          variante: variante,
-          btn: mostrarBtn
+          variante: variante
         };
 
         registros.push(proyecto);

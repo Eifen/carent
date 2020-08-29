@@ -147,20 +147,12 @@
               <template v-slot:cell(estatus)="data">
                 <b-badge :variant="data.item.variante">@{{ data.item.estatus }}</b-badge>
               </template>
-              <template v-slot:cell(opciones)="data">
-                <b-button
-                  :href="data.item.btn.href"
-                  class="btn-accion"
-                  size="sm"
-                  v-if="data.item.btn.mostrar"
-                  :variant="data.item.btn.variante">@{{ data.item.btn.texto }}</b-button>
-              </template>
               <template v-slot:cell(editar)="data">
-                <a :href="'/formModificarCaja/'+data.item.id" target="_self" :id="'editar-'+data.item.id" v-if="permisos.permiso_actualizar">
+                <a :href="'/formAgregarIngresosGastos/'+data.item.id" target="_self" :id="'editar-'+data.item.id" v-if="permisos.permiso_actualizar">
                    <b-icon-gear class="icono"></b-icon-gear>
                 </a>
                 <b-tooltip :target="'editar-'+data.item.id" triggers="hover">
-                  Editar
+                  Agregar Factura/Gasto
                 </b-tooltip>
               </template>
               <template v-slot:custom-foot v-if="tabla.registros.length > 0">

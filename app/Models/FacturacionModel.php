@@ -63,13 +63,14 @@ class FacturacionModel extends Model
     function proyectosFacturacion(){
 
       $sql = DB::select('SELECT p.id,
-                                p.descripcion AS proyecto,
+                                UPPER(p.descripcion) AS proyecto,
                                 CONCAT(so.nombre_1," ",so.nombre_2," ",so.apellido_1," ",so.apellido_2) AS socio,
                                 CONCAT(ge.nombre_1," ",ge.nombre_2," ",ge.apellido_1," ",ge.apellido_2) AS gerente,
                                 DATE_FORMAT(p.fecha_contratacion, "%d/%m/%Y") AS fecha_contratacion,
                                 FORMAT(p.monto,2,"de_DE") AS monto_contratado,
                                 mo.simbolo AS simbolo_moneda,
-                                e.descripcion estatus
+                                e.descripcion estatus,
+                                p.id_estatus
                          FROM tbl_proyecto p,
                               tbl_usuario so,
                               tbl_usuario ge,
@@ -83,6 +84,77 @@ class FacturacionModel extends Model
                          ORDER BY p.descripcion ASC');
 
       return $sql;
+
+    }
+
+    function proyecto($id_proyecto){
+
+      $sql = DB::select('SELECT p.id,
+                                UPPER(p.descripcion) AS proyecto,
+                                LOWER(CONCAT(so.nombre_1," ",so.nombre_2," ",so.apellido_1," ",so.apellido_2)) AS socio,
+                                LOWER(CONCAT(ge.nombre_1," ",ge.nombre_2," ",ge.apellido_1," ",ge.apellido_2)) AS gerente,
+                                DATE_FORMAT(p.fecha_contratacion, "%d/%m/%Y") AS fecha_contratacion,
+                                FORMAT(p.monto,2,"de_DE") AS monto_contratado,
+                                mo.simbolo AS simbolo_moneda,
+                                e.descripcion estatus,
+                                p.id_estatus
+                         FROM tbl_proyecto p,
+                              tbl_usuario so,
+                              tbl_usuario ge,
+                              tbl_monedas mo,
+                              tbl_estatus e
+                         WHERE p.id = ?
+                         AND p.id_socio = so.id
+                         AND p.id_gerente = ge.id
+                         AND p.id_moneda = mo.id
+                         AND p.id_estatus = e.valor
+                         AND e.tabla = "tbl_proyecto"', [$id_proyecto]);
+
+      return $sql[0];
+
+    }
+
+    function conceptosFactura(){
+
+      $sql = DB::select('SELECT cf.id,
+                                cf.descripcion,
+                                cf.id_tipo_concepto_factura
+                         FROM tbl_concepto_factura cf
+                         WHERE cf.id_estatus = 1
+                         ORDER BY descripcion ASC');
+
+      return $sql;
+
+    }
+
+    function proyectoFacturasCargadas($id_proyecto){
+
+      $sql = DB::select('SELECT fp.id,
+                                fp.numero_factura,
+                                fp.numero_control,
+                                fp.observaciones,
+                                cf.descripcion AS concepto,
+                                fp.fecha_factura,
+                                CONCAT(fu.nombre_1," ",fu.nombre_2," ",fu.apellido_1," ",fu.apellido_2) AS facturador
+                         FROM tbl_factura_proyecto fp,
+                              tbl_concepto_factura cf,
+                              tbl_usuario fu
+                         WHERE fp.id_concepto_factura = cf.id
+                         AND fp.id_facturador = fu.id
+                         AND fp.id_proyecto = ?
+                         AND fp.id_estatus = 1', [$id_proyecto]);
+
+      return $sql;
+
+    }
+
+    function registrarFactura($parametros){
+
+      if(DB::table('tbl_factura_proyecto')->insert($parametros)){
+        return true;
+      }else{
+        return false;
+      }
 
     }
 

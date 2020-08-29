@@ -1,0 +1,292 @@
+html{
+  overflow-x: hidden;
+}
+
+[v-cloak] {
+  display: none;
+}
+
+#app{
+  background-color: #E9ECEF;
+
+  .titulo-principal{
+    color: rgba(0,0,0,0.7);
+    margin-bottom: 20px;
+    margin-top: 50px;
+  }
+
+  .card{
+    box-shadow: 0 .15rem 1.55rem 0 rgba(58,59,69,.15);
+    transition: all .3s;
+
+    &:hover{
+      box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+    }
+
+    .card-body{
+      padding: 0.85rem;
+    }
+
+    &.card-proyecto{
+      border-left: 4px solid #091F40;
+
+      .card-text{
+        margin-bottom: 0.3rem;
+
+        .titulo{
+          color: rgba(0,0,0,0.8);
+          font-weight: 600;
+          text-decoration: underline;
+        }
+
+      }
+
+    }
+
+    &.card-monto-contratado,
+    &.card-monto-facturado,
+    &.card-monto-gasto{
+      margin-top: 20px;
+
+      .card-text{
+
+        &:nth-child(1){
+          margin-bottom: 0px;
+        }
+
+        .titulo{
+          font-size: 12px;
+          font-weight: bold;
+        }
+
+      }
+
+      .monto{
+        color: rgba(0,0,0,0.8);
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+    }
+
+    &.card-monto-contratado{
+      border-left: 4px solid #36B9CC;
+
+      .titulo{
+        color: #36B9CC;
+      }
+
+    }
+
+    &.card-monto-facturado{
+      border-left: 4px solid #1CC88A;
+
+      .titulo{
+        color: #1CC88A;
+      }
+
+    }
+
+    &.card-monto-gasto{
+      border-left: 4px solid #DD3D31;
+
+      .titulo{
+        color: #DD3D31;
+      }
+
+    }
+
+  }// Fin .card
+
+  .wrapper-forms {
+    margin: 0px !important;
+    padding-bottom: 50px;
+    padding-top: 20px;
+
+    @media (max-width: 575px) {
+      padding-bottom: 0px;
+    }
+
+    form{
+      background-color: white;
+      border:1px solid rgba(0,0,0,0.13);
+      border-radius: 3px;
+      margin-bottom: 50px;
+      padding: 15px;
+      transition: all .3s;
+
+      &:hover{
+        box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+      }
+
+      > div{
+
+        &.form-group{
+
+          &:nth-last-child(2){
+            margin-top: 20px;
+          }
+
+          label{
+            color:#091F40;
+          }
+
+          .form-control{
+            border-radius: 2px;
+
+            &:disabled{
+              cursor: not-allowed;
+            }
+
+          }
+
+          .btn{
+
+            &:disabled{
+              cursor: not-allowed;
+            }
+
+            &.btn-outline-success{
+              border: 2px solid;
+              font-weight: 600;
+            }
+
+          }
+
+        }// Fin .form-group
+
+      }
+
+    }// Fin form
+
+    .table{
+      background-color: white;
+      border:1px solid rgba(0,0,0,0.13);
+      border-radius: 3px;
+      margin-bottom: 50px;
+      padding: 15px;
+      transition: all .3s;
+
+      &:hover{
+        box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+      }
+
+      thead{
+
+        tr{
+
+          th{
+            background-color: #091F40;
+            color:white;
+            text-align: center;
+          }
+
+        }
+
+      }// Fin thead
+
+      tbody{
+
+        tr{
+          transition: all .3s;
+
+          &:hover{
+            background-color: rgba(246,168,28,.5);
+          }
+
+          th{
+            text-align: center;
+          }
+
+          td{
+            text-align: center;
+
+            a{
+              color: #212529 !important;
+            }
+
+            .fas,
+            .far{
+
+              &:hover{
+                cursor: pointer;
+              }
+
+            }
+
+          }// Fin td
+
+        }// Fin tr
+
+      }// Fin tbody
+
+      tfoot{
+
+        tr{
+
+          td{
+
+            > div{
+              display: table;
+              margin-left: auto;
+              margin-right: auto;
+
+              > div{
+                display: table-cell;
+                padding-left: 5px;
+                padding-right: 5px;
+                vertical-align: middle;
+
+                .form-control{
+                  max-width: 70px;
+                }
+
+                .icono{
+                  color: #091F40;
+                  font-size: 1.5rem;
+
+                  &:hover{
+                    color: #000000;
+                    cursor: pointer;
+                  }
+
+                }
+
+              }
+
+            }
+
+          }
+
+        }
+
+      }// Fin tfoot
+
+    }// Fin table
+
+    .wrapper-alert{
+      margin-top: 15px;
+
+      > div{
+        padding-left: 0px;
+        padding-right: 0px;
+
+        .alert{
+          margin-bottom: 0px;
+          text-align: center;
+          width: 100%;
+        }
+
+      }
+
+    }
+
+  }// Fin .wrapper-forms
+
+  .wrapper-alert-general{
+    min-height: calc(100vh - 62px);
+    padding-bottom: 50px;
+    padding-top: 100px;
+  }
+
+}// Fin #app
