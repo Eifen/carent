@@ -12,6 +12,11 @@ html {
   margin-bottom: 20px;
   margin-top: 50px;
 }
+#app .titulo-secundario {
+  color: rgba(0, 0, 0, 0.7);
+  margin-bottom: 20px;
+  margin-top: 50px;
+}
 #app .card {
   box-shadow: 0 0.15rem 1.55rem 0 rgba(58, 59, 69, 0.15);
   -webkit-transition: all 0.3s;
@@ -77,7 +82,7 @@ html {
 }
 #app .wrapper-forms {
   margin: 0px !important;
-  padding-bottom: 50px;
+  padding-bottom: 20px;
   padding-top: 20px;
 }
 @media (max-width: 575px) {
@@ -149,9 +154,18 @@ html {
 #app .wrapper-forms .table tbody tr td a {
   color: #212529 !important;
 }
-#app .wrapper-forms .table tbody tr td .fas:hover,
-#app .wrapper-forms .table tbody tr td .far:hover {
+#app .wrapper-forms .table tbody tr td .icono {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+#app .wrapper-forms .table tbody tr td .icono:hover {
   cursor: pointer;
+}
+#app .wrapper-forms .table tbody tr td .icono:hover.bi-pencil {
+  color: #17A2B8;
+}
+#app .wrapper-forms .table tbody tr td .icono:hover.bi-trash {
+  color: #DD3D31;
 }
 #app .wrapper-forms .table tfoot tr td > div {
   display: table;

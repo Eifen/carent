@@ -10,6 +10,7 @@ import axios from 'axios';
 import Vuelidate from 'vuelidate';
 import { required } from 'vuelidate/lib/validators';
 import zenscroll from 'zenscroll';
+import AutoNumeric from 'autonumeric';
 
 Vue.component('loading', require('../components/loading.vue').default);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
@@ -55,6 +56,7 @@ new Vue({
       campos: {
         concepto: null,
         numeroFactura: null,
+        montoFactura: null,
         fechaFactura: null,
         numeroControl: null,
         observaciones: null
@@ -69,6 +71,16 @@ new Vue({
           disabled: true,
           invalidFeedback: "",
           state: null
+        },
+        montoFactura: {
+          autonumeric: null,
+          decPlace: 2,
+          decString: ",",
+          disabled: true,
+          invalidFeedback: "",
+          simboloMoneda: "",
+          state: null,
+          thouSep: "."
         },
         fechaFactura: {
           disabled: true,
@@ -130,6 +142,9 @@ new Vue({
         numeroFactura: {
           required
         },
+        montoFactura: {
+          required
+        },
         fechaFactura: {
           required
         },
@@ -167,12 +182,15 @@ new Vue({
           socio: response.data.proyecto.socio
         }
 
+        self.form.camposAtributos.montoFactura.simboloMoneda = response.data.proyecto.simbolo_moneda;
+
         response.data.conceptos_factura.forEach((item, i) => {
           self.comboConceptos.push({text:item.descripcion, value: item.id});
         });
 
         self.form.camposAtributos.concepto.disabled = false;
         self.form.camposAtributos.numeroFactura.disabled = false;
+        self.form.camposAtributos.montoFactura.disabled = false;
         self.form.camposAtributos.fechaFactura.disabled = false;
         self.form.camposAtributos.numeroControl.disabled = false;
         self.form.camposAtributos.observaciones.disabled = false;
@@ -180,61 +198,45 @@ new Vue({
         self.form.botones.submit.html = self.form.botones.submit.htmlInit;
         self.form.botones.submit.disabled = false;
 
-        /*if(response.data.permisos.permiso_actualizar){
+        if(response.data.permisos.permiso_actualizar){
           self.tabla.encabezado = [
             { key: 'numero', label: '#' },
-            { key: 'proyecto', label: 'Proyecto' },
-            { key: 'fecha_contratacion', label: 'Fecha Contrato' },
-            { key: 'monto_contratado', label: 'Monto Contratado' },
-            'estatus',
-            { key: 'opciones', label: ' ' },
-            { key: 'editar', label: ' ' }
+            { key: 'concepto', label: 'Concepto' },
+            { key: 'movimiento', label: 'Movimiento' },
+            { key: 'numero_factura', label: 'Nº Factura' },
+            { key: 'monto_factura', label: 'Monto' },
+            { key: 'fecha_factura', label: 'Fecha Fac.' },
+            { key: 'numero_control', label: 'Nº Control' },
+            { key: 'facturador', label: 'Facturador' },
+            { key: 'opciones', label: ' ' }
           ];
         }else{
           self.tabla.encabezado = [
-           { key: 'numero', label: '#' },
-           { key: 'proyecto', label: 'Proyecto' },
-           { key: 'division', label: 'División' },
-           'estatus',
-           { key: 'opciones', label: ' ' }
+            { key: 'numero', label: '#' },
+            { key: 'concepto', label: 'Concepto' },
+            { key: 'movimiento', label: 'Movimiento' },
+            { key: 'numero_factura', label: 'Nº Factura' },
+            { key: 'monto_factura', label: 'Monto' },
+            { key: 'fecha_factura', label: 'Fecha Fac.' },
+            { key: 'numero_control', label: 'Nº Control' },
+            { key: 'facturador', label: 'Facturador' }
           ];
         }
 
-        var mostrar = false;
-        var mensaje = "";
-        var variante = "";
+        if(response.data.facturas_cargadas.length === 0){
 
-        if(response.data.proyectos.length === 0){
-          mostrar = true;
-          mensaje = "No hay proyectos por facturar";
-          variante = "warning";
+          let mensaje = "No hay facturas cargadas";
+          self.mostrarAlert(self.tabla.alert, true, "warning", mensaje, false, false, 0);
+
         }
 
-        self.mostrarAlert(self.tabla.alert, mostrar, variante, mensaje, false, false, 0);
-
-        self.tabla.registros = self.registroTabla(response.data.proyectos);
-
-        //Le asignamos los valores a las variables
-        self.comboDivisiones = response.data.divisiones;
-        self.formFiltro.proyecto.disabled = false;
-        self.formFiltro.cliente.disabled = false;
-        self.formFiltro.estatus.disabled = false;
-        self.formFiltro.divisiones.disabled = false;
-        self.formFiltro.mostrar = true;
-        self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
-        self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
+        self.tabla.registros = self.registroTabla(response.data.facturas_cargadas);
 
         self.permisos = response.data.permisos;
 
-        response.data.estatus.forEach((item, i) => {
-          self.comboEstatus.push({text : item.descripcion, value : item.valor});
-        });
-
-
-
         self.paginador.numPaginas = response.data.numero_paginas;
         self.paginador.max = parseInt(response.data.numero_paginas);
-        self.paginador.paginar = response.data.paginar;*/
+        self.paginador.paginar = response.data.paginar;
 
         self.form.mostrar = true;
         self.loading = false;
@@ -257,7 +259,31 @@ new Vue({
 
   },
   created: function () {},
-  mounted: function () {},
+  mounted: function () {
+
+    let checkDataInitReady = setInterval(() => {
+
+      if(self.form.mostrar) {
+
+        clearInterval(checkDataInitReady);
+
+        let monto = self.$refs["montoFactura"].$el
+
+        self.form.camposAtributos.montoFactura.autonumeric = new AutoNumeric(monto, {
+          decimalPlaces: 2,
+          decimalCharacter: ',',
+          digitGroupSeparator: '.',
+          emptyInputBehavior: 0,
+          maximumValue: '99999999999999999999.99',
+          minimumValue: 0,
+          modifyValueOnWheel: false
+        });
+
+      }
+
+    }, 1000);
+
+  },
   updated: function () {},
   methods:{
     mostrarAlert: function(alert, mostrar = false, variante = "", mensaje = "", iconCerrar = false, contador = false, ocultarSeg = 0){
@@ -281,6 +307,50 @@ new Vue({
       self.form.camposAtributos[refName].invalidFeedback = "";
       self.form.camposAtributos[refName].state = null;
 
+    },
+    registroTabla: function(datos){
+
+      const registros = [];
+      datos.forEach((item, i) => {
+
+        var varianteMovimiento;
+
+        switch (item.tipo_movimiento) {
+          case 1: varianteMovimiento = "success"; break;
+          case 2: varianteMovimiento = "danger"; break;
+          default: variante = "light";
+        }
+
+        const factura = {
+          numero: (i + 1),
+          concepto: item.concepto,
+          numero_factura: item.numero_factura,
+          monto_factura: item.monto_factura,
+          fecha_factura: item.fecha_factura,
+          numero_control: item.numero_control,
+          facturador: item.facturador,
+          movimiento: item.movimiento,
+          varianteMovimiento: varianteMovimiento,
+          id: item.id,
+        };
+
+        registros.push(factura);
+
+      });
+
+      return registros;
+
+    },
+    paginaAnterior: function(){
+      self.paginador.pagina = ((self.paginador.pagina - 1) === 0) ? 1 : (self.paginador.pagina - 1);
+      self.buscar();
+    },
+    paginaSiguiente: function(){
+      self.paginador.pagina = ((self.paginador.pagina + 1) > self.paginador.max) ? self.paginador.pagina : (self.paginador.pagina + 1);
+      self.buscar();
+    },
+    numeroPagina: function(e){
+      self.buscar();
     },
     registrar: async function(){
 
@@ -340,6 +410,7 @@ new Vue({
         let parametros = {
           concepto: self.form.campos.concepto,
           numero_factura: self.form.campos.numeroFactura,
+          monto_factura: self.form.camposAtributos.montoFactura.autonumeric.get(),
           fecha_factura: self.form.campos.fechaFactura,
           numero_control: self.form.campos.numeroControl,
           observaciones: self.form.campos.observaciones
@@ -360,6 +431,9 @@ new Vue({
         .then(function (response) {
 
           if(response.status === 200 && response.data.response === true){
+
+            self.tabla.registros = [];
+            self.tabla.registros = self.registroTabla(response.data.facturas_cargadas);
 
             self.form.campos.concepto = null;
             self.form.campos.numeroFactura = null;
@@ -436,48 +510,6 @@ new Vue({
       }
 
       return {mensaje:mensaje, respuesta:respuesta};
-
-    },
-
-
-
-
-
-
-
-
-
-    registroTabla: function(datos){
-
-      const registros = [];
-      datos.forEach((item, i) => {
-
-        var variante;
-
-        switch (item.id_estatus) {
-          case 1: variante = "success"; break;
-          case 2: variante = "danger"; break;
-          case 3: variante = "warning"; break;
-          case 4: variante = "warning"; break;
-          default: variante = "light";
-        }
-
-        const proyecto = {
-          numero: (i + 1),
-          proyecto: item.proyecto,
-          fecha_contratacion: item.fecha_contratacion,
-          monto_contratado: item.simbolo_moneda+''+item.monto_contratado,
-          estatus: item.estatus,
-          id: item.id,
-          id_estatus: item.id_estatus,
-          variante: variante
-        };
-
-        registros.push(proyecto);
-
-      });
-
-      return registros;
 
     },
     keyboard: function(e){

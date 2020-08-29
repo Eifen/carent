@@ -78840,17 +78840,11 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
           }];
         }
 
-        var mostrar = false;
-        var mensaje = "";
-        var variante = "";
-
         if (response.data.proyectos.length === 0) {
-          mostrar = true;
-          mensaje = "No hay proyectos por facturar";
-          variante = "warning";
+          var mensaje = "No hay proyectos por facturar";
+          self.mostrarAlert(self.tabla.alert, true, "warning", mensaje, false, false, 0);
         }
 
-        self.mostrarAlert(self.tabla.alert, mostrar, variante, mensaje, false, false, 0);
         self.tabla.registros = self.registroTabla(response.data.proyectos); //Le asignamos los valores a las variables
 
         self.comboDivisiones = response.data.divisiones;

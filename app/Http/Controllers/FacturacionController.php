@@ -83,6 +83,7 @@ class FacturacionController extends Controller
           "id_proyecto" => session("proyecto_id"),
           "id_concepto_factura" => $request["concepto"],
           "numero_factura" => strtoupper($request["numero_factura"]),
+          "monto_factura" => $request["monto_factura"],
           "numero_control" => strtoupper($request["numero_control"]),
           "observaciones" => $request["observaciones"],
           "fecha_factura" => $request["fecha_factura"],

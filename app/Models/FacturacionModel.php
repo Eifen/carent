@@ -130,12 +130,15 @@ class FacturacionModel extends Model
     function proyectoFacturasCargadas($id_proyecto){
 
       $sql = DB::select('SELECT fp.id,
-                                fp.numero_factura,
-                                fp.numero_control,
+                                UPPER(fp.numero_factura) AS numero_factura,
+                                FORMAT(fp.monto_factura,2,"de_DE") AS monto_factura,
+                                DATE_FORMAT(fp.fecha_factura, "%d/%m/%Y") AS fecha_factura,
+                                UPPER(fp.numero_control) AS numero_control,
                                 fp.observaciones,
                                 cf.descripcion AS concepto,
-                                fp.fecha_factura,
-                                CONCAT(fu.nombre_1," ",fu.nombre_2," ",fu.apellido_1," ",fu.apellido_2) AS facturador
+                                LOWER(CONCAT(fu.nombre_1," ",fu.nombre_2," ",fu.apellido_1," ",fu.apellido_2)) AS facturador,
+                                cf.id_tipo_concepto_factura AS tipo_movimiento,
+                                (SELECT descripcion FROM tbl_tipo_concepto_factura WHERE id = cf.id_tipo_concepto_factura) AS movimiento
                          FROM tbl_factura_proyecto fp,
                               tbl_concepto_factura cf,
                               tbl_usuario fu

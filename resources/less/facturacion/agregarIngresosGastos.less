@@ -15,6 +15,12 @@ html{
     margin-top: 50px;
   }
 
+  .titulo-secundario{
+    color: rgba(0,0,0,0.7);
+    margin-bottom: 20px;
+    margin-top: 50px;
+  }
+
   .card{
     box-shadow: 0 .15rem 1.55rem 0 rgba(58,59,69,.15);
     transition: all .3s;
@@ -100,7 +106,7 @@ html{
 
   .wrapper-forms {
     margin: 0px !important;
-    padding-bottom: 50px;
+    padding-bottom: 20px;
     padding-top: 20px;
 
     @media (max-width: 575px) {
@@ -149,6 +155,9 @@ html{
             &.btn-outline-success{
               border: 2px solid;
               font-weight: 600;
+
+
+
             }
 
           }
@@ -205,11 +214,21 @@ html{
               color: #212529 !important;
             }
 
-            .fas,
-            .far{
+            .icono{
+              margin-left: 5px;
+              margin-right: 5px;
 
               &:hover{
                 cursor: pointer;
+
+                &.bi-pencil{
+                  color: #17A2B8;
+                }
+
+                &.bi-trash{
+                  color: #DD3D31;
+                }
+
               }
 
             }

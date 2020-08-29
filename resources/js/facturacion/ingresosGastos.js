@@ -111,17 +111,12 @@ new Vue({
           ];
         }
 
-        var mostrar = false;
-        var mensaje = "";
-        var variante = "";
-
         if(response.data.proyectos.length === 0){
-          mostrar = true;
-          mensaje = "No hay proyectos por facturar";
-          variante = "warning";
-        }
 
-        self.mostrarAlert(self.tabla.alert, mostrar, variante, mensaje, false, false, 0);
+          let mensaje = "No hay proyectos por facturar";
+          self.mostrarAlert(self.tabla.alert, true, "warning", mensaje, false, false, 0);
+
+        }
 
         self.tabla.registros = self.registroTabla(response.data.proyectos);
 

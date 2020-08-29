@@ -126,6 +126,24 @@
                   v-model="$v.form.campos.numeroFactura.$model"></b-form-input>
               </b-form-group>
               <b-form-group
+                :invalid-feedback="form.camposAtributos.montoFactura.invalidFeedback"
+                class="col-12 col-sm-6 col-md-3"
+                label="Monto Factura"
+                label-for="montoFactura"
+                id="group-montoFactura">
+                <b-input-group :prepend="form.camposAtributos.montoFactura.simboloMoneda" size="sm">
+                  <b-form-input
+                    @input="limpiarMensajeError('montoFactura')"
+                    :disabled="form.camposAtributos.montoFactura.disabled"
+                    :state="form.camposAtributos.montoFactura.state"
+                    autocomplete="off"
+                    id="montoFactura"
+                    ref="montoFactura"
+                    type="text"
+                    v-model.trim="$v.form.campos.montoFactura.$model"></b-form-input>
+                </b-input-group>
+              </b-form-group>
+              <b-form-group
                 :invalid-feedback="form.camposAtributos.fechaFactura.invalidFeedback"
                 class="col-12 col-sm-6 col-md-3"
                 label="Fecha de la Factura:"
@@ -148,7 +166,7 @@
               </b-form-group>
               <b-form-group
                 :invalid-feedback="form.camposAtributos.numeroControl.invalidFeedback"
-                class="col-12 col-sm-6 col-md-3"
+                class="col-12"
                 description="Ejemplo: CONTROL-1"
                 label="N° de Control"
                 label-for="numeroControl"
@@ -209,6 +227,80 @@
                 </alert>
               </b-form-group>
             </b-form>
+          </b-col>
+        </b-row>
+
+        <b-row v-cloak>
+          <b-col cols="12" sm="11" md="9" lg="8" v-if="form.mostrar">
+            <h5 class="titulo-secundario">Facturas Asociadas al Proyecto</h5>
+          </b-col>
+        </b-row>
+
+        <b-row class="wrapper-forms" v-cloak v-if="form.mostrar">
+          <b-col cols="12">
+            <b-table hover :fields="tabla.encabezado" :items="tabla.registros" responsive show-empty :busy="tabla.cargando" :small="true">
+              <template v-slot:table-busy>
+                <div class="text-center text-primary">
+                  <b-spinner class="align-middle"></b-spinner>
+                </div>
+              </template>
+              <template v-slot:empty="scope" v-if="tabla.alert.mostrar">
+                <alert :contador="tabla.alert.contador"
+                       :icono-cerrar="tabla.alert.iconCerrar"
+                       :mensaje="tabla.alert.mensaje"
+                       :mostrar="tabla.alert.mostrar"
+                       :ocultar-seg="tabla.alert.ocultarSeg"
+                       :variante="tabla.alert.variante">
+                </alert>
+              </template>
+              <template v-slot:cell(numero)="data">
+                <b>@{{ data.item.numero }}</b>
+              </template>
+              <template v-slot:cell(movimiento)="data">
+                <b-badge :variant="data.item.varianteMovimiento" class="text-capitalize">@{{ data.item.movimiento }}</b-badge>
+              </template>
+              <template v-slot:cell(facturador)="data">
+                <span class="text-capitalize">@{{ data.item.facturador }}<span>
+              </template>
+              <template v-slot:cell(opciones)="data">
+                <a :id="'editar-'+data.item.id" v-if="permisos.permiso_actualizar">
+                   <b-icon-pencil class="icono"></b-icon-pencil>
+                </a>
+                <a :id="'eliminar-'+data.item.id" v-if="permisos.permiso_actualizar">
+                   <b-icon-trash class="icono"></b-icon-trash>
+                </a>
+                <b-tooltip :target="'editar-'+data.item.id" triggers="hover">
+                  Editar Factura
+                </b-tooltip>
+                <b-tooltip :target="'eliminar-'+data.item.id" triggers="hover">
+                  Eliminar Factura
+                </b-tooltip>
+              </template>
+              <template v-slot:custom-foot v-if="tabla.registros.length > 0">
+                <b-tr>
+                  <b-td colspan="8">
+                    <div>
+                      <div><b>Página</b></div>
+                      <div class="wrapper-input" v-on:keyup="numeroPagina">
+                        <vue-numeric :max="paginador.max"
+                                     :min="1"
+                                     :precision="0"
+                                     class="form-control text-center form-control-sm"
+                                     type="text"
+                                     v-model="paginador.pagina"></vue-numeric>
+                      </div>
+                      <div><b>de @{{ paginador.numPaginas }}</b></div>
+                      <div>
+                        <b-icon-chevron-compact-left class="icono border rounded" v-on:click="paginaAnterior"></b-icon-chevron-compact-left>
+                      </div>
+                      <div>
+                        <b-icon-chevron-compact-right class="icono border rounded" v-on:click="paginaSiguiente"></b-icon-chevron-compact-right>
+                      </div>
+                    </div>
+                  </b-td>
+                </b-tr>
+              </template>
+            </b-table>
           </b-col>
         </b-row>
 
