@@ -283,7 +283,7 @@
           </b-col>
         </b-row>
 
-        <b-row class="wrapper-forms" v-cloak v-if="form.mostrar">
+        <b-row class="wrapper-table" v-cloak v-if="form.mostrar">
           <b-col cols="12">
             <b-table hover :fields="tabla.encabezado" :items="tabla.registros" responsive show-empty :busy="tabla.cargando" :small="true">
               <template v-slot:table-busy>

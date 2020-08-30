@@ -14,8 +14,6 @@ html {
 }
 #app .titulo-secundario {
   color: rgba(0, 0, 0, 0.7);
-  margin-bottom: 20px;
-  margin-top: 50px;
 }
 #app .card {
   box-shadow: 0 0.15rem 1.55rem 0 rgba(58, 59, 69, 0.15);
@@ -82,7 +80,7 @@ html {
 }
 #app .wrapper-forms {
   margin: 0px !important;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
   padding-top: 20px;
 }
 @media (max-width: 575px) {
@@ -121,74 +119,6 @@ html {
   border: 2px solid;
   font-weight: 600;
 }
-#app .wrapper-forms .table {
-  background-color: white;
-  border: 1px solid rgba(0, 0, 0, 0.13);
-  border-radius: 3px;
-  margin-bottom: 50px;
-  padding: 15px;
-  -webkit-transition: all 0.3s;
-  transition: all 0.3s;
-}
-#app .wrapper-forms .table:hover {
-  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
-}
-#app .wrapper-forms .table thead tr th {
-  background-color: #091F40;
-  color: white;
-  text-align: center;
-}
-#app .wrapper-forms .table tbody tr {
-  -webkit-transition: all 0.3s;
-  transition: all 0.3s;
-}
-#app .wrapper-forms .table tbody tr:hover {
-  background-color: rgba(246, 168, 28, 0.5);
-}
-#app .wrapper-forms .table tbody tr th {
-  text-align: center;
-}
-#app .wrapper-forms .table tbody tr td {
-  text-align: center;
-}
-#app .wrapper-forms .table tbody tr td a {
-  color: #212529 !important;
-}
-#app .wrapper-forms .table tbody tr td .icono {
-  margin-left: 5px;
-  margin-right: 5px;
-}
-#app .wrapper-forms .table tbody tr td .icono:hover {
-  cursor: pointer;
-}
-#app .wrapper-forms .table tbody tr td .icono:hover.bi-pencil {
-  color: #17A2B8;
-}
-#app .wrapper-forms .table tbody tr td .icono:hover.bi-trash {
-  color: #DD3D31;
-}
-#app .wrapper-forms .table tfoot tr td > div {
-  display: table;
-  margin-left: auto;
-  margin-right: auto;
-}
-#app .wrapper-forms .table tfoot tr td > div > div {
-  display: table-cell;
-  padding-left: 5px;
-  padding-right: 5px;
-  vertical-align: middle;
-}
-#app .wrapper-forms .table tfoot tr td > div > div .form-control {
-  max-width: 70px;
-}
-#app .wrapper-forms .table tfoot tr td > div > div .icono {
-  color: #091F40;
-  font-size: 1.5rem;
-}
-#app .wrapper-forms .table tfoot tr td > div > div .icono:hover {
-  color: #000000;
-  cursor: pointer;
-}
 #app .wrapper-forms .wrapper-alert {
   margin-top: 15px;
 }
@@ -200,6 +130,78 @@ html {
   margin-bottom: 0px;
   text-align: center;
   width: 100%;
+}
+#app .wrapper-table {
+  padding-bottom: 50px;
+  padding-top: 20px;
+}
+#app .wrapper-table .table {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.13);
+  border-radius: 3px;
+  margin-bottom: 50px;
+  padding: 15px;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+#app .wrapper-table .table:hover {
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+}
+#app .wrapper-table .table thead tr th {
+  background-color: #091F40;
+  color: white;
+  text-align: center;
+}
+#app .wrapper-table .table tbody tr {
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+#app .wrapper-table .table tbody tr:hover {
+  background-color: rgba(246, 168, 28, 0.5);
+}
+#app .wrapper-table .table tbody tr th {
+  text-align: center;
+}
+#app .wrapper-table .table tbody tr td {
+  text-align: center;
+}
+#app .wrapper-table .table tbody tr td a {
+  color: #212529 !important;
+}
+#app .wrapper-table .table tbody tr td .icono {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+#app .wrapper-table .table tbody tr td .icono:hover {
+  cursor: pointer;
+}
+#app .wrapper-table .table tbody tr td .icono:hover.bi-pencil {
+  color: #17A2B8;
+}
+#app .wrapper-table .table tbody tr td .icono:hover.bi-trash {
+  color: #DD3D31;
+}
+#app .wrapper-table .table tfoot tr td > div {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+}
+#app .wrapper-table .table tfoot tr td > div > div {
+  display: table-cell;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: middle;
+}
+#app .wrapper-table .table tfoot tr td > div > div .form-control {
+  max-width: 70px;
+}
+#app .wrapper-table .table tfoot tr td > div > div .icono {
+  color: #091F40;
+  font-size: 1.5rem;
+}
+#app .wrapper-table .table tfoot tr td > div > div .icono:hover {
+  color: #000000;
+  cursor: pointer;
 }
 #app .wrapper-alert-general {
   min-height: calc(100vh - 62px);
