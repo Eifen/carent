@@ -215,7 +215,6 @@ new Vue({
             { key: 'monto_factura', label: 'Monto' },
             { key: 'fecha_factura', label: 'Fecha Fac.' },
             { key: 'numero_control', label: 'Nº Control' },
-            { key: 'facturador', label: 'Facturador' },
             { key: 'opciones', label: ' ' }
           ];
         }else{
@@ -226,8 +225,7 @@ new Vue({
             { key: 'numero_factura', label: 'Nº Factura' },
             { key: 'monto_factura', label: 'Monto' },
             { key: 'fecha_factura', label: 'Fecha Fac.' },
-            { key: 'numero_control', label: 'Nº Control' },
-            { key: 'facturador', label: 'Facturador' }
+            { key: 'numero_control', label: 'Nº Control' }
           ];
         }
 
@@ -336,7 +334,6 @@ new Vue({
           monto_factura: item.monto_factura,
           fecha_factura: item.fecha_factura,
           numero_control: item.numero_control,
-          facturador: item.facturador,
           movimiento: item.movimiento,
           varianteMovimiento: varianteMovimiento,
           id: item.id,

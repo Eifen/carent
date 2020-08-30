@@ -35,6 +35,11 @@
                 <span class="text-lowercase">@{{ form.info.proyecto }}</span>
               </b-card-text>
               <b-card-text>
+                <b-icon-calendar2></b-icon-calendar2>
+                <span class="titulo">FECHA DE CONTRATACIÓN/APERTURA:</span>
+                <span>@{{ form.info.fecha_contratacion }}</span>
+              </b-card-text>
+              <b-card-text>
                 <b-icon-person></b-icon-person>
                 <span class="titulo">SOCIO:</span>
                 <span class="text-capitalize">@{{ form.info.socio }}</span>
@@ -72,7 +77,7 @@
           <b-col cols="12" md="6" lg="4">
             <b-card class="text-left card-monto-gasto">
               <b-card-text>
-                <span class="titulo">MONTO GASTOS</span>
+                <span class="titulo">MONTO GASTOS NO FACTURABLES</span>
               </b-card-text>
               <b-card-text>
                 <span class="monto">@{{ form.info.monto_gastos }}</span>
@@ -277,9 +282,6 @@
               </template>
               <template v-slot:cell(movimiento)="data">
                 <b-badge :variant="data.item.varianteMovimiento" class="text-capitalize">@{{ data.item.movimiento }}</b-badge>
-              </template>
-              <template v-slot:cell(facturador)="data">
-                <span class="text-capitalize">@{{ data.item.facturador }}<span>
               </template>
               <template v-slot:cell(opciones)="data">
                 <a :id="'editar-'+data.item.id" v-if="permisos.permiso_actualizar">
