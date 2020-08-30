@@ -317,7 +317,7 @@
                   Editar Factura
                 </b-tooltip>
                 <b-tooltip :target="'eliminar-'+data.item.id" triggers="hover">
-                  Eliminar Factura
+                  Anular Factura
                 </b-tooltip>
               </template>
               <template v-slot:custom-foot v-if="tabla.registros.length > 0">
