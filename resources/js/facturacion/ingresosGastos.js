@@ -1,8 +1,9 @@
 require('bootstrap');
 import Vue from 'vue';
-import { BootstrapVue } from 'bootstrap-vue';
+import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import VueNumeric from 'vue-numeric';
 import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 import axios from 'axios';
@@ -11,7 +12,9 @@ Vue.component('loading', require('../components/loading.vue').default);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
 Vue.component('alert',require('../components/alert.vue').default);
 Vue.use(BootstrapVue);
+Vue.use(BootstrapVueIcons);
 Vue.component('multiselect', Multiselect);
+Vue.use(VueNumeric);
 
 new Vue({
 
@@ -63,6 +66,7 @@ new Vue({
       pagina:1,
       paginar: 0
     },
+    permisos: null,
     tabla: {
       alert:{
         contador: false,
@@ -91,7 +95,8 @@ new Vue({
           self.tabla.encabezado = [
             { key: 'numero', label: '#' },
             { key: 'proyecto', label: 'Proyecto' },
-            { key: 'division', label: 'División' },
+            { key: 'fecha_contratacion', label: 'Fecha Contrato' },
+            { key: 'monto_contratado', label: 'Monto Contratado' },
             'estatus',
             { key: 'opciones', label: ' ' },
             { key: 'editar', label: ' ' }
@@ -106,17 +111,12 @@ new Vue({
           ];
         }
 
-        var mostrar = false;
-        var mensaje = "";
-        var variante = "";
-
         if(response.data.proyectos.length === 0){
-          mostrar = true;
-          mensaje = "No hay proyectos por facturar";
-          variante = "warning";
-        }
 
-        self.mostrarAlert(self.tabla.alert, mostrar, variante, mensaje, false, false, 0);
+          let mensaje = "No hay proyectos por facturar";
+          self.mostrarAlert(self.tabla.alert, true, "warning", mensaje, false, false, 0);
+
+        }
 
         self.tabla.registros = self.registroTabla(response.data.proyectos);
 
@@ -129,6 +129,8 @@ new Vue({
         self.formFiltro.mostrar = true;
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
         self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
+
+        self.permisos = response.data.permisos;
 
         response.data.estatus.forEach((item, i) => {
           self.comboEstatus.push({text : item.descripcion, value : item.valor});
@@ -180,36 +182,15 @@ new Vue({
           default: variante = "light";
         }
 
-        const mostrarBtn = {
-          href: "/cajaPagarMulta/"+item.id,
-          mostrar: false,
-          texto: "",
-          variante: ""
-        }
-
-        if(item.id_estatus === 1 && item.caja_abierta === 0){
-          mostrarBtn.mostrar = true;
-          mostrarBtn.texto = "Abrir Caja";
-          mostrarBtn.variante = "outline-success";
-        }else if(item.id_estatus === 3 && item.caja_abierta === 1 && item.entrar_en_caja === 1){
-          mostrarBtn.mostrar = true;
-          mostrarBtn.texto = "Entrar en la Caja";
-          mostrarBtn.variante = "success";
-        }
-
         const proyecto = {
           numero: (i + 1),
-          descripcion: item.descripcion,
-          sucursal: item.sucursal,
-          municipio: item.municipio,
-          parroquia: item.parroquia,
+          proyecto: item.proyecto,
+          fecha_contratacion: item.fecha_contratacion,
+          monto_contratado: item.simbolo_moneda+''+item.monto_contratado,
           estatus: item.estatus,
           id: item.id,
           id_estatus: item.id_estatus,
-          variante: variante,
-          btn: mostrarBtn,
-          cajero: item.cajero,
-          caja_abierta: item.caja_abierta
+          variante: variante
         };
 
         registros.push(proyecto);
@@ -317,6 +298,17 @@ new Vue({
 
       });
 
+    },
+    paginaAnterior: function(){
+      self.paginador.pagina = ((self.paginador.pagina - 1) === 0) ? 1 : (self.paginador.pagina - 1);
+      self.buscar();
+    },
+    paginaSiguiente: function(){
+      self.paginador.pagina = ((self.paginador.pagina + 1) > self.paginador.max) ? self.paginador.pagina : (self.paginador.pagina + 1);
+      self.buscar();
+    },
+    numeroPagina: function(e){
+      self.buscar();
     }
   }
 

@@ -90,7 +90,7 @@ Route::get('/dataInicialNuevoProyecto', 'ProyectoController@dataInicialNuevoProy
 Route::get('/proyectos', function() {return view('proyecto/formBuscarProyectos');})->middleware('usuario.session');
 Route::get('/dataInicialListadoProyectos', 'ProyectoController@dataInicialListadoProyectos');
 Route::get('/buscarProyectos', 'ProyectoController@buscarProyectos');
-Route::get('/formModificarProyecto/{idProyecto}', 'ProyectoController@formModificarProyecto')->where('idProyecto', '[0-9]+');
+Route::get('/formModificarProyecto/{idProyecto}', 'ProyectoController@formModificarProyecto')->where('idProyecto', '[0-9]+')->middleware('usuario.session');
 Route::get('/detalleProyectoModificar', 'ProyectoController@detalleProyectoModificar');
 Route::get('/proyectoDivision', function() {return view('proyecto/proyectoDivision');})->middleware('usuario.session');
 Route::get('/asignarProyectos', 'ProyectoController@asignarProyectos');
@@ -114,3 +114,7 @@ Route::post('/modificarProyecto', 'ProyectoController@modificarProyecto');
 */
 Route::get('/formIngresosGastos', 'FacturacionController@formIngresosGastos')->middleware('usuario.session');
 Route::get('/dataInicialIngresosGastos', 'FacturacionController@dataInicialIngresosGastos');
+Route::get('/formAgregarIngresosGastos/{idProyecto}', 'FacturacionController@formAgregarIngresosGastos')->where('idProyecto', '[0-9]+')->middleware('usuario.session');
+Route::get('/dataInicialAgregarIngresosGastos', 'FacturacionController@dataInicialAgregarIngresosGastos')->middleware('usuario.session');
+
+Route::post('/registrarFactura', 'FacturacionController@registrarFactura');

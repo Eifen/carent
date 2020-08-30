@@ -13,6 +13,7 @@ const mix = require('laravel-mix');
 
  mix.js('resources/js/login.js', 'public/js/login.js')
     .js('resources/js/inicio.js', 'public/js/inicio.js')
+    .js('resources/js/error/permiso.js', 'public/js/error/permiso.js')
     .js('resources/js/cambiarClave.js', 'public/js/cambiarClave.js')
     .js('resources/js/usuario/nuevoUsuario.js', 'public/js/nuevoUsuario.js')
     .js('resources/js/usuario/buscarUsuario.js', 'public/js/buscarUsuario.js')
@@ -32,8 +33,10 @@ const mix = require('laravel-mix');
     .js('resources/js/horasNoCargables/formConceptosHorasNoCargables.js', 'public/js/formConceptosHorasNoCargables.js')
     .js('resources/js/horasNoCargables/formHorasNoCargables.js', 'public/js/formHorasNoCargables.js')
     .js('resources/js/facturacion/ingresosGastos.js', 'public/js/ingresosGastos.js')
+    .js('resources/js/facturacion/agregarIngresosGastos.js', 'public/js/agregarIngresosGastos.js')
     .less('resources/less/login.less', 'public/css/login.css')
     .less('resources/less/inicio.less', 'public/css/inicio.css')
+    .less('resources/less/error/permiso.less', 'public/css/error/permiso.css')
     .less('resources/less/cambiarClave.less', 'public/css/cambiarClave.css')
     .less('resources/less/usuario/nuevoUsuario.less', 'public/css/nuevoUsuario.css')
     .less('resources/less/usuario/buscarUsuario.less', 'public/css/buscarUsuario.css')
@@ -53,5 +56,6 @@ const mix = require('laravel-mix');
     .less('resources/less/horasNoCargables/formConceptosHorasNoCargables.less', 'public/css/formConceptosHorasNoCargables.css')
     .less('resources/less/horasNoCargables/formHorasNoCargables.less', 'public/css/formHorasNoCargables.css')
     .less('resources/less/facturacion/ingresosGastos.less', 'public/css/ingresosGastos.css')
+    .less('resources/less/facturacion/agregarIngresosGastos.less', 'public/css/agregarIngresosGastos.css')
     .styles('resources/css/bootstrap-4.5.0/bootstrap.min.css','public/css/bootstrap.min.css')
     .styles('resources/css/fontawesome-free-5.12.0/all.min.css','public/css/fontawesome-free-5.12.0.css');
