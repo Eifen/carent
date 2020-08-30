@@ -377,14 +377,14 @@ new Vue({
         axios.post('/registrarHorasNoCargables', parametros)
         .then(function (response) {
 
-          if(response.status === 200 && response.data.respuesta === true){
+          if(response.status === 200 && response.data.response === true){
 
             self.submitModalCargarHora.content = 'Cargar';
             self.limpiarFiltro();
 
             self.alertCargarHora = {
               class : "alert alert-success",
-              message : response.data.mensaje,
+              message : response.data.message,
               show: true
             };
 

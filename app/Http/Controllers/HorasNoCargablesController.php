@@ -151,7 +151,7 @@ class HorasNoCargablesController extends Controller
 
       $resgitrarHora = $modelo->registrarHorasNoCargables($parametrosInsert);
 
-      if($response["response"]){
+      if($resgitrarHora["response"]){
 
         $parametros = [
           "accion" => 'Registro de de horas no cargables al usuario codigo: '.$resgitrarHora["analista"],

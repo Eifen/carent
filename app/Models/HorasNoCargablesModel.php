@@ -300,7 +300,7 @@ class HorasNoCargablesModel extends Model
 
     }
 
-    function registrarHorasNoCargables($parametros,$usuario_id,$fecha,$direccion_ip){
+    function registrarHorasNoCargables($parametros){
 
       if(DB::table('tbl_horas_no_cargables')->insert($parametros)){
 
@@ -308,12 +308,12 @@ class HorasNoCargablesModel extends Model
 
         return array(
           "analista" => $analista[0]->codigo,
-          "respuesta" => true,
-          "mensaje" => "Horas cargadas con éxito!"
+          "response" => true,
+          "message" => "Horas cargadas con éxito!"
         );
-        
+
       }else{
-        return array("respuesta" => false, "mensaje" => "Error al tratar de cargar las horas, intente nuevamente!");
+        return array("response" => false, "message" => "Error al tratar de cargar las horas, intente nuevamente!");
       }
 
     }// Fin registrarHorasNoCargables
