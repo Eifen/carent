@@ -37,17 +37,6 @@ class FacturacionModel extends Model
 
     }// Fin permisosMenu
 
-    function divisiones(){
-
-      $sql = DB::select('SELECT d.id,
-                                d.descripcion
-                         FROM tbl_division d
-                         ORDER BY d.descripcion ASC');
-
-      return $sql;
-
-    }// Fin divisiones
-
     function estatusProyectos(){
 
       $sql = DB::select('SELECT e.valor,
@@ -70,16 +59,19 @@ class FacturacionModel extends Model
                                 FORMAT(p.monto,2,"de_DE") AS monto_contratado,
                                 mo.simbolo AS simbolo_moneda,
                                 e.descripcion estatus,
-                                p.id_estatus
+                                p.id_estatus,
+                                c.razon_social cliente
                          FROM tbl_proyecto p,
                               tbl_usuario so,
                               tbl_usuario ge,
                               tbl_monedas mo,
-                              tbl_estatus e
+                              tbl_estatus e,
+                              tbl_cliente c
                          WHERE p.id_socio = so.id
                          AND p.id_gerente = ge.id
                          AND p.id_moneda = mo.id
                          AND p.id_estatus = e.valor
+                         AND p.id_cliente = c.id
                          AND e.tabla = "tbl_proyecto"
                          ORDER BY p.descripcion ASC');
 

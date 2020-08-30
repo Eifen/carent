@@ -39,7 +39,7 @@
                 <b-form-text id="proyecto-help">Nombre que se le dío la proyecto</b-form-text>
               </b-form-group>
               <b-form-group
-                class="form-group col-12 col-sm-4"
+                class="form-group col-12 col-sm-8"
                 label="Cliente"
                 label-for="cliente"
                 id="group-cliente">
@@ -71,32 +71,6 @@
                 </b-form-select>
                 <small id="estatus-Help" class="form-text text-muted">Estatus del proyecto</small>
               </b-form-group>
-              <b-form-group
-                class="form-group col-12 col-sm-4"
-                label="Divisiones"
-                label-for="divisiones"
-                id="group-divisiones">
-                <multiselect @Open="limpiarMensajeErrorMultiselect"
-                             :clear-on-select="false"
-                             :close-on-select="false"
-                             :disabled="formFiltro.divisiones.disabled"
-                             :multiple="true"
-                             :options="comboDivisiones"
-                             :show-labels="false"
-                             clase="form-control form-control-sm"
-                             data-validar="true"
-                             id="divisiones"
-                             label="descripcion"
-                             placeholder="Seleccione..."
-                             track-by="descripcion"
-                             v-model="formFiltro.divisiones.value">
-                  <template slot="selection"
-                            slot-scope="{ values, search, isOpen }">
-                    <span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">@{{ values.length }} Seleccionadas</span>
-                  </template>
-                </multiselect>
-                <small id="divisiones-Help" class="form-text text-muted">Cuando seleccione divisiones aparecerán los proyectos asociados</small>
-              </b-form-group>
               <b-form-group class="col-12 col-sm-4">
                 <label>&nbsp;</label>
                 <b-button
@@ -121,11 +95,11 @@
 
           </b-col>
 
-          <b-col cols="12" sm="11">
+          <b-col cols="12">
             <h5>Proyectos Disponibles</h5>
           </b-col>
 
-          <b-col cols="12" sm="11">
+          <b-col cols="12">
             <b-table hover :fields="tabla.encabezado" :items="tabla.registros" responsive show-empty :busy="tabla.cargando" :small="true">
               <template v-slot:table-busy>
                 <div class="text-center text-primary">
@@ -157,7 +131,7 @@
               </template>
               <template v-slot:custom-foot v-if="tabla.registros.length > 0">
                 <b-tr>
-                  <b-td colspan="7">
+                  <b-td colspan="8">
                     <div>
                       <div><b>Página</b></div>
                       <div class="wrapper-input" v-on:keyup="numeroPagina">

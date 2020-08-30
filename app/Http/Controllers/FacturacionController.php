@@ -18,12 +18,10 @@ class FacturacionController extends Controller
       $modelo = new FacturacionModel();
 
       $permisos = $modelo->permisosMenu(session("usuario_id"), 16);
-      $divisiones = $modelo->divisiones();
       $estatus = $modelo->estatusProyectos();
       $proyectos = $modelo->proyectosFacturacion();
 
       return [
-        "divisiones" => $divisiones,
         "estatus" => $estatus,
         "permisos" => $permisos,
         "proyectos" => $proyectos,
@@ -81,7 +79,8 @@ class FacturacionController extends Controller
 
         $parametros = [
           "id_proyecto" => session("proyecto_id"),
-          "id_concepto_factura" => $request["concepto"],
+          "concepto" => $request["concepto"],
+          "id_concepto_factura" => $request["tipo_concepto"],
           "numero_factura" => strtoupper($request["numero_factura"]),
           "monto_factura" => $request["monto_factura"],
           "numero_control" => strtoupper($request["numero_control"]),
@@ -91,6 +90,8 @@ class FacturacionController extends Controller
           "id_facturador" => session("usuario_id"),
           "id_estatus" => 1
         ];
+
+        return $parametros;
 
         $conceptosFactura = $modelo->registrarFactura($parametros);
 

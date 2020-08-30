@@ -86,21 +86,40 @@
             <b-form class="row justify-content-center">
               <b-form-group
                 :invalid-feedback="form.camposAtributos.concepto.invalidFeedback"
-                class="col-12 col-sm-6 col-md-3"
-                description="Aquí indicas si es un abono o un gasto"
+                class="col-12"
+                description="Descripción por el cual se esta facturando"
                 label="Concepto"
                 label-for="concepto"
                 id="group-concepto">
-                <b-form-select
-                  @change="limpiarMensajeError('concepto')"
+                <b-form-textarea
+                  @input="limpiarMensajeError('concepto')"
                   :disabled="form.camposAtributos.concepto.disabled"
-                  :options="comboConceptos"
                   :state="form.camposAtributos.concepto.state"
-                  :value="null"
+                  autocomplete="off"
                   id="concepto"
                   ref="concepto"
+                  rows="3"
                   size="sm"
-                  v-model="$v.form.campos.concepto.$model">
+                  type="text"
+                  v-model="$v.form.campos.concepto.$model"></b-form-textarea>
+              </b-form-group>
+              <b-form-group
+                :invalid-feedback="form.camposAtributos.tipoConcepto.invalidFeedback"
+                class="col-12 col-sm-6 col-md-3"
+                description="Aquí indicas si es un abono o un gasto"
+                label="Tipo de Concepto"
+                label-for="tipoConcepto"
+                id="group-tipoConcepto">
+                <b-form-select
+                  @change="limpiarMensajeError('tipoConcepto')"
+                  :disabled="form.camposAtributos.tipoConcepto.disabled"
+                  :options="comboTipoConceptos"
+                  :state="form.camposAtributos.tipoConcepto.state"
+                  :value="null"
+                  id="tipoConcepto"
+                  ref="tipoConcepto"
+                  size="sm"
+                  v-model="$v.form.campos.tipoConcepto.$model">
                   <template v-slot:first>
                     <option :value="null" disabled="true">Seleccione una opción</option>
                   </template>
@@ -200,7 +219,7 @@
                   rows="3"
                   size="sm"
                   type="text"
-                  v-model="$v.form.campos.observaciones.$model"></b-form-textarea>
+                  v-model="form.camposAtributos.observaciones.value"></b-form-textarea>
               </b-form-group>
               <b-form-group
                 class="col-12 col-md-4"

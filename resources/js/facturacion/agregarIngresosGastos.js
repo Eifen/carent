@@ -8,7 +8,7 @@ import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 import axios from 'axios';
 import Vuelidate from 'vuelidate';
-import { required } from 'vuelidate/lib/validators';
+import { required, minLength } from 'vuelidate/lib/validators';
 import zenscroll from 'zenscroll';
 import AutoNumeric from 'autonumeric';
 
@@ -34,7 +34,7 @@ new Vue({
       ocultarSeg: 0,
       variante: ""
     },
-    comboConceptos: [],
+    comboTipoConceptos: [],
     form: {
       alert: {
         contador: false,
@@ -55,14 +55,19 @@ new Vue({
       },
       campos: {
         concepto: null,
+        tipoConcepto: null,
         numeroFactura: null,
         montoFactura: null,
         fechaFactura: null,
-        numeroControl: null,
-        observaciones: null
+        numeroControl: null
       },
       camposAtributos: {
         concepto: {
+          disabled: true,
+          invalidFeedback: "",
+          state: null
+        },
+        tipoConcepto: {
           disabled: true,
           invalidFeedback: "",
           state: null
@@ -96,7 +101,8 @@ new Vue({
         observaciones: {
           disabled: true,
           invalidFeedback: "",
-          state: null
+          state: null,
+          value: ""
         }
       },
       info: {
@@ -137,6 +143,10 @@ new Vue({
     form:{
       campos:{
         concepto: {
+          required,
+          minLength: minLength(5)
+        },
+        tipoConcepto: {
           required
         },
         numeroFactura: {
@@ -149,9 +159,6 @@ new Vue({
           required
         },
         numeroControl: {
-          required
-        },
-        observaciones: {
           required
         }
       }
@@ -185,10 +192,11 @@ new Vue({
         self.form.camposAtributos.montoFactura.simboloMoneda = response.data.proyecto.simbolo_moneda;
 
         response.data.conceptos_factura.forEach((item, i) => {
-          self.comboConceptos.push({text:item.descripcion, value: item.id});
+          self.comboTipoConceptos.push({text:item.descripcion, value: item.id});
         });
 
         self.form.camposAtributos.concepto.disabled = false;
+        self.form.camposAtributos.tipoConcepto.disabled = false;
         self.form.camposAtributos.numeroFactura.disabled = false;
         self.form.camposAtributos.montoFactura.disabled = false;
         self.form.camposAtributos.fechaFactura.disabled = false;
@@ -201,7 +209,7 @@ new Vue({
         if(response.data.permisos.permiso_actualizar){
           self.tabla.encabezado = [
             { key: 'numero', label: '#' },
-            { key: 'concepto', label: 'Concepto' },
+            { key: 'tipo_concepto', label: 'Tipo Concepto' },
             { key: 'movimiento', label: 'Movimiento' },
             { key: 'numero_factura', label: 'Nº Factura' },
             { key: 'monto_factura', label: 'Monto' },
@@ -213,7 +221,7 @@ new Vue({
         }else{
           self.tabla.encabezado = [
             { key: 'numero', label: '#' },
-            { key: 'concepto', label: 'Concepto' },
+            { key: 'tipo_concepto', label: 'Tipo Concepto' },
             { key: 'movimiento', label: 'Movimiento' },
             { key: 'numero_factura', label: 'Nº Factura' },
             { key: 'monto_factura', label: 'Monto' },
@@ -323,7 +331,7 @@ new Vue({
 
         const factura = {
           numero: (i + 1),
-          concepto: item.concepto,
+          tipo_concepto: item.concepto,
           numero_factura: item.numero_factura,
           monto_factura: item.monto_factura,
           fecha_factura: item.fecha_factura,
@@ -409,11 +417,12 @@ new Vue({
         //Obtenemos valores
         let parametros = {
           concepto: self.form.campos.concepto,
+          tipo_concepto: self.form.campos.tipoConcepto,
           numero_factura: self.form.campos.numeroFactura,
           monto_factura: self.form.camposAtributos.montoFactura.autonumeric.get(),
           fecha_factura: self.form.campos.fechaFactura,
           numero_control: self.form.campos.numeroControl,
-          observaciones: self.form.campos.observaciones
+          observaciones: self.form.camposAtributos.observaciones.value
         }
 
         self.form.botones.submit.disabled = true;
@@ -436,10 +445,11 @@ new Vue({
             self.tabla.registros = self.registroTabla(response.data.facturas_cargadas);
 
             self.form.campos.concepto = null;
+            self.form.campos.tipoConcepto = null;
             self.form.campos.numeroFactura = null;
             self.form.campos.fechaFactura = null;
             self.form.campos.numeroControl = null;
-            self.form.campos.observaciones = null;
+            self.form.camposAtributos.observaciones.value = "";
 
             Object.keys(self.form.camposAtributos).forEach((indice, i) => {
 
@@ -504,6 +514,10 @@ new Vue({
 
       if(!campo[indice] && indice === "required"){
         mensaje = "Este campo es requerido!";
+        respuesta = false;
+      }else if(!campo[indice] && indice === "minLength"){
+        let minChar = campo.$params[indice].min;
+        mensaje = "Debe contener al menos "+minChar+" Caracteres!";
         respuesta = false;
       }else{
         mensaje = "";

@@ -78743,7 +78743,6 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
       mostrar: false
     },
     comboEstatus: [],
-    comboDivisiones: [],
     formFiltro: {
       btn: {
         filtrar: {
@@ -78764,10 +78763,6 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
         value: ""
       },
       proyecto: {
-        disabled: true,
-        value: ""
-      },
-      divisiones: {
         disabled: true,
         value: ""
       },
@@ -78812,15 +78807,15 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
             key: 'proyecto',
             label: 'Proyecto'
           }, {
+            key: 'cliente',
+            label: 'Cliente'
+          }, {
             key: 'fecha_contratacion',
             label: 'Fecha Contrato'
           }, {
             key: 'monto_contratado',
             label: 'Monto Contratado'
           }, 'estatus', {
-            key: 'opciones',
-            label: ' '
-          }, {
             key: 'editar',
             label: ' '
           }];
@@ -78832,12 +78827,15 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
             key: 'proyecto',
             label: 'Proyecto'
           }, {
-            key: 'division',
-            label: 'División'
-          }, 'estatus', {
-            key: 'opciones',
-            label: ' '
-          }];
+            key: 'cliente',
+            label: 'Cliente'
+          }, {
+            key: 'fecha_contratacion',
+            label: 'Fecha Contrato'
+          }, {
+            key: 'monto_contratado',
+            label: 'Monto Contratado'
+          }, 'estatus'];
         }
 
         if (response.data.proyectos.length === 0) {
@@ -78847,11 +78845,9 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
 
         self.tabla.registros = self.registroTabla(response.data.proyectos); //Le asignamos los valores a las variables
 
-        self.comboDivisiones = response.data.divisiones;
         self.formFiltro.proyecto.disabled = false;
         self.formFiltro.cliente.disabled = false;
         self.formFiltro.estatus.disabled = false;
-        self.formFiltro.divisiones.disabled = false;
         self.formFiltro.mostrar = true;
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
         self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
@@ -78913,6 +78909,7 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
         var proyecto = {
           numero: i + 1,
           proyecto: item.proyecto,
+          cliente: item.cliente,
           fecha_contratacion: item.fecha_contratacion,
           monto_contratado: item.simbolo_moneda + '' + item.monto_contratado,
           estatus: item.estatus,
@@ -78927,25 +78924,15 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
     buscar: function buscar() {
       self.formFiltro.descripcion.disabled = true;
       self.formFiltro.cliente.disabled = true;
-      self.formFiltro.divisiones.disabled = true;
       self.formFiltro.estatus.disabled = true;
       self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
       self.formFiltro.btn.filtrar.disabled = true;
       self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlLoading;
-      self.formFiltro.btn.limpiarFiltro.disabled = true;
-      var idsDivisiones = [];
-
-      if (self.formFiltro.divisiones.value.length > 0) {
-        self.formFiltro.divisiones.value.forEach(function (item, i) {
-          idsDivisiones.push(item.id);
-        });
-      } //Obtenemos los valores
-
+      self.formFiltro.btn.limpiarFiltro.disabled = true; //Obtenemos los valores
 
       var desde = (self.paginador.pagina - 1) * self.paginador.paginar;
       var parametros = {
         cliente: self.formFiltro.cliente.value,
-        divisiones: idsDivisiones,
         proyecto: self.formFiltro.descripcion.value,
         desde: desde,
         estatus: self.formFiltro.estatus.value,
@@ -78957,7 +78944,6 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
       }).then(function (response) {
         self.formFiltro.descripcion.disabled = false;
         self.formFiltro.cliente.disabled = false;
-        self.formFiltro.divisiones.disabled = false;
         self.formFiltro.estatus.disabled = false;
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
         self.formFiltro.btn.filtrar.disabled = false;
@@ -78970,7 +78956,6 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
       })["catch"](function (error) {
         self.formFiltro.descripcion.disabled = false;
         self.formFiltro.cliente.disabled = false;
-        self.formFiltro.divisiones.disabled = false;
         self.formFiltro.estatus.disabled = false;
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
         self.formFiltro.btn.filtrar.disabled = false;
@@ -78981,7 +78966,6 @@ new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
     limpiarFiltro: function limpiarFiltro() {
       self.formFiltro.descripcion.value = "";
       self.formFiltro.cliente.value = "";
-      self.formFiltro.divisiones.value = "";
       self.formFiltro.estatus.value = "";
       self.buscar();
     },
