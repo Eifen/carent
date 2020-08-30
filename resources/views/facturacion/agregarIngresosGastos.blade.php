@@ -170,7 +170,8 @@
               <b-form-group
                 :invalid-feedback="form.camposAtributos.fechaFactura.invalidFeedback"
                 class="col-12 col-sm-6 col-md-3"
-                label="Fecha de la Factura:"
+                description="Fecha en que se emite la factura"
+                label="Fecha de Emisión:"
                 label-for="fechaFactura"
                 id="group-fechaFactura">
                 <b-form-datepicker
@@ -189,8 +190,30 @@
                   v-model="$v.form.campos.fechaFactura.$model"></b-form-datepicker>
               </b-form-group>
               <b-form-group
+                :invalid-feedback="form.camposAtributos.fechaCobroFactura.invalidFeedback"
+                class="col-12 col-sm-6 col-md-3"
+                description="Fecha de cobro de la factura"
+                label="Fecha de Cobro:"
+                label-for="fechaCobroFactura"
+                id="group-fechaCobroFactura">
+                <b-form-datepicker
+                  @input="limpiarMensajeError('fechaCobroFactura')"
+                  :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+                  :disabled="form.camposAtributos.fechaCobroFactura.disabled"
+                  :max="form.camposAtributos.fechaCobroFactura.max"
+                  :state="form.camposAtributos.fechaCobroFactura.state"
+                  id="fechaCobroFactura"
+                  label-help="Use las teclas del cursor para navegar por las fechas del calendario"
+                  label-no-date-selected="Ninguna fecha seleccionada"
+                  locale="es-ES"
+                  placeholder="Seleccione una fecha"
+                  ref="fechaCobroFactura"
+                  size="sm"
+                  v-model="form.camposAtributos.fechaCobroFactura.value"></b-form-datepicker>
+              </b-form-group>
+              <b-form-group
                 :invalid-feedback="form.camposAtributos.numeroControl.invalidFeedback"
-                class="col-12"
+                class="col-12 col-sm-6 col-md-9"
                 description="Ejemplo: CONTROL-1"
                 label="N° de Control"
                 label-for="numeroControl"

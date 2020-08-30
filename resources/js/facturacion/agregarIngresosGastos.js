@@ -8,7 +8,7 @@ import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 import axios from 'axios';
 import Vuelidate from 'vuelidate';
-import { required, minLength } from 'vuelidate/lib/validators';
+import { required, maxLength, minLength } from 'vuelidate/lib/validators';
 import zenscroll from 'zenscroll';
 import AutoNumeric from 'autonumeric';
 
@@ -93,6 +93,13 @@ new Vue({
           max: null,
           state: null
         },
+        fechaCobroFactura: {
+          disabled: true,
+          invalidFeedback: "",
+          max: null,
+          state: null,
+          value: ""
+        },
         numeroControl: {
           disabled: true,
           invalidFeedback: "",
@@ -150,7 +157,8 @@ new Vue({
           required
         },
         numeroFactura: {
-          required
+          required,
+          maxLength: maxLength(20)
         },
         montoFactura: {
           required
@@ -159,7 +167,8 @@ new Vue({
           required
         },
         numeroControl: {
-          required
+          required,
+          maxLength: maxLength(20)
         }
       }
     }
@@ -177,6 +186,7 @@ new Vue({
         const ahora = new Date()
         const hoy = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate())
         self.form.camposAtributos.fechaFactura.max = hoy;
+        self.form.camposAtributos.fechaCobroFactura.max = hoy;
 
         self.form.info = {
           estatus: response.data.proyecto.estatus,
@@ -200,6 +210,7 @@ new Vue({
         self.form.camposAtributos.numeroFactura.disabled = false;
         self.form.camposAtributos.montoFactura.disabled = false;
         self.form.camposAtributos.fechaFactura.disabled = false;
+        self.form.camposAtributos.fechaCobroFactura.disabled = false;
         self.form.camposAtributos.numeroControl.disabled = false;
         self.form.camposAtributos.observaciones.disabled = false;
 
@@ -418,6 +429,7 @@ new Vue({
           numero_factura: self.form.campos.numeroFactura,
           monto_factura: self.form.camposAtributos.montoFactura.autonumeric.get(),
           fecha_factura: self.form.campos.fechaFactura,
+          fecha_cobro_factura: self.form.camposAtributos.fechaCobroFactura.value,
           numero_control: self.form.campos.numeroControl,
           observaciones: self.form.camposAtributos.observaciones.value
         }
@@ -445,6 +457,7 @@ new Vue({
             self.form.campos.tipoConcepto = null;
             self.form.campos.numeroFactura = null;
             self.form.campos.fechaFactura = null;
+            self.form.camposAtributos.fechaCobroFactura.value = "";
             self.form.campos.numeroControl = null;
             self.form.camposAtributos.observaciones.value = "";
 
@@ -512,9 +525,13 @@ new Vue({
       if(!campo[indice] && indice === "required"){
         mensaje = "Este campo es requerido!";
         respuesta = false;
+      }else if(!campo[indice] && indice === "maxLength"){
+        let maxChar = campo.$params[indice].max;
+        mensaje = "Debe contener como máximo "+maxChar+" caracteres!";
+        respuesta = false;
       }else if(!campo[indice] && indice === "minLength"){
         let minChar = campo.$params[indice].min;
-        mensaje = "Debe contener al menos "+minChar+" Caracteres!";
+        mensaje = "Debe contener al menos "+minChar+" caracteres!";
         respuesta = false;
       }else{
         mensaje = "";

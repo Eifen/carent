@@ -86,6 +86,7 @@ class FacturacionController extends Controller
           "numero_control" => strtoupper($request["numero_control"]),
           "observaciones" => $request["observaciones"],
           "fecha_factura" => $request["fecha_factura"],
+          "fecha_cobro_factura" => $request["fecha_cobro_factura"],
           "fecha_registro" => date("Y-m-d"),
           "id_facturador" => session("usuario_id"),
           "id_estatus" => 1
