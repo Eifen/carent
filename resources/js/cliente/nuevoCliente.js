@@ -256,7 +256,18 @@ new Vue({
 
           }
 
-          self.alert.message = message;
+          self.alertForm = {
+            class : "alert alert-warning",
+            message : message,
+            show: true
+          };
+          setTimeout(function(){
+              self.alertForm = {
+              class: "",
+              message: "",
+              show: false
+              };
+            }, 1000);
 
         });
 
