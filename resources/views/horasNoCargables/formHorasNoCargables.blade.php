@@ -146,7 +146,7 @@
                   <th scope="row">@{{ registro.nombre }}</th>
                   <td>@{{ registro.concepto }}</td>
                   <td>@{{ registro.division }}</td>
-                  <td>@{{ registro.fecha_desde }} - @{{ registro.fecha_hasta }}</td>
+                  <td>@{{ utc_date(registro.fecha_desde_utc) }} - @{{ utc_date(registro.fecha_hasta_utc) }</td>
                   <td>@{{ registro.estatus }}</td>
                   <td>
                     <a v-on:click="modificarConcepto(
