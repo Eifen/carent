@@ -139,6 +139,9 @@ class HorasNoCargablesController extends Controller
 
       $modelo = new HorasNoCargablesModel();
 
+      $aprobado_por = ($request->input("estatus") == "" || $request->input("estatus") === 1) ? null : session("usuario_id");
+      $fecha_aprobacion = ($request->input("estatus") == "" || $request->input("estatus") === 1) ? null : date("Y-m-d H:i:s");
+
       $parametrosInsert = array(
         "id_concepto" => $request->input("concepto"),
         "id_usuario" => session("usuario_id"),
@@ -147,6 +150,8 @@ class HorasNoCargablesController extends Controller
         "fecha_hasta" => date("Y-m-d H:i:s", strtotime($request->input("fechaHasta"))),
         "observacion" => $request->input("observacion"),
         "id_estatus"  => (($request->input("estatus") == "") ? 1 : $request->input("estatus")),
+        "aprobado_por" => $aprobado_por,
+        "fecha_aprobacion" => $fecha_aprobacion
       );
 
       $resgitrarHora = $modelo->registrarHorasNoCargables($parametrosInsert);
@@ -174,8 +179,8 @@ class HorasNoCargablesController extends Controller
 
       $modelo = new HorasNoCargablesModel();
 
-      $aprobado_por = ($request->input("estatus") === 1) ? null : session("usuario_id");
-      $fecha_aprobacion = ($request->input("estatus") === 1) ? null : date("Y-m-d H:i:s");
+      $aprobado_por = ($request->input("estatus") == 1) ? null : session("usuario_id");
+      $fecha_aprobacion = ($request->input("estatus") == 1) ? null : date("Y-m-d H:i:s");
       $id = $request->input("id");
 
       $parametrosUpdate = array(
