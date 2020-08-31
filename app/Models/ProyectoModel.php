@@ -212,7 +212,7 @@ class ProyectoModel extends Model
       }
 
       $proyectos = DB::select('SELECT p.id,
-                                      p.descripcion,
+                                      UPPER(p.descripcion),
                                       (SELECT SUM(horas_contratadas) FROM tbl_proyecto_divisiones WHERE id_proyecto = p.id) AS horas_contratadas,
                                       DATE_FORMAT(p.fecha_contratacion, "%d/%m/%Y") AS fecha_contratacion,
                                       e.descripcion AS estatus,
@@ -512,7 +512,7 @@ class ProyectoModel extends Model
 
     $info = DB::select('SELECT p.id AS id_proyecto,
                                p.fecha_contratacion AS fecha,
-                               p.descripcion AS proyecto,
+                               UPPER(p.descripcion) AS proyecto,
                                (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = p.id_cliente) cliente,
                                (SELECT e.descripcion FROM tbl_estatus e WHERE valor = p.id_estatus AND e.tabla = "tbl_proyecto") estatus,
                                (SELECT a.id FROM tbl_proyecto_analista a WHERE p.id = a.id_proyecto AND a.id_analista = '.$id_usuario.')id_proy_analista,
@@ -570,7 +570,7 @@ class ProyectoModel extends Model
 
     $info = DB::select('SELECT p.id AS id_proyecto,
                                p.fecha_contratacion AS fecha,
-                               p.descripcion AS proyecto,
+                               UPPER(p.descripcion) AS proyecto,
                                (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = p.id_cliente) cliente,
                                (SELECT e.descripcion FROM tbl_estatus e WHERE valor = p.id_estatus AND e.tabla = "tbl_proyecto") estatus,
                                (SELECT a.id FROM tbl_proyecto_analista a WHERE p.id = a.id_proyecto AND a.id_analista = '.$id_usuario.')id_proy_analista,
@@ -617,7 +617,7 @@ class ProyectoModel extends Model
 
       $proyectos = DB::select('SELECT p.id AS id_proyecto,
                                       p.fecha_contratacion AS fecha,
-                                      p.descripcion AS proyecto,
+                                      UPPER(p.descripcion) AS proyecto,
                                       p.id_estatus,
                                       (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = p.id_cliente) cliente,
                                       (SELECT e.descripcion FROM tbl_estatus e WHERE valor = p.id_estatus AND e.tabla = "tbl_proyecto") estatus,
@@ -722,7 +722,7 @@ class ProyectoModel extends Model
 
       $proyectos = DB::select('SELECT p.id AS id_proyecto,
                                       p.fecha_contratacion AS fecha,
-                                      p.descripcion AS proyecto,
+                                      UPPER(p.descripcion) AS proyecto,
                                       (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = p.id_cliente) cliente,
                                       p.id_estatus,
                                       (SELECT e.descripcion FROM tbl_estatus e WHERE valor = p.id_estatus AND e.tabla = "tbl_proyecto") estatus,
@@ -756,7 +756,7 @@ class ProyectoModel extends Model
     function DetalleDivProyecto($idDproyecto){
 
     $info = DB::select('SELECT p.id,
-                               p.descripcion,
+                               UPPER(p.descripcion),
                                (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = p.id_cliente) cliente,
                                (SELECT SUM(d.horas_contratadas) FROM tbl_proyecto_divisiones d WHERE d.id_proyecto = '.$idDproyecto.') horas_contratadas,
                                p.fecha_contratacion
@@ -794,7 +794,7 @@ class ProyectoModel extends Model
     function datosProyecto($id_proyecto,$id_division){
 
       $info = DB::select('SELECT p.id,
-                                 p.descripcion AS proyecto,
+                                 UPPER(p.descripcion) AS proyecto,
                                  (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = p.id_cliente) cliente,
                                  (SELECT d.id FROM tbl_proyecto_divisiones d WHERE d.id_proyecto = '.$id_proyecto.' AND d.id_division = '.$id_division.' )id_proyecto_division,
                                  (SELECT d.horas_contratadas FROM tbl_proyecto_divisiones d WHERE d.id_proyecto = '.$id_proyecto.' AND d.id_division = '.$id_division.' )horas_contratadas

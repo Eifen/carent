@@ -446,14 +446,14 @@ new Vue({
           self.form.botones.submit.disabled = false;
           self.form.botones.submit.html = self.form.botones.submit.htmlInit
 
-          if(error.response){
+          if(error.message){
 
-            var mensaje = "Existe un error!, consulte con el administrador del sistema.";
+            var mensaje = error.message;
             var variante = "warning";
 
           }else{
 
-            var mensaje = error.message;
+            var mensaje = "Existe un error!, consulte con el administrador del sistema.";
             var variante = "danger";
 
           }
