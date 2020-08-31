@@ -120,6 +120,7 @@ new Vue({
         monto_facturado: "",
         monto_gastos: "",
         proyecto: "",
+        simbolo_moneda: "",
         socio: ""
       },
       mostrar: false
@@ -193,9 +194,10 @@ new Vue({
           fecha_contratacion: response.data.proyecto.fecha_contratacion,
           gerente: response.data.proyecto.gerente,
           monto_contratado: response.data.proyecto.simbolo_moneda+response.data.proyecto.monto_contratado,
-          monto_facturado: response.data.proyecto.simbolo_moneda+0,
-          monto_gastos: response.data.proyecto.simbolo_moneda+0,
+          monto_facturado: response.data.proyecto.simbolo_moneda+response.data.facturado_proyecto.monto_facturado,
+          monto_gastos: response.data.proyecto.simbolo_moneda+response.data.facturado_proyecto.monto_gasto,
           proyecto: response.data.proyecto.proyecto,
+          simbolo_moneda: response.data.proyecto.simbolo_moneda,
           socio: response.data.proyecto.socio
         }
 
@@ -221,6 +223,7 @@ new Vue({
           self.tabla.encabezado = [
             { key: 'numero', label: '#' },
             { key: 'tipo_concepto', label: 'Tipo Concepto' },
+            { key: 'concepto', label: 'Concepto' },
             { key: 'movimiento', label: 'Movimiento' },
             { key: 'numero_factura', label: 'Nº Factura' },
             { key: 'monto_factura', label: 'Monto' },
@@ -232,6 +235,7 @@ new Vue({
           self.tabla.encabezado = [
             { key: 'numero', label: '#' },
             { key: 'tipo_concepto', label: 'Tipo Concepto' },
+            { key: 'concepto', label: 'Concepto' },
             { key: 'movimiento', label: 'Movimiento' },
             { key: 'numero_factura', label: 'Nº Factura' },
             { key: 'monto_factura', label: 'Monto' },
@@ -340,7 +344,8 @@ new Vue({
 
         const factura = {
           numero: (i + 1),
-          tipo_concepto: item.concepto,
+          tipo_concepto: item.tipo_concepto,
+          concepto: item.concepto,
           numero_factura: item.numero_factura,
           monto_factura: item.monto_factura,
           fecha_factura: item.fecha_factura,
@@ -460,6 +465,9 @@ new Vue({
             self.form.camposAtributos.fechaCobroFactura.value = "";
             self.form.campos.numeroControl = null;
             self.form.camposAtributos.observaciones.value = "";
+
+            self.form.info.monto_facturado = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_facturado;
+            self.form.info.monto_gastos = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_gasto;
 
             Object.keys(self.form.camposAtributos).forEach((indice, i) => {
 

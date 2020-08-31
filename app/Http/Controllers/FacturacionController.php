@@ -58,10 +58,12 @@ class FacturacionController extends Controller
       $facturasCargadas = $modelo->proyectoFacturasCargadas(session("proyecto_id"));
       $permisos = $modelo->permisosMenu(session("usuario_id"), 16);
       $proyecto = $modelo->proyecto(session("proyecto_id"));
+      $facturadoProyecto = $modelo->facturadoProyecto(session("proyecto_id"));
 
       return [
         "conceptos_factura" => $conceptosFactura,
         "facturas_cargadas" => $facturasCargadas,
+        "facturado_proyecto" => $facturadoProyecto,
         "permisos" => $permisos,
         "proyecto" => $proyecto,
         "response" => true
@@ -92,16 +94,16 @@ class FacturacionController extends Controller
           "id_estatus" => 1
         ];
 
-        return $parametros;
-
         $conceptosFactura = $modelo->registrarFactura($parametros);
 
         if($conceptosFactura){
 
           $facturasCargadas = $modelo->proyectoFacturasCargadas(session("proyecto_id"));
+          $facturadoProyecto = $modelo->facturadoProyecto(session("proyecto_id"));
 
           return [
             "facturas_cargadas" => $facturasCargadas,
+            "facturado_proyecto" => $facturadoProyecto,
             "message" => "Factura registrada con éxito",
             "response" => true
           ];

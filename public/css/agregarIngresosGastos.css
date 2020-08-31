@@ -208,3 +208,6 @@ html {
   padding-bottom: 50px;
   padding-top: 100px;
 }
+.modal .modal-dialog footer {
+  padding: 0.25rem !important;
+}
