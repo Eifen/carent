@@ -45,7 +45,7 @@ class ClienteModel extends Model
                             AND e.valor = u.id_estatus
                             AND u.id = cu.id_usuario
                             AND u.id = udi.id_usuario');
-
+    $usuarios = [];
     for($i = 0; $i < count($usuario); $i++){
       if ($usuario[$i]->id_cargo === 16 || $usuario[$i]->id_cargo === 17) {
         $usuarios[$i] = $usuario[$i];
@@ -53,10 +53,10 @@ class ClienteModel extends Model
     }
     if(count($usuarios) > 0){
       return $usuarios;
-    }else{
-      return array();
     }
+      return array();
   }
+
   function buscarUsuariosG($opcionBusqueda, $dato, $cargo){
 
     switch ((int) $opcionBusqueda) {

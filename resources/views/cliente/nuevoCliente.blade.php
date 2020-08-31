@@ -30,8 +30,8 @@
                   <option value="" selected disabled>Agregar Socio Por</option>
                   <option value="1">Código de usuario</option>
                   <option value="2">Cédula</option>
-                  <option value="4">Primer o segundo nombre</option>
-                  <option value="5">Primer o segundo apellido</option>
+                  <option value="3">Primer o segundo nombre</option>
+                  <option value="4">Primer o segundo apellido</option>
                 </select>
               </div>
               <div class="form-group col-12 col-md-6">
@@ -89,6 +89,11 @@
                     <input class="form-control" type="text" disabled v-bind:value="detalleUsuario.data.nombre">
                   </div>
             </form>
+            <div class="row wrapper-alert">
+              <div class="col-12">
+                <div v-bind:class="alertForm.class" role="alert" v-if="alertForm.show" v-html="alertForm.message"></div>
+              </div>
+            </div>
           </form>
             <form class="row">
               <div class="col-12 wrapper-required-legend">
