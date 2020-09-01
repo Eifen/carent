@@ -190,10 +190,20 @@ class HorasNoCargablesModel extends Model
       }else{
 
         $idsDiv = [];
-        foreach ($id_division as $key => $item) {
-          $item = json_decode($item);
-          array_push($idsDiv,$item->id);
+
+        if(is_array($id_division)){
+
+          foreach ($id_division as $key => $item) {
+            $item = json_decode($item);
+            array_push($idsDiv,$item->id);
+          }
+
+        }else{
+
+          array_push($idsDiv,$id_division);
+
         }
+
         $idsDiv = implode(",", $idsDiv);
         $sql_division = " AND hnc.id_division IN (".$idsDiv.")";
 
@@ -218,10 +228,20 @@ class HorasNoCargablesModel extends Model
       }else{
 
         $idsEmp = [];
-        foreach ($id_empleado as $key => $item) {
-          $item = json_decode($item);
-          array_push($idsEmp,$item->id);
+
+        if(is_array($id_empleado)){
+
+          foreach ($id_empleado as $key => $item) {
+            $item = json_decode($item);
+            array_push($idsEmp,$item->id);
+          }
+
+        }else{
+
+          array_push($idsEmp,$id_empleado);
+
         }
+
         $idsEmp = implode(",", $idsEmp);
         $sql_empleado = " AND u.id IN (".$idsEmp.")";
 
@@ -275,10 +295,20 @@ class HorasNoCargablesModel extends Model
       }else{
 
         $idsDiv = [];
-        foreach ($id_division as $key => $item) {
-          $item = json_decode($item);
-          array_push($idsDiv,$item->id);
+
+        if(is_array($id_division)){
+
+          foreach ($id_division as $key => $item) {
+            $item = json_decode($item);
+            array_push($idsDiv,$item->id);
+          }
+
+        }else{
+
+          array_push($idsDiv,$id_division);
+
         }
+
         $idsDiv = implode(",", $idsDiv);
         $sql_division = " AND hnc.id_division IN (".$idsDiv.")";
 
@@ -303,10 +333,20 @@ class HorasNoCargablesModel extends Model
       }else{
 
         $idsEmp = [];
-        foreach ($id_empleado as $key => $item) {
-          $item = json_decode($item);
-          array_push($idsEmp,$item->id);
+
+        if(is_array($id_empleado)){
+
+          foreach ($id_empleado as $key => $item) {
+            $item = json_decode($item);
+            array_push($idsEmp,$item->id);
+          }
+
+        }else{
+
+          array_push($idsEmp,$id_empleado);
+
         }
+
         $idsEmp = implode(",", $idsEmp);
         $sql_empleado = " AND u.id IN (".$idsEmp.")";
 
