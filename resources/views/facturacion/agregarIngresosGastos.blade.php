@@ -256,6 +256,20 @@
               <template v-slot:cell(numero)="data">
                 <b>@{{ data.item.numero }}</b>
               </template>
+<<<<<<< Updated upstream
+=======
+              <template v-slot:cell(concepto)="data">
+                <b-icon-search v-b-modal="'concepto-'+data.item.id" class="icono"></b-icon-search>
+                <b-modal :id="'concepto-'+data.item.id" :hide-header="true" size="xl" centered>
+                  @{{ data.item.concepto }}
+                  <template v-slot:modal-footer="{ ok }">
+                    <b-button size="sm" variant="primary" @click="ok()">
+                      Cerrar
+                    </b-button>
+                  </template>
+                </b-modal>
+              </template>
+>>>>>>> Stashed changes
               <template v-slot:cell(movimiento)="data">
                 <b-badge :variant="data.item.varianteMovimiento" class="text-capitalize">@{{ data.item.movimiento }}</b-badge>
               </template>
