@@ -37,17 +37,6 @@ class FacturacionModel extends Model
 
     }// Fin permisosMenu
 
-    function divisiones(){
-
-      $sql = DB::select('SELECT d.id,
-                                d.descripcion
-                         FROM tbl_division d
-                         ORDER BY d.descripcion ASC');
-
-      return $sql;
-
-    }// Fin divisiones
-
     function estatusProyectos(){
 
       $sql = DB::select('SELECT e.valor,
@@ -70,16 +59,19 @@ class FacturacionModel extends Model
                                 FORMAT(p.monto,2,"de_DE") AS monto_contratado,
                                 mo.simbolo AS simbolo_moneda,
                                 e.descripcion estatus,
-                                p.id_estatus
+                                p.id_estatus,
+                                c.razon_social cliente
                          FROM tbl_proyecto p,
                               tbl_usuario so,
                               tbl_usuario ge,
                               tbl_monedas mo,
-                              tbl_estatus e
+                              tbl_estatus e,
+                              tbl_cliente c
                          WHERE p.id_socio = so.id
                          AND p.id_gerente = ge.id
                          AND p.id_moneda = mo.id
                          AND p.id_estatus = e.valor
+                         AND p.id_cliente = c.id
                          AND e.tabla = "tbl_proyecto"
                          ORDER BY p.descripcion ASC');
 
@@ -103,12 +95,43 @@ class FacturacionModel extends Model
                               tbl_usuario ge,
                               tbl_monedas mo,
                               tbl_estatus e
-                         WHERE p.id = ?
+                         WHERE p.id = '.$id_proyecto.'
                          AND p.id_socio = so.id
                          AND p.id_gerente = ge.id
                          AND p.id_moneda = mo.id
                          AND p.id_estatus = e.valor
-                         AND e.tabla = "tbl_proyecto"', [$id_proyecto]);
+                         AND e.tabla = "tbl_proyecto"');
+
+      return $sql[0];
+
+    }
+
+    function facturadoProyecto($id_proyecto){
+
+      $sql = DB::select('SELECT (
+                                  SELECT IF(
+                                             SUM(fp.monto_factura) IS NULL,
+                                             FORMAT(0,2,"de_DE"),
+                                             FORMAT(SUM(fp.monto_factura),2,"de_DE")
+                                           )
+                                  FROM tbl_factura_proyecto fp,
+                                       tbl_concepto_factura cf
+                                  WHERE fp.id_concepto_factura = cf.id
+                                  AND fp.id_proyecto = '.$id_proyecto.'
+                                  AND cf.id_tipo_concepto_factura = 1
+                               ) AS monto_facturado,
+                               (
+                                 SELECT IF(
+                                            SUM(fp.monto_factura) IS NULL,
+                                            FORMAT(0,2,"de_DE"),
+                                            FORMAT(SUM(fp.monto_factura),2,"de_DE")
+                                          )
+                                 FROM tbl_factura_proyecto fp,
+                                      tbl_concepto_factura cf
+                                 WHERE fp.id_concepto_factura = cf.id
+                                 AND fp.id_proyecto = '.$id_proyecto.'
+                                 AND cf.id_tipo_concepto_factura = 2
+                              ) AS monto_gasto');
 
       return $sql[0];
 
@@ -135,10 +158,11 @@ class FacturacionModel extends Model
                                 DATE_FORMAT(fp.fecha_factura, "%d/%m/%Y") AS fecha_factura,
                                 UPPER(fp.numero_control) AS numero_control,
                                 fp.observaciones,
-                                cf.descripcion AS concepto,
+                                cf.descripcion AS tipo_concepto,
                                 LOWER(CONCAT(fu.nombre_1," ",fu.nombre_2," ",fu.apellido_1," ",fu.apellido_2)) AS facturador,
                                 cf.id_tipo_concepto_factura AS tipo_movimiento,
-                                (SELECT descripcion FROM tbl_tipo_concepto_factura WHERE id = cf.id_tipo_concepto_factura) AS movimiento
+                                (SELECT descripcion FROM tbl_tipo_concepto_factura WHERE id = cf.id_tipo_concepto_factura) AS movimiento,
+                                fp.concepto
                          FROM tbl_factura_proyecto fp,
                               tbl_concepto_factura cf,
                               tbl_usuario fu
