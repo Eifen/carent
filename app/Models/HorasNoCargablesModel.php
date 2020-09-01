@@ -188,7 +188,15 @@ class HorasNoCargablesModel extends Model
       }else if($id_division == null){
         $sql_division = "";
       }else{
-        $sql_division = " AND hnc.id_division = ".$id_division;
+
+        $idsDiv = [];
+        foreach ($id_division as $key => $item) {
+          $item = json_decode($item);
+          array_push($idsDiv,$item->id);
+        }
+        $idsDiv = implode(",", $idsDiv);
+        $sql_division = " AND hnc.id_division IN (".$idsDiv.")";
+
       }
 
       if($id_concepto == null){
@@ -208,7 +216,15 @@ class HorasNoCargablesModel extends Model
       }else if($id_empleado == null){
         $sql_empleado = "";
       }else{
-        $sql_empleado = " AND u.id = ".$id_empleado;
+
+        $idsEmp = [];
+        foreach ($id_empleado as $key => $item) {
+          $item = json_decode($item);
+          array_push($idsEmp,$item->id);
+        }
+        $idsEmp = implode(",", $idsEmp);
+        $sql_empleado = " AND u.id IN (".$idsEmp.")";
+
       }
 
       $sql = DB::select("SELECT hnc.id,
@@ -257,7 +273,15 @@ class HorasNoCargablesModel extends Model
       }else if($id_division == null){
         $sql_division = "";
       }else{
-        $sql_division = " AND hnc.id_division = ".$id_division;
+
+        $idsDiv = [];
+        foreach ($id_division as $key => $item) {
+          $item = json_decode($item);
+          array_push($idsDiv,$item->id);
+        }
+        $idsDiv = implode(",", $idsDiv);
+        $sql_division = " AND hnc.id_division IN (".$idsDiv.")";
+
       }
 
       if($id_concepto == null){
@@ -277,7 +301,15 @@ class HorasNoCargablesModel extends Model
       }else if($id_empleado == null){
         $sql_empleado = "";
       }else{
-        $sql_empleado = " AND u.id = ".$id_empleado;
+
+        $idsEmp = [];
+        foreach ($id_empleado as $key => $item) {
+          $item = json_decode($item);
+          array_push($idsEmp,$item->id);
+        }
+        $idsEmp = implode(",", $idsEmp);
+        $sql_empleado = " AND u.id IN (".$idsEmp.")";
+
       }
 
       $numConceptos = DB::select('SELECT CEILING( COUNT(1) / '.$paginar.') paginas
