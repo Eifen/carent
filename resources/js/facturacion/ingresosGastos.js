@@ -25,7 +25,6 @@ new Vue({
       mostrar: false
     },
     comboEstatus: [],
-    comboDivisiones: [],
     formFiltro: {
       btn: {
         filtrar: {
@@ -46,10 +45,6 @@ new Vue({
         value: ""
       },
       proyecto:{
-        disabled: true,
-        value: ""
-      },
-      divisiones: {
         disabled: true,
         value: ""
       },
@@ -95,19 +90,20 @@ new Vue({
           self.tabla.encabezado = [
             { key: 'numero', label: '#' },
             { key: 'proyecto', label: 'Proyecto' },
+            { key: 'cliente', label: 'Cliente' },
             { key: 'fecha_contratacion', label: 'Fecha Contrato' },
             { key: 'monto_contratado', label: 'Monto Contratado' },
             'estatus',
-            { key: 'opciones', label: ' ' },
             { key: 'editar', label: ' ' }
           ];
         }else{
           self.tabla.encabezado = [
-           { key: 'numero', label: '#' },
-           { key: 'proyecto', label: 'Proyecto' },
-           { key: 'division', label: 'División' },
-           'estatus',
-           { key: 'opciones', label: ' ' }
+            { key: 'numero', label: '#' },
+            { key: 'proyecto', label: 'Proyecto' },
+            { key: 'cliente', label: 'Cliente' },
+            { key: 'fecha_contratacion', label: 'Fecha Contrato' },
+            { key: 'monto_contratado', label: 'Monto Contratado' },
+            'estatus',
           ];
         }
 
@@ -121,11 +117,9 @@ new Vue({
         self.tabla.registros = self.registroTabla(response.data.proyectos);
 
         //Le asignamos los valores a las variables
-        self.comboDivisiones = response.data.divisiones;
         self.formFiltro.proyecto.disabled = false;
         self.formFiltro.cliente.disabled = false;
         self.formFiltro.estatus.disabled = false;
-        self.formFiltro.divisiones.disabled = false;
         self.formFiltro.mostrar = true;
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
         self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
@@ -185,6 +179,7 @@ new Vue({
         const proyecto = {
           numero: (i + 1),
           proyecto: item.proyecto,
+          cliente: item.cliente,
           fecha_contratacion: item.fecha_contratacion,
           monto_contratado: item.simbolo_moneda+''+item.monto_contratado,
           estatus: item.estatus,
@@ -204,25 +199,16 @@ new Vue({
 
       self.formFiltro.descripcion.disabled = true;
       self.formFiltro.cliente.disabled = true;
-      self.formFiltro.divisiones.disabled = true;
       self.formFiltro.estatus.disabled = true;
       self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
       self.formFiltro.btn.filtrar.disabled = true;
       self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlLoading;
       self.formFiltro.btn.limpiarFiltro.disabled = true;
 
-      let idsDivisiones = [];
-      if(self.formFiltro.divisiones.value.length > 0){
-        self.formFiltro.divisiones.value.forEach((item, i) => {
-          idsDivisiones.push(item.id);
-        });
-      }
-
       //Obtenemos los valores
       let desde = (self.paginador.pagina - 1) * self.paginador.paginar;
       let parametros = {
         cliente: self.formFiltro.cliente.value,
-        divisiones: idsDivisiones,
         proyecto: self.formFiltro.descripcion.value,
         desde: desde,
         estatus: self.formFiltro.estatus.value,
@@ -234,7 +220,6 @@ new Vue({
 
         self.formFiltro.descripcion.disabled = false;
         self.formFiltro.cliente.disabled = false;
-        self.formFiltro.divisiones.disabled = false;
         self.formFiltro.estatus.disabled = false;
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
         self.formFiltro.btn.filtrar.disabled = false;
@@ -249,7 +234,6 @@ new Vue({
 
         self.formFiltro.descripcion.disabled = false;
         self.formFiltro.cliente.disabled = false;
-        self.formFiltro.divisiones.disabled = false;
         self.formFiltro.estatus.disabled = false;
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
         self.formFiltro.btn.filtrar.disabled = false;
@@ -263,7 +247,6 @@ new Vue({
 
       self.formFiltro.descripcion.value = "";
       self.formFiltro.cliente.value = "";
-      self.formFiltro.divisiones.value = "";
       self.formFiltro.estatus.value = "";
       self.buscar();
 
