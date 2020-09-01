@@ -212,7 +212,7 @@ class ProyectoModel extends Model
       }
 
       $proyectos = DB::select('SELECT p.id,
-                                      UPPER(p.descripcion),
+                                      UPPER(p.descripcion) AS descripcion,
                                       (SELECT SUM(horas_contratadas) FROM tbl_proyecto_divisiones WHERE id_proyecto = p.id) AS horas_contratadas,
                                       DATE_FORMAT(p.fecha_contratacion, "%d/%m/%Y") AS fecha_contratacion,
                                       e.descripcion AS estatus,

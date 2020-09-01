@@ -35,6 +35,11 @@
                 <span class="text-lowercase">@{{ form.info.proyecto }}</span>
               </b-card-text>
               <b-card-text>
+                <b-icon-calendar2></b-icon-calendar2>
+                <span class="titulo">FECHA DE CONTRATACIÓN/APERTURA:</span>
+                <span>@{{ form.info.fecha_contratacion }}</span>
+              </b-card-text>
+              <b-card-text>
                 <b-icon-person></b-icon-person>
                 <span class="titulo">SOCIO:</span>
                 <span class="text-capitalize">@{{ form.info.socio }}</span>
@@ -72,7 +77,7 @@
           <b-col cols="12" md="6" lg="4">
             <b-card class="text-left card-monto-gasto">
               <b-card-text>
-                <span class="titulo">MONTO GASTOS</span>
+                <span class="titulo">MONTO GASTOS NO FACTURABLES</span>
               </b-card-text>
               <b-card-text>
                 <span class="monto">@{{ form.info.monto_gastos }}</span>
@@ -86,21 +91,40 @@
             <b-form class="row justify-content-center">
               <b-form-group
                 :invalid-feedback="form.camposAtributos.concepto.invalidFeedback"
-                class="col-12 col-sm-6 col-md-3"
-                description="Aquí indicas si es un abono o un gasto"
+                class="col-12"
+                description="Descripción por el cual se esta facturando"
                 label="Concepto"
                 label-for="concepto"
                 id="group-concepto">
-                <b-form-select
-                  @change="limpiarMensajeError('concepto')"
+                <b-form-textarea
+                  @input="limpiarMensajeError('concepto')"
                   :disabled="form.camposAtributos.concepto.disabled"
-                  :options="comboConceptos"
                   :state="form.camposAtributos.concepto.state"
-                  :value="null"
+                  autocomplete="off"
                   id="concepto"
                   ref="concepto"
+                  rows="3"
                   size="sm"
-                  v-model="$v.form.campos.concepto.$model">
+                  type="text"
+                  v-model="$v.form.campos.concepto.$model"></b-form-textarea>
+              </b-form-group>
+              <b-form-group
+                :invalid-feedback="form.camposAtributos.tipoConcepto.invalidFeedback"
+                class="col-12 col-sm-6 col-md-3"
+                description="Aquí indicas si es un abono o un gasto"
+                label="Tipo de Concepto"
+                label-for="tipoConcepto"
+                id="group-tipoConcepto">
+                <b-form-select
+                  @change="limpiarMensajeError('tipoConcepto')"
+                  :disabled="form.camposAtributos.tipoConcepto.disabled"
+                  :options="comboTipoConceptos"
+                  :state="form.camposAtributos.tipoConcepto.state"
+                  :value="null"
+                  id="tipoConcepto"
+                  ref="tipoConcepto"
+                  size="sm"
+                  v-model="$v.form.campos.tipoConcepto.$model">
                   <template v-slot:first>
                     <option :value="null" disabled="true">Seleccione una opción</option>
                   </template>
@@ -146,7 +170,8 @@
               <b-form-group
                 :invalid-feedback="form.camposAtributos.fechaFactura.invalidFeedback"
                 class="col-12 col-sm-6 col-md-3"
-                label="Fecha de la Factura:"
+                description="Fecha en que se emite la factura"
+                label="Fecha de Emisión:"
                 label-for="fechaFactura"
                 id="group-fechaFactura">
                 <b-form-datepicker
@@ -165,8 +190,30 @@
                   v-model="$v.form.campos.fechaFactura.$model"></b-form-datepicker>
               </b-form-group>
               <b-form-group
+                :invalid-feedback="form.camposAtributos.fechaCobroFactura.invalidFeedback"
+                class="col-12 col-sm-6 col-md-3"
+                description="Fecha de cobro de la factura"
+                label="Fecha de Cobro:"
+                label-for="fechaCobroFactura"
+                id="group-fechaCobroFactura">
+                <b-form-datepicker
+                  @input="limpiarMensajeError('fechaCobroFactura')"
+                  :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+                  :disabled="form.camposAtributos.fechaCobroFactura.disabled"
+                  :max="form.camposAtributos.fechaCobroFactura.max"
+                  :state="form.camposAtributos.fechaCobroFactura.state"
+                  id="fechaCobroFactura"
+                  label-help="Use las teclas del cursor para navegar por las fechas del calendario"
+                  label-no-date-selected="Ninguna fecha seleccionada"
+                  locale="es-ES"
+                  placeholder="Seleccione una fecha"
+                  ref="fechaCobroFactura"
+                  size="sm"
+                  v-model="form.camposAtributos.fechaCobroFactura.value"></b-form-datepicker>
+              </b-form-group>
+              <b-form-group
                 :invalid-feedback="form.camposAtributos.numeroControl.invalidFeedback"
-                class="col-12"
+                class="col-12 col-sm-6 col-md-9"
                 description="Ejemplo: CONTROL-1"
                 label="N° de Control"
                 label-for="numeroControl"
@@ -200,7 +247,7 @@
                   rows="3"
                   size="sm"
                   type="text"
-                  v-model="$v.form.campos.observaciones.$model"></b-form-textarea>
+                  v-model="form.camposAtributos.observaciones.value"></b-form-textarea>
               </b-form-group>
               <b-form-group
                 class="col-12 col-md-4"
@@ -236,7 +283,7 @@
           </b-col>
         </b-row>
 
-        <b-row class="wrapper-forms" v-cloak v-if="form.mostrar">
+        <b-row class="wrapper-table" v-cloak v-if="form.mostrar">
           <b-col cols="12">
             <b-table hover :fields="tabla.encabezado" :items="tabla.registros" responsive show-empty :busy="tabla.cargando" :small="true">
               <template v-slot:table-busy>
@@ -256,11 +303,21 @@
               <template v-slot:cell(numero)="data">
                 <b>@{{ data.item.numero }}</b>
               </template>
+
+              <template v-slot:cell(concepto)="data">
+                <b-icon-search v-b-modal="'concepto-'+data.item.id" class="icono"></b-icon-search>
+                <b-modal :id="'concepto-'+data.item.id" :hide-header="true" size="xl" centered>
+                  @{{ data.item.concepto }}
+                  <template v-slot:modal-footer="{ ok }">
+                    <b-button size="sm" variant="primary" @click="ok()">
+                      Cerrar
+                    </b-button>
+                  </template>
+                </b-modal>
+              </template>
+
               <template v-slot:cell(movimiento)="data">
                 <b-badge :variant="data.item.varianteMovimiento" class="text-capitalize">@{{ data.item.movimiento }}</b-badge>
-              </template>
-              <template v-slot:cell(facturador)="data">
-                <span class="text-capitalize">@{{ data.item.facturador }}<span>
               </template>
               <template v-slot:cell(opciones)="data">
                 <a :id="'editar-'+data.item.id" v-if="permisos.permiso_actualizar">
@@ -273,12 +330,12 @@
                   Editar Factura
                 </b-tooltip>
                 <b-tooltip :target="'eliminar-'+data.item.id" triggers="hover">
-                  Eliminar Factura
+                  Anular Factura
                 </b-tooltip>
               </template>
               <template v-slot:custom-foot v-if="tabla.registros.length > 0">
                 <b-tr>
-                  <b-td colspan="8">
+                  <b-td colspan="9">
                     <div>
                       <div><b>Página</b></div>
                       <div class="wrapper-input" v-on:keyup="numeroPagina">

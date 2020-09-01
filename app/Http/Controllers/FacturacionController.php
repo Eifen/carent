@@ -18,12 +18,10 @@ class FacturacionController extends Controller
       $modelo = new FacturacionModel();
 
       $permisos = $modelo->permisosMenu(session("usuario_id"), 16);
-      $divisiones = $modelo->divisiones();
       $estatus = $modelo->estatusProyectos();
       $proyectos = $modelo->proyectosFacturacion();
 
       return [
-        "divisiones" => $divisiones,
         "estatus" => $estatus,
         "permisos" => $permisos,
         "proyectos" => $proyectos,
@@ -60,10 +58,12 @@ class FacturacionController extends Controller
       $facturasCargadas = $modelo->proyectoFacturasCargadas(session("proyecto_id"));
       $permisos = $modelo->permisosMenu(session("usuario_id"), 16);
       $proyecto = $modelo->proyecto(session("proyecto_id"));
+      $facturadoProyecto = $modelo->facturadoProyecto(session("proyecto_id"));
 
       return [
         "conceptos_factura" => $conceptosFactura,
         "facturas_cargadas" => $facturasCargadas,
+        "facturado_proyecto" => $facturadoProyecto,
         "permisos" => $permisos,
         "proyecto" => $proyecto,
         "response" => true
@@ -81,12 +81,14 @@ class FacturacionController extends Controller
 
         $parametros = [
           "id_proyecto" => session("proyecto_id"),
-          "id_concepto_factura" => $request["concepto"],
+          "concepto" => $request["concepto"],
+          "id_concepto_factura" => $request["tipo_concepto"],
           "numero_factura" => strtoupper($request["numero_factura"]),
           "monto_factura" => $request["monto_factura"],
           "numero_control" => strtoupper($request["numero_control"]),
           "observaciones" => $request["observaciones"],
           "fecha_factura" => $request["fecha_factura"],
+          "fecha_cobro_factura" => $request["fecha_cobro_factura"],
           "fecha_registro" => date("Y-m-d"),
           "id_facturador" => session("usuario_id"),
           "id_estatus" => 1
@@ -97,9 +99,11 @@ class FacturacionController extends Controller
         if($conceptosFactura){
 
           $facturasCargadas = $modelo->proyectoFacturasCargadas(session("proyecto_id"));
+          $facturadoProyecto = $modelo->facturadoProyecto(session("proyecto_id"));
 
           return [
             "facturas_cargadas" => $facturasCargadas,
+            "facturado_proyecto" => $facturadoProyecto,
             "message" => "Factura registrada con éxito",
             "response" => true
           ];
