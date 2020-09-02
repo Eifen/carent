@@ -49,7 +49,7 @@ class HorasNoCargablesController extends Controller
 
       $response = $modelo->crearConceptoNoCargable($concepto);
 
-      if($response["response"]){
+      if($response["respuesta"]){
 
         $parametros = [
           "accion" => 'Registro del concepto de horas no cargables: '.$concepto,
@@ -74,11 +74,8 @@ class HorasNoCargablesController extends Controller
       $concepto = $request->input("concepto");
       $id = $request->input("id");
       $id_estatus = $request->input("id_estatus");
-      $usuario_id = $request->session()->get('usuario_id');
-      $fecha = date("Y-m-d H:i:s");
-      $direccion_ip = $request->session()->get('direccion');
 
-      return $modelo->modificarConceptoNoCargable($id,$concepto,$id_estatus,$usuario_id,$fecha,$direccion_ip);
+      return $modelo->modificarConceptoNoCargable($id,$concepto,$id_estatus);
 
     }
 
