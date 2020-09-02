@@ -667,7 +667,7 @@ new Vue({
       self.$refs[indice].show();
 
     },
-    elegirCliente: function(id, razon_social){
+    elegirFactura: function(id, numero_factura){
 
       self.form.camposAtributos.cliente.valor = razon_social;
       self.form.camposAtributos.cliente.valorFocus = razon_social;
