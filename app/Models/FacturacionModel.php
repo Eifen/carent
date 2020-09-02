@@ -121,6 +121,18 @@ class FacturacionModel extends Model
                                   AND cf.id_tipo_concepto_factura = 1
                                ) AS monto_facturado,
                                (
+                                  SELECT IF(
+                                            SUM(fp.monto_factura) IS NULL,
+                                            FORMAT(0,2,"de_DE"),
+                                            FORMAT(SUM(fp.monto_factura),2,"de_DE")
+                                          )
+                                  FROM tbl_factura_proyecto fp,
+                                       tbl_concepto_factura cf
+                                  WHERE fp.id_concepto_factura = cf.id
+                                  AND fp.id_proyecto = '.$id_proyecto.'
+                                  AND cf.id_tipo_concepto_factura = 3
+                               ) AS monto_notas_credito,
+                               (
                                  SELECT IF(
                                             SUM(fp.monto_factura) IS NULL,
                                             FORMAT(0,2,"de_DE"),
