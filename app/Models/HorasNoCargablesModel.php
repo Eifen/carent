@@ -75,7 +75,7 @@ class HorasNoCargablesModel extends Model
 
     }
 
-    function crearConceptoNoCargable($concepto,$usuario_id,$fecha,$direccion_ip){
+    function crearConceptoNoCargable($concepto){
 
       if(DB::table('tbl_concepto_horas_no_cargables')->insert(array("descripcion" => $concepto, "id_estatus" => 1))){
 
@@ -89,7 +89,7 @@ class HorasNoCargablesModel extends Model
 
     }// Fin crearConceptoNoCargable
 
-    function modificarConceptoNoCargable($id,$concepto,$id_estatus,$usuario_id,$fecha,$direccion_ip){
+    function modificarConceptoNoCargable($id,$concepto,$id_estatus){
 
       if(DB::table('tbl_concepto_horas_no_cargables')->where("id",$id)->update(array("descripcion" => $concepto, "id_estatus" => $id_estatus))){
         return array("respuesta" => true, "mensaje" => "Concepto modificado con éxito!");
