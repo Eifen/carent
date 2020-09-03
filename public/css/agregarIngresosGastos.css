@@ -39,23 +39,27 @@ html {
 }
 #app .card.card-monto-contratado,
 #app .card.card-monto-facturado,
-#app .card.card-monto-gasto {
+#app .card.card-monto-gasto,
+#app .card.card-monto-notas-credito {
   margin-top: 20px;
 }
 #app .card.card-monto-contratado .card-text:nth-child(1),
 #app .card.card-monto-facturado .card-text:nth-child(1),
-#app .card.card-monto-gasto .card-text:nth-child(1) {
+#app .card.card-monto-gasto .card-text:nth-child(1),
+#app .card.card-monto-notas-credito .card-text:nth-child(1) {
   margin-bottom: 0px;
 }
 #app .card.card-monto-contratado .card-text .titulo,
 #app .card.card-monto-facturado .card-text .titulo,
-#app .card.card-monto-gasto .card-text .titulo {
+#app .card.card-monto-gasto .card-text .titulo,
+#app .card.card-monto-notas-credito .card-text .titulo {
   font-size: 12px;
   font-weight: bold;
 }
 #app .card.card-monto-contratado .monto,
 #app .card.card-monto-facturado .monto,
-#app .card.card-monto-gasto .monto {
+#app .card.card-monto-gasto .monto,
+#app .card.card-monto-notas-credito .monto {
   color: rgba(0, 0, 0, 0.8);
   font-size: 1.5rem;
   font-weight: bold;
@@ -71,6 +75,12 @@ html {
 }
 #app .card.card-monto-facturado .titulo {
   color: #1CC88A;
+}
+#app .card.card-monto-notas-credito {
+  border-left: 4px solid #FFC107;
+}
+#app .card.card-monto-notas-credito .titulo {
+  color: #FFC107;
 }
 #app .card.card-monto-gasto {
   border-left: 4px solid #DD3D31;
