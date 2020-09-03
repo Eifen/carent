@@ -124,7 +124,6 @@
               <b-form-group
                 :invalid-feedback="form.camposAtributos.numeroFactura.invalidFeedback"
                 class="col-12 col-sm-6 col-md-3"
-                description="Ejemplo: AABB0123C-5"
                 label="N° de Factura"
                 label-for="numeroFactura"
                 id="group-numeroFactura"
@@ -135,6 +134,7 @@
                   :disabled="form.camposAtributos.numeroFactura.disabled"
                   :state="form.camposAtributos.numeroFactura.state"
                   autocomplete="off"
+                  class="text-uppercase"
                   id="numeroFactura"
                   ref="numeroFactura"
                   size="sm"

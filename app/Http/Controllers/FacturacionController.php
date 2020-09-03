@@ -128,4 +128,18 @@ class FacturacionController extends Controller
 
     }
 
+    function buscarFacturaProyecto(Request $request){
+
+      $modelo = new FacturacionModel();
+      $dato = $request["numero_factura"];
+
+      //$clientes = $modelo->clientes($dato,5);
+
+      return [
+        "response" => true,
+        "facturas" => []
+      ];
+
+    }
+
 }
