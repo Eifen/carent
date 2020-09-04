@@ -162,12 +162,28 @@ class FacturacionModel extends Model
 
     }
 
-    function proyectoFacturasCargadas($id_proyecto){
+    function proyectoFacturasCargadas($id_proyecto, $numero_factura = null, $limit = 0){
+
+      if($numero_factura != null){
+
+        $condicion = " AND UPPER(fp.numero_factura) LIKE UPPER('".$numero_factura."%')";
+        $limit = " LIMIT ".$limit;
+
+      }else{
+
+        $condicion = "";
+        $limit = "";
+
+      }
 
       $sql = DB::select('SELECT fp.id,
                                 UPPER(fp.numero_factura) AS numero_factura,
-                                FORMAT(fp.monto_factura,2,"de_DE") AS monto_factura,
-                                DATE_FORMAT(fp.fecha_factura, "%d/%m/%Y") AS fecha_factura,
+                                FORMAT(fp.monto_factura,2,"de_DE") AS monto_factura_formatted,
+                                fp.monto_factura AS monto_factura,
+                                DATE_FORMAT(fp.fecha_factura, "%d/%m/%Y") AS fecha_factura_formatted,
+                                fp.fecha_factura,
+                                DATE_FORMAT(fp.fecha_cobro_factura, "%d/%m/%Y") AS fecha_cobro_factura_formatted,
+                                fp.fecha_cobro_factura,
                                 UPPER(fp.numero_control) AS numero_control,
                                 fp.observaciones,
                                 cf.descripcion AS tipo_concepto,
@@ -181,7 +197,9 @@ class FacturacionModel extends Model
                          WHERE fp.id_concepto_factura = cf.id
                          AND fp.id_facturador = fu.id
                          AND fp.id_proyecto = ?
-                         AND fp.id_estatus = 1', [$id_proyecto]);
+                         AND fp.id_estatus = 1
+                         '.$condicion.'
+                         '.$limit, [$id_proyecto]);
 
       return $sql;
 
