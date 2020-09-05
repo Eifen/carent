@@ -17,7 +17,6 @@ html {
 }
 #app .card {
   box-shadow: 0 0.15rem 1.55rem 0 rgba(58, 59, 69, 0.15);
-  -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 #app .card:hover {
@@ -104,11 +103,22 @@ html {
   border-radius: 3px;
   margin-bottom: 50px;
   padding: 15px;
-  -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 #app .wrapper-forms form:hover {
   box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+}
+#app .wrapper-forms form > div #lista-facturas .btn {
+  border: none;
+  box-shadow: none !important;
+  padding: 0px !important;
+}
+#app .wrapper-forms form > div #lista-facturas .dropdown-menu {
+  width: 100%;
+}
+#app .wrapper-forms form > div #lista-facturas .dropdown-menu .dropdown-item {
+  padding: 0.25rem 0.7rem;
+  white-space: normal;
 }
 #app .wrapper-forms form > div.form-group:nth-last-child(2) {
   margin-top: 20px;
@@ -151,7 +161,6 @@ html {
   border-radius: 3px;
   margin-bottom: 50px;
   padding: 15px;
-  -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 #app .wrapper-table .table:hover {
@@ -163,7 +172,6 @@ html {
   text-align: center;
 }
 #app .wrapper-table .table tbody tr {
-  -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 #app .wrapper-table .table tbody tr:hover {

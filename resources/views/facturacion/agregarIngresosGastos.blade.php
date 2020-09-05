@@ -15,6 +15,12 @@
     </head>
     <body>
 
+      <script>
+        // Se obtiene el valor proveniente del controlador
+        // para luego asignarselo a un variable dentor de vue
+        const proyecto_id = "{{ $id_proyecto }}";
+      </script>
+
       <b-container fluid id="app" v-on:keypress="keyboard">
 
         <loading :loading="loading" v-show="loading"></loading>
@@ -124,7 +130,6 @@
               <b-form-group
                 :invalid-feedback="form.camposAtributos.numeroFactura.invalidFeedback"
                 class="col-12 col-sm-6 col-md-3"
-                description="Ejemplo: AABB0123C-5"
                 label="N° de Factura"
                 label-for="numeroFactura"
                 id="group-numeroFactura"
@@ -135,6 +140,7 @@
                   :disabled="form.camposAtributos.numeroFactura.disabled"
                   :state="form.camposAtributos.numeroFactura.state"
                   autocomplete="off"
+                  class="text-uppercase"
                   id="numeroFactura"
                   ref="numeroFactura"
                   size="sm"
@@ -146,10 +152,10 @@
                     :key="key"
                     v-for="(factura, key) in form.camposAtributos.numeroFactura.listaDropdown.listado"
                     v-if="form.camposAtributos.numeroFactura.listaDropdown.listado.length > 0"
-                    v-on:click="elegirFactura(factura.id, factura.numero_factura)"> @{{ factura.numero_factura }} </b-dropdown-item-button>
+                    v-on:click="elegirFactura(factura)"> @{{ factura.numero_factura }} </b-dropdown-item-button>
                   <b-dropdown-item-button
                     v-if="form.camposAtributos.numeroFactura.listaDropdown.noResultado"
-                    v-on:click="listadoNoValido('cliente')">No se encontrarón facturas, intente con otro número!</b-dropdown-item-button>
+                    v-on:click="listadoNoValido('numeroFactura')">No se encontrarón facturas, intente con otro número!</b-dropdown-item-button>
                 </b-dropdown>
                 <b-form-text id="factura-help" v-html="form.camposAtributos.numeroFactura.help"></b-form-text>
               </b-form-group>
@@ -233,6 +239,25 @@
                   v-model="$v.form.campos.concepto.$model"></b-form-textarea>
               </b-form-group>
               <b-form-group
+                :invalid-feedback="form.camposAtributos.numeroControl.invalidFeedback"
+                class="col-12 col-sm-6 col-md-9"
+                description="Ejemplo: CONTROL-1"
+                label="N° de Control"
+                label-for="numeroControl"
+                id="group-numeroControl">
+                <b-form-input
+                  @input="limpiarMensajeError('numeroControl')"
+                  :disabled="form.camposAtributos.numeroControl.disabled"
+                  :state="form.camposAtributos.numeroControl.state"
+                  autocomplete="off"
+                  class="text-uppercase"
+                  id="numeroControl"
+                  ref="numeroControl"
+                  size="sm"
+                  type="text"
+                  v-model="$v.form.campos.numeroControl.$model"></b-form-input>
+              </b-form-group>
+              <b-form-group
                 :invalid-feedback="form.camposAtributos.fechaCobroFactura.invalidFeedback"
                 class="col-12 col-sm-6 col-md-3"
                 description="Fecha de cobro de la factura"
@@ -253,25 +278,6 @@
                   ref="fechaCobroFactura"
                   size="sm"
                   v-model="form.camposAtributos.fechaCobroFactura.value"></b-form-datepicker>
-              </b-form-group>
-              <b-form-group
-                :invalid-feedback="form.camposAtributos.numeroControl.invalidFeedback"
-                class="col-12 col-sm-6 col-md-9"
-                description="Ejemplo: CONTROL-1"
-                label="N° de Control"
-                label-for="numeroControl"
-                id="group-numeroControl">
-                <b-form-input
-                  @input="limpiarMensajeError('numeroControl')"
-                  :disabled="form.camposAtributos.numeroControl.disabled"
-                  :state="form.camposAtributos.numeroControl.state"
-                  autocomplete="off"
-                  class="text-uppercase"
-                  id="numeroControl"
-                  ref="numeroControl"
-                  size="sm"
-                  type="text"
-                  v-model="$v.form.campos.numeroControl.$model"></b-form-input>
               </b-form-group>
               <b-form-group
                 :invalid-feedback="form.camposAtributos.observaciones.invalidFeedback"
@@ -349,7 +355,7 @@
 
               <template v-slot:cell(concepto)="data">
                 <b-icon-search v-b-modal="'concepto-'+data.item.id" class="icono"></b-icon-search>
-                <b-modal :id="'concepto-'+data.item.id" :hide-header="true" size="xl" centered>
+                <b-modal :id="'concepto-'+data.item.id" :hide-header="true" size="lg" centered>
                   @{{ data.item.concepto }}
                   <template v-slot:modal-footer="{ ok }">
                     <b-button size="sm" variant="primary" @click="ok()">
