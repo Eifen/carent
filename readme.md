@@ -1,4 +1,4 @@
-<p align="center"><img src="https://raw.githubusercontent.com/sofguar/carent/master/public/images/logo-carent.png?token=ANF3Z3WFYJTFEV5WZFN4M527KPGJO" width="400"></p>
+<p align="center"><img src="https://photos.app.goo.gl/vcrjEYBLwV325bPo8" width="400"></p>
 
 ## Sobre CARENT
 
