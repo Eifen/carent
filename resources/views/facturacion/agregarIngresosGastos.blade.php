@@ -15,6 +15,12 @@
     </head>
     <body>
 
+      <script>
+        // Se obtiene el valor proveniente del controlador
+        // para luego asignarselo a un variable dentor de vue
+        const proyecto_id = "{{ $id_proyecto }}";
+      </script>
+
       <b-container fluid id="app" v-on:keypress="keyboard">
 
         <loading :loading="loading" v-show="loading"></loading>
@@ -54,7 +60,7 @@
         </b-row>
 
         <b-row v-cloak v-if="form.mostrar">
-          <b-col cols="12" md="6" lg="4">
+          <b-col cols="12" md="6" lg="3">
             <b-card class="text-left card-monto-contratado">
               <b-card-text>
                 <span class="titulo">MONTO CONTRATADO</span>
@@ -64,17 +70,27 @@
               </b-card-text>
             </b-card-text>
           </b-col>
-          <b-col cols="12" md="6" lg="4">
+          <b-col cols="12" md="6" lg="3">
             <b-card class="text-left card-monto-facturado">
               <b-card-text>
-                <span class="titulo">MONTO FACTURADO</span>
+                <span class="titulo">MONTO NOTAS DE CRÉDITO</span>
               </b-card-text>
               <b-card-text>
                 <span class="monto">@{{ form.info.monto_facturado }}</span>
               </b-card-text>
             </b-card-text>
           </b-col>
-          <b-col cols="12" md="6" lg="4">
+          <b-col cols="12" md="6" lg="3">
+            <b-card class="text-left card-monto-notas-credito">
+              <b-card-text>
+                <span class="titulo">MONTO NOTAS DE CRÉDITO</span>
+              </b-card-text>
+              <b-card-text>
+                <span class="monto">@{{ form.info.monto_notas_credito }}</span>
+              </b-card-text>
+            </b-card-text>
+          </b-col>
+          <b-col cols="12" md="6" lg="3">
             <b-card class="text-left card-monto-gasto">
               <b-card-text>
                 <span class="titulo">MONTO GASTOS NO FACTURABLES</span>
@@ -90,25 +106,6 @@
           <b-col cols="12">
             <b-form class="row justify-content-center">
               <b-form-group
-                :invalid-feedback="form.camposAtributos.concepto.invalidFeedback"
-                class="col-12"
-                description="Descripción por el cual se esta facturando"
-                label="Concepto"
-                label-for="concepto"
-                id="group-concepto">
-                <b-form-textarea
-                  @input="limpiarMensajeError('concepto')"
-                  :disabled="form.camposAtributos.concepto.disabled"
-                  :state="form.camposAtributos.concepto.state"
-                  autocomplete="off"
-                  id="concepto"
-                  ref="concepto"
-                  rows="3"
-                  size="sm"
-                  type="text"
-                  v-model="$v.form.campos.concepto.$model"></b-form-textarea>
-              </b-form-group>
-              <b-form-group
                 :invalid-feedback="form.camposAtributos.tipoConcepto.invalidFeedback"
                 class="col-12 col-sm-6 col-md-3"
                 description="Aquí indicas si es un abono o un gasto"
@@ -116,7 +113,7 @@
                 label-for="tipoConcepto"
                 id="group-tipoConcepto">
                 <b-form-select
-                  @change="limpiarMensajeError('tipoConcepto')"
+                  @change="tipoConcepto"
                   :disabled="form.camposAtributos.tipoConcepto.disabled"
                   :options="comboTipoConceptos"
                   :state="form.camposAtributos.tipoConcepto.state"
@@ -133,10 +130,43 @@
               <b-form-group
                 :invalid-feedback="form.camposAtributos.numeroFactura.invalidFeedback"
                 class="col-12 col-sm-6 col-md-3"
+                label="N° de Factura"
+                label-for="numeroFactura"
+                id="group-numeroFactura"
+                v-if="form.camposAtributos.numeroFactura.busqueda === true">
+                <b-form-input
+                  @blur="valorBlur('numeroFactura')"
+                  @input="buscarFactura"
+                  :disabled="form.camposAtributos.numeroFactura.disabled"
+                  :state="form.camposAtributos.numeroFactura.state"
+                  autocomplete="off"
+                  class="text-uppercase"
+                  id="numeroFactura"
+                  ref="numeroFactura"
+                  size="sm"
+                  type="text"
+                  v-on:focus="valorFocus('numeroFactura')"
+                  v-model.trim="form.camposAtributos.numeroFactura.valor"></b-form-input>
+                <b-dropdown id="lista-facturas" variant="link" no-caret block ref="ref-lista-facturas">
+                  <b-dropdown-item-button
+                    :key="key"
+                    v-for="(factura, key) in form.camposAtributos.numeroFactura.listaDropdown.listado"
+                    v-if="form.camposAtributos.numeroFactura.listaDropdown.listado.length > 0"
+                    v-on:click="elegirFactura(factura)"> @{{ factura.numero_factura }} </b-dropdown-item-button>
+                  <b-dropdown-item-button
+                    v-if="form.camposAtributos.numeroFactura.listaDropdown.noResultado"
+                    v-on:click="listadoNoValido('numeroFactura')">No se encontrarón facturas, intente con otro número!</b-dropdown-item-button>
+                </b-dropdown>
+                <b-form-text id="factura-help" v-html="form.camposAtributos.numeroFactura.help"></b-form-text>
+              </b-form-group>
+              <b-form-group
+                :invalid-feedback="form.camposAtributos.numeroFactura.invalidFeedback"
+                class="col-12 col-sm-6 col-md-3"
                 description="Ejemplo: AABB0123C-5"
                 label="N° de Factura"
                 label-for="numeroFactura"
-                id="group-numeroFactura">
+                id="group-numeroFactura"
+                v-else="form.camposAtributos.numeroFactura.busqueda === false">
                 <b-form-input
                   @input="limpiarMensajeError('numeroFactura')"
                   :disabled="form.camposAtributos.numeroFactura.disabled"
@@ -190,6 +220,44 @@
                   v-model="$v.form.campos.fechaFactura.$model"></b-form-datepicker>
               </b-form-group>
               <b-form-group
+                :invalid-feedback="form.camposAtributos.concepto.invalidFeedback"
+                class="col-12"
+                description="Descripción por el cual se esta facturando"
+                label="Concepto"
+                label-for="concepto"
+                id="group-concepto">
+                <b-form-textarea
+                  @input="limpiarMensajeError('concepto')"
+                  :disabled="form.camposAtributos.concepto.disabled"
+                  :state="form.camposAtributos.concepto.state"
+                  autocomplete="off"
+                  id="concepto"
+                  ref="concepto"
+                  rows="3"
+                  size="sm"
+                  type="text"
+                  v-model="$v.form.campos.concepto.$model"></b-form-textarea>
+              </b-form-group>
+              <b-form-group
+                :invalid-feedback="form.camposAtributos.numeroControl.invalidFeedback"
+                class="col-12 col-sm-6 col-md-9"
+                description="Ejemplo: CONTROL-1"
+                label="N° de Control"
+                label-for="numeroControl"
+                id="group-numeroControl">
+                <b-form-input
+                  @input="limpiarMensajeError('numeroControl')"
+                  :disabled="form.camposAtributos.numeroControl.disabled"
+                  :state="form.camposAtributos.numeroControl.state"
+                  autocomplete="off"
+                  class="text-uppercase"
+                  id="numeroControl"
+                  ref="numeroControl"
+                  size="sm"
+                  type="text"
+                  v-model="$v.form.campos.numeroControl.$model"></b-form-input>
+              </b-form-group>
+              <b-form-group
                 :invalid-feedback="form.camposAtributos.fechaCobroFactura.invalidFeedback"
                 class="col-12 col-sm-6 col-md-3"
                 description="Fecha de cobro de la factura"
@@ -210,25 +278,6 @@
                   ref="fechaCobroFactura"
                   size="sm"
                   v-model="form.camposAtributos.fechaCobroFactura.value"></b-form-datepicker>
-              </b-form-group>
-              <b-form-group
-                :invalid-feedback="form.camposAtributos.numeroControl.invalidFeedback"
-                class="col-12 col-sm-6 col-md-9"
-                description="Ejemplo: CONTROL-1"
-                label="N° de Control"
-                label-for="numeroControl"
-                id="group-numeroControl">
-                <b-form-input
-                  @input="limpiarMensajeError('numeroControl')"
-                  :disabled="form.camposAtributos.numeroControl.disabled"
-                  :state="form.camposAtributos.numeroControl.state"
-                  autocomplete="off"
-                  class="text-uppercase"
-                  id="numeroControl"
-                  ref="numeroControl"
-                  size="sm"
-                  type="text"
-                  v-model="$v.form.campos.numeroControl.$model"></b-form-input>
               </b-form-group>
               <b-form-group
                 :invalid-feedback="form.camposAtributos.observaciones.invalidFeedback"
@@ -306,7 +355,7 @@
 
               <template v-slot:cell(concepto)="data">
                 <b-icon-search v-b-modal="'concepto-'+data.item.id" class="icono"></b-icon-search>
-                <b-modal :id="'concepto-'+data.item.id" :hide-header="true" size="xl" centered>
+                <b-modal :id="'concepto-'+data.item.id" :hide-header="true" size="lg" centered>
                   @{{ data.item.concepto }}
                   <template v-slot:modal-footer="{ ok }">
                     <b-button size="sm" variant="primary" @click="ok()">
@@ -323,7 +372,7 @@
                 <a :id="'editar-'+data.item.id" v-if="permisos.permiso_actualizar">
                    <b-icon-pencil class="icono"></b-icon-pencil>
                 </a>
-                <a :id="'eliminar-'+data.item.id" v-if="permisos.permiso_actualizar">
+                <a :id="'eliminar-'+data.item.id" v-if="permisos.permiso_actualizar" v-on:click="">
                    <b-icon-trash class="icono"></b-icon-trash>
                 </a>
                 <b-tooltip :target="'editar-'+data.item.id" triggers="hover">
