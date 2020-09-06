@@ -317,9 +317,9 @@ class ClienteModel extends Model
     }
     $clientes = DB::select('SELECT c.id,
                                    c.codigo,
-                                   c.razon_social,
-                                   c.email_fiscal,
-                                   c.rif
+                                   UPPER(c.razon_social) AS razon_social,
+                                   LOWER(c.email_fiscal) AS email_fiscal,
+                                   UPPER(c.rif) AS rif
                             FROM tbl_cliente c
                             '.$condicion.'
                          ');
@@ -579,7 +579,7 @@ class ClienteModel extends Model
     DB::beginTransaction();
 
     try {
-      
+
       $data = array(
                     "id_usuario_socio" => $parametros["idUsuario"],
                     "rif" => $parametros["rif"],
