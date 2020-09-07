@@ -176,7 +176,7 @@ class ClienteModel extends Model
     return $parroquias;
   }// Fin parroquias
 
-  function agregarCodigoCliente(){
+  function codigoCliente(){
 
     $cliente = DB::select('SELECT
                                 codigo

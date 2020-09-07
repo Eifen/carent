@@ -23,6 +23,7 @@ html {
   border-radius: 3px;
   margin-bottom: 50px;
   padding: 15px;
+  -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 #nuevoUsuario .wrapper-forms form:hover {
@@ -83,6 +84,7 @@ html {
   border-radius: 2px;
   color: #ffffff;
   font-weight: 600;
+  -webkit-transition: all 0.3s;
   transition: all 0.3s;
   width: 100%;
 }
@@ -103,6 +105,7 @@ html {
   border-radius: 2px;
   color: #ffffff;
   font-weight: 600;
+  -webkit-transition: all 0.3s;
   transition: all 0.3s;
   width: 100%;
 }
@@ -138,6 +141,7 @@ html {
   color: #ffffff;
   font-weight: 600;
   padding: 0.375rem 0.75rem;
+  -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 #nuevoUsuario .vdatetime-popup .vdatetime-popup__actions .vdatetime-popup__actions__button:hover {
