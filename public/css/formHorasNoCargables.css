@@ -24,6 +24,7 @@ html {
   border-radius: 3px;
   margin-bottom: 50px;
   padding: 15px;
+  -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 #app .wrapper-forms form:hover {
@@ -68,6 +69,7 @@ html {
   border-radius: 3px;
   margin-bottom: 50px;
   padding: 15px;
+  -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 #app .wrapper-forms .table:hover {
@@ -79,6 +81,7 @@ html {
   text-align: center;
 }
 #app .wrapper-forms .table tbody tr {
+  -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 #app .wrapper-forms .table tbody tr:hover {
@@ -123,6 +126,7 @@ html {
   border: 2px solid #091F40;
   border-radius: 2px;
   font-weight: 600;
+  -webkit-transition: all 0.3s;
   transition: all 0.3s;
   width: 100%;
 }
@@ -177,6 +181,7 @@ html {
   font-size: 2rem;
   opacity: 1;
   text-shadow: 0 1px 0 #FED600;
+  -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 #app #modal-cargar .modal-dialog .modal-content .modal-header .close:hover,
@@ -238,6 +243,7 @@ html {
   color: #ffffff;
   font-weight: 600;
   padding: 0.375rem 0.75rem;
+  -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 #app #modal-cargar .modal-dialog .modal-content .modal-footer .btn:hover,
@@ -262,6 +268,7 @@ html {
   color: #ffffff;
   font-weight: 600;
   padding: 0.375rem 0.75rem;
+  -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 #app .vdatetime-popup .vdatetime-popup__actions .vdatetime-popup__actions__button:hover {

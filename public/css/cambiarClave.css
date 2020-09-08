@@ -17,6 +17,7 @@ html {
   border: 1px solid rgba(0, 0, 0, 0.13);
   border-radius: 3px;
   padding: 15px;
+  -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 #cambiarClave > .row form:hover {
@@ -53,6 +54,7 @@ html {
   top: 40px;
   position: absolute;
   right: 6px;
+  -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 #cambiarClave > .row form > div.form-group .ver-clave:hover {
@@ -65,6 +67,7 @@ html {
   border-radius: 2px;
   color: #ffffff;
   font-weight: 600;
+  -webkit-transition: all 0.3s;
   transition: all 0.3s;
   width: 100%;
 }

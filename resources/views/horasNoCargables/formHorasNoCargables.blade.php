@@ -149,19 +149,7 @@
                   <td>@{{ registro.fecha_desde+' - '+registro.fecha_hasta }}</td>
                   <td>@{{ registro.estatus }}</td>
                   <td>
-                    <a v-on:click="modificarConcepto(
-                      registro.id,
-                      registro.autor,
-                      registro.id_concepto,
-                      registro.concepto,
-                      registro.fecha_desde_utc,
-                      registro.fecha_hasta_utc,
-                      registro.observacion,
-                      registro.id_estatus,
-                      registro.editar,
-                      registro.fecha_aprobacion,
-                      registro.aprobado_por
-                    )" target="_self">
+                    <a v-on:click="modificarConcepto(registro)" target="_self">
                        <i class="fas fa-cog"></i>
                     </a>
                   </td>

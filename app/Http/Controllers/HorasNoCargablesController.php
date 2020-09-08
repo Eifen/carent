@@ -179,6 +179,7 @@ class HorasNoCargablesController extends Controller
       $aprobado_por = ($request->input("estatus") == 1) ? null : session("usuario_id");
       $fecha_aprobacion = ($request->input("estatus") == 1) ? null : date("Y-m-d H:i:s");
       $id = $request->input("id");
+      $id_usuario = $request->input("id_usuario");
 
       $parametrosUpdate = array(
         "id_concepto" => $request->input("concepto"),
@@ -190,7 +191,7 @@ class HorasNoCargablesController extends Controller
         "fecha_aprobacion" => $fecha_aprobacion
       );
 
-      $modificarHora = $modelo->modificarHorasNoCargables($parametrosUpdate, $id);
+      $modificarHora = $modelo->modificarHorasNoCargables($parametrosUpdate, $id, $id_usuario);
 
       return $modificarHora;
 
