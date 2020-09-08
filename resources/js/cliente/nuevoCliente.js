@@ -41,7 +41,10 @@ new Vue({
 
     refreshForm: false,
     form: {
-
+      codigoCliente:{
+        disabled: false,
+        value: ""
+      },
       rif:{
         disabled: false,
         value: ""
@@ -144,13 +147,12 @@ new Vue({
 
     self = this;
 
-    axios.get('/encryptConfig')
+    axios.get('/codigoCliente')
     .then(function (response) {
 
-      if(response.status === 200 && response.data.key && response.data.iv){
+      if(response.status === 200 && response.data.response === true){
 
-        self.key = response.data.key;
-        self.iv = response.data.iv;
+        self.form.codigoCliente.value = response.data.codigo;
         self.loading = false;
 
       }else{
@@ -532,6 +534,7 @@ new Vue({
         //Obtenemos valores
         let parametros = {
           idUsuario: self.detalleUsuario.data.id,
+          codigoCliente: self.form.codigoCliente.value,
           rif: self.form.rif.value,
           nit: AutoNumeric.getAutoNumericElement("#nit").getNumber(),
           razon_social:  self.form.razon_social.value,
