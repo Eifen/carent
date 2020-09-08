@@ -261,6 +261,7 @@ class HorasNoCargablesModel extends Model
                                 DATE_FORMAT(hnc.fecha_aprobacion, '%d/%m/%Y %l:%i %p') fecha_aprobacion,
                                 hnc.observacion,
                                 hnc.id_estatus,
+                                hnc.id_usuario,
                                 IF(u.id = ".session('usuario_id').", true, false) autor,
                                 IF(hnc.id_estatus = 1, true, false) editar,
                                 DATE_FORMAT(hnc.fecha_aprobacion, '%d/%m/%Y %l:%i %p') fecha_aprobacion,
@@ -374,28 +375,71 @@ class HorasNoCargablesModel extends Model
 
     function registrarHorasNoCargables($parametros){
 
-      if(DB::table('tbl_horas_no_cargables')->insert($parametros)){
+      // Chequeamos que la fecha desde no este usada
+      $sql_fecha_desde = DB::select('SELECT COUNT(1) existe
+                                     FROM tbl_horas_no_cargables
+                                     WHERE fecha_desde BETWEEN "'.$parametros["fecha_desde"].'" AND "'.$parametros["fecha_hasta"].'"
+                                     AND id_usuario = '.$parametros["id_usuario"]);
 
-        $analista = db::select('SELECT u.codigo FROM tbl_usuario u WHERE u.id ='.$parametros["id_usuario"].' ');
+      if((int) $sql_fecha_desde[0]->existe == 0){
 
-        return array(
-          "analista" => $analista[0]->codigo,
-          "response" => true,
-          "message" => "Horas cargadas con éxito!"
-        );
+        // Chequeamos que la fecha hasta no este usada
+        $sql_fecha_hasta = DB::select('SELECT COUNT(1) existe
+                                       FROM tbl_horas_no_cargables
+                                       WHERE fecha_hasta = "'.$parametros["fecha_hasta"].'"
+                                       AND id_usuario = '.$parametros["id_usuario"]);
+
+        if((int) $sql_fecha_hasta[0]->existe == 0){
+
+          if(DB::table('tbl_horas_no_cargables')->insert($parametros)){
+
+            $analista = db::select('SELECT u.codigo FROM tbl_usuario u WHERE u.id ='.$parametros["id_usuario"].' ');
+
+            return array(
+              "analista" => $analista[0]->codigo,
+              "response" => true,
+              "message" => "Horas cargadas con éxito!"
+            );
+
+          }else{
+            return array("response" => false, "message" => "Error al tratar de cargar las horas, intente nuevamente!");
+          }
+
+        }else{
+          return array("response" => false, "message" => "La fecha HASTA ya ha sido cargada en otra Hora No Cargable, por favor filtre por fecha y busque cuales conceptos ya cargados posee dicha fecha!");
+        }
 
       }else{
-        return array("response" => false, "message" => "Error al tratar de cargar las horas, intente nuevamente!");
+        return array("response" => false, "message" => "La fecha DESDE ya ha sido cargada en otra Hora No Cargable, por favor filtre por fecha y busque cuales conceptos ya cargados posee dicha fecha!");
       }
 
     }// Fin registrarHorasNoCargables
 
-    function modificarHorasNoCargables($parametros, $id){
+    function modificarHorasNoCargables($parametros, $id, $id_usuario){
 
-      if(DB::table('tbl_horas_no_cargables')->where("id",$id)->update($parametros)){
-        return array("respuesta" => true, "mensaje" => "Horas modificadas con éxito!");
+      // Chequeamos que la fecha desde no este usada
+      $sql_fecha_desde = DB::select('SELECT COUNT(1) existe
+                                     FROM tbl_horas_no_cargables
+                                     WHERE fecha_desde BETWEEN "'.$parametros["fecha_desde"].'" AND "'.$parametros["fecha_hasta"].'"
+                                     AND id_usuario = '.$id_usuario.'
+                                     AND id <> '.$id);
+
+      if((int) $sql_fecha_desde[0]->existe == 0){
+
+        try {
+
+          $update = DB::table('tbl_horas_no_cargables')->where("id",$id)->update($parametros);
+
+          return array("respuesta" => true, "mensaje" => "Horas modificadas con éxito!");
+
+        } catch(\Illuminate\Database\QueryException $ex){
+
+          return array("respuesta" => false, "mensaje" => "Error al modificar las horas, intente nuevamente!");
+
+        }
+
       }else{
-        return array("respuesta" => false, "mensaje" => "Error al modificar las horas, intente nuevamente!");
+        return array("response" => false, "message" => "La fecha DESDE ya ha sido cargada en otra Hora No Cargable, por favor filtre por fecha y busque cuales conceptos ya cargados posee dicha fecha!");
       }
 
     }

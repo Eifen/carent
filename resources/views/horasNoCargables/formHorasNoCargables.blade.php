@@ -149,19 +149,7 @@
                   <td>@{{ registro.fecha_desde+' - '+registro.fecha_hasta }}</td>
                   <td>@{{ registro.estatus }}</td>
                   <td>
-                    <a v-on:click="modificarConcepto(
-                      registro.id,
-                      registro.autor,
-                      registro.id_concepto,
-                      registro.concepto,
-                      registro.fecha_desde_utc,
-                      registro.fecha_hasta_utc,
-                      registro.observacion,
-                      registro.id_estatus,
-                      registro.editar,
-                      registro.fecha_aprobacion,
-                      registro.aprobado_por
-                    )" target="_self">
+                    <a v-on:click="modificarConcepto(registro)" target="_self">
                        <i class="fas fa-cog"></i>
                     </a>
                   </td>
@@ -242,8 +230,9 @@
                   <div class="form-group col-6" id="fechaDesde">
                     <label>Fecha Desde</label>
                     <datetime
-                      @input="fechaMinima('formCargarHoras', $event)"
+                      @input="fechaDesde('formCargarHoras', $event)"
                       :disabled="formCargarHoras.fechaDesde.disabled"
+                      :max-datetime="formCargarHoras.fechaDesde.maxValue"
                       :minute-step="30"
                       :use12-hour="true"
                       format="dd/LL/yyyy hh:mm a"
@@ -263,11 +252,12 @@
                     <datetime
                       @input="limpiarMensajeError"
                       :disabled="formCargarHoras.fechaHasta.disabled"
+                      :max-datetime="formCargarHoras.fechaHasta.maxValue"
                       :min-datetime="formCargarHoras.fechaHasta.minValue"
                       :minute-step="30"
                       :use12-hour="true"
                       format="dd/LL/yyyy hh:mm a"
-                      input-class="form-control"
+                      input-class="form-control fechaHasta"
                       v-model="formCargarHoras.fechaHasta.value"
                       value-zone='local'
                       type="datetime"
@@ -348,8 +338,9 @@
                   <div class="form-group col-6" id="fechaDesde">
                     <label>Fecha Desde</label>
                     <datetime
-                      @input="fechaMinima('formModificarHoras', $event)"
+                      @input="fechaDesde('formModificarHoras', $event)"
                       :disabled="formModificarHoras.fechaDesde.disabled"
+                      :max-datetime="formModificarHoras.fechaDesde.maxValue"
                       :minute-step="30"
                       :use12-hour="true"
                       format="dd/LL/yyyy hh:mm a"
@@ -369,11 +360,12 @@
                     <datetime
                       @input="limpiarMensajeError"
                       :disabled="formModificarHoras.fechaHasta.disabled"
+                      :max-datetime="formModificarHoras.fechaHasta.maxValue"
                       :min-datetime="formModificarHoras.fechaHasta.minValue"
                       :minute-step="30"
                       :use12-hour="true"
                       format="dd/LL/yyyy hh:mm a"
-                      input-class="form-control"
+                      input-class="form-control fechaHasta"
                       v-model="formModificarHoras.fechaHasta.value"
                       value-zone='local'
                       type="datetime"

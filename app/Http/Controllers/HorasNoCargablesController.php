@@ -14,7 +14,7 @@ class HorasNoCargablesController extends Controller
     function dataInicialConceptosHorasNoCargables(){
 
       $modelo = new HorasNoCargablesModel();
-      $paginar = 10;
+      $paginar = 50;
       $conceptos = $modelo->conceptosHorasNoCargables($paginar);
       $estatus = $modelo->estatusHorasNoCargables();
       $cantidadPaginas = $modelo->cantidadPaginasConceptosHorasNoCargables($paginar);
@@ -85,7 +85,7 @@ class HorasNoCargablesController extends Controller
 
       if(session("cargo_id") !== NULL){
 
-        $paginar = 10;
+        $paginar = 50;
         $supervisa = $modelo->supervisaA(session("cargo_id"), session("division_id"), session("usuario_id"));
         $horas = $modelo->horasCargadas($paginar, 0, session("usuario_id"), session("division_id"), $supervisa["supervisa"], $supervisa["supervisaTodo"]);
         $cantidadPaginas = $modelo->cantidadPaginasHorasCargadas($paginar, session("usuario_id"), session("division_id"), $supervisa["supervisa"], $supervisa["supervisaTodo"]);
@@ -179,6 +179,7 @@ class HorasNoCargablesController extends Controller
       $aprobado_por = ($request->input("estatus") == 1) ? null : session("usuario_id");
       $fecha_aprobacion = ($request->input("estatus") == 1) ? null : date("Y-m-d H:i:s");
       $id = $request->input("id");
+      $id_usuario = $request->input("id_usuario");
 
       $parametrosUpdate = array(
         "id_concepto" => $request->input("concepto"),
@@ -190,7 +191,7 @@ class HorasNoCargablesController extends Controller
         "fecha_aprobacion" => $fecha_aprobacion
       );
 
-      $modificarHora = $modelo->modificarHorasNoCargables($parametrosUpdate, $id);
+      $modificarHora = $modelo->modificarHorasNoCargables($parametrosUpdate, $id, $id_usuario);
 
       return $modificarHora;
 

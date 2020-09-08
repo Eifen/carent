@@ -10,7 +10,7 @@ html {
 #app .wrapper-forms {
   min-height: calc(100vh - 62px);
   padding-bottom: 50px;
-  padding-top: 100px;
+  padding-top: 50px;
 }
 @media (max-width: 575px) {
   #app .wrapper-forms {
