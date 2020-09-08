@@ -116,5 +116,6 @@ Route::get('/formIngresosGastos', 'FacturacionController@formIngresosGastos')->m
 Route::get('/dataInicialIngresosGastos', 'FacturacionController@dataInicialIngresosGastos');
 Route::get('/formAgregarIngresosGastos/{idProyecto}', 'FacturacionController@formAgregarIngresosGastos')->where('idProyecto', '[0-9]+')->middleware('usuario.session');
 Route::get('/dataInicialAgregarIngresosGastos', 'FacturacionController@dataInicialAgregarIngresosGastos')->middleware('usuario.session');
+Route::get('buscarFacturaProyecto', 'FacturacionController@buscarFacturaProyecto');
 
 Route::post('/registrarFactura', 'FacturacionController@registrarFactura');

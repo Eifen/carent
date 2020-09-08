@@ -14,7 +14,7 @@ class HorasNoCargablesController extends Controller
     function dataInicialConceptosHorasNoCargables(){
 
       $modelo = new HorasNoCargablesModel();
-      $paginar = 10;
+      $paginar = 50;
       $conceptos = $modelo->conceptosHorasNoCargables($paginar);
       $estatus = $modelo->estatusHorasNoCargables();
       $cantidadPaginas = $modelo->cantidadPaginasConceptosHorasNoCargables($paginar);
@@ -85,7 +85,7 @@ class HorasNoCargablesController extends Controller
 
       if(session("cargo_id") !== NULL){
 
-        $paginar = 10;
+        $paginar = 50;
         $supervisa = $modelo->supervisaA(session("cargo_id"), session("division_id"), session("usuario_id"));
         $horas = $modelo->horasCargadas($paginar, 0, session("usuario_id"), session("division_id"), $supervisa["supervisa"], $supervisa["supervisaTodo"]);
         $cantidadPaginas = $modelo->cantidadPaginasHorasCargadas($paginar, session("usuario_id"), session("division_id"), $supervisa["supervisa"], $supervisa["supervisaTodo"]);

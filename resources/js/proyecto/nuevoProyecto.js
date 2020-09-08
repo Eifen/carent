@@ -544,7 +544,7 @@ new Vue({
         .catch(error => {
 
           self.form.camposAtributos.cliente.help = self.form.camposAtributos.cliente.helpInit;
-          self.form.camposAtributos.cliente.invalidFeedback = "Ocurrio un error, intenta nuevamente; con este error no podrás generar la multa.";
+          self.form.camposAtributos.cliente.invalidFeedback = "Ocurrio un error, intenta nuevamente; con este error no podrás generar el proyecto.";
           self.form.camposAtributos.cliente.state = false;
 
         });
@@ -630,7 +630,7 @@ new Vue({
         .catch(error => {
 
           self.form.camposAtributos.socio.help = self.form.camposAtributos.socio.helpInit;
-          self.form.camposAtributos.socio.invalidFeedback = "Ocurrio un error, intenta nuevamente; con este error no podrás generar la multa.";
+          self.form.camposAtributos.socio.invalidFeedback = "Ocurrio un error, intenta nuevamente; con este error no podrás generar el proyecto.";
           self.form.camposAtributos.socio.state = false;
 
         });
@@ -690,7 +690,7 @@ new Vue({
         .catch(error => {
 
           self.form.camposAtributos.gerente.help = self.form.camposAtributos.gerente.helpInit;
-          self.form.camposAtributos.gerente.invalidFeedback = "Ocurrio un error, intenta nuevamente; con este error no podrás generar la multa.";
+          self.form.camposAtributos.gerente.invalidFeedback = "Ocurrio un error, intenta nuevamente; con este error no podrás generar el proyecto.";
           self.form.camposAtributos.gerente.state = false;
 
         });

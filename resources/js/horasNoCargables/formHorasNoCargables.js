@@ -6,6 +6,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 window.zenscroll = require('zenscroll');
 window.axios = require('axios');
 window.AutoNumeric = require('autonumeric');
+const moment = require('moment');
 import Multiselect from 'vue-multiselect';
 import VueNumeric from 'vue-numeric';
 import { Datetime } from 'vue-datetime';
@@ -94,10 +95,12 @@ new Vue({
       },
       fechaDesde:{
         disabled:false,
+        maxValue: "",
         value: ""
       },
       fechaHasta:{
         disabled:true,
+        maxValue: "",
         minValue: "",
         value: ""
       },
@@ -120,10 +123,12 @@ new Vue({
       fechaAprobacion: "",
       fechaDesde:{
         disabled:false,
+        maxValue: "",
         value: ""
       },
       fechaHasta:{
         disabled:false,
+        maxValue: "",
         minValue: "",
         value: ""
       },
@@ -234,10 +239,13 @@ new Vue({
         },
         fechaDesde:{
           disabled:false,
+          maxValue: "",
+          minValue: "",
           value: ""
         },
         fechaHasta:{
           disabled:true,
+          maxValue: "",
           minValue: "",
           value: ""
         },
@@ -247,6 +255,8 @@ new Vue({
           value: ""
         }
       }
+
+      self.fechaDesde("formCargarHoras", "");
 
       $(".multiselect").parents(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
       $(".multiselect .multiselect__tags").removeClass("error");
@@ -283,10 +293,13 @@ new Vue({
         fechaAprobacion: "",
         fechaDesde:{
           disabled:false,
+          maxValue: "",
+          minValue: "",
           value: ""
         },
         fechaHasta:{
           disabled:false,
+          maxValue: "",
           minValue: "",
           value: ""
         },
@@ -297,6 +310,8 @@ new Vue({
           value: ""
         }
       }
+
+      self.fechaDesde("formModificarHoras", "");
 
       $("#modificarConcepto").removeClass("error");
       $("#modificarConcepto").parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
@@ -329,17 +344,66 @@ new Vue({
       return date_formated
 
     },
-    fechaMinima: function(form,e){
+    fechaDesde: function(form,e){
+
+      self.limpiarMensajeError($("#"+form+" .fechaDesde"));
+
+      self.formModificarHoras.fechaHasta.value = "";
+
+      var fecha, fecha_desde_max;
 
       if(e !== ""){
 
-        var fecha_hasta = new Date(e).getTime() + (30 * 60000);
-            fecha_hasta = new Date(fecha_hasta).toISOString();
+        fecha = moment();
+        fecha_desde_max = moment(e);
 
-        self[form].fechaHasta.minValue = fecha_hasta;
-        self[form].fechaHasta.value = "";
+        var fecha_hasta_max = fecha;
+
+        if(fecha_hasta_max.minute() < 30){
+          self[form].fechaHasta.maxValue = fecha_hasta_max.startOf("hour").toISOString();
+        }else{
+          self[form].fechaHasta.maxValue = fecha_hasta_max.startOf("hour").add(30, "minutes").toISOString();
+        }
+
+        var fecha_hasta_min = fecha_desde_max;
+        self[form].fechaHasta.minValue = fecha_hasta_min.add(30, "minutes").toISOString();
         self[form].fechaHasta.disabled = false;
-        self.limpiarMensajeError($("#"+form+" .fechaDesde"));
+
+      }else{
+
+        fecha = fecha_desde_max = moment();
+
+        if(fecha_desde_max.minute() < 30){
+          fecha_desde_max = fecha_desde_max.startOf("hour").subtract(30, "minute");
+          self[form].fechaDesde.maxValue = fecha_desde_max.toISOString();
+        }else{
+          fecha_desde_max =  fecha_desde_max.startOf("hour");
+          self[form].fechaDesde.maxValue = fecha_desde_max.toISOString();
+        }
+
+      }
+
+    },
+    fechaHasta: function(form, fecha_desde, fecha_hasta){
+
+      self.limpiarMensajeError($("#"+form+" .fechaHasta"));
+
+      if(fecha !== ""){
+
+        var fecha = moment();
+        var fecha_desde_max = moment(fecha_desde);
+
+        var fecha_hasta_max = fecha;
+
+        if(fecha_hasta_max.minute() < 30){
+          self[form].fechaHasta.maxValue = fecha_hasta_max.startOf("hour").toISOString();
+        }else{
+          self[form].fechaHasta.maxValue = fecha_hasta_max.startOf("hour").add(30, "minutes").toISOString();
+        }
+
+        var fecha_hasta_min = fecha_desde_max;
+        self[form].fechaHasta.minValue = fecha_hasta_min.add(30, "minutes").toISOString();
+
       }
 
     },
@@ -550,6 +614,7 @@ new Vue({
     },
     validarForm: function(formulario) {
 
+
       if(self[formulario].concepto.value === "" || self[formulario].concepto.value === null){
 
         $('#'+formulario+" #concepto").find(".mensaje").html("Este campo es requerido!").addClass("invalid-feedback");
@@ -577,7 +642,19 @@ new Vue({
 
           }else{
 
-            return true;
+            const fecha_desde = moment(self[formulario].fechaDesde.value);
+            const fecha_hasta = moment(self[formulario].fechaHasta.value);
+
+            if(fecha_desde >= fecha_hasta){
+
+              $('#'+formulario+" #fechaHasta").find(".mensaje").html("La Decha Hasta no puede ser menor o igual a la Fecha Desde!").addClass("invalid-feedback");
+              $('#'+formulario+" #fechaHasta").find(".form-control").addClass("error");
+
+            }else{
+
+              return true;
+
+            }
 
           }
 
@@ -593,8 +670,8 @@ new Vue({
         id:id_concepto,
         descripcion: concepto
       };
+
       self.formModificarHoras.fechaDesde.value = fecha_desde;
-      self.fechaMinima("formModificarHoras",fecha_desde);
       self.formModificarHoras.fechaHasta.value = fecha_hasta;
       self.formModificarHoras.observacion.value = (observacion === null) ? "" : observacion;
       self.formModificarHoras.estatus.value = id_estatus;
@@ -607,6 +684,8 @@ new Vue({
       self.submitModalModificarHora.show = ((autor === 1 && editar === 1) || self.supervisor === true) ? true : false;
       self.formModificarHoras.fechaAprobacion = (fecha_aprobacion === null) ? "" : fecha_aprobacion;
       self.formModificarHoras.aprobadoPor = (aprobado_por === null) ? "" : aprobado_por;
+
+      self.fechaHasta("formModificarHoras", fecha_desde, fecha_hasta);
 
       $("#modal-modificar").modal("show");
 

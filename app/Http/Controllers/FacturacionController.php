@@ -36,11 +36,9 @@ class FacturacionController extends Controller
 
       $permisos = $modelo->permisosMenu(session("usuario_id"), 16);
 
-      $request->session()->put('proyecto_id', $idProyecto);
-
       if((int) $permisos->permiso_crear == 1 && (int) $permisos->permiso_actualizar == 1){
 
-        return view('facturacion/agregarIngresosGastos');
+        return view('facturacion/agregarIngresosGastos', ["id_proyecto" => $idProyecto]);
 
       }else{
 
@@ -50,15 +48,17 @@ class FacturacionController extends Controller
 
     }
 
-    function dataInicialAgregarIngresosGastos(){
+    function dataInicialAgregarIngresosGastos(Request $request){
 
       $modelo = new FacturacionModel();
 
+      $id_proyecto = $request["id_proyecto"];
+
       $conceptosFactura = $modelo->conceptosFactura();
-      $facturasCargadas = $modelo->proyectoFacturasCargadas(session("proyecto_id"));
-      $permisos = $modelo->permisosMenu(session("usuario_id"), 16);
-      $proyecto = $modelo->proyecto(session("proyecto_id"));
-      $facturadoProyecto = $modelo->facturadoProyecto(session("proyecto_id"));
+      $facturasCargadas = $modelo->proyectoFacturasCargadas($id_proyecto);
+      $permisos = $modelo->permisosMenu($id_proyecto, 16);
+      $proyecto = $modelo->proyecto($id_proyecto);
+      $facturadoProyecto = $modelo->facturadoProyecto($id_proyecto);
 
       return [
         "conceptos_factura" => $conceptosFactura,
@@ -80,7 +80,7 @@ class FacturacionController extends Controller
       if($permisos->permiso_crear){
 
         $parametros = [
-          "id_proyecto" => session("proyecto_id"),
+          "id_proyecto" => $request["id_proyecto"],
           "concepto" => $request["concepto"],
           "id_concepto_factura" => $request["tipo_concepto"],
           "numero_factura" => strtoupper($request["numero_factura"]),
@@ -98,8 +98,8 @@ class FacturacionController extends Controller
 
         if($conceptosFactura){
 
-          $facturasCargadas = $modelo->proyectoFacturasCargadas(session("proyecto_id"));
-          $facturadoProyecto = $modelo->facturadoProyecto(session("proyecto_id"));
+          $facturasCargadas = $modelo->proyectoFacturasCargadas($request["id_proyecto"]);
+          $facturadoProyecto = $modelo->facturadoProyecto($request["id_proyecto"]);
 
           return [
             "facturas_cargadas" => $facturasCargadas,
@@ -125,6 +125,21 @@ class FacturacionController extends Controller
         ];
 
       }
+
+    }
+
+    function buscarFacturaProyecto(Request $request){
+
+      $modelo = new FacturacionModel();
+      $numero_factura = $request["numero_factura"];
+      $id_proyecto = $request["id_proyecto"];
+
+      $facturas = $modelo->proyectoFacturasCargadas($id_proyecto, $numero_factura, 5);
+
+      return [
+        "response" => true,
+        "facturas" => $facturas
+      ];
 
     }
 
