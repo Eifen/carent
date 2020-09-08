@@ -348,7 +348,7 @@ new Vue({
 
       self.limpiarMensajeError($("#"+form+" .fechaDesde"));
 
-      self.formModificarHoras.fechaHasta.value = "";
+      self[form].fechaHasta.value = "";
 
       var fecha, fecha_desde_max;
 
@@ -614,7 +614,6 @@ new Vue({
     },
     validarForm: function(formulario) {
 
-
       if(self[formulario].concepto.value === "" || self[formulario].concepto.value === null){
 
         $('#'+formulario+" #concepto").find(".mensaje").html("Este campo es requerido!").addClass("invalid-feedback");
@@ -663,29 +662,30 @@ new Vue({
       }// Fin del if
 
     },
-    modificarConcepto: function(id,autor,id_concepto,concepto,fecha_desde,fecha_hasta,observacion,id_estatus,editar, fecha_aprobacion, aprobado_por){
+    modificarConcepto: function(registro){
 
-      self.formModificarHoras.id = id;
+      self.formModificarHoras.id = registro.id;
       self.formModificarHoras.concepto.value = {
-        id:id_concepto,
-        descripcion: concepto
+        id: registro.id_concepto,
+        id_usuario: registro.id_usuario,
+        descripcion: registro.concepto
       };
 
-      self.formModificarHoras.fechaDesde.value = fecha_desde;
-      self.formModificarHoras.fechaHasta.value = fecha_hasta;
-      self.formModificarHoras.observacion.value = (observacion === null) ? "" : observacion;
-      self.formModificarHoras.estatus.value = id_estatus;
+      self.formModificarHoras.fechaDesde.value = registro.fecha_desde_utc;
+      self.formModificarHoras.fechaHasta.value = registro.fecha_hasta_utc;
+      self.formModificarHoras.observacion.value = (registro.observacion === null) ? "" : registro.observacion;
+      self.formModificarHoras.estatus.value = registro.id_estatus;
 
-      self.formModificarHoras.concepto.disabled = ((autor === 1 && editar === 1) || (autor === 1 && self.supervisor === true)) ? false : true;
-      self.formModificarHoras.fechaDesde.disabled = ((autor === 1 && editar === 1) || (autor === 1 && self.supervisor === true)) ? false : true;
-      self.formModificarHoras.fechaHasta.disabled = ((autor === 1 && editar === 1) || (autor === 1 && self.supervisor === true)) ? false : true;
-      self.formModificarHoras.observacion.disabled = ((autor === 1 && editar === 1) || (autor === 1 && self.supervisor === true)) ? false : true;
+      self.formModificarHoras.concepto.disabled = ((registro.autor === 1 && registro.editar === 1) || (registro.autor === 1 && self.supervisor === true)) ? false : true;
+      self.formModificarHoras.fechaDesde.disabled = ((registro.autor === 1 && registro.editar === 1) || (registro.autor === 1 && self.supervisor === true)) ? false : true;
+      self.formModificarHoras.fechaHasta.disabled = ((registro.autor === 1 && registro.editar === 1) || (registro.autor === 1 && self.supervisor === true)) ? false : true;
+      self.formModificarHoras.observacion.disabled = ((registro.autor === 1 && registro.editar === 1) || (registro.autor === 1 && self.supervisor === true)) ? false : true;
       self.formModificarHoras.estatus.disabled = (self.supervisor === true) ? false : true;
-      self.submitModalModificarHora.show = ((autor === 1 && editar === 1) || self.supervisor === true) ? true : false;
-      self.formModificarHoras.fechaAprobacion = (fecha_aprobacion === null) ? "" : fecha_aprobacion;
-      self.formModificarHoras.aprobadoPor = (aprobado_por === null) ? "" : aprobado_por;
+      self.submitModalModificarHora.show = ((registro.autor === 1 && registro.editar === 1) || self.supervisor === true) ? true : false;
+      self.formModificarHoras.fechaAprobacion = (registro.fecha_aprobacion === null) ? "" : registro.fecha_aprobacion;
+      self.formModificarHoras.aprobadoPor = (registro.aprobado_por === null) ? "" : registro.aprobado_por;
 
-      self.fechaHasta("formModificarHoras", fecha_desde, fecha_hasta);
+      self.fechaHasta("formModificarHoras", registro.fecha_desde_utc, registro.fecha_hasta_utc);
 
       $("#modal-modificar").modal("show");
 
@@ -711,6 +711,7 @@ new Vue({
         //Obtenemos valores
         let parametros = {
           id: self.formModificarHoras.id,
+          id_usuario: self.formModificarHoras.concepto.value.id_usuario,
           concepto: self.formModificarHoras.concepto.value.id,
           fechaDesde: self.formModificarHoras.fechaDesde.value,
           fechaHasta: self.formModificarHoras.fechaHasta.value,
@@ -749,6 +750,9 @@ new Vue({
         .catch(error => {
 
           self.formModificarHoras.concepto.disabled = false;
+          self.formModificarHoras.fechaDesde.disabled = false;
+          self.formModificarHoras.fechaHasta.disabled = false;
+          self.formModificarHoras.observacion.disabled = false;
           self.formModificarHoras.estatus.disabled = false;
           self.submitModalModificarHora.content = 'Modificar';
           self.submitModalModificarHora.disabled = false;
