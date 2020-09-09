@@ -82,6 +82,14 @@ new Vue({
         disabled: true,
         value: ""
       },
+      fechaDesde: {
+        disabled: true,
+        value: ""
+      },
+      fechaHasta: {
+        disabled: true,
+        value: ""
+      },
       mostrar: false
     },
     formCargarHoras: {
@@ -176,6 +184,7 @@ new Vue({
         self.formFiltro.divisiones.disabled = false;
         self.formFiltro.empleados.disabled = false;
         self.formFiltro.estatus.disabled = false;
+        self.formFiltro.fechaDesde.disabled = false;
         self.formFiltro.mostrar = true;
         self.formFiltro.btn.cargar.html = self.formFiltro.btn.cargar.htmlInit;
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
@@ -342,6 +351,12 @@ new Vue({
       let date_formated = dd+"/"+mm+"/"+yyyy+" "+hours+":"+minutes+" "+ampm;
 
       return date_formated
+
+    },
+    fechaDesdeFiltro: function(fecha){
+
+      console.log("FILTRO")
+      console.log(fecha)
 
     },
     fechaDesde: function(form,e){
