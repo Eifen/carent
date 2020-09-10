@@ -27,7 +27,6 @@ html {
   border-radius: 3px;
   margin-bottom: 50px;
   padding: 15px;
-  -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 #nuevoCliente .wrapper-forms form:hover {
@@ -75,7 +74,6 @@ html {
 }
 #nuevoCliente .wrapper-forms form > div.wrapper-recovery-pass .recuperarClave {
   color: #007BFF;
-  -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 #nuevoCliente .wrapper-forms form > div.wrapper-recovery-pass .recuperarClave:hover {
@@ -92,7 +90,6 @@ html {
   border-radius: 2px;
   color: #ffffff;
   font-weight: 600;
-  -webkit-transition: all 0.3s;
   transition: all 0.3s;
   width: 100%;
 }
@@ -113,7 +110,6 @@ html {
   border-radius: 2px;
   color: #ffffff;
   font-weight: 600;
-  -webkit-transition: all 0.3s;
   transition: all 0.3s;
   width: 100%;
 }

@@ -106,7 +106,7 @@
                   <th scope="col">Descripción</th>
                   <th scope="col">Horas</th>
                   <th scope="col" v-if="permisoActualizar">Modificar</th>
-                  <th scope="col" v-if="permisoEliminar">Eliminar</th>
+                  <th scope="col">Eliminar</th>
                 </tr>
               </thead>
               <tbody>
@@ -117,7 +117,7 @@
                   <td v-if="permisoActualizar">
                        <i class="far fa-edit" v-on:click="detalleModHorasCargadas(cargadas.id, $event)"></i>
                   </td>
-                  <td v-if="permisoEliminar">
+                  <td>
                        <i class="fas fa-trash" v-on:click="detalleHorasEliminar(cargadas.id, $event)"></i>
                   </td>
                 </tr>

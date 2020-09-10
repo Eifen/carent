@@ -119,7 +119,6 @@ new Vue({
         self.form.mostrar = true;
         self.form.btn.Crear.html = self.form.btn.Crear.htmlInit;
         self.permisoActualizar = response.data.permisoActualizar;
-        self.permisoEliminar = response.data.permisoEliminar;
         self.permisoCrear = response.data.permisoCrear;
 
         self.horas_asignadas = self.infoProyAnalista.horas_asignadas;
@@ -216,6 +215,9 @@ new Vue({
       var fechaN = self.form.fecha.value;
       var formValido = true;
 
+      self.form.btn.Crear.disabled = true;
+      self.form.btn.Crear.html = self.form.btn.Crear.htmlLoading;
+
       $("form .form-group .mensaje").html("").removeClass("invalid-feedback");
       $("form .form-group .form-control").removeClass("error");
 
@@ -225,6 +227,8 @@ new Vue({
 
           var input = $(elemento).find(".form-control")[0];
           var valido = self.validarValor(input);
+          self.form.btn.Crear.html = self.form.btn.Crear.htmlInit;
+          self.form.btn.Crear.disabled = false;
 
           if(!valido.respuesta){
             $(elemento).find(".mensaje").html(valido.mensaje).addClass("invalid-feedback");
@@ -252,6 +256,8 @@ new Vue({
             message : message,
             show: true
           };
+          self.form.btn.Crear.disabled = false;
+          self.form.btn.Crear.html = self.form.btn.Crear.htmlInit;
           setTimeout(function(){
               self.alertForm = {
               class: "",
@@ -266,6 +272,8 @@ new Vue({
             message : message,
             show: true
           };
+          self.form.btn.Crear.disabled = false;
+          self.form.btn.Crear.html = self.form.btn.Crear.htmlInit;
           self.cargar = 0;
         }else if (self.form.horas_trabajadas.value > 23) {
           var message = "Maximo de 23 horas trabajadas al dia.";
@@ -274,20 +282,7 @@ new Vue({
             message : message,
             show: true
           };
-          setTimeout(function(){
-              self.alertForm = {
-              class: "",
-              message: "",
-              show: false
-              };
-            }, 2000);
-        }else if (fechaN < "06/01/2010") {
-          var message = "Debe introducir una fecha valida";
-          self.alertForm = {
-            class : "alert alert-warning",
-            message : message,
-            show: true
-          };
+          self.form.btn.Crear.html = self.form.btn.Crear.htmlInit;
           setTimeout(function(){
               self.alertForm = {
               class: "",
@@ -320,6 +315,18 @@ new Vue({
             self.actualizar(); //Invocamos el metodo actualizar
           }else{
 
+            self.alertForm = {
+              class : "alert alert-success",
+              message : response.data.message,
+              show: true
+            };
+            setTimeout(function(){
+              self.alertForm = {
+              class: "",
+              message: "",
+              show: false
+              };
+            }, 2000);
             throw response.data;
 
           }
@@ -349,6 +356,7 @@ new Vue({
     },
 
     actualizar: function(){
+
       //Se buscan los parametros actualizados y se los asignamos a las variables
       axios.get('/datosHorasProyecto')
       .then(function (response) {
@@ -358,6 +366,7 @@ new Vue({
         self.infoProyAnalista = response.data.infoProyAnalista;
         self.infoHorasCargadas = response.data.infoHorasCargadas;
         self.form.mostrar = true;
+        self.form.btn.Crear.disabled = false;
         self.form.btn.Crear.html = self.form.btn.Crear.htmlInit;
         self.horas_cargadas = 0;
         for (var i = 0; i < self.infoHorasCargadas.length; i++) {
@@ -481,6 +490,18 @@ new Vue({
             self.actualizar(); // Invocamos el metodo actualizar
           }else{
 
+            self.alertForm = {
+              class : "alert alert-success",
+              message : response.data.message,
+              show: true
+            };
+            setTimeout(function(){
+              self.alertForm = {
+              class: "",
+              message: "",
+              show: false
+              };
+            }, 2000);
             throw response.data;
 
           }
