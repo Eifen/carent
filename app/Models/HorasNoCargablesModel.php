@@ -181,7 +181,7 @@ class HorasNoCargablesModel extends Model
 
     }// Fin supervisaA
 
-    function horasCargadas($paginar, $desde, $id_empleado = null, $id_division = null, $supervisa, $supervisaTodo, $id_concepto = null, $id_estatus = null){
+    function horasCargadas($paginar, $desde, $id_empleado = null, $id_division = null, $supervisa, $supervisaTodo, $id_concepto = null, $id_estatus = null, $fechaDesde = null, $fechaHasta = null){
 
       if($supervisaTodo){
         $sql_division = "";
@@ -219,6 +219,14 @@ class HorasNoCargablesModel extends Model
         $sql_estatus = "";
       }else{
         $sql_estatus = " AND hnc.id_estatus = ".$id_estatus;
+      }
+
+      if($fechaDesde != null && $fechaHasta != null){
+        $sql_fecha = " AND fecha_desde BETWEEN '".$fechaDesde."' AND '".$fechaHasta."'";
+      }else if($fechaDesde != null && $fechaHasta == null){
+          $sql_fecha = " AND fecha_desde = '".$fechaDesde."'";
+      }else{
+        $sql_fecha = "";
       }
 
       if($supervisa == "true"){
@@ -280,6 +288,7 @@ class HorasNoCargablesModel extends Model
                          ".$sql_concepto."
                          ".$sql_estatus."
                          ".$sql_empleado."
+                         ".$sql_fecha."
                          ORDER BY hnc.fecha_desde DESC
                          LIMIT ".$desde.", ".$paginar);
 
@@ -287,7 +296,7 @@ class HorasNoCargablesModel extends Model
 
     }// Fin horasCargadas
 
-    function cantidadPaginasHorasCargadas($paginar, $id_empleado = null, $id_division = null, $supervisa, $supervisaTodo, $id_concepto = null, $id_estatus = null){
+    function cantidadPaginasHorasCargadas($paginar, $id_empleado = null, $id_division = null, $supervisa, $supervisaTodo, $id_concepto = null, $id_estatus = null, $fechaDesde = null, $fechaHasta = null){
 
       if($supervisaTodo){
         $sql_division = "";
@@ -353,6 +362,14 @@ class HorasNoCargablesModel extends Model
 
       }
 
+      if($fechaDesde != null && $fechaHasta != null){
+        $sql_fecha = " AND fecha_desde BETWEEN '".$fechaDesde."' AND '".$fechaHasta."'";
+      }else if($fechaDesde != null && $fechaHasta == null){
+          $sql_fecha = " AND fecha_desde = '".$fechaDesde."'";
+      }else{
+        $sql_fecha = "";
+      }
+
       $numConceptos = DB::select('SELECT CEILING( COUNT(1) / '.$paginar.') paginas
                                   FROM tbl_horas_no_cargables hnc,
                                        tbl_usuario u,
@@ -367,7 +384,8 @@ class HorasNoCargablesModel extends Model
                                   '.$sql_division.'
                                   '.$sql_concepto.'
                                   '.$sql_estatus.'
-                                  '.$sql_empleado);
+                                  '.$sql_empleado.'
+                                  '.$sql_fecha);
 
       return $numConceptos[0]->paginas;
 
