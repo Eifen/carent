@@ -16,7 +16,6 @@ class HorasCargadasController extends Controller
       $modelo = new HorasCargadasModel;
       $idProyAnalista = (int) session("idProyAnalista");
       $permisoActualizar = $modelo->permisoActualizar(session("usuario_id"), 11);
-      $permisoEliminar = $modelo->permisoEliminar(session("usuario_id"), 11);
       $permisoCrear = $modelo->permisoCrear(session("usuario_id"), 11,$idProyAnalista);
       $infoProyAnalista = $modelo->detalleProyAnalista($idProyAnalista);
       $infoHorasCargadas = $modelo->horasCargadas($idProyAnalista);
@@ -27,7 +26,6 @@ class HorasCargadasController extends Controller
         				"idProyAnalista" => $idProyAnalista,
         				"infoHorasCargadas" => $infoHorasCargadas,
         				"permisoActualizar" => $permisoActualizar,
-        				"permisoEliminar" => $permisoEliminar,
         				"permisoCrear" => $permisoCrear,
       				);
   	  }else{
@@ -48,8 +46,10 @@ class HorasCargadasController extends Controller
       $fecha = date('Y-m-d', strtotime($fechaC));
       $descripcion = mb_strtoupper($request->input("descripcion"));
       $horas_trabajadas = $request->input("horas_trabajadas");
+      $fechaActual = date("Y-m-d", strtotime("+1 day"));
 
-      $response = $modelo->cargarHoras($idProyAnalista,$fecha,$descripcion,$horas_trabajadas);
+      if ($fechaActual > $fecha) {
+        $response = $modelo->cargarHoras($idProyAnalista,$fecha,$descripcion,$horas_trabajadas);
 
       if($response["response"]){
 
@@ -65,9 +65,10 @@ class HorasCargadasController extends Controller
         $modeloAudit->logs_auditoria($parametros);
 
       }
-
       return $response;
-
+      } 
+      $response = array("response" => false, "message" => "Introducir una fecha valida"); 
+      return $response;
     }
 
     function detalleModHorasCargadas(Request $request){
@@ -88,10 +89,12 @@ class HorasCargadasController extends Controller
       $idHoraCargada = $request->input("id");
       $fechaC = $request->input("fecha");
       $horas = $request->input("horas");
-      $fecha = date('Y-m-d', strtotime("$fechaC -1 day"));
+      $fecha = date('Y-m-d', strtotime("$fechaC"));
       $descripcion = mb_strtoupper($request->input("descripcion"));
       $horas_trabajadas = $request->input("horas_trabajadas");
+      $fechaActual = date("Y-m-d", strtotime("+1 day"));
 
+      if ($fechaActual > $fecha) {
       $response = $modelo->ModificarHorasCargadas($idHoraCargada,$fecha,$descripcion,$horas_trabajadas);
 
       if($response["response"]){
@@ -109,6 +112,10 @@ class HorasCargadasController extends Controller
 
       }
 
+        return $response;
+      } 
+
+      $response = array("response" => false, "message" => "Introducir una fecha valida"); 
       return $response;
 
     }
