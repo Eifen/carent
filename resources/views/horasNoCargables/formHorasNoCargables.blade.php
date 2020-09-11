@@ -21,10 +21,10 @@
         <menu-principal v-cloak></menu-principal>
 
         <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
-          <div class="col-12 col-sm-12 col-md-11 wrapper-form" v-if="formFiltro.mostrar">
+          <div class="col-12 col-sm-12 col-md-11 col-lg-10 wrapper-form" v-if="formFiltro.mostrar">
             <h5>Filtros de búsqueda</h5>
             <form class="row">
-              <div class="form-group col-12 col-sm-3">
+              <div class="form-group col-12 col-sm-4">
                 <label for="divisiones">Divisiones</label>
                 <multiselect :clear-on-select="false"
                              :disabled="formFiltro.divisiones.disabled"
@@ -45,7 +45,7 @@
                 </multiselect>
                 <div class="mensaje"></div>
               </div>
-              <div class="form-group col-12 col-sm-3">
+              <div class="form-group col-12 col-sm-4">
                 <label for="empleados">Empleado</label>
                 <multiselect :clear-on-select="false"
                              :disabled="formFiltro.empleados.disabled"
@@ -66,7 +66,7 @@
                 </multiselect>
                 <div class="mensaje"></div>
               </div>
-              <div class="form-group col-12 col-sm-3">
+              <div class="form-group col-12 col-sm-4">
                 <label for="conceptos">Conceptos</label>
                 <multiselect :clear-on-select="false"
                              :disabled="formFiltro.conceptos.disabled"
@@ -87,7 +87,7 @@
                 </multiselect>
                 <div class="mensaje"></div>
               </div>
-              <div class="form-group col-12 col-sm-3">
+              <div class="form-group col-12 col-sm-4">
                 <label for="estatus">Estatus</label>
                 <select aria-describedby="estatusHelp"
                         class="form-control form-control-sm"
@@ -101,7 +101,7 @@
                 </select>
                 <div class="mensaje"></div>
               </div>
-              <div class="form-group col-12 col-sm-3">
+              <div class="form-group col-12 col-sm-4">
                 <label for="fechaDesde">Fecha Desde</label>
                 <datetime
                   @input="fechaDesdeFiltro($event)"
@@ -116,11 +116,11 @@
                   type="datetime"
                   zone='local'>
                   <template slot="button-cancel">
-                    Cerrar
+                    <span v-on:click="limpiarFecha('formFiltro','fechaDesde')">Limpiar</span>
                   </template>
                 </datetime>
               </div>
-              <div class="form-group col-12 col-sm-3">
+              <div class="form-group col-12 col-sm-4">
                 <label for="fechaHasta">Fecha Hasta</label>
                 <datetime
                   @input="limpiarMensajeError"
@@ -136,11 +136,11 @@
                   type="datetime"
                   zone='local'>
                   <template slot="button-cancel">
-                    Cerrar
+                    <span v-on:click="limpiarFecha('formFiltro','fechaHasta')">Limpiar</span>
                   </template>
                 </datetime>
               </div>
-              <div class="form-group col-12 col-sm-3">
+              <div class="form-group col-12 col-sm-4">
                 <label>&nbsp;</label>
                 <button class="btn filtrar btn-sm"
                         type="button"
@@ -148,7 +148,7 @@
                         v-bind:disabled="formFiltro.btn.filtrar.disabled"
                         v-html="formFiltro.btn.filtrar.html"></button>
               </div>
-              <div class="form-group col-12 col-sm-3">
+              <div class="form-group col-12 col-sm-4">
                 <label>&nbsp;</label>
                 <button class="btn limpiar_filtro btn-sm"
                         type="button"limpiarFiltro
@@ -156,7 +156,7 @@
                         v-bind:disabled="formFiltro.btn.limpiarFiltro.disabled"
                         v-html="formFiltro.btn.limpiarFiltro.html"></button>
               </div>
-              <div class="form-group col-12">
+              <div class="form-group col-12 col-sm-4">
                 <label>&nbsp;</label>
                 <button class="btn btn-success btn-sm"
                         type="button"
