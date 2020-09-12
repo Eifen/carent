@@ -393,10 +393,11 @@ class HorasNoCargablesModel extends Model
 
     function registrarHorasNoCargables($parametros){
 
-      // Chequeamos que la fecha desde no este usada
       $sql_fecha_desde = DB::select('SELECT COUNT(1) existe
                                      FROM tbl_horas_no_cargables
-                                     WHERE fecha_desde BETWEEN "'.$parametros["fecha_desde"].'" AND "'.$parametros["fecha_hasta"].'"
+                                     WHERE fecha_desde
+                                       BETWEEN "'.$parametros["fecha_desde"].'"
+                                       AND "'.$parametros["fecha_hasta"].'" - INTERVAL 1 SECOND
                                      AND id_usuario = '.$parametros["id_usuario"]);
 
       if((int) $sql_fecha_desde[0]->existe == 0){
