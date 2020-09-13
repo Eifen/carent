@@ -100,6 +100,21 @@
                 <b>Campos obligatorios (<span class="campo-obligatorio">*</span>)</b>
               </div>
               <div class="form-group col-12 col-sm-6">
+                <label for="codigoCliente">Código del Cliente <span class="campo-obligatorio">*</span></label>
+                <input aria-describedby="codigoClienteHelp"
+                       class="form-control"
+                       data-validar="true"
+                       data-only-number="true"
+                       id="codigoCliente"
+                       v-bind:disabled="form.codigoCliente.disabled"
+                       v-model="form.codigoCliente.value"
+                       v-on:keyup="valuesForm"
+                       disabled
+                       type="text">
+                <small id="codigoClienteHelp" class="form-text">Ejemplo: 2209</small>
+                <div class="mensaje"></div>
+              </div>
+              <div class="form-group col-12 col-sm-6">
                 <label for="rif">Rif<span class="campo-obligatorio">*</span> </label>
                 <the-mask mask="F- MMMMMMMMMM" :tokens="hexTokens"
                           class="form-control"
@@ -315,7 +330,6 @@
                         v-if="submitCrear.show"></button>
               </div>
             </div>
-
             <div class="row justify-content-center wrapper-refrescar" v-if="refreshForm">
               <div class="col-12 col-md-6 col-lg-4">
                 <button class="btn"
@@ -323,7 +337,6 @@
                         v-on:click="refreshView">Agregar un nuevo cliente</button>
               </div>
             </div>
-
             <div class="row wrapper-alert">
               <div class="col-12">
                 <div v-bind:class="alertForm.class" role="alert" v-if="alertForm.show" v-html="alertForm.message"></div>

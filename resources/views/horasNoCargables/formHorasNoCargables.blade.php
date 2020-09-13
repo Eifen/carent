@@ -21,10 +21,10 @@
         <menu-principal v-cloak></menu-principal>
 
         <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
-          <div class="col-12 col-sm-12 col-md-11 col-lg-9 wrapper-form" v-if="formFiltro.mostrar">
+          <div class="col-12 col-sm-12 col-md-11 col-lg-10 wrapper-form" v-if="formFiltro.mostrar">
             <h5>Filtros de búsqueda</h5>
             <form class="row">
-              <div class="form-group col-12 col-sm-3">
+              <div class="form-group col-12 col-sm-4">
                 <label for="divisiones">Divisiones</label>
                 <multiselect :clear-on-select="false"
                              :disabled="formFiltro.divisiones.disabled"
@@ -45,7 +45,7 @@
                 </multiselect>
                 <div class="mensaje"></div>
               </div>
-              <div class="form-group col-12 col-sm-3">
+              <div class="form-group col-12 col-sm-4">
                 <label for="empleados">Empleado</label>
                 <multiselect :clear-on-select="false"
                              :disabled="formFiltro.empleados.disabled"
@@ -66,7 +66,7 @@
                 </multiselect>
                 <div class="mensaje"></div>
               </div>
-              <div class="form-group col-12 col-sm-3">
+              <div class="form-group col-12 col-sm-4">
                 <label for="conceptos">Conceptos</label>
                 <multiselect :clear-on-select="false"
                              :disabled="formFiltro.conceptos.disabled"
@@ -87,7 +87,7 @@
                 </multiselect>
                 <div class="mensaje"></div>
               </div>
-              <div class="form-group col-12 col-sm-3">
+              <div class="form-group col-12 col-sm-4">
                 <label for="estatus">Estatus</label>
                 <select aria-describedby="estatusHelp"
                         class="form-control form-control-sm"
@@ -102,8 +102,47 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-4">
+                <label for="fechaDesde">Fecha Desde</label>
+                <datetime
+                  @input="fechaDesdeFiltro($event)"
+                  :disabled="formFiltro.fechaDesde.disabled"
+                  :max-datetime="formFiltro.fechaDesde.maxValue"
+                  :minute-step="30"
+                  :use12-hour="true"
+                  format="dd/LL/yyyy hh:mm a"
+                  input-class="form-control form-control-sm fechaDesde"
+                  v-model="formFiltro.fechaDesde.value"
+                  value-zone='local'
+                  type="datetime"
+                  zone='local'>
+                  <template slot="button-cancel">
+                    <span v-on:click="limpiarFecha('formFiltro','fechaDesde')">Limpiar</span>
+                  </template>
+                </datetime>
+              </div>
+              <div class="form-group col-12 col-sm-4">
+                <label for="fechaHasta">Fecha Hasta</label>
+                <datetime
+                  @input="limpiarMensajeError"
+                  :disabled="formFiltro.fechaHasta.disabled"
+                  :max-datetime="formFiltro.fechaHasta.maxValue"
+                  :min-datetime="formFiltro.fechaHasta.minValue"
+                  :minute-step="30"
+                  :use12-hour="true"
+                  format="dd/LL/yyyy hh:mm a"
+                  input-class="form-control form-control-sm fechaHasta"
+                  v-model="formFiltro.fechaHasta.value"
+                  value-zone='local'
+                  type="datetime"
+                  zone='local'>
+                  <template slot="button-cancel">
+                    <span v-on:click="limpiarFecha('formFiltro','fechaHasta')">Limpiar</span>
+                  </template>
+                </datetime>
+              </div>
+              <div class="form-group col-12 col-sm-4">
                 <label>&nbsp;</label>
-                <button class="btn filtrar"
+                <button class="btn filtrar btn-sm"
                         type="button"
                         v-on:click="buscar"
                         v-bind:disabled="formFiltro.btn.filtrar.disabled"
@@ -111,7 +150,7 @@
               </div>
               <div class="form-group col-12 col-sm-4">
                 <label>&nbsp;</label>
-                <button class="btn limpiar_filtro"
+                <button class="btn limpiar_filtro btn-sm"
                         type="button"limpiarFiltro
                         v-on:click="limpiarFiltro"
                         v-bind:disabled="formFiltro.btn.limpiarFiltro.disabled"
@@ -119,7 +158,7 @@
               </div>
               <div class="form-group col-12 col-sm-4">
                 <label>&nbsp;</label>
-                <button class="btn btn-success"
+                <button class="btn btn-success btn-sm"
                         type="button"
                         v-on:click="cargar"
                         v-bind:disabled="formFiltro.btn.cargar.disabled"
@@ -149,19 +188,7 @@
                   <td>@{{ registro.fecha_desde+' - '+registro.fecha_hasta }}</td>
                   <td>@{{ registro.estatus }}</td>
                   <td>
-                    <a v-on:click="modificarConcepto(
-                      registro.id,
-                      registro.autor,
-                      registro.id_concepto,
-                      registro.concepto,
-                      registro.fecha_desde_utc,
-                      registro.fecha_hasta_utc,
-                      registro.observacion,
-                      registro.id_estatus,
-                      registro.editar,
-                      registro.fecha_aprobacion,
-                      registro.aprobado_por
-                    )" target="_self">
+                    <a v-on:click="modificarConcepto(registro)" target="_self">
                        <i class="fas fa-cog"></i>
                     </a>
                   </td>

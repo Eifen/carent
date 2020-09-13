@@ -82,6 +82,17 @@ new Vue({
         disabled: true,
         value: ""
       },
+      fechaDesde:{
+        disabled:false,
+        maxValue: "",
+        value: ""
+      },
+      fechaHasta:{
+        disabled:true,
+        maxValue: "",
+        minValue: "",
+        value: ""
+      },
       mostrar: false
     },
     formCargarHoras: {
@@ -176,6 +187,7 @@ new Vue({
         self.formFiltro.divisiones.disabled = false;
         self.formFiltro.empleados.disabled = false;
         self.formFiltro.estatus.disabled = false;
+        self.formFiltro.fechaDesde.disabled = false;
         self.formFiltro.mostrar = true;
         self.formFiltro.btn.cargar.html = self.formFiltro.btn.cargar.htmlInit;
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
@@ -325,30 +337,49 @@ new Vue({
     cargar: function(){
       $("#modal-cargar").modal("show");
     },
-    utc_date: function(fecha){
+    fechaDesdeFiltro: function(fecha_seleccionada){
 
-      let date = new Date(fecha);
-      let minutes = date.getMinutes();
-          minutes = minutes < 10 ? '0'+minutes : minutes;
-      let hours = date.getHours();
-      let ampm = hours >= 12 ? 'pm' : 'am';
-          hours = hours % 12;
-          hours = hours ? hours : 12;
-      let dd = date.getDate();
-          dd = dd < 10 ? '0'+dd : dd;
-      let mm = date.getMonth()+1;
-          mm = mm < 10 ? '0'+mm : mm;
-      let yyyy = date.getFullYear();
-      let date_formated = dd+"/"+mm+"/"+yyyy+" "+hours+":"+minutes+" "+ampm;
+      self.formFiltro.fechaHasta.value = "";
 
-      return date_formated
+      var fecha, fecha_desde_max;
+
+      if(fecha_seleccionada !== ""){
+
+        fecha = moment();
+        fecha_desde_max = moment(fecha_seleccionada);
+
+        var fecha_hasta_max = fecha;
+
+        if(fecha_hasta_max.minute() < 30){
+          self.formFiltro.fechaHasta.maxValue = fecha_hasta_max.startOf("hour").toISOString();
+        }else{
+          self.formFiltro.fechaHasta.maxValue = fecha_hasta_max.startOf("hour").add(30, "minutes").toISOString();
+        }
+
+        var fecha_hasta_min = fecha_desde_max;
+        self.formFiltro.fechaHasta.minValue = fecha_hasta_min.add(30, "minutes").toISOString();
+        self.formFiltro.fechaHasta.disabled = false;
+
+      }else{
+
+        fecha = fecha_desde_max = moment();
+
+        if(fecha_desde_max.minute() < 30){
+          fecha_desde_max = fecha_desde_max.startOf("hour").subtract(30, "minute");
+          self.formFiltro.fechaDesde.maxValue = fecha_desde_max.toISOString();
+        }else{
+          fecha_desde_max =  fecha_desde_max.startOf("hour");
+          self.formFiltro.fechaDesde.maxValue = fecha_desde_max.toISOString();
+        }
+
+      }
 
     },
     fechaDesde: function(form,e){
 
       self.limpiarMensajeError($("#"+form+" .fechaDesde"));
 
-      self.formModificarHoras.fechaHasta.value = "";
+      self[form].fechaHasta.value = "";
 
       var fecha, fecha_desde_max;
 
@@ -492,6 +523,15 @@ new Vue({
       }// Fin if(formValido)
 
     },
+    limpiarFecha: function(form,fecha){
+      self[form][fecha].value = "";
+
+      if(fecha === "fechaDesde"){
+        self[form].fechaHasta.value = "";
+        self[form].fechaHasta.disabled = true;
+      }
+
+    },
     limpiarMensajeErrorMultiselect: function(){
       $(".multiselect").parents(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
       $(".multiselect .multiselect__tags").removeClass("error");
@@ -514,6 +554,8 @@ new Vue({
       self.formFiltro.divisiones.value = [];
       self.formFiltro.empleados.value = [];
       self.formFiltro.estatus.value = "";
+      self.formFiltro.fechaDesde.value = "";
+      self.formFiltro.fechaHasta.value = "";
       self.buscar();
 
     },
@@ -523,6 +565,8 @@ new Vue({
       self.formFiltro.divisiones.disabled = true;
       self.formFiltro.empleados.disabled = true;
       self.formFiltro.estatus.disabled = true;
+      self.formFiltro.fechaDesde.disabled = true;
+      self.formFiltro.fechaHasta.disabled = true;
 
       self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
       self.formFiltro.btn.filtrar.disabled = true;
@@ -562,7 +606,9 @@ new Vue({
         estatus: self.formFiltro.estatus.value,
         paginar: self.paginador.paginar,
         supervisa: ((self.supervisor === true && self.formFiltro.empleados.value.length === 0) ? true : false),
-        supervisarTodo: ((self.supervisarTodo === true && self.formFiltro.divisiones.value.length === 0) ? true : false)
+        supervisarTodo: ((self.supervisarTodo === true && self.formFiltro.divisiones.value.length === 0) ? true : false),
+        fecha_desde: self.formFiltro.fechaDesde.value,
+        fecha_hasta: self.formFiltro.fechaHasta.value
       };
 
       axios.get('/buscarHorasNoCargableCargadas', {params: parametros})
@@ -573,6 +619,8 @@ new Vue({
         self.formFiltro.empleados.disabled = false;
         self.formFiltro.estatus.disabled = false;
         self.formFiltro.estatus.disabled = false;
+        self.formFiltro.fechaDesde.disabled = false;
+        self.formFiltro.fechaHasta.disabled = (self.formFiltro.fechaHasta.value !== "") ? false : true;
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
         self.formFiltro.btn.filtrar.disabled = false;
         self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
@@ -591,6 +639,8 @@ new Vue({
         self.formFiltro.empleados.disabled = false;
         self.formFiltro.estatus.disabled = false;
         self.formFiltro.estatus.disabled = false;
+        self.formFiltro.fechaDesde.disabled = false;
+        self.formFiltro.fechaHasta.disabled = (self.formFiltro.fechaHasta.value !== "") ? false : true;
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
         self.formFiltro.btn.filtrar.disabled = false;
         self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
@@ -613,7 +663,6 @@ new Vue({
       self.buscar();
     },
     validarForm: function(formulario) {
-
 
       if(self[formulario].concepto.value === "" || self[formulario].concepto.value === null){
 
@@ -663,29 +712,30 @@ new Vue({
       }// Fin del if
 
     },
-    modificarConcepto: function(id,autor,id_concepto,concepto,fecha_desde,fecha_hasta,observacion,id_estatus,editar, fecha_aprobacion, aprobado_por){
+    modificarConcepto: function(registro){
 
-      self.formModificarHoras.id = id;
+      self.formModificarHoras.id = registro.id;
       self.formModificarHoras.concepto.value = {
-        id:id_concepto,
-        descripcion: concepto
+        id: registro.id_concepto,
+        id_usuario: registro.id_usuario,
+        descripcion: registro.concepto
       };
 
-      self.formModificarHoras.fechaDesde.value = fecha_desde;
-      self.formModificarHoras.fechaHasta.value = fecha_hasta;
-      self.formModificarHoras.observacion.value = (observacion === null) ? "" : observacion;
-      self.formModificarHoras.estatus.value = id_estatus;
+      self.formModificarHoras.fechaDesde.value = registro.fecha_desde_utc;
+      self.formModificarHoras.fechaHasta.value = registro.fecha_hasta_utc;
+      self.formModificarHoras.observacion.value = (registro.observacion === null) ? "" : registro.observacion;
+      self.formModificarHoras.estatus.value = registro.id_estatus;
 
-      self.formModificarHoras.concepto.disabled = ((autor === 1 && editar === 1) || (autor === 1 && self.supervisor === true)) ? false : true;
-      self.formModificarHoras.fechaDesde.disabled = ((autor === 1 && editar === 1) || (autor === 1 && self.supervisor === true)) ? false : true;
-      self.formModificarHoras.fechaHasta.disabled = ((autor === 1 && editar === 1) || (autor === 1 && self.supervisor === true)) ? false : true;
-      self.formModificarHoras.observacion.disabled = ((autor === 1 && editar === 1) || (autor === 1 && self.supervisor === true)) ? false : true;
+      self.formModificarHoras.concepto.disabled = ((registro.autor === 1 && registro.editar === 1) || (registro.autor === 1 && self.supervisor === true)) ? false : true;
+      self.formModificarHoras.fechaDesde.disabled = ((registro.autor === 1 && registro.editar === 1) || (registro.autor === 1 && self.supervisor === true)) ? false : true;
+      self.formModificarHoras.fechaHasta.disabled = ((registro.autor === 1 && registro.editar === 1) || (registro.autor === 1 && self.supervisor === true)) ? false : true;
+      self.formModificarHoras.observacion.disabled = ((registro.autor === 1 && registro.editar === 1) || (registro.autor === 1 && self.supervisor === true)) ? false : true;
       self.formModificarHoras.estatus.disabled = (self.supervisor === true) ? false : true;
-      self.submitModalModificarHora.show = ((autor === 1 && editar === 1) || self.supervisor === true) ? true : false;
-      self.formModificarHoras.fechaAprobacion = (fecha_aprobacion === null) ? "" : fecha_aprobacion;
-      self.formModificarHoras.aprobadoPor = (aprobado_por === null) ? "" : aprobado_por;
+      self.submitModalModificarHora.show = ((registro.autor === 1 && registro.editar === 1) || self.supervisor === true) ? true : false;
+      self.formModificarHoras.fechaAprobacion = (registro.fecha_aprobacion === null) ? "" : registro.fecha_aprobacion;
+      self.formModificarHoras.aprobadoPor = (registro.aprobado_por === null) ? "" : registro.aprobado_por;
 
-      self.fechaHasta("formModificarHoras", fecha_desde, fecha_hasta);
+      self.fechaHasta("formModificarHoras", registro.fecha_desde_utc, registro.fecha_hasta_utc);
 
       $("#modal-modificar").modal("show");
 
@@ -711,6 +761,7 @@ new Vue({
         //Obtenemos valores
         let parametros = {
           id: self.formModificarHoras.id,
+          id_usuario: self.formModificarHoras.concepto.value.id_usuario,
           concepto: self.formModificarHoras.concepto.value.id,
           fechaDesde: self.formModificarHoras.fechaDesde.value,
           fechaHasta: self.formModificarHoras.fechaHasta.value,
@@ -749,6 +800,9 @@ new Vue({
         .catch(error => {
 
           self.formModificarHoras.concepto.disabled = false;
+          self.formModificarHoras.fechaDesde.disabled = false;
+          self.formModificarHoras.fechaHasta.disabled = false;
+          self.formModificarHoras.observacion.disabled = false;
           self.formModificarHoras.estatus.disabled = false;
           self.submitModalModificarHora.content = 'Modificar';
           self.submitModalModificarHora.disabled = false;

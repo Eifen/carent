@@ -33,6 +33,19 @@ class ClienteController extends Controller
     return $parroquias;
   }
 
+  function codigoCliente(Request $request){
+
+    $modelo = new ClienteModel();
+    $codigoCliente = $modelo->codigoCliente();
+    if (!empty($codigoCliente)) {
+      $codigo = $codigoCliente->codigo + 1;
+      $response = array("response" => true, "codigo" => $codigo);
+    }else{
+      $response = array("response" => false, "message" => "No se encontraron resultados");
+    }
+    return $response;
+  }
+
   function buscarUsuariosS(Request $request){
 
     $modelo = new ClienteModel();
@@ -91,17 +104,7 @@ class ClienteController extends Controller
   function crearCliente(Request $request){
 
     $modelo = new ClienteModel();
-    $codigo = $modelo->agregarCodigoCliente();
-
-    if(!empty($codigo)){
-
-      $codigoCliente = $codigo->codigo + 1;
-
-    }else{
-
-      $codigoCliente = 1000;
-
-    }
+    $codigoCliente = (int) $request->input("codigoCliente");
 
     $parametros = array(
         "idUsuario" => (int) $request->input("idUsuario"),
