@@ -24,7 +24,6 @@ html {
   border-radius: 3px;
   margin-bottom: 50px;
   padding: 15px;
-  -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 #cargarHoras .wrapper-forms form:hover {
@@ -60,7 +59,6 @@ html {
   border-radius: 3px;
   margin-bottom: 50px;
   padding: 15px;
-  -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 #cargarHoras .wrapper-forms .table:hover {
@@ -72,7 +70,6 @@ html {
   text-align: center;
 }
 #cargarHoras .wrapper-forms .table tbody tr {
-  -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 #cargarHoras .wrapper-forms .table tbody tr:hover {
@@ -117,7 +114,6 @@ html {
   border: 2px solid #091F40;
   border-radius: 2px;
   font-weight: 600;
-  -webkit-transition: all 0.3s;
   transition: all 0.3s;
   width: 100%;
 }
