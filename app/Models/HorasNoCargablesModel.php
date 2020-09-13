@@ -397,6 +397,9 @@ class HorasNoCargablesModel extends Model
                                      FROM tbl_horas_no_cargables
                                      WHERE ("'.$parametros["fecha_desde"].'" + INTERVAL 1 SECOND)
                                        BETWEEN fecha_desde AND fecha_hasta
+                                     OR fecha_desde
+                                       BETWEEN ("'.$parametros["fecha_desde"].'" + INTERVAL 1 SECOND)
+                                       AND ("'.$parametros["fecha_hasta"].'" - INTERVAL 1 SECOND)
                                      AND id_usuario = '.$parametros["id_usuario"]);
 
       if((int) $sql_fecha_desde[0]->existe == 0){
@@ -406,6 +409,9 @@ class HorasNoCargablesModel extends Model
                                        FROM tbl_horas_no_cargables
                                        WHERE ("'.$parametros["fecha_hasta"].'" - INTERVAL 1 SECOND)
                                          BETWEEN fecha_desde AND fecha_hasta
+                                       OR fecha_hasta
+                                         BETWEEN ("'.$parametros["fecha_desde"].'" + INTERVAL 1 SECOND)
+                                         AND ("'.$parametros["fecha_hasta"].'" - INTERVAL 1 SECOND) 
                                        AND id_usuario = '.$parametros["id_usuario"]);
 
         if((int) $sql_fecha_hasta[0]->existe == 0){
