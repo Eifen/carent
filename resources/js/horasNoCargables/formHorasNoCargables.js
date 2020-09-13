@@ -167,6 +167,20 @@ new Vue({
       disabled: false,
       show:true
     },
+    confirmarModificarHora: {
+      content: "Eliminar",
+      disabled: false,
+      show:true
+    },
+    cancelarEliminarModificarHora: {
+      content: "No quiero eliminarlas",
+      show:false
+    },
+    eliminarModificarHora: {
+      content: "Si, estoy de acuerdo en eliminarlas",
+      disabled: false,
+      show:false
+    },
     supervisor: false,
     supervisarTodo: false
   },
@@ -288,6 +302,12 @@ new Vue({
 
       self.submitModalModificarHora = {
         content: "Modificar",
+        disabled: false,
+        show:true
+      }
+
+      self.confirmarModificarHora = {
+        content: "Eliminar",
         disabled: false,
         show:true
       }
@@ -732,6 +752,7 @@ new Vue({
       self.formModificarHoras.observacion.disabled = ((registro.autor === 1 && registro.editar === 1) || (registro.autor === 1 && self.supervisor === true)) ? false : true;
       self.formModificarHoras.estatus.disabled = (self.supervisor === true) ? false : true;
       self.submitModalModificarHora.show = ((registro.autor === 1 && registro.editar === 1) || self.supervisor === true) ? true : false;
+      self.confirmarModificarHora.show = ((registro.autor === 1 && registro.editar === 1) || self.supervisor === true) ? true : false;
       self.formModificarHoras.fechaAprobacion = (registro.fecha_aprobacion === null) ? "" : registro.fecha_aprobacion;
       self.formModificarHoras.aprobadoPor = (registro.aprobado_por === null) ? "" : registro.aprobado_por;
 
@@ -739,6 +760,40 @@ new Vue({
 
       $("#modal-modificar").modal("show");
 
+    },
+    confirmarEliminar: function(){
+      //alert(self.formModificarHoras.id)
+
+      self.submitModalModificarHora.show = false;
+      self.confirmarModificarHora.show = false;
+      self.eliminarModificarHora.show = true;
+      self.cancelarEliminarModificarHora.show = true;
+
+      self.alertModificarHora = {
+        class : "alert alert-danger text-center",
+        message : "¿Estás de acuerdo de eliminar esta hora no cargable?",
+        show: true
+      };
+
+
+
+    },
+    cancelarEliminarHora: function(){
+
+      self.submitModalModificarHora.show = true;
+      self.confirmarModificarHora.show = true;
+      self.eliminarModificarHora.show = false;
+      self.cancelarEliminarModificarHora.show = false;
+
+      self.alertModificarHora = {
+        class : "",
+        message : "",
+        show: false
+      };
+
+    },
+    eliminarHora: function(){
+      console.log("eliminar")
     },
     guardarModificar: function(){
 
