@@ -473,6 +473,7 @@
                      v-html="alertModificarHora.message"></div>
                 <button class="btn btn-danger btn-sm btn-block"
                         type="button"
+                        v-bind:disabled="cancelarEliminarModificarHora.disabled"
                         v-if="cancelarEliminarModificarHora.show"
                         v-html="cancelarEliminarModificarHora.content"
                         v-on:click="cancelarEliminarHora"></button>

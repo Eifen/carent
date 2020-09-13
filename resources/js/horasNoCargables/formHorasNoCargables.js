@@ -174,12 +174,13 @@ new Vue({
     },
     cancelarEliminarModificarHora: {
       content: "No quiero eliminarlas",
+      disabled: false,
       show:false
     },
     eliminarModificarHora: {
       content: "Si, estoy de acuerdo en eliminarlas",
       disabled: false,
-      show:false
+      show: false
     },
     supervisor: false,
     supervisarTodo: false
@@ -310,6 +311,18 @@ new Vue({
         content: "Eliminar",
         disabled: false,
         show:true
+      }
+
+      self.cancelarEliminarModificarHora = {
+        content: "No quiero eliminarlas",
+        disabled: false,
+        show:false
+      }
+
+      self.eliminarModificarHora = {
+        content: "Si, estoy de acuerdo en eliminarlas",
+        disabled: false,
+        show:false
       }
 
       self.formModificarHoras = {
@@ -771,11 +784,9 @@ new Vue({
 
       self.alertModificarHora = {
         class : "alert alert-danger text-center",
-        message : "¿Estás de acuerdo de eliminar esta hora no cargable?",
+        message : "¿Estás de acuerdo de eliminar estas horas?",
         show: true
       };
-
-
 
     },
     cancelarEliminarHora: function(){
@@ -793,7 +804,72 @@ new Vue({
 
     },
     eliminarHora: function(){
-      console.log("eliminar")
+
+      self.eliminarModificarHora.content = '<i class="fas fa-cog fa-spin"></i>';
+      self.eliminarModificarHora.disabled = true;
+      self.cancelarEliminarModificarHora.disabled = true;
+
+      //Obtenemos valores
+      let parametros = {
+        id: self.formModificarHoras.id
+      }
+
+      axios.post('/eliminarHorasNoCargables', parametros)
+      .then(function (response) {
+
+        if(response.status === 200 && response.data.respuesta === true){
+
+          self.limpiarFiltro();
+
+          self.alertModificarHora = {
+            class : "alert alert-success",
+            message : response.data.mensaje,
+            show: true
+          };
+
+          setTimeout(function(){ $("#modal-modificar").modal("hide"); }, 3000);
+
+        }else{
+
+          throw response.data;
+
+        }
+
+      })
+      .catch(error => {
+
+        self.eliminarModificarHora.content = 'Si, estoy de acuerdo en eliminarlas';
+        self.eliminarModificarHora.disabled = false;
+        self.cancelarEliminarModificarHora.disabled = false;
+
+        if(error.response){
+
+          var message = "Existe un error!, consulte con el administrador del sistema.";
+
+        }else{
+
+          var message = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+
+        }
+
+        self.alertModificarHora = {
+          class : "alert alert-warning",
+          message : message,
+          show: true
+        };
+
+        setTimeout(function(){
+
+          self.alertModificarHora = {
+            class : "alert alert-danger text-center",
+            message : "¿Estás de acuerdo de eliminar estas horas?",
+            show: true
+          };
+
+        }, 3000);
+
+      });
+
     },
     guardarModificar: function(){
 
@@ -828,6 +904,7 @@ new Vue({
         self.submitModalModificarHora.disabled = true;
         self.formModificarHoras.concepto.disabled = true;
         self.formModificarHoras.estatus.disabled = true;
+        self.confirmarModificarHora.disabled = true;
 
         axios.post('/modificarHorasNoCargables', parametros)
         .then(function (response) {
