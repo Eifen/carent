@@ -167,6 +167,21 @@ new Vue({
       disabled: false,
       show:true
     },
+    confirmarModificarHora: {
+      content: "Eliminar",
+      disabled: false,
+      show:true
+    },
+    cancelarEliminarModificarHora: {
+      content: "No quiero eliminarlas",
+      disabled: false,
+      show:false
+    },
+    eliminarModificarHora: {
+      content: "Si, estoy de acuerdo en eliminarlas",
+      disabled: false,
+      show: false
+    },
     supervisor: false,
     supervisarTodo: false
   },
@@ -290,6 +305,24 @@ new Vue({
         content: "Modificar",
         disabled: false,
         show:true
+      }
+
+      self.confirmarModificarHora = {
+        content: "Eliminar",
+        disabled: false,
+        show:true
+      }
+
+      self.cancelarEliminarModificarHora = {
+        content: "No quiero eliminarlas",
+        disabled: false,
+        show:false
+      }
+
+      self.eliminarModificarHora = {
+        content: "Si, estoy de acuerdo en eliminarlas",
+        disabled: false,
+        show:false
       }
 
       self.formModificarHoras = {
@@ -732,12 +765,110 @@ new Vue({
       self.formModificarHoras.observacion.disabled = ((registro.autor === 1 && registro.editar === 1) || (registro.autor === 1 && self.supervisor === true)) ? false : true;
       self.formModificarHoras.estatus.disabled = (self.supervisor === true) ? false : true;
       self.submitModalModificarHora.show = ((registro.autor === 1 && registro.editar === 1) || self.supervisor === true) ? true : false;
+      self.confirmarModificarHora.show = ((registro.autor === 1 && registro.editar === 1) || self.supervisor === true) ? true : false;
       self.formModificarHoras.fechaAprobacion = (registro.fecha_aprobacion === null) ? "" : registro.fecha_aprobacion;
       self.formModificarHoras.aprobadoPor = (registro.aprobado_por === null) ? "" : registro.aprobado_por;
 
       self.fechaHasta("formModificarHoras", registro.fecha_desde_utc, registro.fecha_hasta_utc);
 
       $("#modal-modificar").modal("show");
+
+    },
+    confirmarEliminar: function(){
+      //alert(self.formModificarHoras.id)
+
+      self.submitModalModificarHora.show = false;
+      self.confirmarModificarHora.show = false;
+      self.eliminarModificarHora.show = true;
+      self.cancelarEliminarModificarHora.show = true;
+
+      self.alertModificarHora = {
+        class : "alert alert-danger text-center",
+        message : "¿Estás de acuerdo de eliminar estas horas?",
+        show: true
+      };
+
+    },
+    cancelarEliminarHora: function(){
+
+      self.submitModalModificarHora.show = true;
+      self.confirmarModificarHora.show = true;
+      self.eliminarModificarHora.show = false;
+      self.cancelarEliminarModificarHora.show = false;
+
+      self.alertModificarHora = {
+        class : "",
+        message : "",
+        show: false
+      };
+
+    },
+    eliminarHora: function(){
+
+      self.eliminarModificarHora.content = '<i class="fas fa-cog fa-spin"></i>';
+      self.eliminarModificarHora.disabled = true;
+      self.cancelarEliminarModificarHora.disabled = true;
+
+      //Obtenemos valores
+      let parametros = {
+        id: self.formModificarHoras.id
+      }
+
+      axios.post('/eliminarHorasNoCargables', parametros)
+      .then(function (response) {
+
+        if(response.status === 200 && response.data.respuesta === true){
+
+          self.limpiarFiltro();
+
+          self.alertModificarHora = {
+            class : "alert alert-success",
+            message : response.data.mensaje,
+            show: true
+          };
+
+          setTimeout(function(){ $("#modal-modificar").modal("hide"); }, 3000);
+
+        }else{
+
+          throw response.data;
+
+        }
+
+      })
+      .catch(error => {
+
+        self.eliminarModificarHora.content = 'Si, estoy de acuerdo en eliminarlas';
+        self.eliminarModificarHora.disabled = false;
+        self.cancelarEliminarModificarHora.disabled = false;
+
+        if(error.response){
+
+          var message = "Existe un error!, consulte con el administrador del sistema.";
+
+        }else{
+
+          var message = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+
+        }
+
+        self.alertModificarHora = {
+          class : "alert alert-warning",
+          message : message,
+          show: true
+        };
+
+        setTimeout(function(){
+
+          self.alertModificarHora = {
+            class : "alert alert-danger text-center",
+            message : "¿Estás de acuerdo de eliminar estas horas?",
+            show: true
+          };
+
+        }, 3000);
+
+      });
 
     },
     guardarModificar: function(){
@@ -773,6 +904,7 @@ new Vue({
         self.submitModalModificarHora.disabled = true;
         self.formModificarHoras.concepto.disabled = true;
         self.formModificarHoras.estatus.disabled = true;
+        self.confirmarModificarHora.disabled = true;
 
         axios.post('/modificarHorasNoCargables', parametros)
         .then(function (response) {

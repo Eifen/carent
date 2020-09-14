@@ -289,6 +289,7 @@ class HorasNoCargablesModel extends Model
                          ".$sql_estatus."
                          ".$sql_empleado."
                          ".$sql_fecha."
+                         AND hnc.id_estatus NOT IN(4)
                          ORDER BY hnc.fecha_desde DESC
                          LIMIT ".$desde.", ".$paginar);
 
@@ -385,7 +386,8 @@ class HorasNoCargablesModel extends Model
                                   '.$sql_concepto.'
                                   '.$sql_estatus.'
                                   '.$sql_empleado.'
-                                  '.$sql_fecha);
+                                  '.$sql_fecha.'
+                                  AND hnc.id_estatus NOT IN(4)');
 
       return $numConceptos[0]->paginas;
 
@@ -411,7 +413,7 @@ class HorasNoCargablesModel extends Model
                                          BETWEEN fecha_desde AND fecha_hasta
                                        OR fecha_hasta
                                          BETWEEN ("'.$parametros["fecha_desde"].'" + INTERVAL 1 SECOND)
-                                         AND ("'.$parametros["fecha_hasta"].'" - INTERVAL 1 SECOND) 
+                                         AND ("'.$parametros["fecha_hasta"].'" - INTERVAL 1 SECOND)
                                        AND id_usuario = '.$parametros["id_usuario"]);
 
         if((int) $sql_fecha_hasta[0]->existe == 0){
@@ -465,6 +467,16 @@ class HorasNoCargablesModel extends Model
 
       }else{
         return array("response" => false, "message" => "La fecha DESDE ya ha sido cargada en otra Hora No Cargable, por favor filtre por fecha y busque cuales conceptos ya cargados posee dicha fecha!");
+      }
+
+    }
+
+    function eliminarHorasNoCargables($id){
+
+      if(DB::table('tbl_horas_no_cargables')->where("id",$id)->update(array("id_estatus" => 4))){
+        return array("respuesta" => true, "mensaje" => "Horas eliminadas con éxito!");
+      }else{
+        return array("respuesta" => false, "mensaje" => "Error al eliminar las horas, intente nuevamente!");
       }
 
     }

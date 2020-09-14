@@ -199,4 +199,13 @@ class HorasNoCargablesController extends Controller
 
     }
 
+    function eliminarHorasNoCargables(Request $request){
+
+      $modelo = new HorasNoCargablesModel();
+      $id = $request->input("id");
+
+      return $modelo->eliminarHorasNoCargables($id);
+
+    }
+
 }
