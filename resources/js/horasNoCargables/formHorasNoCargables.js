@@ -82,6 +82,17 @@ new Vue({
         disabled: true,
         value: ""
       },
+      fechaDesde:{
+        disabled:false,
+        maxValue: "",
+        value: ""
+      },
+      fechaHasta:{
+        disabled:true,
+        maxValue: "",
+        minValue: "",
+        value: ""
+      },
       mostrar: false
     },
     formCargarHoras: {
@@ -156,6 +167,21 @@ new Vue({
       disabled: false,
       show:true
     },
+    confirmarModificarHora: {
+      content: "Eliminar",
+      disabled: false,
+      show:true
+    },
+    cancelarEliminarModificarHora: {
+      content: "No quiero eliminarlas",
+      disabled: false,
+      show:false
+    },
+    eliminarModificarHora: {
+      content: "Si, estoy de acuerdo en eliminarlas",
+      disabled: false,
+      show: false
+    },
     supervisor: false,
     supervisarTodo: false
   },
@@ -176,6 +202,7 @@ new Vue({
         self.formFiltro.divisiones.disabled = false;
         self.formFiltro.empleados.disabled = false;
         self.formFiltro.estatus.disabled = false;
+        self.formFiltro.fechaDesde.disabled = false;
         self.formFiltro.mostrar = true;
         self.formFiltro.btn.cargar.html = self.formFiltro.btn.cargar.htmlInit;
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
@@ -280,6 +307,24 @@ new Vue({
         show:true
       }
 
+      self.confirmarModificarHora = {
+        content: "Eliminar",
+        disabled: false,
+        show:true
+      }
+
+      self.cancelarEliminarModificarHora = {
+        content: "No quiero eliminarlas",
+        disabled: false,
+        show:false
+      }
+
+      self.eliminarModificarHora = {
+        content: "Si, estoy de acuerdo en eliminarlas",
+        disabled: false,
+        show:false
+      }
+
       self.formModificarHoras = {
         aprobadoPor: "",
         concepto: {
@@ -325,23 +370,42 @@ new Vue({
     cargar: function(){
       $("#modal-cargar").modal("show");
     },
-    utc_date: function(fecha){
+    fechaDesdeFiltro: function(fecha_seleccionada){
 
-      let date = new Date(fecha);
-      let minutes = date.getMinutes();
-          minutes = minutes < 10 ? '0'+minutes : minutes;
-      let hours = date.getHours();
-      let ampm = hours >= 12 ? 'pm' : 'am';
-          hours = hours % 12;
-          hours = hours ? hours : 12;
-      let dd = date.getDate();
-          dd = dd < 10 ? '0'+dd : dd;
-      let mm = date.getMonth()+1;
-          mm = mm < 10 ? '0'+mm : mm;
-      let yyyy = date.getFullYear();
-      let date_formated = dd+"/"+mm+"/"+yyyy+" "+hours+":"+minutes+" "+ampm;
+      self.formFiltro.fechaHasta.value = "";
 
-      return date_formated
+      var fecha, fecha_desde_max;
+
+      if(fecha_seleccionada !== ""){
+
+        fecha = moment();
+        fecha_desde_max = moment(fecha_seleccionada);
+
+        var fecha_hasta_max = fecha;
+
+        if(fecha_hasta_max.minute() < 30){
+          self.formFiltro.fechaHasta.maxValue = fecha_hasta_max.startOf("hour").toISOString();
+        }else{
+          self.formFiltro.fechaHasta.maxValue = fecha_hasta_max.startOf("hour").add(30, "minutes").toISOString();
+        }
+
+        var fecha_hasta_min = fecha_desde_max;
+        self.formFiltro.fechaHasta.minValue = fecha_hasta_min.add(30, "minutes").toISOString();
+        self.formFiltro.fechaHasta.disabled = false;
+
+      }else{
+
+        fecha = fecha_desde_max = moment();
+
+        if(fecha_desde_max.minute() < 30){
+          fecha_desde_max = fecha_desde_max.startOf("hour").subtract(30, "minute");
+          self.formFiltro.fechaDesde.maxValue = fecha_desde_max.toISOString();
+        }else{
+          fecha_desde_max =  fecha_desde_max.startOf("hour");
+          self.formFiltro.fechaDesde.maxValue = fecha_desde_max.toISOString();
+        }
+
+      }
 
     },
     fechaDesde: function(form,e){
@@ -492,6 +556,15 @@ new Vue({
       }// Fin if(formValido)
 
     },
+    limpiarFecha: function(form,fecha){
+      self[form][fecha].value = "";
+
+      if(fecha === "fechaDesde"){
+        self[form].fechaHasta.value = "";
+        self[form].fechaHasta.disabled = true;
+      }
+
+    },
     limpiarMensajeErrorMultiselect: function(){
       $(".multiselect").parents(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
       $(".multiselect .multiselect__tags").removeClass("error");
@@ -514,6 +587,8 @@ new Vue({
       self.formFiltro.divisiones.value = [];
       self.formFiltro.empleados.value = [];
       self.formFiltro.estatus.value = "";
+      self.formFiltro.fechaDesde.value = "";
+      self.formFiltro.fechaHasta.value = "";
       self.buscar();
 
     },
@@ -523,6 +598,8 @@ new Vue({
       self.formFiltro.divisiones.disabled = true;
       self.formFiltro.empleados.disabled = true;
       self.formFiltro.estatus.disabled = true;
+      self.formFiltro.fechaDesde.disabled = true;
+      self.formFiltro.fechaHasta.disabled = true;
 
       self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
       self.formFiltro.btn.filtrar.disabled = true;
@@ -562,7 +639,9 @@ new Vue({
         estatus: self.formFiltro.estatus.value,
         paginar: self.paginador.paginar,
         supervisa: ((self.supervisor === true && self.formFiltro.empleados.value.length === 0) ? true : false),
-        supervisarTodo: ((self.supervisarTodo === true && self.formFiltro.divisiones.value.length === 0) ? true : false)
+        supervisarTodo: ((self.supervisarTodo === true && self.formFiltro.divisiones.value.length === 0) ? true : false),
+        fecha_desde: self.formFiltro.fechaDesde.value,
+        fecha_hasta: self.formFiltro.fechaHasta.value
       };
 
       axios.get('/buscarHorasNoCargableCargadas', {params: parametros})
@@ -573,6 +652,8 @@ new Vue({
         self.formFiltro.empleados.disabled = false;
         self.formFiltro.estatus.disabled = false;
         self.formFiltro.estatus.disabled = false;
+        self.formFiltro.fechaDesde.disabled = false;
+        self.formFiltro.fechaHasta.disabled = (self.formFiltro.fechaHasta.value !== "") ? false : true;
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
         self.formFiltro.btn.filtrar.disabled = false;
         self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
@@ -591,6 +672,8 @@ new Vue({
         self.formFiltro.empleados.disabled = false;
         self.formFiltro.estatus.disabled = false;
         self.formFiltro.estatus.disabled = false;
+        self.formFiltro.fechaDesde.disabled = false;
+        self.formFiltro.fechaHasta.disabled = (self.formFiltro.fechaHasta.value !== "") ? false : true;
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
         self.formFiltro.btn.filtrar.disabled = false;
         self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
@@ -682,12 +765,110 @@ new Vue({
       self.formModificarHoras.observacion.disabled = ((registro.autor === 1 && registro.editar === 1) || (registro.autor === 1 && self.supervisor === true)) ? false : true;
       self.formModificarHoras.estatus.disabled = (self.supervisor === true) ? false : true;
       self.submitModalModificarHora.show = ((registro.autor === 1 && registro.editar === 1) || self.supervisor === true) ? true : false;
+      self.confirmarModificarHora.show = ((registro.autor === 1 && registro.editar === 1) || self.supervisor === true) ? true : false;
       self.formModificarHoras.fechaAprobacion = (registro.fecha_aprobacion === null) ? "" : registro.fecha_aprobacion;
       self.formModificarHoras.aprobadoPor = (registro.aprobado_por === null) ? "" : registro.aprobado_por;
 
       self.fechaHasta("formModificarHoras", registro.fecha_desde_utc, registro.fecha_hasta_utc);
 
       $("#modal-modificar").modal("show");
+
+    },
+    confirmarEliminar: function(){
+      //alert(self.formModificarHoras.id)
+
+      self.submitModalModificarHora.show = false;
+      self.confirmarModificarHora.show = false;
+      self.eliminarModificarHora.show = true;
+      self.cancelarEliminarModificarHora.show = true;
+
+      self.alertModificarHora = {
+        class : "alert alert-danger text-center",
+        message : "¿Estás de acuerdo de eliminar estas horas?",
+        show: true
+      };
+
+    },
+    cancelarEliminarHora: function(){
+
+      self.submitModalModificarHora.show = true;
+      self.confirmarModificarHora.show = true;
+      self.eliminarModificarHora.show = false;
+      self.cancelarEliminarModificarHora.show = false;
+
+      self.alertModificarHora = {
+        class : "",
+        message : "",
+        show: false
+      };
+
+    },
+    eliminarHora: function(){
+
+      self.eliminarModificarHora.content = '<i class="fas fa-cog fa-spin"></i>';
+      self.eliminarModificarHora.disabled = true;
+      self.cancelarEliminarModificarHora.disabled = true;
+
+      //Obtenemos valores
+      let parametros = {
+        id: self.formModificarHoras.id
+      }
+
+      axios.post('/eliminarHorasNoCargables', parametros)
+      .then(function (response) {
+
+        if(response.status === 200 && response.data.respuesta === true){
+
+          self.limpiarFiltro();
+
+          self.alertModificarHora = {
+            class : "alert alert-success",
+            message : response.data.mensaje,
+            show: true
+          };
+
+          setTimeout(function(){ $("#modal-modificar").modal("hide"); }, 3000);
+
+        }else{
+
+          throw response.data;
+
+        }
+
+      })
+      .catch(error => {
+
+        self.eliminarModificarHora.content = 'Si, estoy de acuerdo en eliminarlas';
+        self.eliminarModificarHora.disabled = false;
+        self.cancelarEliminarModificarHora.disabled = false;
+
+        if(error.response){
+
+          var message = "Existe un error!, consulte con el administrador del sistema.";
+
+        }else{
+
+          var message = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+
+        }
+
+        self.alertModificarHora = {
+          class : "alert alert-warning",
+          message : message,
+          show: true
+        };
+
+        setTimeout(function(){
+
+          self.alertModificarHora = {
+            class : "alert alert-danger text-center",
+            message : "¿Estás de acuerdo de eliminar estas horas?",
+            show: true
+          };
+
+        }, 3000);
+
+      });
 
     },
     guardarModificar: function(){
@@ -723,6 +904,7 @@ new Vue({
         self.submitModalModificarHora.disabled = true;
         self.formModificarHoras.concepto.disabled = true;
         self.formModificarHoras.estatus.disabled = true;
+        self.confirmarModificarHora.disabled = true;
 
         axios.post('/modificarHorasNoCargables', parametros)
         .then(function (response) {

@@ -106,7 +106,7 @@ class ProyectoController extends Controller
     function dataInicialListadoProyectos(){
 
       $modelo = new ProyectoModel();
-      $paginar = 10;
+      $paginar = 50;
       $permisoActualizar = $modelo->permisoActualizar(session("usuario_id"), 10);
       $proyectos = $modelo->proyectos(session("division_id"), $paginar);
       $divisiones = $modelo->divisiones();
