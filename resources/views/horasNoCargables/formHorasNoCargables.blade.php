@@ -464,9 +464,9 @@
                         v-on:click="guardarModificar"></button>
                 <button class="btn btn-danger btn-sm btn-block"
                         type="button"
-                        v-bind:disabled="confirmarModificarHora.disabled"
-                        v-if="confirmarModificarHora.show"
-                        v-html="confirmarModificarHora.content"
+                        v-bind:disabled="confirmarEliminarHora.disabled"
+                        v-if="confirmarEliminarHora.show"
+                        v-html="confirmarEliminarHora.content"
                         v-on:click="confirmarEliminar"></button>
                 <div v-bind:class="alertModificarHora.class"
                      role="alert" v-if="alertModificarHora.show"
