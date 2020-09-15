@@ -1,1 +1,18 @@
-html{overflow-x:hidden}[v-cloak]{display:none}#inicio{background-color:#e9ecef;background-image:url(/images/fondo-inicio.png?c9d94bb56d21f177b561b2e0688233c0);background-position:50%;background-repeat:no-repeat;background-size:25%;height:100vh}
+/*@font-face {
+  font-family: "Rawline";
+  src: url("../../fonts/rawline/rawline-600.ttf");
+}*/
+html {
+  overflow-x: hidden;
+}
+[v-cloak] {
+  display: none;
+}
+#inicio {
+  background-color: #E9ECEF;
+  background-image: url(/images/fondo-inicio.png?c9d94bb56d21f177b561b2e0688233c0);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 25%;
+  height: 100vh;
+}
