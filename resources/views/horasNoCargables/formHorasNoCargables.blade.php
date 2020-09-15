@@ -289,7 +289,7 @@
                   <div class="form-group col-6" id="fechaHasta">
                     <label>Fecha Hasta</label>
                     <datetime
-                      @input="limpiarMensajeError"
+                      @input="limpiarMensajeError('#formCargarHoras .fechaHasta')"
                       :disabled="formCargarHoras.fechaHasta.disabled"
                       :max-datetime="formCargarHoras.fechaHasta.maxValue"
                       :min-datetime="formCargarHoras.fechaHasta.minValue"
@@ -397,7 +397,7 @@
                   <div class="form-group col-6" id="fechaHasta">
                     <label>Fecha Hasta</label>
                     <datetime
-                      @input="limpiarMensajeError"
+                      @input="limpiarMensajeError('#formModificarHoras .fechaHasta')"
                       :disabled="formModificarHoras.fechaHasta.disabled"
                       :max-datetime="formModificarHoras.fechaHasta.maxValue"
                       :min-datetime="formModificarHoras.fechaHasta.minValue"
@@ -464,9 +464,9 @@
                         v-on:click="guardarModificar"></button>
                 <button class="btn btn-danger btn-sm btn-block"
                         type="button"
-                        v-bind:disabled="confirmarModificarHora.disabled"
-                        v-if="confirmarModificarHora.show"
-                        v-html="confirmarModificarHora.content"
+                        v-bind:disabled="confirmarEliminarHora.disabled"
+                        v-if="confirmarEliminarHora.show"
+                        v-html="confirmarEliminarHora.content"
                         v-on:click="confirmarEliminar"></button>
                 <div v-bind:class="alertModificarHora.class"
                      role="alert" v-if="alertModificarHora.show"

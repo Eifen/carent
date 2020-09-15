@@ -167,7 +167,7 @@ new Vue({
       disabled: false,
       show:true
     },
-    confirmarModificarHora: {
+    confirmarEliminarHora: {
       content: "Eliminar",
       disabled: false,
       show:true
@@ -307,7 +307,7 @@ new Vue({
         show:true
       }
 
-      self.confirmarModificarHora = {
+      self.confirmarEliminarHora = {
         content: "Eliminar",
         disabled: false,
         show:true
@@ -571,7 +571,7 @@ new Vue({
       $(".multiselect .multiselect__tags").removeClass("error");
     },
     limpiarMensajeError: function(e){
-
+      
       if(typeof e.target === "undefined"){
         var el = $(e);
       }else{
@@ -766,7 +766,7 @@ new Vue({
       self.formModificarHoras.observacion.disabled = ((registro.autor === 1 && registro.editar === 1) || (registro.autor === 1 && self.supervisor === true)) ? false : true;
       self.formModificarHoras.estatus.disabled = (self.supervisor === true) ? false : true;
       self.submitModalModificarHora.show = ((registro.autor === 1 && registro.editar === 1) || self.supervisor === true) ? true : false;
-      self.confirmarModificarHora.show = ((registro.autor === 1 && registro.editar === 1) || self.supervisor === true) ? true : false;
+      self.confirmarEliminarHora.show = ((registro.autor === 1 && registro.editar === 1) || self.supervisor === true) ? true : false;
       self.formModificarHoras.fechaAprobacion = (registro.fecha_aprobacion === null) ? "" : registro.fecha_aprobacion;
       self.formModificarHoras.aprobadoPor = (registro.aprobado_por === null) ? "" : registro.aprobado_por;
 
@@ -779,7 +779,7 @@ new Vue({
       //alert(self.formModificarHoras.id)
 
       self.submitModalModificarHora.show = false;
-      self.confirmarModificarHora.show = false;
+      self.confirmarEliminarHora.show = false;
       self.eliminarModificarHora.show = true;
       self.cancelarEliminarModificarHora.show = true;
 
@@ -793,7 +793,7 @@ new Vue({
     cancelarEliminarHora: function(){
 
       self.submitModalModificarHora.show = true;
-      self.confirmarModificarHora.show = true;
+      self.confirmarEliminarHora.show = true;
       self.eliminarModificarHora.show = false;
       self.cancelarEliminarModificarHora.show = false;
 
@@ -905,7 +905,7 @@ new Vue({
         self.submitModalModificarHora.disabled = true;
         self.formModificarHoras.concepto.disabled = true;
         self.formModificarHoras.estatus.disabled = true;
-        self.confirmarModificarHora.disabled = true;
+        self.confirmarEliminarHora.disabled = true;
 
         axios.post('/modificarHorasNoCargables', parametros)
         .then(function (response) {
@@ -939,6 +939,7 @@ new Vue({
           self.formModificarHoras.estatus.disabled = false;
           self.submitModalModificarHora.content = 'Modificar';
           self.submitModalModificarHora.disabled = false;
+          self.confirmarEliminarHora.disabled = false;
 
           if(error.response){
 
