@@ -571,7 +571,7 @@ new Vue({
       $(".multiselect .multiselect__tags").removeClass("error");
     },
     limpiarMensajeError: function(e){
-
+      
       if(typeof e.target === "undefined"){
         var el = $(e);
       }else{
