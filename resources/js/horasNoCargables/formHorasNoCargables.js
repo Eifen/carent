@@ -13,7 +13,7 @@ import { Datetime } from 'vue-datetime';
 import 'vue-datetime/dist/vue-datetime.css';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 var self;
- 
+
 Vue.component('multiselect', Multiselect);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
 Vue.component('loading',require('../components/loading.vue').default);
@@ -528,7 +528,7 @@ new Vue({
         .catch(error => {
 
           self.formCargarHoras.concepto.disabled = false;
-          estatus: self.formCargarHoras.estatus.disabled = false;
+          self.formCargarHoras.estatus.disabled = false;
           self.formCargarHoras.fechaDesde.disabled = false;
           self.formCargarHoras.fechaHasta.disabled = false;
           self.formCargarHoras.observacion.disabled = false;
@@ -556,7 +556,8 @@ new Vue({
       }// Fin if(formValido)
 
     },
-    limpiarFecha: function(form,fecha){
+    limpiarFecha: function(form, fecha){
+
       self[form][fecha].value = "";
 
       if(fecha === "fechaDesde"){

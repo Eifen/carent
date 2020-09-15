@@ -11,7 +11,6 @@ import VueNumeric from 'vue-numeric';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 var self;
 
-
 Vue.component('multiselect', Multiselect);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
 Vue.component('loading',require('../components/loading.vue').default);
