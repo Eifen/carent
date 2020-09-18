@@ -47,11 +47,6 @@ html {
   padding: 0.25rem 0.7rem;
   white-space: normal;
 }
-#app .wrapper-forms form > div.form-group .titulo-indicar-horas {
-  color: #cc0000;
-  margin-top: 30px;
-  text-decoration: underline;
-}
 #app .wrapper-forms form > div.form-group label {
   color: #091F40;
 }

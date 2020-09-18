@@ -263,16 +263,14 @@
                   type="text"
                   v-model="form.campos.horas"></b-form-input>
               </b-form-group>
-              <b-form-group class="col-12" v-if="form.camposAtributos.horas.asignar">
-                <h6 class="titulo-indicar-horas">Indica la cantidad de horas por división</h6>
+              <b-form-group class="col-12" v-if="form.camposAtributos.divisiones.divisiones.length > 0">
+                <b-badge variant="warning">Indica la cantidad de horas por división</b-badge>
               </b-form-group>
-              <b-form-group :key="index" class="col-12" v-for="(division, index) in form.campos.divisiones">
+              <b-form-group :key="index" class="col-12" v-for="(division, index) in form.camposAtributos.divisiones.divisiones">
                 <b-row>
                   <b-form-group
-                    class="col-6"
-                    label="División"
-                    label-for="division"
-                    id="group-division">
+                    class="col-12 col-sm-4"
+                    label="División">
                     <b-form-input
                       :value="division.descripcion+`:`"
                       plaintext
@@ -280,17 +278,34 @@
                       size="sm"></b-form-input>
                   </b-form-group>
                   <b-form-group
-                    class="col-6"
-                    label="Horas"
-                    label-for="division"
-                    id="group-division">
+                    class="col-12 col-sm-5"
+                    label="Gerente">
+                    <b-form-select
+                      @change="limpiarMensajeError('estatus')"
+                      :disabled="form.camposAtributos.divisiones.divisiones[index].gerente.disabled"
+                      :options="form.camposAtributos.divisiones.divisiones[index].gerente.listado"
+                      :state="form.camposAtributos.divisiones.divisiones[index].gerente.state"
+                      :value="null"
+                      id="estatus"
+                      ref="estatus"
+                      size="sm"
+                      v-model="form.camposAtributos.divisiones.divisiones[index].gerente.id">
+                      <template v-slot:first>
+                        <option :value="null" disabled="true">Seleccione un gerente</option>
+                      </template>
+                    </b-form-select>
+                    <b-form-text v-html="form.camposAtributos.divisiones.divisiones[index].gerente.help"></b-form-text>
+                    @{{ form.camposAtributos.divisiones.divisiones[index].gerente.invalidFeedback }}
+                    <b-form-valid-feedback>@{{ form.camposAtributos.divisiones.divisiones[index].gerente.invalidFeedback }}</b-form-valid-feedback>
+                  </b-form-group>
+                  <b-form-group
+                    class="col-12 col-sm-3"
+                    label="Horas">
                     <b-form-input
                       @input="horasTotales"
                       :disabled="form.camposAtributos.divisiones.disabled"
                       :formatter="cantidadHora"
-                      :id-division="division.id"
                       :number="true"
-                      :ref="'asignar-'+index"
                       class="form-control hora-asignada"
                       placeholder="0"
                       size="sm"></b-form-input>

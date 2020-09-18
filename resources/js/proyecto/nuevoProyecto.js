@@ -136,11 +136,11 @@ new Vue({
         },
         divisiones: {
           disabled: true,
+          divisiones: [],
           invalidFeedback: "",
           state: null
         },
         horas:{
-          asignar: false,
           disabled: true,
           state: null
         }
@@ -274,13 +274,59 @@ new Vue({
 
     asignarHoras: function(valor){
 
-      self.form.camposAtributos.horas.asignar = (valor.length > 0) ? true : false;
+      self.form.camposAtributos.divisiones.divisiones = [];
 
-      if(!self.form.camposAtributos.horas.asignar){
+      valor.forEach(function(item, index){
+
+        const division = {
+          descripcion: item.descripcion,
+          gerente: {
+            disabled: true,
+            help: "",
+            helpInit: "Gerente para esta división, él estará a cargo de su división para este proyecto",
+            helpLoading: '<i class="fas fa-cog fa-spin"></i> buscando',
+            id: null,
+            listado: [],
+            state: null
+          },
+          horas: 0,
+          id: item.id,
+          posiblesGerentes: []
+        }
+
+        self.$set(self.form.camposAtributos.divisiones.divisiones, index, division);
+        self.gerenteDivision(index, item.id);
+
+      });
+
+      if(self.form.camposAtributos.divisiones.divisiones.length === 0){
         self.form.campos.horas = 0;
         self.form.camposAtributos.horas.invalidFeedback = "";
         self.form.camposAtributos.horas.state = null;
       }
+
+    },
+    gerenteDivision: function(index, id_division){
+
+      self.form.camposAtributos.divisiones.divisiones[index].gerente.help = self.form.camposAtributos.divisiones.divisiones[index].gerente.helpLoading;
+
+      axios.get('/gerentesDivision',{
+        params: {
+          id_division: id_division
+        }
+      })
+      .then(function (response) {
+      })
+      .catch(error => {
+
+        self.form.camposAtributos.divisiones.divisiones[index].gerente.help = self.form.camposAtributos.divisiones.divisiones[index].gerente.helpInit;
+        self.form.camposAtributos.divisiones.divisiones[index].gerente.disabled = false;
+        self.form.camposAtributos.divisiones.divisiones[index].gerente.state = false;
+        
+        var mensaje = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+        self.form.camposAtributos.divisiones.divisiones[index].gerente.invalidFeedback = mensaje;
+
+      });
 
     },
     cantidadHora(value){
@@ -391,6 +437,8 @@ new Vue({
           let hora = (self.$refs["asignar-"+i][0].$el.value.trim() === "") ? 0 : parseInt(self.$refs["asignar-"+i][0].$el.value);
           divisiones.push({id:self.$refs["asignar-"+i][0].$attrs["id-division"], horas: hora});
         });
+
+        console.log(divisiones); return;
 
         //Obtenemos valores
         let parametros = {
