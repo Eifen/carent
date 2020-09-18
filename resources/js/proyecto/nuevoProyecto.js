@@ -286,12 +286,16 @@ new Vue({
             helpInit: "Gerente para esta división, él estará a cargo de su división para este proyecto",
             helpLoading: '<i class="fas fa-cog fa-spin"></i> buscando',
             id: null,
+            invalidFeedback: "",
             listado: [],
             state: null
           },
-          horas: 0,
-          id: item.id,
-          posiblesGerentes: []
+          horas: {
+            invalidFeedback: "",
+            state: null,
+            value: 0,
+          },
+          id: item.id
         }
 
         self.$set(self.form.camposAtributos.divisiones.divisiones, index, division);
@@ -305,24 +309,35 @@ new Vue({
         self.form.camposAtributos.horas.state = null;
       }
 
+      self.horasTotales();
+
     },
     gerenteDivision: function(index, id_division){
 
       self.form.camposAtributos.divisiones.divisiones[index].gerente.help = self.form.camposAtributos.divisiones.divisiones[index].gerente.helpLoading;
 
-      axios.get('/gerentesDivision',{
+      axios.get('/proyectoGerentesDivision',{
         params: {
           id_division: id_division
         }
       })
       .then(function (response) {
+
+        self.form.camposAtributos.divisiones.divisiones[index].gerente.help = self.form.camposAtributos.divisiones.divisiones[index].gerente.helpInit;
+        self.form.camposAtributos.divisiones.divisiones[index].gerente.disabled = false;
+
+        self.form.camposAtributos.divisiones.divisiones[index].gerente.listado = [];
+        response.data.gerentes.forEach((item, i) => {
+          self.form.camposAtributos.divisiones.divisiones[index].gerente.listado.push({text:item.nombre, value: item.id});
+        });
+
       })
       .catch(error => {
 
         self.form.camposAtributos.divisiones.divisiones[index].gerente.help = self.form.camposAtributos.divisiones.divisiones[index].gerente.helpInit;
         self.form.camposAtributos.divisiones.divisiones[index].gerente.disabled = false;
         self.form.camposAtributos.divisiones.divisiones[index].gerente.state = false;
-        
+
         var mensaje = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema.";
         self.form.camposAtributos.divisiones.divisiones[index].gerente.invalidFeedback = mensaje;
 
@@ -344,12 +359,8 @@ new Vue({
 
       var total = 0;
 
-      const horas = document.getElementsByClassName("hora-asignada");
-
-      for(var i = 0; i < horas.length; i++){
-
-        total = total + parseInt(self.$refs["asignar-"+i][0].$el.value);
-
+      for(var i = 0; i < self.form.camposAtributos.divisiones.divisiones.length; i++){
+        total = total + parseInt(self.form.camposAtributos.divisiones.divisiones[i].horas.value);
       }
 
       total = (isNaN(total)) ? 0 : total;
@@ -363,6 +374,12 @@ new Vue({
 
       self.form.camposAtributos[refName].invalidFeedback = "";
       self.form.camposAtributos[refName].state = null;
+
+    },
+    limpiarMensajeErrorHoras: function(index){
+
+      self.form.camposAtributos.divisiones.divisiones[index].gerente.state = null;
+      self.form.camposAtributos.divisiones.divisiones[index].gerente.invalidFeedback = "";
 
     },
     monedaSeleccionada: function(){
@@ -432,10 +449,40 @@ new Vue({
 
       if(formValido){
 
+        Object.keys(self.form.camposAtributos.divisiones.divisiones).forEach((indice, i) => {
+          self.form.camposAtributos.divisiones.divisiones[indice].gerente.state = null;
+          self.form.camposAtributos.divisiones.divisiones[indice].gerente.invalidFeedback = "";
+        });
+
+        for(var i = 0; i < self.form.camposAtributos.divisiones.divisiones.length; i++){
+
+          const gerente = self.form.camposAtributos.divisiones.divisiones[i].gerente.id;
+          const hora = self.form.camposAtributos.divisiones.divisiones[i].horas.value;
+
+          if(gerente === null){
+            self.form.camposAtributos.divisiones.divisiones[i].gerente.invalidFeedback = "Debe elegir a un gerente";
+            self.form.camposAtributos.divisiones.divisiones[i].gerente.state = false;
+            formValido = false;
+            zenscroll.toY(self.$refs['division-'+i].$el);
+            break
+          }else if(hora){
+            self.form.camposAtributos.divisiones.divisiones[i].horas.invalidFeedback = "Debe ser mayor a 0";
+            self.form.camposAtributos.divisiones.divisiones[i].horas.state = false;
+            formValido = false;
+            zenscroll.toY(self.$refs['hora-'+i].$el);
+            break
+          }
+
+        }
+
+      }
+
+      if(formValido){
+
         const divisiones = [];
-        self.form.campos.divisiones.forEach((item, i) => {
-          let hora = (self.$refs["asignar-"+i][0].$el.value.trim() === "") ? 0 : parseInt(self.$refs["asignar-"+i][0].$el.value);
-          divisiones.push({id:self.$refs["asignar-"+i][0].$attrs["id-division"], horas: hora});
+        self.form.camposAtributos.divisiones.divisiones.forEach((item, i) => {
+          let hora = parseInt(item.horas);
+          divisiones.push({id: item.id, horas: hora, id_gerente: item.gerente.id});
         });
 
         console.log(divisiones); return;

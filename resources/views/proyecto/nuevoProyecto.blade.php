@@ -281,13 +281,12 @@
                     class="col-12 col-sm-5"
                     label="Gerente">
                     <b-form-select
-                      @change="limpiarMensajeError('estatus')"
+                      @change="limpiarMensajeErrorHoras(index)"
                       :disabled="form.camposAtributos.divisiones.divisiones[index].gerente.disabled"
                       :options="form.camposAtributos.divisiones.divisiones[index].gerente.listado"
+                      :ref="'division-'+index"
                       :state="form.camposAtributos.divisiones.divisiones[index].gerente.state"
                       :value="null"
-                      id="estatus"
-                      ref="estatus"
                       size="sm"
                       v-model="form.camposAtributos.divisiones.divisiones[index].gerente.id">
                       <template v-slot:first>
@@ -295,10 +294,12 @@
                       </template>
                     </b-form-select>
                     <b-form-text v-html="form.camposAtributos.divisiones.divisiones[index].gerente.help"></b-form-text>
-                    @{{ form.camposAtributos.divisiones.divisiones[index].gerente.invalidFeedback }}
-                    <b-form-valid-feedback>@{{ form.camposAtributos.divisiones.divisiones[index].gerente.invalidFeedback }}</b-form-valid-feedback>
+                    <b-form-invalid-feedback>
+                        @{{ form.camposAtributos.divisiones.divisiones[index].gerente.invalidFeedback }}
+                    </b-form-invalid-feedback>
                   </b-form-group>
                   <b-form-group
+                    :invalid-feedback="form.camposAtributos.divisiones.divisiones[index].horas.invalidFeedback"
                     class="col-12 col-sm-3"
                     label="Horas">
                     <b-form-input
@@ -306,9 +307,12 @@
                       :disabled="form.camposAtributos.divisiones.disabled"
                       :formatter="cantidadHora"
                       :number="true"
+                      :ref="'hora-'+index"
+                      :state="form.camposAtributos.divisiones.divisiones[index].horas.state"
                       class="form-control hora-asignada"
                       placeholder="0"
-                      size="sm"></b-form-input>
+                      size="sm"
+                      v-model="form.camposAtributos.divisiones.divisiones[index].horas.value"></b-form-input>
                   </b-form-group>
                 </b-row>
               </b-form-group>
