@@ -508,13 +508,14 @@ class ProyectoModel extends Model
     }
   }
 
-  function proyectoSDivision($id_usuario,$id_menu){
+  function proyectoSDivision($id_usuario,$division,$id_menu){
 
     $info = DB::select('SELECT p.id AS id_proyecto,
                                p.fecha_contratacion AS fecha,
                                UPPER(p.descripcion) AS proyecto,
                                (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = p.id_cliente) cliente,
                                (SELECT e.descripcion FROM tbl_estatus e WHERE valor = p.id_estatus AND e.tabla = "tbl_proyecto") estatus,
+                               (SELECT d.horas_contratadas FROM tbl_proyecto_divisiones d WHERE d.id_proyecto = p.id AND d.id_division = '.$division.') horas_contratadas,
                                (SELECT a.id FROM tbl_proyecto_analista a WHERE p.id = a.id_proyecto AND a.id_analista = '.$id_usuario.')id_proy_analista,
                                (SELECT CASE mu.C
                                       WHEN 1 THEN "true"
@@ -526,7 +527,9 @@ class ProyectoModel extends Model
                                 AND mu.id_menu = '. $id_menu.'
                                 AND p.id = (SELECT a.id_proyecto FROM tbl_proyecto_analista a WHERE a.id_analista = '.$id_usuario.' AND a.id_proyecto = p.id AND a.id_estatus = 1))permisoCrear
                         FROM tbl_proyecto p
-                        WHERE p.id_estatus = 1
+                        WHERE p.id = (SELECT a.id_proyecto FROM tbl_proyecto_analista a WHERE id_analista = '.$id_usuario.' AND a.id_proyecto = p.id)
+                        AND p.id_estatus = 1
+                        AND 1 = (SELECT a.id_estatus FROM tbl_proyecto_analista a WHERE id_analista = '.$id_usuario.' AND a.id_proyecto = p.id)
                         ORDER BY fecha ASC');
     if(count($info) > 0){
       return $info;
@@ -595,7 +598,7 @@ class ProyectoModel extends Model
     }
   }
 
-  function proyectosSdivi($id_usuario, $id_menu, $proyecto = "", $cliente = "", $estatus = null){
+  function proyectosSdivi($id_usuario, $id_menu, $division, $proyecto = "", $cliente = "", $estatus = null){
 
       if(trim($proyecto) != ""){
         $sql_proyecto = 'AND LOWER(p.descripcion) LIKE "%'.strtolower($proyecto).'%"';
@@ -618,9 +621,10 @@ class ProyectoModel extends Model
       $proyectos = DB::select('SELECT p.id AS id_proyecto,
                                       p.fecha_contratacion AS fecha,
                                       UPPER(p.descripcion) AS proyecto,
-                                      p.id_estatus,
                                       (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = p.id_cliente) cliente,
+                                      p.id_estatus,
                                       (SELECT e.descripcion FROM tbl_estatus e WHERE valor = p.id_estatus AND e.tabla = "tbl_proyecto") estatus,
+                                      (SELECT d.horas_contratadas FROM tbl_proyecto_divisiones d WHERE d.id_proyecto = p.id AND d.id_division = '.$division.') horas_contratadas,
                                       (SELECT a.id FROM tbl_proyecto_analista a WHERE p.id = a.id_proyecto AND a.id_analista = '.$id_usuario.')id_proy_analista,
                                       (SELECT CASE mu.C
                                         WHEN 1 THEN "true"
@@ -632,7 +636,8 @@ class ProyectoModel extends Model
                                         AND mu.id_menu = '. $id_menu.'
                                         AND p.id = (SELECT a.id_proyecto FROM tbl_proyecto_analista a WHERE a.id_analista = '.$id_usuario.' AND a.id_proyecto = p.id AND a.id_estatus = 1))permisoCrear
                                FROM tbl_proyecto p
-                               WHERE p.id_estatus > 0
+                               WHERE p.id = (SELECT a.id_proyecto FROM tbl_proyecto_analista a WHERE id_analista = '.$id_usuario.' AND a.id_proyecto = p.id)
+                               AND 1 = (SELECT a.id_estatus FROM tbl_proyecto_analista a WHERE id_analista = '.$id_usuario.' AND a.id_proyecto = p.id)
                                '.$sql_proyecto.'
                                '.$sql_estatus.'
                                '.$sql_cliente.'
@@ -756,7 +761,7 @@ class ProyectoModel extends Model
     function DetalleDivProyecto($idDproyecto){
 
     $info = DB::select('SELECT p.id,
-                               UPPER(p.descripcion),
+                               UPPER(p.descripcion) descripcion,
                                (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = p.id_cliente) cliente,
                                (SELECT SUM(d.horas_contratadas) FROM tbl_proyecto_divisiones d WHERE d.id_proyecto = '.$idDproyecto.') horas_contratadas,
                                p.fecha_contratacion

@@ -259,8 +259,7 @@ new Vue({
         self.form.cliente.disabled = false;
         self.form.estatus.disabled = false;
         self.form.btn.filtrar.html = self.form.btn.filtrar.htmlInit;
-        self.form.btn.filtrar.disabled = false;
-        self.permisoActualizar = response.data.permisoActualizar;
+        self.form.btn.filtrar.disabled = false
 
         self.proyectos = response.data.proyectos;
 
