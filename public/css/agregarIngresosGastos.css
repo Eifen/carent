@@ -17,7 +17,6 @@ html {
 }
 #app .card {
   box-shadow: 0 0.15rem 1.55rem 0 rgba(58, 59, 69, 0.15);
-  -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 #app .card:hover {
@@ -104,7 +103,6 @@ html {
   border-radius: 3px;
   margin-bottom: 50px;
   padding: 15px;
-  -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 #app .wrapper-forms form:hover {
@@ -163,7 +161,6 @@ html {
   border-radius: 3px;
   margin-bottom: 50px;
   padding: 15px;
-  -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 #app .wrapper-table .table:hover {
@@ -175,7 +172,6 @@ html {
   text-align: center;
 }
 #app .wrapper-table .table tbody tr {
-  -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
 #app .wrapper-table .table tbody tr:hover {

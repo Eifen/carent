@@ -106,7 +106,7 @@ class ProyectoController extends Controller
     function dataInicialListadoProyectos(){
 
       $modelo = new ProyectoModel();
-      $paginar = 10;
+      $paginar = 50;
       $permisoActualizar = $modelo->permisoActualizar(session("usuario_id"), 10);
       $proyectos = $modelo->proyectos(session("division_id"), $paginar);
       $divisiones = $modelo->divisiones();
@@ -221,13 +221,14 @@ class ProyectoController extends Controller
       $estatus = $modelo->estatusProyectos();
 
       if ($infoUsuario->id_cargo === 16 || $infoUsuario->id_cargo === 17) {
-        $infoProyectos = $modelo->proyectoUDivision($id_usuario, 11);
+        $infoProyectos = $modelo->proyectoSDivision($id_usuario, $infoUsuario->id_division, 11);
         $permisoVer = $modelo->permisoVer(session("usuario_id"), 11);
         return [
         "estatus" => $estatus,
         "proyectos" => $infoProyectos,
         "permisoVer" => $permisoVer,
-        "permisoCrear" => $permisoCrear
+        "permisoCrear" => $permisoCrear,
+        "permisoActualizar" => $permisoActualizar
       ];
       }
 
@@ -259,7 +260,7 @@ class ProyectoController extends Controller
       $proyecto = $request->input("proyecto");
       $estatus = $request->input("estatus");
       if ($infoUsuario->id_cargo === 16 || $infoUsuario->id_cargo === 17) {
-        $proyectos = $modelo->proyectosUdivi($id_usuario,11,$proyecto, $cliente, $estatus);
+        $proyectos = $modelo->proyectosSdivi($id_usuario,11,$infoUsuario->id_division,$proyecto, $cliente, $estatus);
 
         return array("proyectos" => $proyectos);
       }

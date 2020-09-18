@@ -117,13 +117,15 @@ class HorasNoCargablesController extends Controller
       $paginar = $request->input("paginar");
       $desde = $request->input("desde");
       $concepto = $request->input("concepto");
-      $estatus = $request->input("estatus");
+      $estatus = ($request->input("estatus") == "") ? null : $request->input("estatus");
       $empleado = $request->input("empleado");
       $division = $request->input("division");
       $supervisa = $request->input("supervisa");
       $supervisaTodo = $request->input("supervisaTodo");
-      $horas = $modelo->horasCargadas($paginar, $desde, $empleado, $division, $supervisa, $supervisaTodo, $concepto, $estatus);
-      $cantidadPaginas = $modelo->cantidadPaginasHorasCargadas($paginar, $empleado, $division, $supervisa, $supervisaTodo, $concepto, $estatus);
+      $fechaDesde = ($request->input("fecha_desde") == "") ? null : date("Y-m-d H:i:s", strtotime($request->input("fecha_desde")));
+      $fechaHasta = ($request->input("fecha_hasta") == "") ? null : date("Y-m-d H:i:s", strtotime($request->input("fecha_hasta")));
+      $horas = $modelo->horasCargadas($paginar, $desde, $empleado, $division, $supervisa, $supervisaTodo, $concepto, $estatus, $fechaDesde, $fechaHasta);
+      $cantidadPaginas = $modelo->cantidadPaginasHorasCargadas($paginar, $empleado, $division, $supervisa, $supervisaTodo, $concepto, $estatus, $fechaDesde, $fechaHasta);
 
       return [
         "numero_paginas" => $cantidadPaginas,
@@ -194,6 +196,15 @@ class HorasNoCargablesController extends Controller
       $modificarHora = $modelo->modificarHorasNoCargables($parametrosUpdate, $id, $id_usuario);
 
       return $modificarHora;
+
+    }
+
+    function eliminarHorasNoCargables(Request $request){
+
+      $modelo = new HorasNoCargablesModel();
+      $id = $request->input("id");
+
+      return $modelo->eliminarHorasNoCargables($id);
 
     }
 
