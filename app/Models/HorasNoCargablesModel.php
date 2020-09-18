@@ -419,8 +419,8 @@ class HorasNoCargablesModel extends Model
                                        OR fecha_hasta
                                          BETWEEN ("'.$parametros["fecha_desde"].'" + INTERVAL 1 SECOND)
                                          AND ("'.$parametros["fecha_hasta"].'" - INTERVAL 1 SECOND)
-                                       AND id_usuario = '.$parametros["id_usuario"].'
-                                       AND id_estatus = 1');
+                                         AND id_usuario = '.$parametros["id_usuario"].'
+                                         AND id_estatus = 1');
 
         if((int) $sql_fecha_hasta[0]->existe == 0){
 
