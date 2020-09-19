@@ -67,6 +67,9 @@ html {
 #app .wrapper-forms form > div.form-group .form-control-plaintext {
   font-weight: 600;
 }
+#app .wrapper-forms form > div.form-group .alert {
+  margin-bottom: 10px !important;
+}
 #app .wrapper-forms form .multiselect.multiselect--disabled {
   background-color: transparent;
 }
@@ -105,46 +108,6 @@ html {
 }
 #app .wrapper-forms form .multiselect .multiselect__tags .multiselect__input::placeholder {
   color: #495057;
-}
-#app .wrapper-forms .wrapper-subtmit > div {
-  padding-left: 0px;
-  padding-right: 0px;
-}
-#app .wrapper-forms .wrapper-subtmit > div .btn {
-  background-color: #091F40;
-  border: 2px solid #091F40;
-  border-radius: 2px;
-  color: #ffffff;
-  font-weight: 600;
-  transition: all 0.3s;
-  width: 100%;
-}
-#app .wrapper-forms .wrapper-subtmit > div .btn:hover {
-  background-color: #F6A81C;
-  color: #091F40;
-}
-#app .wrapper-forms .wrapper-subtmit > div .btn:disabled {
-  cursor: not-allowed;
-}
-#app .wrapper-forms .wrapper-refrescar > div {
-  padding-left: 0px;
-  padding-right: 0px;
-}
-#app .wrapper-forms .wrapper-refrescar > div .btn {
-  background-color: #091F40;
-  border: 2px solid #091F40;
-  border-radius: 2px;
-  color: #ffffff;
-  font-weight: 600;
-  transition: all 0.3s;
-  width: 100%;
-}
-#app .wrapper-forms .wrapper-refrescar > div .btn:hover {
-  background-color: #F6A81C;
-  color: #091F40;
-}
-#app .wrapper-forms .wrapper-refrescar > div .btn:disabled {
-  cursor: not-allowed;
 }
 #app .wrapper-forms .wrapper-alert {
   margin-top: 15px;
