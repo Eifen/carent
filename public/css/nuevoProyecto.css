@@ -67,6 +67,9 @@ html {
 #app .wrapper-forms form > div.form-group .form-control-plaintext {
   font-weight: 600;
 }
+#app .wrapper-forms form > div.form-group .alert {
+  margin-bottom: 10px !important;
+}
 #app .wrapper-forms form .multiselect.multiselect--disabled {
   background-color: transparent;
 }

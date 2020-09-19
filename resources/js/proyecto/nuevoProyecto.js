@@ -416,11 +416,11 @@ new Vue({
       self.limpiarMensajeError(self.form.camposAtributos.monto);
 
     },
-    confirmarCrearProyecto: async function(){
+    confirmarCrearProyecto: function(){
 
       var formValido = true;
 
-      await self.mostrarAlertForm(self.form.alert);
+      self.mostrarAlertForm(self.form.alert);
 
       Object.keys(self.form.camposAtributos).forEach((indice, i) => {
 
@@ -504,7 +504,7 @@ new Vue({
         self.form.botones.submit.show = true;
         self.form.botones.cancelar.show = true;
 
-        await self.mostrarAlertForm(self.form.alert, true, "warning", "¿Estas seguro de crear este nuevo proyecto?", false, false, 0);
+        self.mostrarAlertForm(self.form.alert, true, "warning", "¿Estas seguro de crear este nuevo proyecto?", false, false, 0);
 
       }
 
@@ -515,8 +515,12 @@ new Vue({
       self.form.botones.submit.show = false;
       self.form.botones.cancelar.show = false;
 
+      self.mostrarAlertForm(self.form.alert);
+
     },
     crear: async function(){
+
+      self.mostrarAlertForm(self.form.alert);
 
       const divisiones = [];
       self.form.camposAtributos.divisiones.divisiones.forEach((item, i) => {
