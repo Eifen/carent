@@ -32,7 +32,7 @@
                 label-for="descripcion"
                 id="group-descripcion">
                 <b-form-input
-                  @input="limpiarMensajeError('descripcion')"
+                  @input="limpiarMensajeError(form.camposAtributos.descripcion)"
                   :disabled="form.camposAtributos.descripcion.disabled"
                   :state="form.camposAtributos.descripcion.state"
                   autocomplete="off"
@@ -79,7 +79,7 @@
                 label-for="estatus"
                 id="group-estatus">
                 <b-form-select
-                  @change="limpiarMensajeError('estatus')"
+                  @change="limpiarMensajeError(form.camposAtributos.estatus)"
                   :disabled="form.camposAtributos.estatus.disabled"
                   :options="comboEstatus"
                   :state="form.camposAtributos.estatus.state"
@@ -100,7 +100,7 @@
                 label-for="fechaContratacion"
                 id="group-fechaContratacion">
                 <b-form-datepicker
-                  @input="limpiarMensajeError('fechaContratacion')"
+                  @input="limpiarMensajeError(form.camposAtributos.fechaContratacion)"
                   :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
                   :disabled="form.camposAtributos.fechaContratacion.disabled"
                   :max="form.camposAtributos.fechaContratacion.max"
@@ -208,7 +208,7 @@
                 id="group-monto">
                 <b-input-group :prepend="form.camposAtributos.montoEn.simbolo" size="sm">
                   <b-form-input
-                    @input="limpiarMensajeError('monto')"
+                    @input="limpiarMensajeError(form.camposAtributos.monto)"
                     :disabled="form.camposAtributos.monto.disabled"
                     :state="form.camposAtributos.monto.state"
                     autocomplete="off"
@@ -224,7 +224,7 @@
                 label-for="divisiones"
                 id="group-divisiones">
                 <multiselect @input="asignarHoras"
-                             @Open="limpiarMensajeError('divisiones')"
+                             @Open="limpiarMensajeError(form.camposAtributos.divisiones)"
                              :clear-on-select="false"
                              :close-on-select="false"
                              :disabled="form.camposAtributos.divisiones.disabled"
@@ -281,7 +281,7 @@
                     class="col-12 col-sm-5"
                     label="Gerente">
                     <b-form-select
-                      @change="limpiarMensajeErrorHoras(index)"
+                      @change="limpiarMensajeError(form.camposAtributos.divisiones.divisiones[index].gerente)"
                       :disabled="form.camposAtributos.divisiones.divisiones[index].gerente.disabled"
                       :options="form.camposAtributos.divisiones.divisiones[index].gerente.listado"
                       :ref="'division-'+index"
@@ -303,7 +303,7 @@
                     class="col-12 col-sm-3"
                     label="Horas">
                     <b-form-input
-                      @input="horasTotales"
+                      @input="horaDivision(index)"
                       :disabled="form.camposAtributos.divisiones.disabled"
                       :formatter="cantidadHora"
                       :number="true"
@@ -316,30 +316,46 @@
                   </b-form-group>
                 </b-row>
               </b-form-group>
-            </b-form>
-
-            <!--Al hacer clic se invoca el metodo crear de nuevoProyecto.js y envia los valores de las variables para su modificacion-->
-            <b-row align-h="center" align-v="center" class="wrapper-subtmit">
-              <b-col sm="12" md="6" lg="4">
+              <b-form-group class="col-12">
+                <alert :contador="form.alert.contador"
+                       :icono-cerrar="form.alert.iconCerrar"
+                       :mensaje="form.alert.mensaje"
+                       :mostrar="form.alert.mostrar"
+                       :ocultar-seg="form.alert.ocultarSeg"
+                       :variante="form.alert.variante">
+                </alert>
+                <b-button
+                  @click="confirmarCrearProyecto"
+                  block
+                  size="sm"
+                  v-html="form.botones.confirmar.html"
+                  v-if="form.botones.confirmar.show"
+                  variant="warning"></b-button>
+                <b-button
+                  @click="cancelarCrearProyecto"
+                  :disabled="form.botones.cancelar.disabled"
+                  block
+                  size="sm"
+                  v-html="form.botones.cancelar.html"
+                  v-if="form.botones.cancelar.show"
+                  variant="danger"></b-button>
                 <b-button
                   @click="crear"
                   :disabled="form.botones.submit.disabled"
-                  class="btn"
+                  block
                   size="sm"
                   v-html="form.botones.submit.html"
-                  v-if="form.botones.submit.show"></b-button>
-              </b-col>
-            </b-row>
-
-            <b-row align-h="center" align-v="center" class="wrapper-refrescar" v-if="refreshForm">
-              <b-col sm="12" md="6" lg="4">
+                  v-if="form.botones.submit.show"
+                  variant="success"></b-button>
                 <b-button
                   @click="refreshView"
-                  class="btn"
+                  block
                   size="sm"
-                  v-on:click="refreshView">Crear un nuevo proyecto</b-button>
-              </b-col>
-            </div>
+                  v-html="form.botones.refresh.html"
+                  v-if="form.botones.refresh.show"
+                  variant="primary">Quiero crear un nuevo proyecto</b-button>
+              </b-form-group>
+            </b-form>
 
           </b-col>
 

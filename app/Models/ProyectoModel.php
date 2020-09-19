@@ -155,6 +155,7 @@ class ProyectoModel extends Model
         $data = array(
                       "id_proyecto" => $idProyecto,
                       "id_division" => $divisiones[$i]["id"],
+                      "id_gerente" => $divisiones[$i]["id_gerente"],
                       "horas_contratadas" => $divisiones[$i]["horas"]
                      );
 

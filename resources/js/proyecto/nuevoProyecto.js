@@ -36,13 +36,34 @@ new Vue({
     comboMonedas: [],
     refreshForm: false,
     form: {
+      alert: {
+        contador: false,
+        iconCerrar: false,
+        mensaje: "",
+        mostrar: false,
+        ocultarSeg: 0,
+        variante: ""
+      },
       botones: {
-        submit:{
+        cancelar: {
+          disabled: false,
+          html: "No, deseo cancelar esta acción",
+          show: false
+        },
+        confirmar: {
+          html: "Crear Nuevo Proyecto",
+          show: true
+        },
+        refresh: {
+          html: "Quiero crear un nuevo Proyecto!",
+          show: false
+        },
+        submit: {
           disabled: false,
           html: "",
-          htmlInit: "Crear Nuevo Proyecto",
+          htmlInit: "Si, estoy seguro de crear este proyecto",
           htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
-          show: true
+          show: false
         }
       },
       campos: {
@@ -355,6 +376,12 @@ new Vue({
       }
 
     },
+    horaDivision: function(index){
+
+      self.limpiarMensajeError(self.form.camposAtributos.divisiones.divisiones[index].horas);
+      self.horasTotales();
+
+    },
     horasTotales: function(){
 
       var total = 0;
@@ -367,19 +394,13 @@ new Vue({
 
       self.form.campos.horas = total;
 
-      self.limpiarMensajeError('horas');
+      self.limpiarMensajeError(self.form.camposAtributos.horas);
 
     },
-    limpiarMensajeError: function(refName){
+    limpiarMensajeError: function(objeto){
 
-      self.form.camposAtributos[refName].invalidFeedback = "";
-      self.form.camposAtributos[refName].state = null;
-
-    },
-    limpiarMensajeErrorHoras: function(index){
-
-      self.form.camposAtributos.divisiones.divisiones[index].gerente.state = null;
-      self.form.camposAtributos.divisiones.divisiones[index].gerente.invalidFeedback = "";
+      objeto.state = null;
+      objeto.invalidFeedback = "";
 
     },
     monedaSeleccionada: function(){
@@ -392,14 +413,14 @@ new Vue({
         self.form.camposAtributos.monto.disabled = true;
       }
 
-      self.limpiarMensajeError("montoEn");
+      self.limpiarMensajeError(self.form.camposAtributos.monto);
 
     },
-    crear: async function(){
+    confirmarCrearProyecto: async function(){
 
       var formValido = true;
 
-      await self.mostrarAlertForm(self.alertGeneral);
+      await self.mostrarAlertForm(self.form.alert);
 
       Object.keys(self.form.camposAtributos).forEach((indice, i) => {
 
@@ -465,7 +486,7 @@ new Vue({
             formValido = false;
             zenscroll.toY(self.$refs['division-'+i].$el);
             break
-          }else if(hora){
+          }else if(hora === 0){
             self.form.camposAtributos.divisiones.divisiones[i].horas.invalidFeedback = "Debe ser mayor a 0";
             self.form.camposAtributos.divisiones.divisiones[i].horas.state = false;
             formValido = false;
@@ -479,85 +500,101 @@ new Vue({
 
       if(formValido){
 
-        const divisiones = [];
-        self.form.camposAtributos.divisiones.divisiones.forEach((item, i) => {
-          let hora = parseInt(item.horas);
-          divisiones.push({id: item.id, horas: hora, id_gerente: item.gerente.id});
-        });
+        self.form.botones.confirmar.show = false;
+        self.form.botones.submit.show = true;
+        self.form.botones.cancelar.show = true;
 
-        console.log(divisiones); return;
+        await self.mostrarAlertForm(self.form.alert, true, "warning", "¿Estas seguro de crear este nuevo proyecto?", false, false, 0);
 
-        //Obtenemos valores
-        let parametros = {
-          descripcion:  self.form.campos.descripcion,
-          cliente: self.form.campos.cliente,
-          fechaContratacion: self.form.campos.fechaContratacion,
-          socio: self.form.campos.socio,
-          gerente: self.form.campos.gerente,
-          divisiones: divisiones,
-          estatus: self.form.campos.estatus,
-          id_moneda: self.form.campos.montoEn,
-          monto: self.form.camposAtributos.monto.autonumeric.get()
+      }
+
+    },
+    cancelarCrearProyecto: function(){
+
+      self.form.botones.confirmar.show = true;
+      self.form.botones.submit.show = false;
+      self.form.botones.cancelar.show = false;
+
+    },
+    crear: async function(){
+
+      const divisiones = [];
+      self.form.camposAtributos.divisiones.divisiones.forEach((item, i) => {
+        let hora = parseInt(item.horas.value);
+        divisiones.push({id: item.id, horas: hora, id_gerente: item.gerente.id});
+      });
+
+      //Obtenemos valores
+      let parametros = {
+        descripcion:  self.form.campos.descripcion,
+        cliente: self.form.campos.cliente,
+        fechaContratacion: self.form.campos.fechaContratacion,
+        socio: self.form.campos.socio,
+        gerente: self.form.campos.gerente,
+        divisiones: divisiones,
+        estatus: self.form.campos.estatus,
+        id_moneda: self.form.campos.montoEn,
+        monto: self.form.camposAtributos.monto.autonumeric.get()
+      }
+
+      self.form.botones.cancelar.disabled = true;
+      self.form.botones.submit.disabled = true;
+      self.form.botones.submit.html = self.form.botones.submit.htmlLoading;
+
+      Object.keys(self.form.camposAtributos).forEach((indice, i) => {
+
+        if(self.form.camposAtributos[indice].hasOwnProperty("disabled") && indice !== "horas"){
+          self.form.camposAtributos[indice].disabled = true;
         }
 
-        self.form.botones.submit.disabled = true;
-        self.form.botones.submit.html = self.form.botones.submit.htmlLoading;
+      });
+
+      axios.post('/crearProyecto', parametros)
+      .then(function (response) {
+
+        if(response.status === 200 && response.data.response === true){
+
+          self.form.botones.cancelar.show = false;
+          self.form.botones.submit.show = false;
+          self.form.botones.refresh.show = true;
+
+          self.mostrarAlertForm(self.form.alert, true, "success", response.data.message, false, false, 0);
+
+        }else{
+
+          throw response.data;
+
+        }
+
+      })
+      .catch(error => {
 
         Object.keys(self.form.camposAtributos).forEach((indice, i) => {
 
           if(self.form.camposAtributos[indice].hasOwnProperty("disabled") && indice !== "horas"){
-            self.form.camposAtributos[indice].disabled = true;
+            self.form.camposAtributos[indice].disabled = false;
           }
 
         });
 
-        axios.post('/crearProyecto', parametros)
-        .then(function (response) {
+        self.form.botones.submit.disabled = false;
+        self.form.botones.submit.html = self.form.botones.submit.htmlInit
 
-          if(response.status === 200 && response.data.response === true){
+        if(error.message){
 
-            self.form.botones.submit.show = false;
-            self.refreshForm = true;
+          var mensaje = error.message;
+          var variante = "warning";
 
-            self.mostrarAlertForm(self.alertGeneral, true, "success", response.data.message, false, false, 0);
+        }else{
 
-          }else{
+          var mensaje = "Existe un error!, consulte con el administrador del sistema.";
+          var variante = "danger";
 
-            throw response.data;
+        }
 
-          }
+        self.mostrarAlertForm(self.form.alert, true, variante, mensaje, true, true, 10);
 
-        })
-        .catch(error => {
-
-          Object.keys(self.form.camposAtributos).forEach((indice, i) => {
-
-            if(self.form.camposAtributos[indice].hasOwnProperty("disabled") && indice !== "horas"){
-              self.form.camposAtributos[indice].disabled = false;
-            }
-
-          });
-
-          self.form.botones.submit.disabled = false;
-          self.form.botones.submit.html = self.form.botones.submit.htmlInit
-
-          if(error.message){
-
-            var mensaje = error.message;
-            var variante = "warning";
-
-          }else{
-
-            var mensaje = "Existe un error!, consulte con el administrador del sistema.";
-            var variante = "danger";
-
-          }
-
-          self.mostrarAlertForm(self.alertGeneral, true, variante, mensaje, true, true, 10);
-
-        });
-
-      }// Fin if
+      });
 
     },
     validadorMensajes: function(indice,campo){
@@ -598,7 +635,7 @@ new Vue({
     },
     buscarCliente: function(){
 
-      self.limpiarMensajeError("cliente");
+      self.limpiarMensajeError(self.form.camposAtributos.cliente);
       self.$refs["ref-lista-cliente"].hide();
       self.form.camposAtributos.cliente.listaDropdown.listado = [];
       self.form.camposAtributos.cliente.listaDropdown.noResultado = false;
@@ -684,7 +721,7 @@ new Vue({
     },
     buscarSocio: function(){
 
-      self.limpiarMensajeError("socio");
+      self.limpiarMensajeError(self.form.camposAtributos.socio);
       self.$refs["ref-lista-socio"].hide();
       self.form.camposAtributos.socio.listaDropdown.listado = [];
       self.form.camposAtributos.socio.listaDropdown.noResultado = false;
@@ -744,7 +781,7 @@ new Vue({
     },
     buscarGerente: function(){
 
-      self.limpiarMensajeError("gerente");
+      self.limpiarMensajeError(self.form.camposAtributos.gerente);
       self.$refs["ref-lista-gerente"].hide();
       self.form.camposAtributos.gerente.listaDropdown.listado = [];
       self.form.camposAtributos.gerente.listaDropdown.noResultado = false;
