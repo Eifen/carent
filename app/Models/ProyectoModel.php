@@ -114,6 +114,25 @@ class ProyectoModel extends Model
 
     }// Fin gerentes
 
+    function proyectoGerentesDivision($id_division){
+
+      $gerentes = DB::select("SELECT *
+                              FROM(
+
+                                SELECT u.id,
+                                       CONCAT(u.nombre_1,' ',u.nombre_2,' ',u.apellido_1,' ',u.apellido_2) AS nombre
+                                FROM tbl_usuario u
+                                WHERE u.id_estatus = 1
+                                AND u.id_division = ".$id_division."
+                                AND u.id_cargo IN(12,13,14,15,16,17)
+
+                              )t
+                              ORDER BY nombre ASC");
+
+      return $gerentes;
+
+    }
+
     function crearProyecto($descripcion,$cliente,$socio,$gerente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto){
 
       DB::beginTransaction();
@@ -136,6 +155,7 @@ class ProyectoModel extends Model
         $data = array(
                       "id_proyecto" => $idProyecto,
                       "id_division" => $divisiones[$i]["id"],
+                      "id_gerente" => $divisiones[$i]["id_gerente"],
                       "horas_contratadas" => $divisiones[$i]["horas"]
                      );
 

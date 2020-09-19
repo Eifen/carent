@@ -69,6 +69,20 @@ class ProyectoController extends Controller
 
     }
 
+    function proyectoGerentesDivision(Request $request){
+
+      $modelo = new ProyectoModel();
+      $id_division = $request["id_division"];
+
+      $gerentes = $modelo->proyectoGerentesDivision($id_division);
+
+      return [
+        "response" => true,
+        "gerentes" => $gerentes
+      ];
+
+    }
+
     function crearProyecto(Request $request){
 
       $modelo = new ProyectoModel();
