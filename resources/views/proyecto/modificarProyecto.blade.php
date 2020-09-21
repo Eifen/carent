@@ -15,21 +15,23 @@
     </head>
     <body>
 
-      <div id="modificarProyecto" class="container-fluid" v-on:keypress="keyboard">
+      <div id="app" class="container-fluid" v-on:keypress="keyboard">
 
         <loading :loading="loading" v-show="loading"></loading>
         <menu-principal v-cloak></menu-principal>
 
+        <b-row align-h="center" align-v="center" v-cloak>
+          <b-col cols="12" md="4" lg="2">
+            <b-button
+              block
+              href="{{ url()->previous() }}"
+              size="sm"
+              variant="primary">Regresar</b-button>
+          </b-col>
+        </b-row>
+
         <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
-          <div class="col-12 col-sm-11 col-md-9 col-lg-8 wrapper-back-btn">
-            <div class="row justify-content-center">
-              <div class="col-12 col-md-6 col-lg-4">
-                <a class="btn atras"
-                   href="{{ url()->previous() }}"
-                   type="button">Regresar</a>
-              </div>
-            </div>
-          </div>
+
 
           <div class="col-12 col-sm-11 col-md-9 col-lg-8" v-if="form.mostrar">
             <h3>Estas Modificando un Proyecto</h3>

@@ -4,20 +4,20 @@ html {
 [v-cloak] {
   display: none;
 }
-#modificarProyecto {
+#app {
   background-color: #E9ECEF;
 }
-#modificarProyecto .wrapper-forms {
-  padding-bottom: 50px;
-  padding-top: 70px;
+#app > .row:nth-child(2) {
+  margin-bottom: 50px;
+  margin-top: 40px;
 }
 @media (max-width: 575px) {
-  #modificarProyecto .wrapper-forms {
+  #app .wrapper-forms {
     padding-bottom: 0px;
     padding-top: 50px;
   }
 }
-#modificarProyecto .wrapper-forms form {
+#app .wrapper-forms form {
   background-color: white;
   border: 1px solid rgba(0, 0, 0, 0.13);
   border-radius: 3px;
@@ -25,123 +25,99 @@ html {
   padding: 15px;
   transition: all 0.3s;
 }
-#modificarProyecto .wrapper-forms form:hover {
+#app .wrapper-forms form:hover {
   box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
 }
-#modificarProyecto .wrapper-forms form > div.logo {
+#app .wrapper-forms form > div.logo {
   margin-bottom: 40px;
   margin-top: 30px;
   text-align: center;
 }
-#modificarProyecto .wrapper-forms form > div.logo img {
+#app .wrapper-forms form > div.logo img {
   height: 90px;
   width: auto;
 }
-#modificarProyecto .wrapper-forms form > div.wrapper-required-legend {
+#app .wrapper-forms form > div.wrapper-required-legend {
   margin-bottom: 20px;
 }
-#modificarProyecto .wrapper-forms form > div.wrapper-required-legend .campo-obligatorio {
+#app .wrapper-forms form > div.wrapper-required-legend .campo-obligatorio {
   color: #cc0000;
 }
-#modificarProyecto .wrapper-forms form > div.form-group .titulo-indicar-horas {
+#app .wrapper-forms form > div.form-group .titulo-indicar-horas {
   color: #cc0000;
   margin-top: 30px;
   text-decoration: underline;
 }
-#modificarProyecto .wrapper-forms form > div.form-group .campo-obligatorio {
+#app .wrapper-forms form > div.form-group .campo-obligatorio {
   color: #cc0000;
 }
-#modificarProyecto .wrapper-forms form > div.form-group label {
+#app .wrapper-forms form > div.form-group label {
   color: #091F40;
 }
-#modificarProyecto .wrapper-forms form > div.form-group label.label-warning {
+#app .wrapper-forms form > div.form-group label.label-warning {
   color: #cc0000;
 }
-#modificarProyecto .wrapper-forms form > div.form-group .invalid-feedback {
+#app .wrapper-forms form > div.form-group .invalid-feedback {
   display: block !important;
 }
-#modificarProyecto .wrapper-forms form > div.form-group .form-control {
+#app .wrapper-forms form > div.form-group .form-control {
   border-radius: 2px;
 }
-#modificarProyecto .wrapper-forms form > div.form-group .form-control.error {
+#app .wrapper-forms form > div.form-group .form-control.error {
   border-color: #dc3545;
 }
-#modificarProyecto .wrapper-forms form > div.form-group .form-control:disabled {
+#app .wrapper-forms form > div.form-group .form-control:disabled {
   cursor: not-allowed;
 }
-#modificarProyecto .wrapper-forms form > div.form-group .form-control-plaintext {
+#app .wrapper-forms form > div.form-group .form-control-plaintext {
   font-weight: 600;
 }
-#modificarProyecto .wrapper-forms form > div.wrapper-recovery-pass {
+#app .wrapper-forms form > div.wrapper-recovery-pass {
   margin-bottom: 10px;
   margin-top: 10px;
 }
-#modificarProyecto .wrapper-forms form > div.wrapper-recovery-pass .recuperarClave {
+#app .wrapper-forms form > div.wrapper-recovery-pass .recuperarClave {
   color: #007BFF;
   transition: all 0.3s;
 }
-#modificarProyecto .wrapper-forms form > div.wrapper-recovery-pass .recuperarClave:hover {
+#app .wrapper-forms form > div.wrapper-recovery-pass .recuperarClave:hover {
   cursor: pointer;
   text-decoration: underline;
 }
-#modificarProyecto .wrapper-forms .wrapper-back-btn {
-  margin-bottom: 35px;
-}
-#modificarProyecto .wrapper-forms .wrapper-back-btn > div {
+#app .wrapper-forms .wrapper-subtmit > div {
   padding-left: 5px;
   padding-right: 5px;
 }
-#modificarProyecto .wrapper-forms .wrapper-back-btn > div .btn {
-  background-color: transparent;
-  border: 2px solid #091F40;
-  border-radius: 2px;
-  color: #091F40;
-  font-weight: 600;
-  transition: all 0.3s;
-  width: 100%;
-}
-#modificarProyecto .wrapper-forms .wrapper-back-btn > div .btn.atras {
-  background-color: transparent;
-  color: #091F40;
-}
-#modificarProyecto .wrapper-forms .wrapper-back-btn > div .btn:hover {
-  background-color: #F6A81C;
-  color: #091F40;
-}
-#modificarProyecto .wrapper-forms .wrapper-subtmit > div {
-  padding-left: 5px;
-  padding-right: 5px;
-}
-#modificarProyecto .wrapper-forms .wrapper-subtmit > div .btn {
+#app .wrapper-forms .wrapper-subtmit > div .btn {
   border: 2px solid #091F40;
   border-radius: 2px;
   font-weight: 600;
   transition: all 0.3s;
   width: 100%;
 }
-#modificarProyecto .wrapper-forms .wrapper-subtmit > div .btn.subtmit {
+#app .wrapper-forms .wrapper-subtmit > div .btn.subtmit {
   background-color: #091F40;
   color: #ffffff;
 }
-#modificarProyecto .wrapper-forms .wrapper-subtmit > div .btn.atras {
+#app .wrapper-forms .wrapper-subtmit > div .btn.atras {
   background-color: transparent;
   color: #091F40;
 }
-#modificarProyecto .wrapper-forms .wrapper-subtmit > div .btn:hover {
+#app .wrapper-forms .wrapper-subtmit > div .btn:hover {
   background-color: #F6A81C;
   color: #091F40;
 }
-#modificarProyecto .wrapper-forms .wrapper-subtmit > div .btn:disabled {
+#app .wrapper-forms .wrapper-subtmit > div .btn:disabled {
   cursor: not-allowed;
 }
-#modificarProyecto .wrapper-forms .wrapper-alert {
+#app .wrapper-forms .wrapper-alert {
   margin-top: 15px;
 }
-#modificarProyecto .wrapper-forms .wrapper-alert > div {
+#app .wrapper-forms .wrapper-alert > div {
   padding-left: 0px;
   padding-right: 0px;
 }
-#modificarProyecto .wrapper-forms .wrapper-alert > div .alert {
+#app .wrapper-forms .wrapper-alert > div .alert {
   margin-bottom: 0px;
   text-align: center;
   width: 100%;

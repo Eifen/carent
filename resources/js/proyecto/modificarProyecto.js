@@ -3,9 +3,9 @@ import Vue from 'vue';
 import { BootstrapVue } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
-window.zenscroll = require('zenscroll');
-window.axios = require('axios');
-window.AutoNumeric = require('autonumeric');
+import zenscroll from 'zenscroll';
+import axios from 'axios';
+import AutoNumeric from 'autonumeric';
 import VueTheMask from 'vue-the-mask';
 import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
@@ -80,7 +80,7 @@ const datosIniciales = () => {
 
 new Vue({
 
-  el: '#modificarProyecto',
+  el: '#app',
   data: {
     idProyecto: null,
     alertForm: {
