@@ -448,7 +448,11 @@ class HorasNoCargablesModel extends Model
 
     }// Fin registrarHorasNoCargables
 
-    function modificarHorasNoCargables($parametros, $id, $id_usuario){
+    function modificarHorasNoCargables($parametros, $id){
+
+      $id_usuario = DB::table('tbl_horas_no_cargables')->where('id', $id)->first();
+
+      $id_usuario = $id_usuario->id_usuario;
 
       // Chequeamos que la fecha desde no este usada
       $sql_fecha_desde = DB::select('SELECT COUNT(1) existe
@@ -456,11 +460,13 @@ class HorasNoCargablesModel extends Model
                                      WHERE ("'.$parametros["fecha_desde"].'" + INTERVAL 1 SECOND)
                                        BETWEEN fecha_desde AND fecha_hasta
                                        AND id <> '.$id.'
+                                       AND id_usuario = '.$id_usuario.'
                                        AND id_estatus = 1
                                      OR fecha_desde
                                        BETWEEN ("'.$parametros["fecha_desde"].'" + INTERVAL 1 SECOND)
                                        AND ("'.$parametros["fecha_hasta"].'" - INTERVAL 1 SECOND)
                                        AND id <> '.$id.'
+                                       AND id_usuario = '.$id_usuario.'
                                        AND id_estatus = 1');
 
       if((int) $sql_fecha_desde[0]->existe == 0){
