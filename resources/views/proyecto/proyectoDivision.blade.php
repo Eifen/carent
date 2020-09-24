@@ -84,12 +84,11 @@
               <thead>
                 <!--Dependiendo de los permisos que posea el usuario se les hablitara o no las columnas-->
                 <tr>
-                  <th scope="col">Clientes</th>
+                  <th scope="col">Cliente</th>
                   <th scope="col">Proyecto</th>
-                  <th scope="col">Estatus</th>
-                  <th scope="col"v-if="permisoVer">Ver Empleados</th><!--Socios-->
-                  <th scope="col" v-if="permisoActualizar">Horas Contratadas</th><!--Director o encargado del area-->
-                  <th scope="col" v-if="permisoActualizar">Asignar</th><!--Director o encargado del area-->
+                  <th scope="col"v-if="permisoVer">Ver Empleados</th>
+                  <th scope="col" v-if="permisoActualizar">Asignar</th>
+                  <th scope="col" v-if="permisoCrear">Mis Horas Asignadas</th>
                   <th scope="col" v-if="permisoCrear">Cargar Horas</th>
                 </tr>
               </thead>
@@ -97,24 +96,24 @@
                 <tr v-for="proyecto in proyectos">
                   <th scope="row">@{{ proyecto.cliente }}</th>
                   <td>@{{ proyecto.proyecto }}</td>
-                  <td>@{{ proyecto.estatus }}</td>
                   <td v-if="permisoVer">
-                    <i class="fas fa-search-plus" v-on:click="mostrarDetalleDivProyecto(proyecto.id_proyecto, $event)"></i><!--Al hacer clic se invoca el metodo mostrarDetalleDivProyecto y abre la modal-->
+                    <i class="fas fa-search-plus" v-on:click="mostrarDetalleDivProyecto(proyecto.id_proyecto, $event)" v-if= "proyecto.permisoVer"></i>
                   </td>
-                  <td v-if="permisoActualizar">@{{ proyecto.horas_contratadas }}</td>
                   <td v-if="permisoActualizar">
-                       <i class="far fa-edit" v-on:click="asignarAnalistaProyecto(proyecto.id_proyecto, $event)"></i><!--Al hacer clic se invoca el metodo asignarAnalistaProyecto y abre la modal-->
+                       <i class="far fa-edit" v-on:click="asignarAnalistaProyecto(proyecto.id_proyecto, $event)"v-if= "proyecto.permisoActualizar"></i>
                   </td>
+                  <td v-if= "permisoCrear">@{{ proyecto.horas_asignadas }}</td>
                   <td v-if= "permisoCrear">
                     <a v-bind:href="'/formCargarHoras/'+proyecto.id_proy_analista" target="_self">
-                    <i class="fas fa-user-edit" v-if= "proyecto.permisoCrear"></i><!--Al hacer clic te envia a la pagina de cargar horas-->
-                  </td>
+                    <i class="fas fa-user-edit" v-if= "proyecto.permisoCrear"></i>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div class="col-12 col-sm-11 col-md-10 col-lg-8 col-xl-7" v-if="alert.mostrar">
-            <div class="alert alert-warning text-center" v-html="alert.message"></div>
+          <div class="row wrapper-alert">
+            <div class="col-12">
+              <div v-bind:class="alertForm.class" role="alert" v-if="alertForm.show" v-html="alertForm.message"></div>
+            </div>
           </div>
         </div>
         <div id="modal-detalle-Dproyecto" class="modal fade" tabindex="-1" role="dialog" v-cloak>
@@ -194,7 +193,7 @@
                     <input class="form-control" type="text" disabled v-bind:value="Asigproyecto.proyecto">
                   </div>
                   <div class="form-group col-12 col-sm-6">
-                    <label>Horas Contratadas</label>
+                    <label>Horas Asignadas a la División </label>
                     <input class="form-control" type="text" disabled v-bind:value="Asigproyecto.horas_contratadas">
                   </div>
                   <div class="form-group col-12 col-sm-6">
@@ -233,7 +232,7 @@
                   <td><input @keypress="formatoHoraAsignada"
                              @keyup="horasTotales"
                              v-model="analista.horas_asignadas"
-                             v-mask="'####'"
+                             v-mask="'#####'"
                              :disabled="analista.estatus != 1"
                              v-on:keyup="asigna(analista.id,analista.idAnaProy,proyecto.id,Asigproyecto.horas_contratadas, $event)"
                              class="form-control hora-asignada"
