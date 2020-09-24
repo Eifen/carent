@@ -67,7 +67,7 @@ class HorasCargadasController extends Controller
       }
       return $response;
       } 
-      $response = array("response" => false, "message" => "Introducir una fecha valida"); 
+      $response = array("response" => false, "message" => "A intentado introducir una actividad en una fecha a futuros acción no permitida"); 
       return $response;
     }
 
