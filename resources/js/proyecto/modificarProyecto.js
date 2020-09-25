@@ -723,6 +723,18 @@ new Vue({
 
           self.mostrarAlertForm(self.form.alert, true, "success", response.data.message, true, true, 10);
 
+          Object.keys(self.form.camposAtributos).forEach((indice, i) => {
+
+            if(self.form.camposAtributos[indice].hasOwnProperty("disabled") && indice !== "horas"){
+              self.form.camposAtributos[indice].disabled = false;
+            }
+
+          });
+
+          self.form.botones.submit.disabled = false;
+          self.form.botones.submit.html = self.form.botones.submit.htmlInit
+          self.form.botones.cancelar.disabled = false;
+
         }else{
 
           throw response.data;
