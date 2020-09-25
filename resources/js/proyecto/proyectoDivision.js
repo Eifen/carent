@@ -88,7 +88,9 @@ new Vue({
       data: []
     },
     permisoActualizar: false,
+    proyectosD: [],
     proyectos: [],
+    proyectoBusqueda: [],
     horasComparar: [],
     horas_cargadas: 0,
     diferencia: 0,
@@ -113,14 +115,37 @@ new Vue({
         self.form.mostrar = true;
         self.form.btn.filtrar.html = self.form.btn.filtrar.htmlInit;
 
-        self.proyectos = response.data.proyectos;
-        self.permisoActualizar = response.data.permisoActualizar;
-        self.permisoVer = response.data.permisoVer;
-        self.permisoCrear = response.data.permisoCrear;
-
+        self.proyectosD = response.data.proyectos;
+        for (var i = 0; i < self.proyectosD.length; i++) {
+          if(self.proyectosD[i].permiso > 0 && self.proyectosD[i].id_estatus === 1){
+            self.proyectos = self.proyectos.concat(self.proyectosD[i]);
+            self.permisoCrear = true;
+          }
+          if (self.proyectosD[i].permiso === 1 || self.proyectosD[i].permiso === 2 || self.proyectosD[i].permiso === 3) {
+            self.permisoActualizar = true; 
+          }
+          if (self.proyectosD[i].permiso === 1 || self.proyectosD[i].permiso === 2) {
+            self.permisoVer = true;
+          }
+        }
+        if (Object.entries(self.proyectos).length === 0) {
+          var message = "No posee proyectos asignados";
+          self.alertForm = {
+            class : "alert alert-warning",
+            message : message,
+            show: true
+          };
+        }
         self.loading = false;
 
       }else{
+
+        var message = "No posee proyectos asignados";
+          self.alertForm = {
+            class : "alert alert-warning",
+            message : message,
+            show: true
+          };
 
         throw "error";
 
@@ -238,7 +263,9 @@ new Vue({
 
     buscar: function(){
 
-      permisoActualizar: false,
+      self.permisoActualizar = false;
+      self.permisoCrear = false;
+      self.permisoVer = false;
       self.alert.mostrar = false;
       self.form.descripcion.disabled = true;
       self.form.cliente.disabled = true;
@@ -261,7 +288,35 @@ new Vue({
         self.form.btn.filtrar.html = self.form.btn.filtrar.htmlInit;
         self.form.btn.filtrar.disabled = false
 
-        self.proyectos = response.data.proyectos;
+        self.proyectoBusqueda = response.data.proyectoBusqueda;
+        self.proyectosD = response.data.proyectos;
+        self.proyectos = [];
+
+        for (var i = 0; i < self.proyectosD.length; i++) {
+          for (var j = 0; j < self.proyectoBusqueda.length; j++) {
+            if (self.proyectosD[i].id_proyecto == self.proyectoBusqueda[j].id_proyecto && self.proyectoBusqueda[j].id_estatus === 1) {
+              if(self.proyectosD[i].permiso > 0){
+                self.proyectos = self.proyectos.concat(self.proyectosD[i]);
+                self.permisoCrear = true;
+              }
+              if (self.proyectosD[i].permiso === 1 || self.proyectosD[i].permiso === 2 || self.proyectosD[i].permiso === 3) {
+                self.permisoActualizar = true; 
+              }
+              if (self.proyectosD[i].permiso === 1 || self.proyectosD[i].permiso === 2) {
+                self.permisoVer = true;
+              }
+            }
+            if (self.proyectosD[i].id_proyecto == self.proyectoBusqueda[j].id_proyecto && self.proyectoBusqueda[j].id_estatus === 2) {
+              if(self.proyectosD[i].permiso > 0){
+                self.proyectos = self.proyectos.concat(self.proyectosD[i]);
+                self.permisoCrear = true;
+              }
+              if (self.proyectosD[i].permiso === 1 || self.proyectosD[i].permiso === 2) {
+                self.permisoVer = true;
+              }
+            }            
+          }
+        }
 
       }).catch(error => {
 
@@ -390,7 +445,7 @@ new Vue({
             }
 
           }
-            self.buscar();
+            self.actualizar();
           }
         })
 
@@ -413,7 +468,7 @@ new Vue({
             }
 
           }
-            self.buscar();
+            self.actualizar();
       }else{
         throw response.data;
       }
@@ -463,18 +518,58 @@ new Vue({
           self.detalleAnalista.data = response.data.analistas;
           self.detalleAsigproyecto.data = response.data.proyecto;
 
-          for (var i = 0; i < self.detalleAnalista.data.length; i++) {
-            self.horasComparar[i] = self.detalleAnalista.data[i].horas_asignadas;
-            if (self.detalleAnalista.data[i].horas_asignadas === null) {
-              self.horasComparar[i] = 0;
-            }
-
-          }
+        self.actualizar();
         }else{
           throw response.data;
         }
       })
       }
+    },
+
+    actualizar: function(){
+
+      let parametros = {
+        cliente: self.form.cliente.value,
+        proyecto: self.form.descripcion.value,
+        estatus: self.form.estatus.value,
+      };
+
+      axios.get('/buscardiviProyectos', {params: parametros})
+      .then(function (response) {
+
+        self.proyectoBusqueda = response.data.proyectoBusqueda;
+        self.proyectosD = response.data.proyectos;
+        self.proyectos = [];
+
+        for (var i = 0; i < self.proyectosD.length; i++) {
+          for (var j = 0; j < self.proyectoBusqueda.length; j++) {
+            if (self.proyectosD[i].id_proyecto == self.proyectoBusqueda[j].id_proyecto && self.proyectoBusqueda[j].id_estatus === 1) {
+              if(self.proyectosD[i].permiso > 0){
+                self.proyectos = self.proyectos.concat(self.proyectosD[i]);
+                self.permisoCrear = true;
+              }
+            }
+            if (self.proyectosD[i].id_proyecto == self.proyectoBusqueda[j].id_proyecto && self.proyectoBusqueda[j].id_estatus === 2) {
+              if(self.proyectosD[i].permiso > 0){
+                self.proyectos = self.proyectos.concat(self.proyectosD[i]);
+              }
+              if (self.proyectosD[i].permiso === 1 || self.proyectosD[i].permiso === 2) {
+              }
+            }            
+          }
+        }
+
+      }).catch(error => {
+
+        self.alert.mostrar = true;
+        self.form.descripcion.disabled = false;
+        self.form.cliente.disabled = false;
+        self.form.estatus.disabled = false;
+        self.form.btn.filtrar.html = self.form.btn.filtrar.htmlInit;
+        self.form.btn.filtrar.disabled = false;
+
+      });
+
     },
 
     formCargarHoras: function(idProyecto,idUsuario,e){
