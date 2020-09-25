@@ -42,6 +42,45 @@ html {
   padding: 0.25rem 0.7rem;
   white-space: normal;
 }
+#app > .row form .multiselect.multiselect--disabled {
+  background-color: transparent;
+}
+#app > .row form .multiselect.multiselect--disabled .multiselect__select {
+  background-color: transparent;
+}
+#app > .row form .multiselect .multiselect__select {
+  height: calc(1.5em + 0.5rem + 2px);
+  min-height: calc(1.5em + 0.5rem + 2px);
+}
+#app > .row form .multiselect .multiselect__select:before {
+  border-color: #343A40 transparent transparent;
+}
+#app > .row form .multiselect .multiselect__tags {
+  border: 1px solid #ced4da;
+  height: calc(1.5em + 0.5rem + 2px);
+  min-height: calc(1.5em + 0.5rem + 2px);
+  padding: 2px 40px 0 8px;
+}
+#app > .row form .multiselect .multiselect__tags .multiselect__tag {
+  margin-top: 1px;
+}
+#app > .row form .multiselect .multiselect__tags .multiselect__placeholder {
+  color: #495057;
+}
+#app > .row form .multiselect .multiselect__tags .multiselect__input {
+  font-size: 0.875rem;
+  height: calc(1.5em + 0.5rem + 2px);
+  min-height: calc(1.5em + 0.5rem + 2px);
+}
+#app > .row form .multiselect .multiselect__tags .multiselect__input::-moz-placeholder {
+  color: #495057;
+}
+#app > .row form .multiselect .multiselect__tags .multiselect__input:-ms-input-placeholder {
+  color: #495057;
+}
+#app > .row form .multiselect .multiselect__tags .multiselect__input::placeholder {
+  color: #495057;
+}
 @media (max-width: 575px) {
   #app .wrapper-forms {
     padding-bottom: 0px;
