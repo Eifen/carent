@@ -467,65 +467,87 @@ class ProyectoModel extends Model
       }
     }
 
-    function modificarProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus,$idProyecto,$divisiones_v){
+    function modificarProyecto($idProyecto, $parametros_proyecto, $divisiones, $divisiones_v){
 
       DB::beginTransaction();
 
       try{
 
-        $data = array("descripcion" => $descripcion,
-                      "id_cliente" => $cliente,
-                      "fecha_contratacion" => $fechaContratacion,
-                      "id_estatus" => $estatus);
+        $update = DB::table('tbl_proyecto')->where("id", $idProyecto)->update($parametros_proyecto);
 
-        $update = DB::table('tbl_proyecto')->where("id",$idProyecto)->update($data);
+        $divisionCreada = true;
 
         for($i = 0; $i < count($divisiones); $i++){
-          $si = 0;
+
+          $actualizar_division = false;
+
           for($j = 0; $j < count($divisiones_v); $j++){
-            if ($divisiones[$i]["id"] === $divisiones_v[$j]->id_division) {
-              $si=1;
+
+            if ($divisiones[$i]["id"] === $divisiones_v[$j]->id) {
+              $actualizar_division = true;
             }
+
           }
-          if ($si === 0) {
+
+          if($actualizar_division){
+
+            $data = array(
+                          "horas_contratadas" => $divisiones[$i]["horas"],
+                          "id_gerente" => $divisiones[$i]["id_gerente"]
+                         );
+            $div = DB::table('tbl_proyecto_divisiones')->where([['id_proyecto', '=', $idProyecto],['id_division', '=', $divisiones_v[$i]->id]])->update($data);
+
+          }else{
 
             $data = array(
                           "id_proyecto" => $idProyecto,
                           "id_division" => $divisiones[$i]["id"],
+                          "id_gerente" => $divisiones[$i]["id_gerente"],
                           "horas_contratadas" => $divisiones[$i]["horas"]
-                          );
-            $div = DB::table('tbl_proyecto_divisiones')->insert($data);
+                         );
 
-          }else{
-
-            $data = array("horas_contratadas" => $divisiones[$i]["horas"]);
-            $div = DB::table('tbl_proyecto_divisiones')->where([['id_proyecto', '=', $idProyecto],['id_division', '=', $divisiones_v[$i]->id_division]])->update($data);
+            if(!DB::table('tbl_proyecto_divisiones')->insert($data)){
+              throw new Exception('No se pudo asociar la nueva división.');
+              break;
+            }
 
           }
 
         }
 
         for($i = 0; $i < count($divisiones_v); $i++){
-          $no = 0;
+
+          $eliminar_division = true;
+
           for($j = 0; $j < count($divisiones); $j++){
-            if ($divisiones_v[$i]->id_division === $divisiones[$j]["id"]) {
-              $no=1;
+
+            if ($divisiones_v[$i]->id === $divisiones[$j]["id"]) {
+              $eliminar_division = false;
             }
+
           }
-          if ($no === 0) {
-            $delete = DB::table('tbl_proyecto_divisiones')->where([['id_proyecto', '=', $idProyecto],['id_division', '=', $divisiones_v[$i]->id_division]])->delete();
+
+          if($eliminar_division) {
+
+            $delete = DB::table('tbl_proyecto_divisiones')->where([['id_proyecto', '=', $idProyecto],['id_division', '=', $divisiones_v[$i]->id]])->delete();
+
+            if(!$delete){
+              throw new Exception('No se pudo eliminar la división.');
+              break;
             }
+
+          }
 
         }
 
-          DB::commit();
-          $client = DB::select('SELECT c.razon_social FROM tbl_cliente c WHERE c.id = '.$cliente.'');
+        DB::commit();
+        $client = DB::select('SELECT c.razon_social FROM tbl_cliente c WHERE c.id = '.$parametros_proyecto["id_cliente"].'');
 
-          return array(
-            "cliente" => $client[0]->razon_social,
-            "response" => true,
-            "message" => "Proyecto actualizado con éxito."
-          );
+        return array(
+          "cliente" => $client[0]->razon_social,
+          "response" => true,
+          "message" => "Proyecto actualizado con éxito."
+        );
 
       } catch(\Illuminate\Database\QueryException $ex){
 

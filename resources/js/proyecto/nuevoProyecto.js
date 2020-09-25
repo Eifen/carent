@@ -582,6 +582,7 @@ new Vue({
 
         self.form.botones.submit.disabled = false;
         self.form.botones.submit.html = self.form.botones.submit.htmlInit
+        self.form.botones.cancelar.disabled = false;
 
         if(error.message){
 

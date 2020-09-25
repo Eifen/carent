@@ -195,16 +195,31 @@ class ProyectoController extends Controller
     function modificarProyecto(Request $request){
 
       $modelo = new ProyectoModel();
-      $id_proyecto = (int) session("id_proyecto_mod");
-      $idProyecto = $request->input("idProyecto");
-      $descripcion = $request->input("descripcion");
+
+      $idProyecto = $request->input("id_proyecto");
+      $descripcion = strtoupper($request->input("descripcion"));
       $cliente = $request->input("cliente");
+      $socio = $request->input("socio");
+      $gerente = $request->input("gerente");
       $fechaContratacion = $request->input("fechaContratacion");
       $divisiones = $request->input("divisiones");
-      $divisiones_v =  $modelo->detalleDivisionProyecto($id_proyecto);
       $estatus = $request->input("estatus");
+      $id_moneda = $request->input("id_moneda");
+      $monto = $request->input("monto");
+      $divisiones_v =  $modelo->detalleDivisionProyecto($idProyecto);
 
-      $response = $modelo->modificarProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus,$idProyecto,$divisiones_v);
+      $parametros_proyecto = array(
+        "descripcion" => $descripcion,
+        "id_cliente" => $cliente,
+        "fecha_contratacion" => $fechaContratacion,
+        "id_estatus" => $estatus,
+        "id_socio" => $socio,
+        "id_gerente" => $gerente,
+        "id_moneda" => $id_moneda,
+        "monto" => $monto
+      );
+
+      $response = $modelo->modificarProyecto($idProyecto, $parametros_proyecto, $divisiones, $divisiones_v);
 
       if($response["response"]){
 
@@ -228,7 +243,7 @@ class ProyectoController extends Controller
     function asignarProyectos(Request $request){
 
       $modelo = new ProyectoModel();
-      
+
       $id_usuario = $request->session()->get('usuario_id');
       $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
       $proyectos = $modelo->proyectosDivision($id_usuario, $infoUsuario->id_division);

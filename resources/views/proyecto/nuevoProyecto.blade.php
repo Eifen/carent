@@ -331,7 +331,7 @@
                   size="sm"
                   v-html="form.botones.confirmar.html"
                   v-if="form.botones.confirmar.show"
-                  variant="warning"></b-button>
+                  variant="success"></b-button>
                 <b-button
                   @click="cancelarCrearProyecto"
                   :disabled="form.botones.cancelar.disabled"
