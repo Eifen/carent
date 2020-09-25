@@ -36,6 +36,7 @@
                   :disabled="form.camposAtributos.descripcion.disabled"
                   :state="form.camposAtributos.descripcion.state"
                   autocomplete="off"
+                  class="text-uppercase"
                   id="descripcion"
                   ref="descripcion"
                   size="sm"

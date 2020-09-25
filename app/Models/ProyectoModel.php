@@ -410,10 +410,13 @@ class ProyectoModel extends Model
 
       $info = DB::select('SELECT p.*,
                                  (SELECT SUM(horas_contratadas) FROM tbl_proyecto_divisiones WHERE id_proyecto = p.id) AS horas_contratadas,
-                                 m.simbolo
+                                 m.simbolo,
+                                 c.razon_social
                           FROM tbl_proyecto p,
+                               tbl_cliente c,
                                tbl_monedas m
                           WHERE p.id = '.$id_proyecto.'
+                          AND p.id_cliente = c.id
                           AND p.id_moneda = m.id');
 
       if(count($info) > 0){

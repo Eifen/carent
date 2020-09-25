@@ -16,7 +16,51 @@ html{
       margin-top: 40px;
     }
 
-  }
+    form{
+      background-color: white;
+      border:1px solid rgba(0,0,0,0.13);
+      border-radius: 3px;
+      margin-bottom: 50px;
+      margin-left: 0px;
+      margin-right: 0px;
+      padding: 15px;
+      transition: all .3s;
+
+      &:hover{
+        box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+      }
+
+      > div{
+
+        #lista-cliente,
+        #lista-socio,
+        #lista-gerente{
+
+          .btn{
+            border: none;
+            box-shadow: none !important;
+            padding: 0px !important;
+          }
+
+          .dropdown-menu{
+            width: 100%;
+
+            .dropdown-item{
+              padding: 0.25rem 0.7rem;
+              white-space: normal;
+            }
+
+          }
+
+        }// Fin #lista-cliente,
+        // #lista-socio,
+        // #lista-gerente
+
+      }// Fin > div
+
+    }// Fin form
+
+  }// Fin > .row
 
   .wrapper-forms {
 

@@ -290,7 +290,6 @@ new Vue({
     }, 1000);
 
   },
-  updated: function () {},
   methods:{
 
     asignarHoras: function(valor){
