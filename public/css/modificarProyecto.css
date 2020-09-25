@@ -6,6 +6,7 @@ html {
 }
 #app {
   background-color: #E9ECEF;
+  min-height: calc(100vh);
 }
 #app > .row:nth-child(2) {
   margin-bottom: 50px;
@@ -41,6 +42,29 @@ html {
 #app > .row form > div #lista-gerente .dropdown-menu .dropdown-item {
   padding: 0.25rem 0.7rem;
   white-space: normal;
+}
+#app > .row form > div.form-group .titulo-indicar-horas {
+  color: #cc0000;
+  margin-top: 30px;
+  text-decoration: underline;
+}
+#app > .row form > div.form-group label {
+  color: #091F40;
+}
+#app > .row form > div.form-group label.label-warning {
+  color: #cc0000;
+}
+#app > .row form > div.form-group .form-control {
+  border-radius: 2px;
+}
+#app > .row form > div.form-group .form-control:disabled {
+  cursor: not-allowed;
+}
+#app > .row form > div.form-group .form-control-plaintext {
+  font-weight: 600;
+}
+#app > .row form > fieldset .alert {
+  margin-bottom: 10px !important;
 }
 #app > .row form .multiselect.multiselect--disabled {
   background-color: transparent;
@@ -80,115 +104,4 @@ html {
 }
 #app > .row form .multiselect .multiselect__tags .multiselect__input::placeholder {
   color: #495057;
-}
-@media (max-width: 575px) {
-  #app .wrapper-forms {
-    padding-bottom: 0px;
-    padding-top: 50px;
-  }
-}
-#app .wrapper-forms form {
-  background-color: white;
-  border: 1px solid rgba(0, 0, 0, 0.13);
-  border-radius: 3px;
-  margin-bottom: 50px;
-  padding: 15px;
-  transition: all 0.3s;
-}
-#app .wrapper-forms form:hover {
-  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
-}
-#app .wrapper-forms form > div.logo {
-  margin-bottom: 40px;
-  margin-top: 30px;
-  text-align: center;
-}
-#app .wrapper-forms form > div.logo img {
-  height: 90px;
-  width: auto;
-}
-#app .wrapper-forms form > div.wrapper-required-legend {
-  margin-bottom: 20px;
-}
-#app .wrapper-forms form > div.wrapper-required-legend .campo-obligatorio {
-  color: #cc0000;
-}
-#app .wrapper-forms form > div.form-group .titulo-indicar-horas {
-  color: #cc0000;
-  margin-top: 30px;
-  text-decoration: underline;
-}
-#app .wrapper-forms form > div.form-group .campo-obligatorio {
-  color: #cc0000;
-}
-#app .wrapper-forms form > div.form-group label {
-  color: #091F40;
-}
-#app .wrapper-forms form > div.form-group label.label-warning {
-  color: #cc0000;
-}
-#app .wrapper-forms form > div.form-group .invalid-feedback {
-  display: block !important;
-}
-#app .wrapper-forms form > div.form-group .form-control {
-  border-radius: 2px;
-}
-#app .wrapper-forms form > div.form-group .form-control.error {
-  border-color: #dc3545;
-}
-#app .wrapper-forms form > div.form-group .form-control:disabled {
-  cursor: not-allowed;
-}
-#app .wrapper-forms form > div.form-group .form-control-plaintext {
-  font-weight: 600;
-}
-#app .wrapper-forms form > div.wrapper-recovery-pass {
-  margin-bottom: 10px;
-  margin-top: 10px;
-}
-#app .wrapper-forms form > div.wrapper-recovery-pass .recuperarClave {
-  color: #007BFF;
-  transition: all 0.3s;
-}
-#app .wrapper-forms form > div.wrapper-recovery-pass .recuperarClave:hover {
-  cursor: pointer;
-  text-decoration: underline;
-}
-#app .wrapper-forms .wrapper-subtmit > div {
-  padding-left: 5px;
-  padding-right: 5px;
-}
-#app .wrapper-forms .wrapper-subtmit > div .btn {
-  border: 2px solid #091F40;
-  border-radius: 2px;
-  font-weight: 600;
-  transition: all 0.3s;
-  width: 100%;
-}
-#app .wrapper-forms .wrapper-subtmit > div .btn.subtmit {
-  background-color: #091F40;
-  color: #ffffff;
-}
-#app .wrapper-forms .wrapper-subtmit > div .btn.atras {
-  background-color: transparent;
-  color: #091F40;
-}
-#app .wrapper-forms .wrapper-subtmit > div .btn:hover {
-  background-color: #F6A81C;
-  color: #091F40;
-}
-#app .wrapper-forms .wrapper-subtmit > div .btn:disabled {
-  cursor: not-allowed;
-}
-#app .wrapper-forms .wrapper-alert {
-  margin-top: 15px;
-}
-#app .wrapper-forms .wrapper-alert > div {
-  padding-left: 0px;
-  padding-right: 0px;
-}
-#app .wrapper-forms .wrapper-alert > div .alert {
-  margin-bottom: 0px;
-  text-align: center;
-  width: 100%;
 }

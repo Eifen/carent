@@ -31,7 +31,7 @@
         </b-row>
 
         <b-row align-h="center" align-v="center" v-cloak>
-          <b-col cols="12" md="9" lg="8">
+          <b-col cols="12" md="9" lg="8" v-if="form.mostrar">
             <h4>Estas Modificando un Proyecto</h4>
             <b-form class="row">
               <b-form-group
@@ -343,7 +343,7 @@
                   v-if="form.botones.confirmar.show"
                   variant="warning"></b-button>
                 <b-button
-                  @click="cancelarCrearProyecto"
+                  @click="cancelarModificarProyecto"
                   :disabled="form.botones.cancelar.disabled"
                   block
                   size="sm"
@@ -351,7 +351,7 @@
                   v-if="form.botones.cancelar.show"
                   variant="danger"></b-button>
                 <b-button
-                  @click="crear"
+                  @click="modificar"
                   :disabled="form.botones.submit.disabled"
                   block
                   size="sm"
@@ -360,6 +360,19 @@
                   variant="success"></b-button>
               </b-form-group>
             </b-form>
+          </b-col>
+          <b-col sm="11" md="9" lg="8" v-cloak>
+            <b-row class="row wrapper-alert">
+              <b-col cols="12">
+                <alert :contador="alertGeneral.contador"
+                       :icono-cerrar="alertGeneral.iconCerrar"
+                       :mensaje="alertGeneral.mensaje"
+                       :mostrar="alertGeneral.mostrar"
+                       :ocultar-seg="alertGeneral.ocultarSeg"
+                       :variante="alertGeneral.variante">
+                </alert>
+              </b-col>
+            </b-row>
           </b-col>
         </b-row>
 
