@@ -69,7 +69,7 @@ class ClienteController extends Controller
     if(!empty($clientes)){
       $response = array("response" => true, "clientes" => $clientes);
     }else{
-      $response = array("response" => false, "message" => "No se encontraron resultadoos");
+      $response = array("response" => false, "message" => "No se encontraron resultados");
     }
     return $response;
   }
@@ -154,7 +154,7 @@ class ClienteController extends Controller
     if(!empty($clientes)){
       $response = array("response" => true, "clientes" => $clientes, "permisoActualizar" => $permisoActualizar);
     }else{
-      $response = array("response" => false, "message" => "No se encontraron resultadoos");
+      $response = array("response" => false, "message" => "No se encontraron resultados");
     }
     return $response;
   }
