@@ -411,7 +411,17 @@ class ProyectoModel extends Model
       $info = DB::select('SELECT p.*,
                                  (SELECT SUM(horas_contratadas) FROM tbl_proyecto_divisiones WHERE id_proyecto = p.id) AS horas_contratadas,
                                  m.simbolo,
-                                 c.razon_social
+                                 c.razon_social,
+                                 (
+                                   SELECT CONCAT(u1.nombre_1," ",u1.nombre_2," ",u1.apellido_1," ",u1.apellido_2)
+                                   FROM tbl_usuario u1
+                                   WHERE u1.id = p.id_socio
+                                 ) nombre_socio,
+                                 (
+                                   SELECT CONCAT(u2.nombre_1," ",u2.nombre_2," ",u2.apellido_1," ",u2.apellido_2)
+                                   FROM tbl_usuario u2
+                                   WHERE u2.id = p.id_gerente
+                                 ) nombre_gerente
                           FROM tbl_proyecto p,
                                tbl_cliente c,
                                tbl_monedas m
@@ -543,29 +553,29 @@ class ProyectoModel extends Model
                                     WHEN d.id_gerente = '.$id_usuario.' THEN 3
                                     WHEN a.id_analista = '.$id_usuario.' THEN 4
                                     ELSE 0
-                               END AS permiso)permiso, 
-                               (SELECT CASE 
+                               END AS permiso)permiso,
+                               (SELECT CASE
                                        WHEN a.horas_asignadas > 0 THEN a.horas_asignadas
                                        END AS horas_asignadas
                                        FROM tbl_proyecto_analista a
-                                       WHERE a.id_proyecto = p.id 
+                                       WHERE a.id_proyecto = p.id
                                        AND a.id_analista = '.$id_usuario.')horas_asignadas,
-                                (SELECT CASE 
+                                (SELECT CASE
                                        WHEN a.id_estatus > 0 THEN true
                                        ELSE false
                                        END AS permisoCrear
                                        FROM tbl_proyecto_analista a
-                                       WHERE a.id_proyecto = p.id 
-                                       AND a.id_analista = '.$id_usuario.' 
+                                       WHERE a.id_proyecto = p.id
+                                       AND a.id_analista = '.$id_usuario.'
                                        AND id_estatus = 1)permisoCrear,
-                                (SELECT CASE 
+                                (SELECT CASE
                                       WHEN p.id_socio = '.$id_usuario.' THEN true
                                       WHEN p.id_gerente = '.$id_usuario.' THEN true
                                       WHEN d.id_gerente = '.$id_usuario.' THEN true
                                       WHEN a.id_analista = '.$id_usuario.' THEN false
                                       ELSE false
                                       END AS permisoActualizar)permisoActualizar,
-                                (SELECT CASE 
+                                (SELECT CASE
                                       WHEN p.id_socio = '.$id_usuario.' THEN true
                                       WHEN p.id_gerente = '.$id_usuario.' THEN true
                                       WHEN d.id_gerente = '.$id_usuario.' THEN false

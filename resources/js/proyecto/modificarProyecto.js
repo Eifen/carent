@@ -333,13 +333,40 @@ new Vue({
         self.comboEstatus.push({text:item.descripcion, value: item.id});
       });
 
+      dataInit.monedas.forEach((item, i) => {
+        self.comboMonedas.push({text:item.moneda, value: item.id, simbolo: item.simbolo});
+      });
+
       self.idProyecto = dataInit.info.id;
       self.form.campos.descripcion = dataInit.info.descripcion;
       self.form.camposAtributos.cliente.valor = dataInit.info.razon_social;
       self.form.campos.estatus = dataInit.info.id_estatus;
       self.form.campos.fechaContratacion = dataInit.info.fecha_contratacion;
-      //self.form.camposAtributos.socio.valor =
-      //self.form.camposAtributos.gerente.valor = 
+      self.form.camposAtributos.socio.valor = dataInit.info.nombre_socio;
+      self.form.camposAtributos.socio.valorFocus = dataInit.info.nombre_socio;
+      self.form.camposAtributos.socio.valorBlur = dataInit.info.nombre_socio;
+      self.form.campos.socio = dataInit.info.id_socio;
+      self.form.camposAtributos.gerente.valor = dataInit.info.nombre_gerente;
+      self.form.camposAtributos.gerente.valorFocus = dataInit.info.nombre_gerente;
+      self.form.camposAtributos.gerente.valorBlur = dataInit.info.nombre_gerente;
+      self.form.campos.gerente = dataInit.info.id_gerente;
+      self.form.campos.montoEn = dataInit.info.id_moneda;
+      self.form.campos.monto = dataInit.info.monto;
+      self.comboDivisiones = dataInit.divisiones;
+
+      self.form.camposAtributos.descripcion.disabled = false;
+      self.form.camposAtributos.cliente.disabled = false;
+      self.form.camposAtributos.estatus.disabled = false;
+      self.form.camposAtributos.fechaContratacion.disabled = false;
+      self.form.camposAtributos.socio.state = true;
+      self.form.camposAtributos.socio.disabled = false;
+      self.form.camposAtributos.socio.help = self.form.camposAtributos.socio.helpInit;
+      self.form.camposAtributos.gerente.state = true;
+      self.form.camposAtributos.gerente.disabled = false;
+      self.form.camposAtributos.gerente.help = self.form.camposAtributos.gerente.helpInit;
+      self.form.camposAtributos.montoEn.disabled = false;
+      self.form.camposAtributos.monto.disabled = false;
+      self.form.camposAtributos.divisiones.disabled = false;
 
 
 
@@ -353,11 +380,10 @@ new Vue({
       self.form.monto.simbolo = dataInit.info.simbolo;
       self.comboClientes = dataInit.clientes;
       //self.comboEstatus = dataInit.estatus;
-      self.comboDivisiones = dataInit.divisiones;
-      self.comboMonedas = dataInit.monedas;
+      //self.comboDivisiones = dataInit.divisiones;
+      //self.comboMonedas = dataInit.monedas;
       self.form.descripcion.disabled = false;
       self.form.cliente.disabled = false;
-      self.form.camposAtributos.fechaContratacion.disabled = false;
       self.form.estatus.disabled = false;
       self.form.mostrar = true;
 
@@ -397,27 +423,6 @@ new Vue({
           maximumValue: '99999999999999999999.99',
           minimumValue: 0,
           modifyValueOnWheel: false
-        });
-
-      }
-
-    }, 1000);
-
-  },
-  created: async function () {
-
-    let checkDataInitReady = setInterval(() => {
-
-      if (self.form.mostrar) {
-
-        clearInterval(checkDataInitReady);
-
-        var indices = ["descripcion","cliente","horas","fechaContratacion","estatus","divisiones"];
-
-        indices.forEach(function(indiceObjecto, indice) {
-          if(self.form[indiceObjecto].hasOwnProperty('disabled') && indiceObjecto !== "horas"){
-            self.form[indiceObjecto].disabled = false;
-          }
         });
 
         self.divisiones_v.forEach(function(item, index){
