@@ -443,10 +443,20 @@ class ProyectoModel extends Model
 
     function detalleDivisionProyecto($id_proyecto){
 
-      $info = DB::select('SELECT id_division,
-                                 horas_contratadas
-                          FROM tbl_proyecto_divisiones
-                          WHERE id_proyecto = '.$id_proyecto.'');
+      $info = DB::select('SELECT d.id,
+                                 pd.horas_contratadas,
+                                 d.descripcion,
+                                 pd.id_gerente,
+                                 (
+                                   SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)
+                                   FROM tbl_usuario u
+                                   WHERE u.id = pd.id_gerente
+                                 ) nombre_gerente,
+                                 pd.horas_contratadas
+                          FROM tbl_proyecto_divisiones pd,
+                               tbl_division d
+                          WHERE pd.id_proyecto = '.$id_proyecto.'
+                          AND pd.id_division = d.id');
       if(count($info) > 0){
 
         return $info;

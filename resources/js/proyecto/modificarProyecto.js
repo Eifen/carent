@@ -353,6 +353,10 @@ new Vue({
       self.form.campos.montoEn = dataInit.info.id_moneda;
       self.form.campos.monto = dataInit.info.monto;
       self.comboDivisiones = dataInit.divisiones;
+      self.form.campos.horas = dataInit.info.horas_contratadas;
+      //self.form.camposAtributos.divisiones.divisiones = dataInit.infodivi;
+
+      self.asignarHoras(dataInit.infodivi);
 
       self.form.camposAtributos.descripcion.disabled = false;
       self.form.camposAtributos.cliente.disabled = false;
@@ -367,6 +371,16 @@ new Vue({
       self.form.camposAtributos.montoEn.disabled = false;
       self.form.camposAtributos.monto.disabled = false;
       self.form.camposAtributos.divisiones.disabled = false;
+
+      var data = [];
+      for (var i = 0; i < dataInit.infodivi.length; i++) {
+        for (var j = 0; j < self.comboDivisiones.length; j++) {
+          if (dataInit.infodivi[i].id === self.comboDivisiones[j].id) {
+            data[i] = self.comboDivisiones[j];
+          }
+        }
+      }
+      self.form.campos.divisiones = data;
 
 
 
@@ -390,7 +404,7 @@ new Vue({
       var data = [];
       for (var i = 0; i < dataInit.infodivi.length; i++) {
         for (var j = 0; j < self.comboDivisiones.length; j++) {
-          if (dataInit.infodivi[i].id_division === self.comboDivisiones[j].id) {
+          if (dataInit.infodivi[i].id === self.comboDivisiones[j].id) {
             data[i] = self.comboDivisiones[j];
           }
         }
@@ -427,7 +441,7 @@ new Vue({
 
         self.divisiones_v.forEach(function(item, index){
 
-          self.$refs["asignar-"+item.id_division][0].value = self.divisiones_v[index].horas_contratadas;
+          self.$refs["asignar-"+item.id][0].value = self.divisiones_v[index].horas_contratadas;
 
         });
 
@@ -750,30 +764,106 @@ new Vue({
       }
 
     },
-
-
-
-
-
-
-
-
-
-
-
-
-
     asignarHoras: function(valor){
+      
+      self.form.camposAtributos.divisiones.divisiones = [];
 
-      self.form.horas.asignar = (valor.length > 0) ? true : false;
+      valor.forEach(function(item, index){
 
-      if(!self.form.horas.asignar){
-        self.form.horas.value = 0;
-        $("#horas").parent().find(".mensaje").html("").removeClass("invalid-feedback");
-        $("#horas").removeClass("error");
+        const division = {
+          descripcion: item.descripcion,
+          gerente: {
+            disabled: true,
+            help: "",
+            helpInit: "Gerente para esta división, él estará a cargo de su división para este proyecto",
+            helpLoading: '<i class="fas fa-cog fa-spin"></i> buscando',
+            id: null,
+            invalidFeedback: "",
+            listado: [],
+            state: null
+          },
+          horas: {
+            invalidFeedback: "",
+            state: null,
+            value: item.hasOwnProperty('horas_contratadas') ? item.horas_contratadas : 0,
+          },
+          id: item.id
+        }
+
+        let id_gerente = item.hasOwnProperty('id_gerente') ? item.id_gerente : null;
+
+        self.$set(self.form.camposAtributos.divisiones.divisiones, index, division);
+        self.gerenteDivision(index, item.id, id_gerente);
+
+      });
+
+      if(self.form.camposAtributos.divisiones.divisiones.length === 0){
+        self.form.campos.horas = 0;
+        self.form.camposAtributos.horas.invalidFeedback = "";
+        self.form.camposAtributos.horas.state = null;
+      }
+
+      self.horasTotales();
+
+    },
+    cantidadHora(value){
+
+      let regex = /^(?:[1-9][0-9]*)$/;
+
+      if(regex.test(value)){
+        return value;
+      }else{
+        return "";
       }
 
     },
+    gerenteDivision: function(index, id_division, id_gerente = null){
+
+      self.form.camposAtributos.divisiones.divisiones[index].gerente.help = self.form.camposAtributos.divisiones.divisiones[index].gerente.helpLoading;
+
+      axios.get('/proyectoGerentesDivision',{
+        params: {
+          id_division: id_division
+        }
+      })
+      .then(function (response) {
+
+        self.form.camposAtributos.divisiones.divisiones[index].gerente.help = self.form.camposAtributos.divisiones.divisiones[index].gerente.helpInit;
+        self.form.camposAtributos.divisiones.divisiones[index].gerente.disabled = false;
+
+        self.form.camposAtributos.divisiones.divisiones[index].gerente.listado = [];
+        response.data.gerentes.forEach((item, i) => {
+          self.form.camposAtributos.divisiones.divisiones[index].gerente.listado.push({text:item.nombre, value: item.id});
+        });
+
+        if(id_gerente !== null){
+          self.form.camposAtributos.divisiones.divisiones[index].gerente.id = id_gerente;
+        }
+
+      })
+      .catch(error => {
+
+        self.form.camposAtributos.divisiones.divisiones[index].gerente.help = self.form.camposAtributos.divisiones.divisiones[index].gerente.helpInit;
+        self.form.camposAtributos.divisiones.divisiones[index].gerente.disabled = false;
+        self.form.camposAtributos.divisiones.divisiones[index].gerente.state = false;
+
+        var mensaje = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+        self.form.camposAtributos.divisiones.divisiones[index].gerente.invalidFeedback = mensaje;
+
+      });
+
+    },
+
+
+
+
+
+
+
+
+
+
+
     formatoHoraAsignada: function(input){
 
       let regex = /^\d+$/;
