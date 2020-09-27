@@ -36,6 +36,7 @@
                   :disabled="form.camposAtributos.descripcion.disabled"
                   :state="form.camposAtributos.descripcion.state"
                   autocomplete="off"
+                  class="text-uppercase"
                   id="descripcion"
                   ref="descripcion"
                   size="sm"
@@ -330,7 +331,7 @@
                   size="sm"
                   v-html="form.botones.confirmar.html"
                   v-if="form.botones.confirmar.show"
-                  variant="warning"></b-button>
+                  variant="success"></b-button>
                 <b-button
                   @click="cancelarCrearProyecto"
                   :disabled="form.botones.cancelar.disabled"
