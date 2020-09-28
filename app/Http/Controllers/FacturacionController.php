@@ -20,7 +20,7 @@ class FacturacionController extends Controller
       $paginar = 10;
       $estatus = $modelo->estatusProyectos();
       $permisos = $modelo->permisosMenu(session("usuario_id"), 16);
-      $proyectos = $modelo->proyectosFacturacion();
+      $proyectos = $modelo->proyectosFacturacion($paginar);
 
       return [
         "estatus" => $estatus,
@@ -29,6 +29,22 @@ class FacturacionController extends Controller
         "proyectos" => $proyectos,
         "response" => true
       ];
+
+    }
+
+    function buscarProyectoFacturacion(Request $request){
+
+      $modelo = new FacturacionModel();
+
+      $paginar = $request->input("paginar");
+      $desde = $request->input("desde");
+      $cliente = $request->input("cliente");
+      $proyecto = $request->input("proyecto");
+      $estatus = $request->input("estatus");
+      $proyectos = $modelo->proyectosFacturacion($paginar, $desde, $cliente, $proyecto, $estatus);
+      $cantidadPaginas = $modelo->cantidadPaginasProyectoFacturacion($paginar, $cliente, $proyecto, $estatus);
+
+      return array("proyectos" => $proyectos, "paginas" => $cantidadPaginas);
 
     }
 

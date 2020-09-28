@@ -215,27 +215,28 @@ new Vue({
         paginar: self.paginador.paginar
       };
 
-      console.log(parametros); return;
-
       //Se utiliza el metodo get para su busqueda y se envian con los parametros
-      axios.get('/buscarProyectos', {params: parametros})
+      axios.get('/buscarProyectoFacturacion', {params: parametros})
       .then(function (response) {
 
-        self.formFiltro.descripcion.disabled = false;
         self.formFiltro.cliente.disabled = false;
+        self.formFiltro.proyecto.disabled = false;
         self.formFiltro.estatus.disabled = false;
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
         self.formFiltro.btn.filtrar.disabled = false;
         self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
         self.formFiltro.btn.limpiarFiltro.disabled = false;
+
         // Se le asigna los valores a las variables
         self.proyectos = response.data.proyectos;
         self.paginador.numPaginas = response.data.paginas;
         self.paginador.max = parseInt(response.data.paginas);
 
+        self.tabla.registros = self.registroTabla(response.data.proyectos);
+
       }).catch(error => {
 
-        self.formFiltro.descripcion.disabled = false;
+        self.formFiltro.proyecto.disabled = false;
         self.formFiltro.cliente.disabled = false;
         self.formFiltro.estatus.disabled = false;
         self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
@@ -248,19 +249,11 @@ new Vue({
     },
     limpiarFiltro: function(){
 
-      self.formFiltro.descripcion.value = "";
+      self.formFiltro.proyecto.value = "";
       self.formFiltro.cliente.value = "";
       self.formFiltro.estatus.value = "";
       self.buscar();
 
-    },
-    limpiarMensajeError: function(e){
-      $(e.target).removeClass("error");
-      $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
-    },
-    limpiarMensajeErrorMultiselect: function(){
-      $(".multiselect").parent().find(".mensaje").html("").removeClass("invalid-feedback");
-      $(".multiselect").removeClass("error");
     },
     keyboard: function(e){
 
