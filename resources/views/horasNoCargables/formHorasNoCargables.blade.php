@@ -21,10 +21,10 @@
         <menu-principal v-cloak></menu-principal>
 
         <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
-          <div class="col-12 col-sm-12 col-md-11 col-lg-9 wrapper-form" v-if="formFiltro.mostrar">
+          <div class="col-12 col-sm-12 col-md-11 col-lg-10 wrapper-form" v-if="formFiltro.mostrar">
             <h5>Filtros de búsqueda</h5>
             <form class="row">
-              <div class="form-group col-12 col-sm-3">
+              <div class="form-group col-12 col-sm-4">
                 <label for="divisiones">Divisiones</label>
                 <multiselect :clear-on-select="false"
                              :disabled="formFiltro.divisiones.disabled"
@@ -45,7 +45,7 @@
                 </multiselect>
                 <div class="mensaje"></div>
               </div>
-              <div class="form-group col-12 col-sm-3">
+              <div class="form-group col-12 col-sm-4">
                 <label for="empleados">Empleado</label>
                 <multiselect :clear-on-select="false"
                              :disabled="formFiltro.empleados.disabled"
@@ -66,7 +66,7 @@
                 </multiselect>
                 <div class="mensaje"></div>
               </div>
-              <div class="form-group col-12 col-sm-3">
+              <div class="form-group col-12 col-sm-4">
                 <label for="conceptos">Conceptos</label>
                 <multiselect :clear-on-select="false"
                              :disabled="formFiltro.conceptos.disabled"
@@ -87,7 +87,7 @@
                 </multiselect>
                 <div class="mensaje"></div>
               </div>
-              <div class="form-group col-12 col-sm-3">
+              <div class="form-group col-12 col-sm-4">
                 <label for="estatus">Estatus</label>
                 <select aria-describedby="estatusHelp"
                         class="form-control form-control-sm"
@@ -102,8 +102,47 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-4">
+                <label for="fechaDesde">Fecha Desde</label>
+                <datetime
+                  @input="fechaDesdeFiltro($event)"
+                  :disabled="formFiltro.fechaDesde.disabled"
+                  :max-datetime="formFiltro.fechaDesde.maxValue"
+                  :minute-step="30"
+                  :use12-hour="true"
+                  format="dd/LL/yyyy hh:mm a"
+                  input-class="form-control form-control-sm fechaDesde"
+                  v-model="formFiltro.fechaDesde.value"
+                  value-zone='local'
+                  type="datetime"
+                  zone='local'>
+                  <template slot="button-cancel">
+                    <span v-on:click="limpiarFecha('formFiltro','fechaDesde')">Limpiar</span>
+                  </template>
+                </datetime>
+              </div>
+              <div class="form-group col-12 col-sm-4">
+                <label for="fechaHasta">Fecha Hasta</label>
+                <datetime
+                  @input="limpiarMensajeError"
+                  :disabled="formFiltro.fechaHasta.disabled"
+                  :max-datetime="formFiltro.fechaHasta.maxValue"
+                  :min-datetime="formFiltro.fechaHasta.minValue"
+                  :minute-step="30"
+                  :use12-hour="true"
+                  format="dd/LL/yyyy hh:mm a"
+                  input-class="form-control form-control-sm fechaHasta"
+                  v-model="formFiltro.fechaHasta.value"
+                  value-zone='local'
+                  type="datetime"
+                  zone='local'>
+                  <template slot="button-cancel">
+                    <span v-on:click="limpiarFecha('formFiltro','fechaHasta')">Limpiar</span>
+                  </template>
+                </datetime>
+              </div>
+              <div class="form-group col-12 col-sm-4">
                 <label>&nbsp;</label>
-                <button class="btn filtrar"
+                <button class="btn btn-sm btn-primary"
                         type="button"
                         v-on:click="buscar"
                         v-bind:disabled="formFiltro.btn.filtrar.disabled"
@@ -111,7 +150,7 @@
               </div>
               <div class="form-group col-12 col-sm-4">
                 <label>&nbsp;</label>
-                <button class="btn limpiar_filtro"
+                <button class="btn btn-sm btn-outline-primary"
                         type="button"limpiarFiltro
                         v-on:click="limpiarFiltro"
                         v-bind:disabled="formFiltro.btn.limpiarFiltro.disabled"
@@ -119,7 +158,7 @@
               </div>
               <div class="form-group col-12 col-sm-4">
                 <label>&nbsp;</label>
-                <button class="btn btn-success"
+                <button class="btn btn-outline-success btn-sm"
                         type="button"
                         v-on:click="cargar"
                         v-bind:disabled="formFiltro.btn.cargar.disabled"
@@ -149,19 +188,7 @@
                   <td>@{{ registro.fecha_desde+' - '+registro.fecha_hasta }}</td>
                   <td>@{{ registro.estatus }}</td>
                   <td>
-                    <a v-on:click="modificarConcepto(
-                      registro.id,
-                      registro.autor,
-                      registro.id_concepto,
-                      registro.concepto,
-                      registro.fecha_desde_utc,
-                      registro.fecha_hasta_utc,
-                      registro.observacion,
-                      registro.id_estatus,
-                      registro.editar,
-                      registro.fecha_aprobacion,
-                      registro.aprobado_por
-                    )" target="_self">
+                    <a v-on:click="modificarConcepto(registro)" target="_self">
                        <i class="fas fa-cog"></i>
                     </a>
                   </td>
@@ -242,12 +269,13 @@
                   <div class="form-group col-6" id="fechaDesde">
                     <label>Fecha Desde</label>
                     <datetime
-                      @input="fechaMinima('formCargarHoras', $event)"
+                      @input="fechaDesde('formCargarHoras', $event)"
                       :disabled="formCargarHoras.fechaDesde.disabled"
+                      :max-datetime="formCargarHoras.fechaDesde.maxValue"
                       :minute-step="30"
                       :use12-hour="true"
                       format="dd/LL/yyyy hh:mm a"
-                      input-class="form-control fechaDesde"
+                      input-class="form-control fechaDesde form-control-sm"
                       v-model="formCargarHoras.fechaDesde.value"
                       value-zone='local'
                       type="datetime"
@@ -261,13 +289,14 @@
                   <div class="form-group col-6" id="fechaHasta">
                     <label>Fecha Hasta</label>
                     <datetime
-                      @input="limpiarMensajeError"
+                      @input="limpiarMensajeError('#formCargarHoras .fechaHasta')"
                       :disabled="formCargarHoras.fechaHasta.disabled"
+                      :max-datetime="formCargarHoras.fechaHasta.maxValue"
                       :min-datetime="formCargarHoras.fechaHasta.minValue"
                       :minute-step="30"
                       :use12-hour="true"
                       format="dd/LL/yyyy hh:mm a"
-                      input-class="form-control"
+                      input-class="form-control fechaHasta form-control-sm"
                       v-model="formCargarHoras.fechaHasta.value"
                       value-zone='local'
                       type="datetime"
@@ -283,7 +312,7 @@
                       <label>Observacion</label>
                       <textarea :disabled="formCargarHoras.observacion.disabled"
                                 :maxlength="formCargarHoras.observacion.maxlength"
-                                class="form-control"
+                                class="form-control form-control-sm"
                                 rows="3"
                                 v-model="formCargarHoras.observacion.value"></textarea>
                     </div>
@@ -308,7 +337,7 @@
                 <div v-bind:class="alertCargarHora.class" role="alert" v-if="alertCargarHora.show" v-html="alertCargarHora.message"></div>
               </div>
               <div class="modal-footer">
-                <button class="btn"
+                <button class="btn btn-success btn-sm btn-block"
                         type="button"
                         v-bind:disabled="submitModalCargarHora.disabled"
                         v-if="submitModalCargarHora.show"
@@ -348,12 +377,13 @@
                   <div class="form-group col-6" id="fechaDesde">
                     <label>Fecha Desde</label>
                     <datetime
-                      @input="fechaMinima('formModificarHoras', $event)"
+                      @input="fechaDesde('formModificarHoras', $event)"
                       :disabled="formModificarHoras.fechaDesde.disabled"
+                      :max-datetime="formModificarHoras.fechaDesde.maxValue"
                       :minute-step="30"
                       :use12-hour="true"
                       format="dd/LL/yyyy hh:mm a"
-                      input-class="form-control fechaDesde"
+                      input-class="form-control fechaDesde form-control-sm"
                       v-model="formModificarHoras.fechaDesde.value"
                       value-zone='local'
                       type="datetime"
@@ -367,13 +397,14 @@
                   <div class="form-group col-6" id="fechaHasta">
                     <label>Fecha Hasta</label>
                     <datetime
-                      @input="limpiarMensajeError"
+                      @input="limpiarMensajeError('#formModificarHoras .fechaHasta')"
                       :disabled="formModificarHoras.fechaHasta.disabled"
+                      :max-datetime="formModificarHoras.fechaHasta.maxValue"
                       :min-datetime="formModificarHoras.fechaHasta.minValue"
                       :minute-step="30"
                       :use12-hour="true"
                       format="dd/LL/yyyy hh:mm a"
-                      input-class="form-control"
+                      input-class="form-control fechaHasta form-control-sm"
                       v-model="formModificarHoras.fechaHasta.value"
                       value-zone='local'
                       type="datetime"
@@ -389,7 +420,7 @@
                       <label>Observacion</label>
                       <textarea :disabled="formModificarHoras.observacion.disabled"
                                 :maxlength="formModificarHoras.observacion.maxlength"
-                                class="form-control"
+                                class="form-control form-control-sm"
                                 rows="3"
                                 v-model="formModificarHoras.observacion.value"></textarea>
                     </div>
@@ -399,13 +430,13 @@
                   <div class="form-group col-12">
                     <div class="form-group">
                       <label>Aprobado por</label>
-                      <input class="form-control" v-model="formModificarHoras.aprobadoPor" disabled>
+                      <input class="form-control form-control-sm" v-model="formModificarHoras.aprobadoPor" disabled>
                     </div>
                   </div>
                   <div class="form-group col-12">
                     <div class="form-group">
                       <label>Fecha de Aprobación</label>
-                      <input class="form-control" v-model="formModificarHoras.fechaAprobacion" disabled>
+                      <input class="form-control form-control-sm" v-model="formModificarHoras.fechaAprobacion" disabled>
                     </div>
                   </div>
                   <div class="form-group col-12">
@@ -423,15 +454,35 @@
                     <div class="mensaje"></div>
                   </div>
                 </form>
-                <div v-bind:class="alertModificarHora.class" role="alert" v-if="alertModificarHora.show" v-html="alertModificarHora.message"></div>
               </div>
               <div class="modal-footer">
-                <button class="btn"
+                <button class="btn btn-warning btn-sm btn-block"
                         type="button"
                         v-bind:disabled="submitModalModificarHora.disabled"
                         v-if="submitModalModificarHora.show"
                         v-html="submitModalModificarHora.content"
                         v-on:click="guardarModificar"></button>
+                <button class="btn btn-danger btn-sm btn-block"
+                        type="button"
+                        v-bind:disabled="confirmarEliminarHora.disabled"
+                        v-if="confirmarEliminarHora.show"
+                        v-html="confirmarEliminarHora.content"
+                        v-on:click="confirmarEliminar"></button>
+                <div v-bind:class="alertModificarHora.class"
+                     role="alert" v-if="alertModificarHora.show"
+                     v-html="alertModificarHora.message"></div>
+                <button class="btn btn-danger btn-sm btn-block"
+                        type="button"
+                        v-bind:disabled="cancelarEliminarModificarHora.disabled"
+                        v-if="cancelarEliminarModificarHora.show"
+                        v-html="cancelarEliminarModificarHora.content"
+                        v-on:click="cancelarEliminarHora"></button>
+                <button class="btn btn-success btn-sm btn-block"
+                        type="button"
+                        v-bind:disabled="eliminarModificarHora.disabled"
+                        v-if="eliminarModificarHora.show"
+                        v-html="eliminarModificarHora.content"
+                        v-on:click="eliminarHora"></button>
               </div>
             </div>
           </div>

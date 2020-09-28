@@ -69,6 +69,20 @@ class ProyectoController extends Controller
 
     }
 
+    function proyectoGerentesDivision(Request $request){
+
+      $modelo = new ProyectoModel();
+      $id_division = $request["id_division"];
+
+      $gerentes = $modelo->proyectoGerentesDivision($id_division);
+
+      return [
+        "response" => true,
+        "gerentes" => $gerentes
+      ];
+
+    }
+
     function crearProyecto(Request $request){
 
       $modelo = new ProyectoModel();
@@ -106,7 +120,7 @@ class ProyectoController extends Controller
     function dataInicialListadoProyectos(){
 
       $modelo = new ProyectoModel();
-      $paginar = 10;
+      $paginar = 50;
       $permisoActualizar = $modelo->permisoActualizar(session("usuario_id"), 10);
       $proyectos = $modelo->proyectos(session("division_id"), $paginar);
       $divisiones = $modelo->divisiones();
@@ -181,16 +195,31 @@ class ProyectoController extends Controller
     function modificarProyecto(Request $request){
 
       $modelo = new ProyectoModel();
-      $id_proyecto = (int) session("id_proyecto_mod");
-      $idProyecto = $request->input("idProyecto");
-      $descripcion = $request->input("descripcion");
+
+      $idProyecto = $request->input("id_proyecto");
+      $descripcion = strtoupper($request->input("descripcion"));
       $cliente = $request->input("cliente");
+      $socio = $request->input("socio");
+      $gerente = $request->input("gerente");
       $fechaContratacion = $request->input("fechaContratacion");
       $divisiones = $request->input("divisiones");
-      $divisiones_v =  $modelo->detalleDivisionProyecto($id_proyecto);
       $estatus = $request->input("estatus");
+      $id_moneda = $request->input("id_moneda");
+      $monto = $request->input("monto");
+      $divisiones_v =  $modelo->detalleDivisionProyecto($idProyecto);
 
-      $response = $modelo->modificarProyecto($descripcion,$cliente,$fechaContratacion,$divisiones,$estatus,$idProyecto,$divisiones_v);
+      $parametros_proyecto = array(
+        "descripcion" => $descripcion,
+        "id_cliente" => $cliente,
+        "fecha_contratacion" => $fechaContratacion,
+        "id_estatus" => $estatus,
+        "id_socio" => $socio,
+        "id_gerente" => $gerente,
+        "id_moneda" => $id_moneda,
+        "monto" => $monto
+      );
+
+      $response = $modelo->modificarProyecto($idProyecto, $parametros_proyecto, $divisiones, $divisiones_v);
 
       if($response["response"]){
 
@@ -214,39 +243,13 @@ class ProyectoController extends Controller
     function asignarProyectos(Request $request){
 
       $modelo = new ProyectoModel();
-      $permisoActualizar = $modelo->permisoActualizar(session("usuario_id"), 11);
-      $permisoCrear = $modelo->permisoCrear(session("usuario_id"), 11);
+
       $id_usuario = $request->session()->get('usuario_id');
       $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
+      $proyectos = $modelo->proyectosDivision($id_usuario, $infoUsuario->id_division);
       $estatus = $modelo->estatusProyectos();
 
-      if ($infoUsuario->id_cargo === 16 || $infoUsuario->id_cargo === 17) {
-        $infoProyectos = $modelo->proyectoUDivision($id_usuario, 11);
-        $permisoVer = $modelo->permisoVer(session("usuario_id"), 11);
-        return [
-        "estatus" => $estatus,
-        "proyectos" => $infoProyectos,
-        "permisoVer" => $permisoVer,
-        "permisoCrear" => $permisoCrear
-      ];
-      }
-
-      if ($permisoActualizar === "true") {
-        $infoProyectos = $modelo->proyectoDDivision($infoUsuario->id_division,$id_usuario, 11);
-          return [
-            "estatus" => $estatus,
-            "proyectos" => $infoProyectos,
-            "permisoActualizar" => $permisoActualizar,
-            "permisoCrear" => $permisoCrear
-        ];
-      }
-
-      $infoProyectos = $modelo->proyectoUDivision($id_usuario, 11);
-      return [
-        "estatus" => $estatus,
-        "proyectos" => $infoProyectos,
-        "permisoCrear" => $permisoCrear
-      ];
+        return array("proyectos" => $proyectos, "estatus" => $estatus);
     }
 
     function buscardiviProyectos(Request $request){
@@ -258,20 +261,10 @@ class ProyectoController extends Controller
       $cliente = $request->input("cliente");
       $proyecto = $request->input("proyecto");
       $estatus = $request->input("estatus");
-      if ($infoUsuario->id_cargo === 16 || $infoUsuario->id_cargo === 17) {
-        $proyectos = $modelo->proyectosUdivi($id_usuario,11,$proyecto, $cliente, $estatus);
+      $proyectoBusqueda = $modelo->proyectoBusqueda($proyecto, $cliente, $estatus);
+      $proyectos = $modelo->proyectosDivision($id_usuario, $infoUsuario->id_division);
 
-        return array("proyectos" => $proyectos);
-      }
-      if ($permisoActualizar === "true") {
-        $proyectos = $modelo->proyectosDdivi($id_usuario,11,$infoUsuario->id_division,$proyecto, $cliente, $estatus);
-        if ($estatus === "1" || empty($estatus)) {
-          return array("proyectos" => $proyectos, "permisoActualizar" => $permisoActualizar, "estatus" => $estatus);
-        }
-        return array("proyectos" => $proyectos);
-      }
-      $proyectos = $modelo->proyectosUdivi($id_usuario,11,$proyecto, $cliente, $estatus);
-      return array("proyectos" => $proyectos);
+      return array("proyectoBusqueda" => $proyectoBusqueda, "proyectos" => $proyectos);
     }
 
     function DetalleDivProyecto(Request $request){

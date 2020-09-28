@@ -39,6 +39,7 @@ Route::get('/buscarCliente', 'ClienteController@buscarCliente');
 Route::get('/estados', 'ClienteController@estados');
 Route::get('/municipios', 'ClienteController@municipios');
 Route::get('/parroquias', 'ClienteController@parroquias');
+Route::get('/codigoCliente', 'ClienteController@codigoCliente');
 Route::post('/crearCliente', 'ClienteController@crearCliente');
 Route::get('/formBuscarCliente', function() {return view('cliente/buscarCliente');})->middleware('usuario.session');
 Route::get('/buscarClientes', 'ClienteController@buscarClientes');
@@ -72,6 +73,7 @@ Route::get('/dataInicialConceptosHorasNoCargables', 'HorasNoCargablesController@
 Route::get('/buscarConceptoHorasNoCargables', 'HorasNoCargablesController@buscarConceptoHorasNoCargables');
 Route::post('/crearConceptoNoCargable', 'HorasNoCargablesController@crearConceptoNoCargable');
 Route::post('/modificarConceptoNoCargable', 'HorasNoCargablesController@modificarConceptoNoCargable');
+Route::post('/eliminarHorasNoCargables', 'HorasNoCargablesController@eliminarHorasNoCargables');
 Route::get('/cargarHorasNoCargables',  function() {return view('horasNoCargables/formHorasNoCargables');})->middleware('usuario.session');
 Route::get('/dataInicialHorasNoCargables', 'HorasNoCargablesController@dataInicialHorasNoCargables');
 Route::post('/registrarHorasNoCargables', 'HorasNoCargablesController@registrarHorasNoCargables');
@@ -104,6 +106,7 @@ Route::get('/formCargarHoras/{idProyAnalista}', 'ProyectoController@formCargarHo
 Route::get('/buscarClienteProyecto', 'ProyectoController@buscarClienteProyecto');
 Route::get('/buscarSocioProyecto', 'ProyectoController@buscarSocioProyecto');
 Route::get('/buscarGerenteProyecto', 'ProyectoController@buscarGerenteProyecto');
+Route::get('/proyectoGerentesDivision', 'ProyectoController@proyectoGerentesDivision');
 
 Route::post('/crearProyecto', 'ProyectoController@crearProyecto');
 Route::post('/modificarProyecto', 'ProyectoController@modificarProyecto');

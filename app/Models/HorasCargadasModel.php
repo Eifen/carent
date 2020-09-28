@@ -46,29 +46,6 @@ class HorasCargadasModel extends Model
 
     }
 
-    function permisoEliminar($id_usuario, $id_menu){
-
-      $permiso = DB::select('SELECT CASE mu.D
-                                      WHEN 1 THEN "true"
-                                      ELSE "false"
-                                    END AS permiso
-                             FROM tbl_menu_usuario mu
-                             WHERE mu.id_usuario = '.$id_usuario.'
-                             AND mu.D = 1
-                             AND mu.id_menu = '. $id_menu);
-
-      if(count($permiso) > 0){
-
-        return $permiso[0]->permiso;
-
-      }else{
-
-        return false;
-
-      }
-
-    }
-
     function permisoCrear($id_usuario, $id_menu,$idProyAnalista){
 
       $permiso = DB::select('SELECT CASE mu.C
