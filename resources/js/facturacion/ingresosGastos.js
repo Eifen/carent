@@ -197,8 +197,8 @@ new Vue({
     },
     buscar: function(){
 
-      self.formFiltro.descripcion.disabled = true;
       self.formFiltro.cliente.disabled = true;
+      self.formFiltro.proyecto.disabled = true;
       self.formFiltro.estatus.disabled = true;
       self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
       self.formFiltro.btn.filtrar.disabled = true;
@@ -209,11 +209,14 @@ new Vue({
       let desde = (self.paginador.pagina - 1) * self.paginador.paginar;
       let parametros = {
         cliente: self.formFiltro.cliente.value,
-        proyecto: self.formFiltro.descripcion.value,
+        proyecto: self.formFiltro.proyecto.value,
         desde: desde,
         estatus: self.formFiltro.estatus.value,
         paginar: self.paginador.paginar
       };
+
+      console.log(parametros); return;
+
       //Se utiliza el metodo get para su busqueda y se envian con los parametros
       axios.get('/buscarProyectos', {params: parametros})
       .then(function (response) {

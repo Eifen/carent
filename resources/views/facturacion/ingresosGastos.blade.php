@@ -21,7 +21,7 @@
         <menu-principal></menu-principal>
 
         <b-row align-h="center" align-v="center" v-if="alert.mostrar === false && formFiltro.mostrar" class="wrapper-forms" v-cloak>
-          <b-col cols="12" sm="11" md="9" v-if="formFiltro.mostrar">
+          <b-col cols="12" v-if="formFiltro.mostrar">
             <h5>Filtros de búsqueda</h5>
             <b-form class="row">
               <b-form-group
