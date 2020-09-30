@@ -49,7 +49,25 @@ class FacturacionModel extends Model
 
     }// Fin estatusProyectos
 
-    function proyectosFacturacion(){
+    function proyectosFacturacion($paginar, $desde = 0, $cliente = "", $proyecto = "", $estatus = null){
+
+      if(trim($cliente) != ""){
+        $sql_cliente = 'AND LOWER(c.razon_social) LIKE "%'.strtolower($cliente).'%"';
+      }else{
+        $sql_cliente = "";
+      }
+
+      if(trim($proyecto) != ""){
+        $sql_proyecto = 'AND LOWER(p.descripcion) LIKE "%'.strtolower($proyecto).'%"';
+      }else{
+        $sql_proyecto = "";
+      }
+
+      if($estatus != null){
+        $sql_estatus = 'AND p.id_estatus = '.$estatus;
+      }else{
+        $sql_estatus = "";
+      }
 
       $sql = DB::select('SELECT p.id,
                                 UPPER(p.descripcion) AS proyecto,
@@ -73,9 +91,54 @@ class FacturacionModel extends Model
                          AND p.id_estatus = e.valor
                          AND p.id_cliente = c.id
                          AND e.tabla = "tbl_proyecto"
-                         ORDER BY p.descripcion ASC');
+                         '.$sql_proyecto.'
+                         '.$sql_cliente.'
+                         '.$sql_estatus.'
+                         ORDER BY p.descripcion ASC
+                         LIMIT '.$desde.', '.$paginar);
 
       return $sql;
+
+    }
+
+    function cantidadPaginasProyectoFacturacion($paginar, $cliente = "", $proyecto = "", $estatus = null){
+
+      if(trim($cliente) != ""){
+        $sql_cliente = 'AND LOWER(c.razon_social) LIKE "%'.strtolower($cliente).'%"';
+      }else{
+        $sql_cliente = "";
+      }
+
+      if(trim($proyecto) != ""){
+        $sql_proyecto = 'AND LOWER(p.descripcion) LIKE "%'.strtolower($proyecto).'%"';
+      }else{
+        $sql_proyecto = "";
+      }
+
+      if($estatus != null){
+        $sql_estatus = 'AND p.id_estatus = '.$estatus;
+      }else{
+        $sql_estatus = "";
+      }
+
+      $numProyectos = DB::select('SELECT CEILING( COUNT(1) / '.$paginar.') paginas
+                                  FROM tbl_proyecto p,
+                                       tbl_usuario so,
+                                       tbl_usuario ge,
+                                       tbl_monedas mo,
+                                       tbl_estatus e,
+                                       tbl_cliente c
+                                  WHERE p.id_socio = so.id
+                                  AND p.id_gerente = ge.id
+                                  AND p.id_moneda = mo.id
+                                  AND p.id_estatus = e.valor
+                                  AND p.id_cliente = c.id
+                                  AND e.tabla = "tbl_proyecto"
+                                  '.$sql_proyecto.'
+                                  '.$sql_cliente.'
+                                  '.$sql_estatus);
+
+      return $numProyectos[0]->paginas;
 
     }
 
