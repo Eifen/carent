@@ -7,13 +7,17 @@ html {
 #app {
   background-color: #E9ECEF;
 }
+#app > .row:nth-child(2) {
+  margin-bottom: 50px;
+  margin-top: 40px;
+}
 #app .titulo-principal {
   color: rgba(0, 0, 0, 0.7);
   margin-bottom: 20px;
-  margin-top: 50px;
 }
 #app .titulo-secundario {
   color: rgba(0, 0, 0, 0.7);
+  margin-top: 30px;
 }
 #app .card {
   box-shadow: 0 0.15rem 1.55rem 0 rgba(58, 59, 69, 0.15);
@@ -151,9 +155,12 @@ html {
   text-align: center;
   width: 100%;
 }
+#app .wrapper-btn-agregar-factura {
+  margin-top: 50px;
+}
 #app .wrapper-table {
   padding-bottom: 50px;
-  padding-top: 20px;
+  padding-top: 0px;
 }
 #app .wrapper-table .table {
   background-color: white;
@@ -226,6 +233,12 @@ html {
   padding-bottom: 50px;
   padding-top: 100px;
 }
+.modal .modal-dialog .modal-header {
+  padding: 0.75rem;
+}
 .modal .modal-dialog footer {
   padding: 0.25rem !important;
+}
+.modal .modal-dialog footer .alert {
+  margin-bottom: 10px !important;
 }
