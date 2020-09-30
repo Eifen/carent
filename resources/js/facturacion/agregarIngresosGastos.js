@@ -34,6 +34,15 @@ new Vue({
       ocultarSeg: 0,
       variante: ""
     },
+    botones: {
+      agregarFactura: {
+        disabled: false,
+        html: "",
+        htmlInit: "Agregar Factura",
+        htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
+        show: true
+      }
+    },
     comboTipoConceptos: [],
     form: {
       alert: {
@@ -45,12 +54,21 @@ new Vue({
         variante: ""
       },
       botones: {
+        cancelar: {
+          disabled: false,
+          html: "No, deseo cancelar esta acción",
+          show: false
+        },
+        confirmar: {
+          html: "Crear Nuevo Proyecto",
+          show: true
+        },
         submit:{
           disabled: false,
           html: "",
-          htmlInit: "Registrar Factura",
+          htmlInit: "Si, estoy seguro de realizar esta acción",
           htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
-          show: true
+          show: false
         }
       },
       campos: {
@@ -270,6 +288,8 @@ new Vue({
         self.paginador.max = parseInt(response.data.numero_paginas);
         self.paginador.paginar = response.data.paginar;
 
+        self.botones.agregarFactura.html = self.botones.agregarFactura.htmlInit;
+
         self.form.mostrar = true;
         self.loading = false;
         self.tabla.cargando = false;
@@ -299,16 +319,21 @@ new Vue({
 
         clearInterval(checkDataInitReady);
 
-        let monto = self.$refs["montoFactura"].$el
+        self.$refs["agregar-factura"].$on('shown', () => {
+          console.log('Modal is about to be shown')
 
-        self.form.camposAtributos.montoFactura.autonumeric = new AutoNumeric(monto, {
-          decimalPlaces: 2,
-          decimalCharacter: ',',
-          digitGroupSeparator: '.',
-          emptyInputBehavior: 0,
-          maximumValue: '99999999999999999999.99',
-          minimumValue: 0,
-          modifyValueOnWheel: false
+          let monto = self.$refs["montoFactura"].$el
+
+          self.form.camposAtributos.montoFactura.autonumeric = new AutoNumeric(monto, {
+            decimalPlaces: 2,
+            decimalCharacter: ',',
+            digitGroupSeparator: '.',
+            emptyInputBehavior: 0,
+            maximumValue: '99999999999999999999.99',
+            minimumValue: 0,
+            modifyValueOnWheel: false
+          });
+
         });
 
       }
@@ -318,9 +343,6 @@ new Vue({
   },
   updated: function () {},
   methods:{
-    mostrarConfirm: function(){
-      alert("confirm")
-    },
     mostrarAlert: function(alert, mostrar = false, variante = "", mensaje = "", iconCerrar = false, contador = false, ocultarSeg = 0){
 
       return new Promise(resolve => {
@@ -430,7 +452,7 @@ new Vue({
       self.limpiarMensajeError('tipoConcepto');
 
     },
-    registrar: async function(id){
+    confirmaRegistrarFactura: async function(){
 
       var formValido = true;
 
@@ -484,103 +506,129 @@ new Vue({
 
       if(formValido){
 
-        //Obtenemos valores
-        let parametros = {
-          concepto: self.form.campos.concepto,
-          tipo_concepto: self.form.campos.tipoConcepto.id,
-          numero_factura: self.form.campos.numeroFactura,
-          monto_factura: self.form.camposAtributos.montoFactura.autonumeric.get(),
-          fecha_factura: self.form.campos.fechaFactura,
-          fecha_cobro_factura: self.form.camposAtributos.fechaCobroFactura.value,
-          numero_control: self.form.campos.numeroControl,
-          observaciones: self.form.camposAtributos.observaciones.value,
-          id_proyecto: proyecto_id
+        self.form.botones.confirmar.show = false;
+        self.form.botones.submit.show = true;
+        self.form.botones.cancelar.show = true;
+
+        self.mostrarAlert(self.form.alert, true, "warning", "¿Estas seguro de registrar esta factura/gasto?", false, false, 0);
+
+      }
+
+    },
+    cancelarRegistrarFactura: function(){
+
+      self.form.botones.confirmar.show = true;
+      self.form.botones.submit.show = false;
+      self.form.botones.cancelar.show = false;
+
+      self.mostrarAlert(self.form.alert);
+
+    },
+    registrar: async function(id){
+
+      //Obtenemos valores
+      let parametros = {
+        concepto: self.form.campos.concepto,
+        tipo_concepto: self.form.campos.tipoConcepto.id,
+        numero_factura: self.form.campos.numeroFactura,
+        monto_factura: self.form.camposAtributos.montoFactura.autonumeric.get(),
+        fecha_factura: self.form.campos.fechaFactura,
+        fecha_cobro_factura: self.form.camposAtributos.fechaCobroFactura.value,
+        numero_control: self.form.campos.numeroControl,
+        observaciones: self.form.camposAtributos.observaciones.value,
+        id_proyecto: proyecto_id
+      }
+
+      self.form.botones.cancelar.disabled = true;
+      self.form.botones.submit.disabled = true;
+      self.form.botones.submit.html = self.form.botones.submit.htmlLoading;
+
+      Object.keys(self.form.camposAtributos).forEach((indice, i) => {
+
+        if(self.form.camposAtributos[indice].hasOwnProperty("disabled")){
+          self.form.camposAtributos[indice].disabled = true;
         }
 
-        self.form.botones.submit.disabled = true;
-        self.form.botones.submit.html = self.form.botones.submit.htmlLoading;
+      });
 
-        Object.keys(self.form.camposAtributos).forEach((indice, i) => {
+      axios.post('/registrarFactura', parametros)
+      .then(function (response) {
 
-          if(self.form.camposAtributos[indice].hasOwnProperty("disabled")){
-            self.form.camposAtributos[indice].disabled = true;
-          }
+        if(response.status === 200 && response.data.response === true){
 
-        });
+          self.tabla.registros = [];
+          self.tabla.registros = self.registroTabla(response.data.facturas_cargadas);
 
-        axios.post('/registrarFactura', parametros)
-        .then(function (response) {
+          self.form.campos.concepto = null;
+          self.form.campos.tipoConcepto = null;
+          self.form.campos.numeroFactura = null;
+          self.form.campos.fechaFactura = null;
+          self.form.camposAtributos.fechaCobroFactura.value = "";
+          self.form.campos.numeroControl = null;
+          self.form.camposAtributos.observaciones.value = "";
+          self.form.camposAtributos.montoFactura.autonumeric.set(0);
 
-          if(response.status === 200 && response.data.response === true){
-
-            self.tabla.registros = [];
-            self.tabla.registros = self.registroTabla(response.data.facturas_cargadas);
-
-            self.form.campos.concepto = null;
-            self.form.campos.tipoConcepto = null;
-            self.form.campos.numeroFactura = null;
-            self.form.campos.fechaFactura = null;
-            self.form.camposAtributos.fechaCobroFactura.value = "";
-            self.form.campos.numeroControl = null;
-            self.form.camposAtributos.observaciones.value = "";
-
-            self.form.info.monto_facturado = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_facturado;
-            self.form.info.monto_gastos = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_gasto;
-
-            Object.keys(self.form.camposAtributos).forEach((indice, i) => {
-
-              if(self.form.camposAtributos[indice].hasOwnProperty("disabled")){
-                self.form.camposAtributos[indice].disabled = false;
-              }
-
-            });
-
-            self.$nextTick(() => {
-              self.$v.$reset();
-            });
-
-            self.form.botones.submit.disabled = false;
-            self.form.botones.submit.html = self.form.botones.submit.htmlInit;
-
-            self.mostrarAlert(self.form.alert, true, "success", response.data.message, true, true, 10);
-
-          }else{
-
-            throw response.data;
-
-          }
-
-        })
-        .catch(error => {
+          self.form.info.monto_facturado = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_facturado;
+          self.form.info.monto_gastos = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_gasto;
 
           Object.keys(self.form.camposAtributos).forEach((indice, i) => {
 
-            if(self.form.camposAtributos[indice].hasOwnProperty("disabled") && indice !== "horas"){
+            if(self.form.camposAtributos[indice].hasOwnProperty("disabled") && indice !== "tipoConcepto"){
+              self.form.camposAtributos[indice].disabled = true;
+            }else if(indice === "tipoConcepto"){
               self.form.camposAtributos[indice].disabled = false;
             }
 
           });
 
+          self.$nextTick(() => {
+            self.$v.$reset();
+          });
+
           self.form.botones.submit.disabled = false;
-          self.form.botones.submit.html = self.form.botones.submit.htmlInit
+          self.form.botones.submit.html = self.form.botones.submit.htmlInit;
 
-          if(error.message){
+          self.mostrarAlert(self.form.alert, true, "success", response.data.message, true, true, 10);
 
-            var mensaje = error.message;
-            var variante = "warning";
+          self.form.botones.confirmar.show = true;
+          self.form.botones.submit.show = false;
+          self.form.botones.cancelar.show = false;
 
-          }else{
+        }else{
 
-            var mensaje = "Existe un error!, consulte con el administrador del sistema.";
-            var variante = "danger";
+          throw response.data;
 
+        }
+
+      })
+      .catch(error => {
+
+        Object.keys(self.form.camposAtributos).forEach((indice, i) => {
+
+          if(self.form.camposAtributos[indice].hasOwnProperty("disabled") && indice !== "horas"){
+            self.form.camposAtributos[indice].disabled = false;
           }
-
-          self.mostrarAlert(self.form.alert, true, variante, mensaje, true, true, 10);
 
         });
 
-      }// Fin if
+        self.form.botones.submit.disabled = false;
+        self.form.botones.submit.html = self.form.botones.submit.htmlInit
+
+        if(error.message){
+
+          var mensaje = error.message;
+          var variante = "warning";
+
+        }else{
+
+          var mensaje = "Existe un error!, consulte con el administrador del sistema.";
+          var variante = "danger";
+
+        }
+
+        self.mostrarAlert(self.form.alert, true, variante, mensaje, true, true, 10);
+
+      });
 
     },
     validadorMensajes: function(indice,campo){
