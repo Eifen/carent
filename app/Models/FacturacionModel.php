@@ -225,11 +225,11 @@ class FacturacionModel extends Model
 
     }
 
-    function proyectoFacturasCargadas($id_proyecto, $numero_factura = null, $limit = 0){
+    function proyectoFacturasCargadas($id_proyecto, $numero_factura = null, $limit = 0, $tipo_factura = 0){
 
       if($numero_factura != null){
 
-        $condicion = " AND UPPER(fp.numero_factura) LIKE UPPER('".$numero_factura."%')";
+        $condicion = " AND UPPER(fp.numero_factura) LIKE UPPER('".$numero_factura."%') AND fp.id_concepto_factura = ".$tipo_factura;
         $limit = " LIMIT ".$limit;
 
       }else{

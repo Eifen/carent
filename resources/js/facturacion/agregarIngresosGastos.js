@@ -72,11 +72,11 @@ new Vue({
         }
       },
       campos: {
-        concepto: null,
         tipoConcepto: null,
         numeroFactura: null,
         montoFactura: null,
         fechaFactura: null,
+        concepto: null,
         numeroControl: null
       },
       camposAtributos: {
@@ -180,10 +180,6 @@ new Vue({
   validations: {
     form:{
       campos:{
-        concepto: {
-          required,
-          minLength: minLength(5)
-        },
         tipoConcepto: {
           required
         },
@@ -196,6 +192,10 @@ new Vue({
         },
         fechaFactura: {
           required
+        },
+        concepto: {
+          required,
+          minLength: minLength(5)
         },
         numeroControl: {
           required,
@@ -320,7 +320,6 @@ new Vue({
         clearInterval(checkDataInitReady);
 
         self.$refs["agregar-factura"].$on('shown', () => {
-          console.log('Modal is about to be shown')
 
           let monto = self.$refs["montoFactura"].$el
 
@@ -333,6 +332,45 @@ new Vue({
             minimumValue: 0,
             modifyValueOnWheel: false
           });
+
+        });
+
+        self.$refs["agregar-factura"].$on('hidden', () => {
+
+          self.form.campos.concepto = null;
+          self.form.campos.tipoConcepto = null;
+          self.form.campos.numeroFactura = null;
+          self.form.campos.fechaFactura = null;
+          self.form.camposAtributos.fechaCobroFactura.value = "";
+          self.form.campos.numeroControl = null;
+          self.form.camposAtributos.observaciones.value = "";
+          self.form.campos.montoFactura = null;
+          self.form.camposAtributos.montoFactura.autonumeric.set(0);
+
+          Object.keys(self.form.camposAtributos).forEach((indice, i) => {
+
+            if(self.form.camposAtributos[indice].hasOwnProperty("state")){
+              self.form.camposAtributos[indice].state = null;
+            }
+
+            if(self.form.camposAtributos[indice].hasOwnProperty("disabled") && indice !== "tipoConcepto"){
+              self.form.camposAtributos[indice].disabled = true;
+            }else if(indice === "tipoConcepto"){
+              self.form.camposAtributos[indice].disabled = false;
+            }
+
+          });
+
+          self.form.botones.confirmar.show = true;
+          self.form.botones.submit.show = false;
+          self.form.botones.cancelar.show = false;
+
+          self.mostrarAlert(self.form.alert);
+
+          self.form.camposAtributos.numeroFactura.busqueda = false;
+          self.form.camposAtributos.numeroFactura.valor = null;
+          self.form.camposAtributos.numeroFactura.valorFocus = null;
+          self.form.camposAtributos.numeroFactura.valorBlur = null;
 
         });
 
@@ -566,6 +604,7 @@ new Vue({
           self.form.camposAtributos.fechaCobroFactura.value = "";
           self.form.campos.numeroControl = null;
           self.form.camposAtributos.observaciones.value = "";
+          self.form.campos.montoFactura = null;
           self.form.camposAtributos.montoFactura.autonumeric.set(0);
 
           self.form.info.monto_facturado = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_facturado;
@@ -581,12 +620,18 @@ new Vue({
 
           });
 
+          self.form.camposAtributos.numeroFactura.busqueda = false;
+          self.form.camposAtributos.numeroFactura.valor = null;
+          self.form.camposAtributos.numeroFactura.valorFocus = null;
+          self.form.camposAtributos.numeroFactura.valorBlur = null;
+
           self.$nextTick(() => {
             self.$v.$reset();
           });
 
           self.form.botones.submit.disabled = false;
           self.form.botones.submit.html = self.form.botones.submit.htmlInit;
+          self.form.botones.cancelar.disabled = false;
 
           self.mostrarAlert(self.form.alert, true, "success", response.data.message, true, true, 10);
 
@@ -612,7 +657,8 @@ new Vue({
         });
 
         self.form.botones.submit.disabled = false;
-        self.form.botones.submit.html = self.form.botones.submit.htmlInit
+        self.form.botones.submit.html = self.form.botones.submit.htmlInit;
+        self.form.botones.cancelar.disabled = false;
 
         if(error.message){
 
@@ -673,7 +719,7 @@ new Vue({
 
       if(self.form.camposAtributos.numeroFactura.valor !== ''){
 
-        axios.get('/buscarFacturaProyecto',{
+        axios.get('/buscarFacturaProyectoNotaCredito',{
           params: {
             id_proyecto: proyecto_id,
             numero_factura: self.form.camposAtributos.numeroFactura.valor

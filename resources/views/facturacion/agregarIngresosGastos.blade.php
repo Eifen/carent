@@ -83,7 +83,7 @@
           <b-col cols="12" md="6" lg="3">
             <b-card class="text-left card-monto-facturado">
               <b-card-text>
-                <span class="titulo">MONTO NOTAS DE CRÉDITO</span>
+                <span class="titulo">MONTO FACTURADO</span>
               </b-card-text>
               <b-card-text>
                 <span class="monto">@{{ form.info.monto_facturado }}</span>

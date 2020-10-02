@@ -146,13 +146,13 @@ class FacturacionController extends Controller
 
     }
 
-    function buscarFacturaProyecto(Request $request){
+    function buscarFacturaProyectoNotaCredito(Request $request){
 
       $modelo = new FacturacionModel();
       $numero_factura = $request["numero_factura"];
       $id_proyecto = $request["id_proyecto"];
 
-      $facturas = $modelo->proyectoFacturasCargadas($id_proyecto, $numero_factura, 5);
+      $facturas = $modelo->proyectoFacturasCargadas($id_proyecto, $numero_factura, 5, 1);
 
       return [
         "response" => true,
