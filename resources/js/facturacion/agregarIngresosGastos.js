@@ -899,8 +899,9 @@ console.log("Se jerro r");
           self.form.info.monto_notas_credito = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_notas_credito;
           self.form.info.monto_otros_gastos = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_otros_gastos;
 
-          self.modalEliminar.botones.cancelar.show = true;
-          self.modalEliminar.botones.submit.html = self.form.botones.submit.htmlInit;
+          self.modalEliminar.botones.submit.show = false;
+          self.modalEliminar.botones.hide.show = true;
+          //self.modalEliminar.botones.submit.html = self.form.botones.submit.htmlInit;
 
           self.mostrarAlert(self.modalEliminar.alert, true, "success", response.data.message, false, true, 10);
 
