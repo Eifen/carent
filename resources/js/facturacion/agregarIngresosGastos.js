@@ -8,7 +8,7 @@ import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 import axios from 'axios';
 import Vuelidate from 'vuelidate';
-import { required, maxLength, minLength } from 'vuelidate/lib/validators';
+import { required, requiredIf, maxLength, minLength } from 'vuelidate/lib/validators';
 import zenscroll from 'zenscroll';
 import AutoNumeric from 'autonumeric';
 
@@ -185,21 +185,32 @@ new Vue({
           required
         },
         numeroFactura: {
-          required,
+          required: requiredIf(function() {
+
+            const requerido = (!this.form.camposAtributos.numeroFactura.disabled && !this.form.camposAtributos.tipoConcepto.disabled) ? true : false;
+            return requerido;
+
+          }),
           maxLength: maxLength(20)
         },
         montoFactura: {
           required
         },
         fechaFactura: {
-          required
+          required: requiredIf(function() {
+            return (!this.form.camposAtributos.fechaFactura.disabled);
+          })
         },
         concepto: {
-          required,
+          required: requiredIf(function() {
+            return (!this.form.camposAtributos.concepto.disabled);
+          }),
           minLength: minLength(5)
         },
         numeroControl: {
-          required,
+          required: requiredIf(function() {
+            return (!this.form.camposAtributos.numeroControl.disabled);
+          }),
           maxLength: maxLength(20)
         }
       }
@@ -423,7 +434,7 @@ new Vue({
           numero_factura: item.numero_factura,
           monto_factura: item.monto_factura_formatted,
           fecha_factura: item.fecha_factura_formatted,
-          fecha_cobro: item.fecha_cobro_factura_formatted,
+          fecha_cobro_factura: item.fecha_cobro_factura,
           numero_control: item.numero_control,
           movimiento: item.movimiento,
           varianteMovimiento: varianteMovimiento,
@@ -457,6 +468,14 @@ new Vue({
           self.form.camposAtributos[indice].disabled = true;
         }
 
+        if(self.form.camposAtributos[indice].hasOwnProperty("state")){
+          self.form.camposAtributos[indice].state = (self.form.camposAtributos[indice].state === true) ? true : null;
+        }
+
+        if(self.form.camposAtributos[indice].hasOwnProperty("invalidFeedback")){
+          self.form.camposAtributos[indice].invalidFeedback = "";
+        }
+
       });
 
       self.form.camposAtributos.numeroFactura.help = self.form.camposAtributos.numeroFactura.helpInit;
@@ -465,16 +484,20 @@ new Vue({
       if(valor !== null && valor.trim !== '' && valor.hasOwnProperty("type")){
 
         const type = parseInt(valor.type);
+        const id = parseInt(valor.id);
 
         if(type === 3){
 
           self.form.camposAtributos.numeroFactura.disabled = false;
           self.form.camposAtributos.numeroControl.disabled = false;
           self.form.camposAtributos.observaciones.disabled = false;
-
           self.form.camposAtributos.numeroFactura.busqueda = true;
 
-        }else if(type !== 3){
+        }else if(type === 2 && id === 5){
+
+          self.form.camposAtributos.montoFactura.disabled = false;
+
+        }else{
 
           self.form.camposAtributos.concepto.disabled = false;
           self.form.camposAtributos.numeroFactura.disabled = false;

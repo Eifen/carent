@@ -164,26 +164,41 @@
               </template>
               <template v-slot:cell(opciones)="data">
                 <b-icon-search v-b-modal="'concepto-'+data.item.id" class="icono"></b-icon-search>
-                <b-modal :id="'concepto-'+data.item.id" :hide-header="true" size="lg" centered>
+                <b-modal :id="'concepto-'+data.item.id" size="lg" centered>
+                  <template v-slot:modal-title>
+                    Más información @{{ data.item.numero_factura }}
+                  </template>
                   <b-form-group
                     label="Concepto">
                     <b-form-textarea
                       readonly
                       rows="3"
+                      size="sm"
                       v-model="data.item.concepto"></b-form-textarea>
                   </b-form-group>
                   <b-form-group
                     label="N° Control">
                     <b-form-input
                       :value="data.item.numero_control"
-                      readonly></b-form-input>
+                      readonly
+                      size="sm"></b-form-input>
                   </b-form-group>
                   <b-form-group
                     label="Observaciones">
                     <b-form-textarea
                       readonly
                       rows="3"
+                      size="sm"
                       v-model="data.item.observaciones"></b-form-textarea>
+                  </b-form-group>
+                  <b-form-group
+                    label="Fecha de Cobro">
+                    <b-form-datepicker
+                      :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+                      locale="es-ES"
+                      readonly
+                      size="sm"
+                      v-model="data.item.fecha_cobro_factura"></b-form-datepicker>
                   </b-form-group>
                   <template v-slot:modal-footer="{ ok }">
                     <b-button size="sm" variant="primary" @click="ok()">
