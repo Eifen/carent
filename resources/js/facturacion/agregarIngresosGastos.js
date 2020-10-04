@@ -171,6 +171,9 @@ new Vue({
         cancelar: {
           disabled: false,
           html: "No",
+          show: true
+        },
+        hide: {
           show: false
         },
         submit:{
@@ -178,7 +181,7 @@ new Vue({
           html: "",
           htmlInit: "Si, estoy seguro de realizar esta acción",
           htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
-          show: false
+          show: true
         }
       }
     },

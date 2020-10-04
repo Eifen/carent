@@ -227,7 +227,7 @@
                   body-bg-variant="warning"
                   centered>
                   <div class="text-center"><b>¿Estas seguro de eliminar esta Factura / Gasto?</b></div>
-                  <template v-slot:modal-footer="{ ok, cancel }">
+                  <template v-slot:modal-footer="{ ok, cancel, hide  }">
                     <alert :contador="modalEliminar.alert.contador"
                            :icono-cerrar="modalEliminar.alert.iconCerrar"
                            :mensaje="modalEliminar.alert.mensaje"
@@ -240,6 +240,7 @@
                       :disabled="modalEliminar.botones.cancelar.disabled"
                       size="sm"
                       v-html="modalEliminar.botones.cancelar.html"
+                      v-if="modalEliminar.botones.cancelar.show"
                       variant="danger">
                     </b-button>
                     <b-button
@@ -247,7 +248,15 @@
                       :disabled="modalEliminar.botones.submit.disabled"
                       size="sm"
                       v-html="modalEliminar.botones.submit.html"
+                      v-if="modalEliminar.botones.submit.show"
                       variant="success">
+                    </b-button>
+                    <b-button
+                      @click="hide()"
+                      size="sm"
+                      v-if="modalEliminar.botones.hide.show"
+                      variant="primary">
+                      Cerrar
                     </b-button>
                   </template>
                 </b-modal>
