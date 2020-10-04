@@ -17,7 +17,7 @@ class FacturacionController extends Controller
 
       $modelo = new FacturacionModel();
 
-      $paginar = 10;
+      $paginar = 50;
       $estatus = $modelo->estatusProyectos();
       $permisos = $modelo->permisosMenu(session("usuario_id"), 16);
       $proyectos = $modelo->proyectosFacturacion($paginar);

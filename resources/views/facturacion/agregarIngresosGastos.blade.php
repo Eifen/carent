@@ -70,7 +70,7 @@
         </b-row>
 
         <b-row v-cloak v-if="form.mostrar">
-          <b-col cols="12" md="6" lg="3">
+          <b-col cols="12" md="6" lg="4">
             <b-card class="text-left card-monto-contratado">
               <b-card-text>
                 <span class="titulo">MONTO CONTRATADO</span>
@@ -78,9 +78,9 @@
               <b-card-text>
                 <span class="monto">@{{ form.info.monto_contratado }}</span>
               </b-card-text>
-            </b-card-text>
+            </b-card>
           </b-col>
-          <b-col cols="12" md="6" lg="3">
+          <b-col cols="12" md="6" lg="4">
             <b-card class="text-left card-monto-facturado">
               <b-card-text>
                 <span class="titulo">MONTO FACTURADO</span>
@@ -88,9 +88,9 @@
               <b-card-text>
                 <span class="monto">@{{ form.info.monto_facturado }}</span>
               </b-card-text>
-            </b-card-text>
+            </b-card>
           </b-col>
-          <b-col cols="12" md="6" lg="3">
+          <b-col cols="12" md="6" lg="4">
             <b-card class="text-left card-monto-notas-credito">
               <b-card-text>
                 <span class="titulo">MONTO NOTAS DE CRÉDITO</span>
@@ -98,9 +98,9 @@
               <b-card-text>
                 <span class="monto">@{{ form.info.monto_notas_credito }}</span>
               </b-card-text>
-            </b-card-text>
+            </b-card>
           </b-col>
-          <b-col cols="12" md="6" lg="3">
+          <b-col cols="12" md="6" lg="4">
             <b-card class="text-left card-monto-gasto">
               <b-card-text>
                 <span class="titulo">MONTO GASTOS NO FACTURABLES</span>
@@ -108,12 +108,19 @@
               <b-card-text>
                 <span class="monto">@{{ form.info.monto_gastos }}</span>
               </b-card-text>
-            </b-card-text>
+            </b-card>
           </b-col>
-        </b-row>
-
-        <b-row v-cloak class="wrapper-btn-agregar-factura" align-h="center">
-          <b-col cols="12" lg="3" v-if="form.mostrar">
+          <b-col cols="12" md="6" lg="4">
+            <b-card class="text-left card-monto-otros-gastos">
+              <b-card-text>
+                <span class="titulo">OTROS GASTOS (COMISIONES)</span>
+              </b-card-text>
+              <b-card-text>
+                <span class="monto">@{{ form.info.monto_otros_gastos }}</span>
+              </b-card-text>
+            </b-card>
+          </b-col>
+          <b-col cols="12" md="6" lg="4" class="wrapper-btn-agregar-factura">
             <b-button
               :disabled="botones.agregarFactura.disabled"
               block
@@ -152,23 +159,38 @@
               <template v-slot:cell(numero)="data">
                 <b>@{{ data.item.numero }}</b>
               </template>
-
-              <template v-slot:cell(concepto)="data">
+              <template v-slot:cell(movimiento)="data">
+                <b-badge :variant="data.item.varianteMovimiento" class="text-capitalize">@{{ data.item.movimiento }}</b-badge>
+              </template>
+              <template v-slot:cell(opciones)="data">
                 <b-icon-search v-b-modal="'concepto-'+data.item.id" class="icono"></b-icon-search>
                 <b-modal :id="'concepto-'+data.item.id" :hide-header="true" size="lg" centered>
-                  @{{ data.item.concepto }}
+                  <b-form-group
+                    label="Concepto">
+                    <b-form-textarea
+                      readonly
+                      rows="3"
+                      v-model="data.item.concepto"></b-form-textarea>
+                  </b-form-group>
+                  <b-form-group
+                    label="N° Control">
+                    <b-form-input
+                      :value="data.item.numero_control"
+                      readonly></b-form-input>
+                  </b-form-group>
+                  <b-form-group
+                    label="Observaciones">
+                    <b-form-textarea
+                      readonly
+                      rows="3"
+                      v-model="data.item.observaciones"></b-form-textarea>
+                  </b-form-group>
                   <template v-slot:modal-footer="{ ok }">
                     <b-button size="sm" variant="primary" @click="ok()">
                       Cerrar
                     </b-button>
                   </template>
                 </b-modal>
-              </template>
-
-              <template v-slot:cell(movimiento)="data">
-                <b-badge :variant="data.item.varianteMovimiento" class="text-capitalize">@{{ data.item.movimiento }}</b-badge>
-              </template>
-              <template v-slot:cell(opciones)="data">
                 <a :id="'editar-'+data.item.id" v-if="permisos.permiso_actualizar">
                    <b-icon-pencil class="icono"></b-icon-pencil>
                 </a>

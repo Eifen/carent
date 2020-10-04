@@ -94,7 +94,7 @@ class FacturacionModel extends Model
                          '.$sql_proyecto.'
                          '.$sql_cliente.'
                          '.$sql_estatus.'
-                         ORDER BY p.descripcion ASC
+                         ORDER BY p.id DESC
                          LIMIT '.$desde.', '.$paginar);
 
       return $sql;
@@ -206,7 +206,19 @@ class FacturacionModel extends Model
                                  WHERE fp.id_concepto_factura = cf.id
                                  AND fp.id_proyecto = '.$id_proyecto.'
                                  AND cf.id_tipo_concepto_factura = 2
-                              ) AS monto_gasto');
+                              ) AS monto_gasto,
+                              (
+                                SELECT IF(
+                                           SUM(fp.monto_factura) IS NULL,
+                                           FORMAT(0,2,"de_DE"),
+                                           FORMAT(SUM(fp.monto_factura),2,"de_DE")
+                                         )
+                                FROM tbl_factura_proyecto fp,
+                                     tbl_concepto_factura cf
+                                WHERE fp.id_concepto_factura = cf.id
+                                AND fp.id_proyecto = '.$id_proyecto.'
+                                AND cf.id_tipo_concepto_factura = 2
+                             ) AS monto_otros_gastos');
 
       return $sql[0];
 
@@ -262,6 +274,7 @@ class FacturacionModel extends Model
                          AND fp.id_proyecto = ?
                          AND fp.id_estatus = 1
                          '.$condicion.'
+                         ORDER BY fp.id DESC
                          '.$limit, [$id_proyecto]);
 
       return $sql;

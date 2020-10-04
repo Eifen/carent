@@ -59,7 +59,8 @@ html{
     &.card-monto-contratado,
     &.card-monto-facturado,
     &.card-monto-gasto,
-    &.card-monto-notas-credito{
+    &.card-monto-notas-credito,
+    &.card-monto-otros-gastos{
       margin-top: 20px;
 
       .card-text{
@@ -111,7 +112,8 @@ html{
 
     }
 
-    &.card-monto-gasto{
+    &.card-monto-gasto,
+    &.card-monto-otros-gastos{
       border-left: 4px solid #DD3D31;
 
       .titulo{
@@ -123,7 +125,13 @@ html{
   }// Fin .card
 
   .wrapper-btn-agregar-factura{
-    margin-top: 50px;
+    padding-top: 20px;
+
+    button{
+      height: 100%;
+      font-weight: bold;
+    }
+
   }
 
   .wrapper-table{
@@ -266,16 +274,7 @@ html{
     .modal-body{
 
       form{
-        background-color: white;
-        border:1px solid rgba(0,0,0,0.13);
-        border-radius: 3px;
-        margin-bottom: 50px;
         padding: 15px;
-        transition: all .3s;
-
-        &:hover{
-          box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
-        }
 
         > div{
 
@@ -300,10 +299,6 @@ html{
           }// lista-facturas
 
           &.form-group{
-
-            &:nth-last-child(2){
-              margin-top: 20px;
-            }
 
             label{
               color:#091F40;

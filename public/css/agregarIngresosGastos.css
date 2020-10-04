@@ -43,26 +43,30 @@ html {
 #app .card.card-monto-contratado,
 #app .card.card-monto-facturado,
 #app .card.card-monto-gasto,
-#app .card.card-monto-notas-credito {
+#app .card.card-monto-notas-credito,
+#app .card.card-monto-otros-gastos {
   margin-top: 20px;
 }
 #app .card.card-monto-contratado .card-text:nth-child(1),
 #app .card.card-monto-facturado .card-text:nth-child(1),
 #app .card.card-monto-gasto .card-text:nth-child(1),
-#app .card.card-monto-notas-credito .card-text:nth-child(1) {
+#app .card.card-monto-notas-credito .card-text:nth-child(1),
+#app .card.card-monto-otros-gastos .card-text:nth-child(1) {
   margin-bottom: 0px;
 }
 #app .card.card-monto-contratado .card-text .titulo,
 #app .card.card-monto-facturado .card-text .titulo,
 #app .card.card-monto-gasto .card-text .titulo,
-#app .card.card-monto-notas-credito .card-text .titulo {
+#app .card.card-monto-notas-credito .card-text .titulo,
+#app .card.card-monto-otros-gastos .card-text .titulo {
   font-size: 12px;
   font-weight: bold;
 }
 #app .card.card-monto-contratado .monto,
 #app .card.card-monto-facturado .monto,
 #app .card.card-monto-gasto .monto,
-#app .card.card-monto-notas-credito .monto {
+#app .card.card-monto-notas-credito .monto,
+#app .card.card-monto-otros-gastos .monto {
   color: rgba(0, 0, 0, 0.8);
   font-size: 1.5rem;
   font-weight: bold;
@@ -85,14 +89,20 @@ html {
 #app .card.card-monto-notas-credito .titulo {
   color: #FFC107;
 }
-#app .card.card-monto-gasto {
+#app .card.card-monto-gasto,
+#app .card.card-monto-otros-gastos {
   border-left: 4px solid #DD3D31;
 }
-#app .card.card-monto-gasto .titulo {
+#app .card.card-monto-gasto .titulo,
+#app .card.card-monto-otros-gastos .titulo {
   color: #DD3D31;
 }
 #app .wrapper-btn-agregar-factura {
-  margin-top: 50px;
+  padding-top: 20px;
+}
+#app .wrapper-btn-agregar-factura button {
+  height: 100%;
+  font-weight: bold;
 }
 #app .wrapper-table {
   padding-bottom: 50px;
@@ -173,15 +183,7 @@ html {
   padding: 0.75rem;
 }
 .modal .modal-dialog .modal-body form {
-  background-color: white;
-  border: 1px solid rgba(0, 0, 0, 0.13);
-  border-radius: 3px;
-  margin-bottom: 50px;
   padding: 15px;
-  transition: all 0.3s;
-}
-.modal .modal-dialog .modal-body form:hover {
-  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
 }
 .modal .modal-dialog .modal-body form > div #lista-facturas .btn {
   border: none;
@@ -194,9 +196,6 @@ html {
 .modal .modal-dialog .modal-body form > div #lista-facturas .dropdown-menu .dropdown-item {
   padding: 0.25rem 0.7rem;
   white-space: normal;
-}
-.modal .modal-dialog .modal-body form > div.form-group:nth-last-child(2) {
-  margin-top: 20px;
 }
 .modal .modal-dialog .modal-body form > div.form-group label {
   color: #091F40;

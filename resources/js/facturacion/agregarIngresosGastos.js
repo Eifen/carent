@@ -38,7 +38,7 @@ new Vue({
       agregarFactura: {
         disabled: false,
         html: "",
-        htmlInit: "Agregar Factura",
+        htmlInit: "AGREAR FACTURA",
         htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
         show: true
       }
@@ -149,6 +149,7 @@ new Vue({
         monto_facturado: "",
         monto_gastos: "",
         monto_notas_credito: "",
+        monto_otros_gastos: "",
         proyecto: "",
         simbolo_moneda: "",
         socio: ""
@@ -231,6 +232,7 @@ new Vue({
           monto_facturado: response.data.proyecto.simbolo_moneda+response.data.facturado_proyecto.monto_facturado,
           monto_gastos: response.data.proyecto.simbolo_moneda+response.data.facturado_proyecto.monto_gasto,
           monto_notas_credito: response.data.proyecto.simbolo_moneda+response.data.facturado_proyecto.monto_notas_credito,
+          monto_otros_gastos: response.data.proyecto.simbolo_moneda+response.data.facturado_proyecto.monto_otros_gastos,
           proyecto: response.data.proyecto.proyecto,
           simbolo_moneda: response.data.proyecto.simbolo_moneda,
           socio: response.data.proyecto.socio
@@ -252,24 +254,21 @@ new Vue({
           self.tabla.encabezado = [
             { key: 'numero', label: '#' },
             { key: 'tipo_concepto', label: 'Tipo Concepto' },
-            { key: 'concepto', label: 'Concepto' },
             { key: 'movimiento', label: 'Movimiento' },
             { key: 'numero_factura', label: 'Nº Factura' },
             { key: 'monto_factura', label: 'Monto' },
-            { key: 'fecha_factura', label: 'Fecha Fac.' },
-            { key: 'numero_control', label: 'Nº Control' },
+            { key: 'fecha_factura', label: 'Fecha Fact.' },
             { key: 'opciones', label: ' ' }
           ];
         }else{
           self.tabla.encabezado = [
             { key: 'numero', label: '#' },
             { key: 'tipo_concepto', label: 'Tipo Concepto' },
-            { key: 'concepto', label: 'Concepto' },
             { key: 'movimiento', label: 'Movimiento' },
             { key: 'numero_factura', label: 'Nº Factura' },
             { key: 'monto_factura', label: 'Monto' },
-            { key: 'fecha_factura', label: 'Fecha Fac.' },
-            { key: 'numero_control', label: 'Nº Control' }
+            { key: 'fecha_factura', label: 'Fecha Fact.' },
+            { key: 'opciones', label: '' }
           ];
         }
 
@@ -424,10 +423,12 @@ new Vue({
           numero_factura: item.numero_factura,
           monto_factura: item.monto_factura_formatted,
           fecha_factura: item.fecha_factura_formatted,
+          fecha_cobro: item.fecha_cobro_factura_formatted,
           numero_control: item.numero_control,
           movimiento: item.movimiento,
           varianteMovimiento: varianteMovimiento,
           id: item.id,
+          observaciones: item.observaciones
         };
 
         registros.push(factura);
@@ -609,6 +610,8 @@ new Vue({
 
           self.form.info.monto_facturado = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_facturado;
           self.form.info.monto_gastos = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_gasto;
+          self.form.info.monto_notas_credito = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_notas_credito;
+          self.form.info.monto_otros_gastos = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_otros_gastos;
 
           Object.keys(self.form.camposAtributos).forEach((indice, i) => {
 
