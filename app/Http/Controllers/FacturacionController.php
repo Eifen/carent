@@ -162,4 +162,50 @@ class FacturacionController extends Controller
 
     }
 
+    function eliminarFactura(Request $request){
+
+      $modelo = new FacturacionModel();
+
+      $permisos = $modelo->permisosMenu(session("usuario_id"), 16);
+
+      if($permisos->permiso_eliminar){
+
+        $parametros = [
+          "id_estatus" => 2
+        ];
+
+        $eliminarFactura = $modelo->eliminarFactura($request["id_factura"], $parametros);
+
+        if($eliminarFactura){
+
+          $facturasCargadas = $modelo->proyectoFacturasCargadas($request["id_proyecto"]);
+          $facturadoProyecto = $modelo->facturadoProyecto($request["id_proyecto"]);
+
+          return [
+            "facturas_cargadas" => $facturasCargadas,
+            "facturado_proyecto" => $facturadoProyecto,
+            "message" => "Factura/Gasto eliminado con éxito",
+            "response" => true
+          ];
+
+        }else{
+
+          return [
+            "message" => "Error al tratar de registrar esta Factura/Gasto!",
+            "response" => false
+          ];
+
+        }
+
+      }else{
+
+        return [
+          "message" => "No posee permisos para esta acción!",
+          "response" => false
+        ];
+
+      }
+
+    }
+
 }

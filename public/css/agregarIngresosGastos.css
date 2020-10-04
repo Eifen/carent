@@ -180,7 +180,7 @@ html {
   padding-top: 100px;
 }
 .modal .modal-dialog .modal-header {
-  padding: 0.75rem;
+  padding: 0.5rem;
 }
 .modal .modal-dialog .modal-body form {
   padding: 15px;
@@ -212,6 +212,9 @@ html {
 .modal .modal-dialog .modal-body form > div.form-group .btn.btn-outline-success {
   border: 2px solid;
   font-weight: 600;
+}
+.modal .modal-dialog .modal-body .alert {
+  margin-bottom: 0px;
 }
 .modal .modal-dialog footer {
   padding: 0.25rem !important;

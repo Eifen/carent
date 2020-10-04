@@ -309,4 +309,14 @@ class FacturacionModel extends Model
 
     }
 
+    function eliminarFactura($id_factura, $parametros){
+
+      if(DB::table('tbl_factura_proyecto')->where("id", $id_factura)->update($parametros)){
+        return true;
+      }else{
+        return false;
+      }
+
+    }
+
 }

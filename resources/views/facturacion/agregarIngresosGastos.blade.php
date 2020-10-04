@@ -163,8 +163,18 @@
                 <b-badge :variant="data.item.varianteMovimiento" class="text-capitalize">@{{ data.item.movimiento }}</b-badge>
               </template>
               <template v-slot:cell(opciones)="data">
-                <b-icon-search v-b-modal="'concepto-'+data.item.id" class="icono"></b-icon-search>
-                <b-modal :id="'concepto-'+data.item.id" size="lg" centered>
+                <b-icon-search :id="'info-'+data.item.id" v-b-modal="'modal-info-'+data.item.id" class="icono"></b-icon-search>
+                <b-tooltip :target="'info-'+data.item.id" triggers="hover">
+                  Ver más info
+                </b-tooltip>
+                <b-modal
+                  :id="'modal-info-'+data.item.id"
+                  :ok-only="true"
+                  button-size="sm"
+                  centered
+                  ok-title="Cerrar"
+                  ok-variant="primary"
+                  size="lg">
                   <template v-slot:modal-title>
                     Más información @{{ data.item.numero_factura }}
                   </template>
@@ -200,24 +210,47 @@
                       size="sm"
                       v-model="data.item.fecha_cobro_factura"></b-form-datepicker>
                   </b-form-group>
-                  <template v-slot:modal-footer="{ ok }">
-                    <b-button size="sm" variant="primary" @click="ok()">
-                      Cerrar
-                    </b-button>
-                  </template>
                 </b-modal>
-                <a :id="'editar-'+data.item.id" v-if="permisos.permiso_actualizar">
-                   <b-icon-pencil class="icono"></b-icon-pencil>
-                </a>
-                <a :id="'eliminar-'+data.item.id" v-if="permisos.permiso_actualizar" v-on:click="">
-                   <b-icon-trash class="icono"></b-icon-trash>
-                </a>
-                <b-tooltip :target="'editar-'+data.item.id" triggers="hover">
-                  Editar Factura
-                </b-tooltip>
+                <b-icon-trash
+                  :id="'eliminar-'+data.item.id"
+                  class="icono"
+                  v-b-modal="'modal-eliminar-'+data.item.id"
+                  v-if="permisos.permiso_eliminar"></b-icon-trash>
                 <b-tooltip :target="'eliminar-'+data.item.id" triggers="hover">
                   Anular Factura
                 </b-tooltip>
+                <b-modal
+                  :hide-header-close="true"
+                  :id="'modal-eliminar-'+data.item.id"
+                  :no-close-on-backdrop="true"
+                  :ref="'modal-eliminar-factura-'data.item.id"
+                  body-bg-variant="warning"
+                  centered>
+                  <div class="text-center"><b>¿Estas seguro de eliminar esta Factura / Gasto?</b></div>
+                  <template v-slot:modal-footer="{ ok, cancel }">
+                    <alert :contador="modalEliminar.alert.contador"
+                           :icono-cerrar="modalEliminar.alert.iconCerrar"
+                           :mensaje="modalEliminar.alert.mensaje"
+                           :mostrar="modalEliminar.alert.mostrar"
+                           :ocultar-seg="modalEliminar.alert.ocultarSeg"
+                           :variante="modalEliminar.alert.variante">
+                    </alert>
+                    <b-button
+                      @click="cancel()"
+                      :disabled="modalEliminar.botones.cancelar.disabled"
+                      size="sm"
+                      v-html="modalEliminar.botones.cancelar.html"
+                      variant="danger">
+                    </b-button>
+                    <b-button
+                      @click="eliminar_factura(data.item.id)"
+                      :disabled="modalEliminar.botones.submit.disabled"
+                      size="sm"
+                      v-html="modalEliminar.botones.submit.html"
+                      variant="success">
+                    </b-button>
+                  </template>
+                </b-modal>
               </template>
               <template v-slot:custom-foot v-if="tabla.registros.length > 0">
                 <b-tr>

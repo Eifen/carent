@@ -123,3 +123,4 @@ Route::get('/buscarFacturaProyectoNotaCredito', 'FacturacionController@buscarFac
 Route::get('/buscarProyectoFacturacion', 'FacturacionController@buscarProyectoFacturacion');
 
 Route::post('/registrarFactura', 'FacturacionController@registrarFactura');
+Route::post('/eliminarFactura', 'FacturacionController@eliminarFactura');

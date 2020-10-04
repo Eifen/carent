@@ -158,6 +158,30 @@ new Vue({
       mostrar: false
     },
     loading: true,
+    modalEliminar: {
+      alert: {
+        contador: false,
+        iconCerrar: false,
+        mensaje: "",
+        mostrar: false,
+        ocultarSeg: 0,
+        variante: ""
+      },
+      botones: {
+        cancelar: {
+          disabled: false,
+          html: "No",
+          show: false
+        },
+        submit:{
+          disabled: false,
+          html: "",
+          htmlInit: "Si, estoy seguro de realizar esta acción",
+          htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
+          show: false
+        }
+      }
+    },
     paginador: {
       max: 0,
       numPaginas: 0,
@@ -263,27 +287,17 @@ new Vue({
         self.form.botones.submit.html = self.form.botones.submit.htmlInit;
         self.form.botones.submit.disabled = false;
 
-        if(response.data.permisos.permiso_actualizar){
-          self.tabla.encabezado = [
-            { key: 'numero', label: '#' },
-            { key: 'numero_factura', label: 'Nº Factura' },
-            { key: 'tipo_concepto', label: 'Tipo Concepto' },
-            { key: 'movimiento', label: 'Movimiento' },
-            { key: 'monto_factura', label: 'Monto' },
-            { key: 'fecha_factura', label: 'Fecha Fact.' },
-            { key: 'opciones', label: ' ' }
-          ];
-        }else{
-          self.tabla.encabezado = [
-            { key: 'numero', label: '#' },
-            { key: 'numero_factura', label: 'Nº Factura' },
-            { key: 'tipo_concepto', label: 'Tipo Concepto' },
-            { key: 'movimiento', label: 'Movimiento' },
-            { key: 'monto_factura', label: 'Monto' },
-            { key: 'fecha_factura', label: 'Fecha Fact.' },
-            { key: 'opciones', label: '' }
-          ];
-        }
+        self.modalEliminar.botones.submit.html = self.modalEliminar.botones.submit.htmlInit;
+
+        self.tabla.encabezado = [
+          { key: 'numero', label: '#' },
+          { key: 'numero_factura', label: 'Nº Factura' },
+          { key: 'tipo_concepto', label: 'Tipo Concepto' },
+          { key: 'movimiento', label: 'Movimiento' },
+          { key: 'monto_factura', label: 'Monto' },
+          { key: 'fecha_factura', label: 'Fecha Fact.' },
+          { key: 'opciones', label: ' ' }
+        ];
 
         if(response.data.facturas_cargadas.length === 0){
 
@@ -385,13 +399,18 @@ new Vue({
           self.form.camposAtributos.numeroFactura.valorBlur = null;
 
         });
+console.log("Se jerro r");
+        /*self.$refs["modal-eliminar-factura"].$on('hidden', () => {
+
+          console.log("Se jerro");
+
+        });*/
 
       }
 
     }, 1000);
 
   },
-  updated: function () {},
   methods:{
     mostrarAlert: function(alert, mostrar = false, variante = "", mensaje = "", iconCerrar = false, contador = false, ocultarSeg = 0){
 
@@ -852,6 +871,69 @@ new Vue({
       self.form.camposAtributos[indice].invalidFeedback = "Debe seleccionar una opción válida";
 
     },
+    eliminar_factura: function(id_factura){
+
+      self.modalEliminar.botones.cancelar.disabled = true;
+      self.modalEliminar.botones.cancelar.show = false;
+      self.modalEliminar.botones.submit.disabled = true;
+      self.modalEliminar.botones.submit.html = self.modalEliminar.botones.submit.htmlLoading;
+
+      let parametros = {
+        id_factura: id_factura,
+        id_proyecto: proyecto_id
+      }
+
+      axios.post('/eliminarFactura', parametros)
+      .then(function (response) {
+
+        if(response.status === 200 && response.data.response === true){
+
+          self.tabla.registros = [];
+          self.tabla.registros = self.registroTabla(response.data.facturas_cargadas);
+
+          self.form.info.monto_facturado = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_facturado;
+          self.form.info.monto_gastos = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_gasto;
+          self.form.info.monto_notas_credito = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_notas_credito;
+          self.form.info.monto_otros_gastos = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_otros_gastos;
+
+          self.modalEliminar.botones.cancelar.show = true;
+          self.modalEliminar.botones.submit.html = self.form.botones.submit.htmlInit;
+
+          self.mostrarAlert(self.modalEliminar.alert, true, "success", response.data.message, false, true, 10);
+
+          self.$refs["modal-eliminar-factura"+id_factura]
+
+        }else{
+
+          throw response.data;
+
+        }
+
+      })
+      .catch(error => {
+
+        self.modalEliminar.botones.submit.disabled = false;
+        self.modalEliminar.botones.submit.html = self.form.botones.submit.htmlInit;
+        self.modalEliminar.botones.cancelar.disabled = false;
+        self.modalEliminar.botones.cancelar.show = true;
+
+        if(error.message){
+
+          var mensaje = error.message;
+          var variante = "warning";
+
+        }else{
+
+          var mensaje = "Existe un error!, consulte con el administrador del sistema.";
+          var variante = "danger";
+
+        }
+
+        self.mostrarAlert(self.modalEliminar.alert, true, variante, mensaje, true, true, 10);
+
+      });
+
+    }
   }
 
 });
