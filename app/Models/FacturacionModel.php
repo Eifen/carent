@@ -31,7 +31,14 @@ class FacturacionModel extends Model
                                 AND id_menu = '.$id_menu.'
                                 AND u = 1
                                 LIMIT 1
-                               ) AS permiso_actualizar');
+                              ) AS permiso_actualizar,
+                              (SELECT COUNT(1)
+                               FROM tbl_menu_usuario
+                               WHERE id_usuario = '.$id_usuario.'
+                               AND id_menu = '.$id_menu.'
+                               AND d = 1
+                               LIMIT 1
+                             ) AS permiso_eliminar');
 
       return $permisos[0];
 
@@ -182,6 +189,10 @@ class FacturacionModel extends Model
                                   WHERE fp.id_concepto_factura = cf.id
                                   AND fp.id_proyecto = '.$id_proyecto.'
                                   AND cf.id_tipo_concepto_factura = 1
+                                  AND fp.id NOT IN(
+                                    SELECT id_factura_anular FROM tbl_factura_proyecto WHERE id_estatus = 1 AND id_factura_anular IS NOT NULL
+                                  )
+                                  AND fp.id_estatus = 1
                                ) AS monto_facturado,
                                (
                                   SELECT IF(
@@ -194,6 +205,7 @@ class FacturacionModel extends Model
                                   WHERE fp.id_concepto_factura = cf.id
                                   AND fp.id_proyecto = '.$id_proyecto.'
                                   AND cf.id_tipo_concepto_factura = 3
+                                  AND fp.id_estatus = 1
                                ) AS monto_notas_credito,
                                (
                                  SELECT IF(
@@ -206,6 +218,8 @@ class FacturacionModel extends Model
                                  WHERE fp.id_concepto_factura = cf.id
                                  AND fp.id_proyecto = '.$id_proyecto.'
                                  AND cf.id_tipo_concepto_factura = 2
+                                 AND cf.id <> 5
+                                 AND fp.id_estatus = 1
                               ) AS monto_gasto,
                               (
                                 SELECT IF(
@@ -218,6 +232,8 @@ class FacturacionModel extends Model
                                 WHERE fp.id_concepto_factura = cf.id
                                 AND fp.id_proyecto = '.$id_proyecto.'
                                 AND cf.id_tipo_concepto_factura = 2
+                                AND cf.id = 5
+                                AND fp.id_estatus = 1
                              ) AS monto_otros_gastos');
 
       return $sql[0];
@@ -241,7 +257,9 @@ class FacturacionModel extends Model
 
       if($numero_factura != null){
 
-        $condicion = " AND UPPER(fp.numero_factura) LIKE UPPER('".$numero_factura."%') AND fp.id_concepto_factura = ".$tipo_factura;
+        $condicion = " AND UPPER(fp.numero_factura) LIKE UPPER('".$numero_factura."%')
+                      AND fp.id_concepto_factura = ".$tipo_factura."
+                      AND fp.id NOT IN( SELECT id_factura_anular FROM tbl_factura_proyecto WHERE id_estatus = 1 AND id_factura_anular IS NOT NULL )";
         $limit = " LIMIT ".$limit;
 
       }else{

@@ -74,7 +74,7 @@ class FacturacionController extends Controller
 
       $conceptosFactura = $modelo->conceptosFactura();
       $facturasCargadas = $modelo->proyectoFacturasCargadas($id_proyecto);
-      $permisos = $modelo->permisosMenu($id_proyecto, 16);
+      $permisos = $modelo->permisosMenu(session("usuario_id"), 16);
       $proyecto = $modelo->proyecto($id_proyecto);
       $facturadoProyecto = $modelo->facturadoProyecto($id_proyecto);
 
@@ -109,7 +109,8 @@ class FacturacionController extends Controller
           "fecha_cobro_factura" => $request["fecha_cobro_factura"],
           "fecha_registro" => date("Y-m-d"),
           "id_facturador" => session("usuario_id"),
-          "id_estatus" => 1
+          "id_estatus" => 1,
+          "id_factura_anular" => $request["id_factura_anular"]
         ];
 
         $conceptosFactura = $modelo->registrarFactura($parametros);
@@ -122,14 +123,14 @@ class FacturacionController extends Controller
           return [
             "facturas_cargadas" => $facturasCargadas,
             "facturado_proyecto" => $facturadoProyecto,
-            "message" => "Factura registrada con éxito",
+            "message" => "Factura/Gasto registrado con éxito",
             "response" => true
           ];
 
         }else{
 
           return [
-            "message" => "Error al tratar de registrar la factura!",
+            "message" => "Error al tratar de registrar esta Factura/Gasto!",
             "response" => false
           ];
 
