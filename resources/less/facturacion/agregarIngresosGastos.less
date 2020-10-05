@@ -265,6 +265,20 @@ html{
 
 .modal{
 
+  &[id^="modal-eliminar-"]{
+
+    .modal-dialog{
+
+      .modal-body{
+        border-top-right-radius: calc(0.3rem - 1px);
+        border-top-left-radius: calc(0.3rem - 1px);
+        padding: 0px;
+      }
+
+    }
+
+  }
+
   .modal-dialog{
 
     .modal-header{

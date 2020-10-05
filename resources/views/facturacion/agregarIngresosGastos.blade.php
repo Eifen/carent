@@ -221,13 +221,16 @@
                 </b-tooltip>
                 <b-modal
                   :hide-header-close="true"
+                  :hide-header="true"
                   :id="'modal-eliminar-'+data.item.id"
                   :no-close-on-backdrop="true"
-                  :ref="'modal-eliminar-factura-'data.item.id"
-                  body-bg-variant="warning"
+                  :ref="'modal-eliminar-factura-'+data.item.id"
                   centered>
-                  <div class="text-center"><b>¿Estas seguro de eliminar esta Factura / Gasto?</b></div>
-                  <template v-slot:modal-footer="{ ok, cancel, hide  }">
+                  <b-alert
+                    :show="modalEliminar.botones.submit.show"
+                    class="text-center"
+                    variant="warning"><b>¿Estas seguro de eliminar esta Factura / Gasto?</b></b-alert>
+                  <template v-slot:modal-footer="{ ok, cancel, hide }">
                     <alert :contador="modalEliminar.alert.contador"
                            :icono-cerrar="modalEliminar.alert.iconCerrar"
                            :mensaje="modalEliminar.alert.mensaje"

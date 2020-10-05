@@ -179,6 +179,11 @@ html {
   padding-bottom: 50px;
   padding-top: 100px;
 }
+.modal[id^="modal-eliminar-"] .modal-dialog .modal-body {
+  border-top-right-radius: calc(0.3rem - 1px);
+  border-top-left-radius: calc(0.3rem - 1px);
+  padding: 0px;
+}
 .modal .modal-dialog .modal-header {
   padding: 0.5rem;
 }

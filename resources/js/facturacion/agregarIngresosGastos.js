@@ -402,12 +402,6 @@ new Vue({
           self.form.camposAtributos.numeroFactura.valorBlur = null;
 
         });
-console.log("Se jerro r");
-        /*self.$refs["modal-eliminar-factura"].$on('hidden', () => {
-
-          console.log("Se jerro");
-
-        });*/
 
       }
 
@@ -876,6 +870,21 @@ console.log("Se jerro r");
     },
     eliminar_factura: function(id_factura){
 
+      self.$refs["modal-eliminar-factura-"+id_factura].$on('hidden', () => {
+
+        self.modalEliminar.botones.cancelar.show = true;
+        self.modalEliminar.botones.submit.show = true;
+        self.modalEliminar.botones.hide.show = false;
+
+        self.modalEliminar.botones.cancelar.disabled = false;
+        self.modalEliminar.botones.submit.disabled = false;
+
+        self.modalEliminar.botones.submit.html = self.modalEliminar.botones.submit.htmlInit;
+
+        self.mostrarAlert(self.modalEliminar.alert);
+
+      });
+
       self.modalEliminar.botones.cancelar.disabled = true;
       self.modalEliminar.botones.cancelar.show = false;
       self.modalEliminar.botones.submit.disabled = true;
@@ -901,11 +910,14 @@ console.log("Se jerro r");
 
           self.modalEliminar.botones.submit.show = false;
           self.modalEliminar.botones.hide.show = true;
-          //self.modalEliminar.botones.submit.html = self.form.botones.submit.htmlInit;
 
-          self.mostrarAlert(self.modalEliminar.alert, true, "success", response.data.message, false, true, 10);
+          self.mostrarAlert(self.modalEliminar.alert, true, "success", response.data.message, false, true, 3);
 
-          self.$refs["modal-eliminar-factura"+id_factura]
+          setTimeout(function(){
+
+            self.$refs["modal-eliminar-factura-"+id_factura].hide();
+
+          }, 3000);
 
         }else{
 
