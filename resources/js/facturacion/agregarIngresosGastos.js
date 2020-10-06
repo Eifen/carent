@@ -469,14 +469,39 @@ new Vue({
     },
     paginaAnterior: function(){
       self.paginador.pagina = ((self.paginador.pagina - 1) === 0) ? 1 : (self.paginador.pagina - 1);
-      self.buscar();
+      self.buscarFacturasCargadas();
     },
     paginaSiguiente: function(){
       self.paginador.pagina = ((self.paginador.pagina + 1) > self.paginador.max) ? self.paginador.pagina : (self.paginador.pagina + 1);
-      self.buscar();
+      self.buscarFacturasCargadas();
     },
     numeroPagina: function(e){
-      self.buscar();
+      self.buscarFacturasCargadas();
+    },
+    buscarFacturasCargadas: function(){
+
+      //Obtenemos los valores
+      let desde = (self.paginador.pagina - 1) * self.paginador.paginar;
+      let parametros = {
+        desde: desde,
+        id_proyecto: proyecto_id,
+        paginar: self.paginador.paginar
+      };
+
+      axios.get('/buscarFacturasCargadas', {params: parametros})
+      .then(function (response) {
+
+        // Se le asigna los valores a las variables
+        self.paginador.numPaginas = response.data.paginas;
+        self.paginador.max = parseInt(response.data.paginas);
+
+        self.tabla.registros = self.registroTabla(response.data.facturas_cargadas);
+
+      }).catch(error => {
+
+
+      });
+
     },
     tipoConcepto: function(valor){
 
@@ -627,7 +652,8 @@ new Vue({
         numero_control: self.form.campos.numeroControl,
         observaciones: self.form.camposAtributos.observaciones.value,
         id_proyecto: proyecto_id,
-        id_factura_anular: self.form.camposAtributos.numeroFactura.idFacturaAnular
+        id_factura_anular: self.form.camposAtributos.numeroFactura.idFacturaAnular,
+        paginar: self.paginador.paginar
       }
 
       self.form.botones.cancelar.disabled = true;
@@ -892,7 +918,8 @@ new Vue({
 
       let parametros = {
         id_factura: id_factura,
-        id_proyecto: proyecto_id
+        id_proyecto: proyecto_id,
+        paginar: self.paginador.paginar
       }
 
       axios.post('/eliminarFactura', parametros)

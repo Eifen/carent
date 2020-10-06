@@ -72,19 +72,39 @@ class FacturacionController extends Controller
 
       $id_proyecto = $request["id_proyecto"];
 
+      $paginar = 20;
       $conceptosFactura = $modelo->conceptosFactura();
-      $facturasCargadas = $modelo->proyectoFacturasCargadas($id_proyecto);
+      $facturasCargadas = $modelo->proyectoFacturasCargadas($id_proyecto, null, 0, $paginar);
       $permisos = $modelo->permisosMenu(session("usuario_id"), 16);
       $proyecto = $modelo->proyecto($id_proyecto);
       $facturadoProyecto = $modelo->facturadoProyecto($id_proyecto);
+      $cantidadPaginas = $modelo->cantidadPaginasFacturasCargadas($paginar, $id_proyecto);
 
       return [
+        "numero_paginas" => $cantidadPaginas,
         "conceptos_factura" => $conceptosFactura,
         "facturas_cargadas" => $facturasCargadas,
         "facturado_proyecto" => $facturadoProyecto,
+        "paginar" => $paginar,
         "permisos" => $permisos,
         "proyecto" => $proyecto,
         "response" => true
+      ];
+
+    }
+
+    function buscarFacturasCargadas(Request $request){
+
+      $modelo = new FacturacionModel();
+
+      $paginar = $request->input("paginar");
+      $desde = $request->input("desde");
+      $id_proyecto = $request->input("id_proyecto");
+      $facturasCargadas = $modelo->proyectoFacturasCargadas($id_proyecto, null, $desde, $paginar);
+      $cantidadPaginas = $modelo->cantidadPaginasFacturasCargadas($paginar, $id_proyecto);
+
+      return[
+        "facturas_cargadas" => $facturasCargadas
       ];
 
     }
@@ -113,11 +133,13 @@ class FacturacionController extends Controller
           "id_factura_anular" => $request["id_factura_anular"]
         ];
 
+        $paginar = $request["paginar"];
+
         $conceptosFactura = $modelo->registrarFactura($parametros);
 
         if($conceptosFactura){
 
-          $facturasCargadas = $modelo->proyectoFacturasCargadas($request["id_proyecto"]);
+          $facturasCargadas = $modelo->proyectoFacturasCargadas($request["id_proyecto"], null, 0, $paginar);
           $facturadoProyecto = $modelo->facturadoProyecto($request["id_proyecto"]);
 
           return [
@@ -153,7 +175,7 @@ class FacturacionController extends Controller
       $numero_factura = $request["numero_factura"];
       $id_proyecto = $request["id_proyecto"];
 
-      $facturas = $modelo->proyectoFacturasCargadas($id_proyecto, $numero_factura, 5, 1);
+      $facturas = $modelo->proyectoFacturasCargadas($id_proyecto, $numero_factura, 0, 5, 1);
 
       return [
         "response" => true,
@@ -178,7 +200,9 @@ class FacturacionController extends Controller
 
         if($eliminarFactura){
 
-          $facturasCargadas = $modelo->proyectoFacturasCargadas($request["id_proyecto"]);
+          $paginar = $request["paginar"];
+
+          $facturasCargadas = $modelo->proyectoFacturasCargadas($request["id_proyecto"], null, 0, $paginar);
           $facturadoProyecto = $modelo->facturadoProyecto($request["id_proyecto"]);
 
           return [

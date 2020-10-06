@@ -253,19 +253,20 @@ class FacturacionModel extends Model
 
     }
 
-    function proyectoFacturasCargadas($id_proyecto, $numero_factura = null, $limit = 0, $tipo_factura = 0){
+    function proyectoFacturasCargadas($id_proyecto, $numero_factura, $desde, $hasta, $tipo_factura = 0){
 
       if($numero_factura != null){
 
         $condicion = " AND UPPER(fp.numero_factura) LIKE UPPER('".$numero_factura."%')
                       AND fp.id_concepto_factura = ".$tipo_factura."
                       AND fp.id NOT IN( SELECT id_factura_anular FROM tbl_factura_proyecto WHERE id_estatus = 1 AND id_factura_anular IS NOT NULL )";
-        $limit = " LIMIT ".$limit;
+
+        $limit = " LIMIT ".$hasta;
 
       }else{
 
         $condicion = "";
-        $limit = "";
+        $limit = " LIMIT ".$desde.",".$hasta;
 
       }
 
@@ -296,6 +297,22 @@ class FacturacionModel extends Model
                          '.$limit, [$id_proyecto]);
 
       return $sql;
+
+    }
+
+    function cantidadPaginasFacturasCargadas($paginar, $id_proyecto){
+
+      $numFacturas = DB::select('SELECT CEILING( COUNT(1) / '.$paginar.') paginas
+                                  FROM tbl_factura_proyecto fp,
+                                       tbl_concepto_factura cf,
+                                       tbl_usuario fu
+                                  WHERE fp.id_concepto_factura = cf.id
+                                  AND fp.id_facturador = fu.id
+                                  AND fp.id_proyecto = ?
+                                  AND fp.id_estatus = 1
+                                  ORDER BY fp.id DESC', [$id_proyecto]);
+
+      return $numFacturas[0]->paginas;
 
     }
 
