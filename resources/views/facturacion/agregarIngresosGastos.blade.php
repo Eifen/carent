@@ -70,7 +70,7 @@
         </b-row>
 
         <b-row v-cloak v-if="form.mostrar">
-          <b-col cols="12" md="6" lg="3">
+          <b-col cols="12" md="6" lg="4">
             <b-card class="text-left card-monto-contratado">
               <b-card-text>
                 <span class="titulo">MONTO CONTRATADO</span>
@@ -78,19 +78,19 @@
               <b-card-text>
                 <span class="monto">@{{ form.info.monto_contratado }}</span>
               </b-card-text>
-            </b-card-text>
+            </b-card>
           </b-col>
-          <b-col cols="12" md="6" lg="3">
+          <b-col cols="12" md="6" lg="4">
             <b-card class="text-left card-monto-facturado">
               <b-card-text>
-                <span class="titulo">MONTO NOTAS DE CRÉDITO</span>
+                <span class="titulo">MONTO FACTURADO</span>
               </b-card-text>
               <b-card-text>
                 <span class="monto">@{{ form.info.monto_facturado }}</span>
               </b-card-text>
-            </b-card-text>
+            </b-card>
           </b-col>
-          <b-col cols="12" md="6" lg="3">
+          <b-col cols="12" md="6" lg="4">
             <b-card class="text-left card-monto-notas-credito">
               <b-card-text>
                 <span class="titulo">MONTO NOTAS DE CRÉDITO</span>
@@ -98,9 +98,9 @@
               <b-card-text>
                 <span class="monto">@{{ form.info.monto_notas_credito }}</span>
               </b-card-text>
-            </b-card-text>
+            </b-card>
           </b-col>
-          <b-col cols="12" md="6" lg="3">
+          <b-col cols="12" md="6" lg="4">
             <b-card class="text-left card-monto-gasto">
               <b-card-text>
                 <span class="titulo">MONTO GASTOS NO FACTURABLES</span>
@@ -108,12 +108,19 @@
               <b-card-text>
                 <span class="monto">@{{ form.info.monto_gastos }}</span>
               </b-card-text>
-            </b-card-text>
+            </b-card>
           </b-col>
-        </b-row>
-
-        <b-row v-cloak class="wrapper-btn-agregar-factura" align-h="center">
-          <b-col cols="12" lg="3" v-if="form.mostrar">
+          <b-col cols="12" md="6" lg="4">
+            <b-card class="text-left card-monto-otros-gastos">
+              <b-card-text>
+                <span class="titulo">OTROS GASTOS (COMISIONES)</span>
+              </b-card-text>
+              <b-card-text>
+                <span class="monto">@{{ form.info.monto_otros_gastos }}</span>
+              </b-card-text>
+            </b-card>
+          </b-col>
+          <b-col cols="12" md="6" lg="4" class="wrapper-btn-agregar-factura">
             <b-button
               :disabled="botones.agregarFactura.disabled"
               block
@@ -152,35 +159,110 @@
               <template v-slot:cell(numero)="data">
                 <b>@{{ data.item.numero }}</b>
               </template>
-
-              <template v-slot:cell(concepto)="data">
-                <b-icon-search v-b-modal="'concepto-'+data.item.id" class="icono"></b-icon-search>
-                <b-modal :id="'concepto-'+data.item.id" :hide-header="true" size="lg" centered>
-                  @{{ data.item.concepto }}
-                  <template v-slot:modal-footer="{ ok }">
-                    <b-button size="sm" variant="primary" @click="ok()">
-                      Cerrar
-                    </b-button>
-                  </template>
-                </b-modal>
-              </template>
-
               <template v-slot:cell(movimiento)="data">
                 <b-badge :variant="data.item.varianteMovimiento" class="text-capitalize">@{{ data.item.movimiento }}</b-badge>
               </template>
               <template v-slot:cell(opciones)="data">
-                <a :id="'editar-'+data.item.id" v-if="permisos.permiso_actualizar">
-                   <b-icon-pencil class="icono"></b-icon-pencil>
-                </a>
-                <a :id="'eliminar-'+data.item.id" v-if="permisos.permiso_actualizar" v-on:click="">
-                   <b-icon-trash class="icono"></b-icon-trash>
-                </a>
-                <b-tooltip :target="'editar-'+data.item.id" triggers="hover">
-                  Editar Factura
+                <b-icon-search :id="'info-'+data.item.id" v-b-modal="'modal-info-'+data.item.id" class="icono"></b-icon-search>
+                <b-tooltip :target="'info-'+data.item.id" triggers="hover">
+                  Ver más info
                 </b-tooltip>
+                <b-modal
+                  :id="'modal-info-'+data.item.id"
+                  :ok-only="true"
+                  button-size="sm"
+                  centered
+                  ok-title="Cerrar"
+                  ok-variant="primary"
+                  size="lg">
+                  <template v-slot:modal-title>
+                    Más información @{{ data.item.numero_factura }}
+                  </template>
+                  <b-form-group
+                    label="Concepto">
+                    <b-form-textarea
+                      readonly
+                      rows="3"
+                      size="sm"
+                      v-model="data.item.concepto"></b-form-textarea>
+                  </b-form-group>
+                  <b-form-group
+                    label="N° Control">
+                    <b-form-input
+                      :value="data.item.numero_control"
+                      readonly
+                      size="sm"></b-form-input>
+                  </b-form-group>
+                  <b-form-group
+                    label="Observaciones">
+                    <b-form-textarea
+                      readonly
+                      rows="3"
+                      size="sm"
+                      v-model="data.item.observaciones"></b-form-textarea>
+                  </b-form-group>
+                  <b-form-group
+                    label="Fecha de Cobro">
+                    <b-form-datepicker
+                      :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+                      locale="es-ES"
+                      readonly
+                      size="sm"
+                      v-model="data.item.fecha_cobro_factura"></b-form-datepicker>
+                  </b-form-group>
+                </b-modal>
+                <b-icon-trash
+                  :id="'eliminar-'+data.item.id"
+                  class="icono"
+                  v-b-modal="'modal-eliminar-'+data.item.id"
+                  v-if="permisos.permiso_eliminar"></b-icon-trash>
                 <b-tooltip :target="'eliminar-'+data.item.id" triggers="hover">
                   Anular Factura
                 </b-tooltip>
+                <b-modal
+                  :hide-header-close="true"
+                  :hide-header="true"
+                  :id="'modal-eliminar-'+data.item.id"
+                  :no-close-on-backdrop="true"
+                  :ref="'modal-eliminar-factura-'+data.item.id"
+                  centered>
+                  <b-alert
+                    :show="modalEliminar.botones.submit.show"
+                    class="text-center"
+                    variant="warning"><b>¿Estas seguro de eliminar esta Factura / Gasto?</b></b-alert>
+                  <template v-slot:modal-footer="{ ok, cancel, hide }">
+                    <alert :contador="modalEliminar.alert.contador"
+                           :icono-cerrar="modalEliminar.alert.iconCerrar"
+                           :mensaje="modalEliminar.alert.mensaje"
+                           :mostrar="modalEliminar.alert.mostrar"
+                           :ocultar-seg="modalEliminar.alert.ocultarSeg"
+                           :variante="modalEliminar.alert.variante">
+                    </alert>
+                    <b-button
+                      @click="cancel()"
+                      :disabled="modalEliminar.botones.cancelar.disabled"
+                      size="sm"
+                      v-html="modalEliminar.botones.cancelar.html"
+                      v-if="modalEliminar.botones.cancelar.show"
+                      variant="danger">
+                    </b-button>
+                    <b-button
+                      @click="eliminar_factura(data.item.id)"
+                      :disabled="modalEliminar.botones.submit.disabled"
+                      size="sm"
+                      v-html="modalEliminar.botones.submit.html"
+                      v-if="modalEliminar.botones.submit.show"
+                      variant="success">
+                    </b-button>
+                    <b-button
+                      @click="hide()"
+                      size="sm"
+                      v-if="modalEliminar.botones.hide.show"
+                      variant="primary">
+                      Cerrar
+                    </b-button>
+                  </template>
+                </b-modal>
               </template>
               <template v-slot:custom-foot v-if="tabla.registros.length > 0">
                 <b-tr>
