@@ -113,7 +113,6 @@ new Vue({
           decString: ",",
           disabled: true,
           invalidFeedback: "",
-          simboloMoneda: "",
           state: null,
           thouSep: "."
         },
@@ -152,12 +151,102 @@ new Vue({
         monto_notas_credito: "",
         monto_otros_gastos: "",
         proyecto: "",
-        simbolo_moneda: "",
         socio: ""
       },
       mostrar: false
     },
     loading: true,
+    modalMasInfo: {
+      alert: {
+        contador: false,
+        iconCerrar: false,
+        mensaje: "",
+        mostrar: false,
+        ocultarSeg: 0,
+        variante: ""
+      },
+      botones: {
+        cancelar: {
+          disabled: false,
+          html: "No",
+          show: true
+        },
+        confirmar: {
+          html: "Modificar Factura/Gasto",
+          show: true
+        },
+        hide: {
+          show: false
+        },
+        submit:{
+          disabled: false,
+          html: "",
+          htmlInit: "Si, estoy seguro de realizar esta acción",
+          htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
+          show: true
+        }
+      },
+      form: {
+        campos: {
+          montoFactura: null,
+          fechaFactura: null,
+          concepto: null,
+          numeroControl: null
+        },
+        camposAtributos:{
+          montoFactura: {
+            autonumeric: null,
+            decPlace: 2,
+            decString: ",",
+            disabled: true,
+            invalidFeedback: "",
+            simboloMoneda: "",
+            state: null,
+            thouSep: "."
+          },
+          concepto: {
+            disabled: true,
+            invalidFeedback: "",
+            state: null
+          },
+          montoFactura: {
+            autonumeric: null,
+            decPlace: 2,
+            decString: ",",
+            disabled: true,
+            invalidFeedback: "",
+            state: null,
+            thouSep: "."
+          },
+          fechaFactura: {
+            disabled: true,
+            invalidFeedback: "",
+            max: null,
+            state: null
+          },
+          fechaCobroFactura: {
+            disabled: true,
+            invalidFeedback: "",
+            max: null,
+            state: null,
+            value: ""
+          },
+          numeroControl: {
+            disabled: true,
+            invalidFeedback: "",
+            state: null
+          },
+          observaciones: {
+            disabled: true,
+            invalidFeedback: "",
+            state: null,
+            value: ""
+          }
+        }
+      },
+      idFactura: null,
+      titulo: ""
+    },
     modalEliminar: {
       alert: {
         contador: false,
@@ -192,6 +281,7 @@ new Vue({
       paginar: 0
     },
     permisos: null,
+    simboloMoneda: null,
     tabla: {
       alert:{
         contador: false,
@@ -242,6 +332,32 @@ new Vue({
           maxLength: maxLength(20)
         }
       }
+    },
+    modalMasInfo: {
+      form:{
+        campos:{
+          montoFactura: {
+            required
+          },
+          fechaFactura: {
+            required: requiredIf(function() {
+              return (!this.form.camposAtributos.fechaFactura.disabled);
+            })
+          },
+          concepto: {
+            required: requiredIf(function() {
+              return (!this.form.camposAtributos.concepto.disabled);
+            }),
+            minLength: minLength(5)
+          },
+          numeroControl: {
+            required: requiredIf(function() {
+              return (!this.form.camposAtributos.numeroControl.disabled);
+            }),
+            maxLength: maxLength(20)
+          }
+        }
+      }
     }
   },
   beforeCreate: function(){
@@ -263,21 +379,22 @@ new Vue({
         self.form.camposAtributos.fechaFactura.max = hoy;
         self.form.camposAtributos.fechaCobroFactura.max = hoy;
 
+        self.simboloMoneda = response.data.proyecto.simbolo_moneda;
+
         self.form.info = {
           estatus: response.data.proyecto.estatus,
           fecha_contratacion: response.data.proyecto.fecha_contratacion,
           gerente: response.data.proyecto.gerente,
-          monto_contratado: response.data.proyecto.simbolo_moneda+response.data.proyecto.monto_contratado,
-          monto_facturado: response.data.proyecto.simbolo_moneda+response.data.facturado_proyecto.monto_facturado,
-          monto_gastos: response.data.proyecto.simbolo_moneda+response.data.facturado_proyecto.monto_gasto,
-          monto_notas_credito: response.data.proyecto.simbolo_moneda+response.data.facturado_proyecto.monto_notas_credito,
-          monto_otros_gastos: response.data.proyecto.simbolo_moneda+response.data.facturado_proyecto.monto_otros_gastos,
+          monto_contratado: self.simboloMoneda+response.data.proyecto.monto_contratado,
+          monto_facturado: self.simboloMoneda+response.data.facturado_proyecto.monto_facturado,
+          monto_gastos: self.simboloMoneda+response.data.facturado_proyecto.monto_gasto,
+          monto_notas_credito: self.simboloMoneda+response.data.facturado_proyecto.monto_notas_credito,
+          monto_otros_gastos: self.simboloMoneda+response.data.facturado_proyecto.monto_otros_gastos,
           proyecto: response.data.proyecto.proyecto,
-          simbolo_moneda: response.data.proyecto.simbolo_moneda,
+          simbolo_moneda: self.simboloMoneda,
           socio: response.data.proyecto.socio
         }
 
-        self.form.camposAtributos.montoFactura.simboloMoneda = response.data.proyecto.simbolo_moneda;
         self.form.camposAtributos.numeroFactura.help = self.form.camposAtributos.numeroFactura.helpInit;
 
         response.data.conceptos_factura.forEach((item, i) => {
@@ -297,8 +414,8 @@ new Vue({
           { key: 'numero_factura', label: 'Nº Factura' },
           { key: 'tipo_concepto', label: 'Tipo Concepto' },
           { key: 'movimiento', label: 'Movimiento' },
-          { key: 'monto_factura', label: 'Monto' },
-          { key: 'fecha_factura', label: 'Fecha Fact.' },
+          { key: 'monto_factura_formatted', label: 'Monto' },
+          { key: 'fecha_factura_formatted', label: 'Fecha Fact.' },
           { key: 'opciones', label: ' ' }
         ];
 
@@ -313,7 +430,7 @@ new Vue({
 
         self.permisos = response.data.permisos;
 
-        self.paginador.numPaginas = response.data.numero_paginas;
+        self.paginador.numPaginas = (parseInt(response.data.numero_paginas) === 0) ? 1 : response.data.numero_paginas;
         self.paginador.max = parseInt(response.data.numero_paginas);
         self.paginador.paginar = response.data.paginar;
 
@@ -403,6 +520,22 @@ new Vue({
 
         });
 
+        self.$refs["modal-mas-info"].$on('shown', () => {
+
+          let monto = self.$refs["montoFacturaMod"].$el
+
+          self.modalMasInfo.form.camposAtributos.montoFactura.autonumeric = new AutoNumeric(monto, {
+            decimalPlaces: 2,
+            decimalCharacter: ',',
+            digitGroupSeparator: '.',
+            emptyInputBehavior: 0,
+            maximumValue: '99999999999999999999.99',
+            minimumValue: 0,
+            modifyValueOnWheel: false
+          });
+
+        });
+
       }
 
     }, 1000);
@@ -450,14 +583,18 @@ new Vue({
           tipo_concepto: item.tipo_concepto,
           concepto: item.concepto,
           numero_factura: item.numero_factura,
-          monto_factura: item.monto_factura_formatted,
-          fecha_factura: item.fecha_factura_formatted,
+          monto_factura: item.monto_factura,
+          monto_factura_formatted: self.simboloMoneda+item.monto_factura_formatted,
+          fecha_factura: item.fecha_factura,
+          fecha_factura_formatted: item.fecha_factura_formatted,
           fecha_cobro_factura: item.fecha_cobro_factura,
+          fecha_cobro_factura_formatted: item.fecha_cobro_factura_formatted,
           numero_control: item.numero_control,
           movimiento: item.movimiento,
           varianteMovimiento: varianteMovimiento,
           id: item.id,
-          observaciones: item.observaciones
+          observaciones: item.observaciones,
+          id_concepto_factura: item.id_concepto_factura
         };
 
         registros.push(factura);
@@ -533,7 +670,6 @@ new Vue({
         if(type === 3){
 
           self.form.camposAtributos.numeroFactura.disabled = false;
-          self.form.camposAtributos.numeroControl.disabled = false;
           self.form.camposAtributos.observaciones.disabled = false;
           self.form.camposAtributos.numeroFactura.busqueda = true;
 
@@ -686,10 +822,10 @@ new Vue({
           self.form.campos.montoFactura = null;
           self.form.camposAtributos.montoFactura.autonumeric.set(0);
 
-          self.form.info.monto_facturado = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_facturado;
-          self.form.info.monto_gastos = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_gasto;
-          self.form.info.monto_notas_credito = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_notas_credito;
-          self.form.info.monto_otros_gastos = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_otros_gastos;
+          self.form.info.monto_facturado = self.simboloMoneda+response.data.facturado_proyecto.monto_facturado;
+          self.form.info.monto_gastos = self.simboloMoneda+response.data.facturado_proyecto.monto_gasto;
+          self.form.info.monto_notas_credito = self.simboloMoneda+response.data.facturado_proyecto.monto_notas_credito;
+          self.form.info.monto_otros_gastos = self.simboloMoneda+response.data.facturado_proyecto.monto_otros_gastos;
 
           Object.keys(self.form.camposAtributos).forEach((indice, i) => {
 
@@ -930,10 +1066,10 @@ new Vue({
           self.tabla.registros = [];
           self.tabla.registros = self.registroTabla(response.data.facturas_cargadas);
 
-          self.form.info.monto_facturado = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_facturado;
-          self.form.info.monto_gastos = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_gasto;
-          self.form.info.monto_notas_credito = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_notas_credito;
-          self.form.info.monto_otros_gastos = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_otros_gastos;
+          self.form.info.monto_facturado = self.simboloMoneda+response.data.facturado_proyecto.monto_facturado;
+          self.form.info.monto_gastos = self.simboloMoneda+response.data.facturado_proyecto.monto_gasto;
+          self.form.info.monto_notas_credito = self.simboloMoneda+response.data.facturado_proyecto.monto_notas_credito;
+          self.form.info.monto_otros_gastos = self.simboloMoneda+response.data.facturado_proyecto.monto_otros_gastos;
 
           self.modalEliminar.botones.submit.show = false;
           self.modalEliminar.botones.hide.show = true;
@@ -975,6 +1111,46 @@ new Vue({
         self.mostrarAlert(self.modalEliminar.alert, true, variante, mensaje, true, true, 10);
 
       });
+
+    },
+    verMasInfo: function(data){
+      console.log(data)
+
+      self.modalMasInfo.form.campos.montoFactura = data.monto_factura;
+      self.modalMasInfo.form.campos.fechaFactura = data.fecha_factura;
+      self.modalMasInfo.form.campos.concepto = data.concepto;
+      self.modalMasInfo.form.campos.numeroControl = data.numero_control;
+      self.modalMasInfo.form.camposAtributos.observaciones.value = data.observaciones;
+      self.modalMasInfo.form.camposAtributos.fechaCobroFactura.value = data.fecha_cobro_factura;
+
+      self.modalMasInfo.titulo = (data.numero_factura === null) ? "("+data.tipo_concepto+")" : data.numero_factura+" ("+data.tipo_concepto+")";
+
+console.log(data.id_concepto_factura)
+      var indicesDisabled = [];
+
+      if([1,2,3].includes(data.id_concepto_factura)){
+
+        indicesDisabled = ["montoFactura","concepto","montoFactura","fechaFactura","fechaCobroFactura","numeroControl","observaciones"];
+
+      }else if(data.id_concepto_factura === 4){
+
+        indicesDisabled = ["observaciones"];
+
+      }else if(data.id_concepto_factura === 5){
+
+        indicesDisabled = ["montoFactura","observaciones"];
+
+      }
+
+      indicesDisabled.forEach((indice) => {
+
+        if(self.modalMasInfo.form.camposAtributos[indice].hasOwnProperty("disabled")){
+          self.modalMasInfo.form.camposAtributos[indice].disabled = false;
+        }
+
+      });
+
+      self.$refs["modal-mas-info"].show();
 
     }
   }

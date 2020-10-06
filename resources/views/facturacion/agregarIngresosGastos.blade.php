@@ -163,54 +163,10 @@
                 <b-badge :variant="data.item.varianteMovimiento" class="text-capitalize">@{{ data.item.movimiento }}</b-badge>
               </template>
               <template v-slot:cell(opciones)="data">
-                <b-icon-search :id="'info-'+data.item.id" v-b-modal="'modal-info-'+data.item.id" class="icono"></b-icon-search>
+                <b-icon-search :id="'info-'+data.item.id" class="icono" v-on:click="verMasInfo(data.item)"></b-icon-search>
                 <b-tooltip :target="'info-'+data.item.id" triggers="hover">
                   Ver más info
                 </b-tooltip>
-                <b-modal
-                  :id="'modal-info-'+data.item.id"
-                  :ok-only="true"
-                  button-size="sm"
-                  centered
-                  ok-title="Cerrar"
-                  ok-variant="primary"
-                  size="lg">
-                  <template v-slot:modal-title>
-                    Más información @{{ data.item.numero_factura }}
-                  </template>
-                  <b-form-group
-                    label="Concepto">
-                    <b-form-textarea
-                      readonly
-                      rows="3"
-                      size="sm"
-                      v-model="data.item.concepto"></b-form-textarea>
-                  </b-form-group>
-                  <b-form-group
-                    label="N° Control">
-                    <b-form-input
-                      :value="data.item.numero_control"
-                      readonly
-                      size="sm"></b-form-input>
-                  </b-form-group>
-                  <b-form-group
-                    label="Observaciones">
-                    <b-form-textarea
-                      readonly
-                      rows="3"
-                      size="sm"
-                      v-model="data.item.observaciones"></b-form-textarea>
-                  </b-form-group>
-                  <b-form-group
-                    label="Fecha de Cobro">
-                    <b-form-datepicker
-                      :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
-                      locale="es-ES"
-                      readonly
-                      size="sm"
-                      v-model="data.item.fecha_cobro_factura"></b-form-datepicker>
-                  </b-form-group>
-                </b-modal>
                 <b-icon-trash
                   :id="'eliminar-'+data.item.id"
                   class="icono"
@@ -310,6 +266,117 @@
         </b-row>
 
         <b-modal
+          centered
+          ref="modal-mas-info"
+          size="lg">
+          <template v-slot:modal-title>
+            Más información @{{ modalMasInfo.titulo }}
+          </template>
+          <b-form-group
+            :invalid-feedback="modalMasInfo.form.camposAtributos.montoFactura.invalidFeedback"
+            label="Monto Factura"
+            label-for="montoFacturaMod">
+            <b-input-group :prepend="simboloMoneda" size="sm">
+              <b-form-input
+                @input="limpiarMensajeError('montoFactura')"
+                :disabled="modalMasInfo.form.camposAtributos.montoFactura.disabled"
+                :state="modalMasInfo.form.camposAtributos.montoFactura.state"
+                autocomplete="off"
+                id="montoFacturaMod"
+                ref="montoFacturaMod"
+                type="text"
+                v-model.trim="$v.modalMasInfo.form.campos.montoFactura.$model"></b-form-input>
+            </b-input-group>
+          </b-form-group>
+          <b-form-group
+            :invalid-feedback="modalMasInfo.form.camposAtributos.fechaFactura.invalidFeedback"
+            description="Fecha en que se emite la factura"
+            label="Fecha de Emisión:"
+            label-for="fechaFacturaMod">
+            <b-form-datepicker
+              @input="limpiarMensajeError('fechaFactura')"
+              :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+              :disabled="modalMasInfo.form.camposAtributos.fechaFactura.disabled"
+              :max="modalMasInfo.form.camposAtributos.fechaFactura.max"
+              :state="modalMasInfo.form.camposAtributos.fechaFactura.state"
+              id="fechaFacturaMod"
+              label-help="Use las teclas del cursor para navegar por las fechas del calendario"
+              label-no-date-selected="Ninguna fecha seleccionada"
+              locale="es-ES"
+              placeholder="Seleccione una fecha"
+              ref="fechaFactura"
+              size="sm"
+              v-model="$v.modalMasInfo.form.campos.fechaFactura.$model"></b-form-datepicker>
+          </b-form-group>
+          <b-form-group
+            label="Concepto">
+            <b-form-textarea
+              :disabled="modalMasInfo.form.camposAtributos.concepto.disabled"
+              rows="3"
+              size="sm"
+              v-model="modalMasInfo.form.campos.concepto"></b-form-textarea>
+          </b-form-group>
+          <b-form-group
+            label="N° Control">
+            <b-form-input
+              :disabled="modalMasInfo.form.camposAtributos.numeroControl.disabled"
+              size="sm"
+              v-model="modalMasInfo.form.campos.numeroControl"></b-form-input>
+          </b-form-group>
+          <b-form-group
+            label="Observaciones">
+            <b-form-textarea
+              :disabled="modalMasInfo.form.camposAtributos.observaciones.disabled"
+              rows="3"
+              size="sm"
+              v-model="modalMasInfo.form.camposAtributos.observaciones.value"></b-form-textarea>
+          </b-form-group>
+          <b-form-group
+            label="Fecha de Cobro">
+            <b-form-datepicker
+              :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+              :disabled="modalMasInfo.form.camposAtributos.fechaCobroFactura.disabled"
+              locale="es-ES"
+              size="sm"
+              v-model="modalMasInfo.form.camposAtributos.fechaCobroFactura.value"></b-form-datepicker>
+          </b-form-group>
+          <template v-slot:modal-footer>
+            <alert :contador="form.alert.contador"
+                   :icono-cerrar="form.alert.iconCerrar"
+                   :mensaje="form.alert.mensaje"
+                   :mostrar="form.alert.mostrar"
+                   :ocultar-seg="form.alert.ocultarSeg"
+                   :variante="form.alert.variante">
+            </alert>
+            <b-button
+              @click="confirmaRegistrarFactura"
+              block
+              size="sm"
+              v-html="modalMasInfo.botones.confirmar.html"
+              v-if="modalMasInfo.botones.confirmar.show"
+              variant="warning"></b-button>
+            <b-button
+              @click="cancelarRegistrarFactura"
+              :disabled="form.botones.cancelar.disabled"
+              block
+              size="sm"
+              v-html="form.botones.cancelar.html"
+              v-if="form.botones.cancelar.show"
+              variant="danger"></b-button>
+            <b-button
+              @click="registrar"
+              :disabled="form.botones.submit.disabled"
+              block
+              class="btn"
+              id="registrar"
+              size="sm"
+              v-html="form.botones.submit.html"
+              v-if="form.botones.submit.show"
+              variant="success"></b-button>
+          </template>
+        </b-modal>
+
+        <b-modal
           id="agregar-factura"
           ref="agregar-factura"
           size="xl"
@@ -399,7 +466,7 @@
               label="Monto Factura"
               label-for="montoFactura"
               id="group-montoFactura">
-              <b-input-group :prepend="form.camposAtributos.montoFactura.simboloMoneda" size="sm">
+              <b-input-group :prepend="simboloMoneda" size="sm">
                 <b-form-input
                   @input="limpiarMensajeError('montoFactura')"
                   :disabled="form.camposAtributos.montoFactura.disabled"
