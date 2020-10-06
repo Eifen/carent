@@ -304,52 +304,90 @@
               label-no-date-selected="Ninguna fecha seleccionada"
               locale="es-ES"
               placeholder="Seleccione una fecha"
-              ref="fechaFactura"
+              ref="fechaFacturaMod"
               size="sm"
               v-model="$v.modalMasInfo.form.campos.fechaFactura.$model"></b-form-datepicker>
           </b-form-group>
           <b-form-group
-            label="Concepto">
+            :invalid-feedback="modalMasInfo.form.camposAtributos.concepto.invalidFeedback"
+            description="Descripción por el cual se esta facturando"
+            label="Concepto"
+            label-for="conceptoMod">
             <b-form-textarea
+              @input="limpiarMensajeError('concepto')"
               :disabled="modalMasInfo.form.camposAtributos.concepto.disabled"
+              :state="modalMasInfo.form.camposAtributos.concepto.state"
+              autocomplete="off"
+              id="conceptoMod"
+              ref="conceptoMod"
               rows="3"
               size="sm"
-              v-model="modalMasInfo.form.campos.concepto"></b-form-textarea>
+              type="text"
+              v-model="$v.modalMasInfo.form.campos.concepto.$model"></b-form-textarea>
           </b-form-group>
           <b-form-group
-            label="N° Control">
+            :invalid-feedback="modalMasInfo.form.camposAtributos.numeroControl.invalidFeedback"
+            description="Ejemplo: CONTROL-1"
+            label="N° de Control"
+            label-for="numeroControlMod">
             <b-form-input
+              @input="limpiarMensajeError('numeroControl')"
               :disabled="modalMasInfo.form.camposAtributos.numeroControl.disabled"
+              :state="modalMasInfo.form.camposAtributos.numeroControl.state"
+              autocomplete="off"
+              class="text-uppercase"
+              id="numeroControlMod"
+              ref="numeroControlMod"
               size="sm"
-              v-model="modalMasInfo.form.campos.numeroControl"></b-form-input>
+              type="text"
+              v-model="$v.modalMasInfo.form.campos.numeroControl.$model"></b-form-input>
           </b-form-group>
           <b-form-group
-            label="Observaciones">
+            :invalid-feedback="modalMasInfo.form.camposAtributos.observaciones.invalidFeedback"
+            description="Algún comentario relacionado a la acción de facturar"
+            label-for="observacionesMod">
             <b-form-textarea
+              @input="limpiarMensajeError('observaciones')"
               :disabled="modalMasInfo.form.camposAtributos.observaciones.disabled"
+              :state="modalMasInfo.form.camposAtributos.observaciones.state"
+              autocomplete="off"
+              id="observacionesMod"
+              ref="observacionesMod"
               rows="3"
               size="sm"
+              type="text"
               v-model="modalMasInfo.form.camposAtributos.observaciones.value"></b-form-textarea>
           </b-form-group>
           <b-form-group
-            label="Fecha de Cobro">
+            :invalid-feedback="modalMasInfo.form.camposAtributos.fechaCobroFactura.invalidFeedback"
+            description="Fecha de cobro de la factura"
+            label="Fecha de Cobro:"
+            label-for="fechaCobroFacturaMod">
             <b-form-datepicker
+              @input="limpiarMensajeError('fechaCobroFactura')"
               :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
               :disabled="modalMasInfo.form.camposAtributos.fechaCobroFactura.disabled"
+              :max="modalMasInfo.form.camposAtributos.fechaCobroFactura.max"
+              :state="modalMasInfo.form.camposAtributos.fechaCobroFactura.state"
+              id="fechaCobroFacturaMod"
+              label-help="Use las teclas del cursor para navegar por las fechas del calendario"
+              label-no-date-selected="Ninguna fecha seleccionada"
               locale="es-ES"
+              placeholder="Seleccione una fecha"
+              ref="fechaCobroFacturaMod"
               size="sm"
               v-model="modalMasInfo.form.camposAtributos.fechaCobroFactura.value"></b-form-datepicker>
           </b-form-group>
           <template v-slot:modal-footer>
-            <alert :contador="form.alert.contador"
-                   :icono-cerrar="form.alert.iconCerrar"
-                   :mensaje="form.alert.mensaje"
-                   :mostrar="form.alert.mostrar"
-                   :ocultar-seg="form.alert.ocultarSeg"
-                   :variante="form.alert.variante">
+            <alert :contador="modalMasInfo.alert.contador"
+                   :icono-cerrar="modalMasInfo.alert.iconCerrar"
+                   :mensaje="modalMasInfo.alert.mensaje"
+                   :mostrar="modalMasInfo.alert.mostrar"
+                   :ocultar-seg="modalMasInfo.alert.ocultarSeg"
+                   :variante="modalMasInfo.alert.variante">
             </alert>
             <b-button
-              @click="confirmaRegistrarFactura"
+              @click="confirmaModiciarFactura"
               block
               size="sm"
               v-html="modalMasInfo.botones.confirmar.html"
@@ -357,21 +395,21 @@
               variant="warning"></b-button>
             <b-button
               @click="cancelarRegistrarFactura"
-              :disabled="form.botones.cancelar.disabled"
+              :disabled="modalMasInfo.botones.cancelar.disabled"
               block
               size="sm"
-              v-html="form.botones.cancelar.html"
-              v-if="form.botones.cancelar.show"
+              v-html="modalMasInfo.botones.cancelar.html"
+              v-if="modalMasInfo.botones.cancelar.show"
               variant="danger"></b-button>
             <b-button
               @click="registrar"
-              :disabled="form.botones.submit.disabled"
+              :disabled="modalMasInfo.botones.submit.disabled"
               block
               class="btn"
               id="registrar"
               size="sm"
-              v-html="form.botones.submit.html"
-              v-if="form.botones.submit.show"
+              v-html="modalMasInfo.botones.submit.html"
+              v-if="modalMasInfo.botones.submit.show"
               variant="success"></b-button>
           </template>
         </b-modal>

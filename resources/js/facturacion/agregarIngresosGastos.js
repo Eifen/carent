@@ -536,6 +536,22 @@ new Vue({
 
         });
 
+        self.$refs["modal-mas-info"].$on('hidden', () => {
+
+          Object.keys(self.modalMasInfo.form.camposAtributos).forEach((indice, i) => {
+
+            if(self.modalMasInfo.form.camposAtributos[indice].hasOwnProperty("state")){
+              self.modalMasInfo.form.camposAtributos[indice].state = null;
+            }
+
+            if(self.modalMasInfo.form.camposAtributos[indice].hasOwnProperty("disabled")){
+              self.modalMasInfo.form.camposAtributos[indice].disabled = true;
+            }
+
+          });
+
+        });
+
       }
 
     }, 1000);
@@ -1114,7 +1130,6 @@ new Vue({
 
     },
     verMasInfo: function(data){
-      console.log(data)
 
       self.modalMasInfo.form.campos.montoFactura = data.monto_factura;
       self.modalMasInfo.form.campos.fechaFactura = data.fecha_factura;
@@ -1125,7 +1140,6 @@ new Vue({
 
       self.modalMasInfo.titulo = (data.numero_factura === null) ? "("+data.tipo_concepto+")" : data.numero_factura+" ("+data.tipo_concepto+")";
 
-console.log(data.id_concepto_factura)
       var indicesDisabled = [];
 
       if([1,2,3].includes(data.id_concepto_factura)){
@@ -1152,7 +1166,70 @@ console.log(data.id_concepto_factura)
 
       self.$refs["modal-mas-info"].show();
 
-    }
+    },
+    confirmaModiciarFactura: async function(){
+
+      var formValido = true;
+
+      await self.mostrarAlert(self.modalMasInfo.alert);
+
+      Object.keys(self.modalMasInfo.form.camposAtributos).forEach((indice, i) => {
+
+        if(self.modalMasInfo.form.camposAtributos[indice].hasOwnProperty("state")){
+          self.modalMasInfo.form.camposAtributos[indice].state = (self.form.camposAtributos[indice].state === true) ? true : null;
+        }
+
+        if(self.modalMasInfo.form.camposAtributos[indice].hasOwnProperty("invalidFeedback")){
+          self.modalMasInfo.form.camposAtributos[indice].invalidFeedback = "";
+        }
+
+      });
+
+      var formValido = true;
+
+      const arrayCampos = Object.keys(self.modalMasInfo.form.campos);
+      for(var i = 0; i <= (arrayCampos.length - 1); i++){
+
+        let indice = arrayCampos[i];
+        const campo = self.$v.modalMasInfo.form.campos[indice];
+        campo.$touch();
+
+        if(campo.$invalid){
+
+          self.modalMasInfo.form.camposAtributos[indice].state = false;
+          const valorCampo = self.$v.form.campos[indice].$model;
+
+          const arrayParams = Object.keys(campo.$params);
+          for(var j = 0; j <= (arrayParams.length - 1); j++){
+
+            let mensajeError = self.validadorMensajes(arrayParams[j], campo);
+            self.modalMasInfo.form.camposAtributos[indice].invalidFeedback = mensajeError.mensaje;
+
+            if(!mensajeError.respuesta){
+              break
+            }
+
+          }
+
+          zenscroll.toY(self.$refs[indice].$el);
+          formValido = false;
+          break;
+
+        }
+
+      }
+
+      if(formValido){
+
+        self.modalMasInfo.botones.confirmar.show = false;
+        self.modalMasInfo.botones.submit.show = true;
+        self.modalMasInfo.botones.cancelar.show = true;
+
+        self.mostrarAlert(self.modalMasInfo.alert, true, "warning", "¿Estas seguro de modificar esta factura/gasto?", false, false, 0);
+
+      }
+
+    },
   }
 
 });
