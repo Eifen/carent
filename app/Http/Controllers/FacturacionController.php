@@ -54,7 +54,7 @@ class FacturacionController extends Controller
 
       $permisos = $modelo->permisosMenu(session("usuario_id"), 16);
 
-      if((int) $permisos->permiso_crear == 1 && (int) $permisos->permiso_actualizar == 1){
+      if((int) $permisos->permiso_ver == 1){
 
         return view('facturacion/agregarIngresosGastos', ["id_proyecto" => $idProyecto]);
 
@@ -216,6 +216,59 @@ class FacturacionController extends Controller
 
           return [
             "message" => "Error al tratar de registrar esta Factura/Gasto!",
+            "response" => false
+          ];
+
+        }
+
+      }else{
+
+        return [
+          "message" => "No posee permisos para esta acción!",
+          "response" => false
+        ];
+
+      }
+
+    }
+
+    function modificarFactura(Request $request){
+
+      $modelo = new FacturacionModel();
+
+      $permisos = $modelo->permisosMenu(session("usuario_id"), 16);
+
+      if($permisos->permiso_actualizar){
+
+        $parametros = [
+          "concepto" => $request["concepto"],
+          "monto_factura" => $request["monto_factura"],
+          "numero_control" => strtoupper($request["numero_control"]),
+          "observaciones" => $request["observaciones"],
+          "fecha_factura" => $request["fecha_factura"],
+          "fecha_cobro_factura" => $request["fecha_cobro_factura"]
+        ];
+
+        $actualizarFactura = $modelo->actualizarFactura($request["id_factura"], $parametros);
+
+        if($actualizarFactura){
+
+          $paginar = $request["paginar"];
+
+          $facturasCargadas = $modelo->proyectoFacturasCargadas($request["id_proyecto"], null, 0, $paginar);
+          $facturadoProyecto = $modelo->facturadoProyecto($request["id_proyecto"]);
+
+          return [
+            "facturas_cargadas" => $facturasCargadas,
+            "facturado_proyecto" => $facturadoProyecto,
+            "message" => "Factura/Gasto actualizado con éxito",
+            "response" => true
+          ];
+
+        }else{
+
+          return [
+            "message" => "Error al tratar de actualizar esta Factura/Gasto!",
             "response" => false
           ];
 

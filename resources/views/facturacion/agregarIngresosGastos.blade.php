@@ -278,7 +278,7 @@
             label-for="montoFacturaMod">
             <b-input-group :prepend="simboloMoneda" size="sm">
               <b-form-input
-                @input="limpiarMensajeError('montoFactura')"
+                @input="limpiarMensajeError(modalMasInfo.form.camposAtributos.montoFacturaMod)"
                 :disabled="modalMasInfo.form.camposAtributos.montoFacturaMod.disabled"
                 :state="modalMasInfo.form.camposAtributos.montoFacturaMod.state"
                 autocomplete="off"
@@ -294,7 +294,7 @@
             label="Fecha de Emisión:"
             label-for="fechaFacturaMod">
             <b-form-datepicker
-              @input="limpiarMensajeError('fechaFactura')"
+              @input="limpiarMensajeError(modalMasInfo.form.camposAtributos.fechaFacturaMod)"
               :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
               :disabled="modalMasInfo.form.camposAtributos.fechaFacturaMod.disabled"
               :max="modalMasInfo.form.camposAtributos.fechaFacturaMod.max"
@@ -314,7 +314,7 @@
             label="Concepto"
             label-for="conceptoMod">
             <b-form-textarea
-              @input="limpiarMensajeError('concepto')"
+              @input="limpiarMensajeError(modalMasInfo.form.camposAtributos.conceptoMod)"
               :disabled="modalMasInfo.form.camposAtributos.conceptoMod.disabled"
               :state="modalMasInfo.form.camposAtributos.conceptoMod.state"
               autocomplete="off"
@@ -331,7 +331,7 @@
             label="N° de Control"
             label-for="numeroControlMod">
             <b-form-input
-              @input="limpiarMensajeError('numeroControl')"
+              @input="limpiarMensajeError(modalMasInfo.form.camposAtributos.numeroControlMod)"
               :disabled="modalMasInfo.form.camposAtributos.numeroControlMod.disabled"
               :state="modalMasInfo.form.camposAtributos.numeroControlMod.state"
               autocomplete="off"
@@ -347,7 +347,7 @@
             description="Algún comentario relacionado a la acción de facturar"
             label-for="observacionesMod">
             <b-form-textarea
-              @input="limpiarMensajeError('observaciones')"
+              @input="limpiarMensajeError(modalMasInfo.form.camposAtributos.observacionesMod)"
               :disabled="modalMasInfo.form.camposAtributos.observacionesMod.disabled"
               :state="modalMasInfo.form.camposAtributos.observacionesMod.state"
               autocomplete="off"
@@ -364,7 +364,7 @@
             label="Fecha de Cobro:"
             label-for="fechaCobroFacturaMod">
             <b-form-datepicker
-              @input="limpiarMensajeError('fechaCobroFactura')"
+              @input="limpiarMensajeError(modalMasInfo.form.camposAtributos.fechaCobroFacturaMod)"
               :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
               :disabled="modalMasInfo.form.camposAtributos.fechaCobroFacturaMod.disabled"
               :max="modalMasInfo.form.camposAtributos.fechaCobroFacturaMod.max"
@@ -402,7 +402,7 @@
               v-if="modalMasInfo.botones.cancelar.show"
               variant="danger"></b-button>
             <b-button
-              @click="registrar"
+              @click="modificar"
               :disabled="modalMasInfo.botones.submit.disabled"
               block
               class="btn"
@@ -487,7 +487,7 @@
               id="group-numeroFactura"
               v-else="form.camposAtributos.numeroFactura.busqueda === false">
               <b-form-input
-                @input="limpiarMensajeError('numeroFactura')"
+                @input="limpiarMensajeError(form.camposAtributos.numeroFactura)"
                 :disabled="form.camposAtributos.numeroFactura.disabled"
                 :state="form.camposAtributos.numeroFactura.state"
                 autocomplete="off"
@@ -506,7 +506,7 @@
               id="group-montoFactura">
               <b-input-group :prepend="simboloMoneda" size="sm">
                 <b-form-input
-                  @input="limpiarMensajeError('montoFactura')"
+                  @input="limpiarMensajeError(form.camposAtributos.montoFactura)"
                   :disabled="form.camposAtributos.montoFactura.disabled"
                   :state="form.camposAtributos.montoFactura.state"
                   autocomplete="off"
@@ -524,7 +524,7 @@
               label-for="fechaFactura"
               id="group-fechaFactura">
               <b-form-datepicker
-                @input="limpiarMensajeError('fechaFactura')"
+                @input="limpiarMensajeError(form.camposAtributos.fechaFactura)"
                 :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
                 :disabled="form.camposAtributos.fechaFactura.disabled"
                 :max="form.camposAtributos.fechaFactura.max"
@@ -546,7 +546,7 @@
               label-for="concepto"
               id="group-concepto">
               <b-form-textarea
-                @input="limpiarMensajeError('concepto')"
+                @input="limpiarMensajeError(form.camposAtributos.concepto)"
                 :disabled="form.camposAtributos.concepto.disabled"
                 :state="form.camposAtributos.concepto.state"
                 autocomplete="off"
@@ -565,7 +565,7 @@
               label-for="numeroControl"
               id="group-numeroControl">
               <b-form-input
-                @input="limpiarMensajeError('numeroControl')"
+                @input="limpiarMensajeError(form.camposAtributos.numeroControl)"
                 :disabled="form.camposAtributos.numeroControl.disabled"
                 :state="form.camposAtributos.numeroControl.state"
                 autocomplete="off"
@@ -584,7 +584,7 @@
               label-for="fechaCobroFactura"
               id="group-fechaCobroFactura">
               <b-form-datepicker
-                @input="limpiarMensajeError('fechaCobroFactura')"
+                @input="limpiarMensajeError(form.camposAtributos.fechaCobroFactura)"
                 :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
                 :disabled="form.camposAtributos.fechaCobroFactura.disabled"
                 :max="form.camposAtributos.fechaCobroFactura.max"
@@ -606,7 +606,7 @@
               label-for="observaciones"
               id="group-observaciones">
               <b-form-textarea
-                @input="limpiarMensajeError('observaciones')"
+                @input="limpiarMensajeError(form.camposAtributos.observaciones)"
                 :disabled="form.camposAtributos.observaciones.disabled"
                 :state="form.camposAtributos.observaciones.state"
                 autocomplete="off"
