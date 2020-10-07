@@ -113,7 +113,6 @@ new Vue({
           decString: ",",
           disabled: true,
           invalidFeedback: "",
-          simboloMoneda: "",
           state: null,
           thouSep: "."
         },
@@ -152,12 +151,100 @@ new Vue({
         monto_notas_credito: "",
         monto_otros_gastos: "",
         proyecto: "",
-        simbolo_moneda: "",
         socio: ""
       },
       mostrar: false
     },
     loading: true,
+    modalMasInfo: {
+      alert: {
+        contador: false,
+        iconCerrar: false,
+        mensaje: "",
+        mostrar: false,
+        ocultarSeg: 0,
+        variante: ""
+      },
+      botones: {
+        cancelar: {
+          disabled: false,
+          html: "No",
+          show: false
+        },
+        confirmar: {
+          html: "Modificar Factura/Gasto",
+          show: true
+        },
+        submit:{
+          disabled: false,
+          html: "",
+          htmlInit: "Si, estoy seguro de realizar esta acción",
+          htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
+          show: false
+        }
+      },
+      form: {
+        campos: {
+          montoFacturaMod: null,
+          fechaFacturaMod: null,
+          conceptoMod: null,
+          numeroControlMod: null
+        },
+        camposAtributos:{
+          montoFacturaMod: {
+            autonumeric: null,
+            decPlace: 2,
+            decString: ",",
+            disabled: true,
+            invalidFeedback: "",
+            simboloMoneda: "",
+            state: null,
+            thouSep: "."
+          },
+          conceptoMod: {
+            disabled: true,
+            invalidFeedback: "",
+            state: null
+          },
+          montoFacturaMod: {
+            autonumeric: null,
+            decPlace: 2,
+            decString: ",",
+            disabled: true,
+            invalidFeedback: "",
+            state: null,
+            thouSep: "."
+          },
+          fechaFacturaMod: {
+            disabled: true,
+            invalidFeedback: "",
+            max: null,
+            state: null
+          },
+          fechaCobroFacturaMod: {
+            disabled: true,
+            invalidFeedback: "",
+            max: null,
+            state: null,
+            value: ""
+          },
+          numeroControlMod: {
+            disabled: true,
+            invalidFeedback: "",
+            state: null
+          },
+          observacionesMod: {
+            disabled: true,
+            invalidFeedback: "",
+            state: null,
+            value: ""
+          }
+        }
+      },
+      idConceptoFactura: null,
+      idFactura: null,
+      titulo: ""
+    },
     modalEliminar: {
       alert: {
         contador: false,
@@ -192,6 +279,7 @@ new Vue({
       paginar: 0
     },
     permisos: null,
+    simboloMoneda: null,
     tabla: {
       alert:{
         contador: false,
@@ -242,6 +330,32 @@ new Vue({
           maxLength: maxLength(20)
         }
       }
+    },
+    modalMasInfo: {
+      form:{
+        campos:{
+          montoFacturaMod: {
+            required
+          },
+          fechaFacturaMod: {
+            required: requiredIf(function() {
+              return (!this.modalMasInfo.form.camposAtributos.fechaFacturaMod.disabled);
+            })
+          },
+          conceptoMod: {
+            required: requiredIf(function() {
+              return (!this.modalMasInfo.form.camposAtributos.conceptoMod.disabled);
+            }),
+            minLength: minLength(5)
+          },
+          numeroControlMod: {
+            required: requiredIf(function() {
+              return (!this.modalMasInfo.form.camposAtributos.numeroControlMod.disabled);
+            }),
+            maxLength: maxLength(20)
+          }
+        }
+      }
     }
   },
   beforeCreate: function(){
@@ -262,22 +376,25 @@ new Vue({
         const hoy = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate())
         self.form.camposAtributos.fechaFactura.max = hoy;
         self.form.camposAtributos.fechaCobroFactura.max = hoy;
+        self.modalMasInfo.form.camposAtributos.fechaFacturaMod.max = hoy;
+        self.modalMasInfo.form.camposAtributos.fechaCobroFacturaMod.max = hoy;
+
+        self.simboloMoneda = response.data.proyecto.simbolo_moneda;
 
         self.form.info = {
           estatus: response.data.proyecto.estatus,
           fecha_contratacion: response.data.proyecto.fecha_contratacion,
           gerente: response.data.proyecto.gerente,
-          monto_contratado: response.data.proyecto.simbolo_moneda+response.data.proyecto.monto_contratado,
-          monto_facturado: response.data.proyecto.simbolo_moneda+response.data.facturado_proyecto.monto_facturado,
-          monto_gastos: response.data.proyecto.simbolo_moneda+response.data.facturado_proyecto.monto_gasto,
-          monto_notas_credito: response.data.proyecto.simbolo_moneda+response.data.facturado_proyecto.monto_notas_credito,
-          monto_otros_gastos: response.data.proyecto.simbolo_moneda+response.data.facturado_proyecto.monto_otros_gastos,
+          monto_contratado: self.simboloMoneda+response.data.proyecto.monto_contratado,
+          monto_facturado: self.simboloMoneda+response.data.facturado_proyecto.monto_facturado,
+          monto_gastos: self.simboloMoneda+response.data.facturado_proyecto.monto_gasto,
+          monto_notas_credito: self.simboloMoneda+response.data.facturado_proyecto.monto_notas_credito,
+          monto_otros_gastos: self.simboloMoneda+response.data.facturado_proyecto.monto_otros_gastos,
           proyecto: response.data.proyecto.proyecto,
-          simbolo_moneda: response.data.proyecto.simbolo_moneda,
+          simbolo_moneda: self.simboloMoneda,
           socio: response.data.proyecto.socio
         }
 
-        self.form.camposAtributos.montoFactura.simboloMoneda = response.data.proyecto.simbolo_moneda;
         self.form.camposAtributos.numeroFactura.help = self.form.camposAtributos.numeroFactura.helpInit;
 
         response.data.conceptos_factura.forEach((item, i) => {
@@ -290,6 +407,7 @@ new Vue({
         self.form.botones.submit.html = self.form.botones.submit.htmlInit;
         self.form.botones.submit.disabled = false;
 
+        self.modalMasInfo.botones.submit.html = self.modalMasInfo.botones.submit.htmlInit;
         self.modalEliminar.botones.submit.html = self.modalEliminar.botones.submit.htmlInit;
 
         self.tabla.encabezado = [
@@ -297,8 +415,8 @@ new Vue({
           { key: 'numero_factura', label: 'Nº Factura' },
           { key: 'tipo_concepto', label: 'Tipo Concepto' },
           { key: 'movimiento', label: 'Movimiento' },
-          { key: 'monto_factura', label: 'Monto' },
-          { key: 'fecha_factura', label: 'Fecha Fact.' },
+          { key: 'monto_factura_formatted', label: 'Monto' },
+          { key: 'fecha_factura_formatted', label: 'Fecha Fact.' },
           { key: 'opciones', label: ' ' }
         ];
 
@@ -313,7 +431,7 @@ new Vue({
 
         self.permisos = response.data.permisos;
 
-        self.paginador.numPaginas = response.data.numero_paginas;
+        self.paginador.numPaginas = (parseInt(response.data.numero_paginas) === 0) ? 1 : response.data.numero_paginas;
         self.paginador.max = parseInt(response.data.numero_paginas);
         self.paginador.paginar = response.data.paginar;
 
@@ -403,6 +521,44 @@ new Vue({
 
         });
 
+        self.$refs["modal-mas-info"].$on('shown', () => {
+
+          let monto = self.$refs["montoFacturaMod"].$el
+
+          self.modalMasInfo.form.camposAtributos.montoFacturaMod.autonumeric = new AutoNumeric(monto, {
+            decimalPlaces: 2,
+            decimalCharacter: ',',
+            digitGroupSeparator: '.',
+            emptyInputBehavior: 0,
+            maximumValue: '99999999999999999999.99',
+            minimumValue: 0,
+            modifyValueOnWheel: false
+          });
+
+        });
+
+        self.$refs["modal-mas-info"].$on('hidden', () => {
+
+          Object.keys(self.modalMasInfo.form.camposAtributos).forEach((indice, i) => {
+
+            if(self.modalMasInfo.form.camposAtributos[indice].hasOwnProperty("state")){
+              self.modalMasInfo.form.camposAtributos[indice].state = null;
+            }
+
+            if(self.modalMasInfo.form.camposAtributos[indice].hasOwnProperty("disabled")){
+              self.modalMasInfo.form.camposAtributos[indice].disabled = true;
+            }
+
+          });
+
+          self.modalMasInfo.botones.confirmar.show = true;
+          self.modalMasInfo.botones.submit.show = false;
+          self.modalMasInfo.botones.cancelar.show = false;
+
+          self.mostrarAlert(self.modalMasInfo.alert);
+
+        });
+
       }
 
     }, 1000);
@@ -425,10 +581,10 @@ new Vue({
       });
 
     },
-    limpiarMensajeError: function(refName){
+    limpiarMensajeError: function(elemento){
 
-      self.form.camposAtributos[refName].invalidFeedback = "";
-      self.form.camposAtributos[refName].state = null;
+      elemento.invalidFeedback = "";
+      elemento.state = null;
 
     },
     registroTabla: function(datos){
@@ -450,14 +606,18 @@ new Vue({
           tipo_concepto: item.tipo_concepto,
           concepto: item.concepto,
           numero_factura: item.numero_factura,
-          monto_factura: item.monto_factura_formatted,
-          fecha_factura: item.fecha_factura_formatted,
+          monto_factura: item.monto_factura,
+          monto_factura_formatted: self.simboloMoneda+item.monto_factura_formatted,
+          fecha_factura: item.fecha_factura,
+          fecha_factura_formatted: item.fecha_factura_formatted,
           fecha_cobro_factura: item.fecha_cobro_factura,
+          fecha_cobro_factura_formatted: item.fecha_cobro_factura_formatted,
           numero_control: item.numero_control,
           movimiento: item.movimiento,
           varianteMovimiento: varianteMovimiento,
           id: item.id,
-          observaciones: item.observaciones
+          observaciones: item.observaciones,
+          id_concepto_factura: item.id_concepto_factura
         };
 
         registros.push(factura);
@@ -533,7 +693,6 @@ new Vue({
         if(type === 3){
 
           self.form.camposAtributos.numeroFactura.disabled = false;
-          self.form.camposAtributos.numeroControl.disabled = false;
           self.form.camposAtributos.observaciones.disabled = false;
           self.form.camposAtributos.numeroFactura.busqueda = true;
 
@@ -564,7 +723,7 @@ new Vue({
 
       }
 
-      self.limpiarMensajeError('tipoConcepto');
+      self.limpiarMensajeError(self.form.camposAtributos.tipoConcepto);
 
     },
     confirmaRegistrarFactura: async function(){
@@ -641,6 +800,8 @@ new Vue({
     },
     registrar: async function(id){
 
+      self.mostrarAlert(self.form.alert);
+
       //Obtenemos valores
       let parametros = {
         concepto: self.form.campos.concepto,
@@ -686,10 +847,10 @@ new Vue({
           self.form.campos.montoFactura = null;
           self.form.camposAtributos.montoFactura.autonumeric.set(0);
 
-          self.form.info.monto_facturado = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_facturado;
-          self.form.info.monto_gastos = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_gasto;
-          self.form.info.monto_notas_credito = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_notas_credito;
-          self.form.info.monto_otros_gastos = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_otros_gastos;
+          self.form.info.monto_facturado = self.simboloMoneda+response.data.facturado_proyecto.monto_facturado;
+          self.form.info.monto_gastos = self.simboloMoneda+response.data.facturado_proyecto.monto_gasto;
+          self.form.info.monto_notas_credito = self.simboloMoneda+response.data.facturado_proyecto.monto_notas_credito;
+          self.form.info.monto_otros_gastos = self.simboloMoneda+response.data.facturado_proyecto.monto_otros_gastos;
 
           Object.keys(self.form.camposAtributos).forEach((indice, i) => {
 
@@ -799,7 +960,7 @@ new Vue({
     },
     buscarFactura: function(){
 
-      self.limpiarMensajeError("numeroFactura");
+      self.limpiarMensajeError(self.form.camposAtributos.numeroFactura);
       self.$refs["ref-lista-facturas"].hide();
       self.form.camposAtributos.numeroFactura.listaDropdown.listado = [];
       self.form.camposAtributos.numeroFactura.listaDropdown.noResultado = false;
@@ -911,6 +1072,8 @@ new Vue({
 
       });
 
+      self.mostrarAlert(self.modalEliminar.alert);
+
       self.modalEliminar.botones.cancelar.disabled = true;
       self.modalEliminar.botones.cancelar.show = false;
       self.modalEliminar.botones.submit.disabled = true;
@@ -930,10 +1093,10 @@ new Vue({
           self.tabla.registros = [];
           self.tabla.registros = self.registroTabla(response.data.facturas_cargadas);
 
-          self.form.info.monto_facturado = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_facturado;
-          self.form.info.monto_gastos = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_gasto;
-          self.form.info.monto_notas_credito = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_notas_credito;
-          self.form.info.monto_otros_gastos = self.form.info.simbolo_moneda+response.data.facturado_proyecto.monto_otros_gastos;
+          self.form.info.monto_facturado = self.simboloMoneda+response.data.facturado_proyecto.monto_facturado;
+          self.form.info.monto_gastos = self.simboloMoneda+response.data.facturado_proyecto.monto_gasto;
+          self.form.info.monto_notas_credito = self.simboloMoneda+response.data.facturado_proyecto.monto_notas_credito;
+          self.form.info.monto_otros_gastos = self.simboloMoneda+response.data.facturado_proyecto.monto_otros_gastos;
 
           self.modalEliminar.botones.submit.show = false;
           self.modalEliminar.botones.hide.show = true;
@@ -973,6 +1136,248 @@ new Vue({
         }
 
         self.mostrarAlert(self.modalEliminar.alert, true, variante, mensaje, true, true, 10);
+
+      });
+
+    },
+    verMasInfo: function(data){
+
+      self.modalMasInfo.form.campos.montoFacturaMod = data.monto_factura;
+      self.modalMasInfo.form.campos.fechaFacturaMod = data.fecha_factura;
+      self.modalMasInfo.form.campos.conceptoMod = data.concepto;
+      self.modalMasInfo.form.campos.numeroControlMod = data.numero_control;
+      self.modalMasInfo.form.camposAtributos.observacionesMod.value = data.observaciones;
+      self.modalMasInfo.form.camposAtributos.fechaCobroFacturaMod.value = data.fecha_cobro_factura;
+      self.modalMasInfo.idConceptoFactura = data.id_concepto_factura;
+      self.modalMasInfo.idFactura = data.id;
+
+      self.modalMasInfo.titulo = (data.numero_factura === null) ? "("+data.tipo_concepto+")" : data.numero_factura+" ("+data.tipo_concepto+")";
+
+      var indicesDisabled = [];
+
+      if([1,2,3].includes(data.id_concepto_factura)){
+
+        indicesDisabled = ["montoFacturaMod","conceptoMod","montoFacturaMod","fechaFacturaMod","fechaCobroFacturaMod","numeroControlMod","observacionesMod"];
+
+      }else if(data.id_concepto_factura === 4){
+
+        indicesDisabled = ["observacionesMod"];
+
+      }else if(data.id_concepto_factura === 5){
+
+        indicesDisabled = ["montoFacturaMod","observacionesMod"];
+
+      }
+
+      indicesDisabled.forEach((indice) => {
+
+        if(self.modalMasInfo.form.camposAtributos[indice].hasOwnProperty("disabled")){
+          self.modalMasInfo.form.camposAtributos[indice].disabled = false;
+        }
+
+      });
+
+      self.$refs["modal-mas-info"].show();
+
+    },
+    confirmarModificarFactura: async function(){
+
+      var formValido = true;
+
+      await self.mostrarAlert(self.modalMasInfo.alert);
+
+      Object.keys(self.modalMasInfo.form.camposAtributos).forEach((indice, i) => {
+
+        if(self.modalMasInfo.form.camposAtributos[indice].hasOwnProperty("state")){
+          self.modalMasInfo.form.camposAtributos[indice].state = (self.modalMasInfo.form.camposAtributos[indice].state === true) ? true : null;
+        }
+
+        if(self.modalMasInfo.form.camposAtributos[indice].hasOwnProperty("invalidFeedback")){
+          self.modalMasInfo.form.camposAtributos[indice].invalidFeedback = "";
+        }
+
+      });
+
+      var formValido = true;
+
+      const arrayCampos = Object.keys(self.modalMasInfo.form.campos);
+      for(var i = 0; i <= (arrayCampos.length - 1); i++){
+
+        let indice = arrayCampos[i];
+        const campo = self.$v.modalMasInfo.form.campos[indice];
+        campo.$touch();
+
+        if(campo.$invalid){
+
+          self.modalMasInfo.form.camposAtributos[indice].state = false;
+          const valorCampo = self.$v.modalMasInfo.form.campos[indice].$model;
+
+          const arrayParams = Object.keys(campo.$params);
+          for(var j = 0; j <= (arrayParams.length - 1); j++){
+
+            let mensajeError = self.validadorMensajes(arrayParams[j], campo);
+            self.modalMasInfo.form.camposAtributos[indice].invalidFeedback = mensajeError.mensaje;
+
+            if(!mensajeError.respuesta){
+              break
+            }
+
+          }
+
+          zenscroll.toY(self.$refs[indice].$el);
+          formValido = false;
+          break;
+
+        }
+
+      }
+
+      if(formValido){
+
+        self.modalMasInfo.botones.confirmar.show = false;
+        self.modalMasInfo.botones.submit.show = true;
+        self.modalMasInfo.botones.cancelar.show = true;
+
+        self.mostrarAlert(self.modalMasInfo.alert, true, "warning", "¿Estas seguro de modificar esta factura/gasto?", false, false, 0);
+
+      }
+
+    },
+    cancelarModificarFactura: function(){
+
+      self.modalMasInfo.botones.confirmar.show = true;
+      self.modalMasInfo.botones.submit.show = false;
+      self.modalMasInfo.botones.cancelar.show = false;
+
+      self.mostrarAlert(self.modalMasInfo.alert);
+
+    },
+    modificar: function(){
+
+      self.mostrarAlert(self.modalMasInfo.alert);
+
+      //Obtenemos valores
+      let parametros = {
+        concepto: self.modalMasInfo.form.campos.conceptoMod,
+        monto_factura: self.modalMasInfo.form.camposAtributos.montoFacturaMod.autonumeric.get(),
+        fecha_factura: self.modalMasInfo.form.campos.fechaFacturaMod,
+        fecha_cobro_factura: self.modalMasInfo.form.camposAtributos.fechaCobroFacturaMod.value,
+        numero_control: self.modalMasInfo.form.campos.numeroControlMod,
+        observaciones: self.modalMasInfo.form.camposAtributos.observacionesMod.value,
+        id_proyecto: proyecto_id,
+        id_factura: self.modalMasInfo.idFactura,
+        paginar: self.paginador.paginar
+      }
+
+      self.modalMasInfo.botones.cancelar.disabled = true;
+      self.modalMasInfo.botones.submit.disabled = true;
+      self.modalMasInfo.botones.submit.html = self.modalMasInfo.botones.submit.htmlLoading;
+
+      Object.keys(self.modalMasInfo.form.camposAtributos).forEach((indice, i) => {
+
+        if(self.modalMasInfo.form.camposAtributos[indice].hasOwnProperty("disabled")){
+          self.modalMasInfo.form.camposAtributos[indice].disabled = true;
+        }
+
+      });
+
+      axios.post('/modificarFactura', parametros)
+      .then(function (response) {
+
+        if(response.status === 200 && response.data.response === true){
+
+          self.tabla.registros = [];
+          self.tabla.registros = self.registroTabla(response.data.facturas_cargadas);
+
+          self.form.info.monto_facturado = self.simboloMoneda+response.data.facturado_proyecto.monto_facturado;
+          self.form.info.monto_gastos = self.simboloMoneda+response.data.facturado_proyecto.monto_gasto;
+          self.form.info.monto_notas_credito = self.simboloMoneda+response.data.facturado_proyecto.monto_notas_credito;
+          self.form.info.monto_otros_gastos = self.simboloMoneda+response.data.facturado_proyecto.monto_otros_gastos;
+
+          var indicesDisabled = [];
+
+          if([1,2,3].includes(self.modalMasInfo.idConceptoFactura)){
+
+            indicesDisabled = ["montoFacturaMod","conceptoMod","montoFacturaMod","fechaFacturaMod","fechaCobroFacturaMod","numeroControlMod","observacionesMod"];
+
+          }else if(self.modalMasInfo.idConceptoFactura === 4){
+
+            indicesDisabled = ["observacionesMod"];
+
+          }else if(self.modalMasInfo.idConceptoFactura === 5){
+
+            indicesDisabled = ["montoFacturaMod","observacionesMod"];
+
+          }
+
+          indicesDisabled.forEach((indice) => {
+
+            if(self.modalMasInfo.form.camposAtributos[indice].hasOwnProperty("disabled")){
+              self.modalMasInfo.form.camposAtributos[indice].disabled = false;
+            }
+
+          });
+
+          self.modalMasInfo.botones.submit.disabled = false;
+          self.modalMasInfo.botones.submit.html = self.form.botones.submit.htmlInit;
+          self.modalMasInfo.botones.cancelar.disabled = false;
+
+          self.mostrarAlert(self.modalMasInfo.alert, true, "success", response.data.message, true, true, 10);
+
+          self.modalMasInfo.botones.confirmar.show = true;
+          self.modalMasInfo.botones.submit.show = false;
+          self.modalMasInfo.botones.cancelar.show = false;
+
+        }else{
+
+          throw response.data;
+
+        }
+
+      })
+      .catch(error => {
+
+        var indicesDisabled = [];
+
+        if([1,2,3].includes(self.modalMasInfo.idConceptoFactura)){
+
+          indicesDisabled = ["montoFacturaMod","conceptoMod","montoFacturaMod","fechaFacturaMod","fechaCobroFacturaMod","numeroControlMod","observacionesMod"];
+
+        }else if(self.modalMasInfo.idConceptoFactura === 4){
+
+          indicesDisabled = ["observacionesMod"];
+
+        }else if(self.modalMasInfo.idConceptoFactura === 5){
+
+          indicesDisabled = ["montoFacturaMod","observacionesMod"];
+
+        }
+
+        indicesDisabled.forEach((indice) => {
+
+          if(self.modalMasInfo.form.camposAtributos[indice].hasOwnProperty("disabled")){
+            self.modalMasInfo.form.camposAtributos[indice].disabled = false;
+          }
+
+        });
+
+        self.modalMasInfo.botones.submit.disabled = false;
+        self.modalMasInfo.botones.submit.html = self.form.botones.submit.htmlInit;
+        self.modalMasInfo.botones.cancelar.disabled = false;
+
+        if(error.message){
+
+          var mensaje = error.message;
+          var variante = "warning";
+
+        }else{
+
+          var mensaje = "Existe un error!, consulte con el administrador del sistema.";
+          var variante = "danger";
+
+        }
+
+        self.mostrarAlert(self.modalMasInfo.alert, true, variante, mensaje, true, true, 10);
 
       });
 

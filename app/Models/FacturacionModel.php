@@ -280,6 +280,7 @@ class FacturacionModel extends Model
                                 fp.fecha_cobro_factura,
                                 UPPER(fp.numero_control) AS numero_control,
                                 fp.observaciones,
+                                cf.id as id_concepto_factura,
                                 cf.descripcion AS tipo_concepto,
                                 LOWER(CONCAT(fu.nombre_1," ",fu.nombre_2," ",fu.apellido_1," ",fu.apellido_2)) AS facturador,
                                 cf.id_tipo_concepto_factura AS tipo_movimiento,
@@ -327,6 +328,16 @@ class FacturacionModel extends Model
     }
 
     function eliminarFactura($id_factura, $parametros){
+
+      if(DB::table('tbl_factura_proyecto')->where("id", $id_factura)->update($parametros)){
+        return true;
+      }else{
+        return false;
+      }
+
+    }
+
+    function actualizarFactura($id_factura, $parametros){
 
       if(DB::table('tbl_factura_proyecto')->where("id", $id_factura)->update($parametros)){
         return true;

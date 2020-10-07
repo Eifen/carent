@@ -163,54 +163,10 @@
                 <b-badge :variant="data.item.varianteMovimiento" class="text-capitalize">@{{ data.item.movimiento }}</b-badge>
               </template>
               <template v-slot:cell(opciones)="data">
-                <b-icon-search :id="'info-'+data.item.id" v-b-modal="'modal-info-'+data.item.id" class="icono"></b-icon-search>
+                <b-icon-search :id="'info-'+data.item.id" class="icono" v-on:click="verMasInfo(data.item)"></b-icon-search>
                 <b-tooltip :target="'info-'+data.item.id" triggers="hover">
                   Ver más info
                 </b-tooltip>
-                <b-modal
-                  :id="'modal-info-'+data.item.id"
-                  :ok-only="true"
-                  button-size="sm"
-                  centered
-                  ok-title="Cerrar"
-                  ok-variant="primary"
-                  size="lg">
-                  <template v-slot:modal-title>
-                    Más información @{{ data.item.numero_factura }}
-                  </template>
-                  <b-form-group
-                    label="Concepto">
-                    <b-form-textarea
-                      readonly
-                      rows="3"
-                      size="sm"
-                      v-model="data.item.concepto"></b-form-textarea>
-                  </b-form-group>
-                  <b-form-group
-                    label="N° Control">
-                    <b-form-input
-                      :value="data.item.numero_control"
-                      readonly
-                      size="sm"></b-form-input>
-                  </b-form-group>
-                  <b-form-group
-                    label="Observaciones">
-                    <b-form-textarea
-                      readonly
-                      rows="3"
-                      size="sm"
-                      v-model="data.item.observaciones"></b-form-textarea>
-                  </b-form-group>
-                  <b-form-group
-                    label="Fecha de Cobro">
-                    <b-form-datepicker
-                      :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
-                      locale="es-ES"
-                      readonly
-                      size="sm"
-                      v-model="data.item.fecha_cobro_factura"></b-form-datepicker>
-                  </b-form-group>
-                </b-modal>
                 <b-icon-trash
                   :id="'eliminar-'+data.item.id"
                   class="icono"
@@ -310,6 +266,155 @@
         </b-row>
 
         <b-modal
+          centered
+          ref="modal-mas-info"
+          size="lg">
+          <template v-slot:modal-title>
+            Más información @{{ modalMasInfo.titulo }}
+          </template>
+          <b-form-group
+            :invalid-feedback="modalMasInfo.form.camposAtributos.montoFacturaMod.invalidFeedback"
+            label="Monto Factura"
+            label-for="montoFacturaMod">
+            <b-input-group :prepend="simboloMoneda" size="sm">
+              <b-form-input
+                @input="limpiarMensajeError(modalMasInfo.form.camposAtributos.montoFacturaMod)"
+                :disabled="modalMasInfo.form.camposAtributos.montoFacturaMod.disabled"
+                :state="modalMasInfo.form.camposAtributos.montoFacturaMod.state"
+                autocomplete="off"
+                id="montoFacturaMod"
+                ref="montoFacturaMod"
+                type="text"
+                v-model.trim="$v.modalMasInfo.form.campos.montoFacturaMod.$model"></b-form-input>
+            </b-input-group>
+          </b-form-group>
+          <b-form-group
+            :invalid-feedback="modalMasInfo.form.camposAtributos.fechaFacturaMod.invalidFeedback"
+            description="Fecha en que se emite la factura"
+            label="Fecha de Emisión:"
+            label-for="fechaFacturaMod">
+            <b-form-datepicker
+              @input="limpiarMensajeError(modalMasInfo.form.camposAtributos.fechaFacturaMod)"
+              :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+              :disabled="modalMasInfo.form.camposAtributos.fechaFacturaMod.disabled"
+              :max="modalMasInfo.form.camposAtributos.fechaFacturaMod.max"
+              :state="modalMasInfo.form.camposAtributos.fechaFacturaMod.state"
+              id="fechaFacturaMod"
+              label-help="Use las teclas del cursor para navegar por las fechas del calendario"
+              label-no-date-selected="Ninguna fecha seleccionada"
+              locale="es-ES"
+              placeholder="Seleccione una fecha"
+              ref="fechaFacturaMod"
+              size="sm"
+              v-model="$v.modalMasInfo.form.campos.fechaFacturaMod.$model"></b-form-datepicker>
+          </b-form-group>
+          <b-form-group
+            :invalid-feedback="modalMasInfo.form.camposAtributos.conceptoMod.invalidFeedback"
+            description="Descripción por el cual se esta facturando"
+            label="Concepto"
+            label-for="conceptoMod">
+            <b-form-textarea
+              @input="limpiarMensajeError(modalMasInfo.form.camposAtributos.conceptoMod)"
+              :disabled="modalMasInfo.form.camposAtributos.conceptoMod.disabled"
+              :state="modalMasInfo.form.camposAtributos.conceptoMod.state"
+              autocomplete="off"
+              id="conceptoMod"
+              ref="conceptoMod"
+              rows="3"
+              size="sm"
+              type="text"
+              v-model="$v.modalMasInfo.form.campos.conceptoMod.$model"></b-form-textarea>
+          </b-form-group>
+          <b-form-group
+            :invalid-feedback="modalMasInfo.form.camposAtributos.numeroControlMod.invalidFeedback"
+            description="Ejemplo: CONTROL-1"
+            label="N° de Control"
+            label-for="numeroControlMod">
+            <b-form-input
+              @input="limpiarMensajeError(modalMasInfo.form.camposAtributos.numeroControlMod)"
+              :disabled="modalMasInfo.form.camposAtributos.numeroControlMod.disabled"
+              :state="modalMasInfo.form.camposAtributos.numeroControlMod.state"
+              autocomplete="off"
+              class="text-uppercase"
+              id="numeroControlMod"
+              ref="numeroControlMod"
+              size="sm"
+              type="text"
+              v-model="$v.modalMasInfo.form.campos.numeroControlMod.$model"></b-form-input>
+          </b-form-group>
+          <b-form-group
+            :invalid-feedback="modalMasInfo.form.camposAtributos.observacionesMod.invalidFeedback"
+            description="Algún comentario relacionado a la acción de facturar"
+            label-for="observacionesMod">
+            <b-form-textarea
+              @input="limpiarMensajeError(modalMasInfo.form.camposAtributos.observacionesMod)"
+              :disabled="modalMasInfo.form.camposAtributos.observacionesMod.disabled"
+              :state="modalMasInfo.form.camposAtributos.observacionesMod.state"
+              autocomplete="off"
+              id="observacionesMod"
+              ref="observacionesMod"
+              rows="3"
+              size="sm"
+              type="text"
+              v-model="modalMasInfo.form.camposAtributos.observacionesMod.value"></b-form-textarea>
+          </b-form-group>
+          <b-form-group
+            :invalid-feedback="modalMasInfo.form.camposAtributos.fechaCobroFacturaMod.invalidFeedback"
+            description="Fecha de cobro de la factura"
+            label="Fecha de Cobro:"
+            label-for="fechaCobroFacturaMod">
+            <b-form-datepicker
+              @input="limpiarMensajeError(modalMasInfo.form.camposAtributos.fechaCobroFacturaMod)"
+              :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+              :disabled="modalMasInfo.form.camposAtributos.fechaCobroFacturaMod.disabled"
+              :max="modalMasInfo.form.camposAtributos.fechaCobroFacturaMod.max"
+              :state="modalMasInfo.form.camposAtributos.fechaCobroFacturaMod.state"
+              id="fechaCobroFacturaMod"
+              label-help="Use las teclas del cursor para navegar por las fechas del calendario"
+              label-no-date-selected="Ninguna fecha seleccionada"
+              locale="es-ES"
+              placeholder="Seleccione una fecha"
+              ref="fechaCobroFacturaMod"
+              size="sm"
+              v-model="modalMasInfo.form.camposAtributos.fechaCobroFacturaMod.value"></b-form-datepicker>
+          </b-form-group>
+          <template v-slot:modal-footer>
+            <alert :contador="modalMasInfo.alert.contador"
+                   :icono-cerrar="modalMasInfo.alert.iconCerrar"
+                   :mensaje="modalMasInfo.alert.mensaje"
+                   :mostrar="modalMasInfo.alert.mostrar"
+                   :ocultar-seg="modalMasInfo.alert.ocultarSeg"
+                   :variante="modalMasInfo.alert.variante">
+            </alert>
+            <b-button
+              @click="confirmarModificarFactura"
+              block
+              size="sm"
+              v-html="modalMasInfo.botones.confirmar.html"
+              v-if="modalMasInfo.botones.confirmar.show"
+              variant="warning"></b-button>
+            <b-button
+              @click="cancelarModificarFactura"
+              :disabled="modalMasInfo.botones.cancelar.disabled"
+              block
+              size="sm"
+              v-html="modalMasInfo.botones.cancelar.html"
+              v-if="modalMasInfo.botones.cancelar.show"
+              variant="danger"></b-button>
+            <b-button
+              @click="modificar"
+              :disabled="modalMasInfo.botones.submit.disabled"
+              block
+              class="btn"
+              id="registrar"
+              size="sm"
+              v-html="modalMasInfo.botones.submit.html"
+              v-if="modalMasInfo.botones.submit.show"
+              variant="success"></b-button>
+          </template>
+        </b-modal>
+
+        <b-modal
           id="agregar-factura"
           ref="agregar-factura"
           size="xl"
@@ -382,7 +487,7 @@
               id="group-numeroFactura"
               v-else="form.camposAtributos.numeroFactura.busqueda === false">
               <b-form-input
-                @input="limpiarMensajeError('numeroFactura')"
+                @input="limpiarMensajeError(form.camposAtributos.numeroFactura)"
                 :disabled="form.camposAtributos.numeroFactura.disabled"
                 :state="form.camposAtributos.numeroFactura.state"
                 autocomplete="off"
@@ -399,9 +504,9 @@
               label="Monto Factura"
               label-for="montoFactura"
               id="group-montoFactura">
-              <b-input-group :prepend="form.camposAtributos.montoFactura.simboloMoneda" size="sm">
+              <b-input-group :prepend="simboloMoneda" size="sm">
                 <b-form-input
-                  @input="limpiarMensajeError('montoFactura')"
+                  @input="limpiarMensajeError(form.camposAtributos.montoFactura)"
                   :disabled="form.camposAtributos.montoFactura.disabled"
                   :state="form.camposAtributos.montoFactura.state"
                   autocomplete="off"
@@ -419,7 +524,7 @@
               label-for="fechaFactura"
               id="group-fechaFactura">
               <b-form-datepicker
-                @input="limpiarMensajeError('fechaFactura')"
+                @input="limpiarMensajeError(form.camposAtributos.fechaFactura)"
                 :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
                 :disabled="form.camposAtributos.fechaFactura.disabled"
                 :max="form.camposAtributos.fechaFactura.max"
@@ -441,7 +546,7 @@
               label-for="concepto"
               id="group-concepto">
               <b-form-textarea
-                @input="limpiarMensajeError('concepto')"
+                @input="limpiarMensajeError(form.camposAtributos.concepto)"
                 :disabled="form.camposAtributos.concepto.disabled"
                 :state="form.camposAtributos.concepto.state"
                 autocomplete="off"
@@ -460,7 +565,7 @@
               label-for="numeroControl"
               id="group-numeroControl">
               <b-form-input
-                @input="limpiarMensajeError('numeroControl')"
+                @input="limpiarMensajeError(form.camposAtributos.numeroControl)"
                 :disabled="form.camposAtributos.numeroControl.disabled"
                 :state="form.camposAtributos.numeroControl.state"
                 autocomplete="off"
@@ -479,7 +584,7 @@
               label-for="fechaCobroFactura"
               id="group-fechaCobroFactura">
               <b-form-datepicker
-                @input="limpiarMensajeError('fechaCobroFactura')"
+                @input="limpiarMensajeError(form.camposAtributos.fechaCobroFactura)"
                 :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
                 :disabled="form.camposAtributos.fechaCobroFactura.disabled"
                 :max="form.camposAtributos.fechaCobroFactura.max"
@@ -501,7 +606,7 @@
               label-for="observaciones"
               id="group-observaciones">
               <b-form-textarea
-                @input="limpiarMensajeError('observaciones')"
+                @input="limpiarMensajeError(form.camposAtributos.observaciones)"
                 :disabled="form.camposAtributos.observaciones.disabled"
                 :state="form.camposAtributos.observaciones.state"
                 autocomplete="off"
