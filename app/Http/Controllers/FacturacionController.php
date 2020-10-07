@@ -21,9 +21,11 @@ class FacturacionController extends Controller
       $estatus = $modelo->estatusProyectos();
       $permisos = $modelo->permisosMenu(session("usuario_id"), 16);
       $proyectos = $modelo->proyectosFacturacion($paginar);
+      $cantidadPaginas = $modelo->cantidadPaginasProyectoFacturacion($paginar);
 
       return [
         "estatus" => $estatus,
+        "numero_paginas" => $cantidadPaginas,
         "paginar" => $paginar,
         "permisos" => $permisos,
         "proyectos" => $proyectos,

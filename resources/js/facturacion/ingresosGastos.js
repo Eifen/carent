@@ -130,9 +130,6 @@ new Vue({
           self.comboEstatus.push({text : item.descripcion, value : item.valor});
         });
 
-        /*self.proyectos = response.data.proyectos;
-        self.permisoActualizar = response.data.permisoActualizar;*/
-
         self.paginador.numPaginas = response.data.numero_paginas;
         self.paginador.max = parseInt(response.data.numero_paginas);
         self.paginador.paginar = response.data.paginar;
