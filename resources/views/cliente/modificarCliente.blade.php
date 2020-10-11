@@ -178,123 +178,27 @@
             <h5>Dirección Fiscal</h5>
             <form class="row">
               <div class="form-group col-12 col-sm-6">
-                <label for="estadofi">Estado <span class="campo-obligatorio">*</span></label>
-                <select aria-describedby="estadoHelp"
-                        class="form-control"
-                        id="estadofi"
-                        v-bind:data-validar="form.estadofi.validar"
-                        v-bind:disabled="form.estadofi.disabled"
-                        v-model="form.estadofi.value"
-                        v-on:change="municipiosfi"
-                        v-on:click="limpiarMensajeError"
-                        type="text">
-                  <option value="" disabled selected>Seleccione...</option>
-                  <option v-bind:value="estadofi.id" v-for="estadofi in comboEstadosfi">@{{ estadofi.estado }}</option>
-                </select>
-                <small id="estadofiHelp" class="form-text text-muted">Estado de la oficina en donde se desempeña</small>
-                <div class="mensaje"></div>
+                <label for="pais">Pais<span class="campo-obligatorio">*</span></label>
+                <v-select @input="pais"
+                :options="comboPaises"
+                          label="nombre"                          
+                          id="pais"
+                          v-model="form.pais.value"
+                          v-bind:data-validar="form.pais.validar"
+                          v-bind:disable="form.pais.disable"
+                          placeholder="Seleccione..."
+                          type="text"></v-select>
               </div>
-              <div class="form-group col-12 col-sm-6">
-                <label for="estadofi">Municipio <span  class="campo-obligatorio">*</span></label>
-                <select aria-describedby="municipiofiHelp"
-                        class="form-control"
-                        id="municipiofi"
-                        v-bind:data-validar="form.municipiofi.validar"
-                        v-bind:disabled="form.municipiofi.disabled"
-                        v-model="form.municipiofi.value"
-                        v-on:change="parroquiasfi"
-                        v-on:click="limpiarMensajeError"
-                        type="text">
-                  <option value="" disabled selected>Seleccione...</option>
-                  <option v-bind:value="municipiofi.id" v-for="municipiofi in comboMunicipiosfi">@{{ municipiofi.municipio }}</option>
-                </select>
-                <small id="estadofiHelp" class="form-text text-muted" v-html="form.municipiofi.help"></small>
-                <div class="mensaje"></div>
-              </div>
-              <div class="form-group col-12 col-sm-6">
-                <label for="estadofi">Parroquia <span class="campo-obligatorio">*</span></label>
-                <select aria-describedby="parroquiafiHelp"
-                        class="form-control"
-                        id="parroquiafi"
-                        v-bind:data-validar="form.parroquiafi.validar"
-                        v-bind:disabled="form.parroquiafi.disabled"
-                        v-model="form.parroquiafi.value"
-                        v-on:click="limpiarMensajeError"
-                        type="text">
-                  <option value="" disabled selected>Seleccione...</option>
-                  <option v-bind:value="parroquiafi.id" v-for="parroquiafi in comboParroquiasfi">@{{ parroquiafi.parroquia }}</option>
-                </select>
-                <small id="estadofiHelp" class="form-text text-muted" v-html="form.parroquiafi.help"></small>
-                <div class="mensaje"></div>
-              </div>
-              <div class="form-group col-12 col-sm-6">
-                <label for="ciudad_fiscal">Ciudad<span class="campo-obligatorio">*</span></label>
-                <input aria-describedby="ciudad_fiscalHelp"
-                       class="form-control text-lowercase"
-                       data-validar="true"
-                       id="ciudad_fiscal"
-                       v-bind:disabled="form.ciudad_fiscal.disabled"
-                       v-model="form.ciudad_fiscal.value"
-                       v-on:keyup="valuesForm"
-                       type="text">
-                <small id="ciudad_fiscal" class="form-text text-muted">Ejemplo: caracas</small>
-                <div class="mensaje"></div>
-              </div>
-
-              <div class="form-group col-12 col-sm-6">
-                <label for="avenida_calle_fiscal">Avenida o Calle <span class="campo-obligatorio">*</span></label>
-                <input aria-describedby="avenida_calle_fiscalHelp"
-                       class="form-control text-lowercase"
-                       data-validar="true"
-                       id="avenida_calle_fiscal"
-                       v-bind:disabled="form.avenida_calle_fiscal.disabled"
-                       v-model="form.avenida_calle_fiscal.value"
-                       v-on:keyup="valuesForm"
-                       type="text">
-                <small id="avenida_calle_fiscalHelp" class="form-text text-muted"></small>
-                <div class="mensaje"></div>
-              </div>
-
-              <div class="form-group col-12 col-sm-6">
-                <label for="edificio_quinta_fiscal">Quinta o Edificio<span class="campo-obligatorio">*</span></label>
-                <input aria-describedby="edificio_quinta_fiscalHelp"
-                       class="form-control text-lowercase"
-                       data-validar="true"
-                       id="edificio_quinta_fiscal"
-                       v-bind:disabled="form.edificio_quinta_fiscal.disabled"
-                       v-model="form.edificio_quinta_fiscal.value"
-                       v-on:keyup="valuesForm"
-                       type="text">
-                <small id="edificio_quinta_fiscalHelp" class="form-text text-muted"></small>
-                <div class="mensaje"></div>
-              </div>
-              <div class="form-group col-12 col-sm-6">
-                <label for="piso_fiscal">Piso<span class="campo-obligatorio">*</span></label>
-                <input aria-describedby="piso_ficalHelp"
-                       class="form-control text-lowercase"
-                       id="piso_fiscal"
-                       v-bind:disabled="form.piso_fiscal.disabled"
-                       v-mask="'XXX'"
-                       v-model="form.piso_fiscal.value"
-                       v-on:keyup="valuesForm"
-                       type="text">
-                <small id="piso_ficalHelp" class="form-text text-muted">ejemplo: 24</small>
-                <div class="mensaje"></div>
-              </div>
-
-              <div class="form-group col-12 col-sm-6">
-                <label for="numero_fiscal">Número<span class="campo-obligatorio">*</span></label>
-                <input aria-describedby="numero_fiscal"
-                       class="form-control text-lowercase"
-                       id="numero_fiscal"
-                       v-bind:disabled="form.numero_fiscal.disabled"
-                       v-mask="'XXXXX'"
-                       v-model="form.numero_fiscal.value"
-                       v-on:keyup="valuesForm"
-                       type="text">
-                <small id="numero_fiscal" class="form-text text-muted"></small>
-                <div class="mensaje"></div>
-              </div>
+              <div class="form-group col-12 col-sm-6"></div>
+              <div class="form-group col-24 col-sm-12">
+                <label for="direccion">Dirección<span class="campo-obligatorio">*</span></label>
+                <textarea :disabled="form.direccion.disabled"
+                          :maxlength="form.direccion.maxlength"
+                          class="form-control form-control-sm"
+                          rows="3"
+                          v-model="form.direccion.value"
+                          data-min="10"></textarea>
+              </div>         
 
               <div class="form-group col-12 col-sm-6">
                 <label for="telefono_fiscal">Nº de Teléfono Principal<span class="campo-obligatorio">*</span></label>
@@ -302,7 +206,7 @@
                        class="form-control"
                        id="telefono_fiscal"
                        v-bind:disabled="form.telefono_fiscal.disabled"
-                       v-mask="'(####) - ### ####'"
+                       v-mask="'+ ################'"
                        v-model="form.telefono_fiscal.value"
                        v-on:keyup="valuesForm"
                        type="text">

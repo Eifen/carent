@@ -53,6 +53,18 @@ html {
 #cargarHoras .wrapper-forms form > div.form-group .form-control:disabled {
   cursor: not-allowed;
 }
+#cargarHoras .wrapper-forms form > div.form-group .form-control-distint {
+  border-radius: 2px;
+  background-color: white;
+  width: 10em;
+  height: 2.4em;
+}
+#cargarHoras .wrapper-forms form > div.form-group .form-control-distint.error {
+  border-color: #dc3545;
+}
+#cargarHoras .wrapper-forms form > div.form-group .form-control-distint:disabled {
+  cursor: not-allowed;
+}
 #cargarHoras .wrapper-forms .table {
   background-color: white;
   border: 1px solid rgba(0, 0, 0, 0.13);
