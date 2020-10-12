@@ -39,7 +39,7 @@ Route::get('/buscarCliente', 'ClienteController@buscarCliente');
 Route::get('/estados', 'ClienteController@estados');
 Route::get('/municipios', 'ClienteController@municipios');
 Route::get('/parroquias', 'ClienteController@parroquias');
-Route::get('/codigoCliente', 'ClienteController@codigoCliente');
+Route::get('/dataInicialCliente', 'ClienteController@dataInicialCliente');
 Route::post('/crearCliente', 'ClienteController@crearCliente');
 Route::get('/formBuscarCliente', function() {return view('cliente/buscarCliente');})->middleware('usuario.session');
 Route::get('/buscarClientes', 'ClienteController@buscarClientes');

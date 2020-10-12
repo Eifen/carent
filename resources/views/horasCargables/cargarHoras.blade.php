@@ -18,7 +18,7 @@
         <loading :loading="loading" v-show="loading"></loading>
         <menu-principal v-cloak></menu-principal>
         <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
-          <div class="col-12 col-sm-11 col-md-9 wrapper-form" v-if="form.mostrar">
+          <div class="col-11 col-sm-12 col-md-10 wrapper-form" v-if="form.mostrar">
             <h3>Datos del Proyecto a Cargar Horas</h3>
             <form class="row" v-for="ProyAnalista in infoProyAnalista">
               <div class="form-group col-12 col-sm-6">
