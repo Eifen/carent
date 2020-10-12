@@ -10,7 +10,7 @@ html {
 #app .wrapper-forms {
   min-height: calc(100vh - 62px);
   padding-bottom: 50px;
-  padding-top: 100px;
+  padding-top: 50px;
 }
 @media (max-width: 575px) {
   #app .wrapper-forms {
@@ -23,6 +23,8 @@ html {
   border: 1px solid rgba(0, 0, 0, 0.13);
   border-radius: 3px;
   margin-bottom: 50px;
+  margin-left: 0px;
+  margin-right: 0px;
   padding: 15px;
   transition: all 0.3s;
 }
@@ -106,11 +108,8 @@ html {
   cursor: pointer;
 }
 #app .wrapper-forms .btn {
-  border: 2px solid #091F40;
   border-radius: 2px;
   font-weight: 600;
-  transition: all 0.3s;
-  width: 100%;
 }
 #app .wrapper-forms .btn:hover {
   background-color: #F6A81C !important;
@@ -118,14 +117,6 @@ html {
 }
 #app .wrapper-forms .btn:disabled {
   cursor: not-allowed;
-}
-#app .wrapper-forms .btn.filtrar {
-  background-color: #091F40;
-  color: #ffffff;
-}
-#app .wrapper-forms .btn.limpiar_filtro {
-  background-color: transparent;
-  color: #091F40;
 }
 #app .wrapper-forms .wrapper-alert {
   margin-top: 15px;
