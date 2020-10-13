@@ -175,6 +175,7 @@
                 <textarea :disabled="form.direccion.disabled"
                           :maxlength="form.direccion.maxlength"
                           class="form-control form-control-sm"
+                          data-validar="true"
                           rows="3"
                           v-model="form.direccion.value"
                           data-min="10"></textarea>
