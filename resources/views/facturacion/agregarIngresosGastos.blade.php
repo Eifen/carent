@@ -449,43 +449,10 @@
             <b-form-group
               :invalid-feedback="form.camposAtributos.numeroFactura.invalidFeedback"
               class="col-12 col-sm-6 col-md-3"
-              label="N° de Factura"
-              label-for="numeroFactura"
-              id="group-numeroFactura"
-              v-if="form.camposAtributos.numeroFactura.busqueda === true">
-              <b-form-input
-                @blur="valorBlur('numeroFactura')"
-                @input="buscarFactura"
-                :disabled="form.camposAtributos.numeroFactura.disabled"
-                :state="form.camposAtributos.numeroFactura.state"
-                autocomplete="off"
-                class="text-uppercase"
-                id="numeroFactura"
-                ref="numeroFactura"
-                size="sm"
-                type="text"
-                v-on:focus="valorFocus('numeroFactura')"
-                v-model.trim="form.camposAtributos.numeroFactura.valor"></b-form-input>
-              <b-dropdown id="lista-facturas" variant="link" no-caret block ref="ref-lista-facturas">
-                <b-dropdown-item-button
-                  :key="key"
-                  v-for="(factura, key) in form.camposAtributos.numeroFactura.listaDropdown.listado"
-                  v-if="form.camposAtributos.numeroFactura.listaDropdown.listado.length > 0"
-                  v-on:click="elegirFactura(factura)"> @{{ factura.numero_factura }} </b-dropdown-item-button>
-                <b-dropdown-item-button
-                  v-if="form.camposAtributos.numeroFactura.listaDropdown.noResultado"
-                  v-on:click="listadoNoValido('numeroFactura')">No se encontrarón facturas, intente con otro número!</b-dropdown-item-button>
-              </b-dropdown>
-              <b-form-text id="factura-help" v-html="form.camposAtributos.numeroFactura.help"></b-form-text>
-            </b-form-group>
-            <b-form-group
-              :invalid-feedback="form.camposAtributos.numeroFactura.invalidFeedback"
-              class="col-12 col-sm-6 col-md-3"
               description="Ejemplo: AABB0123C-5"
               label="N° de Factura"
               label-for="numeroFactura"
-              id="group-numeroFactura"
-              v-else="form.camposAtributos.numeroFactura.busqueda === false">
+              id="group-numeroFactura">
               <b-form-input
                 @input="limpiarMensajeError(form.camposAtributos.numeroFactura)"
                 :disabled="form.camposAtributos.numeroFactura.disabled"
@@ -616,6 +583,52 @@
                 size="sm"
                 type="text"
                 v-model="form.camposAtributos.observaciones.value"></b-form-textarea>
+            </b-form-group>
+            <b-form-group
+              :invalid-feedback="form.camposAtributos.numeroFacturaAnular.invalidFeedback"
+              class="col-12 col-sm-6"
+              label="N° de Factura"
+              label-for="numeroFactura"
+              id="group-numeroFactura"
+              v-if="form.camposAtributos.numeroFacturaAnular.busqueda === true">
+              <b-form-input
+                @blur="valorBlur('numeroFacturaAnular')"
+                @input="buscarFactura"
+                :disabled="form.camposAtributos.numeroFacturaAnular.disabled"
+                :state="form.camposAtributos.numeroFacturaAnular.state"
+                autocomplete="off"
+                class="text-uppercase"
+                id="numeroFacturaAnular"
+                ref="numeroFacturaAnular"
+                size="sm"
+                type="text"
+                v-on:focus="valorFocus('numeroFacturaAnular')"
+                v-model.trim="form.camposAtributos.numeroFacturaAnular.valor"></b-form-input>
+              <b-dropdown id="lista-facturas" variant="link" no-caret block ref="ref-lista-facturas">
+                <b-dropdown-item-button
+                  :key="key"
+                  v-for="(factura, key) in form.camposAtributos.numeroFacturaAnular.listaDropdown.listado"
+                  v-if="form.camposAtributos.numeroFacturaAnular.listaDropdown.listado.length > 0"
+                  v-on:click="elegirFactura(factura)"> @{{ factura.numero_factura }} </b-dropdown-item-button>
+                <b-dropdown-item-button
+                  v-if="form.camposAtributos.numeroFacturaAnular.listaDropdown.noResultado"
+                  v-on:click="listadoNoValido('numeroFactura')">No se encontrarón facturas, intente con otro número!</b-dropdown-item-button>
+              </b-dropdown>
+              <b-form-text id="factura-help" v-html="form.camposAtributos.numeroFacturaAnular.help"></b-form-text>
+            </b-form-group>
+            <b-form-group
+              class="col-12 col-sm-6"
+              description="N° de Control de la factura que se le asocia la nota de crédito"
+              label="N° de Control"
+              label-for="numeroControl"
+              id="group-numeroControl"
+              v-if="form.camposAtributos.numeroFacturaAnular.busqueda === true">
+              <b-form-input
+                :disabled="true"
+                class="text-uppercase"
+                size="sm"
+                type="text"
+                v-model="form.camposAtributos.numeroFacturaAnular.numeroControl"></b-form-input>
             </b-form-group>
           </b-form>
           <template v-slot:modal-footer>

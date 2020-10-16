@@ -91,21 +91,27 @@ new Vue({
           state: null
         },
         numeroFactura: {
-          busqueda: false,
           disabled: true,
-          help: "",
-          helpInit: "Ejemplo: AABB0123C-5",
-          helpLoading: '<i class="fas fa-cog fa-spin"></i> buscando',
+          invalidFeedback: "",
+          state: null
+        },
+        numeroFacturaAnular: {
+          busqueda: false,
+          disabled: false,
           idFacturaAnular: null,
           invalidFeedback: "",
+          help: "",
+          helpInit: "N° de la factura que se le asocia la nota de crédito",
+          helpLoading: '<i class="fas fa-cog fa-spin"></i> buscando',
           listaDropdown: {
             listado: [],
             noResultado: false
           },
-          state: null,
+          numeroControl: "",
           valor: null,
           valorBlur: null,
-          valorFocus: null
+          valorFocus: null,
+          state: null
         },
         montoFactura: {
           autonumeric: null,
@@ -395,7 +401,7 @@ new Vue({
           socio: response.data.proyecto.socio
         }
 
-        self.form.camposAtributos.numeroFactura.help = self.form.camposAtributos.numeroFactura.helpInit;
+        self.form.camposAtributos.numeroFacturaAnular.help = self.form.camposAtributos.numeroFacturaAnular.helpInit;
 
         response.data.conceptos_factura.forEach((item, i) => {
           self.comboTipoConceptos.push({text:item.descripcion, value: {id: item.id, type: item.id_tipo_concepto_factura} });
@@ -502,7 +508,7 @@ new Vue({
 
             if(self.form.camposAtributos[indice].hasOwnProperty("disabled") && indice !== "tipoConcepto" && indice !== "observaciones"){
               self.form.camposAtributos[indice].disabled = true;
-            }else if(indice === "tipoConcepto" || indice === "observaciones"){
+            }else if(indice === "tipoConcepto" || indice === "observaciones" || indice === "numeroFacturaAnular"){
               self.form.camposAtributos[indice].disabled = false;
             }
 
@@ -514,10 +520,10 @@ new Vue({
 
           self.mostrarAlert(self.form.alert);
 
-          self.form.camposAtributos.numeroFactura.busqueda = false;
-          self.form.camposAtributos.numeroFactura.valor = null;
-          self.form.camposAtributos.numeroFactura.valorFocus = null;
-          self.form.camposAtributos.numeroFactura.valorBlur = null;
+          self.form.camposAtributos.numeroFacturaAnular.busqueda = false;
+          self.form.camposAtributos.numeroFacturaAnular.valor = null;
+          self.form.camposAtributos.numeroFacturaAnular.valorFocus = null;
+          self.form.camposAtributos.numeroFacturaAnular.valorBlur = null;
 
         });
 
@@ -667,7 +673,7 @@ new Vue({
 
       Object.keys(self.form.camposAtributos).forEach((indice, i) => {
 
-        if(self.form.camposAtributos[indice].hasOwnProperty("disabled") && indice !== "tipoConcepto" && indice !== "observaciones"){
+        if(self.form.camposAtributos[indice].hasOwnProperty("disabled") && indice !== "tipoConcepto" && indice !== "observaciones" && indice !== "numeroFacturaAnular"){
           self.form.camposAtributos[indice].disabled = true;
         }
 
@@ -681,9 +687,11 @@ new Vue({
 
       });
 
-      self.form.camposAtributos.numeroFactura.help = self.form.camposAtributos.numeroFactura.helpInit;
-      self.form.camposAtributos.numeroFactura.busqueda = false;
-      self.form.camposAtributos.numeroFactura.idFacturaAnular = null;
+      self.form.camposAtributos.numeroFacturaAnular.help = self.form.camposAtributos.numeroFacturaAnular.helpInit;
+      self.form.camposAtributos.numeroFacturaAnular.busqueda = false;
+      self.form.camposAtributos.numeroFacturaAnular.idFacturaAnular = null;
+      self.form.camposAtributos.numeroFacturaAnular.valor = null;
+      self.form.camposAtributos.numeroFacturaAnular.numeroControl = null;
 
       if(valor !== null && valor.trim !== '' && valor.hasOwnProperty("type")){
 
@@ -693,8 +701,9 @@ new Vue({
         if(type === 3){
 
           self.form.camposAtributos.numeroFactura.disabled = false;
+          self.form.camposAtributos.numeroControl.disabled = false;
           self.form.camposAtributos.observaciones.disabled = false;
-          self.form.camposAtributos.numeroFactura.busqueda = true;
+          self.form.camposAtributos.numeroFacturaAnular.busqueda = true;
 
         }else if(type === 2 && id === 5){
 
@@ -813,7 +822,7 @@ new Vue({
         numero_control: self.form.campos.numeroControl,
         observaciones: self.form.camposAtributos.observaciones.value,
         id_proyecto: proyecto_id,
-        id_factura_anular: self.form.camposAtributos.numeroFactura.idFacturaAnular,
+        id_factura_anular: self.form.camposAtributos.numeroFacturaAnular.idFacturaAnular,
         paginar: self.paginador.paginar
       }
 
@@ -856,7 +865,7 @@ new Vue({
 
             if(self.form.camposAtributos[indice].hasOwnProperty("disabled") && indice !== "tipoConcepto" && indice !== "observaciones"){
               self.form.camposAtributos[indice].disabled = true;
-            }else if(indice === "tipoConcepto" || indice === "observaciones"){
+            }else if(indice === "tipoConcepto" || indice === "observaciones"|| indice === "numeroFacturaAnular"){
               self.form.camposAtributos[indice].disabled = false;
             }
 
@@ -870,7 +879,7 @@ new Vue({
 
           });
 
-          self.form.camposAtributos.numeroFactura.busqueda = false;
+          self.form.camposAtributos.numeroFacturaAnular.busqueda = false;
           self.form.camposAtributos.numeroFactura.valor = null;
           self.form.camposAtributos.numeroFactura.valorFocus = null;
           self.form.camposAtributos.numeroFactura.valorBlur = null;
@@ -960,33 +969,36 @@ new Vue({
     },
     buscarFactura: function(){
 
-      self.limpiarMensajeError(self.form.camposAtributos.numeroFactura);
+      self.limpiarMensajeError(self.form.camposAtributos.numeroFacturaAnular);
       self.$refs["ref-lista-facturas"].hide();
-      self.form.camposAtributos.numeroFactura.listaDropdown.listado = [];
-      self.form.camposAtributos.numeroFactura.listaDropdown.noResultado = false;
-      self.form.campos.numeroFactura = null;
-      self.form.camposAtributos.numeroFactura.valorFocus = null;
-      self.form.camposAtributos.numeroFactura.valorBlur = null;
-      self.form.camposAtributos.numeroFactura.idFacturaAnular = null;
+      self.form.camposAtributos.numeroFacturaAnular.listaDropdown.listado = [];
+      self.form.camposAtributos.numeroFacturaAnular.listaDropdown.noResultado = false;
+      //self.form.campos.numeroFactura = null;
+      self.form.camposAtributos.numeroFacturaAnular.valorFocus = null;
+      self.form.camposAtributos.numeroFacturaAnular.valorBlur = null;
+      self.form.camposAtributos.numeroFacturaAnular.idFacturaAnular = null;
 
-      if(self.form.camposAtributos.numeroFactura.valor !== ''){
+      self.form.camposAtributos.numeroFacturaAnular.help = self.form.camposAtributos.numeroFacturaAnular.helpLoading;
+
+
+      if(self.form.camposAtributos.numeroFacturaAnular.valor !== ''){
 
         axios.get('/buscarFacturaProyectoNotaCredito',{
           params: {
             id_proyecto: proyecto_id,
-            numero_factura: self.form.camposAtributos.numeroFactura.valor
+            numero_factura: self.form.camposAtributos.numeroFacturaAnular.valor
           }
         })
         .then(function (response) {
 
-          self.form.camposAtributos.numeroFactura.help = self.form.camposAtributos.numeroFactura.helpInit;
+          self.form.camposAtributos.numeroFacturaAnular.help = self.form.camposAtributos.numeroFacturaAnular.helpInit;
 
           if(response.status === 200 && response.data.response === true){
 
-            self.form.camposAtributos.numeroFactura.listaDropdown.listado = response.data.facturas;
+            self.form.camposAtributos.numeroFacturaAnular.listaDropdown.listado = response.data.facturas;
 
             if(response.data.facturas.length === 0){
-              self.form.camposAtributos.numeroFactura.listaDropdown.noResultado = true;
+              self.form.camposAtributos.numeroFacturaAnular.listaDropdown.noResultado = true;
             }
 
             self.mostrarListado("ref-lista-facturas");
@@ -1000,9 +1012,9 @@ new Vue({
         })
         .catch(error => {
 
-          self.form.camposAtributos.numeroFactura.help = self.form.camposAtributos.numeroFactura.helpInit;
-          self.form.camposAtributos.numeroFactura.invalidFeedback = "Ocurrio un error, intenta nuevamente; con este error no podrás la factura.";
-          self.form.camposAtributos.numeroFactura.state = false;
+          self.form.camposAtributos.numeroFacturaAnular.help = self.form.camposAtributos.numeroFacturaAnular.helpInit;
+          self.form.camposAtributos.numeroFacturaAnular.invalidFeedback = "Ocurrio un error, intenta nuevamente; con este error no podrás la factura.";
+          self.form.camposAtributos.numeroFacturaAnular.state = false;
 
         });
 
@@ -1017,18 +1029,18 @@ new Vue({
     },
     elegirFactura: function(factura){
 
-      self.form.camposAtributos.numeroFactura.valor = factura.numero_factura;
-      self.form.camposAtributos.numeroFactura.valorFocus = factura.numero_factura;
-      self.form.camposAtributos.numeroFactura.valorBlur = factura.numero_factura;
-      self.form.camposAtributos.numeroFactura.state = true;
-      self.form.camposAtributos.numeroFactura.idFacturaAnular = factura.id;
-      self.form.campos.numeroFactura = factura.numero_factura;
+      self.form.camposAtributos.numeroFacturaAnular.valor = factura.numero_factura;
+      self.form.camposAtributos.numeroFacturaAnular.valorFocus = factura.numero_factura;
+      self.form.camposAtributos.numeroFacturaAnular.valorBlur = factura.numero_factura;
+      self.form.camposAtributos.numeroFacturaAnular.state = true;
+      self.form.camposAtributos.numeroFacturaAnular.idFacturaAnular = factura.id;
+      //self.form.campos.numeroFactura = factura.numero_factura;
 
-      self.form.campos.concepto = factura.concepto;
-      self.form.campos.fechaFactura = factura.fecha_factura;
-      self.form.campos.numeroControl = factura.numero_control;
-      self.form.camposAtributos.observaciones.value = factura.observaciones;
-      self.form.camposAtributos.fechaCobroFactura.value = factura.fecha_cobro_factura;
+      //self.form.campos.concepto = factura.concepto;
+      //self.form.campos.fechaFactura = factura.fecha_factura;
+      self.form.camposAtributos.numeroFacturaAnular.numeroControl = factura.numero_control;
+      //self.form.camposAtributos.observaciones.value = factura.observaciones;
+      //self.form.camposAtributos.fechaCobroFactura.value = factura.fecha_cobro_factura;
       self.form.campos.montoFactura = factura.monto_factura;
 
       let monto = self.$refs["montoFactura"].$el
