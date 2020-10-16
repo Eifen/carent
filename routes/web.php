@@ -126,3 +126,8 @@ Route::get('/buscarFacturasCargadas', 'FacturacionController@buscarFacturasCarga
 Route::post('/registrarFactura', 'FacturacionController@registrarFactura');
 Route::post('/eliminarFactura', 'FacturacionController@eliminarFactura');
 Route::post('/modificarFactura', 'FacturacionController@modificarFactura');
+
+/*
+  Módulo de Reportes
+*/
+Route::get('/formReportes', 'ReportesController@formReportes')->middleware('usuario.session');
