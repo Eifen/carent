@@ -285,7 +285,9 @@ class FacturacionModel extends Model
                                 LOWER(CONCAT(fu.nombre_1," ",fu.nombre_2," ",fu.apellido_1," ",fu.apellido_2)) AS facturador,
                                 cf.id_tipo_concepto_factura AS tipo_movimiento,
                                 (SELECT descripcion FROM tbl_tipo_concepto_factura WHERE id = cf.id_tipo_concepto_factura) AS movimiento,
-                                fp.concepto
+                                fp.concepto,
+                                (SELECT UPPER(numero_factura) FROM tbl_factura_proyecto WHERE id = fp.id_factura_anular) numero_factura_anular,
+                                (SELECT UPPER(numero_control) FROM tbl_factura_proyecto WHERE id = fp.id_factura_anular) numero_control_anular
                          FROM tbl_factura_proyecto fp,
                               tbl_concepto_factura cf,
                               tbl_usuario fu
