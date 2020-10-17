@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use App\Models\FacturacionModel;
+use App\Models\ReportesModel;
 
-class FacturacionController extends Controller
+class ReportesController extends Controller
 {
 
     function formReportes(){
