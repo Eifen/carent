@@ -247,7 +247,6 @@ new Vue({
           },
           numeroFacturaAnular: {
             factura: null,
-            help: "N° de la factura que se le asocia la nota de crédito",sultado: false,
             numeroControl: null
           }
         }
