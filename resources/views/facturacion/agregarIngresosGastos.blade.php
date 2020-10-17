@@ -378,6 +378,19 @@
               size="sm"
               v-model="modalMasInfo.form.camposAtributos.fechaCobroFacturaMod.value"></b-form-datepicker>
           </b-form-group>
+          <b-form-group
+            description="N° de Control de la factura que se le asocia la nota de crédito"
+            label="N° de Control"
+            label-for="numeroControl"
+            id="group-numeroControl"
+            v-if="modalMasInfo.form.camposAtributos.numeroFacturaAnular.numeroControl !== null">
+            <b-form-input
+              :disabled="true"
+              class="text-uppercase"
+              size="sm"
+              type="text"
+              v-model="modalMasInfo.form.camposAtributos.numeroFacturaAnular.numeroControl "></b-form-input>
+          </b-form-group>
           <template v-slot:modal-footer>
             <alert :contador="modalMasInfo.alert.contador"
                    :icono-cerrar="modalMasInfo.alert.iconCerrar"

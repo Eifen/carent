@@ -244,6 +244,11 @@ new Vue({
             invalidFeedback: "",
             state: null,
             value: ""
+          },
+          numeroFacturaAnular: {
+            factura: null,
+            help: "N° de la factura que se le asocia la nota de crédito",sultado: false,
+            numeroControl: null
           }
         }
       },
@@ -631,7 +636,9 @@ new Vue({
           varianteMovimiento: varianteMovimiento,
           id: item.id,
           observaciones: item.observaciones,
-          id_concepto_factura: item.id_concepto_factura
+          id_concepto_factura: item.id_concepto_factura,
+          numero_factura_anular: item.numero_factura_anular,
+          numero_control_anular: item.numero_control_anular
         };
 
         registros.push(factura);
@@ -1175,6 +1182,8 @@ new Vue({
       self.modalMasInfo.form.camposAtributos.fechaCobroFacturaMod.value = data.fecha_cobro_factura;
       self.modalMasInfo.idConceptoFactura = data.id_concepto_factura;
       self.modalMasInfo.idFactura = data.id;
+      self.modalMasInfo.form.camposAtributos.numeroFacturaAnular.factura = data.numero_factura_anular;
+      self.modalMasInfo.form.camposAtributos.numeroFacturaAnular.numeroControl = data.numero_control_anular;
 
       self.modalMasInfo.titulo = (data.numero_factura === null) ? "("+data.tipo_concepto+")" : data.numero_factura+" ("+data.tipo_concepto+")";
 
