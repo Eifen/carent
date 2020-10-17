@@ -506,6 +506,7 @@ new Vue({
           self.form.camposAtributos.observaciones.value = "";
           self.form.campos.montoFactura = null;
           self.form.camposAtributos.montoFactura.autonumeric.set(0);
+          self.form.campos.numeroFacturaAnular = null;
 
           Object.keys(self.form.camposAtributos).forEach((indice, i) => {
 
@@ -878,6 +879,7 @@ new Vue({
           self.form.camposAtributos.observaciones.value = "";
           self.form.campos.montoFactura = null;
           self.form.camposAtributos.montoFactura.autonumeric.set(0);
+          self.form.campos.numeroFacturaAnular = null;
 
           self.form.info.monto_facturado = self.simboloMoneda+response.data.facturado_proyecto.monto_facturado;
           self.form.info.monto_gastos = self.simboloMoneda+response.data.facturado_proyecto.monto_gasto;
@@ -906,7 +908,6 @@ new Vue({
           self.form.camposAtributos.numeroFactura.valor = null;
           self.form.camposAtributos.numeroFactura.valorFocus = null;
           self.form.camposAtributos.numeroFactura.valorBlur = null;
-          self.form.camposAtributos.numeroFactura.numeroFacturaAnular = null;
 
           self.$nextTick(() => {
             self.$v.$reset();
