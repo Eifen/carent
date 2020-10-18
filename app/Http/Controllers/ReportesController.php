@@ -13,22 +13,14 @@ class ReportesController extends Controller
 
     }
 
-    function dataInicialIngresosGastos(){
+    function dataInicialFormReportes(){
 
-      $modelo = new FacturacionModel();
+      $modelo = new ReportesModel();
 
-      $paginar = 50;
-      $estatus = $modelo->estatusProyectos();
-      $permisos = $modelo->permisosMenu(session("usuario_id"), 16);
-      $proyectos = $modelo->proyectosFacturacion($paginar);
-      $cantidadPaginas = $modelo->cantidadPaginasProyectoFacturacion($paginar);
+      $reportes = $modelo->reportesAsociados(session("usuario_id"));
 
       return [
-        "estatus" => $estatus,
-        "numero_paginas" => $cantidadPaginas,
-        "paginar" => $paginar,
-        "permisos" => $permisos,
-        "proyectos" => $proyectos,
+        "reportes" => $reportes,
         "response" => true
       ];
 

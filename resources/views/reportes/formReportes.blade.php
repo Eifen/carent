@@ -25,20 +25,24 @@
             <h5>Reportes Disponibles</h5>
             <b-form class="row">
               <b-form-group
-                class="form-group col-12 col-sm-8"
+                class="form-group col-12 col-sm-7 col-md-8"
                 label="Tipo de reporte"
                 label-for="proyecto"
                 id="group-proyecto">
-                <b-form-input
+                <b-form-select
                   :disabled="formReportes.reportes.disabled"
-                  id="proyecto"
-                  ref="proyecto"
+                  :value="null"
+                  :options="formReportes.reportes.listado"
+                  id="reportes"
+                  ref="reportes"
                   size="sm"
-                  type="text"
-                  v-model.trim="formReportes.reportes.value"></b-form-input>
-                <b-form-text id="proyecto-help">Nombre que se le dío la proyecto</b-form-text>
+                  v-model="formReportes.reportes.value">
+                  <template v-slot:first>
+                    <option :value="null" disabled="true">Seleccione...</option>
+                  </template>
+                </b-form-select>
               </b-form-group>
-              <b-form-group class="col-12 col-sm-4">
+              <b-form-group class="col-12 col-sm-5 col-md-4">
                 <label>&nbsp;</label>
                 <b-button
                   :disabled="formReportes.btn.generar.disabled"

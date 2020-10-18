@@ -35,7 +35,8 @@ new Vue({
       },
       reportes:{
         disabled: true,
-        value: ""
+        listado: [],
+        value: null
       },
       mostrar: false
     },
@@ -47,23 +48,19 @@ new Vue({
     self = this;
 
     //Se utiliza el metodo get para obtener los valores inciales
-    axios.get('/dataInicialIngresosGastos')
+    axios.get('/dataInicialFormReportes')
     .then(function (response) {
 
       if(response.status === 200 && response.data.response === true){
-
-
 
         //Le asignamos los valores a las variables
         self.formReportes.reportes.disabled = false;
         self.formReportes.mostrar = true;
         self.formReportes.btn.generar.html = self.formReportes.btn.generar.htmlInit;
 
-        self.permisos = response.data.permisos;
-
-        /*esponse.data.estatus.forEach((item, i) => {
-          self.comboEstatus.push({text : item.descripcion, value : item.valor});
-        });*/
+        response.data.reportes.forEach((item, i) => {
+          self.formReportes.reportes.listado.push({text : item.descripcion, value : item.valor});
+        });
 
         self.loading = false;
 
@@ -87,40 +84,6 @@ new Vue({
   mounted: function () {},
   updated: function () {},
   methods:{
-    registroTabla: function(datos){
-
-      const registros = [];
-      datos.forEach((item, i) => {
-
-        var variante;
-
-        switch (item.id_estatus) {
-          case 1: variante = "success"; break;
-          case 2: variante = "danger"; break;
-          case 3: variante = "warning"; break;
-          case 4: variante = "warning"; break;
-          default: variante = "light";
-        }
-
-        const proyecto = {
-          numero: (i + 1),
-          proyecto: item.proyecto,
-          cliente: item.cliente,
-          fecha_contratacion: item.fecha_contratacion,
-          monto_contratado: item.simbolo_moneda+''+item.monto_contratado,
-          estatus: item.estatus,
-          id: item.id,
-          id_estatus: item.id_estatus,
-          variante: variante
-        };
-
-        registros.push(proyecto);
-
-      });
-
-      return registros;
-
-    },
     buscar: function(){
 
       self.formFiltro.cliente.disabled = true;
@@ -173,14 +136,6 @@ new Vue({
       });
 
     },
-    limpiarFiltro: function(){
-
-      self.formFiltro.proyecto.value = "";
-      self.formFiltro.cliente.value = "";
-      self.formFiltro.estatus.value = "";
-      self.buscar();
-
-    },
     keyboard: function(e){
 
       if (e.keyCode === 13){
@@ -203,17 +158,6 @@ new Vue({
 
       });
 
-    },
-    paginaAnterior: function(){
-      self.paginador.pagina = ((self.paginador.pagina - 1) === 0) ? 1 : (self.paginador.pagina - 1);
-      self.buscar();
-    },
-    paginaSiguiente: function(){
-      self.paginador.pagina = ((self.paginador.pagina + 1) > self.paginador.max) ? self.paginador.pagina : (self.paginador.pagina + 1);
-      self.buscar();
-    },
-    numeroPagina: function(e){
-      self.buscar();
     }
   }
 
