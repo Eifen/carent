@@ -1,0 +1,132 @@
+html {
+  overflow-x: hidden;
+}
+[v-cloak] {
+  display: none;
+}
+#app {
+  background-color: #E9ECEF;
+}
+#app .wrapper-forms {
+  min-height: calc(100vh - 62px);
+  padding-bottom: 50px;
+  padding-top: 50px;
+}
+@media (max-width: 575px) {
+  #app .wrapper-forms {
+    padding-bottom: 0px;
+    padding-top: 50px;
+  }
+}
+#app .wrapper-forms form {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.13);
+  border-radius: 3px;
+  margin-bottom: 50px;
+  margin-left: 0px;
+  margin-right: 0px;
+  padding: 15px;
+  transition: all 0.3s;
+}
+#app .wrapper-forms form:hover {
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+}
+#app .wrapper-forms form > div.logo {
+  margin-bottom: 40px;
+  margin-top: 30px;
+  text-align: center;
+}
+#app .wrapper-forms form > div.logo img {
+  height: 90px;
+  width: auto;
+}
+#app .wrapper-forms form > div.form-group label {
+  color: #091F40;
+}
+#app .wrapper-forms form > div.form-group .form-control {
+  border-radius: 2px;
+}
+#app .wrapper-forms form > div.form-group .form-control:disabled {
+  cursor: not-allowed;
+}
+#app .wrapper-forms .table {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.13);
+  border-radius: 3px;
+  margin-bottom: 50px;
+  padding: 15px;
+  transition: all 0.3s;
+}
+#app .wrapper-forms .table:hover {
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+}
+#app .wrapper-forms .table thead tr th {
+  background-color: #091F40;
+  color: white;
+  text-align: center;
+  vertical-align: middle;
+}
+#app .wrapper-forms .table tbody tr {
+  transition: all 0.3s;
+}
+#app .wrapper-forms .table tbody tr:hover {
+  background-color: rgba(246, 168, 28, 0.5);
+}
+#app .wrapper-forms .table tbody tr th {
+  text-align: center;
+}
+#app .wrapper-forms .table tbody tr td {
+  text-align: center;
+}
+#app .wrapper-forms .table tbody tr td a {
+  color: #212529 !important;
+}
+#app .wrapper-forms .table tbody tr td .fas:hover,
+#app .wrapper-forms .table tbody tr td .far:hover {
+  cursor: pointer;
+}
+#app .wrapper-forms .table tfoot tr td > div {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+}
+#app .wrapper-forms .table tfoot tr td > div > div {
+  display: table-cell;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: middle;
+}
+#app .wrapper-forms .table tfoot tr td > div > div .form-control {
+  max-width: 70px;
+}
+#app .wrapper-forms .table tfoot tr td > div > div .icono {
+  color: #091F40;
+  font-size: 1.5rem;
+}
+#app .wrapper-forms .table tfoot tr td > div > div .icono:hover {
+  color: #000000;
+  cursor: pointer;
+}
+#app .wrapper-forms .btn {
+  border-radius: 2px;
+  font-weight: 600;
+}
+#app .wrapper-forms .btn:hover {
+  background-color: #F6A81C !important;
+  color: #091F40 !important;
+}
+#app .wrapper-forms .btn:disabled {
+  cursor: not-allowed;
+}
+#app .wrapper-forms .wrapper-alert {
+  margin-top: 15px;
+}
+#app .wrapper-forms .wrapper-alert > div {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+#app .wrapper-forms .wrapper-alert > div .alert {
+  margin-bottom: 0px;
+  text-align: center;
+  width: 100%;
+}
