@@ -11,6 +11,7 @@ import axios from 'axios';
 Vue.component('loading', require('../components/loading.vue').default);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
 Vue.component('alert',require('../components/alert.vue').default);
+Vue.component('reporte-1',require('./horasCargables.vue').default);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 Vue.component('multiselect', Multiselect);
@@ -36,6 +37,7 @@ new Vue({
       reportes:{
         disabled: true,
         listado: [],
+        verReporte: null,
         value: null
       },
       mostrar: false
@@ -59,7 +61,7 @@ new Vue({
         self.formReportes.btn.generar.html = self.formReportes.btn.generar.htmlInit;
 
         response.data.reportes.forEach((item, i) => {
-          self.formReportes.reportes.listado.push({text : item.descripcion, value : item.valor});
+          self.formReportes.reportes.listado.push({text : item.descripcion, value : item.id});
         });
 
         self.loading = false;
@@ -84,56 +86,20 @@ new Vue({
   mounted: function () {},
   updated: function () {},
   methods:{
-    buscar: function(){
+    generarReporte: function(){
 
-      self.formFiltro.cliente.disabled = true;
-      self.formFiltro.proyecto.disabled = true;
-      self.formFiltro.estatus.disabled = true;
-      self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
-      self.formFiltro.btn.filtrar.disabled = true;
-      self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlLoading;
-      self.formFiltro.btn.limpiarFiltro.disabled = true;
+      self.formReportes.reportes.disabled = true;
+      self.formReportes.btn.generar.html = self.formReportes.btn.generar.htmlLoading;
+      self.formReportes.btn.generar.disabled = true;
 
-      //Obtenemos los valores
-      let desde = (self.paginador.pagina - 1) * self.paginador.paginar;
-      let parametros = {
-        cliente: self.formFiltro.cliente.value,
-        proyecto: self.formFiltro.proyecto.value,
-        desde: desde,
-        estatus: self.formFiltro.estatus.value,
-        paginar: self.paginador.paginar
-      };
+      self.formReportes.reportes.verReporte = self.formReportes.reportes.value;
 
-      //Se utiliza el metodo get para su busqueda y se envian con los parametros
-      axios.get('/buscarProyectoFacturacion', {params: parametros})
-      .then(function (response) {
+    },
+    reporteCargado: function(){
 
-        self.formFiltro.cliente.disabled = false;
-        self.formFiltro.proyecto.disabled = false;
-        self.formFiltro.estatus.disabled = false;
-        self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
-        self.formFiltro.btn.filtrar.disabled = false;
-        self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
-        self.formFiltro.btn.limpiarFiltro.disabled = false;
-
-        // Se le asigna los valores a las variables
-        self.proyectos = response.data.proyectos;
-        self.paginador.numPaginas = response.data.paginas;
-        self.paginador.max = parseInt(response.data.paginas);
-
-        self.tabla.registros = self.registroTabla(response.data.proyectos);
-
-      }).catch(error => {
-
-        self.formFiltro.proyecto.disabled = false;
-        self.formFiltro.cliente.disabled = false;
-        self.formFiltro.estatus.disabled = false;
-        self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
-        self.formFiltro.btn.filtrar.disabled = false;
-        self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
-        self.formFiltro.btn.limpiarFiltro.disabled = false;
-
-      });
+      self.formReportes.reportes.disabled = false;
+      self.formReportes.btn.generar.html = self.formReportes.btn.generar.htmlInit;
+      self.formReportes.btn.generar.disabled = false;
 
     },
     keyboard: function(e){

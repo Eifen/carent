@@ -132,3 +132,4 @@ Route::post('/modificarFactura', 'FacturacionController@modificarFactura');
 */
 Route::get('/formReportes', 'ReportesController@formReportes')->middleware('usuario.session');
 Route::get('/dataInicialFormReportes', 'ReportesController@dataInicialFormReportes')->middleware('usuario.session');
+Route::get('/dataRepHorasCargables', 'ReportesController@dataRepHorasCargables')->middleware('usuario.session');

@@ -26,6 +26,28 @@ class ReportesController extends Controller
 
     }
 
+    function dataRepHorasCargables(){
+
+      $modelo = new ReportesModel();
+
+      $paginar = 50;
+      //$estatus = $modelo->estatusProyectos();
+      //$permisos = $modelo->permisosMenu(session("usuario_id"), 16);
+      $horas = $modelo->repoHorasCargables($paginar);
+      $paginas = $modelo->pagHorasCargables($paginar);
+      //$proyectos = $modelo->proyectosHorasCargables();
+
+      return [
+        /*"estatus" => $estatus,*/
+        "horas" => $horas,
+        "paginas" => $paginas,
+        "paginar" => $paginar,
+        //"proyectos" => $proyectos,
+        "response" => true
+      ];
+
+    }
+
     function buscarProyectoFacturacion(Request $request){
 
       $modelo = new FacturacionModel();

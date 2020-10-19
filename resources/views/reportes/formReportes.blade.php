@@ -49,13 +49,18 @@
                   block
                   size="sm"
                   v-html="formReportes.btn.generar.html"
-                  v-on:click="limpiarFiltro"
+                  v-on:click="generarReporte"
                   variant="primary">
               </b-form-group>
             </b-form>
 
           </b-col>
+        </b-row>
 
+        <b-row align-h="center" align-v="center" v-cloak>
+          <b-col cols="12">
+            <reporte-1 v-if="formReportes.reportes.verReporte === 18"></reporte-1>
+          </b-col>
         </b-row>
 
         <b-row align-h="center" align-v="center" v-if="alert.mostrar" v-cloak>

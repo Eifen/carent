@@ -75,96 +75,67 @@ class ReportesModel extends Model
 
     }// Fin estatusProyectos
 
-    function proyectosFacturacion($paginar, $desde = 0, $cliente = "", $proyecto = "", $estatus = null){
+    function repoHorasCargables($paginar, $desde = 0){
 
-      if(trim($cliente) != ""){
-        $sql_cliente = 'AND LOWER(c.razon_social) LIKE "%'.strtolower($cliente).'%"';
-      }else{
-        $sql_cliente = "";
-      }
-
-      if(trim($proyecto) != ""){
-        $sql_proyecto = 'AND LOWER(p.descripcion) LIKE "%'.strtolower($proyecto).'%"';
-      }else{
-        $sql_proyecto = "";
-      }
-
-      if($estatus != null){
-        $sql_estatus = 'AND p.id_estatus = '.$estatus;
-      }else{
-        $sql_estatus = "";
-      }
-
-      $sql = DB::select('SELECT p.id,
-                                UPPER(p.descripcion) AS proyecto,
-                                CONCAT(so.nombre_1," ",so.nombre_2," ",so.apellido_1," ",so.apellido_2) AS socio,
-                                CONCAT(ge.nombre_1," ",ge.nombre_2," ",ge.apellido_1," ",ge.apellido_2) AS gerente,
-                                DATE_FORMAT(p.fecha_contratacion, "%d/%m/%Y") AS fecha_contratacion,
-                                FORMAT(p.monto,2,"de_DE") AS monto_contratado,
-                                mo.simbolo AS simbolo_moneda,
-                                e.descripcion estatus,
-                                p.id_estatus,
-                                c.razon_social cliente
-                         FROM tbl_proyecto p,
-                              tbl_usuario so,
-                              tbl_usuario ge,
-                              tbl_monedas mo,
-                              tbl_estatus e,
-                              tbl_cliente c
-                         WHERE p.id_socio = so.id
-                         AND p.id_gerente = ge.id
-                         AND p.id_moneda = mo.id
-                         AND p.id_estatus = e.valor
+      $sql = DB::select('SELECT p.id AS id_proyecto,
+                                p.descripcion AS proyecto,
+                                u.id_division,
+                                d.descripcion AS division,
+                                u.id AS id_usuario,
+                                u.id_cargo,
+                                ce.descripcion AS cargo,
+                                CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS empleado,
+                                c.id AS id_cliente,
+                                c.razon_social AS cliente,
+                                SEC_TO_TIME(SUM(TIME_TO_SEC(hc.horas_trabajadas))) horas_trabajadas
+                         FROM tbl_horas_cargables hc,
+                              tbl_proyecto_analista pa,
+                              tbl_usuario u,
+                              tbl_proyecto p,
+                              tbl_cliente c,
+                              tbl_division d,
+                              tbl_cargo_empleado ce
+                         WHERE hc.id_proy_analista = pa.id
+                         AND pa.id_analista = u.id
+                         AND pa.id_proyecto = p.id
                          AND p.id_cliente = c.id
-                         AND e.tabla = "tbl_proyecto"
-                         '.$sql_proyecto.'
-                         '.$sql_cliente.'
-                         '.$sql_estatus.'
-                         ORDER BY p.id DESC
+                         AND u.id_division = d.id
+                         AND u.id_cargo = ce.id
+                         GROUP BY p.id,
+                                  p.descripcion,
+                                  u.nombre_1,
+                                  u.nombre_2,
+                                  u.apellido_1,
+                                  u.apellido_2,
+                                  c.razon_social,
+                                  c.id,
+                                  u.id,
+                                  u.id_division,
+                                  u.id_cargo
                          LIMIT '.$desde.', '.$paginar);
 
       return $sql;
 
     }
 
-    function cantidadPaginasProyectoFacturacion($paginar, $cliente = "", $proyecto = "", $estatus = null){
+    function pagHorasCargables($paginar){
 
-      if(trim($cliente) != ""){
-        $sql_cliente = 'AND LOWER(c.razon_social) LIKE "%'.strtolower($cliente).'%"';
-      }else{
-        $sql_cliente = "";
-      }
+      $sql = DB::select('SELECT CEILING( COUNT(1) / '.$paginar.') paginas
+                         FROM tbl_horas_cargables hc,
+                              tbl_proyecto_analista pa,
+                              tbl_usuario u,
+                              tbl_proyecto p,
+                              tbl_cliente c,
+                              tbl_division d,
+                              tbl_cargo_empleado ce
+                         WHERE hc.id_proy_analista = pa.id
+                         AND pa.id_analista = u.id
+                         AND pa.id_proyecto = p.id
+                         AND p.id_cliente = c.id
+                         AND u.id_division = d.id
+                         AND u.id_cargo = ce.id');
 
-      if(trim($proyecto) != ""){
-        $sql_proyecto = 'AND LOWER(p.descripcion) LIKE "%'.strtolower($proyecto).'%"';
-      }else{
-        $sql_proyecto = "";
-      }
-
-      if($estatus != null){
-        $sql_estatus = 'AND p.id_estatus = '.$estatus;
-      }else{
-        $sql_estatus = "";
-      }
-
-      $numProyectos = DB::select('SELECT CEILING( COUNT(1) / '.$paginar.') paginas
-                                  FROM tbl_proyecto p,
-                                       tbl_usuario so,
-                                       tbl_usuario ge,
-                                       tbl_monedas mo,
-                                       tbl_estatus e,
-                                       tbl_cliente c
-                                  WHERE p.id_socio = so.id
-                                  AND p.id_gerente = ge.id
-                                  AND p.id_moneda = mo.id
-                                  AND p.id_estatus = e.valor
-                                  AND p.id_cliente = c.id
-                                  AND e.tabla = "tbl_proyecto"
-                                  '.$sql_proyecto.'
-                                  '.$sql_cliente.'
-                                  '.$sql_estatus);
-
-      return $numProyectos[0]->paginas;
+      return $sql[0]->paginas;
 
     }
 
