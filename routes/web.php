@@ -39,7 +39,7 @@ Route::get('/buscarCliente', 'ClienteController@buscarCliente');
 Route::get('/estados', 'ClienteController@estados');
 Route::get('/municipios', 'ClienteController@municipios');
 Route::get('/parroquias', 'ClienteController@parroquias');
-Route::get('/codigoCliente', 'ClienteController@codigoCliente');
+Route::get('/dataInicialCliente', 'ClienteController@dataInicialCliente');
 Route::post('/crearCliente', 'ClienteController@crearCliente');
 Route::get('/formBuscarCliente', function() {return view('cliente/buscarCliente');})->middleware('usuario.session');
 Route::get('/buscarClientes', 'ClienteController@buscarClientes');
@@ -119,6 +119,10 @@ Route::get('/formIngresosGastos', 'FacturacionController@formIngresosGastos')->m
 Route::get('/dataInicialIngresosGastos', 'FacturacionController@dataInicialIngresosGastos');
 Route::get('/formAgregarIngresosGastos/{idProyecto}', 'FacturacionController@formAgregarIngresosGastos')->where('idProyecto', '[0-9]+')->middleware('usuario.session');
 Route::get('/dataInicialAgregarIngresosGastos', 'FacturacionController@dataInicialAgregarIngresosGastos')->middleware('usuario.session');
-Route::get('buscarFacturaProyecto', 'FacturacionController@buscarFacturaProyecto');
+Route::get('/buscarFacturaProyectoNotaCredito', 'FacturacionController@buscarFacturaProyectoNotaCredito');
+Route::get('/buscarProyectoFacturacion', 'FacturacionController@buscarProyectoFacturacion');
+Route::get('/buscarFacturasCargadas', 'FacturacionController@buscarFacturasCargadas');
 
 Route::post('/registrarFactura', 'FacturacionController@registrarFactura');
+Route::post('/eliminarFactura', 'FacturacionController@eliminarFactura');
+Route::post('/modificarFactura', 'FacturacionController@modificarFactura');
