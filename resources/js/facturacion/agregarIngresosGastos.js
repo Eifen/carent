@@ -38,7 +38,7 @@ new Vue({
       agregarFactura: {
         disabled: false,
         html: "",
-        htmlInit: "AGREAR FACTURA",
+        htmlInit: "AGREGAR FACTURA",
         htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
         show: true
       }
