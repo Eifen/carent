@@ -318,8 +318,9 @@ class UsuarioController extends Controller
       $modelo = new UsuarioModel();
       $id_usuario = (int) $request->input("idUsuario");
       $datosUsuario = $modelo->divisionUsu($id_usuario);
-      $infoMenuUsuario = $modelo->detalleMenu($id_usuario);
-      $response = array("response" => true, "info" => $infoMenuUsuario, "id_usuario" => $id_usuario, "datosUsuario" => $datosUsuario);
+      $infoMenuUsuario = $modelo->detalleMenuUsu($id_usuario);
+      $infoMenus = $modelo->detalleMenu();
+      $response = array("response" => true, "info" => $infoMenuUsuario, "id_usuario" => $id_usuario, "datosUsuario" => $datosUsuario, "infoMenus" => $infoMenus);
       return $response;
 
     }

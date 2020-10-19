@@ -437,7 +437,7 @@ class UsuarioModel extends Model
 
     }// Fin modificarUsuario
 
-    function detalleMenu($id_usuario){
+    function detalleMenuUsu($id_usuario){
 
       $info = DB::select('SELECT *
                           FROM tbl_menu_usuario m
@@ -455,6 +455,15 @@ class UsuarioModel extends Model
       }
 
     }
+
+     function detalleMenu(){
+
+      $menus = DB::select('SELECT *
+                                FROM tbl_menu m');
+
+      return $menus;
+
+    }// Fin parroquias
 
     function divisionUsu($id_usuario){
 
