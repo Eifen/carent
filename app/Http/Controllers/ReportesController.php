@@ -31,14 +31,16 @@ class ReportesController extends Controller
       $modelo = new ReportesModel();
 
       $paginar = 50;
-      //$estatus = $modelo->estatusProyectos();
+      $cargos = $modelo->cargosEmpleado();
+      $divisiones = $modelo->divisiones();
       //$permisos = $modelo->permisosMenu(session("usuario_id"), 16);
       $horas = $modelo->repoHorasCargables($paginar);
       $paginas = $modelo->pagHorasCargables($paginar);
       //$proyectos = $modelo->proyectosHorasCargables();
 
       return [
-        /*"estatus" => $estatus,*/
+        "cargos" => $cargos,
+        "divisiones" => $divisiones,
         "horas" => $horas,
         "paginas" => $paginas,
         "paginar" => $paginar,

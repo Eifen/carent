@@ -1,9 +1,53 @@
 <template>
   <b-row>
+
     <b-col cols=12>
-      <b-form>
+      <b-form class="row">
+        <b-form-group
+          class="form-group col-12 col-sm-6 col-md-4"
+          description="Nombre que se le dío la proyecto"
+          label="Proyecto"
+          label-for="proyecto"
+          id="group-proyecto">
+          <b-form-input
+            :disabled="formFiltro.proyecto.disabled"
+            id="proyecto"
+            ref="proyecto"
+            size="sm"
+            type="text"
+            v-model.trim="formFiltro.proyecto.value"></b-form-input>
+        </b-form-group>
+        <b-form-group
+          class="form-group col-12 col-sm-6 col-md-4"
+          description="Razón Social del Cliente"
+          label="Cliente"
+          label-for="cliente"
+          id="group-cliente">
+          <b-form-input
+            :disabled="formFiltro.cliente.disabled"
+            id="cliente"
+            ref="cliente"
+            size="sm"
+            type="text"
+            v-model.trim="formFiltro.cliente.value"></b-form-input>
+        </b-form-group>
+        <b-form-group
+          class="form-group col-12 col-sm-6 col-md-4"
+          description="Nombre del Empleado"
+          label="Empleado"
+          label-for="empleado"
+          id="group-empleado">
+          <b-form-input
+            :disabled="formFiltro.empleado.disabled"
+            id="empleado"
+            ref="empleado"
+            size="sm"
+            type="text"
+            v-model.trim="formFiltro.empleado.value"></b-form-input>
+        </b-form-group>
       </b-form>
     </b-col>
+
     <b-col cols=12>
       <b-table
         :busy="tabla.cargando"
@@ -58,6 +102,7 @@
         </template>
       </b-table>
     </b-col>
+
   </b-row>
 </template>
 
@@ -180,6 +225,39 @@
   export default {
       data() {
         return {
+          formFiltro: {
+            btn: {
+              filtrar: {
+                disabled: false,
+                html: "",
+                htmlInit: "Aplicar Filtro",
+                htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
+              },
+              limpiarFiltro: {
+                disabled: false,
+                html: "",
+                htmlInit: "Limpiar Filtro",
+                htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
+              }
+            },
+            cliente : {
+              disabled: true,
+              value: ""
+            },
+            empleado : {
+              disabled: true,
+              value: ""
+            },
+            proyecto : {
+              disabled: true,
+              value: ""
+            },
+            estatus : {
+              disabled: true,
+              value: null
+            },
+            mostrar : false
+          },
           tabla: {
             alert:{
               contador: false,

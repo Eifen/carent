@@ -63,17 +63,29 @@ class ReportesModel extends Model
 
     }
 
-    function estatusProyectos(){
+    function cargosEmpleado(){
 
-      $sql = DB::select('SELECT e.valor,
-                                e.descripcion
-                         FROM tbl_estatus e
-                         WHERE e.tabla = "tbl_proyecto"
-                         ORDER BY e.descripcion ASC');
+      $sql = DB::select('SELECT c.id,
+                                c.descripcion
+                         FROM tbl_cargo_empleado c
+                         WHERE c.id_estatus = 1
+                         ORDER BY c.descripcion ASC');
 
       return $sql;
 
-    }// Fin estatusProyectos
+    }// Fin cargosEmpleado
+
+    function divisiones(){
+
+      $sql = DB::select('SELECT d.id,
+                                d.descripcion
+                         FROM tbl_division d
+                         WHERE d.id_estatus = 1
+                         ORDER BY d.descripcion ASC');
+
+      return $sql;
+
+    }// Fin divisiones
 
     function repoHorasCargables($paginar, $desde = 0){
 
@@ -87,7 +99,7 @@ class ReportesModel extends Model
                                 CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS empleado,
                                 c.id AS id_cliente,
                                 c.razon_social AS cliente,
-                                SEC_TO_TIME(SUM(TIME_TO_SEC(hc.horas_trabajadas))) horas_trabajadas
+                                TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(hc.horas_trabajadas))),"%H:%i") horas_trabajadas
                          FROM tbl_horas_cargables hc,
                               tbl_proyecto_analista pa,
                               tbl_usuario u,
