@@ -45,6 +45,72 @@
             type="text"
             v-model.trim="formFiltro.empleado.value"></b-form-input>
         </b-form-group>
+        <b-form-group
+          class="form-group col-12 col-sm-6 col-md-4"
+          label="Divisiones"
+          label-for="divisiones"
+          id="group-divisiones">
+          <multiselect :clear-on-select="false"
+                       :disabled="formFiltro.divisiones.disabled"
+                       :multiple="true"
+                       :options="formFiltro.divisiones.listado"
+                       :preserve-search="true"
+                       :show-labels="false"
+                       id="divisiones"
+                       label="descripcion"
+                       placeholder="Seleccione..."
+                       track-by="descripcion"
+                       v-model="formFiltro.divisiones.value">
+             <template slot="selection"
+                       slot-scope="{ values, search, isOpen }">
+                       <span class="multiselect__single"
+                             v-if="values.length &amp;&amp; !isOpen">@{{ values.length }} seleccionado(s)</span>
+             </template>
+          </multiselect>
+        </b-form-group>
+        <b-form-group
+          class="form-group col-12 col-sm-6 col-md-4"
+          label="Cargos"
+          label-for="cargos"
+          id="group-cargos">
+          <multiselect :clear-on-select="false"
+                       :disabled="formFiltro.cargos.disabled"
+                       :multiple="true"
+                       :options="formFiltro.cargos.listado"
+                       :preserve-search="true"
+                       :show-labels="false"
+                       id="cargos"
+                       label="cargos"
+                       placeholder="Seleccione..."
+                       track-by="cargo"
+                       v-model="formFiltro.cargos.value">
+             <template slot="selection"
+                       slot-scope="{ values, search, isOpen }">
+                       <span class="multiselect__single"
+                             v-if="values.length &amp;&amp; !isOpen">@{{ values.length }} seleccionado(s)</span>
+             </template>
+          </multiselect>
+        </b-form-group>
+        <b-form-group class="col-12 col-sm-4 col-md-2">
+          <label>&nbsp;</label>
+          <b-button
+            :disabled="formFiltro.btn.filtrar.disabled"
+            block
+            size="sm"
+            v-html="formFiltro.btn.filtrar.html"
+            v-on:click="buscar"
+            variant="primary"></b-button>
+        </b-form-group>
+        <b-form-group class="col-12 col-sm-4 col-md-2">
+          <label>&nbsp;</label>
+          <b-button
+            :disabled="formFiltro.btn.limpiarFiltro.disabled"
+            block
+            size="sm"
+            v-html="formFiltro.btn.limpiarFiltro.html"
+            v-on:click="limpiarFiltro"
+            variant="outline-primary"></b-button>
+        </b-form-group>
       </b-form>
     </b-col>
 
@@ -107,6 +173,78 @@
 </template>
 
 <style lang="less">
+
+form{
+  background-color: white;
+  border:1px solid rgba(0,0,0,0.13);
+  border-radius: 3px;
+  margin-bottom: 50px;
+  margin-left:0px;
+  margin-right:0px;
+  padding: 15px;
+  transition: all .3s;
+
+  &:hover{
+    box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+  }
+
+  > div{
+
+    &.form-group{
+
+      label{
+        color:#091F40;
+      }
+
+      .invalid-feedback{
+        display: block !important;
+      }
+
+      .form-control{
+        border-radius: 2px;
+
+        &.error{
+          border-color: #dc3545;
+        }
+
+        &:disabled{
+          cursor: not-allowed;
+        }
+
+      }
+
+      .multiselect{
+
+        &.multiselect--disabled{
+          min-height: 32px;
+        }
+
+        .multiselect__select{
+          height: 32px;
+          max-height: 50px;
+        }
+
+        .multiselect__tags{
+          height: 32px;
+          max-height: 50px;
+          min-height: 32px;
+          padding: 2px 40px 0 8px;
+
+          .multiselect__single{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+        }
+
+      }// Fin .multiselect
+
+    }// Fin .form-group
+
+  }
+
+}// Fin form
 
 .table{
   background-color: white;
@@ -220,6 +358,7 @@
 
   import axios from 'axios';
   import alert from '../components/alert.vue';
+  import Multiselect from 'vue-multiselect';
   var self;
 
   export default {
@@ -240,9 +379,19 @@
                 htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
               }
             },
+            cargos:{
+              disabled: true,
+              listado: [],
+              value: []
+            },
             cliente : {
               disabled: true,
               value: ""
+            },
+            divisiones:{
+              disabled: true,
+              listado: [],
+              value: []
             },
             empleado : {
               disabled: true,
@@ -280,7 +429,8 @@
         };
       },
       components: {
-        alert
+        alert,
+        Multiselect
       },
       beforeCreate: function(){
 
@@ -382,6 +532,66 @@
           });
 
           return registros;
+
+        },
+        buscar: function(){
+
+          self.formFiltro.cliente.disabled = true;
+          self.formFiltro.proyecto.disabled = true;
+          self.formFiltro.estatus.disabled = true;
+          self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
+          self.formFiltro.btn.filtrar.disabled = true;
+          self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlLoading;
+          self.formFiltro.btn.limpiarFiltro.disabled = true;
+
+          //Obtenemos los valores
+          let desde = (self.paginador.pagina - 1) * self.paginador.paginar;
+          let parametros = {
+            cliente: self.formFiltro.cliente.value,
+            proyecto: self.formFiltro.proyecto.value,
+            desde: desde,
+            estatus: self.formFiltro.estatus.value,
+            paginar: self.paginador.paginar
+          };
+
+          //Se utiliza el metodo get para su busqueda y se envian con los parametros
+          axios.get('/buscarProyectoFacturacion', {params: parametros})
+          .then(function (response) {
+
+            self.formFiltro.cliente.disabled = false;
+            self.formFiltro.proyecto.disabled = false;
+            self.formFiltro.estatus.disabled = false;
+            self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
+            self.formFiltro.btn.filtrar.disabled = false;
+            self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
+            self.formFiltro.btn.limpiarFiltro.disabled = false;
+
+            // Se le asigna los valores a las variables
+            self.proyectos = response.data.proyectos;
+            self.paginador.numPaginas = response.data.paginas;
+            self.paginador.max = parseInt(response.data.paginas);
+
+            self.tabla.registros = self.registroTabla(response.data.proyectos);
+
+          }).catch(error => {
+
+            self.formFiltro.proyecto.disabled = false;
+            self.formFiltro.cliente.disabled = false;
+            self.formFiltro.estatus.disabled = false;
+            self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
+            self.formFiltro.btn.filtrar.disabled = false;
+            self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
+            self.formFiltro.btn.limpiarFiltro.disabled = false;
+
+          });
+
+        },
+        limpiarFiltro: function(){
+
+          self.formFiltro.proyecto.value = "";
+          self.formFiltro.cliente.value = "";
+          self.formFiltro.estatus.value = "";
+          self.buscar();
 
         }
 
