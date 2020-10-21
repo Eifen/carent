@@ -65,7 +65,7 @@
              <template slot="selection"
                        slot-scope="{ values, search, isOpen }">
                        <span class="multiselect__single"
-                             v-if="values.length &amp;&amp; !isOpen">@{{ values.length }} seleccionado(s)</span>
+                             v-if="values.length &amp;&amp; !isOpen">{{ values.length }} seleccionado(s)</span>
              </template>
           </multiselect>
         </b-form-group>
@@ -83,12 +83,12 @@
                        id="cargos"
                        label="cargos"
                        placeholder="Seleccione..."
-                       track-by="cargo"
+                       track-by="descripcion"
                        v-model="formFiltro.campos.cargos.value">
              <template slot="selection"
                        slot-scope="{ values, search, isOpen }">
                        <span class="multiselect__single"
-                             v-if="values.length &amp;&amp; !isOpen">@{{ values.length }} seleccionado(s)</span>
+                             v-if="values.length &amp;&amp; !isOpen">{{ values.length }} seleccionado(s)</span>
              </template>
           </multiselect>
         </b-form-group>
@@ -459,6 +459,9 @@ form{
 
             }
 
+            self.formFiltro.campos.cargos.listado = response.data.cargos;
+            self.formFiltro.campos.divisiones.listado = response.data.divisiones;
+
             self.tabla.paginador.paginar = response.data.paginar;
             self.tabla.paginador.numPaginas = response.data.paginas;
             self.tabla.paginador.max = parseInt(response.data.paginas);
@@ -514,11 +517,11 @@ form{
           self.buscar();
         },
         paginaAnterior: function(){
-          self.paginador.pagina = ((self.paginador.pagina - 1) === 0) ? 1 : (self.paginador.pagina - 1);
+          self.tabla.paginador.pagina = ((self.tabla.paginador.pagina - 1) === 0) ? 1 : (self.tabla.paginador.pagina - 1);
           self.buscar();
         },
         paginaSiguiente: function(){
-          self.paginador.pagina = ((self.paginador.pagina + 1) > self.paginador.max) ? self.paginador.pagina : (self.paginador.pagina + 1);
+          self.tabla.paginador.pagina = ((self.tabla.paginador.pagina + 1) > self.tabla.paginador.max) ? self.tabla.paginador.pagina : (self.tabla.paginador.pagina + 1);
           self.buscar();
         },
         registroTabla: function(datos){
@@ -557,7 +560,7 @@ form{
           self.formFiltro.btn.limpiarFiltro.disabled = true;
 
           //Obtenemos los valores
-          let desde = (self.paginador.pagina - 1) * self.paginador.paginar;
+          let desde = (self.tabla.paginador.pagina - 1) * self.tabla.paginador.paginar;
           let parametros = {
             cargos: self.formFiltro.campos.cargos.value,
             cliente: self.formFiltro.campos.cliente.value,
@@ -565,7 +568,7 @@ form{
             divisiones: self.formFiltro.campos.divisiones.value,
             empleado: self.formFiltro.campos.empleado.value,
             proyecto: self.formFiltro.campos.proyecto.value,
-            paginar: self.paginador.paginar
+            paginar: self.tabla.paginador.paginar
           };
           console.log(parametros);
           return;
@@ -584,8 +587,8 @@ form{
 
             // Se le asigna los valores a las variables
             self.proyectos = response.data.proyectos;
-            self.paginador.numPaginas = response.data.paginas;
-            self.paginador.max = parseInt(response.data.paginas);
+            self.tabla.paginador.numPaginas = response.data.paginas;
+            self.tabla.paginador.max = parseInt(response.data.paginas);
 
             self.tabla.registros = self.registroTabla(response.data.proyectos);
 
