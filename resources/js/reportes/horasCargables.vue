@@ -2,6 +2,7 @@
   <b-row>
 
     <b-col cols=12>
+      <h5 v-if="formFiltro.mostrar">Filtros de Búsqueda</h5>
       <b-form class="row" v-if="formFiltro.mostrar">
         <b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
@@ -178,7 +179,7 @@ form{
   background-color: white;
   border:1px solid rgba(0,0,0,0.13);
   border-radius: 3px;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
   margin-left:0px !important;
   margin-right:0px !important;
   padding: 15px;
@@ -544,9 +545,12 @@ form{
         },
         buscar: function(){
 
-          self.formFiltro.cliente.disabled = true;
-          self.formFiltro.proyecto.disabled = true;
-          self.formFiltro.estatus.disabled = true;
+          self.formFiltro.campos.cargos.disabled = true;
+          self.formFiltro.campos.cliente.disabled = true;
+          self.formFiltro.campos.divisiones.disabled = true;
+          self.formFiltro.campos.empleado.disabled = true;
+          self.formFiltro.campos.proyecto.disabled = true;
+
           self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
           self.formFiltro.btn.filtrar.disabled = true;
           self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlLoading;
@@ -555,12 +559,16 @@ form{
           //Obtenemos los valores
           let desde = (self.paginador.pagina - 1) * self.paginador.paginar;
           let parametros = {
-            cliente: self.formFiltro.cliente.value,
-            proyecto: self.formFiltro.proyecto.value,
+            cargos: self.formFiltro.campos.cargos.value,
+            cliente: self.formFiltro.campos.cliente.value,
             desde: desde,
-            estatus: self.formFiltro.estatus.value,
+            divisiones: self.formFiltro.campos.divisiones.value,
+            empleado: self.formFiltro.campos.empleado.value,
+            proyecto: self.formFiltro.campos.proyecto.value,
             paginar: self.paginador.paginar
           };
+          console.log(parametros);
+          return;
 
           //Se utiliza el metodo get para su busqueda y se envian con los parametros
           axios.get('/buscarProyectoFacturacion', {params: parametros})
@@ -596,9 +604,11 @@ form{
         },
         limpiarFiltro: function(){
 
-          self.formFiltro.proyecto.value = "";
-          self.formFiltro.cliente.value = "";
-          self.formFiltro.estatus.value = "";
+          self.formFiltro.campos.cargos.value = null;
+          self.formFiltro.campos.cliente.value = null;
+          self.formFiltro.campos.divisiones.value = null;
+          self.formFiltro.campos.empleado.value = null;
+          self.formFiltro.campos.proyecto.value = null;
           self.buscar();
 
         }
