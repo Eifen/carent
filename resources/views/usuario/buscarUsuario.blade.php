@@ -247,20 +247,18 @@
                 <h5>Seleccionar menus</h5>
                 <form class="row">
                   <div class="form-group col-12 col-sm-6">
-                    <multiselect  :multiple="true"
-                                  :group-select="true" 
-                                  :options="comboMenus"
-                                  :clear-on-select="false"
-                                  :close-on-select="false"
-                                  group-values="value"
-                                  group-label="menus"                                 
-                                  placeholder="Seleccione..." 
-                                  v-model="selectMenus.value"
-                                  track-by="descripcion"
-                                  label="descripcion">
+                    <multiselect :group-select="true"
+                                 :multiple="true"
+                                 :options="comboMenus"
+                                 group-values="value"
+                                 group-label="menus"
+                                 label="descripcion"
+                                 placeholder="Seleccione..."
+                                 track-by="descripcion"
+                                 v-model="selectMenus.value">
                       <span slot="noResult">No se encontraron menus.</span>
                     </multiselect>
-                  </div>                  
+                  </div>
                 </form>
               </div>
               <div class="modal-footer">

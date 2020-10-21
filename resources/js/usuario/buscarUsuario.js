@@ -58,7 +58,7 @@ new Vue({
       data: ""
     },
     permisoActualizar: false,
-    comboMenus: [],
+    //comboMenus: [],
     infoUsuario: [],
     comboMenus: [
       {
@@ -76,9 +76,9 @@ new Vue({
       {
         menus: "Horas no Cargables",
         value:[]
-      },
+      }
     ],
-    comboMenu: [],
+    comboMenu: []
   },
   beforeCreate: function(){
 
@@ -285,6 +285,40 @@ new Vue({
                 h++;
               }
             }
+
+            //Reasigno los valores del combo para que veas como debe de quedar
+            self.comboMenus = [
+              {
+                menus: "Usuarios",
+                value:[
+                  { descripcion: 'Crear Usuario' },
+                  { descripcion: 'Editar Usuario' }
+                ]
+              },
+              {
+                menus: "Clientes",
+                value:[
+                  { descripcion: 'Crear Cliente' },
+                  { descripcion: 'Editar Cliente' }
+                ]
+              },
+              {
+                menus: "Proyectos",
+                value:[
+                  { descripcion: 'Crear Proyectos' },
+                  { descripcion: 'Editar Proyectos' }
+                ]
+              },
+              {
+                menus: "Horas no Cargables",
+                value:[
+                  { descripcion: 'Crear Horas' },
+                  { descripcion: 'Editar Horas' }
+                ]
+              }
+            ]
+
+            console.log(self.comboMenus)
 
 
           $('#modal-asignar-menu').modal("show");
