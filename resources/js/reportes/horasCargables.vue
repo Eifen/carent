@@ -2,7 +2,7 @@
   <b-row>
 
     <b-col cols=12>
-      <b-form class="row">
+      <b-form class="row" v-if="formFiltro.mostrar">
         <b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
           description="Nombre que se le dío la proyecto"
@@ -10,12 +10,12 @@
           label-for="proyecto"
           id="group-proyecto">
           <b-form-input
-            :disabled="formFiltro.proyecto.disabled"
+            :disabled="formFiltro.campos.proyecto.disabled"
             id="proyecto"
             ref="proyecto"
             size="sm"
             type="text"
-            v-model.trim="formFiltro.proyecto.value"></b-form-input>
+            v-model.trim="formFiltro.campos.proyecto.value"></b-form-input>
         </b-form-group>
         <b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
@@ -24,12 +24,12 @@
           label-for="cliente"
           id="group-cliente">
           <b-form-input
-            :disabled="formFiltro.cliente.disabled"
+            :disabled="formFiltro.campos.cliente.disabled"
             id="cliente"
             ref="cliente"
             size="sm"
             type="text"
-            v-model.trim="formFiltro.cliente.value"></b-form-input>
+            v-model.trim="formFiltro.campos.cliente.value"></b-form-input>
         </b-form-group>
         <b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
@@ -38,12 +38,12 @@
           label-for="empleado"
           id="group-empleado">
           <b-form-input
-            :disabled="formFiltro.empleado.disabled"
+            :disabled="formFiltro.campos.empleado.disabled"
             id="empleado"
             ref="empleado"
             size="sm"
             type="text"
-            v-model.trim="formFiltro.empleado.value"></b-form-input>
+            v-model.trim="formFiltro.campos.empleado.value"></b-form-input>
         </b-form-group>
         <b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
@@ -51,16 +51,16 @@
           label-for="divisiones"
           id="group-divisiones">
           <multiselect :clear-on-select="false"
-                       :disabled="formFiltro.divisiones.disabled"
+                       :disabled="formFiltro.campos.divisiones.disabled"
                        :multiple="true"
-                       :options="formFiltro.divisiones.listado"
+                       :options="formFiltro.campos.divisiones.listado"
                        :preserve-search="true"
                        :show-labels="false"
                        id="divisiones"
                        label="descripcion"
                        placeholder="Seleccione..."
                        track-by="descripcion"
-                       v-model="formFiltro.divisiones.value">
+                       v-model="formFiltro.campos.divisiones.value">
              <template slot="selection"
                        slot-scope="{ values, search, isOpen }">
                        <span class="multiselect__single"
@@ -74,16 +74,16 @@
           label-for="cargos"
           id="group-cargos">
           <multiselect :clear-on-select="false"
-                       :disabled="formFiltro.cargos.disabled"
+                       :disabled="formFiltro.campos.cargos.disabled"
                        :multiple="true"
-                       :options="formFiltro.cargos.listado"
+                       :options="formFiltro.campos.cargos.listado"
                        :preserve-search="true"
                        :show-labels="false"
                        id="cargos"
                        label="cargos"
                        placeholder="Seleccione..."
                        track-by="cargo"
-                       v-model="formFiltro.cargos.value">
+                       v-model="formFiltro.campos.cargos.value">
              <template slot="selection"
                        slot-scope="{ values, search, isOpen }">
                        <span class="multiselect__single"
@@ -179,8 +179,8 @@ form{
   border:1px solid rgba(0,0,0,0.13);
   border-radius: 3px;
   margin-bottom: 50px;
-  margin-left:0px;
-  margin-right:0px;
+  margin-left:0px !important;
+  margin-right:0px !important;
   padding: 15px;
   transition: all .3s;
 
@@ -379,31 +379,29 @@ form{
                 htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
               }
             },
-            cargos:{
-              disabled: true,
-              listado: [],
-              value: []
-            },
-            cliente : {
-              disabled: true,
-              value: ""
-            },
-            divisiones:{
-              disabled: true,
-              listado: [],
-              value: []
-            },
-            empleado : {
-              disabled: true,
-              value: ""
-            },
-            proyecto : {
-              disabled: true,
-              value: ""
-            },
-            estatus : {
-              disabled: true,
-              value: null
+            campos: {
+              cargos:{
+                disabled: true,
+                listado: [],
+                value: []
+              },
+              cliente : {
+                disabled: true,
+                value: ""
+              },
+              divisiones:{
+                disabled: true,
+                listado: [],
+                value: []
+              },
+              empleado : {
+                disabled: true,
+                value: ""
+              },
+              proyecto : {
+                disabled: true,
+                value: ""
+              }
             },
             mostrar : false
           },
@@ -465,6 +463,16 @@ form{
             self.tabla.paginador.max = parseInt(response.data.paginas);
 
             self.tabla.cargando = false;
+
+            self.formFiltro.campos.cargos.disabled = false;
+            self.formFiltro.campos.cliente.disabled = false;
+            self.formFiltro.campos.divisiones.disabled = false;
+            self.formFiltro.campos.empleado.disabled = false;
+            self.formFiltro.campos.proyecto.disabled = false;
+            self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
+            self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
+            self.formFiltro.mostrar = true;
+
 
             self.$parent.reporteCargado();
 
