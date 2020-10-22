@@ -87,7 +87,7 @@ class ReportesModel extends Model
 
     }// Fin divisiones
 
-    function repoHorasCargables($paginar, $desde = 0, $cargos = null){
+    function repoHorasCargables($paginar, $desde = 0, $cargos = null, $cliente = null, $divisiones = null, $proyecto = null, $empleado = null){
 
       if($cargos !== null){
 
@@ -102,6 +102,33 @@ class ReportesModel extends Model
 
       }else{
         $sql_cargos = "";
+      }
+
+      if($cliente != null && trim($cliente) != ""){
+        $sql_cliente = 'AND LOWER(c.razon_social) LIKE "%'.strtolower($cliente).'%"';
+      }else{
+        $sql_cliente = "";
+      }
+
+      if($divisiones !== null){
+
+        $idsDivision = [];
+        foreach ($divisiones as $key => $item) {
+          $item = json_decode($item);
+          array_push($idsDivision,$item->id);
+        }
+
+        $idsDivision = implode(",", $idsDivision);
+        $sql_division = "AND u.id_division IN(".$idsDivision.")";
+
+      }else{
+        $sql_division = "";
+      }
+
+      if($proyecto != null && trim($proyecto) != ""){
+        $sql_proyecto = 'AND LOWER(p.descripcion) LIKE "%'.strtolower($proyecto).'%"';
+      }else{
+        $sql_proyecto = "";
       }
 
       $sql = DB::select('SELECT p.id AS id_proyecto,
@@ -129,6 +156,9 @@ class ReportesModel extends Model
                          AND u.id_division = d.id
                          AND u.id_cargo = ce.id
                          '.$sql_cargos.'
+                         '.$sql_cliente.'
+                         '.$sql_division.'
+                         '.$sql_proyecto.'
                          GROUP BY p.id,
                                   p.descripcion,
                                   u.nombre_1,
@@ -146,7 +176,7 @@ class ReportesModel extends Model
 
     }
 
-    function pagHorasCargables($paginar, $cargos = null){
+    function pagHorasCargables($paginar, $cargos = null, $cliente = null, $divisiones = null, $proyecto = null, $empleado = null){
 
       if($cargos !== null){
 
@@ -163,14 +193,41 @@ class ReportesModel extends Model
         $sql_cargos = "";
       }
 
+      if($cliente != null && trim($cliente) != ""){
+        $sql_cliente = 'AND LOWER(c.razon_social) LIKE "%'.strtolower($cliente).'%"';
+      }else{
+        $sql_cliente = "";
+      }
+
+      if($divisiones !== null){
+
+        $idsDivision = [];
+        foreach ($divisiones as $key => $item) {
+          $item = json_decode($item);
+          array_push($idsDivision,$item->id);
+        }
+
+        $idsDivision = implode(",", $idsDivision);
+        $sql_division = "AND u.id_division IN(".$idsDivision.")";
+
+      }else{
+        $sql_division = "";
+      }
+
+      if($proyecto != null && trim($proyecto) != ""){
+        $sql_proyecto = 'AND LOWER(p.descripcion) LIKE "%'.strtolower($proyecto).'%"';
+      }else{
+        $sql_proyecto = "";
+      }
+
       $sql = DB::select('SELECT CEILING( COUNT(1) / '.$paginar.') paginas
                          FROM(
 
                            SELECT p.descripcion AS proyecto,
-                                 u.id_division,
-                                 u.id_cargo,
-                                 ce.descripcion AS cargo,
-                                 c.razon_social
+                                  u.id_division,
+                                  u.id_cargo,
+                                  ce.descripcion AS cargo,
+                                  c.razon_social
                            FROM tbl_horas_cargables hc,
                                 tbl_proyecto_analista pa,
                                 tbl_usuario u,
@@ -185,11 +242,14 @@ class ReportesModel extends Model
                            AND u.id_division = d.id
                            AND u.id_cargo = ce.id
                            '.$sql_cargos.'
+                           '.$sql_cliente.'
+                           '.$sql_division.'
+                           '.$sql_proyecto.'
                            GROUP BY p.descripcion,
-                           u.id_division,
-                           u.id_cargo,
-                           ce.descripcion,
-                           c.razon_social
+                                    u.id_division,
+                                    u.id_cargo,
+                                    ce.descripcion,
+                                    c.razon_social
                          )t'
                        );
 

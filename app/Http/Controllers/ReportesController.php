@@ -58,8 +58,8 @@ class ReportesController extends Controller
       $divisiones = $request->input("divisiones");
       $empleado = $request->input("empleado");
       $proyecto = $request->input("proyecto");
-      $horas = $modelo->repoHorasCargables($paginar, $desde, $cargos);
-      $paginas = $modelo->pagHorasCargables($paginar, $cargos);
+      $horas = $modelo->repoHorasCargables($paginar, $desde, $cargos, $cliente, $divisiones, $proyecto, $empleado);
+      $paginas = $modelo->pagHorasCargables($paginar, $cargos, $cliente, $divisiones, $proyecto, $empleado);
 
       return array("horas" => $horas, "paginas" => $paginas);
 
