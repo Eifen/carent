@@ -164,20 +164,34 @@ class ReportesModel extends Model
       }
 
       $sql = DB::select('SELECT CEILING( COUNT(1) / '.$paginar.') paginas
-                         FROM tbl_horas_cargables hc,
-                              tbl_proyecto_analista pa,
-                              tbl_usuario u,
-                              tbl_proyecto p,
-                              tbl_cliente c,
-                              tbl_division d,
-                              tbl_cargo_empleado ce
-                         WHERE hc.id_proy_analista = pa.id
-                         AND pa.id_analista = u.id
-                         AND pa.id_proyecto = p.id
-                         AND p.id_cliente = c.id
-                         AND u.id_division = d.id
-                         AND u.id_cargo = ce.id
-                         '.$sql_cargos);
+                         FROM(
+
+                           SELECT p.descripcion AS proyecto,
+                                 u.id_division,
+                                 u.id_cargo,
+                                 ce.descripcion AS cargo,
+                                 c.razon_social
+                           FROM tbl_horas_cargables hc,
+                                tbl_proyecto_analista pa,
+                                tbl_usuario u,
+                                tbl_proyecto p,
+                                tbl_cliente c,
+                                tbl_division d,
+                                tbl_cargo_empleado ce
+                           WHERE hc.id_proy_analista = pa.id
+                           AND pa.id_analista = u.id
+                           AND pa.id_proyecto = p.id
+                           AND p.id_cliente = c.id
+                           AND u.id_division = d.id
+                           AND u.id_cargo = ce.id
+                           '.$sql_cargos.'
+                           GROUP BY p.descripcion,
+                           u.id_division,
+                           u.id_cargo,
+                           ce.descripcion,
+                           c.razon_social
+                         )t'
+                       );
 
       return $sql[0]->paginas;
 
