@@ -87,7 +87,22 @@ class ReportesModel extends Model
 
     }// Fin divisiones
 
-    function repoHorasCargables($paginar, $desde = 0){
+    function repoHorasCargables($paginar, $desde = 0, $cargos = null){
+
+      if($cargos !== null){
+
+        $idsCargo = [];
+        foreach ($cargos as $key => $item) {
+          $item = json_decode($item);
+          array_push($idsCargo,$item->id);
+        }
+
+        $idsCargo = implode(",", $idsCargo);
+        $sql_cargos = "AND ce.id IN(".$idsCargo.")";
+
+      }else{
+        $sql_cargos = "";
+      }
 
       $sql = DB::select('SELECT p.id AS id_proyecto,
                                 p.descripcion AS proyecto,
@@ -113,6 +128,7 @@ class ReportesModel extends Model
                          AND p.id_cliente = c.id
                          AND u.id_division = d.id
                          AND u.id_cargo = ce.id
+                         '.$sql_cargos.'
                          GROUP BY p.id,
                                   p.descripcion,
                                   u.nombre_1,
@@ -130,7 +146,22 @@ class ReportesModel extends Model
 
     }
 
-    function pagHorasCargables($paginar){
+    function pagHorasCargables($paginar, $cargos = null){
+
+      if($cargos !== null){
+
+        $idsCargo = [];
+        foreach ($cargos as $key => $item) {
+          $item = json_decode($item);
+          array_push($idsCargo,$item->id);
+        }
+
+        $idsCargo = implode(",", $idsCargo);
+        $sql_cargos = "AND ce.id IN(".$idsCargo.")";
+
+      }else{
+        $sql_cargos = "";
+      }
 
       $sql = DB::select('SELECT CEILING( COUNT(1) / '.$paginar.') paginas
                          FROM tbl_horas_cargables hc,
@@ -145,7 +176,8 @@ class ReportesModel extends Model
                          AND pa.id_proyecto = p.id
                          AND p.id_cliente = c.id
                          AND u.id_division = d.id
-                         AND u.id_cargo = ce.id');
+                         AND u.id_cargo = ce.id
+                         '.$sql_cargos);
 
       return $sql[0]->paginas;
 

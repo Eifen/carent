@@ -33,10 +33,8 @@ class ReportesController extends Controller
       $paginar = 50;
       $cargos = $modelo->cargosEmpleado();
       $divisiones = $modelo->divisiones();
-      //$permisos = $modelo->permisosMenu(session("usuario_id"), 16);
       $horas = $modelo->repoHorasCargables($paginar);
       $paginas = $modelo->pagHorasCargables($paginar);
-      //$proyectos = $modelo->proyectosHorasCargables();
 
       return [
         "cargos" => $cargos,
@@ -44,25 +42,26 @@ class ReportesController extends Controller
         "horas" => $horas,
         "paginas" => $paginas,
         "paginar" => $paginar,
-        //"proyectos" => $proyectos,
         "response" => true
       ];
 
     }
 
-    function buscarProyectoFacturacion(Request $request){
+    function buscarHorasCargables(Request $request){
 
-      $modelo = new FacturacionModel();
+      $modelo = new ReportesModel();
 
       $paginar = $request->input("paginar");
       $desde = $request->input("desde");
+      $cargos = $request->input("cargos");
       $cliente = $request->input("cliente");
+      $divisiones = $request->input("divisiones");
+      $empleado = $request->input("empleado");
       $proyecto = $request->input("proyecto");
-      $estatus = $request->input("estatus");
-      $proyectos = $modelo->proyectosFacturacion($paginar, $desde, $cliente, $proyecto, $estatus);
-      $cantidadPaginas = $modelo->cantidadPaginasProyectoFacturacion($paginar, $cliente, $proyecto, $estatus);
+      $horas = $modelo->repoHorasCargables($paginar, $desde, $cargos);
+      $paginas = $modelo->pagHorasCargables($paginar, $cargos);
 
-      return array("proyectos" => $proyectos, "paginas" => $cantidadPaginas);
+      return array("horas" => $horas, "paginas" => $paginas);
 
     }
 

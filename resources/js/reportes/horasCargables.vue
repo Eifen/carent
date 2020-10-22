@@ -81,7 +81,7 @@
                        :preserve-search="true"
                        :show-labels="false"
                        id="cargos"
-                       label="cargos"
+                       label="descripcion"
                        placeholder="Seleccione..."
                        track-by="descripcion"
                        v-model="formFiltro.campos.cargos.value">
@@ -570,37 +570,37 @@ form{
             proyecto: self.formFiltro.campos.proyecto.value,
             paginar: self.tabla.paginador.paginar
           };
-          console.log(parametros);
-          return;
 
           //Se utiliza el metodo get para su busqueda y se envian con los parametros
-          axios.get('/buscarProyectoFacturacion', {params: parametros})
+          axios.get('/buscarHorasCargables', {params: parametros})
           .then(function (response) {
 
-            self.formFiltro.cliente.disabled = false;
-            self.formFiltro.proyecto.disabled = false;
-            self.formFiltro.estatus.disabled = false;
+            self.formFiltro.campos.cargos.disabled = false;
+            self.formFiltro.campos.cliente.disabled = false;
+            self.formFiltro.campos.divisiones.disabled = false;
+            self.formFiltro.campos.empleado.disabled = false;
+            self.formFiltro.campos.proyecto.disabled = false;
+
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
             self.formFiltro.btn.filtrar.disabled = false;
             self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
             self.formFiltro.btn.limpiarFiltro.disabled = false;
 
             // Se le asigna los valores a las variables
-            self.proyectos = response.data.proyectos;
             self.tabla.paginador.numPaginas = response.data.paginas;
             self.tabla.paginador.max = parseInt(response.data.paginas);
 
-            self.tabla.registros = self.registroTabla(response.data.proyectos);
+            self.tabla.registros = self.registroTabla(response.data.horas);
 
           }).catch(error => {
 
-            self.formFiltro.proyecto.disabled = false;
+          /*  self.formFiltro.proyecto.disabled = false;
             self.formFiltro.cliente.disabled = false;
             self.formFiltro.estatus.disabled = false;
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
             self.formFiltro.btn.filtrar.disabled = false;
             self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
-            self.formFiltro.btn.limpiarFiltro.disabled = false;
+            self.formFiltro.btn.limpiarFiltro.disabled = false;*/
 
           });
 
