@@ -131,6 +131,12 @@ class ReportesModel extends Model
         $sql_proyecto = "";
       }
 
+      if($empleado != null && trim($empleado) != ""){
+        $sql_empleado = 'AND LOWER(CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)) LIKE "%'.strtolower($empleado).'%"';
+      }else{
+        $sql_empleado = "";
+      }
+
       $sql = DB::select('SELECT p.id AS id_proyecto,
                                 p.descripcion AS proyecto,
                                 u.id_division,
@@ -159,6 +165,7 @@ class ReportesModel extends Model
                          '.$sql_cliente.'
                          '.$sql_division.'
                          '.$sql_proyecto.'
+                         '.$sql_empleado.'
                          GROUP BY p.id,
                                   p.descripcion,
                                   u.nombre_1,
@@ -220,6 +227,12 @@ class ReportesModel extends Model
         $sql_proyecto = "";
       }
 
+      if($empleado != null && trim($empleado) != ""){
+        $sql_empleado = 'AND LOWER(CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)) LIKE "%'.strtolower($empleado).'%"';
+      }else{
+        $sql_empleado = "";
+      }
+
       $sql = DB::select('SELECT CEILING( COUNT(1) / '.$paginar.') paginas
                          FROM(
 
@@ -245,6 +258,7 @@ class ReportesModel extends Model
                            '.$sql_cliente.'
                            '.$sql_division.'
                            '.$sql_proyecto.'
+                           '.$sql_empleado.'
                            GROUP BY p.descripcion,
                                     u.id_division,
                                     u.id_cargo,
