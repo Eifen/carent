@@ -130,7 +130,7 @@ Route::post('/modificarFactura', 'FacturacionController@modificarFactura');
 /*
   Módulo de Reportes
 */
-Route::get('/formReportes', 'ReportesController@formReportes')->middleware('usuario.session');
-Route::get('/dataInicialFormReportes', 'ReportesController@dataInicialFormReportes')->middleware('usuario.session');
-Route::get('/dataRepHorasCargables', 'ReportesController@dataRepHorasCargables')->middleware('usuario.session');
-Route::get('/buscarHorasCargables', 'ReportesController@buscarHorasCargables')->middleware('usuario.session');
+Route::get('/formReportes', 'Reportes\ReportesController@formReportes')->middleware('usuario.session');
+Route::get('/dataInicialFormReportes', 'Reportes\ReportesController@dataInicialFormReportes')->middleware('usuario.session');
+Route::get('/dataRepHorasCargables', 'Reportes\HorasCargablesController@dataRepHorasCargables')->middleware('usuario.session');
+Route::get('/buscarHorasCargables', 'Reportes\HorasCargablesController@buscarHorasCargables')->middleware('usuario.session');
