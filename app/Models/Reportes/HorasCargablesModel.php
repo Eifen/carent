@@ -128,6 +128,79 @@ class HorasCargablesModel extends Model
 
     }
 
+    function totalesHorasCargables($cargos = null, $cliente = null, $divisiones = null, $proyecto = null, $empleado = null){
+
+      if($cargos !== null){
+
+        $idsCargo = [];
+        foreach ($cargos as $key => $item) {
+          $item = json_decode($item);
+          array_push($idsCargo,$item->id);
+        }
+
+        $idsCargo = implode(",", $idsCargo);
+        $sql_cargos = "AND ce.id IN(".$idsCargo.")";
+
+      }else{
+        $sql_cargos = "";
+      }
+
+      if($cliente != null && trim($cliente) != ""){
+        $sql_cliente = 'AND LOWER(c.razon_social) LIKE "%'.strtolower($cliente).'%"';
+      }else{
+        $sql_cliente = "";
+      }
+
+      if($divisiones !== null){
+
+        $idsDivision = [];
+        foreach ($divisiones as $key => $item) {
+          $item = json_decode($item);
+          array_push($idsDivision,$item->id);
+        }
+
+        $idsDivision = implode(",", $idsDivision);
+        $sql_division = "AND u.id_division IN(".$idsDivision.")";
+
+      }else{
+        $sql_division = "";
+      }
+
+      if($proyecto != null && trim($proyecto) != ""){
+        $sql_proyecto = 'AND LOWER(p.descripcion) LIKE "%'.strtolower($proyecto).'%"';
+      }else{
+        $sql_proyecto = "";
+      }
+
+      if($empleado != null && trim($empleado) != ""){
+        $sql_empleado = 'AND LOWER(CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)) LIKE "%'.strtolower($empleado).'%"';
+      }else{
+        $sql_empleado = "";
+      }
+
+      $sql = DB::select('SELECT TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(hc.horas_trabajadas))),"%H:%i") horas_trabajadas
+                         FROM tbl_horas_cargables hc,
+                              tbl_proyecto_analista pa,
+                              tbl_usuario u,
+                              tbl_proyecto p,
+                              tbl_cliente c,
+                              tbl_division d,
+                              tbl_cargo_empleado ce
+                         WHERE hc.id_proy_analista = pa.id
+                         AND pa.id_analista = u.id
+                         AND pa.id_proyecto = p.id
+                         AND p.id_cliente = c.id
+                         AND u.id_division = d.id
+                         AND u.id_cargo = ce.id
+                         '.$sql_cargos.'
+                         '.$sql_cliente.'
+                         '.$sql_division.'
+                         '.$sql_proyecto.'
+                         '.$sql_empleado.'
+                         GROUP BY hc.horas_trabajadas');
+
+    }
+
     function pagHorasCargables($paginar, $cargos = null, $cliente = null, $divisiones = null, $proyecto = null, $empleado = null){
 
       if($cargos !== null){

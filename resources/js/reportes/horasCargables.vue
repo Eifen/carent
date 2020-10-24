@@ -115,6 +115,21 @@
       </b-form>
     </b-col>
 
+    <b-col cols="12">
+      <b-row align-h="end" v-cloak v-if="formFiltro.mostrar">
+        <b-col cols="12" md="6" lg="4">
+          <b-card class="text-left card-monto-contratado">
+            <b-card-text>
+              <span class="titulo">TOTAL DE HORAS TRABAJADAS</span>
+            </b-card-text>
+            <b-card-text>
+              <span class="monto">{{ totales.horasTrabajadas }}</span>
+            </b-card-text>
+          </b-card>
+        </b-col>
+      </b-row>
+    </b-col>
+
     <b-col cols=12>
       <b-table
         :busy="tabla.cargando"
@@ -353,6 +368,103 @@ form{
 
 }// Fin table
 
+.card{
+  box-shadow: 0 .15rem 1.55rem 0 rgba(58,59,69,.15);
+  margin-bottom: 30px;
+  transition: all .3s;
+
+  &:hover{
+    box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+  }
+
+  .card-body{
+    padding: 0.85rem;
+  }
+
+  &.card-proyecto{
+    border-left: 4px solid #091F40;
+
+    .card-text{
+      margin-bottom: 0.3rem;
+
+      .titulo{
+        color: rgba(0,0,0,0.8);
+        font-weight: 600;
+        text-decoration: underline;
+      }
+
+    }
+
+  }
+
+  &.card-monto-contratado,
+  &.card-monto-facturado,
+  &.card-monto-gasto,
+  &.card-monto-notas-credito,
+  &.card-monto-otros-gastos{
+    margin-top: 20px;
+
+    .card-text{
+
+      &:nth-child(1){
+        margin-bottom: 0px;
+      }
+
+      .titulo{
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+    }
+
+    .monto{
+      color: rgba(0,0,0,0.8);
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+  }
+
+  &.card-monto-contratado{
+    border-left: 4px solid #36B9CC;
+
+    .titulo{
+      color: #36B9CC;
+    }
+
+  }
+
+  &.card-monto-facturado{
+    border-left: 4px solid #1CC88A;
+
+    .titulo{
+      color: #1CC88A;
+    }
+
+  }
+
+  &.card-monto-notas-credito{
+
+    border-left: 4px solid #FFC107;
+
+    .titulo{
+      color: #FFC107;
+    }
+
+  }
+
+  &.card-monto-gasto,
+  &.card-monto-otros-gastos{
+    border-left: 4px solid #DD3D31;
+
+    .titulo{
+      color: #DD3D31;
+    }
+
+  }
+
+}// Fin .card
+
 </style>
 
 <script>
@@ -424,6 +536,9 @@ form{
               paginar: 0
             },
             registros: []
+          },
+          totales: {
+            horasTrabajadas: 0
           }
         };
       },
