@@ -3,15 +3,12 @@ import Vue from 'vue';
 import { BootstrapVue } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
-import Multiselect from 'vue-multiselect';
-import 'vue-multiselect/dist/vue-multiselect.min.css';
 window.axios = require('axios');
 window.AutoNumeric = require('autonumeric');
 window.zenscroll = require('zenscroll');
 window.$ = require('jquery');
 var self;
 
-Vue.component('multiselect', Multiselect);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
 Vue.component('loading',require('../components/loading.vue').default);
 Vue.use(BootstrapVue);
@@ -39,9 +36,6 @@ new Vue({
       }
     },
     loading: true,
-    selectMenus: {
-      value:[]
-    },
     usuarios: {
       mostrar: false,
       registros: []
@@ -54,31 +48,11 @@ new Vue({
       error: false,
       data: []
     },
-    usuario: {
-      data: ""
-    },
+    usuario: "",
     permisoActualizar: false,
-    //comboMenus: [],
     infoUsuario: [],
-    comboMenus: [
-      {
-        menus: "Usuarios",
-        value:[]
-      },
-      {
-        menus: "Clientes",
-        value:[]
-      },
-      {
-        menus: "Proyectos",
-        value:[]
-      },
-      {
-        menus: "Horas no Cargables",
-        value:[]
-      }
-    ],
-    comboMenu: []
+    infoMenUsu: [],
+    comboMenus: [],
   },
   beforeCreate: function(){
 
@@ -248,6 +222,7 @@ new Vue({
     mostrarDetalleMenu: function(idUsuario,e){
 
       self.infoUsuario = [];
+      self.usuario = "";
       self.detalleUsuario.error = false;
       $(e.target).removeClass("fa-user-edit").addClass("fa-cog fa-spin");
 
@@ -260,66 +235,10 @@ new Vue({
 
         if(response.status === 200 && response.data.response === true){
 
-          self.usuario.data = response.data.id_usuario;
+          self.usuario = response.data.id_usuario;
           self.infoUsuario = response.data.datosUsuario;
-          self.detalleMenu.data = response.data.info;
-          var u = 0;
-          var c = 0;
-          var p = 0;
-          var h = 0;
-            for (var i = 0; i < response.data.infoMenus.length; i++) {
-              if (response.data.infoMenus[i].id_menu_padre === 1) {
-                self.comboMenus[0].value[u] = response.data.infoMenus[i];
-                u++;
-              }
-              if (response.data.infoMenus[i].id_menu_padre === 4) {
-                self.comboMenus[1].value[c] = response.data.infoMenus[i];
-                c++;
-              }
-              if (response.data.infoMenus[i].id_menu_padre === 8) {
-                self.comboMenus[2].value[p] = response.data.infoMenus[i];
-                p++;
-              }
-              if (response.data.infoMenus[i].id_menu_padre === 12) {
-                self.comboMenus[3].value[h] = response.data.infoMenus[i];
-                h++;
-              }
-            }
-
-            //Reasigno los valores del combo para que veas como debe de quedar
-            self.comboMenus = [
-              {
-                menus: "Usuarios",
-                value:[
-                  { descripcion: 'Crear Usuario' },
-                  { descripcion: 'Editar Usuario' }
-                ]
-              },
-              {
-                menus: "Clientes",
-                value:[
-                  { descripcion: 'Crear Cliente' },
-                  { descripcion: 'Editar Cliente' }
-                ]
-              },
-              {
-                menus: "Proyectos",
-                value:[
-                  { descripcion: 'Crear Proyectos' },
-                  { descripcion: 'Editar Proyectos' }
-                ]
-              },
-              {
-                menus: "Horas no Cargables",
-                value:[
-                  { descripcion: 'Crear Horas' },
-                  { descripcion: 'Editar Horas' }
-                ]
-              }
-            ]
-
-            console.log(self.comboMenus)
-
+          self.infoMenUsu = response.data.infoMenUsu;
+          self.comboMenus = response.data.infoMenus;
 
           $('#modal-asignar-menu').modal("show");
           $(e.target).removeClass("fa-cog fa-spin").addClass("fa-user-edit");
@@ -336,6 +255,39 @@ new Vue({
         self.detalleUsuario.error = true;
         $('#modal-asignar-menu').modal("show");
         $(e.target).removeClass("fa-cog fa-spin").addClass("fa-user-edit");
+
+      });
+
+    },
+
+    Menu: function(id_menu, C, R, U, D, e){
+
+      let parametros = {
+        id_usuario: self.usuario,
+          id_menu: id_menu,
+          C: C,
+          R: R,
+          U: U,
+          D: D
+      };
+
+      axios.get('/menuUsuario', {params: parametros})
+      .then(function (response) {
+
+        if(response.status === 200 && response.data.response === true){
+
+          self.comboMenus = response.data.infoMenus;
+
+        }else{
+
+          throw response.data;
+
+        }
+
+      })
+      .catch(error => {
+
+        self.detalleUsuario.error = true;
 
       });
 

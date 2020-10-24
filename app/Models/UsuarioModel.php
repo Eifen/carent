@@ -437,33 +437,127 @@ class UsuarioModel extends Model
 
     }// Fin modificarUsuario
 
-    function detalleMenuUsu($id_usuario){
+     function detalleMenu($id_usuario){
 
-      $info = DB::select('SELECT *
-                          FROM tbl_menu_usuario m
-                          WHERE m.id_usuario = '.$id_usuario.'
-                        ');
+      $menus = DB::select('SELECT m.id,
+                                  m.id_menu_padre,
+                                  m.descripcion,
+                                  m.url,
+                                  m.C,
+                                  m.R,
+                                  m.U,
+                                  m.D,
+                                  (SELECT CASE
+                                      WHEN mu.id_menu = m.id THEN "true"
+                                      ELSE "false"
+                                    END AS permiso
+                                  FROM tbl_menu_usuario mu
+                                  WHERE mu.id_usuario = '.$id_usuario.'
+                                  AND mu.id_menu = m.id)permiso
+                           FROM tbl_menu m
+                           WHERE m.id_estatus = 1
+                           ORDER BY m.id_menu_padre ASC');
 
-      if(count($info) > 0){
+      if(count($menus) > 0){
 
-        return $info;
+        $array_menus = $this->arbolMenu($menus,$id_usuario);
+
+        return $array_menus;
 
       }else{
 
         return array();
 
       }
+    }
+
+    private function arbolMenu($menus,$id_usuario){
+
+      $arbolMenu = [];
+
+      foreach($menus as $menu){
+
+        $ramaTmp = $this->ramas($menu,$id_usuario);
+        $rama[$ramaTmp->id] = $ramaTmp;
+        $arbolMenu = $this->unirRamas($arbolMenu, $rama);
+
+      }// Fin foreach
+
+      return $arbolMenu;
 
     }
 
-     function detalleMenu(){
+    private function ramas($menu,$id_usuario){
 
-      $menus = DB::select('SELECT *
-                                FROM tbl_menu m');
+      $sql = DB::select('SELECT m.id,
+                                m.id_menu_padre,
+                                m.descripcion,
+                                m.url,
+                                m.C,
+                                m.R,
+                                m.U,
+                                m.D,
+                                (SELECT CASE
+                                      WHEN mu.id_menu = m.id THEN "true"
+                                      ELSE "false"
+                                    END AS permiso
+                                  FROM tbl_menu_usuario mu
+                                  WHERE mu.id_usuario = '.$id_usuario.'
+                                  AND mu.id_menu = m.id)permiso
+                         FROM tbl_menu m
+                         WHERE m.id = "'.$menu->id_menu_padre.'"
+                         AND m.id_estatus = 1');
 
-      return $menus;
+      if(empty($sql)){
 
-    }// Fin parroquias
+        $menu->submenu = [];
+        return $menu;
+        
+      }else{
+
+        if(!property_exists($menu, "submenu")){
+          $menu->submenu = [];
+        }
+
+        if($sql[0]->id_menu_padre === 0){
+
+          $sql[0]->submenu[$menu->id] = $menu;
+          return $sql[0];
+
+        }else{
+
+          $sql[0]->submenu[$menu->id] = $menu;
+
+          $ramaMenu = $this->ramas($sql[0]);
+          return $ramaMenu;
+
+        }
+
+      }
+
+    }
+
+    private function unirRamas($arbolMenu, $rama){
+
+      foreach($rama as $indice => $hoja){
+
+        if(!array_key_exists($indice, $arbolMenu)){
+
+          $arbolMenu[$indice] = $hoja;
+          break;
+
+        }else{
+
+          $p = $this->unirRamas($arbolMenu[$indice]->submenu,$hoja->submenu);
+          $arbolMenu[$indice]->submenu = $p;
+
+        }
+
+      }
+
+      return $arbolMenu;
+
+    }
 
     function divisionUsu($id_usuario){
 
@@ -487,6 +581,48 @@ class UsuarioModel extends Model
 
       }
 
+    }
+
+    function menuUsuario($id_usuario,$id_menu,$C,$R,$U,$D){
+
+      $menu = DB::select('SELECT mu.id_usuario,
+                                 mu.id_menu
+                             FROM tbl_menu_usuario mu
+                             WHERE mu.id_usuario = '.$id_usuario.'
+                             AND mu.id_menu = '. $id_menu);
+
+      if(count($menu) > 0){
+
+        DB::beginTransaction();
+
+        $contacto = DB::table('tbl_menu_usuario')->where([['id_usuario', '=', $id_usuario],['id_menu', '=', $id_menu]])->delete();
+        if($contacto){
+          DB::commit();
+          return array("response" => true, "message" => "menu eliminado con exito.");
+        }else{
+          DB::rollBack();
+          return array("response" => false, "message" => "Error al tratar de eliminar el menu.");
+        }
+
+      }else{
+
+        DB::beginTransaction();
+
+        $data = array("id_usuario" => $id_usuario,
+                      "id_menu" => $id_menu,
+                      "C" => $C,
+                      "R" => $R,
+                      "U" => $U,
+                      "D" => $D);
+        $contacto = DB::table('tbl_menu_usuario')->insert($data);
+        if($contacto){
+          DB::commit();
+          return array("response" => true, "message" => "Menu Creada con Éxito.");
+        }else{
+          DB::rollBack();
+          return array("response" => false, "message" => "Error al tratar de crear el menu.");
+        }
+      }
     }
 
     function agregarMenUsu($menuCr,$C,$R,$U,$D, $id_usuario){

@@ -246,18 +246,18 @@
                 </form>
                 <h5>Seleccionar menus</h5>
                 <form class="row">
-                  <div class="form-group col-12 col-sm-6">
-                    <multiselect :group-select="true"
-                                 :multiple="true"
-                                 :options="comboMenus"
-                                 group-values="value"
-                                 group-label="menus"
-                                 label="descripcion"
-                                 placeholder="Seleccione..."
-                                 track-by="descripcion"
-                                 v-model="selectMenus.value">
-                      <span slot="noResult">No se encontraron menus.</span>
-                    </multiselect>
+                  <div class="form-group col-12 col-sm-6" v-for="menus in comboMenus">
+                    <h4>@{{ menus.descripcion }}</h4>
+                    <div class="custom-control custom-switch" v-for="submenu in menus.submenu">
+                      <label>@{{ submenu.descripcion }}</label>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input class="custom-control-input"
+                               type="checkbox"
+                               :id="submenu.descripcion" 
+                               v-model = "submenu.permiso"
+                               v-on:change="Menu(submenu.id, submenu.C, submenu.R, submenu.U, submenu.D, $event)">
+                        <label class="custom-control-label" :for="submenu.descripcion"></label>                
+                    </div>
                   </div>
                 </form>
               </div>

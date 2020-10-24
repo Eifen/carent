@@ -80,9 +80,7 @@ Route::post('/registrarHorasNoCargables', 'HorasNoCargablesController@registrarH
 Route::get('/buscarHorasNoCargableCargadas', 'HorasNoCargablesController@buscarHorasNoCargableCargadas');
 Route::post('/modificarHorasNoCargables', 'HorasNoCargablesController@modificarHorasNoCargables');
 Route::get('/detalleMenu', 'UsuarioController@detalleMenu');
-Route::get('/agregarMenUsu', 'UsuarioController@agregarMenUsu');
-Route::get('/quitarMenUsu', 'UsuarioController@quitarMenUsu');
-Route::get('/modificarMenUsu', 'UsuarioController@modificarMenUsu');
+Route::get('/menuUsuario', 'UsuarioController@menuUsuario');
 
 /*
   Módulo de Proyectos
