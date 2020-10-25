@@ -118,6 +118,14 @@
     <b-col cols="12">
       <b-row align-h="end" v-cloak v-if="formFiltro.mostrar">
         <b-col cols="12" md="6" lg="4">
+          <download-excel :data="tabla.registros" :name="'horas_cargables.xls'">
+            Download Data
+            <b-icon icon="file-earmark" aria-hidden="true"></b-icon>
+          </download-excel>
+        </b-col>
+
+
+        <b-col cols="12" md="6" lg="4">
           <b-card class="text-left card-monto-contratado">
             <b-card-text>
               <span class="titulo">TOTAL DE HORAS TRABAJADAS</span>
@@ -472,6 +480,7 @@ form{
   import axios from 'axios';
   import alert from '../components/alert.vue';
   import Multiselect from 'vue-multiselect';
+  import JsonExcel from "vue-json-excel";
   var self;
 
   export default {
@@ -544,6 +553,7 @@ form{
       },
       components: {
         alert,
+        "downloadExcel": JsonExcel,
         Multiselect
       },
       beforeCreate: function(){
