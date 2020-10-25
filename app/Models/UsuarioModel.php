@@ -456,6 +456,7 @@ class UsuarioModel extends Model
                                   AND mu.id_menu = m.id)permiso
                            FROM tbl_menu m
                            WHERE m.id_estatus = 1
+                           AND m.id != 17
                            ORDER BY m.id_menu_padre ASC');
 
       if(count($menus) > 0){
@@ -506,7 +507,8 @@ class UsuarioModel extends Model
                                   AND mu.id_menu = m.id)permiso
                          FROM tbl_menu m
                          WHERE m.id = "'.$menu->id_menu_padre.'"
-                         AND m.id_estatus = 1');
+                         AND m.id_estatus = 1
+                         AND m.id != 17');
 
       if(empty($sql)){
 
