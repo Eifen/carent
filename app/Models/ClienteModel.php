@@ -188,7 +188,17 @@ class ClienteModel extends Model
       return array();
     }
 
-  }// Fin buscarCliente
+  }
+
+  function paises(){
+
+    $paises = DB::select('SELECT pa.id,
+                                  pa.nombre,
+                                  pa.codigo_telf
+                           FROM tbl_paises pa');
+
+      return $paises;
+  }
 
   function buscarCliente($codigo){
 
@@ -230,12 +240,8 @@ class ClienteModel extends Model
                   "rif" => $parametros["rif"],
                   "nit" => $parametros["nit"],
                   "razon_social" => $parametros["razon_social"],
-                  "id_parroquia_fiscal" => $parametros["parroquiafi"],
-                  "ciudad_fiscal" => $parametros["ciudad_fiscal"],
-                  "avenida_calle_fiscal" => $parametros["avenida_calle_fiscal"],
-                  "edificio_quinta_fiscal" => $parametros["edificio_quinta_fiscal"],
-                  "piso_fiscal" => $parametros["piso_fiscal"],
-                  "numero_fiscal" => $parametros["numero_fiscal"],
+                  "id_pais" => $parametros["id_pais"],
+                  "direccion" => $parametros["direccion"],
                   "telefono_fiscal" => $parametros["telefono_fiscal"],
                   "pagina_web" => $parametros["pagina_web"],
                   "email_fiscal" => $parametros["email_fiscal"],
@@ -369,23 +375,11 @@ class ClienteModel extends Model
                                 rif,
                                 nit,
                                 razon_social,
-                                ciudad_fiscal,
-                                avenida_calle_fiscal,
-                                edificio_quinta_fiscal,
-                                piso_fiscal,
-                                numero_fiscal,
+                                direccion,
                                 telefono_fiscal,
                                 pagina_web,
                                 email_fiscal,
-                                (SELECT p.parroquia FROM tbl_parroquias p WHERE p.id = id_parroquia_fiscal) parroquiafi,
-                                (SELECT m.municipio
-                                 FROM tbl_municipios m
-                                 WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = id_parroquia_fiscal)) municipiofi,
-                                (SELECT e.estado
-                                 FROM tbl_estados e
-                                 WHERE e.id = (SELECT m.id_estado
-                                               FROM tbl_municipios m
-                                               WHERE m.id = (SELECT p.id_municipio FROM tbl_parroquias p WHERE p.id = id_parroquia_fiscal))) estadofi
+                                (SELECT pa.nombre FROM tbl_paises pa WHERE pa.id = id_pais) pais
                           FROM tbl_cliente
                           WHERE id = '.$id_cliente.'
                         ');
@@ -468,24 +462,13 @@ class ClienteModel extends Model
                                  rif,
                                  nit,
                                  razon_social,
-                                 ciudad_fiscal,
-                                 avenida_calle_fiscal,
-                                 edificio_quinta_fiscal,
-                                 piso_fiscal,
-                                 numero_fiscal,
+                                 direccion,
                                  telefono_fiscal,
                                  pagina_web,
                                  email_fiscal,
                                  id_estatus,
-                                 id_parroquia_fiscal,
-                                 (SELECT id
-                                  FROM tbl_municipios
-                                  WHERE id = (SELECT id_municipio FROM tbl_parroquias WHERE id =id_parroquia_fiscal)) id_municipio_fiscal,
-                                 (SELECT id
-                                  FROM tbl_estados
-                                  WHERE id = (SELECT id_estado
-                                                FROM tbl_municipios
-                                                WHERE id = (SELECT id_municipio FROM tbl_parroquias WHERE id = id_parroquia_fiscal))) id_estado_fiscal
+                                 id_pais,
+                                 (SELECT pa.nombre FROM tbl_paises pa WHERE pa.id = id_pais) pais
                           FROM tbl_cliente
                           WHERE id = '.$id_cliente.'');
 
@@ -585,12 +568,8 @@ class ClienteModel extends Model
                     "rif" => $parametros["rif"],
                     "nit" => $parametros["nit"],
                     "razon_social" => $parametros["razon_social"],
-                    "id_parroquia_fiscal" => $parametros["parroquiafi"],
-                    "ciudad_fiscal" => $parametros["ciudad_fiscal"],
-                    "avenida_calle_fiscal" => $parametros["avenida_calle_fiscal"],
-                    "edificio_quinta_fiscal" => $parametros["edificio_quinta_fiscal"],
-                    "piso_fiscal" => $parametros["piso_fiscal"],
-                    "numero_fiscal" => $parametros["numero_fiscal"],
+                    "id_pais" => $parametros["id_pais"],
+                    "direccion" => $parametros["direccion"],
                     "telefono_fiscal" => $parametros["telefono_fiscal"],
                     "pagina_web" => $parametros["pagina_web"],
                     "email_fiscal" => $parametros["email_fiscal"],

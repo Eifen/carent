@@ -33,13 +33,14 @@ class ClienteController extends Controller
     return $parroquias;
   }
 
-  function codigoCliente(Request $request){
+  function dataInicialCliente(Request $request){
 
     $modelo = new ClienteModel();
     $codigoCliente = $modelo->codigoCliente();
+    $paises = $modelo->paises();
     if (!empty($codigoCliente)) {
       $codigo = $codigoCliente->codigo + 1;
-      $response = array("response" => true, "codigo" => $codigo);
+      $response = array("response" => true, "codigo" => $codigo, "paises" => $paises);
     }else{
       $response = array("response" => false, "message" => "No se encontraron resultados");
     }
@@ -105,6 +106,7 @@ class ClienteController extends Controller
 
     $modelo = new ClienteModel();
     $codigoCliente = (int) $request->input("codigoCliente");
+    $pais = $request->input("pais");
 
     $parametros = array(
         "idUsuario" => (int) $request->input("idUsuario"),
@@ -112,12 +114,8 @@ class ClienteController extends Controller
         "rif" => $request->input("rif"),
         "nit" => $request->input("nit"),
         "razon_social" => mb_strtoupper ($request->input("razon_social")),
-        "parroquiafi" => $request->input("parroquiafi"),
-        "ciudad_fiscal" => mb_strtoupper($request->input("ciudad_fiscal")),
-        "avenida_calle_fiscal" => mb_strtoupper($request->input("avenida_calle_fiscal")),
-        "edificio_quinta_fiscal" => mb_strtoupper($request->input("edificio_quinta_fiscal")),
-        "piso_fiscal" => mb_strtoupper($request->input("piso_fiscal")),
-        "numero_fiscal" => $request->input("numero_fiscal"),
+        "id_pais" => $request->input("pais"),
+        "direccion" => $request->input("direccion"),
         "telefono_fiscal" => $request->input("telefono_fiscal"),
         "pagina_web" => $request->input("pagina_web"),
         "email_fiscal" => strtolower($request->input("email_fiscal"))
@@ -218,20 +216,12 @@ class ClienteController extends Controller
     $id_cliente = (int) session("id_cliente_mod");
     $infoCliente = $modelo->detalleClienteModificar($id_cliente);
     $estatus = $modelo->estatusCliente();
-    $estados_fiscal = $modelo->estados();
-    if($infoCliente->id_estado_fiscal !== NULL){
-      $municipios_fiscal = $modelo->municipios($infoCliente->id_estado_fiscal);
-      $parroquias_fiscal = $modelo->parroquias($infoCliente->id_municipio_fiscal);
-    }else{
-      $municipios_fiscal = array();
-      $parroquias_fiscal = array();
-    }
+    $paises = $modelo->paises();
+
     if(!empty($infoCliente)){
       $response = array("response" => true,
                         "info" => $infoCliente,
-                        "estadosfi" => $estados_fiscal,
-                        "municipiosfi" => $municipios_fiscal,
-                        "parroquiasfi" => $parroquias_fiscal,
+                        "paises" => $paises,
                         "estatus" => $estatus);
     }else{
       $response = array("response" => false, "message" => "No se encontraron resultados");
@@ -318,6 +308,7 @@ class ClienteController extends Controller
     function modificarCliente(Request $request){
 
     $modelo = new ClienteModel();
+
     $parametros = array(
       "idCliente" => $request->input("idCliente"),
       "idUsuario" => (int) $request->input("idUsuario"),
@@ -325,12 +316,8 @@ class ClienteController extends Controller
       "rif" => $request->input("rif"),
       "nit" => $request->input("nit"),
       "razon_social" => mb_strtoupper ($request->input("razon_social")),
-      "parroquiafi" => $request->input("parroquiafi"),
-      "ciudad_fiscal" => mb_strtoupper($request->input("ciudad_fiscal")),
-      "avenida_calle_fiscal" => mb_strtoupper($request->input("avenida_calle_fiscal")),
-      "edificio_quinta_fiscal" => mb_strtoupper($request->input("edificio_quinta_fiscal")),
-      "piso_fiscal" => mb_strtoupper($request->input("piso_fiscal")),
-      "numero_fiscal" => $request->input("numero_fiscal"),
+      "id_pais" => $request->input("pais"),
+      "direccion" => $request->input("direccion"),
       "telefono_fiscal" => $request->input("telefono_fiscal"),
       "pagina_web" => $request->input("pagina_web"),
       "email_fiscal" => strtolower($request->input("email_fiscal")),

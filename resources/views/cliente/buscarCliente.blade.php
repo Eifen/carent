@@ -132,36 +132,13 @@
                 <h5 v-if="!detalleCliente.error">Dirección Fiscal</h5>
                 <form class="row" v-if="!detalleCliente.error">
                   <div class="form-group col-12 col-sm-6">
-                    <label>Estado</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.estadofi">
+                    <label>Pais</label>
+                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.pais">
                   </div>
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Municipio</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.municipiofi">
-                  </div>
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Parroquia</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.parroquiafi">
-                  </div>
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Ciudad</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.ciudad_fiscal">
-                  </div>
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Avenida o Calle</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.avenida_calle_fiscal">
-                  </div>
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Quinta o Edificio</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.edificio_quinta_fiscal">
-                  </div>
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Piso</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.piso_fiscal">
-                  </div>
-                  <div class="form-group col-12 col-sm-6">
-                    <label>Número</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.numero_fiscal">
+                  <div class="form-group col-12 col-sm-6"></div>
+                  <div class="form-group col-24 col-sm-12">
+                    <label>Dirección</label>
+                    <textarea class="form-control" type="text" rows="3" disabled v-bind:value="detalleCliente.data.direccion"></textarea>
                   </div>
                   <div class="form-group col-12 col-sm-6">
                     <label>Nº de Teléfono Principal</label>

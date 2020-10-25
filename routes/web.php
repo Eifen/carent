@@ -39,7 +39,7 @@ Route::get('/buscarCliente', 'ClienteController@buscarCliente');
 Route::get('/estados', 'ClienteController@estados');
 Route::get('/municipios', 'ClienteController@municipios');
 Route::get('/parroquias', 'ClienteController@parroquias');
-Route::get('/codigoCliente', 'ClienteController@codigoCliente');
+Route::get('/dataInicialCliente', 'ClienteController@dataInicialCliente');
 Route::post('/crearCliente', 'ClienteController@crearCliente');
 Route::get('/formBuscarCliente', function() {return view('cliente/buscarCliente');})->middleware('usuario.session');
 Route::get('/buscarClientes', 'ClienteController@buscarClientes');
@@ -116,9 +116,21 @@ Route::post('/modificarProyecto', 'ProyectoController@modificarProyecto');
   Módulo Facturación
 */
 Route::get('/formIngresosGastos', 'FacturacionController@formIngresosGastos')->middleware('usuario.session');
-Route::get('/dataInicialIngresosGastos', 'FacturacionController@dataInicialIngresosGastos');
+Route::get('/dataInicialIngresosGastos', 'FacturacionController@dataInicialIngresosGastos')->middleware('usuario.session');
 Route::get('/formAgregarIngresosGastos/{idProyecto}', 'FacturacionController@formAgregarIngresosGastos')->where('idProyecto', '[0-9]+')->middleware('usuario.session');
 Route::get('/dataInicialAgregarIngresosGastos', 'FacturacionController@dataInicialAgregarIngresosGastos')->middleware('usuario.session');
-Route::get('buscarFacturaProyecto', 'FacturacionController@buscarFacturaProyecto');
+Route::get('/buscarFacturaProyectoNotaCredito', 'FacturacionController@buscarFacturaProyectoNotaCredito')->middleware('usuario.session');
+Route::get('/buscarProyectoFacturacion', 'FacturacionController@buscarProyectoFacturacion')->middleware('usuario.session');
+Route::get('/buscarFacturasCargadas', 'FacturacionController@buscarFacturasCargadas')->middleware('usuario.session');
 
 Route::post('/registrarFactura', 'FacturacionController@registrarFactura');
+Route::post('/eliminarFactura', 'FacturacionController@eliminarFactura');
+Route::post('/modificarFactura', 'FacturacionController@modificarFactura');
+
+/*
+  Módulo de Reportes
+*/
+Route::get('/formReportes', 'Reportes\ReportesController@formReportes')->middleware('usuario.session');
+Route::get('/dataInicialFormReportes', 'Reportes\ReportesController@dataInicialFormReportes')->middleware('usuario.session');
+Route::get('/dataRepHorasCargables', 'Reportes\HorasCargablesController@dataRepHorasCargables')->middleware('usuario.session');
+Route::get('/buscarHorasCargables', 'Reportes\HorasCargablesController@buscarHorasCargables')->middleware('usuario.session');

@@ -167,5 +167,5 @@
       },
       methods: {}
   }
-  
+
 </script>
