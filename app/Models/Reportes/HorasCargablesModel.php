@@ -178,7 +178,19 @@ class HorasCargablesModel extends Model
         $sql_empleado = "";
       }
 
-      $sql = DB::select('SELECT TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(hc.horas_trabajadas))),"%H:%i") horas_trabajadas
+      $sql = DB::select('SELECT CONCAT(
+                                  IF(
+                                     LENGTH(FLOOR(SUM(TIME_TO_SEC(hc.horas_trabajadas))/3600)) = 1,
+                                     CONCAT("0",FLOOR(SUM(TIME_TO_SEC(hc.horas_trabajadas))/3600)),
+                                     FLOOR(SUM(TIME_TO_SEC(hc.horas_trabajadas))/3600)
+                                    ),
+                                  ":",
+                                  IF(
+                                     LENGTH(FLOOR(SUM(TIME_TO_SEC(hc.horas_trabajadas))/60)%60) = 1,
+                                     CONCAT("0",FLOOR(SUM(TIME_TO_SEC(hc.horas_trabajadas))/60)%60),
+                                     FLOOR(SUM(TIME_TO_SEC(hc.horas_trabajadas))/60)%60
+                                    )
+                                ) horas_trabajadas
                          FROM tbl_horas_cargables hc,
                               tbl_proyecto_analista pa,
                               tbl_usuario u,
@@ -196,8 +208,9 @@ class HorasCargablesModel extends Model
                          '.$sql_cliente.'
                          '.$sql_division.'
                          '.$sql_proyecto.'
-                         '.$sql_empleado.'
-                         GROUP BY hc.horas_trabajadas');
+                         '.$sql_empleado);
+
+      return $sql[0];
 
     }
 

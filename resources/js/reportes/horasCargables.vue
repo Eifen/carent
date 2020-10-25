@@ -577,11 +577,11 @@ form{
             self.formFiltro.campos.cargos.listado = response.data.cargos;
             self.formFiltro.campos.divisiones.listado = response.data.divisiones;
 
+            self.totales.horasTrabajadas = response.data.totales.horas_trabajadas;
+
             self.tabla.paginador.paginar = response.data.paginar;
             self.tabla.paginador.numPaginas = response.data.paginas;
             self.tabla.paginador.max = parseInt(response.data.paginas);
-
-            self.tabla.cargando = false;
 
             self.formFiltro.campos.cargos.disabled = false;
             self.formFiltro.campos.cliente.disabled = false;
@@ -592,6 +592,7 @@ form{
             self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
             self.formFiltro.mostrar = true;
 
+            self.tabla.cargando = false;
 
             self.$parent.reporteCargado();
 
@@ -704,6 +705,8 @@ form{
             // Se le asigna los valores a las variables
             self.tabla.paginador.numPaginas = response.data.paginas;
             self.tabla.paginador.max = parseInt(response.data.paginas);
+
+            self.totales.horasTrabajadas = response.data.totales.horas_trabajadas;
 
             self.tabla.registros = self.registroTabla(response.data.horas);
 
