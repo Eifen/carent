@@ -34,6 +34,7 @@ const mix = require('laravel-mix');
     .js('resources/js/horasNoCargables/formHorasNoCargables.js', 'public/js/formHorasNoCargables.js')
     .js('resources/js/facturacion/ingresosGastos.js', 'public/js/ingresosGastos.js')
     .js('resources/js/facturacion/agregarIngresosGastos.js', 'public/js/agregarIngresosGastos.js')
+    .js('resources/js/reportes/formReportes.js', 'public/js/formReportes.js')
     .less('resources/less/login.less', 'public/css/login.css')
     .less('resources/less/inicio.less', 'public/css/inicio.css')
     .less('resources/less/error/permiso.less', 'public/css/error/permiso.css')
@@ -57,5 +58,6 @@ const mix = require('laravel-mix');
     .less('resources/less/horasNoCargables/formHorasNoCargables.less', 'public/css/formHorasNoCargables.css')
     .less('resources/less/facturacion/ingresosGastos.less', 'public/css/ingresosGastos.css')
     .less('resources/less/facturacion/agregarIngresosGastos.less', 'public/css/agregarIngresosGastos.css')
+    .less('resources/less/reportes/formReportes.less', 'public/css/formReportes.css')
     .styles('resources/css/bootstrap-4.5.0/bootstrap.min.css','public/css/bootstrap.min.css')
     .styles('resources/css/fontawesome-free-5.12.0/all.min.css','public/css/fontawesome-free-5.12.0.css');
