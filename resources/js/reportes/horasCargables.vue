@@ -127,6 +127,16 @@
             </b-card-text>
           </b-card>
         </b-col>
+        <b-col cols="12" md="6" lg="4" class="wrapper-btn-generar-excel">
+          <download-excel :data="tabla.registros" :name="'horas_cargables.xls'">
+            <b-button
+              block
+              variant="success">
+              Generar Excel
+              <b-icon icon="file-earmark" aria-hidden="true"></b-icon>
+            </b-button>
+          </download-excel>
+        </b-col>
       </b-row>
     </b-col>
 
@@ -465,6 +475,19 @@ form{
 
 }// Fin .card
 
+.wrapper-btn-generar-excel{
+  padding-top: 20px;
+
+  > div {
+    height:74%;
+  }
+
+  button{
+    height: 100%;
+    font-weight: bold;
+  }
+}
+
 </style>
 
 <script>
@@ -472,6 +495,7 @@ form{
   import axios from 'axios';
   import alert from '../components/alert.vue';
   import Multiselect from 'vue-multiselect';
+  import JsonExcel from "vue-json-excel";
   var self;
 
   export default {
@@ -544,6 +568,7 @@ form{
       },
       components: {
         alert,
+        "downloadExcel": JsonExcel,
         Multiselect
       },
       beforeCreate: function(){
@@ -577,11 +602,11 @@ form{
             self.formFiltro.campos.cargos.listado = response.data.cargos;
             self.formFiltro.campos.divisiones.listado = response.data.divisiones;
 
+            self.totales.horasTrabajadas = response.data.totales.horas_trabajadas;
+
             self.tabla.paginador.paginar = response.data.paginar;
             self.tabla.paginador.numPaginas = response.data.paginas;
             self.tabla.paginador.max = parseInt(response.data.paginas);
-
-            self.tabla.cargando = false;
 
             self.formFiltro.campos.cargos.disabled = false;
             self.formFiltro.campos.cliente.disabled = false;
@@ -592,6 +617,7 @@ form{
             self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
             self.formFiltro.mostrar = true;
 
+            self.tabla.cargando = false;
 
             self.$parent.reporteCargado();
 
@@ -704,6 +730,8 @@ form{
             // Se le asigna los valores a las variables
             self.tabla.paginador.numPaginas = response.data.paginas;
             self.tabla.paginador.max = parseInt(response.data.paginas);
+
+            self.totales.horasTrabajadas = response.data.totales.horas_trabajadas;
 
             self.tabla.registros = self.registroTabla(response.data.horas);
 
