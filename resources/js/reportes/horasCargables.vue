@@ -118,14 +118,6 @@
     <b-col cols="12">
       <b-row align-h="end" v-cloak v-if="formFiltro.mostrar">
         <b-col cols="12" md="6" lg="4">
-          <download-excel :data="tabla.registros" :name="'horas_cargables.xls'">
-            Download Data
-            <b-icon icon="file-earmark" aria-hidden="true"></b-icon>
-          </download-excel>
-        </b-col>
-
-
-        <b-col cols="12" md="6" lg="4">
           <b-card class="text-left card-monto-contratado">
             <b-card-text>
               <span class="titulo">TOTAL DE HORAS TRABAJADAS</span>
@@ -134,6 +126,16 @@
               <span class="monto">{{ totales.horasTrabajadas }}</span>
             </b-card-text>
           </b-card>
+        </b-col>
+        <b-col cols="12" md="6" lg="4" class="wrapper-btn-generar-excel">
+          <download-excel :data="tabla.registros" :name="'horas_cargables.xls'">
+            <b-button
+              block
+              variant="success">
+              Generar Excel
+              <b-icon icon="file-earmark" aria-hidden="true"></b-icon>
+            </b-button>
+          </download-excel>
         </b-col>
       </b-row>
     </b-col>
@@ -472,6 +474,15 @@ form{
   }
 
 }// Fin .card
+
+.wrapper-btn-generar-excel{
+  padding-top: 20px;
+
+  button{
+    height: 100%;
+    font-weight: bold;
+  }
+}
 
 </style>
 
