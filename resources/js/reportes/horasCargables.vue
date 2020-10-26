@@ -478,6 +478,10 @@ form{
 .wrapper-btn-generar-excel{
   padding-top: 20px;
 
+  > div {
+    height:74%;
+  }
+
   button{
     height: 100%;
     font-weight: bold;
