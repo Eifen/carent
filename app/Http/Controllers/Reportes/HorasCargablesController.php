@@ -42,10 +42,12 @@ class HorasCargablesController extends Controller
       $cliente = $request->input("cliente");
       $divisiones = $request->input("divisiones");
       $empleado = $request->input("empleado");
+      $fecha_desde = $request->input("fechaDesde");
+      $fecha_hasta = $request->input("fechaHasta");
       $proyecto = $request->input("proyecto");
-      $horas = $modelo->repoHorasCargables($paginar, $desde, $cargos, $cliente, $divisiones, $proyecto, $empleado);
-      $paginas = $modelo->pagHorasCargables($paginar, $cargos, $cliente, $divisiones, $proyecto, $empleado);
-      $totales = $modelo->totalesHorasCargables($cargos, $cliente, $divisiones, $proyecto, $empleado);
+      $horas = $modelo->repoHorasCargables($paginar, $desde, $cargos, $cliente, $divisiones, $proyecto, $empleado, $fecha_desde, $fecha_hasta);
+      $paginas = $modelo->pagHorasCargables($paginar, $cargos, $cliente, $divisiones, $proyecto, $empleado, $fecha_desde, $fecha_hasta);
+      $totales = $modelo->totalesHorasCargables($cargos, $cliente, $divisiones, $proyecto, $empleado, $fecha_desde, $fecha_hasta);
 
       return array("horas" => $horas, "paginas" => $paginas, "totales" => $totales);
 
