@@ -92,7 +92,44 @@
              </template>
           </multiselect>
         </b-form-group>
-        <b-form-group class="col-12 col-sm-4 col-md-2">
+        <b-form-group
+          class="form-group col-12 col-sm-6 col-md-4"
+          label="Fecha Desde"
+          label-for="fechaDesde"
+          id="group-fechaDesde">
+          <b-form-datepicker
+            @input="fecha_hasta"
+            :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+            :disabled="formFiltro.campos.fechaDesde.disabled"
+            :max="formFiltro.campos.fechaDesde.max"
+            id="fechaDesde"
+            label-help="Use las teclas del cursor para navegar por las fechas del calendario"
+            label-no-date-selected="Ninguna fecha seleccionada"
+            locale="es-ES"
+            placeholder="Seleccione una fecha"
+            ref="fechaDesde"
+            size="sm"
+            v-model="formFiltro.campos.fechaDesde.value"></b-form-datepicker>
+        </b-form-group>
+        <b-form-group
+          class="form-group col-12 col-sm-6 col-md-4"
+          label="Fecha Hasta"
+          label-for="fechaHasta"
+          id="group-fechaHasta">
+          <b-form-datepicker
+            :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+            :disabled="formFiltro.campos.fechaHasta.disabled"
+            :min="formFiltro.campos.fechaHasta.min"
+            id="fechaHasta"
+            label-help="Use las teclas del cursor para navegar por las fechas del calendario"
+            label-no-date-selected="Ninguna fecha seleccionada"
+            locale="es-ES"
+            placeholder="Seleccione una fecha"
+            ref="fechaHasta"
+            size="sm"
+            v-model="formFiltro.campos.fechaHasta.value"></b-form-datepicker>
+        </b-form-group>
+        <b-form-group class="col-12 col-sm-6 col-md-4">
           <label>&nbsp;</label>
           <b-button
             :disabled="formFiltro.btn.filtrar.disabled"
@@ -102,7 +139,7 @@
             v-on:click="buscar"
             variant="primary"></b-button>
         </b-form-group>
-        <b-form-group class="col-12 col-sm-4 col-md-2">
+        <b-form-group class="col-12 col-sm-6 col-md-4">
           <label>&nbsp;</label>
           <b-button
             :disabled="formFiltro.btn.limpiarFiltro.disabled"
@@ -143,6 +180,7 @@
     <b-col cols=12>
       <b-table
         :busy="tabla.cargando"
+        :empty-text="'No se encontraron resultados'"
         :fields="tabla.encabezado"
         :items="tabla.registros"
         :select-mode="'multi'"
@@ -531,8 +569,17 @@ form{
                 listado: [],
                 value: []
               },
-              empleado : {
+              empleado: {
                 disabled: true,
+                value: ""
+              },
+              fechaDesde: {
+                disabled: true,
+                value: ""
+              },
+              fechaHasta: {
+                disabled: true,
+                min: null,
                 value: ""
               },
               proyecto : {
@@ -602,7 +649,7 @@ form{
             self.formFiltro.campos.cargos.listado = response.data.cargos;
             self.formFiltro.campos.divisiones.listado = response.data.divisiones;
 
-            self.totales.horasTrabajadas = response.data.totales.horas_trabajadas;
+            self.totales.horasTrabajadas = (response.data.totales.horas_trabajadas) ? response.data.totales.horas_trabajadas : 0;
 
             self.tabla.paginador.paginar = response.data.paginar;
             self.tabla.paginador.numPaginas = response.data.paginas;
@@ -612,6 +659,7 @@ form{
             self.formFiltro.campos.cliente.disabled = false;
             self.formFiltro.campos.divisiones.disabled = false;
             self.formFiltro.campos.empleado.disabled = false;
+            self.formFiltro.campos.fechaDesde.disabled = false;
             self.formFiltro.campos.proyecto.disabled = false;
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
             self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
@@ -693,6 +741,8 @@ form{
           self.formFiltro.campos.cliente.disabled = true;
           self.formFiltro.campos.divisiones.disabled = true;
           self.formFiltro.campos.empleado.disabled = true;
+          self.formFiltro.campos.fechaDesde.disabled = true;
+          self.formFiltro.campos.fechaHasta.disabled = true;
           self.formFiltro.campos.proyecto.disabled = true;
 
           self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
@@ -708,6 +758,8 @@ form{
             desde: desde,
             divisiones: self.formFiltro.campos.divisiones.value,
             empleado: self.formFiltro.campos.empleado.value,
+            fechaDesde: self.formFiltro.campos.fechaDesde.value,
+            fechaHasta: self.formFiltro.campos.fechaHasta.value,
             proyecto: self.formFiltro.campos.proyecto.value,
             paginar: self.tabla.paginador.paginar
           };
@@ -720,6 +772,8 @@ form{
             self.formFiltro.campos.cliente.disabled = false;
             self.formFiltro.campos.divisiones.disabled = false;
             self.formFiltro.campos.empleado.disabled = false;
+            self.formFiltro.campos.fechaDesde.disabled = false;
+            self.formFiltro.campos.fechaHasta.disabled = false;
             self.formFiltro.campos.proyecto.disabled = false;
 
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
@@ -731,7 +785,7 @@ form{
             self.tabla.paginador.numPaginas = response.data.paginas;
             self.tabla.paginador.max = parseInt(response.data.paginas);
 
-            self.totales.horasTrabajadas = response.data.totales.horas_trabajadas;
+            self.totales.horasTrabajadas = (response.data.totales.horas_trabajadas) ? response.data.totales.horas_trabajadas : 0;
 
             self.tabla.registros = self.registroTabla(response.data.horas);
 
@@ -754,8 +808,18 @@ form{
           self.formFiltro.campos.cliente.value = null;
           self.formFiltro.campos.divisiones.value = null;
           self.formFiltro.campos.empleado.value = null;
+          self.formFiltro.campos.fechaDesde.value = null;
+          self.formFiltro.campos.fechaHasta.min = null;
+          self.formFiltro.campos.fechaHasta.value = null;
+          self.formFiltro.campos.fechaHasta.disabled = true;
           self.formFiltro.campos.proyecto.value = null;
           self.buscar();
+
+        },
+        fecha_hasta: function(fecha_desde){
+
+          self.formFiltro.campos.fechaHasta.min = fecha_desde;
+          self.formFiltro.campos.fechaHasta.disabled = false;
 
         }
 

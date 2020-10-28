@@ -32,7 +32,7 @@ class HorasCargablesModel extends Model
 
     }// Fin divisiones
 
-    function repoHorasCargables($paginar, $desde = 0, $cargos = null, $cliente = null, $divisiones = null, $proyecto = null, $empleado = null){
+    function repoHorasCargables($paginar, $desde = 0, $cargos = null, $cliente = null, $divisiones = null, $proyecto = null, $empleado = null, $fecha_desde = null, $fecha_hasta = null){
 
       if($cargos !== null){
 
@@ -80,6 +80,14 @@ class HorasCargablesModel extends Model
         $sql_empleado = 'AND LOWER(CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)) LIKE "%'.strtolower($empleado).'%"';
       }else{
         $sql_empleado = "";
+      }
+
+      if($fecha_desde != null && $fecha_hasta != null){
+        $sql_fecha = 'AND hc.fecha BETWEEN "'.$fecha_desde.'" AND "'.$fecha_hasta.'"';
+      }else if($fecha_desde != null && $fecha_hasta == null){
+        $sql_fecha = 'AND hc.fecha = "'.$fecha_desde.'"';
+      }else{
+        $sql_fecha = '';
       }
 
       $sql = DB::select('SELECT p.id AS id_proyecto,
@@ -111,6 +119,7 @@ class HorasCargablesModel extends Model
                          '.$sql_division.'
                          '.$sql_proyecto.'
                          '.$sql_empleado.'
+                         '.$sql_fecha.'
                          GROUP BY p.id,
                                   p.descripcion,
                                   u.nombre_1,
@@ -128,7 +137,7 @@ class HorasCargablesModel extends Model
 
     }
 
-    function totalesHorasCargables($cargos = null, $cliente = null, $divisiones = null, $proyecto = null, $empleado = null){
+    function totalesHorasCargables($cargos = null, $cliente = null, $divisiones = null, $proyecto = null, $empleado = null, $fecha_desde = null, $fecha_hasta = null){
 
       if($cargos !== null){
 
@@ -176,6 +185,14 @@ class HorasCargablesModel extends Model
         $sql_empleado = 'AND LOWER(CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)) LIKE "%'.strtolower($empleado).'%"';
       }else{
         $sql_empleado = "";
+      }
+
+      if($fecha_desde != null && $fecha_hasta != null){
+        $sql_fecha = 'AND hc.fecha BETWEEN "'.$fecha_desde.'" AND "'.$fecha_hasta.'"';
+      }else if($fecha_desde != null && $fecha_hasta == null){
+        $sql_fecha = 'AND hc.fecha = "'.$fecha_desde.'"';
+      }else{
+        $sql_fecha = '';
       }
 
       $sql = DB::select('SELECT CONCAT(
@@ -208,13 +225,14 @@ class HorasCargablesModel extends Model
                          '.$sql_cliente.'
                          '.$sql_division.'
                          '.$sql_proyecto.'
-                         '.$sql_empleado);
+                         '.$sql_empleado.'
+                         '.$sql_fecha);
 
       return $sql[0];
 
     }
 
-    function pagHorasCargables($paginar, $cargos = null, $cliente = null, $divisiones = null, $proyecto = null, $empleado = null){
+    function pagHorasCargables($paginar, $cargos = null, $cliente = null, $divisiones = null, $proyecto = null, $empleado = null, $fecha_desde = null, $fecha_hasta = null){
 
       if($cargos !== null){
 
@@ -264,6 +282,14 @@ class HorasCargablesModel extends Model
         $sql_empleado = "";
       }
 
+      if($fecha_desde != null && $fecha_hasta != null){
+        $sql_fecha = 'AND hc.fecha BETWEEN "'.$fecha_desde.'" AND "'.$fecha_hasta.'"';
+      }else if($fecha_desde != null && $fecha_hasta == null){
+        $sql_fecha = 'AND hc.fecha = "'.$fecha_desde.'"';
+      }else{
+        $sql_fecha = '';
+      }
+
       $sql = DB::select('SELECT CEILING( COUNT(1) / '.$paginar.') paginas
                          FROM(
 
@@ -290,6 +316,7 @@ class HorasCargablesModel extends Model
                            '.$sql_division.'
                            '.$sql_proyecto.'
                            '.$sql_empleado.'
+                           '.$sql_fecha.'
                            GROUP BY p.descripcion,
                                     u.id_division,
                                     u.id_cargo,
