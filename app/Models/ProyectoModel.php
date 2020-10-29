@@ -433,7 +433,8 @@ class ProyectoModel extends Model
                                    SELECT CONCAT(u2.nombre_1," ",u2.nombre_2," ",u2.apellido_1," ",u2.apellido_2)
                                    FROM tbl_usuario u2
                                    WHERE u2.id = p.id_gerente
-                                 ) nombre_gerente
+                                 ) nombre_gerente,
+                                 p.id_empresa
                           FROM tbl_proyecto p,
                                tbl_cliente c,
                                tbl_monedas m

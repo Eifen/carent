@@ -71,12 +71,12 @@ new Vue({
         descripcion: null,
         cliente: null,
         estatus: null,
-        empresa: null,
         fechaContratacion: null,
         socio: null,
         gerente: null,
         montoEn: null,
         monto: null,
+        empresa: null,
         divisiones: null,
         horas: 0
       },
@@ -205,15 +205,15 @@ new Vue({
         monto: {
           required
         },
+        empresa: {
+          required
+        },
         divisiones: {
           required
         },
         horas: {
           required,
           minValue: minValue(1)
-        },
-        empresa: {
-          required
         }
       }
     }
