@@ -8,29 +8,73 @@ use Illuminate\Database\Eloquent\Model;
 class HorasCargablesModel extends Model
 {
 
-    function cargosEmpleado(){
+    /*
+      Función que valida si supervisa a empleados o no
+    */
+    function supervisaA($id_cargo, $id_division, $id_usuario){
 
-      $sql = DB::select('SELECT c.id,
-                                c.descripcion
-                         FROM tbl_cargo_empleado c
-                         WHERE c.id_estatus = 1
-                         ORDER BY c.descripcion ASC');
+      $sql = DB::select('SELECT * FROM(
+                            (
+                             SELECT COUNT(DISTINCT cs.id_cargo_supervisor) num_cargo_sup
+                             FROM tbl_cargo_supervisa cs
+                             WHERE cs.id_cargo_supervisor <> '.$id_cargo.'
+                            ) t1,
+                            (
+                             SELECT COUNT(1) supervisa
+                             FROM tbl_cargo_supervisa cs
+                             WHERE cs.id_cargo_supervisor = '.$id_cargo.'
+                             AND cs.id_cargo IN(
+                              SELECT DISTINCT cs.id_cargo_supervisor
+                                FROM tbl_cargo_supervisa cs
+                                WHERE cs.id_cargo_supervisor <> '.$id_cargo.'
+                             )) t2
+                        )');
 
-      return $sql;
+      if($sql[0]->num_cargo_sup === $sql[0]->supervisa){ // Supervisa a todos
 
-    }// Fin cargosEmpleado
+        $condicion_cargos = "";
+        $condicion_divisiones = "";
+        $supervisor = true;
+        $supervisaTodo = true;
 
-    function divisiones(){
+      }else if($sql[0]->num_cargo_sup > $sql[0]->supervisa && $sql[0]->supervisa > 0){ //Directores, Gerentes, etc
 
-      $sql = DB::select('SELECT d.id,
-                                d.descripcion
-                         FROM tbl_division d
-                         WHERE d.id_estatus = 1
-                         ORDER BY d.descripcion ASC');
+        $condicion_cargos = "AND c.id IN(SELECT id_cargo FROM tbl_cargo_supervisa WHERE id_cargo_supervisor = ".$id_cargo." OR id_Cargo = ".$id_cargo.")";
+        $condicion_divisiones = " AND d.id = ".$id_division;
+        $supervisor = true;
+        $supervisaTodo = false;
 
-      return $sql;
+      }else{
 
-    }// Fin divisiones
+        $condicion_cargos = "AND c.id = ".$id_cargo;
+        $condicion_divisiones = " AND d.id = ".$id_division;
+        $supervisor = false;
+        $supervisaTodo = false;
+
+      }
+
+      $cargos = DB::select('SELECT c.id,
+                                   c.descripcion
+                            FROM tbl_cargo_empleado c
+                            WHERE c.id_estatus = 1
+                            '.$condicion_cargos.'
+                            ORDER BY c.descripcion ASC');
+
+      $divisiones = DB::select('SELECT d.id,
+                                       d.descripcion
+                                FROM tbl_division d
+                                WHERE d.id_estatus = 1
+                                '.$condicion_divisiones.'
+                                ORDER BY d.descripcion ASC');
+
+      return [
+        "cargos" => $cargos,
+        "divisiones" => $divisiones,
+        "supervisa" => $supervisor,
+        "supervisaTodo" => $supervisaTodo
+      ];
+
+    }// Fin supervisaA
 
     function repoHorasCargables($paginar, $desde = 0, $cargos = null, $cliente = null, $divisiones = null, $proyecto = null, $empleado = null, $fecha_desde = null, $fecha_hasta = null){
 

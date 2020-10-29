@@ -13,9 +13,10 @@ class HorasCargablesController extends Controller
 
       $modelo = new HorasCargablesModel();
 
-      $paginar = 50;
-      $cargos = $modelo->cargosEmpleado();
-      $divisiones = $modelo->divisiones();
+      $paginar = 200;
+      $supervisa = $modelo->supervisaA(session("cargo_id"), session("division_id"), session("usuario_id"));
+      $cargos = $supervisa["cargos"];
+      $divisiones = $supervisa["divisiones"];
       $horas = $modelo->repoHorasCargables($paginar);
       $paginas = $modelo->pagHorasCargables($paginar);
       $totales = $modelo->totalesHorasCargables();
