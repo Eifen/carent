@@ -20,6 +20,17 @@ class ProyectoModel extends Model
 
     }// Fin estatusProyectos
 
+    function empresas(){
+
+      $sql = DB::select('SELECT e.id,
+                                e.razon_social
+                         FROM tbl_empresa e
+                         ORDER BY e.razon_social ASC');
+
+      return $sql;
+
+    }// Fin empresas
+
     function monedas($activas){
 
       if($activas){
@@ -133,7 +144,7 @@ class ProyectoModel extends Model
 
     }
 
-    function crearProyecto($descripcion,$cliente,$socio,$gerente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto){
+    function crearProyecto($descripcion,$cliente,$socio,$gerente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto,$empresa){
 
       DB::beginTransaction();
 
@@ -144,7 +155,8 @@ class ProyectoModel extends Model
                     "id_moneda" => $id_moneda,
                     "monto" => $monto,
                     "id_socio" => $socio,
-                    "id_gerente" => $gerente);
+                    "id_gerente" => $gerente,
+                    "id_empresa" => $empresa);
 
       $idProyecto = DB::table('tbl_proyecto')->insertGetId($data);
 

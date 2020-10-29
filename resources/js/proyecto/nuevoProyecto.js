@@ -32,6 +32,7 @@ new Vue({
       variante: ""
     },
     comboEstatus: [],
+    comboEmpresas: [],
     comboDivisiones: [],
     comboMonedas: [],
     refreshForm: false,
@@ -70,6 +71,7 @@ new Vue({
         descripcion: null,
         cliente: null,
         estatus: null,
+        empresa: null,
         fechaContratacion: null,
         socio: null,
         gerente: null,
@@ -100,6 +102,11 @@ new Vue({
           valorFocus: null
         },
         estatus: {
+          disabled: true,
+          invalidFeedback: "",
+          state: null
+        },
+        empresa: {
           disabled: true,
           invalidFeedback: "",
           state: null
@@ -204,6 +211,9 @@ new Vue({
         horas: {
           required,
           minValue: minValue(1)
+        },
+        empresa: {
+          required
         }
       }
     }
@@ -225,6 +235,10 @@ new Vue({
           self.comboEstatus.push({text:item.descripcion, value: item.id});
         });
 
+        response.data.empresas.forEach((item, i) => {
+          self.comboEmpresas.push({text:item.razon_social, value: item.id});
+        });
+
         response.data.monedas.forEach((item, i) => {
           self.comboMonedas.push({text:item.moneda, value: item.id, simbolo: item.simbolo});
         });
@@ -234,6 +248,7 @@ new Vue({
         self.form.camposAtributos.cliente.disabled = false;
         self.form.camposAtributos.cliente.help = self.form.camposAtributos.cliente.helpInit;
         self.form.camposAtributos.estatus.disabled = false;
+        self.form.camposAtributos.empresa.disabled = false;
         self.form.camposAtributos.fechaContratacion.disabled = false;
         self.form.camposAtributos.socio.disabled = false;
         self.form.camposAtributos.socio.help = self.form.camposAtributos.socio.helpInit;
@@ -537,7 +552,8 @@ new Vue({
         divisiones: divisiones,
         estatus: self.form.campos.estatus,
         id_moneda: self.form.campos.montoEn,
-        monto: self.form.camposAtributos.monto.autonumeric.get()
+        monto: self.form.camposAtributos.monto.autonumeric.get(),
+        empresa: self.form.campos.empresa
       }
 
       self.form.botones.cancelar.disabled = true;
