@@ -76,42 +76,64 @@ class HorasCargablesModel extends Model
 
     }// Fin supervisaA
 
-    function repoHorasCargables($paginar, $desde = 0, $cargos = null, $cliente = null, $divisiones = null, $proyecto = null, $empleado = null, $fecha_desde = null, $fecha_hasta = null){
+    function repoHorasCargables($paginar, $supervisa, $supervisaTodo, $divisiones, $cargos, $desde = 0, $cliente = null, $proyecto = null, $empleado = null, $fecha_desde = null, $fecha_hasta = null){
 
-      if($cargos !== null){
+      if($supervisaTodo){
+        $sql_division = "";
+      }else if($divisiones == null){
+        $sql_division = "";
+      }else{
+
+        $idsDivision = [];
+
+        if(is_array($divisiones)){
+
+          foreach ($divisiones as $key => $item) {
+            $item = json_decode($item);
+            array_push($idsDivision,$item->id);
+          }
+
+        }else{
+
+          array_push($idsDivision,$divisiones);
+
+        }
+
+        $idsDivision = implode(",", $idsDivision);
+        $sql_division = "AND u.id_division IN(".$idsDivision.")";
+
+      }
+
+      if($supervisaTodo){
+        $sql_cargos = "";
+      }else if($cargos == null){
+        $sql_cargos = "";
+      }else{
 
         $idsCargo = [];
-        foreach ($cargos as $key => $item) {
-          $item = json_decode($item);
-          array_push($idsCargo,$item->id);
+
+        if(is_array($cargos)){
+
+          foreach ($cargos as $key => $item) {
+            $item = json_decode($item);
+            array_push($idsCargo,$item->id);
+          }
+
+        }else{
+
+          array_push($idsCargo,$cargos);
+
         }
 
         $idsCargo = implode(",", $idsCargo);
         $sql_cargos = "AND ce.id IN(".$idsCargo.")";
 
-      }else{
-        $sql_cargos = "";
       }
 
       if($cliente != null && trim($cliente) != ""){
         $sql_cliente = 'AND LOWER(c.razon_social) LIKE "%'.strtolower($cliente).'%"';
       }else{
         $sql_cliente = "";
-      }
-
-      if($divisiones !== null){
-
-        $idsDivision = [];
-        foreach ($divisiones as $key => $item) {
-          $item = json_decode($item);
-          array_push($idsDivision,$item->id);
-        }
-
-        $idsDivision = implode(",", $idsDivision);
-        $sql_division = "AND u.id_division IN(".$idsDivision.")";
-
-      }else{
-        $sql_division = "";
       }
 
       if($proyecto != null && trim($proyecto) != ""){
@@ -181,42 +203,64 @@ class HorasCargablesModel extends Model
 
     }
 
-    function totalesHorasCargables($cargos = null, $cliente = null, $divisiones = null, $proyecto = null, $empleado = null, $fecha_desde = null, $fecha_hasta = null){
+    function totalesHorasCargables($supervisa, $supervisaTodo, $divisiones, $cargos, $cliente = null, $proyecto = null, $empleado = null, $fecha_desde = null, $fecha_hasta = null){
 
-      if($cargos !== null){
+      if($supervisaTodo){
+        $sql_division = "";
+      }else if($divisiones == null){
+        $sql_division = "";
+      }else{
+
+        $idsDivision = [];
+
+        if(is_array($divisiones)){
+
+          foreach ($divisiones as $key => $item) {
+            $item = json_decode($item);
+            array_push($idsDivision,$item->id);
+          }
+
+        }else{
+
+          array_push($idsDivision,$divisiones);
+
+        }
+
+        $idsDivision = implode(",", $idsDivision);
+        $sql_division = "AND u.id_division IN(".$idsDivision.")";
+
+      }
+
+      if($supervisaTodo){
+        $sql_cargos = "";
+      }else if($cargos == null){
+        $sql_cargos = "";
+      }else{
 
         $idsCargo = [];
-        foreach ($cargos as $key => $item) {
-          $item = json_decode($item);
-          array_push($idsCargo,$item->id);
+
+        if(is_array($cargos)){
+
+          foreach ($cargos as $key => $item) {
+            $item = json_decode($item);
+            array_push($idsCargo,$item->id);
+          }
+
+        }else{
+
+          array_push($idsCargo,$cargos);
+
         }
 
         $idsCargo = implode(",", $idsCargo);
         $sql_cargos = "AND ce.id IN(".$idsCargo.")";
 
-      }else{
-        $sql_cargos = "";
       }
 
       if($cliente != null && trim($cliente) != ""){
         $sql_cliente = 'AND LOWER(c.razon_social) LIKE "%'.strtolower($cliente).'%"';
       }else{
         $sql_cliente = "";
-      }
-
-      if($divisiones !== null){
-
-        $idsDivision = [];
-        foreach ($divisiones as $key => $item) {
-          $item = json_decode($item);
-          array_push($idsDivision,$item->id);
-        }
-
-        $idsDivision = implode(",", $idsDivision);
-        $sql_division = "AND u.id_division IN(".$idsDivision.")";
-
-      }else{
-        $sql_division = "";
       }
 
       if($proyecto != null && trim($proyecto) != ""){
@@ -276,42 +320,64 @@ class HorasCargablesModel extends Model
 
     }
 
-    function pagHorasCargables($paginar, $cargos = null, $cliente = null, $divisiones = null, $proyecto = null, $empleado = null, $fecha_desde = null, $fecha_hasta = null){
+    function pagHorasCargables($paginar, $supervisa, $supervisaTodo, $divisiones, $cargos, $cliente = null, $proyecto = null, $empleado = null, $fecha_desde = null, $fecha_hasta = null){
 
-      if($cargos !== null){
+      if($supervisaTodo){
+        $sql_division = "";
+      }else if($divisiones == null){
+        $sql_division = "";
+      }else{
+
+        $idsDivision = [];
+
+        if(is_array($divisiones)){
+
+          foreach ($divisiones as $key => $item) {
+            $item = json_decode($item);
+            array_push($idsDivision,$item->id);
+          }
+
+        }else{
+
+          array_push($idsDivision,$divisiones);
+
+        }
+
+        $idsDivision = implode(",", $idsDivision);
+        $sql_division = "AND u.id_division IN(".$idsDivision.")";
+
+      }
+
+      if($supervisaTodo){
+        $sql_cargos = "";
+      }else if($cargos == null){
+        $sql_cargos = "";
+      }else{
 
         $idsCargo = [];
-        foreach ($cargos as $key => $item) {
-          $item = json_decode($item);
-          array_push($idsCargo,$item->id);
+
+        if(is_array($cargos)){
+
+          foreach ($cargos as $key => $item) {
+            $item = json_decode($item);
+            array_push($idsCargo,$item->id);
+          }
+
+        }else{
+
+          array_push($idsCargo,$cargos);
+
         }
 
         $idsCargo = implode(",", $idsCargo);
         $sql_cargos = "AND ce.id IN(".$idsCargo.")";
 
-      }else{
-        $sql_cargos = "";
       }
 
       if($cliente != null && trim($cliente) != ""){
         $sql_cliente = 'AND LOWER(c.razon_social) LIKE "%'.strtolower($cliente).'%"';
       }else{
         $sql_cliente = "";
-      }
-
-      if($divisiones !== null){
-
-        $idsDivision = [];
-        foreach ($divisiones as $key => $item) {
-          $item = json_decode($item);
-          array_push($idsDivision,$item->id);
-        }
-
-        $idsDivision = implode(",", $idsDivision);
-        $sql_division = "AND u.id_division IN(".$idsDivision.")";
-
-      }else{
-        $sql_division = "";
       }
 
       if($proyecto != null && trim($proyecto) != ""){

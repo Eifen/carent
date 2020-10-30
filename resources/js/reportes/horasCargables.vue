@@ -641,7 +641,7 @@ form{
 
             if(response.data.horas.length === 0){
 
-              let mensaje = "No hay proyectos por facturar";
+              let mensaje = "No hay proyectos";
               self.mostrarAlert(self.tabla.alert, true, "warning", mensaje, false, false, 0);
 
             }
@@ -750,13 +750,35 @@ form{
           self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlLoading;
           self.formFiltro.btn.limpiarFiltro.disabled = true;
 
+          //Evaluamos como filtraremos la division
+          if(self.formFiltro.campos.divisiones.value.length === 0 && self.formFiltro.campos.divisiones.listado.length > 1){
+            var param_divisiones = null;
+          }else if(self.formFiltro.campos.divisiones.value.length > 0){
+            var param_divisiones = self.formFiltro.campos.divisiones.value.value;
+          }else if(self.formFiltro.campos.divisiones.value.length === 0 && self.formFiltro.campos.divisiones.listado.length === 1){
+            var param_divisiones = self.formFiltro.campos.divisiones.listado[0].id;
+          }else{
+            var param_divisiones = null;
+          }
+
+          //Evaluamos como filtraremos los cargos
+          if(self.formFiltro.campos.cargos.value.length === 0 && self.formFiltro.campos.cargos.listado.length > 1){
+            var param_cargos = null;
+          }else if(self.formFiltro.campos.cargos.value.length > 0){
+            var param_cargos = self.formFiltro.campos.cargos.value.value;
+          }else if(self.formFiltro.campos.cargos.value.length === 0 && self.formFiltro.campos.cargos.listado.length === 1){
+            var param_cargos = self.formFiltro.campos.cargos.listado[0].id;
+          }else{
+            var param_cargos = null;
+          }
+
           //Obtenemos los valores
           let desde = (self.tabla.paginador.pagina - 1) * self.tabla.paginador.paginar;
           let parametros = {
-            cargos: self.formFiltro.campos.cargos.value,
+            cargos: param_cargos,
             cliente: self.formFiltro.campos.cliente.value,
             desde: desde,
-            divisiones: self.formFiltro.campos.divisiones.value,
+            divisiones: param_divisiones,
             empleado: self.formFiltro.campos.empleado.value,
             fechaDesde: self.formFiltro.campos.fechaDesde.value,
             fechaHasta: self.formFiltro.campos.fechaHasta.value,
