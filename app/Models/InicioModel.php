@@ -13,7 +13,8 @@ class InicioModel extends Model
       $menus = DB::select('SELECT m.id,
                                   m.id_menu_padre,
                                   m.descripcion,
-                                  m.url
+                                  m.url,
+                                  m.visible
                            FROM tbl_menu m,
                                 tbl_menu_usuario mu
                            WHERE m.id = mu.id_menu
@@ -56,7 +57,8 @@ class InicioModel extends Model
       $sql = DB::select('SELECT m.id,
                                 m.id_menu_padre,
                                 m.descripcion,
-                                m.url
+                                m.url,
+                                m.visible
                          FROM tbl_menu m
                          WHERE m.id = "'.$menu->id_menu_padre.'"
                          AND m.id_estatus = 1');
@@ -65,7 +67,7 @@ class InicioModel extends Model
 
         $menu->submenu = [];
         return $menu;
-        
+
       }else{
 
         if(!property_exists($menu, "submenu")){
@@ -74,7 +76,12 @@ class InicioModel extends Model
 
         if($sql[0]->id_menu_padre === 0){
 
-          $sql[0]->submenu[$menu->id] = $menu;
+          if($menu->visible === 1){
+            $sql[0]->submenu[$menu->id] = $menu;
+          }else{
+            $sql[0]->submenu = [];
+          }
+          
           return $sql[0];
 
         }else{

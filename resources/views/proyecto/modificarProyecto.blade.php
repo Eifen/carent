@@ -230,6 +230,28 @@
                 </b-input-group>
               </b-form-group>
               <b-form-group
+                :invalid-feedback="form.camposAtributos.empresa.invalidFeedback"
+                class="col-12 col-sm-6"
+                description="Empresa que se llevará el proyecto"
+                label="Empresa:"
+                label-for="empresa"
+                id="group-empresa">
+                <b-form-select
+                  @change="limpiarMensajeError(form.camposAtributos.empresa)"
+                  :disabled="form.camposAtributos.empresa.disabled"
+                  :options="comboEmpresas"
+                  :state="form.camposAtributos.empresa.state"
+                  :value="null"
+                  id="empresa"
+                  ref="empresa"
+                  size="sm"
+                  v-model="$v.form.campos.empresa.$model">
+                  <template v-slot:first>
+                    <option :value="null" disabled="true">Seleccione una opción</option>
+                  </template>
+                </b-form-select>
+              </b-form-group>
+              <b-form-group
                 class="col-12 col-sm-6"
                 label="Divisiones"
                 label-for="divisiones"
