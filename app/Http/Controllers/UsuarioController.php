@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Crypt;
 use App\Models\ConfigsModel;
 use App\Models\UsuarioModel;
 use App\Models\AuditoriaLogModel;
+use App\Models\InicioModel;
 use Illuminate\Http\RedirectResponse;
 
 class UsuarioController extends Controller
@@ -316,54 +317,32 @@ class UsuarioController extends Controller
     function detalleMenu(Request $request){
 
       $modelo = new UsuarioModel();
+      $modelo_menu = new InicioModel();
       $id_usuario = (int) $request->input("idUsuario");
       $datosUsuario = $modelo->divisionUsu($id_usuario);
-      $infoMenuUsuario = $modelo->detalleMenu($id_usuario);
-      $response = array("response" => true, "info" => $infoMenuUsuario, "id_usuario" => $id_usuario, "datosUsuario" => $datosUsuario);
+      $infoMenuUsuario = $modelo_menu->menUsuario($id_usuario);
+      $infoMenus = $modelo->detalleMenu($id_usuario);
+      $response = array("response" => true, "infoMenUsu" => $infoMenuUsuario, "id_usuario" => $id_usuario, "datosUsuario" => $datosUsuario, "infoMenus" => $infoMenus);
       return $response;
 
     }
 
-    function agregarMenUsu(Request $request){
+    function menuUsuario(Request $request){
 
       $modelo= new UsuarioModel();
-      $menuCr = (int) $request->input("menuCr");
-      $C = (int) $request->input("C");
-      $R = (int) $request->input("R");
-      $U = (int) $request->input("U");
-      $D = (int) $request->input("D");
-      $idUsuario = (int) $request->input("idUsuario");
-      $menu= $modelo->agregarMenUsu($menuCr,$C,$R,$U,$D,$idUsuario);
-      if(!empty($menu)){
-      $response = array("response" => true, "menUsus" => $menu);
+      $id_usuario = (int)$request->input("id_usuario");
+      $id_menu = $request->input("id_menu");
+      $C = $request->input("C");
+      $R = $request->input("R");
+      $U = $request->input("U");
+      $D = $request->input("D");
+      $menusUsuario = $modelo->menuUsuario($id_usuario,$id_menu,$C,$R,$U,$D);
+      if(!empty($menusUsuario)){
+        $infoMenus = $modelo->detalleMenu($id_usuario);
+        $response = array("response" => true, "infoMenus" => $infoMenus);
       }else{
-      $response = array("response" => false, "message" => "No se encontraron resultadoos");
+        $response = array("response" => false, "message" => "Error al tratar de actualizar menus");
       }
     return $response;
     }
-
-    function quitarMenUsu(Request $request){
-
-      $modelo= new UsuarioModel();
-      $menuCr = (int) $request->input("menuCr");
-      $idUsuario = (int) $request->input("idUsuario");
-      $menu= $modelo->quitarMenUsu($menuCr, $idUsuario);
-      $response = array("response" => true, "menUsus" => $menu);
-      return $response;
-    }
-
-    function modificarMenUsu(Request $request){
-
-      $modelo= new UsuarioModel();
-      $menuCr = (int) $request->input("menuCr");
-      $C = (int) $request->input("C");
-      $R = (int) $request->input("R");
-      $U = (int) $request->input("U");
-      $D = (int) $request->input("D");
-      $idUsuario = (int) $request->input("idUsuario");
-      $menu= $modelo->modificarMenUsu($menuCr,$C,$R,$U,$D,$idUsuario);
-      $response = array("response" => true, "menUsus" => $menu);
-      return $response;
-    }
-
 }
