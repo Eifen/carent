@@ -3,6 +3,8 @@ import Vue from 'vue';
 import { BootstrapVue } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import vSelect from "vue-select";
+import "vue-select/dist/vue-select.css";
 window.zenscroll = require('zenscroll');
 window.axios = require('axios');
 window.AutoNumeric = require('autonumeric');
@@ -14,6 +16,7 @@ var self;
 Vue.use(VueTheMask);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
 Vue.component('loading',require('../components/loading.vue').default);
+Vue.component("v-select", vSelect);
 Vue.use(BootstrapVue);
 
 new Vue({
@@ -57,45 +60,18 @@ new Vue({
         disabled: false,
         value: ""
       },
-      estadofi: {
+      pais: {
         disabled: false,
         validar: true,
         value: ""
       },
-      municipiofi: {
-        disabled: true,
-        help: "Municipio de la oficina fiscal",
-        validar: false,
-        value: ""
-      },
-      parroquiafi: {
-        disabled: true,
-        help: "Parroquia de la oficina fiscal",
-        validar: false,
-        value: ""
-      },
-      ciudad_fiscal: {
+      direccion:{
         disabled: false,
-        value: ""
-      },
-      avenida_calle_fiscal: {
-        disabled: false,
-        value: ""
-      },
-      edificio_quinta_fiscal: {
-        disabled: false,
-        value: ""
-      },
-      piso_fiscal: {
-        disabled: false,
-        value: ""
-      },
-      numero_fiscal:{
-        disabled: false,
+        maxlength: 500,
         value: ""
       },
       telefono_fiscal: {
-        disabled: false,
+        disabled: true,
         value: ""
       },
       pagina_web: {
@@ -142,17 +118,19 @@ new Vue({
       disabled: false,
       show:true
     },
+    comboPaises: [],
   },
   beforeCreate: function(){
 
     self = this;
 
-    axios.get('/codigoCliente')
+    axios.get('/dataInicialCliente')
     .then(function (response) {
 
       if(response.status === 200 && response.data.response === true){
 
         self.form.codigoCliente.value = response.data.codigo;
+        self.comboPaises = response.data.paises;
         self.loading = false;
 
       }else{
@@ -182,11 +160,7 @@ new Vue({
     });
 
   },
-  created: function () {
-
-    self.estadosfi();
-
-  },
+  created: function () {},
    mounted: function () {
 
     new AutoNumeric('#nit', {
@@ -194,13 +168,8 @@ new Vue({
       decimalCharacter: ',',
       digitGroupSeparator: '.'
     });
-    new AutoNumeric('#numero_fiscal', {
-      decimalPlaces: 0,
-      decimalCharacter: ',',
-      digitGroupSeparator: '.'
-    });
-
   },
+
   updated: function () {},
   methods:{
 
@@ -349,135 +318,13 @@ new Vue({
       });
 
     },
-     estadosfi: function(){
 
-      self.form.municipiofi.help = '<i class="fas fa-cog fa-spin"></i> buscando';
+    pais: function(){
 
-      axios.get('/estados')
-      .then(function (response) {
-
-        if(response.status === 200 && response.data.length > 0){
-
-          self.form.municipiofi.help = 'Municipio de la oficina en donde se desempeña';
-          self.comboEstadosfi = response.data;
-
-        }else{
-
-          throw "error";
-
-        }
-
-      })
-      .catch(error => {
-
-        self.form.municipiofi.help = 'Municipio de la oficina en donde se desempeña';
-
-        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-
-          self.form[indiceObjecto].disabled = true;
-
-        });
-
-        self.submitCrear.disabled = true;
-
-        self.alertForm = {
-          class : "alert alert-warning",
-          message : "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-
-      });
-
+      self.form.telefono_fiscal.disabled = false;
+      self.form.telefono_fiscal.value = "";
+      self.form.telefono_fiscal.value = self.form.pais.value.codigo_telf;
     },
-    municipiosfi: function(){
-
-      self.form.municipiofi.value = ""
-      self.form.municipiofi.disabled = true;
-      self.form.parroquiafi.value = ""
-      self.form.parroquiafi.disabled = true;
-      self.form.parroquiafi.help = '<i class="fas fa-cog fa-spin"></i> buscando';
-
-      axios.get('/municipios', { params: {
-         id_estado: self.form.estadofi.value
-      }})
-      .then(function (response) {
-
-        if(response.status === 200 && response.data.length > 0){
-
-          self.form.parroquiafi.help = 'Parroquia de la oficina en donde se desempeña';
-          self.comboMunicipiosfi = response.data;
-          self.form.municipiofi.disabled = false;
-
-        }else{
-
-          throw "error";
-
-        }
-
-      })
-      .catch(error => {
-
-        self.form.parroquiafi.help = 'Parroquia de la oficina en donde se desempeña';
-
-        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-
-          self.form[indiceObjecto].disabled = true;
-
-        });
-
-        self.submitCrear.disabled = true;
-
-        self.alertForm = {
-          class : "alert alert-warning",
-          message : "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-
-      });
-
-    },
-    parroquiasfi: function(){
-
-      self.form.parroquiafi.disabled = true;
-
-      axios.get('/parroquias', {params: {
-         id_municipio: self.form.municipiofi.value
-      }})
-      .then(function (response) {
-
-        if(response.status === 200 && response.data.length > 0){
-
-          self.comboParroquiasfi = response.data;
-          self.form.parroquiafi.disabled = false;
-
-        }else{
-
-          throw "error";
-
-        }
-
-      })
-      .catch(error => {
-
-        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-
-          self.form[indiceObjecto].disabled = true;
-
-        });
-
-        self.submitCrear.disabled = true;
-
-        self.alertForm = {
-          class : "alert alert-warning",
-          message : "Existe un error!, consulte con el administrador del sistema.",
-          show: true
-        };
-
-      });
-
-    },
-
-
 
     valuesForm: function(e){
 
@@ -538,12 +385,8 @@ new Vue({
           rif: self.form.rif.value,
           nit: AutoNumeric.getAutoNumericElement("#nit").getNumber(),
           razon_social:  self.form.razon_social.value,
-          parroquiafi: self.form.parroquiafi.value,
-          ciudad_fiscal: self.form.ciudad_fiscal.value,
-          avenida_calle_fiscal: self.form.avenida_calle_fiscal.value,
-          edificio_quinta_fiscal: self.form.edificio_quinta_fiscal.value,
-          piso_fiscal: self.form.piso_fiscal.value,
-          numero_fiscal: AutoNumeric.getAutoNumericElement("#numero_fiscal").getNumber(),
+          pais: self.form.pais.value.id,
+          direccion: self.form.direccion.value,
           telefono_fiscal: self.form.telefono_fiscal.value,
           pagina_web: self.form.pagina_web.value,
           email_fiscal: self.form.email_fiscal.value,
@@ -579,7 +422,7 @@ new Vue({
         })
         .catch(error => {
 
-          var indices = ["rif","nit","razon_social","ciudad_fiscal","avenida_calle_fiscal","edificio_quinta_fiscal","piso_fiscal","numero_fiscal","telefono_fiscal","pagina_web","email_fiscal","estadofi","municipiofi","parroquiafi"];
+          var indices = ["rif","nit","razon_social","pais","direccion","telefono_fiscal","pagina_web","email_fiscal"];
 
           indices.forEach(function(indiceObjecto, indice) {
             self.form[indiceObjecto].disabled = false;

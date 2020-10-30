@@ -73,17 +73,17 @@ class HorasCargadasModel extends Model
     function horasCargadas($idProyAnalista){
 
     	$info = DB::select('SELECT h.id,
-    							   h.fecha,
-    							   h.descripcion,
-    							   h.horas_trabajadas
-    						FROM tbl_horas_cargables h
-    						WHERE h.id_proy_analista = '.$idProyAnalista.'
-    						ORDER BY h.fecha DESC');
-    if(count($info) > 0){
-      return $info;
-    }else{
-      return array();
-    }
+    							               h.fecha,
+    							               h.descripcion,
+    							               h.horas_trabajadas
+    						            FROM tbl_horas_cargables h
+    						            WHERE h.id_proy_analista = '.$idProyAnalista.'
+    						            ORDER BY h.fecha DESC');
+      if(count($info) > 0){
+        return $info;
+      }else{
+        return array();
+      }
     }
 
 
@@ -124,9 +124,9 @@ class HorasCargadasModel extends Model
     function detalleModHorasCargadas($idHcargadas){
 
     	$info = DB::select('SELECT h.id,
-    		 					   DATE_ADD(h.fecha, INTERVAL 1 DAY) AS fecha,
-    							   h.descripcion,
-    							   h.horas_trabajadas
+    		 					               DATE_ADD(h.fecha, INTERVAL 1 DAY) AS fecha,
+    							               h.descripcion,
+    							               h.horas_trabajadas
     						FROM tbl_horas_cargables h
     						WHERE h.id = '.$idHcargadas.'');
     if(count($info) > 0){

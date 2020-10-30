@@ -9,14 +9,23 @@ html{
 #app{
   background-color: #E9ECEF;
 
+  > .row{
+
+    &:nth-child(2){
+      margin-bottom: 50px;
+      margin-top: 40px;
+    }
+
+  }// Fin > .row
+
   .titulo-principal{
     color: rgba(0,0,0,0.7);
     margin-bottom: 20px;
-    margin-top: 50px;
   }
 
   .titulo-secundario{
     color: rgba(0,0,0,0.7);
+    margin-top: 30px;
   }
 
   .card{
@@ -50,7 +59,8 @@ html{
     &.card-monto-contratado,
     &.card-monto-facturado,
     &.card-monto-gasto,
-    &.card-monto-notas-credito{
+    &.card-monto-notas-credito,
+    &.card-monto-otros-gastos{
       margin-top: 20px;
 
       .card-text{
@@ -102,7 +112,8 @@ html{
 
     }
 
-    &.card-monto-gasto{
+    &.card-monto-gasto,
+    &.card-monto-otros-gastos{
       border-left: 4px solid #DD3D31;
 
       .titulo{
@@ -113,112 +124,19 @@ html{
 
   }// Fin .card
 
-  .wrapper-forms {
-    margin: 0px !important;
-    padding-bottom: 10px;
+  .wrapper-btn-agregar-factura{
     padding-top: 20px;
 
-    @media (max-width: 575px) {
-      padding-bottom: 0px;
+    button{
+      height: 100%;
+      font-weight: bold;
     }
 
-    form{
-      background-color: white;
-      border:1px solid rgba(0,0,0,0.13);
-      border-radius: 3px;
-      margin-bottom: 50px;
-      padding: 15px;
-      transition: all .3s;
-
-      &:hover{
-        box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
-      }
-
-      > div{
-
-        #lista-facturas{
-
-          .btn{
-            border: none;
-            box-shadow: none !important;
-            padding: 0px !important;
-          }
-
-          .dropdown-menu{
-            width: 100%;
-
-            .dropdown-item{
-              padding: 0.25rem 0.7rem;
-              white-space: normal;
-            }
-
-          }
-
-        }// lista-facturas
-
-        &.form-group{
-
-          &:nth-last-child(2){
-            margin-top: 20px;
-          }
-
-          label{
-            color:#091F40;
-          }
-
-          .form-control{
-            border-radius: 2px;
-
-            &:disabled{
-              cursor: not-allowed;
-            }
-
-          }
-
-          .btn{
-
-            &:disabled{
-              cursor: not-allowed;
-            }
-
-            &.btn-outline-success{
-              border: 2px solid;
-              font-weight: 600;
-
-
-
-            }
-
-          }
-
-        }// Fin .form-group
-
-      }
-
-    }// Fin form
-
-    .wrapper-alert{
-      margin-top: 15px;
-
-      > div{
-        padding-left: 0px;
-        padding-right: 0px;
-
-        .alert{
-          margin-bottom: 0px;
-          text-align: center;
-          width: 100%;
-        }
-
-      }
-
-    }
-
-  }// Fin .wrapper-forms
+  }
 
   .wrapper-table{
     padding-bottom: 50px;
-    padding-top: 20px;
+    padding-top: 0px;
 
     .table{
       background-color: white;
@@ -347,10 +265,103 @@ html{
 
 .modal{
 
+  &[id^="modal-eliminar-"]{
+
+    .modal-dialog{
+
+      .modal-body{
+        border-top-right-radius: calc(0.3rem - 1px);
+        border-top-left-radius: calc(0.3rem - 1px);
+        padding: 0px;
+      }
+
+    }
+
+  }
+
   .modal-dialog{
+
+    .modal-header{
+      padding: 0.50rem;
+    }
+
+    .modal-body{
+
+      form{
+        padding: 15px;
+
+        > div{
+
+          #lista-facturas{
+
+            .btn{
+              border: none;
+              box-shadow: none !important;
+              padding: 0px !important;
+            }
+
+            .dropdown-menu{
+              width: 100%;
+
+              .dropdown-item{
+                padding: 0.25rem 0.7rem;
+                white-space: normal;
+              }
+
+            }
+
+          }// lista-facturas
+
+          &.form-group{
+
+            label{
+              color:#091F40;
+            }
+
+            .form-control{
+              border-radius: 2px;
+
+              &:disabled{
+                cursor: not-allowed;
+              }
+
+            }
+
+            .btn{
+
+              &:disabled{
+                cursor: not-allowed;
+              }
+
+              &.btn-outline-success{
+                border: 2px solid;
+                font-weight: 600;
+
+
+
+              }
+
+            }
+
+          }// Fin .form-group
+
+        }
+
+      }// Fin form
+
+      .alert{
+        margin-bottom: 0px;
+      }
+
+    }// Fin .modal-body
 
     footer{
       padding: 0.25rem !important;
+
+      .alert{
+        margin-bottom: 10px !important;
+      }
+
     }
 
   }// Fin .modal-dialog

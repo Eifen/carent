@@ -1,0 +1,75 @@
+html{
+  background-color: #E9ECEF;
+}
+
+[v-cloak] {
+  display: none;
+}
+
+#app{
+  background-color: #E9ECEF;
+
+  .wrapper-forms {
+    padding-bottom: 30px;
+    padding-top: 50px;
+
+    @media (max-width: 575px) {
+      padding-bottom: 0px;
+      padding-top: 50px;
+    }
+
+    form{
+      background-color: white;
+      border:1px solid rgba(0,0,0,0.13);
+      border-radius: 3px;
+      margin-bottom: 50px;
+      margin-left: 0px;
+      margin-right: 0px;
+      padding: 15px;
+      transition: all .3s;
+
+      &:hover{
+        box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+      }
+
+      > div{
+
+        &.form-group{
+
+          label{
+            color:#091F40;
+          }
+
+          .form-control{
+            border-radius: 2px;
+
+            &:disabled{
+              cursor: not-allowed;
+            }
+
+          }
+
+        }// Fin .form-group
+
+      }
+
+    }// Fin form
+
+    .btn{
+      border-radius: 2px;
+      font-weight: 600;
+
+      &:hover{
+        background-color: #F6A81C !important;
+        color: #091F40 !important;
+      }
+
+      &:disabled{
+        cursor: not-allowed;
+      }
+
+    }
+
+  }// Fin .wrapper-forms
+
+}// Fin #app

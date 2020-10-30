@@ -18,7 +18,7 @@
         <loading :loading="loading" v-show="loading"></loading>
         <menu-principal v-cloak></menu-principal>
         <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
-          <div class="col-12 col-sm-11 col-md-9 wrapper-form" v-if="form.mostrar">
+          <div class="col-11 col-sm-12 col-md-10 wrapper-form" v-if="form.mostrar">
             <h3>Datos del Proyecto a Cargar Horas</h3>
             <form class="row" v-for="ProyAnalista in infoProyAnalista">
               <div class="form-group col-12 col-sm-6">
@@ -35,7 +35,7 @@
               </div>
               <div class="form-group col-4 col-sm-2">
                 <label>Horas Asignadas</label>
-                  <input  style="text-align:center" class="form-control" type="text" disabled v-bind:value="ProyAnalista.horas_asignadas">
+                  <input  style="text-align:center" class="form-control" type="text" disabled v-bind:value="horas_asignadas">
               </div>
               <div class="form-group col-4 col-sm-2">
                 <label>Horas Cargadas</label>
@@ -73,16 +73,13 @@
               </div>
               <div class="form-group col-2 col-sm-2">
                 <label for="horas_trabajadas">Horas Trabajadas</label>
-                  <input style="text-align:center"
-                         class="form-control"
-                         id="horas_trabajadas"
-                         v-mask="'##'"
-                         v-bind:disabled="form.horas_trabajadas.disabled"
-                         v-model="form.horas_trabajadas.value"
-                         v-on:keyup="valuesForm"
-                         data-validar="true"
-                         data-min="1"
-                         type="text" >
+                <vue-timepicker input-class="form-control-distint"
+                                placeholder="Seleccione horas"
+                                format="HH:mm"
+                                id="horas_trabajadas"
+                                v-model="form.horas_trabajadas.value"
+                                v-bind:disabled="form.horas_trabajadas.disabled"
+                                :minute-interval="30"></vue-timepicker>
               </div>
               <div class="form-group col-12 col-sm-3" v-for="ProyAnalista in infoProyAnalista">
                 <label>&nbsp;</label>
@@ -165,13 +162,13 @@
                   </div>
                   <div class="form-group col-12 col-sm-6">
                     <label for="horas_trabajadasM">Horas Trabajadas</label>
-                      <input style="text-align:center"
-                             class="form-control"
-                             id="horas_trabajadasM"
-                             v-bind:disabled="form.horas_trabajadasM.disabled"
-                             v-model="form.horas_trabajadasM.value"
-                             v-on:keyup="valuesForm"
-                             type="text">
+                    <vue-timepicker input-class="form-control-distint"
+                                placeholder="Seleccione horas"
+                                format="HH:mm"
+                                id="horas_trabajadasM"
+                                v-model="form.horas_trabajadasM.value"
+                                v-bind:disabled="form.horas_trabajadasM.disabled"
+                                :minute-interval="30"></vue-timepicker>
                   </div>
                   <div class="form-group col-18 col-sm-10">
                       <label for="descripcionM">Descripción de lo Realizado</label>
@@ -184,14 +181,13 @@
                   </div>
                 </form>
                 <div class="row justify-content-center wrapper-subtmit">
-                  <div class="form-group col-12 col-sm-3" v-for="ProyAnalista in infoProyAnalista">
+                  <div class="form-group col-12 col-sm-3">
                     <label>&nbsp;</label>
                       <button class="btn btn-primary"
                               type="button"
-                              v-on:click="modificar(horas_cargadas,ProyAnalista.horas_asignadas, form.horas_trabajadasA.value, $event)"
+                              v-on:click="modificar(horas_cargadas, horas_asignadas,horas_trabajadasA,$event)"
                               v-bind:disabled="form.btn.Modificar.disabled"
-                              v-html="form.btn.Modificar.html"
-                              data-dismiss="modal"></button>
+                              v-html="form.btn.Modificar.html"></button>
                   </div>
                 </div>
                 <div class="row wrapper-alert">

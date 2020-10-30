@@ -3,15 +3,18 @@ import Vue from 'vue';
 import { BootstrapVue } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import 'vue2-timepicker/dist/VueTimepicker.css'
 window.zenscroll = require('zenscroll');
 window.axios = require('axios');
 window.AutoNumeric = require('autonumeric');
 import VueTheMask from 'vue-the-mask';
+import VueTimepicker from 'vue2-timepicker'
 import Datepicker from 'vuejs-datepicker';
 import {es} from 'vuejs-datepicker/dist/locale';
 export default {
     components: {
-        Datepicker
+        Datepicker,
+        VueTimepicker
     }
 };
 var self;
@@ -24,7 +27,8 @@ new Vue({
 
   el: '#cargarHoras',
   components: {
-        Datepicker
+        Datepicker,
+        VueTimepicker
     },
   data: {
 
@@ -49,7 +53,7 @@ new Vue({
       },
       horas_trabajadas:{
         disabled: false,
-        value: ""
+        value: "00:00"
       },
       fechaM:{
         disabled: false,
@@ -60,10 +64,6 @@ new Vue({
         value: ""
       },
       horas_trabajadasM:{
-        disabled: false,
-        value: ""
-      },
-      horas_trabajadasA:{
         disabled: false,
         value: ""
       },
@@ -101,9 +101,9 @@ new Vue({
     infoHorasCargadas: [],
     infoEliHorasCargadas: [],
     permisoActualizar: false,
-    horas_cargadas: 0,
+    horas_cargadas: "",
+    horas_trabajadasA: "",
     loading: true,
-    cargar: 1,
   },
   beforeCreate: function(){
 
@@ -120,14 +120,8 @@ new Vue({
         self.form.btn.Crear.html = self.form.btn.Crear.htmlInit;
         self.permisoActualizar = response.data.permisoActualizar;
         self.permisoCrear = response.data.permisoCrear;
-
-        self.horas_asignadas = self.infoProyAnalista.horas_asignadas;
-        for (var i = 0; i < self.infoHorasCargadas.length; i++) {
-              self.horas_cargadas = self.infoHorasCargadas[i].horas_trabajadas + self.horas_cargadas;
-        };
-        if (self.permisoActualizar === false) {
-          self.cargar = 0;
-        };
+        self.horas_asignadas = response.data.horas_asignadas;
+        self.horas_cargadas = response.data.horas_cargadas;
         self.loading = false;
 
       }else{
@@ -214,7 +208,6 @@ new Vue({
 
       self.form.btn.Crear.disabled = true;
       self.form.btn.Crear.html = self.form.btn.Crear.htmlLoading;
-      var fechaN = self.form.fecha.value;
       var formValido = true;
       self.form.fecha.disabled = true;
       self.form.descripcion.disabled = true;
@@ -246,67 +239,16 @@ new Vue({
         }
 
       });
-
       if(formValido){
-
         self.alertForm = {
           class : "",
           message : "",
           show: false
         };
-
-        if(parseInt(horas_asignadas) < parseInt(horas_cargadas) + parseInt(self.form.horas_trabajadas.value) && self.permisoActualizar === false){
-          var message = "Sobrepasaste el limite de horas asignadas.";
-          self.alertForm = {
-            class : "alert alert-warning",
-            message : message,
-            show: true
-          };
-          setTimeout(function(){
-              self.alertForm = {
-              class: "",
-              message: "",
-              show: false
-              };
-            }, 1500);
-          self.form.btn.Crear.disabled = false;
-          self.form.btn.Crear.html = self.form.btn.Crear.htmlInit;
-        }else if (parseInt(horas_asignadas) < parseInt(horas_cargadas) + parseInt(self.form.horas_trabajadas.value) && self.cargar === 1) {
-          var message = "Sobrepasaste el limite de horas asignadas. Si estas seguro volver hacer clic en Cargar Horas.";
-          self.alertForm = {
-            class : "alert alert-warning",
-            message : message,
-            show: true
-          };
-          self.cargar = 0;
-          setTimeout(function(){
-              self.alertForm = {
-              class: "",
-              message: "",
-              show: false
-              };
-            }, 1500);
-          self.form.btn.Crear.disabled = false;
-          self.form.btn.Crear.html = self.form.btn.Crear.htmlInit;
-        }else if (self.form.horas_trabajadas.value > 23) {
-          var message = "Maximo de 23 horas trabajadas al dia.";
-          self.alertForm = {
-            class : "alert alert-warning",
-            message : message,
-            show: true
-          };
-          setTimeout(function(){
-              self.alertForm = {
-              class: "",
-              message: "",
-              show: false
-              };
-            }, 1500);
-          self.form.btn.Crear.disabled = false;
-          self.form.btn.Crear.html = self.form.btn.Crear.htmlInit;
-        }else{
         //Obtenemos valores
         let parametros = {
+          horas_cargadas: horas_cargadas,
+          horas_asignadas: horas_asignadas,
           fecha:  self.form.fecha.value,
           descripcion: self.form.descripcion.value,
           horas_trabajadas: self.form.horas_trabajadas.value,
@@ -324,8 +266,7 @@ new Vue({
             };
             self.form.fecha.value = "";
             self.form.descripcion.value = "";
-            self.form.horas_trabajadas.value = "";
-            self.cargar = 1;
+            self.form.horas_trabajadas.value = "00:00";
             self.actualizar(); //Invocamos el metodo actualizar
           }else{
 
@@ -367,8 +308,7 @@ new Vue({
           };
 
         });
-      };
-    }
+      }
     },
 
     actualizar: function(){
@@ -385,18 +325,14 @@ new Vue({
         self.infoProyAnalista = response.data.infoProyAnalista;
         self.infoHorasCargadas = response.data.infoHorasCargadas;
         self.form.mostrar = true;
-
-        self.horas_cargadas = 0;
-        for (var i = 0; i < self.infoHorasCargadas.length; i++) {
-              self.horas_cargadas = self.infoHorasCargadas[i].horas_trabajadas + self.horas_cargadas;
-        }
+        self.horas_cargadas = response.data.horas_cargadas;
         setTimeout(function(){
               self.alertForm = {
               class: "",
               message: "",
               show: false
               };
-            }, 2000);
+            }, 1500);
         self.form.btn.Crear.disabled = false;
         self.form.btn.Crear.html = self.form.btn.Crear.htmlInit;
       }else{
@@ -436,7 +372,7 @@ new Vue({
           self.form.fechaM.value = self.modHorasCargadas.data.fecha;
           self.form.descripcionM.value = self.modHorasCargadas.data.descripcion;
           self.form.horas_trabajadasM.value = self.modHorasCargadas.data.horas_trabajadas;
-          self.form.horas_trabajadasA.value = self.modHorasCargadas.data.horas_trabajadas
+          self.horas_trabajadasA = self.modHorasCargadas.data.horas_trabajadas
           self.form.btn.Modificar.html = self.form.btn.Modificar.htmlInit;
 
 
@@ -460,38 +396,25 @@ new Vue({
 
     },
 
-    modificar: function(horas_cargadas,horas_asignadas,horas_trabajadasA,e){
+    modificar: function(horas_cargadas,horas_asignadas,horas_anterior,e){
 
-      var diferencia = parseInt(horas_cargadas) - parseInt(horas_trabajadasA);
+      self.form.btn.Modificar.disabled = true;
+      self.form.btn.Modificar.html = self.form.btn.Modificar.htmlLoading;
+
         self.alertForm = {
           class : "",
           message : "",
           show: false
         };
-        if (parseInt(horas_asignadas) < diferencia + parseInt(self.form.horas_trabajadasM.value)) {
-          var message = "Sobrepasaste el limite de horas asignadas";
-          self.alertForm = {
-            class : "alert alert-warning",
-            message : message,
-            show: true
-          };
-          self.form.fechaM.value = "";
-          self.form.descripcionM.value = "";
-          self.form.horas_trabajadasM.value = "";
-          setTimeout(function(){
-              self.alertForm = {
-              class: "",
-              message: "",
-              show: false
-              };
-            }, 2000);
-        }else{
         //Obtenemos valores
         let parametros = {
           fecha:  self.form.fechaM.value,
           descripcion: self.form.descripcionM.value,
           horas_trabajadas: self.form.horas_trabajadasM.value,
           id: self.modHorasCargadas.data.id,
+          horas_cargadas: horas_cargadas,
+          horas_asignadas: horas_asignadas,
+          horas_anterior: horas_anterior,
         }
         //Se utiliza el metodo post para modificar y se envian con los parametros
         axios.post('/ModificarHorasCargadas', parametros)
@@ -507,6 +430,8 @@ new Vue({
             self.form.fechaM.value = "";
             self.form.descripcionM.value = "";
             self.form.horas_trabajadasM.value = "";
+            self.form.btn.Modificar.disabled = false;
+            $('#modal-detalle-Hcargadas').modal("hide");
             self.actualizar(); // Invocamos el metodo actualizar
           }else{
 
@@ -515,13 +440,15 @@ new Vue({
               message : response.data.message,
               show: true
             };
+            self.form.btn.Modificar.disabled = false;
+            self.form.btn.Modificar.html = self.form.btn.Modificar.htmlInit;
             setTimeout(function(){
               self.alertForm = {
               class: "",
               message: "",
               show: false
               };
-            }, 2000);
+            }, 1500);
             throw response.data;
 
           }
@@ -546,8 +473,6 @@ new Vue({
           };
 
         });
-      }
-
     },
 
     detalleHorasEliminar: function(idHcargadas,e){

@@ -20,6 +20,17 @@ class ProyectoModel extends Model
 
     }// Fin estatusProyectos
 
+    function empresas(){
+
+      $sql = DB::select('SELECT e.id,
+                                e.razon_social
+                         FROM tbl_empresa e
+                         ORDER BY e.razon_social ASC');
+
+      return $sql;
+
+    }// Fin empresas
+
     function monedas($activas){
 
       if($activas){
@@ -133,7 +144,7 @@ class ProyectoModel extends Model
 
     }
 
-    function crearProyecto($descripcion,$cliente,$socio,$gerente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto){
+    function crearProyecto($descripcion,$cliente,$socio,$gerente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto,$empresa){
 
       DB::beginTransaction();
 
@@ -144,7 +155,8 @@ class ProyectoModel extends Model
                     "id_moneda" => $id_moneda,
                     "monto" => $monto,
                     "id_socio" => $socio,
-                    "id_gerente" => $gerente);
+                    "id_gerente" => $gerente,
+                    "id_empresa" => $empresa);
 
       $idProyecto = DB::table('tbl_proyecto')->insertGetId($data);
 
@@ -421,7 +433,8 @@ class ProyectoModel extends Model
                                    SELECT CONCAT(u2.nombre_1," ",u2.nombre_2," ",u2.apellido_1," ",u2.apellido_2)
                                    FROM tbl_usuario u2
                                    WHERE u2.id = p.id_gerente
-                                 ) nombre_gerente
+                                 ) nombre_gerente,
+                                 p.id_empresa
                           FROM tbl_proyecto p,
                                tbl_cliente c,
                                tbl_monedas m
@@ -693,7 +706,7 @@ class ProyectoModel extends Model
                                (SELECT c.descripcion FROM tbl_cargo_empleado c WHERE c.id = (SELECT u.id_cargo FROM tbl_usuario u WHERE u.id = a.id_analista)) cargo,
                                (SELECT u.id_cargo FROM tbl_usuario u WHERE u.id = a.id_analista) id_cargo,
                                (SELECT d.descripcion FROM tbl_division d WHERE d.id = (SELECT u.id_division FROM tbl_usuario u WHERE u.id = a.id_analista)) division,
-                               (SELECT SUM(h.horas_trabajadas) FROM tbl_horas_cargables h WHERE h.id_proy_analista = a.id AND a.id_analista = (SELECT u.id FROM tbl_usuario u WHERE u.id = a.id_analista))horas_cargadas
+                               (SELECT SUM(cast(time_to_sec(h.horas_trabajadas) / (60 * 60) as decimal(10, 1))) FROM tbl_horas_cargables h WHERE h.id_proy_analista = a.id AND a.id_analista = (SELECT u.id FROM tbl_usuario u WHERE u.id = a.id_analista))horas_cargadas
                           FROM tbl_proyecto_analista a
                           WHERE a.id_proyecto = '.$idDproyecto.'
                           AND a.id_estatus = 1
@@ -733,7 +746,7 @@ class ProyectoModel extends Model
       $info = DB::select('SELECT u.id,
                                  CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)AS nombre,
                                  (SELECT c.descripcion FROM tbl_cargo_empleado c WHERE c.id = u.id_cargo) cargo,
-                                 (SELECT SUM(h.horas_trabajadas) FROM tbl_horas_cargables h WHERE id_proy_analista = (SELECT a.id FROM tbl_proyecto_analista a WHERE a.id_proyecto = '.$id_proyecto.' AND a.id_analista = u.id))suma,
+                                 (SELECT SUM(cast(time_to_sec(h.horas_trabajadas) / (60 * 60) as decimal(10, 1))) FROM tbl_horas_cargables h WHERE id_proy_analista = (SELECT a.id FROM tbl_proyecto_analista a WHERE a.id_proyecto = '.$id_proyecto.' AND a.id_analista = u.id))suma,
 
                                  (SELECT a.id_estatus FROM tbl_proyecto_analista a WHERE a.id_proyecto = '.$id_proyecto.' AND a.id_analista = u.id) estatus,
                                  (SELECT a.horas_asignadas FROM tbl_proyecto_analista a WHERE a.id_proyecto = '.$id_proyecto.' AND a.id_analista = u.id) horas_asignadas,

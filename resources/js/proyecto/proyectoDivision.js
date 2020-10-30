@@ -350,7 +350,7 @@ new Vue({
           self.detalleAproyecto.data = response.data.infoAproyecto;
           for (var i = 0; i < self.detalleAproyecto.data.length; i++) {
             if (self.detalleAproyecto.data[i].horas_cargadas != null) {
-              self.horas_cargadas = parseInt(self.detalleAproyecto.data[i].horas_cargadas) + self.horas_cargadas;
+              self.horas_cargadas = parseFloat(self.detalleAproyecto.data[i].horas_cargadas) + self.horas_cargadas;
             }
           }
 

@@ -21,11 +21,11 @@
         <menu-principal></menu-principal>
 
         <b-row align-h="center" align-v="center" v-if="alert.mostrar === false && formFiltro.mostrar" class="wrapper-forms" v-cloak>
-          <b-col cols="12" sm="11" md="9" v-if="formFiltro.mostrar">
+          <b-col cols="12 col-sm-10" v-if="formFiltro.mostrar">
             <h5>Filtros de búsqueda</h5>
             <b-form class="row">
               <b-form-group
-                class="form-group col-12 col-sm-4"
+                class="form-group col-12 col-sm-6"
                 label="Proyecto"
                 label-for="proyecto"
                 id="group-proyecto">
@@ -39,7 +39,7 @@
                 <b-form-text id="proyecto-help">Nombre que se le dío la proyecto</b-form-text>
               </b-form-group>
               <b-form-group
-                class="form-group col-12 col-sm-8"
+                class="form-group col-12 col-sm-6"
                 label="Cliente"
                 label-for="cliente"
                 id="group-cliente">
@@ -76,20 +76,20 @@
                 <b-button
                   :disabled="formFiltro.btn.filtrar.disabled"
                   block
-                  class="filtrar"
                   size="sm"
                   v-html="formFiltro.btn.filtrar.html"
-                  v-on:click="buscar">
+                  v-on:click="buscar"
+                  variant="primary">
               </b-form-group>
               <b-form-group class="col-12 col-sm-4">
                 <label>&nbsp;</label>
                 <b-button
                   :disabled="formFiltro.btn.limpiarFiltro.disabled"
                   block
-                  class="limpiar_filtro"
                   size="sm"
                   v-html="formFiltro.btn.limpiarFiltro.html"
-                  v-on:click="limpiarFiltro">
+                  v-on:click="limpiarFiltro"
+                  variant="outline-primary">
               </b-form-group>
             </b-form>
 
