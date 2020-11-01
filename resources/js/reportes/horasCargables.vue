@@ -771,7 +771,7 @@ form{
           }else{
             var param_cargos = null;
           }
-
+          
           //Obtenemos los valores
           let desde = (self.tabla.paginador.pagina - 1) * self.tabla.paginador.paginar;
           let parametros = {

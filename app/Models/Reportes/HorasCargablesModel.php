@@ -89,7 +89,7 @@ class HorasCargablesModel extends Model
         if(is_array($divisiones)){
 
           foreach ($divisiones as $key => $item) {
-            $item = json_decode($item);
+            //$item = json_decode($item);
             array_push($idsDivision,$item->id);
           }
 
@@ -115,13 +115,13 @@ class HorasCargablesModel extends Model
         if(is_array($cargos)){
 
           foreach ($cargos as $key => $item) {
-            $item = json_decode($item);
-            array_push($idsCargo,$item->id);
+            //$item = json_decode($item);
+            array_push($idsCargo, $item->id);
           }
 
         }else{
 
-          array_push($idsCargo,$cargos);
+          array_push($idsCargo, $cargos);
 
         }
 
@@ -216,7 +216,7 @@ class HorasCargablesModel extends Model
         if(is_array($divisiones)){
 
           foreach ($divisiones as $key => $item) {
-            $item = json_decode($item);
+            //$item = json_decode($item);
             array_push($idsDivision,$item->id);
           }
 
@@ -242,7 +242,7 @@ class HorasCargablesModel extends Model
         if(is_array($cargos)){
 
           foreach ($cargos as $key => $item) {
-            $item = json_decode($item);
+            //$item = json_decode($item);
             array_push($idsCargo,$item->id);
           }
 
@@ -333,7 +333,7 @@ class HorasCargablesModel extends Model
         if(is_array($divisiones)){
 
           foreach ($divisiones as $key => $item) {
-            $item = json_decode($item);
+            //$item = json_decode($item);
             array_push($idsDivision,$item->id);
           }
 
@@ -359,7 +359,7 @@ class HorasCargablesModel extends Model
         if(is_array($cargos)){
 
           foreach ($cargos as $key => $item) {
-            $item = json_decode($item);
+            //$item = json_decode($item);
             array_push($idsCargo,$item->id);
           }
 
