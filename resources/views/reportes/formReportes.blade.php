@@ -60,7 +60,7 @@
 
         <b-row align-h="center" align-v="center" v-cloak>
           <b-col cols="12">
-            <reporte-1 v-if="formReportes.reportes.verReporte === 18" :recargar="formReportes.reportes.recargar"></reporte-1>
+            <reporte-1 v-if="formReportes.reportes.verReporte.id === 18" :key="formReportes.reportes.verReporte.key"></reporte-1>
           </b-col>
         </b-row>
 

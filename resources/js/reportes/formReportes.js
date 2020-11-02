@@ -38,7 +38,10 @@ new Vue({
         disabled: true,
         listado: [],
         recargar: false,
-        verReporte: null,
+        verReporte: {
+          id: null,
+          key: 0
+        },
         value: null
       },
       mostrar: false
@@ -96,15 +99,15 @@ new Vue({
     },
     generarReporte: function(){
 
-      if(self.formReportes.reportes.verReporte === self.formReportes.reportes.value) {
-        self.formReportes.reportes.recargar = true;
+      if(self.formReportes.reportes.verReporte.id === self.formReportes.reportes.value) {
+        self.formReportes.reportes.verReporte.key += 1;
       }
 
       self.formReportes.reportes.disabled = true;
       self.formReportes.btn.generar.html = self.formReportes.btn.generar.htmlLoading;
       self.formReportes.btn.generar.disabled = true;
 
-      self.formReportes.reportes.verReporte = self.formReportes.reportes.value;
+      self.formReportes.reportes.verReporte.id = self.formReportes.reportes.value;
 
     },
     reporteCargado: function(){

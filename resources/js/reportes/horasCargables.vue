@@ -249,9 +249,6 @@
   var self;
 
   export default {
-      props:{
-        recargar: Boolean
-      },
       data() {
         return {
           formFiltro: {
@@ -397,16 +394,6 @@
         });
 
 
-      },
-      watch: {
-      	recargar: function(nuevoValor, viejoValor) {
-
-          if(nuevoValor){
-            console.log("recargar")
-            self.$forceUpdate();
-          }
-
-        }
       },
       beforeUpdate:function(){},
       updated: function(){},
