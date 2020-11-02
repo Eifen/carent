@@ -106,29 +106,23 @@ class HorasNoCargablesModel extends Model
 
       $sql = DB::select('SELECT * FROM(
                             (
-                             SELECT COUNT(DISTINCT cs.id_cargo_supervisor) num_cargo_sup
-                             FROM tbl_cargo_supervisa cs
-                             WHERE cs.id_cargo_supervisor <> '.$id_cargo.'
+                             SELECT COUNT(1) cargos FROM tbl_cargo_empleado ce WHERE ce.id <> '.$id_cargo.'
                             ) t1,
                             (
-                             SELECT COUNT(1) supervisa
+                             SELECT COUNT(DISTINCT cs.id_cargo) supervisa
                              FROM tbl_cargo_supervisa cs
                              WHERE cs.id_cargo_supervisor = '.$id_cargo.'
-                             AND cs.id_cargo IN(
-                             	SELECT DISTINCT cs.id_cargo_supervisor
-                                FROM tbl_cargo_supervisa cs
-                                WHERE cs.id_cargo_supervisor <> '.$id_cargo.'
-                             )) t2
+                            ) t2
                         )');
 
-      if($sql[0]->num_cargo_sup === $sql[0]->supervisa){ // Supervisa a todos
+      if($sql[0]->cargos === $sql[0]->supervisa){ // Supervisa a todos
 
         $condicion_divisiones = "";
         $condicion_empleados = "";
         $supervisor = true;
         $supervisaTodo = true;
 
-      }else if($sql[0]->num_cargo_sup > $sql[0]->supervisa && $sql[0]->supervisa > 0){ //Directores, Gerentes, etc
+      }else if($sql[0]->cargos > $sql[0]->supervisa && $sql[0]->supervisa > 0){ //Directores, Gerentes, etc
 
         $condicion_divisiones = " WHERE d.id = ".$id_division;
         $condicion_empleados = " WHERE u.id_division = ".$id_division;
