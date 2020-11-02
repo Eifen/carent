@@ -30,6 +30,7 @@
                 label-for="proyecto"
                 id="group-proyecto">
                 <b-form-select
+                  @change="reporteSeleccionado"
                   :disabled="formReportes.reportes.disabled"
                   :value="null"
                   :options="formReportes.reportes.listado"

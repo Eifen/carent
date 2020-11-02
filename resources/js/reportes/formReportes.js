@@ -28,7 +28,7 @@ new Vue({
     formReportes: {
       btn: {
         generar: {
-          disabled: false,
+          disabled: true,
           html: "",
           htmlInit: "Generar Reporte",
           htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
@@ -86,6 +86,13 @@ new Vue({
   mounted: function () {},
   updated: function () {},
   methods:{
+    reporteSeleccionado: function(valor){
+
+      if(valor !== null){
+        self.formReportes.btn.generar.disabled = false;
+      }
+
+    },
     generarReporte: function(){
 
       self.formReportes.reportes.disabled = true;
