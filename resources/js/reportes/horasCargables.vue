@@ -155,7 +155,7 @@
     <b-col cols="12">
       <b-row align-h="end" v-cloak v-if="formFiltro.mostrar">
         <b-col cols="12" md="6" lg="4">
-          <b-card class="text-left card-monto-contratado">
+          <b-card class="text-left card-horas-trabajadas">
             <b-card-text>
               <span class="titulo">TOTAL DE HORAS TRABAJADAS</span>
             </b-card-text>
@@ -237,295 +237,7 @@
 </template>
 
 <style lang="less">
-
-form{
-  background-color: white;
-  border:1px solid rgba(0,0,0,0.13);
-  border-radius: 3px;
-  margin-bottom: 30px;
-  margin-left:0px !important;
-  margin-right:0px !important;
-  padding: 15px;
-  transition: all .3s;
-
-  &:hover{
-    box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
-  }
-
-  > div{
-
-    &.form-group{
-
-      label{
-        color:#091F40;
-      }
-
-      .invalid-feedback{
-        display: block !important;
-      }
-
-      .form-control{
-        border-radius: 2px;
-
-        &.error{
-          border-color: #dc3545;
-        }
-
-        &:disabled{
-          cursor: not-allowed;
-        }
-
-      }
-
-      .multiselect{
-
-        &.multiselect--disabled{
-          min-height: 32px;
-        }
-
-        .multiselect__select{
-          height: 32px;
-          max-height: 50px;
-        }
-
-        .multiselect__tags{
-          height: 32px;
-          max-height: 50px;
-          min-height: 32px;
-          padding: 2px 40px 0 8px;
-
-          .multiselect__single{
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-          }
-
-        }
-
-      }// Fin .multiselect
-
-    }// Fin .form-group
-
-  }
-
-}// Fin form
-
-.table{
-  background-color: white;
-  border:1px solid rgba(0,0,0,0.13);
-  border-radius: 3px;
-  margin-bottom: 50px;
-  padding: 15px;
-  transition: all .3s;
-
-  &:hover{
-    box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
-  }
-
-  thead{
-
-    tr{
-
-      th{
-        background-color: #0069D9;
-        color:white;
-        text-align: center;
-        vertical-align: middle;
-      }
-
-    }
-
-  }// Fin thead
-
-  tbody{
-
-    tr{
-      transition: all .3s;
-
-      &:hover{
-        background-color: rgba(246,168,28,.5);
-      }
-
-      th{
-        text-align: center;
-      }
-
-      td{
-        text-align: center;
-
-        a{
-          color: #212529 !important;
-        }
-
-        .fas,
-        .far{
-
-          &:hover{
-            cursor: pointer;
-          }
-
-        }
-
-      }// Fin td
-
-    }// Fin tr
-
-  }// Fin tbody
-
-  tfoot{
-
-    tr{
-
-      td{
-
-        > div{
-          display: table;
-          margin-left: auto;
-          margin-right: auto;
-
-          > div{
-            display: table-cell;
-            padding-left: 5px;
-            padding-right: 5px;
-            vertical-align: middle;
-
-            .form-control{
-              max-width: 70px;
-            }
-
-            .icono{
-              color: #091F40;
-              font-size: 1.5rem;
-
-              &:hover{
-                color: #000000;
-                cursor: pointer;
-              }
-
-            }
-
-          }
-
-        }
-
-      }
-
-    }
-
-  }// Fin tfoot
-
-}// Fin table
-
-.card{
-  box-shadow: 0 .15rem 1.55rem 0 rgba(58,59,69,.15);
-  margin-bottom: 30px;
-  transition: all .3s;
-
-  &:hover{
-    box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
-  }
-
-  .card-body{
-    padding: 0.85rem;
-  }
-
-  &.card-proyecto{
-    border-left: 4px solid #091F40;
-
-    .card-text{
-      margin-bottom: 0.3rem;
-
-      .titulo{
-        color: rgba(0,0,0,0.8);
-        font-weight: 600;
-        text-decoration: underline;
-      }
-
-    }
-
-  }
-
-  &.card-monto-contratado,
-  &.card-monto-facturado,
-  &.card-monto-gasto,
-  &.card-monto-notas-credito,
-  &.card-monto-otros-gastos{
-    margin-top: 20px;
-
-    .card-text{
-
-      &:nth-child(1){
-        margin-bottom: 0px;
-      }
-
-      .titulo{
-        font-size: 12px;
-        font-weight: bold;
-      }
-
-    }
-
-    .monto{
-      color: rgba(0,0,0,0.8);
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-
-  }
-
-  &.card-monto-contratado{
-    border-left: 4px solid #36B9CC;
-
-    .titulo{
-      color: #36B9CC;
-    }
-
-  }
-
-  &.card-monto-facturado{
-    border-left: 4px solid #1CC88A;
-
-    .titulo{
-      color: #1CC88A;
-    }
-
-  }
-
-  &.card-monto-notas-credito{
-
-    border-left: 4px solid #FFC107;
-
-    .titulo{
-      color: #FFC107;
-    }
-
-  }
-
-  &.card-monto-gasto,
-  &.card-monto-otros-gastos{
-    border-left: 4px solid #DD3D31;
-
-    .titulo{
-      color: #DD3D31;
-    }
-
-  }
-
-}// Fin .card
-
-.wrapper-btn-generar-excel{
-  padding-top: 20px;
-
-  > div {
-    height:74%;
-  }
-
-  button{
-    height: 100%;
-    font-weight: bold;
-  }
-}
-
+  @import '../../less/reportes/horasCargables.less';
 </style>
 
 <script>
@@ -641,7 +353,7 @@ form{
 
             if(response.data.horas.length === 0){
 
-              let mensaje = "No hay proyectos por facturar";
+              let mensaje = "No hay proyectos";
               self.mostrarAlert(self.tabla.alert, true, "warning", mensaje, false, false, 0);
 
             }
@@ -683,6 +395,7 @@ form{
 
 
       },
+      beforeUpdate:function(){},
       updated: function(){},
       methods: {
 
@@ -750,13 +463,40 @@ form{
           self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlLoading;
           self.formFiltro.btn.limpiarFiltro.disabled = true;
 
+          //Evaluamos como filtraremos la division
+          if(self.formFiltro.campos.divisiones.value.length === 0 && self.formFiltro.campos.divisiones.listado.length > 1){
+            var param_divisiones = null;
+          }else if(self.formFiltro.campos.divisiones.value.length > 0){
+            var param_divisiones = self.formFiltro.campos.divisiones.value;
+          }else if(self.formFiltro.campos.divisiones.value.length === 0 && self.formFiltro.campos.divisiones.listado.length === 1){
+            var param_divisiones = self.formFiltro.campos.divisiones.listado[0].id;
+          }else{
+            var param_divisiones = null;
+          }
+
+          //Evaluamos como filtraremos los cargos
+          if(self.formFiltro.campos.cargos.value.length === 0 && self.formFiltro.campos.cargos.listado.length > 1){
+            var param_cargos = null;
+          }else if(self.formFiltro.campos.cargos.value.length > 0){
+
+            var param_cargos = [];
+            self.formFiltro.campos.cargos.value.forEach((cargo, index) => {
+              param_cargos.push({id: cargo.id});
+            });
+
+          }else if(self.formFiltro.campos.cargos.value.length === 0 && self.formFiltro.campos.cargos.listado.length === 1){
+            var param_cargos = self.formFiltro.campos.cargos.listado[0].id;
+          }else{
+            var param_cargos = null;
+          }
+
           //Obtenemos los valores
           let desde = (self.tabla.paginador.pagina - 1) * self.tabla.paginador.paginar;
           let parametros = {
-            cargos: self.formFiltro.campos.cargos.value,
+            cargos: param_cargos,
             cliente: self.formFiltro.campos.cliente.value,
             desde: desde,
-            divisiones: self.formFiltro.campos.divisiones.value,
+            divisiones: param_divisiones,
             empleado: self.formFiltro.campos.empleado.value,
             fechaDesde: self.formFiltro.campos.fechaDesde.value,
             fechaHasta: self.formFiltro.campos.fechaHasta.value,
@@ -804,9 +544,9 @@ form{
         },
         limpiarFiltro: function(){
 
-          self.formFiltro.campos.cargos.value = null;
+          self.formFiltro.campos.cargos.value = [];
           self.formFiltro.campos.cliente.value = null;
-          self.formFiltro.campos.divisiones.value = null;
+          self.formFiltro.campos.divisiones.value = [];
           self.formFiltro.campos.empleado.value = null;
           self.formFiltro.campos.fechaDesde.value = null;
           self.formFiltro.campos.fechaHasta.min = null;
