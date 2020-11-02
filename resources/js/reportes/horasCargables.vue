@@ -155,7 +155,7 @@
     <b-col cols="12">
       <b-row align-h="end" v-cloak v-if="formFiltro.mostrar">
         <b-col cols="12" md="6" lg="4">
-          <b-card class="text-left card-monto-contratado">
+          <b-card class="text-left card-horas-trabajadas">
             <b-card-text>
               <span class="titulo">TOTAL DE HORAS TRABAJADAS</span>
             </b-card-text>
@@ -237,8 +237,7 @@
 </template>
 
 <style lang="less">
-
-
+  @import '../../less/reportes/horasCargables.less';
 </style>
 
 <script>

@@ -189,27 +189,8 @@ form{
     padding: 0.85rem;
   }
 
-  &.card-proyecto{
-    border-left: 4px solid #091F40;
-
-    .card-text{
-      margin-bottom: 0.3rem;
-
-      .titulo{
-        color: rgba(0,0,0,0.8);
-        font-weight: 600;
-        text-decoration: underline;
-      }
-
-    }
-
-  }
-
-  &.card-monto-contratado,
-  &.card-monto-facturado,
-  &.card-monto-gasto,
-  &.card-monto-notas-credito,
-  &.card-monto-otros-gastos{
+  &.card-horas-trabajadas{
+    border-left: 4px solid #36B9CC;
     margin-top: 20px;
 
     .card-text{
@@ -219,6 +200,7 @@ form{
       }
 
       .titulo{
+        color: #36B9CC;
         font-size: 12px;
         font-weight: bold;
       }
@@ -233,47 +215,10 @@ form{
 
   }
 
-  &.card-monto-contratado{
-    border-left: 4px solid #36B9CC;
-
-    .titulo{
-      color: #36B9CC;
-    }
-
-  }
-
-  &.card-monto-facturado{
-    border-left: 4px solid #1CC88A;
-
-    .titulo{
-      color: #1CC88A;
-    }
-
-  }
-
-  &.card-monto-notas-credito{
-
-    border-left: 4px solid #FFC107;
-
-    .titulo{
-      color: #FFC107;
-    }
-
-  }
-
-  &.card-monto-gasto,
-  &.card-monto-otros-gastos{
-    border-left: 4px solid #DD3D31;
-
-    .titulo{
-      color: #DD3D31;
-    }
-
-  }
-
 }// Fin .card
 
 .wrapper-btn-generar-excel{
+  border: 1px solid red;
   padding-top: 20px;
 
   > div {
