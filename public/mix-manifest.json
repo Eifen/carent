@@ -46,7 +46,5 @@
     "/js/nuevoCliente.js": "/js/nuevoCliente.js",
     "/js/nuevoProyecto.js": "/js/nuevoProyecto.js",
     "/js/nuevoUsuario.js": "/js/nuevoUsuario.js",
-    "/js/proyectoDivision.js": "/js/proyectoDivision.js",
-    "/css/bootstrap.min.css": "/css/bootstrap.min.css",
-    "/css/fontawesome-free-5.12.0.css": "/css/fontawesome-free-5.12.0.css"
+    "/js/proyectoDivision.js": "/js/proyectoDivision.js"
 }
