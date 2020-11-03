@@ -34,6 +34,7 @@
         "moment": "^2.29.0",
         "text-mask-addons": "^3.8.0",
         "vue-datetime": "^1.0.0-beta.14",
+        "vue-json-excel": "^0.3.0",
         "vue-multiselect": "^2.1.6",
         "vue-numeric": "^2.3.0",
         "vue-select": "^3.10.8",
