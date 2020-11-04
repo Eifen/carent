@@ -84,9 +84,7 @@ class HorasCargablesModel extends Model
 
     function repoHorasCargables($id_usuario, $paginar, $supervisa, $supervisaTodo, $divisiones, $cargos, $desde = 0, $cliente = null, $proyecto = null, $empleado = null, $fecha_desde = null, $fecha_hasta = null, $estatus = null){
 
-      if($supervisaTodo){
-        $sql_division = "";
-      }else if($divisiones == null){
+      if($divisiones == null){
         $sql_division = "";
       }else{
 
@@ -114,9 +112,7 @@ class HorasCargablesModel extends Model
 
       }
 
-      if($supervisaTodo){
-        $sql_cargos = "";
-      }else if($cargos == null){
+      if($cargos == null){
         $sql_cargos = "";
       }else{
 
@@ -241,9 +237,7 @@ class HorasCargablesModel extends Model
 
     function totalesHorasCargables($id_usuario, $supervisa, $supervisaTodo, $divisiones, $cargos, $cliente = null, $proyecto = null, $empleado = null, $fecha_desde = null, $fecha_hasta = null, $estatus = null){
 
-      if($supervisaTodo){
-        $sql_division = "";
-      }else if($divisiones == null){
+      if($divisiones == null){
         $sql_division = "";
       }else{
 
@@ -271,9 +265,7 @@ class HorasCargablesModel extends Model
 
       }
 
-      if($supervisaTodo){
-        $sql_cargos = "";
-      }else if($cargos == null){
+      if($cargos == null){
         $sql_cargos = "";
       }else{
 
@@ -287,12 +279,13 @@ class HorasCargablesModel extends Model
               $item = json_decode($item);
             }
 
-            array_push($idsCargo,$item->id);
+            array_push($idsCargo, $item->id);
+
           }
 
         }else{
 
-          array_push($idsCargo,$cargos);
+          array_push($idsCargo, $cargos);
 
         }
 
@@ -381,9 +374,7 @@ class HorasCargablesModel extends Model
 
     function pagHorasCargables($id_usuario, $paginar, $supervisa, $supervisaTodo, $divisiones, $cargos, $cliente = null, $proyecto = null, $empleado = null, $fecha_desde = null, $fecha_hasta = null, $estatus = null){
 
-      if($supervisaTodo){
-        $sql_division = "";
-      }else if($divisiones == null){
+      if($divisiones == null){
         $sql_division = "";
       }else{
 
@@ -411,9 +402,7 @@ class HorasCargablesModel extends Model
 
       }
 
-      if($supervisaTodo){
-        $sql_cargos = "";
-      }else if($cargos == null){
+      if($cargos == null){
         $sql_cargos = "";
       }else{
 
@@ -427,12 +416,13 @@ class HorasCargablesModel extends Model
               $item = json_decode($item);
             }
 
-            array_push($idsCargo,$item->id);
+            array_push($idsCargo, $item->id);
+
           }
 
         }else{
 
-          array_push($idsCargo,$cargos);
+          array_push($idsCargo, $cargos);
 
         }
 

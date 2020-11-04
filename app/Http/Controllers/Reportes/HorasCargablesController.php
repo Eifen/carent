@@ -54,7 +54,7 @@ class HorasCargablesController extends Controller
       $paginas = $modelo->pagHorasCargables(session("usuario_id"), $paginar, $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos, $cliente, $proyecto, $empleado, $fecha_desde, $fecha_hasta, $estatus);
       $totales = $modelo->totalesHorasCargables(session("usuario_id"), $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos, $cliente, $proyecto, $empleado, $fecha_desde, $fecha_hasta, $estatus);
 
-      return array("horas" => $horas, "paginas" => $paginas, "totales" => $totales, "cargos" => $cargos);
+      return array("horas" => $horas, "paginas" => $paginas, "totales" => $totales);
 
     }
 
