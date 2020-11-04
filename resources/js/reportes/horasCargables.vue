@@ -129,7 +129,22 @@
             size="sm"
             v-model="formFiltro.campos.fechaHasta.value"></b-form-datepicker>
         </b-form-group>
-        <b-form-group class="col-12 col-sm-6 col-md-4">
+        <b-form-group
+          class="form-group col-12 col-sm-6 col-md-4"
+          label="Estatus"
+          label-for="estatus"
+          id="group-estatus">
+          <select aria-describedby="estatusHelp"
+                  class="form-control form-control-sm"
+                  id="estatus"
+                  data-validar="true"
+                  v-bind:disabled="formFiltro.campos.estatus.disabled"
+                  v-model="formFiltro.campos.estatus.value">
+            <option :value="null" selected>Seleccione...</option>
+            <option v-bind:value="estatus.id" v-for="estatus in formFiltro.campos.estatus.listado">{{ estatus.descripcion }}</option>
+          </select>
+        </b-form-group>
+        <b-form-group class="col-12 col-sm-6 col-md-2">
           <label>&nbsp;</label>
           <b-button
             :disabled="formFiltro.btn.filtrar.disabled"
@@ -139,7 +154,7 @@
             v-on:click="buscar"
             variant="primary"></b-button>
         </b-form-group>
-        <b-form-group class="col-12 col-sm-6 col-md-4">
+        <b-form-group class="col-12 col-sm-6 col-md-2">
           <label>&nbsp;</label>
           <b-button
             :disabled="formFiltro.btn.limpiarFiltro.disabled"
@@ -285,14 +300,19 @@
                 disabled: true,
                 value: ""
               },
+              estatus: {
+                disabled: true,
+                listado: [],
+                value: null
+              },
               fechaDesde: {
                 disabled: true,
-                value: ""
+                value: null
               },
               fechaHasta: {
                 disabled: true,
                 min: null,
-                value: ""
+                value: null
               },
               proyecto : {
                 disabled: true,
@@ -346,7 +366,8 @@
               { key: 'division', label: 'División' },
               { key: 'empleado', label: 'Empleado' },
               { key: 'cargo', label: 'Cargo' },
-              { key: 'horas_trabajadas', label: 'Horas' }
+              { key: 'horas_trabajadas', label: 'Horas' },
+              { key: 'estatus', label: 'Estatus' }
             ];
 
             self.tabla.registros = self.registroTabla(response.data.horas);
@@ -360,6 +381,7 @@
 
             self.formFiltro.campos.cargos.listado = response.data.cargos;
             self.formFiltro.campos.divisiones.listado = response.data.divisiones;
+            self.formFiltro.campos.estatus.listado = response.data.estatus;
 
             self.totales.horasTrabajadas = (response.data.totales.horas_trabajadas) ? response.data.totales.horas_trabajadas : 0;
 
@@ -371,6 +393,7 @@
             self.formFiltro.campos.cliente.disabled = false;
             self.formFiltro.campos.divisiones.disabled = false;
             self.formFiltro.campos.empleado.disabled = false;
+            self.formFiltro.campos.estatus.disabled = false;
             self.formFiltro.campos.fechaDesde.disabled = false;
             self.formFiltro.campos.proyecto.disabled = false;
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
@@ -438,7 +461,8 @@
               division: item.division,
               empleado: item.empleado,
               cargo: item.cargo,
-              horas_trabajadas: item.horas_trabajadas
+              horas_trabajadas: item.horas_trabajadas,
+              estatus: item.estatus
             };
 
             registros.push(data);
@@ -454,6 +478,7 @@
           self.formFiltro.campos.cliente.disabled = true;
           self.formFiltro.campos.divisiones.disabled = true;
           self.formFiltro.campos.empleado.disabled = true;
+          self.formFiltro.campos.estatus.disabled = true;
           self.formFiltro.campos.fechaDesde.disabled = true;
           self.formFiltro.campos.fechaHasta.disabled = true;
           self.formFiltro.campos.proyecto.disabled = true;
@@ -498,6 +523,7 @@
             desde: desde,
             divisiones: param_divisiones,
             empleado: self.formFiltro.campos.empleado.value,
+            estatus: self.formFiltro.campos.estatus.value,
             fechaDesde: self.formFiltro.campos.fechaDesde.value,
             fechaHasta: self.formFiltro.campos.fechaHasta.value,
             proyecto: self.formFiltro.campos.proyecto.value,
@@ -512,8 +538,9 @@
             self.formFiltro.campos.cliente.disabled = false;
             self.formFiltro.campos.divisiones.disabled = false;
             self.formFiltro.campos.empleado.disabled = false;
+            self.formFiltro.campos.estatus.disabled = false;
             self.formFiltro.campos.fechaDesde.disabled = false;
-            self.formFiltro.campos.fechaHasta.disabled = false;
+            self.formFiltro.campos.fechaHasta.disabled = (self.formFiltro.campos.fechaDesde !== null) ? false : true;
             self.formFiltro.campos.proyecto.disabled = false;
 
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
