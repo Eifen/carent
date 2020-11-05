@@ -35,6 +35,7 @@ const datosIniciales = () => {
                  clientes: response.data.clientes,
                  divisiones: response.data.divisiones,
                  estatus: response.data.estatus,
+                 empresas: response.data.empresas,
                  monedas: response.data.monedas,
                  response: true
                });
@@ -69,6 +70,7 @@ new Vue({
     },
     idProyecto: null,
     comboEstatus: [],
+    comboEmpresas: [],
     comboDivisiones: [],
     comboMonedas: [],
     form: {
@@ -107,6 +109,7 @@ new Vue({
         gerente: null,
         montoEn: null,
         monto: null,
+        empresa: null,
         divisiones: null,
         horas: 0
       },
@@ -132,6 +135,11 @@ new Vue({
           valorFocus: null
         },
         estatus: {
+          disabled: true,
+          invalidFeedback: "",
+          state: null
+        },
+        empresa: {
           disabled: true,
           invalidFeedback: "",
           state: null
@@ -230,6 +238,9 @@ new Vue({
         monto: {
           required
         },
+        empresa: {
+          required
+        },
         divisiones: {
           required
         },
@@ -256,6 +267,10 @@ new Vue({
         self.comboEstatus.push({text:item.descripcion, value: item.id});
       });
 
+      dataInit.empresas.forEach((item, i) => {
+        self.comboEmpresas.push({text:item.razon_social, value: item.id});
+      });
+
       dataInit.monedas.forEach((item, i) => {
         self.comboMonedas.push({text:item.moneda, value: item.id, simbolo: item.simbolo});
       });
@@ -267,6 +282,7 @@ new Vue({
       self.form.camposAtributos.cliente.valorBlur = dataInit.info.razon_social;
       self.form.campos.cliente = dataInit.info.id_cliente,
       self.form.campos.estatus = dataInit.info.id_estatus;
+      self.form.campos.empresa = dataInit.info.id_empresa;
       self.form.campos.fechaContratacion = dataInit.info.fecha_contratacion;
       self.form.camposAtributos.socio.valor = dataInit.info.nombre_socio;
       self.form.camposAtributos.socio.valorFocus = dataInit.info.nombre_socio;
@@ -287,6 +303,7 @@ new Vue({
       self.form.camposAtributos.descripcion.disabled = false;
       self.form.camposAtributos.cliente.disabled = false;
       self.form.camposAtributos.estatus.disabled = false;
+      self.form.camposAtributos.empresa.disabled = false;
       self.form.camposAtributos.fechaContratacion.disabled = false;
       self.form.camposAtributos.socio.state = true;
       self.form.camposAtributos.socio.disabled = false;
@@ -697,7 +714,8 @@ new Vue({
         divisiones: divisiones,
         estatus: self.form.campos.estatus,
         id_moneda: self.form.campos.montoEn,
-        monto: self.form.camposAtributos.monto.autonumeric.get()
+        monto: self.form.camposAtributos.monto.autonumeric.get(),
+        empresa: self.form.campos.empresa
       }
 
       self.form.botones.cancelar.disabled = true;

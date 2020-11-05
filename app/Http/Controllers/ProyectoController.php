@@ -17,11 +17,13 @@ class ProyectoController extends Controller
       $modelo = new ProyectoModel();
       $divisiones = $modelo->divisiones();
       $estatus = $modelo->estatusProyectos();
+      $empresas = $modelo->empresas();
       $monedas = $modelo->monedas(true);
 
       return [
         "divisiones" => $divisiones,
         "estatus" => $estatus,
+        "empresas" => $empresas,
         "monedas" => $monedas
       ];
 
@@ -95,8 +97,9 @@ class ProyectoController extends Controller
       $estatus = $request->input("estatus");
       $id_moneda = $request->input("id_moneda");
       $monto = $request->input("monto");
+      $empresa = $request->input("empresa");
 
-      $response = $modelo->crearProyecto($descripcion,$cliente,$socio,$gerente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto);
+      $response = $modelo->crearProyecto($descripcion,$cliente,$socio,$gerente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto,$empresa);
 
       if($response["response"]){
 
@@ -171,6 +174,7 @@ class ProyectoController extends Controller
       $clientes = $modelo->clientes();
       $divisiones = $modelo->divisiones();
       $estatus = $modelo->estatusProyectos();
+      $empresas = $modelo->empresas();
       $monedas = $modelo->monedas(false);
 
       if(!empty($infoProyecto)){
@@ -181,6 +185,7 @@ class ProyectoController extends Controller
                           'clientes' => $clientes,
                           'divisiones' => $divisiones,
                           "estatus" => $estatus,
+                          "empresas" => $empresas,
                           "monedas" => $monedas);
       }else{
 
@@ -207,6 +212,7 @@ class ProyectoController extends Controller
       $id_moneda = $request->input("id_moneda");
       $monto = $request->input("monto");
       $divisiones_v =  $modelo->detalleDivisionProyecto($idProyecto);
+      $empresa = $request->input("empresa");
 
       $parametros_proyecto = array(
         "descripcion" => $descripcion,
@@ -216,7 +222,8 @@ class ProyectoController extends Controller
         "id_socio" => $socio,
         "id_gerente" => $gerente,
         "id_moneda" => $id_moneda,
-        "monto" => $monto
+        "monto" => $monto,
+        "id_empresa" => $empresa
       );
 
       $response = $modelo->modificarProyecto($idProyecto, $parametros_proyecto, $divisiones, $divisiones_v);
