@@ -28,7 +28,7 @@ new Vue({
     formReportes: {
       btn: {
         generar: {
-          disabled: false,
+          disabled: true,
           html: "",
           htmlInit: "Generar Reporte",
           htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
@@ -37,7 +37,11 @@ new Vue({
       reportes:{
         disabled: true,
         listado: [],
-        verReporte: null,
+        recargar: false,
+        verReporte: {
+          id: null,
+          key: 0
+        },
         value: null
       },
       mostrar: false
@@ -86,13 +90,24 @@ new Vue({
   mounted: function () {},
   updated: function () {},
   methods:{
+    reporteSeleccionado: function(valor){
+
+      if(valor !== null){
+        self.formReportes.btn.generar.disabled = false;
+      }
+
+    },
     generarReporte: function(){
+
+      if(self.formReportes.reportes.verReporte.id === self.formReportes.reportes.value) {
+        self.formReportes.reportes.verReporte.key += 1;
+      }
 
       self.formReportes.reportes.disabled = true;
       self.formReportes.btn.generar.html = self.formReportes.btn.generar.htmlLoading;
       self.formReportes.btn.generar.disabled = true;
 
-      self.formReportes.reportes.verReporte = self.formReportes.reportes.value;
+      self.formReportes.reportes.verReporte.id = self.formReportes.reportes.value;
 
     },
     reporteCargado: function(){
@@ -100,6 +115,7 @@ new Vue({
       self.formReportes.reportes.disabled = false;
       self.formReportes.btn.generar.html = self.formReportes.btn.generar.htmlInit;
       self.formReportes.btn.generar.disabled = false;
+      self.formReportes.reportes.recargar = false;
 
     },
     keyboard: function(e){

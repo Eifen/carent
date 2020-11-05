@@ -8,45 +8,137 @@ use Illuminate\Database\Eloquent\Model;
 class HorasCargablesModel extends Model
 {
 
-    function cargosEmpleado(){
+    /*
+      Función que valida si supervisa a empleados o no
+    */
+    function supervisaA($id_cargo, $id_division, $id_usuario){
 
-      $sql = DB::select('SELECT c.id,
-                                c.descripcion
-                         FROM tbl_cargo_empleado c
-                         WHERE c.id_estatus = 1
-                         ORDER BY c.descripcion ASC');
+      $sql = DB::select('SELECT * FROM(
+                            (
+                             SELECT COUNT(1) cargos FROM tbl_cargo_empleado ce WHERE ce.id <> '.$id_cargo.'
+                            ) t1,
+                            (
+                             SELECT COUNT(DISTINCT cs.id_cargo) supervisa
+                             FROM tbl_cargo_supervisa cs
+                             WHERE cs.id_cargo_supervisor = '.$id_cargo.'
+                            ) t2
+                        )');
 
-      return $sql;
+      if($sql[0]->cargos === $sql[0]->supervisa){ // Supervisa a todos
 
-    }// Fin cargosEmpleado
+        $condicion_cargos = "";
+        $condicion_divisiones = "";
+        $supervisor = true;
+        $supervisaTodo = true;
 
-    function divisiones(){
+      }else if($sql[0]->cargos > $sql[0]->supervisa && $sql[0]->supervisa > 0){ //Directores, Gerentes, etc
 
-      $sql = DB::select('SELECT d.id,
-                                d.descripcion
-                         FROM tbl_division d
-                         WHERE d.id_estatus = 1
-                         ORDER BY d.descripcion ASC');
+        $condicion_cargos = "AND c.id IN(SELECT id_cargo FROM tbl_cargo_supervisa WHERE id_cargo_supervisor = ".$id_cargo." OR id_Cargo = ".$id_cargo.")";
+        $condicion_divisiones = " AND d.id = ".$id_division;
+        $supervisor = true;
+        $supervisaTodo = false;
 
-      return $sql;
+      }else{
 
-    }// Fin divisiones
+        $condicion_cargos = "AND c.id = ".$id_cargo;
+        $condicion_divisiones = " AND d.id = ".$id_division;
+        $supervisor = false;
+        $supervisaTodo = false;
 
-    function repoHorasCargables($paginar, $desde = 0, $cargos = null, $cliente = null, $divisiones = null, $proyecto = null, $empleado = null){
+      }
 
-      if($cargos !== null){
+      $cargos = DB::select('SELECT c.id,
+                                   c.descripcion
+                            FROM tbl_cargo_empleado c
+                            WHERE c.id_estatus = 1
+                            '.$condicion_cargos.'
+                            ORDER BY c.descripcion ASC');
+
+      $divisiones = DB::select('SELECT d.id,
+                                       d.descripcion
+                                FROM tbl_division d
+                                WHERE d.id_estatus = 1
+                                '.$condicion_divisiones.'
+                                ORDER BY d.descripcion ASC');
+
+      return [
+        "cargos" => $cargos,
+        "divisiones" => $divisiones,
+        "supervisa" => $supervisor,
+        "supervisaTodo" => $supervisaTodo
+      ];
+
+    }// Fin supervisaA
+
+    function estatusProyectos(){
+
+      $estatus = DB::select('SELECT e.valor AS id,
+                                    e.descripcion
+                             FROM tbl_estatus e
+                             WHERE tabla = "tbl_proyecto"
+                             ORDER BY e.descripcion ASC');
+
+      return $estatus;
+
+    }// Fin estatusProyectos
+
+    function repoHorasCargables($id_usuario, $paginar, $supervisa, $supervisaTodo, $divisiones, $cargos, $desde = 0, $cliente = null, $proyecto = null, $empleado = null, $fecha_desde = null, $fecha_hasta = null, $estatus = null){
+
+      if($divisiones == null){
+        $sql_division = "";
+      }else{
+
+        $idsDivision = [];
+
+        if(is_array($divisiones)){
+
+          foreach ($divisiones as $key => $item) {
+
+            if(!isset($item->id)){
+              $item = json_decode($item);
+            }
+
+            array_push($idsDivision,$item->id);
+          }
+
+        }else{
+
+          array_push($idsDivision,$divisiones);
+
+        }
+
+        $idsDivision = implode(",", $idsDivision);
+        $sql_division = "AND u.id_division IN(".$idsDivision.")";
+
+      }
+
+      if($cargos == null){
+        $sql_cargos = "";
+      }else{
 
         $idsCargo = [];
-        foreach ($cargos as $key => $item) {
-          $item = json_decode($item);
-          array_push($idsCargo,$item->id);
+
+        if(is_array($cargos)){
+
+          foreach ($cargos as $key => $item) {
+
+            if(!isset($item->id)){
+              $item = json_decode($item);
+            }
+
+            array_push($idsCargo, $item->id);
+
+          }
+
+        }else{
+
+          array_push($idsCargo, $cargos);
+
         }
 
         $idsCargo = implode(",", $idsCargo);
         $sql_cargos = "AND ce.id IN(".$idsCargo.")";
 
-      }else{
-        $sql_cargos = "";
       }
 
       if($cliente != null && trim($cliente) != ""){
@@ -55,31 +147,38 @@ class HorasCargablesModel extends Model
         $sql_cliente = "";
       }
 
-      if($divisiones !== null){
-
-        $idsDivision = [];
-        foreach ($divisiones as $key => $item) {
-          $item = json_decode($item);
-          array_push($idsDivision,$item->id);
-        }
-
-        $idsDivision = implode(",", $idsDivision);
-        $sql_division = "AND u.id_division IN(".$idsDivision.")";
-
-      }else{
-        $sql_division = "";
-      }
-
       if($proyecto != null && trim($proyecto) != ""){
         $sql_proyecto = 'AND LOWER(p.descripcion) LIKE "%'.strtolower($proyecto).'%"';
       }else{
         $sql_proyecto = "";
       }
 
-      if($empleado != null && trim($empleado) != ""){
-        $sql_empleado = 'AND LOWER(CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)) LIKE "%'.strtolower($empleado).'%"';
+      if($supervisaTodo OR $supervisa){
+
+        if($empleado != null && trim($empleado) != ""){
+          $sql_empleado = 'AND LOWER(CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)) LIKE "%'.strtolower($empleado).'%"';
+        }else{
+          $sql_empleado = "";
+        }
+
       }else{
-        $sql_empleado = "";
+
+        $sql_empleado = 'AND u.id = '.$id_usuario;
+
+      }
+
+      if($fecha_desde != null && $fecha_hasta != null){
+        $sql_fecha = 'AND hc.fecha BETWEEN "'.$fecha_desde.'" AND "'.$fecha_hasta.'"';
+      }else if($fecha_desde != null && $fecha_hasta == null){
+        $sql_fecha = 'AND hc.fecha = "'.$fecha_desde.'"';
+      }else{
+        $sql_fecha = '';
+      }
+
+      if($estatus !== null){
+        $sql_estatus = 'AND p.id_estatus = '.$estatus;
+      }else{
+        $sql_estatus = '';
       }
 
       $sql = DB::select('SELECT p.id AS id_proyecto,
@@ -92,25 +191,32 @@ class HorasCargablesModel extends Model
                                 CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS empleado,
                                 c.id AS id_cliente,
                                 c.razon_social AS cliente,
-                                TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(hc.horas_trabajadas))),"%H:%i") horas_trabajadas
+                                TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(hc.horas_trabajadas))),"%H:%i") horas_trabajadas,
+                                p.id_estatus,
+                                e.descripcion AS estatus
                          FROM tbl_horas_cargables hc,
                               tbl_proyecto_analista pa,
                               tbl_usuario u,
                               tbl_proyecto p,
                               tbl_cliente c,
                               tbl_division d,
-                              tbl_cargo_empleado ce
+                              tbl_cargo_empleado ce,
+                              tbl_estatus e
                          WHERE hc.id_proy_analista = pa.id
                          AND pa.id_analista = u.id
                          AND pa.id_proyecto = p.id
                          AND p.id_cliente = c.id
                          AND u.id_division = d.id
                          AND u.id_cargo = ce.id
+                         AND p.id_estatus = e.valor
+                         AND e.tabla = "tbl_proyecto"
                          '.$sql_cargos.'
                          '.$sql_cliente.'
                          '.$sql_division.'
                          '.$sql_proyecto.'
                          '.$sql_empleado.'
+                         '.$sql_fecha.'
+                         '.$sql_estatus.'
                          GROUP BY p.id,
                                   p.descripcion,
                                   u.nombre_1,
@@ -121,28 +227,71 @@ class HorasCargablesModel extends Model
                                   c.id,
                                   u.id,
                                   u.id_division,
-                                  u.id_cargo
+                                  u.id_cargo,
+                                  e.descripcion
                          LIMIT '.$desde.', '.$paginar);
 
       return $sql;
 
     }
 
-    function totalesHorasCargables($cargos = null, $cliente = null, $divisiones = null, $proyecto = null, $empleado = null){
+    function totalesHorasCargables($id_usuario, $supervisa, $supervisaTodo, $divisiones, $cargos, $cliente = null, $proyecto = null, $empleado = null, $fecha_desde = null, $fecha_hasta = null, $estatus = null){
 
-      if($cargos !== null){
+      if($divisiones == null){
+        $sql_division = "";
+      }else{
+
+        $idsDivision = [];
+
+        if(is_array($divisiones)){
+
+          foreach ($divisiones as $key => $item) {
+
+            if(!isset($item->id)){
+              $item = json_decode($item);
+            }
+
+            array_push($idsDivision,$item->id);
+          }
+
+        }else{
+
+          array_push($idsDivision,$divisiones);
+
+        }
+
+        $idsDivision = implode(",", $idsDivision);
+        $sql_division = "AND u.id_division IN(".$idsDivision.")";
+
+      }
+
+      if($cargos == null){
+        $sql_cargos = "";
+      }else{
 
         $idsCargo = [];
-        foreach ($cargos as $key => $item) {
-          $item = json_decode($item);
-          array_push($idsCargo,$item->id);
+
+        if(is_array($cargos)){
+
+          foreach ($cargos as $key => $item) {
+
+            if(!isset($item->id)){
+              $item = json_decode($item);
+            }
+
+            array_push($idsCargo, $item->id);
+
+          }
+
+        }else{
+
+          array_push($idsCargo, $cargos);
+
         }
 
         $idsCargo = implode(",", $idsCargo);
         $sql_cargos = "AND ce.id IN(".$idsCargo.")";
 
-      }else{
-        $sql_cargos = "";
       }
 
       if($cliente != null && trim($cliente) != ""){
@@ -151,31 +300,38 @@ class HorasCargablesModel extends Model
         $sql_cliente = "";
       }
 
-      if($divisiones !== null){
-
-        $idsDivision = [];
-        foreach ($divisiones as $key => $item) {
-          $item = json_decode($item);
-          array_push($idsDivision,$item->id);
-        }
-
-        $idsDivision = implode(",", $idsDivision);
-        $sql_division = "AND u.id_division IN(".$idsDivision.")";
-
-      }else{
-        $sql_division = "";
-      }
-
       if($proyecto != null && trim($proyecto) != ""){
         $sql_proyecto = 'AND LOWER(p.descripcion) LIKE "%'.strtolower($proyecto).'%"';
       }else{
         $sql_proyecto = "";
       }
 
-      if($empleado != null && trim($empleado) != ""){
-        $sql_empleado = 'AND LOWER(CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)) LIKE "%'.strtolower($empleado).'%"';
+      if($supervisaTodo OR $supervisa){
+
+        if($empleado != null && trim($empleado) != ""){
+          $sql_empleado = 'AND LOWER(CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)) LIKE "%'.strtolower($empleado).'%"';
+        }else{
+          $sql_empleado = "";
+        }
+
       }else{
-        $sql_empleado = "";
+
+        $sql_empleado = 'AND u.id = '.$id_usuario;
+
+      }
+
+      if($fecha_desde != null && $fecha_hasta != null){
+        $sql_fecha = 'AND hc.fecha BETWEEN "'.$fecha_desde.'" AND "'.$fecha_hasta.'"';
+      }else if($fecha_desde != null && $fecha_hasta == null){
+        $sql_fecha = 'AND hc.fecha = "'.$fecha_desde.'"';
+      }else{
+        $sql_fecha = '';
+      }
+
+      if($estatus !== null){
+        $sql_estatus = 'AND p.id_estatus = '.$estatus;
+      }else{
+        $sql_estatus = '';
       }
 
       $sql = DB::select('SELECT CONCAT(
@@ -208,27 +364,71 @@ class HorasCargablesModel extends Model
                          '.$sql_cliente.'
                          '.$sql_division.'
                          '.$sql_proyecto.'
-                         '.$sql_empleado);
+                         '.$sql_empleado.'
+                         '.$sql_fecha.'
+                         '.$sql_estatus);
 
       return $sql[0];
 
     }
 
-    function pagHorasCargables($paginar, $cargos = null, $cliente = null, $divisiones = null, $proyecto = null, $empleado = null){
+    function pagHorasCargables($id_usuario, $paginar, $supervisa, $supervisaTodo, $divisiones, $cargos, $cliente = null, $proyecto = null, $empleado = null, $fecha_desde = null, $fecha_hasta = null, $estatus = null){
 
-      if($cargos !== null){
+      if($divisiones == null){
+        $sql_division = "";
+      }else{
+
+        $idsDivision = [];
+
+        if(is_array($divisiones)){
+
+          foreach ($divisiones as $key => $item) {
+
+            if(!isset($item->id)){
+              $item = json_decode($item);
+            }
+
+            array_push($idsDivision,$item->id);
+          }
+
+        }else{
+
+          array_push($idsDivision,$divisiones);
+
+        }
+
+        $idsDivision = implode(",", $idsDivision);
+        $sql_division = "AND u.id_division IN(".$idsDivision.")";
+
+      }
+
+      if($cargos == null){
+        $sql_cargos = "";
+      }else{
 
         $idsCargo = [];
-        foreach ($cargos as $key => $item) {
-          $item = json_decode($item);
-          array_push($idsCargo,$item->id);
+
+        if(is_array($cargos)){
+
+          foreach ($cargos as $key => $item) {
+
+            if(!isset($item->id)){
+              $item = json_decode($item);
+            }
+
+            array_push($idsCargo, $item->id);
+
+          }
+
+        }else{
+
+          array_push($idsCargo, $cargos);
+
         }
 
         $idsCargo = implode(",", $idsCargo);
         $sql_cargos = "AND ce.id IN(".$idsCargo.")";
 
-      }else{
-        $sql_cargos = "";
       }
 
       if($cliente != null && trim($cliente) != ""){
@@ -237,31 +437,38 @@ class HorasCargablesModel extends Model
         $sql_cliente = "";
       }
 
-      if($divisiones !== null){
-
-        $idsDivision = [];
-        foreach ($divisiones as $key => $item) {
-          $item = json_decode($item);
-          array_push($idsDivision,$item->id);
-        }
-
-        $idsDivision = implode(",", $idsDivision);
-        $sql_division = "AND u.id_division IN(".$idsDivision.")";
-
-      }else{
-        $sql_division = "";
-      }
-
       if($proyecto != null && trim($proyecto) != ""){
         $sql_proyecto = 'AND LOWER(p.descripcion) LIKE "%'.strtolower($proyecto).'%"';
       }else{
         $sql_proyecto = "";
       }
 
-      if($empleado != null && trim($empleado) != ""){
-        $sql_empleado = 'AND LOWER(CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)) LIKE "%'.strtolower($empleado).'%"';
+      if($supervisaTodo OR $supervisa){
+
+        if($empleado != null && trim($empleado) != ""){
+          $sql_empleado = 'AND LOWER(CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)) LIKE "%'.strtolower($empleado).'%"';
+        }else{
+          $sql_empleado = "";
+        }
+
       }else{
-        $sql_empleado = "";
+
+        $sql_empleado = 'AND u.id = '.$id_usuario;
+
+      }
+
+      if($fecha_desde != null && $fecha_hasta != null){
+        $sql_fecha = 'AND hc.fecha BETWEEN "'.$fecha_desde.'" AND "'.$fecha_hasta.'"';
+      }else if($fecha_desde != null && $fecha_hasta == null){
+        $sql_fecha = 'AND hc.fecha = "'.$fecha_desde.'"';
+      }else{
+        $sql_fecha = '';
+      }
+
+      if($estatus !== null){
+        $sql_estatus = 'AND p.id_estatus = '.$estatus;
+      }else{
+        $sql_estatus = '';
       }
 
       $sql = DB::select('SELECT CEILING( COUNT(1) / '.$paginar.') paginas
@@ -290,6 +497,8 @@ class HorasCargablesModel extends Model
                            '.$sql_division.'
                            '.$sql_proyecto.'
                            '.$sql_empleado.'
+                           '.$sql_fecha.'
+                           '.$sql_estatus.'
                            GROUP BY p.descripcion,
                                     u.id_division,
                                     u.id_cargo,

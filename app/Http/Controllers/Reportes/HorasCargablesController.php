@@ -13,16 +13,19 @@ class HorasCargablesController extends Controller
 
       $modelo = new HorasCargablesModel();
 
-      $paginar = 50;
-      $cargos = $modelo->cargosEmpleado();
-      $divisiones = $modelo->divisiones();
-      $horas = $modelo->repoHorasCargables($paginar);
-      $paginas = $modelo->pagHorasCargables($paginar);
-      $totales = $modelo->totalesHorasCargables();
+      $paginar = 200;
+      $supervisa = $modelo->supervisaA(session("cargo_id"), session("division_id"), session("usuario_id"));
+      $cargos = $supervisa["cargos"];
+      $divisiones = $supervisa["divisiones"];
+      $estatus = $modelo->estatusProyectos();
+      $horas = $modelo->repoHorasCargables(session("usuario_id"), $paginar, $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos);
+      $paginas = $modelo->pagHorasCargables(session("usuario_id"), $paginar, $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos);
+      $totales = $modelo->totalesHorasCargables(session("usuario_id"), $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos);
 
       return [
         "cargos" => $cargos,
         "divisiones" => $divisiones,
+        "estatus" => $estatus,
         "horas" => $horas,
         "paginas" => $paginas,
         "paginar" => $paginar,
@@ -36,16 +39,20 @@ class HorasCargablesController extends Controller
 
       $modelo = new HorasCargablesModel();
 
+      $supervisa = $modelo->supervisaA(session("cargo_id"), session("division_id"), session("usuario_id"));
       $paginar = $request->input("paginar");
       $desde = $request->input("desde");
-      $cargos = $request->input("cargos");
+      $cargos = ($request->input("cargos") == null) ? $supervisa["cargos"] : $request->input("cargos");
       $cliente = $request->input("cliente");
-      $divisiones = $request->input("divisiones");
+      $divisiones = ($request->input("divisiones") == null) ? $supervisa["divisiones"] : $request->input("divisiones");
       $empleado = $request->input("empleado");
+      $estatus = $request->input("estatus");
+      $fecha_desde = $request->input("fechaDesde");
+      $fecha_hasta = $request->input("fechaHasta");
       $proyecto = $request->input("proyecto");
-      $horas = $modelo->repoHorasCargables($paginar, $desde, $cargos, $cliente, $divisiones, $proyecto, $empleado);
-      $paginas = $modelo->pagHorasCargables($paginar, $cargos, $cliente, $divisiones, $proyecto, $empleado);
-      $totales = $modelo->totalesHorasCargables($cargos, $cliente, $divisiones, $proyecto, $empleado);
+      $horas = $modelo->repoHorasCargables(session("usuario_id"), $paginar, $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos, $desde, $cliente, $proyecto, $empleado, $fecha_desde, $fecha_hasta, $estatus);
+      $paginas = $modelo->pagHorasCargables(session("usuario_id"), $paginar, $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos, $cliente, $proyecto, $empleado, $fecha_desde, $fecha_hasta, $estatus);
+      $totales = $modelo->totalesHorasCargables(session("usuario_id"), $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos, $cliente, $proyecto, $empleado, $fecha_desde, $fecha_hasta, $estatus);
 
       return array("horas" => $horas, "paginas" => $paginas, "totales" => $totales);
 

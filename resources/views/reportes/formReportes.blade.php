@@ -30,6 +30,7 @@
                 label-for="proyecto"
                 id="group-proyecto">
                 <b-form-select
+                  @change="reporteSeleccionado"
                   :disabled="formReportes.reportes.disabled"
                   :value="null"
                   :options="formReportes.reportes.listado"
@@ -59,7 +60,7 @@
 
         <b-row align-h="center" align-v="center" v-cloak>
           <b-col cols="12">
-            <reporte-1 v-if="formReportes.reportes.verReporte === 18"></reporte-1>
+            <reporte-1 v-if="formReportes.reportes.verReporte.id === 18" :key="formReportes.reportes.verReporte.key"></reporte-1>
           </b-col>
         </b-row>
 
