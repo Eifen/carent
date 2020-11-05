@@ -70,11 +70,21 @@ class HorasCargablesModel extends Model
 
     }// Fin supervisaA
 
-    function repoHorasCargables($id_usuario, $paginar, $supervisa, $supervisaTodo, $divisiones, $cargos, $desde = 0, $cliente = null, $proyecto = null, $empleado = null, $fecha_desde = null, $fecha_hasta = null){
+    function estatusProyectos(){
 
-      if($supervisaTodo){
-        $sql_division = "";
-      }else if($divisiones == null){
+      $estatus = DB::select('SELECT e.valor AS id,
+                                    e.descripcion
+                             FROM tbl_estatus e
+                             WHERE tabla = "tbl_proyecto"
+                             ORDER BY e.descripcion ASC');
+
+      return $estatus;
+
+    }// Fin estatusProyectos
+
+    function repoHorasCargables($id_usuario, $paginar, $supervisa, $supervisaTodo, $divisiones, $cargos, $desde = 0, $cliente = null, $proyecto = null, $empleado = null, $fecha_desde = null, $fecha_hasta = null, $estatus = null){
+
+      if($divisiones == null){
         $sql_division = "";
       }else{
 
@@ -102,9 +112,7 @@ class HorasCargablesModel extends Model
 
       }
 
-      if($supervisaTodo){
-        $sql_cargos = "";
-      }else if($cargos == null){
+      if($cargos == null){
         $sql_cargos = "";
       }else{
 
@@ -167,6 +175,12 @@ class HorasCargablesModel extends Model
         $sql_fecha = '';
       }
 
+      if($estatus !== null){
+        $sql_estatus = 'AND p.id_estatus = '.$estatus;
+      }else{
+        $sql_estatus = '';
+      }
+
       $sql = DB::select('SELECT p.id AS id_proyecto,
                                 p.descripcion AS proyecto,
                                 u.id_division,
@@ -177,26 +191,32 @@ class HorasCargablesModel extends Model
                                 CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS empleado,
                                 c.id AS id_cliente,
                                 c.razon_social AS cliente,
-                                TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(hc.horas_trabajadas))),"%H:%i") horas_trabajadas
+                                TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(hc.horas_trabajadas))),"%H:%i") horas_trabajadas,
+                                p.id_estatus,
+                                e.descripcion AS estatus
                          FROM tbl_horas_cargables hc,
                               tbl_proyecto_analista pa,
                               tbl_usuario u,
                               tbl_proyecto p,
                               tbl_cliente c,
                               tbl_division d,
-                              tbl_cargo_empleado ce
+                              tbl_cargo_empleado ce,
+                              tbl_estatus e
                          WHERE hc.id_proy_analista = pa.id
                          AND pa.id_analista = u.id
                          AND pa.id_proyecto = p.id
                          AND p.id_cliente = c.id
                          AND u.id_division = d.id
                          AND u.id_cargo = ce.id
+                         AND p.id_estatus = e.valor
+                         AND e.tabla = "tbl_proyecto"
                          '.$sql_cargos.'
                          '.$sql_cliente.'
                          '.$sql_division.'
                          '.$sql_proyecto.'
                          '.$sql_empleado.'
                          '.$sql_fecha.'
+                         '.$sql_estatus.'
                          GROUP BY p.id,
                                   p.descripcion,
                                   u.nombre_1,
@@ -207,18 +227,17 @@ class HorasCargablesModel extends Model
                                   c.id,
                                   u.id,
                                   u.id_division,
-                                  u.id_cargo
+                                  u.id_cargo,
+                                  e.descripcion
                          LIMIT '.$desde.', '.$paginar);
 
       return $sql;
 
     }
 
-    function totalesHorasCargables($id_usuario, $supervisa, $supervisaTodo, $divisiones, $cargos, $cliente = null, $proyecto = null, $empleado = null, $fecha_desde = null, $fecha_hasta = null){
+    function totalesHorasCargables($id_usuario, $supervisa, $supervisaTodo, $divisiones, $cargos, $cliente = null, $proyecto = null, $empleado = null, $fecha_desde = null, $fecha_hasta = null, $estatus = null){
 
-      if($supervisaTodo){
-        $sql_division = "";
-      }else if($divisiones == null){
+      if($divisiones == null){
         $sql_division = "";
       }else{
 
@@ -246,9 +265,7 @@ class HorasCargablesModel extends Model
 
       }
 
-      if($supervisaTodo){
-        $sql_cargos = "";
-      }else if($cargos == null){
+      if($cargos == null){
         $sql_cargos = "";
       }else{
 
@@ -262,12 +279,13 @@ class HorasCargablesModel extends Model
               $item = json_decode($item);
             }
 
-            array_push($idsCargo,$item->id);
+            array_push($idsCargo, $item->id);
+
           }
 
         }else{
 
-          array_push($idsCargo,$cargos);
+          array_push($idsCargo, $cargos);
 
         }
 
@@ -308,6 +326,12 @@ class HorasCargablesModel extends Model
         $sql_fecha = 'AND hc.fecha = "'.$fecha_desde.'"';
       }else{
         $sql_fecha = '';
+      }
+
+      if($estatus !== null){
+        $sql_estatus = 'AND p.id_estatus = '.$estatus;
+      }else{
+        $sql_estatus = '';
       }
 
       $sql = DB::select('SELECT CONCAT(
@@ -341,17 +365,16 @@ class HorasCargablesModel extends Model
                          '.$sql_division.'
                          '.$sql_proyecto.'
                          '.$sql_empleado.'
-                         '.$sql_fecha);
+                         '.$sql_fecha.'
+                         '.$sql_estatus);
 
       return $sql[0];
 
     }
 
-    function pagHorasCargables($id_usuario, $paginar, $supervisa, $supervisaTodo, $divisiones, $cargos, $cliente = null, $proyecto = null, $empleado = null, $fecha_desde = null, $fecha_hasta = null){
+    function pagHorasCargables($id_usuario, $paginar, $supervisa, $supervisaTodo, $divisiones, $cargos, $cliente = null, $proyecto = null, $empleado = null, $fecha_desde = null, $fecha_hasta = null, $estatus = null){
 
-      if($supervisaTodo){
-        $sql_division = "";
-      }else if($divisiones == null){
+      if($divisiones == null){
         $sql_division = "";
       }else{
 
@@ -379,9 +402,7 @@ class HorasCargablesModel extends Model
 
       }
 
-      if($supervisaTodo){
-        $sql_cargos = "";
-      }else if($cargos == null){
+      if($cargos == null){
         $sql_cargos = "";
       }else{
 
@@ -395,12 +416,13 @@ class HorasCargablesModel extends Model
               $item = json_decode($item);
             }
 
-            array_push($idsCargo,$item->id);
+            array_push($idsCargo, $item->id);
+
           }
 
         }else{
 
-          array_push($idsCargo,$cargos);
+          array_push($idsCargo, $cargos);
 
         }
 
@@ -443,6 +465,12 @@ class HorasCargablesModel extends Model
         $sql_fecha = '';
       }
 
+      if($estatus !== null){
+        $sql_estatus = 'AND p.id_estatus = '.$estatus;
+      }else{
+        $sql_estatus = '';
+      }
+
       $sql = DB::select('SELECT CEILING( COUNT(1) / '.$paginar.') paginas
                          FROM(
 
@@ -470,6 +498,7 @@ class HorasCargablesModel extends Model
                            '.$sql_proyecto.'
                            '.$sql_empleado.'
                            '.$sql_fecha.'
+                           '.$sql_estatus.'
                            GROUP BY p.descripcion,
                                     u.id_division,
                                     u.id_cargo,
