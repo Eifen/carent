@@ -56,7 +56,7 @@ class ReportesModel extends Model
                           WHERE m.id = mu.id_menu
                           AND mu.id_usuario = "'.$id_usuario.'"
                           AND m.id_estatus = 1
-                          AND m.id IN(18)
+                          AND m.id_menu_padre = 17
                           ORDER BY m.id_menu_padre ASC');
 
       return $sql;

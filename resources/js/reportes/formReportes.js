@@ -12,6 +12,7 @@ Vue.component('loading', require('../components/loading.vue').default);
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
 Vue.component('alert',require('../components/alert.vue').default);
 Vue.component('reporte-1',require('./horasCargables.vue').default);
+Vue.component('reporte-2',require('./clientesProyecto.vue').default);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 Vue.component('multiselect', Multiselect);
