@@ -82,7 +82,7 @@ class EmpleadosModel extends Model
 
     }// Fin estatusProyectos
 
-    function repoEmpleados($id_usuario, $paginar, $supervisa, $supervisaTodo, $divisiones, $cargos, $desde = 0, $empleado = null, $fecha_ingreso = null, $fecha_egreso = null, $estatus = null){
+    function repoEmpleados($id_usuario, $paginar, $supervisa, $supervisaTodo, $divisiones, $cargos, $desde = 0, $empleado = null, $fecha_ingreso = null, $fecha_egreso = null, $estatus = null, $codigo = null){
 
       if($divisiones == null){
         $sql_division = "";
@@ -171,6 +171,12 @@ class EmpleadosModel extends Model
         $sql_estatus = 'AND u.id_estatus = '.$estatus;
       }else{
         $sql_estatus = '';
+      }
+
+      if($codigo !== null){
+        $sql_codigo = 'AND u.codigo = "'.$codigo.'"';
+      }else{
+        $sql_codigo = '';
       }
 
       $sql = DB::select('SELECT * FROM(
@@ -195,6 +201,7 @@ class EmpleadosModel extends Model
                           '.$sql_fecha_ingreso.'
                           '.$sql_fecha_egreso.'
                           '.$sql_estatus.'
+                          '.$sql_codigo.'
                         )t
                         ORDER BY empleado ASC
                         LIMIT '.$desde.', '.$paginar);
@@ -203,7 +210,7 @@ class EmpleadosModel extends Model
 
     }
 
-    function totalesEmpleados($id_usuario, $supervisa, $supervisaTodo, $divisiones, $cargos, $empleado = null, $fecha_ingreso = null, $fecha_egreso = null, $estatus = null){
+    function totalesEmpleados($id_usuario, $supervisa, $supervisaTodo, $divisiones, $cargos, $empleado = null, $fecha_ingreso = null, $fecha_egreso = null, $estatus = null, $codigo = null){
 
       if($divisiones == null){
         $sql_division = "";
@@ -292,6 +299,12 @@ class EmpleadosModel extends Model
         $sql_estatus = 'AND u.id_estatus = '.$estatus;
       }else{
         $sql_estatus = '';
+      }
+
+      if($codigo !== null){
+        $sql_codigo = 'AND u.codigo = "'.$codigo.'"';
+      }else{
+        $sql_codigo = '';
       }
 
       $sql = DB::select('SELECT COUNT(1) AS empleados
@@ -308,13 +321,14 @@ class EmpleadosModel extends Model
                          '.$sql_empleado.'
                          '.$sql_fecha_ingreso.'
                          '.$sql_fecha_egreso.'
-                         '.$sql_estatus);
+                         '.$sql_estatus.'
+                         '.$sql_codigo);
 
       return $sql[0];
 
     }
 
-    function pagEmpleados($id_usuario, $paginar, $supervisa, $supervisaTodo, $divisiones, $cargos, $empleado = null, $fecha_ingreso = null, $fecha_egreso = null, $estatus = null){
+    function pagEmpleados($id_usuario, $paginar, $supervisa, $supervisaTodo, $divisiones, $cargos, $empleado = null, $fecha_ingreso = null, $fecha_egreso = null, $estatus = null, $codigo = null){
 
       if($divisiones == null){
         $sql_division = "";
@@ -403,6 +417,12 @@ class EmpleadosModel extends Model
         $sql_estatus = 'AND u.id_estatus = '.$estatus;
       }else{
         $sql_estatus = '';
+      }
+
+      if($codigo !== null){
+        $sql_codigo = 'AND u.codigo = "'.$codigo.'"';
+      }else{
+        $sql_codigo = '';
       }
 
       $sql = DB::select('SELECT CEILING( COUNT(1) / '.$paginar.') paginas
@@ -428,6 +448,7 @@ class EmpleadosModel extends Model
                           '.$sql_fecha_ingreso.'
                           '.$sql_fecha_egreso.'
                           '.$sql_estatus.'
+                          '.$sql_codigo.'
                          )t'
                        );
 

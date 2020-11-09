@@ -6,6 +6,20 @@
       <b-form class="row" v-if="formFiltro.mostrar">
         <b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
+          description="Código Empleado"
+          label="Código"
+          label-for="codigo"
+          id="group-codigo">
+          <b-form-input
+            :disabled="formFiltro.campos.codigo.disabled"
+            id="codigo"
+            ref="codigo"
+            size="sm"
+            type="text"
+            v-model.trim="formFiltro.campos.codigo.value"></b-form-input>
+        </b-form-group>
+        <b-form-group
+          class="form-group col-12 col-sm-6 col-md-4"
           description="Nombre del Empleado"
           label="Empleado"
           label-for="empleado"
@@ -258,6 +272,10 @@
                 listado: [],
                 value: []
               },
+              codigo:{
+                disabled: true,
+                value: null
+              },
               divisiones:{
                 disabled: true,
                 listado: [],
@@ -265,7 +283,7 @@
               },
               empleado: {
                 disabled: true,
-                value: ""
+                value: null
               },
               estatus: {
                 disabled: true,
@@ -353,6 +371,7 @@
             self.tabla.paginador.max = parseInt(response.data.paginas);
 
             self.formFiltro.campos.cargos.disabled = false;
+            self.formFiltro.campos.codigo.disabled = false;
             self.formFiltro.campos.divisiones.disabled = false;
             self.formFiltro.campos.empleado.disabled = false;
             self.formFiltro.campos.estatus.disabled = false;
@@ -437,6 +456,7 @@
         buscar: function(){
 
           self.formFiltro.campos.cargos.disabled = true;
+          self.formFiltro.campos.codigo.disabled = true;
           self.formFiltro.campos.divisiones.disabled = true;
           self.formFiltro.campos.empleado.disabled = true;
           self.formFiltro.campos.estatus.disabled = true;
@@ -479,6 +499,7 @@
           let desde = (self.tabla.paginador.pagina - 1) * self.tabla.paginador.paginar;
           let parametros = {
             cargos: param_cargos,
+            codigo: self.formFiltro.campos.codigo.value,
             desde: desde,
             divisiones: param_divisiones,
             empleado: self.formFiltro.campos.empleado.value,
@@ -493,6 +514,7 @@
           .then(function (response) {
 
             self.formFiltro.campos.cargos.disabled = false;
+            self.formFiltro.campos.codigo.disabled = false;
             self.formFiltro.campos.divisiones.disabled = false;
             self.formFiltro.campos.empleado.disabled = false;
             self.formFiltro.campos.estatus.disabled = false;
@@ -514,7 +536,13 @@
 
           }).catch(error => {
 
-            self.formFiltro.estatus.disabled = false;
+            self.formFiltro.campos.cargos.disabled = false;
+            self.formFiltro.campos.codigo.disabled = false;
+            self.formFiltro.campos.divisiones.disabled = false;
+            self.formFiltro.campos.empleado.disabled = false;
+            self.formFiltro.campos.estatus.disabled = false;
+            self.formFiltro.campos.fechaIngreso.disabled = false;
+            self.formFiltro.campos.fechaEgreso.disabled = false;
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
             self.formFiltro.btn.filtrar.disabled = false;
             self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
@@ -526,6 +554,7 @@
         limpiarFiltro: function(){
 
           self.formFiltro.campos.cargos.value = [];
+          self.formFiltro.campos.codigo.value = null;
           self.formFiltro.campos.divisiones.value = [];
           self.formFiltro.campos.empleado.value = null;
           self.formFiltro.campos.fechaIngreso.value = null;
