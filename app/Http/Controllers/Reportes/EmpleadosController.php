@@ -37,7 +37,7 @@ class EmpleadosController extends Controller
 
     function buscarEmpleados(Request $request){
 
-      $modelo = new HorasCargablesModel();
+      $modelo = new EmpleadosModel();
 
       $supervisa = $modelo->supervisaA(session("cargo_id"), session("division_id"), session("usuario_id"));
       $paginar = $request->input("paginar");
@@ -50,9 +50,9 @@ class EmpleadosController extends Controller
       $fecha_egreso = $request->input("fechaEgreso");
       $empleados = $modelo->repoEmpleados(session("usuario_id"), $paginar, $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos, $desde, $empleado, $fecha_ingreso, $fecha_egreso, $estatus);
       $paginas = $modelo->pagEmpleados(session("usuario_id"), $paginar, $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos, $empleado, $fecha_ingreso, $fecha_egreso, $estatus);
-      $totales = $modelo->totalesEmpleados(session("usuario_id"), $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos, $cliente, $proyecto, $empleado, $fecha_ingreso, $fecha_egreso, $estatus);
+      $totales = $modelo->totalesEmpleados(session("usuario_id"), $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos, $empleado, $fecha_ingreso, $fecha_egreso, $estatus);
 
-      return array("empleados" => $horas, "paginas" => $paginas, "totales" => $totales);
+      return array("empleados" => $empleados, "paginas" => $paginas, "totales" => $totales);
 
     }
 

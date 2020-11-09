@@ -514,12 +514,11 @@
 
           }).catch(error => {
 
-          /*
             self.formFiltro.estatus.disabled = false;
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
             self.formFiltro.btn.filtrar.disabled = false;
             self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
-            self.formFiltro.btn.limpiarFiltro.disabled = false;*/
+            self.formFiltro.btn.limpiarFiltro.disabled = false;
 
           });
 
