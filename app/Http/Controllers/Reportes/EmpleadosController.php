@@ -18,7 +18,7 @@ class EmpleadosController extends Controller
       $cargos = $supervisa["cargos"];
       $divisiones = $supervisa["divisiones"];
       $estatus = $modelo->estatusProyectos();
-      $horas = $modelo->empleados(session("usuario_id"), $paginar, $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos);
+      $empleados = $modelo->repoEmpleados(session("usuario_id"), $paginar, $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos);
       $paginas = $modelo->pagEmpleados(session("usuario_id"), $paginar, $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos);
       $totales = $modelo->totalesEmpleados(session("usuario_id"), $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos);
 
@@ -26,7 +26,7 @@ class EmpleadosController extends Controller
         "cargos" => $cargos,
         "divisiones" => $divisiones,
         "estatus" => $estatus,
-        "horas" => $horas,
+        "empleados" => $empleados,
         "paginas" => $paginas,
         "paginar" => $paginar,
         "response" => true,
@@ -43,18 +43,16 @@ class EmpleadosController extends Controller
       $paginar = $request->input("paginar");
       $desde = $request->input("desde");
       $cargos = ($request->input("cargos") == null) ? $supervisa["cargos"] : $request->input("cargos");
-      $cliente = $request->input("cliente");
       $divisiones = ($request->input("divisiones") == null) ? $supervisa["divisiones"] : $request->input("divisiones");
       $empleado = $request->input("empleado");
       $estatus = $request->input("estatus");
-      $fecha_desde = $request->input("fechaDesde");
-      $fecha_hasta = $request->input("fechaHasta");
-      $proyecto = $request->input("proyecto");
-      $horas = $modelo->repoEmpleados(session("usuario_id"), $paginar, $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos, $desde, $cliente, $proyecto, $empleado, $fecha_desde, $fecha_hasta, $estatus);
-      $paginas = $modelo->pagEmpleados(session("usuario_id"), $paginar, $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos, $cliente, $proyecto, $empleado, $fecha_desde, $fecha_hasta, $estatus);
-      $totales = $modelo->totalesEmpleados(session("usuario_id"), $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos, $cliente, $proyecto, $empleado, $fecha_desde, $fecha_hasta, $estatus);
+      $fecha_ingreso = $request->input("fechaIngreso");
+      $fecha_egreso = $request->input("fechaEgreso");
+      $empleados = $modelo->repoEmpleados(session("usuario_id"), $paginar, $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos, $desde, $empleado, $fecha_ingreso, $fecha_egreso, $estatus);
+      $paginas = $modelo->pagEmpleados(session("usuario_id"), $paginar, $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos, $empleado, $fecha_ingreso, $fecha_egreso, $estatus);
+      $totales = $modelo->totalesEmpleados(session("usuario_id"), $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos, $cliente, $proyecto, $empleado, $fecha_ingreso, $fecha_egreso, $estatus);
 
-      return array("horas" => $horas, "paginas" => $paginas, "totales" => $totales);
+      return array("empleados" => $horas, "paginas" => $paginas, "totales" => $totales);
 
     }
 

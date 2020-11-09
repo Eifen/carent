@@ -82,7 +82,7 @@ class EmpleadosModel extends Model
 
     }// Fin estatusProyectos
 
-    function empleados($id_usuario, $paginar, $supervisa, $supervisaTodo, $divisiones, $cargos, $desde = 0, $empleado = null, $fecha_ingreso = null, $fecha_egreso = null, $estatus = null){
+    function repoEmpleados($id_usuario, $paginar, $supervisa, $supervisaTodo, $divisiones, $cargos, $desde = 0, $empleado = null, $fecha_ingreso = null, $fecha_egreso = null, $estatus = null){
 
       if($divisiones == null){
         $sql_division = "";
@@ -137,7 +137,7 @@ class EmpleadosModel extends Model
         }
 
         $idsCargo = implode(",", $idsCargo);
-        $sql_cargos = "AND ce.id IN(".$idsCargo.")";
+        $sql_cargos = "AND u.id_cargo IN(".$idsCargo.")";
 
       }
 
@@ -155,67 +155,49 @@ class EmpleadosModel extends Model
 
       }
 
-      if($fecha_ingreso != null && $fecha_egreso != null){
-        $sql_fecha = 'AND hc.fecha BETWEEN "'.$fecha_ingreso.'" AND "'.$fecha_egreso.'"';
-      }else if($fecha_ingreso != null && $fecha_egreso == null){
-        $sql_fecha = 'AND hc.fecha = "'.$fecha_ingreso.'"';
+      if($fecha_ingreso !== null){
+        $sql_fecha_ingreso = 'AND u.fecha_ingreso = "'.$fecha_ingreso.'"';
       }else{
-        $sql_fecha = '';
+        $sql_fecha_ingreso = '';
+      }
+
+      if($fecha_egreso !== null){
+        $sql_fecha_egreso = 'AND u.fecha_egreso = "'.$fecha_egreso.'"';
+      }else{
+        $sql_fecha_egreso = '';
       }
 
       if($estatus !== null){
-        $sql_estatus = 'AND p.id_estatus = '.$estatus;
+        $sql_estatus = 'AND u.id_estatus = '.$estatus;
       }else{
         $sql_estatus = '';
       }
 
-      $sql = DB::select('SELECT p.id AS id_proyecto,
-                                p.descripcion AS proyecto,
-                                u.id_division,
-                                d.descripcion AS division,
-                                u.id AS id_usuario,
-                                u.id_cargo,
-                                ce.descripcion AS cargo,
-                                CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS empleado,
-                                c.id AS id_cliente,
-                                c.razon_social AS cliente,
-                                TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(hc.horas_trabajadas))),"%H:%i") horas_trabajadas,
-                                p.id_estatus,
-                                e.descripcion AS estatus
-                         FROM tbl_horas_cargables hc,
-                              tbl_proyecto_analista pa,
-                              tbl_usuario u,
-                              tbl_proyecto p,
-                              tbl_cliente c,
-                              tbl_division d,
-                              tbl_cargo_empleado ce,
-                              tbl_estatus e
-                         WHERE hc.id_proy_analista = pa.id
-                         AND pa.id_analista = u.id
-                         AND pa.id_proyecto = p.id
-                         AND p.id_cliente = c.id
-                         AND u.id_division = d.id
-                         AND u.id_cargo = ce.id
-                         AND p.id_estatus = e.valor
-                         AND e.tabla = "tbl_proyecto"
-                         '.$sql_cargos.'
-                         '.$sql_division.'
-                         '.$sql_empleado.'
-                         '.$sql_fecha.'
-                         '.$sql_estatus.'
-                         GROUP BY p.id,
-                                  p.descripcion,
-                                  u.nombre_1,
-                                  u.nombre_2,
-                                  u.apellido_1,
-                                  u.apellido_2,
-                                  c.razon_social,
-                                  c.id,
-                                  u.id,
-                                  u.id_division,
-                                  u.id_cargo,
-                                  e.descripcion
-                         LIMIT '.$desde.', '.$paginar);
+      $sql = DB::select('SELECT * FROM(
+                           SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS empleado,
+                                  DATE_FORMAT(u.fecha_ingreso, "%d/%m/%Y") fecha_ingreso,
+                                  DATE_FORMAT(u.fecha_egreso, "%d/%m/%Y") fecha_egreso,
+                                  ce.descripcion AS cargo,
+                                  d.descripcion AS division,
+                                  e.descripcion AS estatus,
+                                  u.codigo
+                          FROM tbl_usuario u,
+                               tbl_cargo_empleado ce,
+                               tbl_division d,
+                               tbl_estatus e
+                          WHERE u.id_cargo = ce.id
+                          AND u.id_division = d.id
+                          AND u.id_estatus = e.valor
+                          AND e.tabla = "tbl_usuario"
+                          '.$sql_cargos.'
+                          '.$sql_division.'
+                          '.$sql_empleado.'
+                          '.$sql_fecha_ingreso.'
+                          '.$sql_fecha_egreso.'
+                          '.$sql_estatus.'
+                        )t
+                        ORDER BY empleado ASC
+                        LIMIT '.$desde.', '.$paginar);
 
       return $sql;
 
@@ -294,12 +276,16 @@ class EmpleadosModel extends Model
 
       }
 
-      if($fecha_ingreso != null && $fecha_egreso != null){
-        $sql_fecha = 'AND hc.fecha BETWEEN "'.$fecha_ingreso.'" AND "'.$fecha_egreso.'"';
-      }else if($fecha_ingreso != null && $fecha_egreso == null){
-        $sql_fecha = 'AND hc.fecha = "'.$fecha_ingreso.'"';
+      if($fecha_ingreso !== null){
+        $sql_fecha_ingreso = 'AND u.fecha_ingreso = "'.$fecha_ingreso.'"';
       }else{
-        $sql_fecha = '';
+        $sql_fecha_ingreso = '';
+      }
+
+      if($fecha_egreso !== null){
+        $sql_fecha_egreso = 'AND u.fecha_egreso = "'.$fecha_egreso.'"';
+      }else{
+        $sql_fecha_egreso = '';
       }
 
       if($estatus !== null){
@@ -308,43 +294,27 @@ class EmpleadosModel extends Model
         $sql_estatus = '';
       }
 
-      $sql = DB::select('SELECT CONCAT(
-                                  IF(
-                                     LENGTH(FLOOR(SUM(TIME_TO_SEC(hc.horas_trabajadas))/3600)) = 1,
-                                     CONCAT("0",FLOOR(SUM(TIME_TO_SEC(hc.horas_trabajadas))/3600)),
-                                     FLOOR(SUM(TIME_TO_SEC(hc.horas_trabajadas))/3600)
-                                    ),
-                                  ":",
-                                  IF(
-                                     LENGTH(FLOOR(SUM(TIME_TO_SEC(hc.horas_trabajadas))/60)%60) = 1,
-                                     CONCAT("0",FLOOR(SUM(TIME_TO_SEC(hc.horas_trabajadas))/60)%60),
-                                     FLOOR(SUM(TIME_TO_SEC(hc.horas_trabajadas))/60)%60
-                                    )
-                                ) horas_trabajadas
-                         FROM tbl_horas_cargables hc,
-                              tbl_proyecto_analista pa,
-                              tbl_usuario u,
-                              tbl_proyecto p,
-                              tbl_cliente c,
+      $sql = DB::select('SELECT COUNT(1) AS empleados
+                         FROM tbl_usuario u,
+                              tbl_cargo_empleado ce,
                               tbl_division d,
-                              tbl_cargo_empleado ce
-                         WHERE hc.id_proy_analista = pa.id
-                         AND pa.id_analista = u.id
-                         AND pa.id_proyecto = p.id
-                         AND p.id_cliente = c.id
+                              tbl_estatus e
+                         WHERE u.id_cargo = ce.id
                          AND u.id_division = d.id
-                         AND u.id_cargo = ce.id
+                         AND u.id_estatus = e.valor
+                         AND e.tabla = "tbl_usuario"
                          '.$sql_cargos.'
                          '.$sql_division.'
                          '.$sql_empleado.'
-                         '.$sql_fecha.'
+                         '.$sql_fecha_ingreso.'
+                         '.$sql_fecha_egreso.'
                          '.$sql_estatus);
 
       return $sql[0];
 
     }
 
-    function pagHorasCargables($id_usuario, $paginar, $supervisa, $supervisaTodo, $divisiones, $cargos, $empleado = null, $fecha_ingreso = null, $fecha_egreso = null, $estatus = null){
+    function pagEmpleados($id_usuario, $paginar, $supervisa, $supervisaTodo, $divisiones, $cargos, $empleado = null, $fecha_ingreso = null, $fecha_egreso = null, $estatus = null){
 
       if($divisiones == null){
         $sql_division = "";
@@ -417,12 +387,16 @@ class EmpleadosModel extends Model
 
       }
 
-      if($fecha_egreso != null && $fecha_ingreso != null){
-        $sql_fecha = 'AND hc.fecha BETWEEN "'.$fecha_egreso.'" AND "'.$fecha_ingreso.'"';
-      }else if($fecha_egreso != null && $fecha_ingreso == null){
-        $sql_fecha = 'AND hc.fecha = "'.$fecha_egreso.'"';
+      if($fecha_ingreso !== null){
+        $sql_fecha_ingreso = 'AND u.fecha_ingreso = "'.$fecha_ingreso.'"';
       }else{
-        $sql_fecha = '';
+        $sql_fecha_ingreso = '';
+      }
+
+      if($fecha_egreso !== null){
+        $sql_fecha_egreso = 'AND u.fecha_egreso = "'.$fecha_egreso.'"';
+      }else{
+        $sql_fecha_egreso = '';
       }
 
       if($estatus !== null){
@@ -434,34 +408,26 @@ class EmpleadosModel extends Model
       $sql = DB::select('SELECT CEILING( COUNT(1) / '.$paginar.') paginas
                          FROM(
 
-                           SELECT p.descripcion AS proyecto,
-                                  u.id_division,
-                                  u.id_cargo,
+                           SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS empleado,
+                                  DATE_FORMAT(u.fecha_ingreso, "%d/%m/%Y") fecha_ingreso,
+                                  DATE_FORMAT(u.fecha_egreso, "%d/%m/%Y") fecha_egreso,
                                   ce.descripcion AS cargo,
-                                  c.razon_social
-                           FROM tbl_horas_cargables hc,
-                                tbl_proyecto_analista pa,
-                                tbl_usuario u,
-                                tbl_proyecto p,
-                                tbl_cliente c,
-                                tbl_division d,
-                                tbl_cargo_empleado ce
-                           WHERE hc.id_proy_analista = pa.id
-                           AND pa.id_analista = u.id
-                           AND pa.id_proyecto = p.id
-                           AND p.id_cliente = c.id
-                           AND u.id_division = d.id
-                           AND u.id_cargo = ce.id
-                           '.$sql_cargos.'
-                           '.$sql_division.'
-                           '.$sql_empleado.'
-                           '.$sql_fecha.'
-                           '.$sql_estatus.'
-                           GROUP BY p.descripcion,
-                                    u.id_division,
-                                    u.id_cargo,
-                                    ce.descripcion,
-                                    c.razon_social
+                                  d.descripcion AS division,
+                                  e.descripcion AS estatus
+                          FROM tbl_usuario u,
+                               tbl_cargo_empleado ce,
+                               tbl_division d,
+                               tbl_estatus e
+                          WHERE u.id_cargo = ce.id
+                          AND u.id_division = d.id
+                          AND u.id_estatus = e.valor
+                          AND e.tabla = "tbl_usuario"
+                          '.$sql_cargos.'
+                          '.$sql_division.'
+                          '.$sql_empleado.'
+                          '.$sql_fecha_ingreso.'
+                          '.$sql_fecha_egreso.'
+                          '.$sql_estatus.'
                          )t'
                        );
 

@@ -70,7 +70,6 @@
           label-for="fechaIngreso"
           id="group-fechaIngreso">
           <b-form-datepicker
-            @input="fecha_hasta"
             :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
             :disabled="formFiltro.campos.fechaIngreso.disabled"
             :max="formFiltro.campos.fechaIngreso.max"
@@ -142,17 +141,17 @@
     <b-col cols="12">
       <b-row align-h="end" v-cloak v-if="formFiltro.mostrar">
         <b-col cols="12" md="6" lg="4">
-          <b-card class="text-left card-horas-trabajadas">
+          <b-card class="text-left card-empleados">
             <b-card-text>
-              <span class="titulo">TOTAL DE HORAS TRABAJADAS</span>
+              <span class="titulo">TOTAL DE EMPLEADOS</span>
             </b-card-text>
             <b-card-text>
-              <span class="monto">{{ totales.horasTrabajadas }}</span>
+              <span class="monto">{{ totales.empleados }}</span>
             </b-card-text>
           </b-card>
         </b-col>
         <b-col cols="12" md="6" lg="4" class="wrapper-btn-generar-excel">
-          <download-excel :data="tabla.registros" :name="'horas_cargables.xls'">
+          <download-excel :data="tabla.registros" :name="'empleados.xls'">
             <b-button
               block
               variant="success">
@@ -305,7 +304,7 @@
             registros: []
           },
           totales: {
-            horasTrabajadas: 0
+            empleados: 0
           }
         };
       },
@@ -318,23 +317,25 @@
 
         self = this;
 
-        axios.get('/dataRepHorasCargables')
+        axios.get('/dataRepEmpleados')
         .then(function (response) {
 
           if(response.status === 200 && response.data.response === true){
 
             self.tabla.encabezado = [
               { key: 'numero', label: '#' },
-              { key: 'division', label: 'División' },
+              { key: 'codigo', label: 'Código' },
               { key: 'empleado', label: 'Empleado' },
               { key: 'cargo', label: 'Cargo' },
-              { key: 'horas_trabajadas', label: 'Horas' },
+              { key: 'division', label: 'División' },
+              { key: 'fecha_ingreso', label: 'Fecha Ingreso' },
+              { key: 'fecha_egreso', label: 'Fecha Egreso' },
               { key: 'estatus', label: 'Estatus' }
             ];
 
-            self.tabla.registros = self.registroTabla(response.data.horas);
+            self.tabla.registros = self.registroTabla(response.data.empleados);
 
-            if(response.data.horas.length === 0){
+            if(response.data.empleados.length === 0){
 
               let mensaje = "No hay empleados";
               self.mostrarAlert(self.tabla.alert, true, "warning", mensaje, false, false, 0);
@@ -345,7 +346,7 @@
             self.formFiltro.campos.divisiones.listado = response.data.divisiones;
             self.formFiltro.campos.estatus.listado = response.data.estatus;
 
-            self.totales.horasTrabajadas = (response.data.totales.horas_trabajadas) ? response.data.totales.horas_trabajadas : 0;
+            self.totales.empleados = (response.data.totales.empleados) ? response.data.totales.empleados : 0;
 
             self.tabla.paginador.paginar = response.data.paginar;
             self.tabla.paginador.numPaginas = response.data.paginas;
@@ -356,6 +357,7 @@
             self.formFiltro.campos.empleado.disabled = false;
             self.formFiltro.campos.estatus.disabled = false;
             self.formFiltro.campos.fechaIngreso.disabled = false;
+            self.formFiltro.campos.fechaEgreso.disabled = false;
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
             self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
             self.formFiltro.mostrar = true;
@@ -416,10 +418,12 @@
 
             const data = {
               numero: (i + 1),
-              division: item.division,
+              codigo: item.codigo,
               empleado: item.empleado,
               cargo: item.cargo,
-              horas_trabajadas: item.horas_trabajadas,
+              division: item.division,
+              fecha_ingreso: item.fecha_ingreso,
+              fecha_egreso: item.fecha_egreso,
               estatus: item.estatus
             };
 
@@ -493,7 +497,7 @@
             self.formFiltro.campos.empleado.disabled = false;
             self.formFiltro.campos.estatus.disabled = false;
             self.formFiltro.campos.fechaIngreso.disabled = false;
-            self.formFiltro.campos.fechaEgreso.disabled = (self.formFiltro.campos.fechaIngreso !== null) ? false : true;
+            self.formFiltro.campos.fechaEgreso.disabled = false;
 
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
             self.formFiltro.btn.filtrar.disabled = false;
@@ -504,9 +508,9 @@
             self.tabla.paginador.numPaginas = response.data.paginas;
             self.tabla.paginador.max = parseInt(response.data.paginas);
 
-            self.totales.horasTrabajadas = (response.data.totales.horas_trabajadas) ? response.data.totales.horas_trabajadas : 0;
+            self.totales.empleados = (response.data.totales.empleados) ? response.data.totales.empleados : 0;
 
-            self.tabla.registros = self.registroTabla(response.data.horas);
+            self.tabla.registros = self.registroTabla(response.data.empleados);
 
           }).catch(error => {
 
@@ -528,14 +532,7 @@
           self.formFiltro.campos.fechaIngreso.value = null;
           self.formFiltro.campos.fechaEgreso.min = null;
           self.formFiltro.campos.fechaEgreso.value = null;
-          self.formFiltro.campos.fechaEgreso.disabled = true;
           self.buscar();
-
-        },
-        fecha_hasta: function(fecha_desde){
-
-          self.formFiltro.campos.fechaEgreso.min = fecha_desde;
-          self.formFiltro.campos.fechaEgreso.disabled = false;
 
         }
 
