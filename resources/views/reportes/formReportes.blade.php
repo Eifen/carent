@@ -70,6 +70,12 @@
           </b-col>
         </b-row>
 
+        <b-row align-h="center" align-v="center" v-cloak>
+          <b-col cols="12">
+            <reporte-3 v-if="formReportes.reportes.verReporte.id === 20" :key="formReportes.reportes.verReporte.key"></reporte-3>
+          </b-col>
+        </b-row>
+
         <b-row align-h="center" align-v="center" v-if="alert.mostrar" v-cloak>
           <b-col cols="12" sm="11" md="10" lg="8" xl="7">
             <b-alert variant="warning" show class="text-center" v-html="alert.message"></b-alert>
