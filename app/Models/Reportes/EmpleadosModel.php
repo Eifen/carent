@@ -258,7 +258,7 @@ class EmpleadosModel extends Model
         }
 
         $idsCargo = implode(",", $idsCargo);
-        $sql_cargos = "AND ce.id IN(".$idsCargo.")";
+        $sql_cargos = "AND u.id_cargo IN(".$idsCargo.")";
 
       }
 
@@ -289,7 +289,7 @@ class EmpleadosModel extends Model
       }
 
       if($estatus !== null){
-        $sql_estatus = 'AND p.id_estatus = '.$estatus;
+        $sql_estatus = 'AND u.id_estatus = '.$estatus;
       }else{
         $sql_estatus = '';
       }
@@ -369,7 +369,7 @@ class EmpleadosModel extends Model
         }
 
         $idsCargo = implode(",", $idsCargo);
-        $sql_cargos = "AND ce.id IN(".$idsCargo.")";
+        $sql_cargos = "AND u.id_cargo IN(".$idsCargo.")";
 
       }
 
@@ -400,7 +400,7 @@ class EmpleadosModel extends Model
       }
 
       if($estatus !== null){
-        $sql_estatus = 'AND p.id_estatus = '.$estatus;
+        $sql_estatus = 'AND u.id_estatus = '.$estatus;
       }else{
         $sql_estatus = '';
       }
