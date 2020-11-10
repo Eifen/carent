@@ -136,3 +136,5 @@ Route::get('/dataRepClientesProyectos', 'Reportes\ClientesProyectoController@dat
 Route::get('/buscarClientesProyectos', 'Reportes\ClientesProyectoController@buscarClientesProyectos')->middleware('usuario.session');
 Route::get('/dataRepEmpleados', 'Reportes\EmpleadosController@dataRepEmpleados')->middleware('usuario.session');
 Route::get('/buscarEmpleados', 'Reportes\EmpleadosController@buscarEmpleados')->middleware('usuario.session');
+Route::get('/dataRepClientes', 'Reportes\ClientesController@dataRepClientes')->middleware('usuario.session');
+Route::get('/buscarClientes', 'Reportes\ClientesController@buscarClientes')->middleware('usuario.session');

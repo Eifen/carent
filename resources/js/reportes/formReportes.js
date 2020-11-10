@@ -14,6 +14,7 @@ Vue.component('alert',require('../components/alert.vue').default);
 Vue.component('reporte-1',require('./horasCargables.vue').default);
 Vue.component('reporte-2',require('./clientesProyecto.vue').default);
 Vue.component('reporte-3',require('./empleados.vue').default);
+Vue.component('reporte-4',require('./clientes.vue').default);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 Vue.component('multiselect', Multiselect);
