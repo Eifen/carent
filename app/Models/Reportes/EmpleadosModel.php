@@ -70,7 +70,7 @@ class EmpleadosModel extends Model
 
     }// Fin supervisaA
 
-    function estatusProyectos(){
+    function estatusEmpleado(){
 
       $estatus = DB::select('SELECT e.valor AS id,
                                     e.descripcion
@@ -80,7 +80,7 @@ class EmpleadosModel extends Model
 
       return $estatus;
 
-    }// Fin estatusProyectos
+    }// Fin estatusEmpleado
 
     function repoEmpleados($id_usuario, $paginar, $supervisa, $supervisaTodo, $divisiones, $cargos, $desde = 0, $empleado = null, $fecha_ingreso = null, $fecha_egreso = null, $estatus = null, $codigo = null){
 

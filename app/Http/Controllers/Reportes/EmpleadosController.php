@@ -17,7 +17,7 @@ class EmpleadosController extends Controller
       $supervisa = $modelo->supervisaA(session("cargo_id"), session("division_id"), session("usuario_id"));
       $cargos = $supervisa["cargos"];
       $divisiones = $supervisa["divisiones"];
-      $estatus = $modelo->estatusProyectos();
+      $estatus = $modelo->estatusEmpleado();
       $empleados = $modelo->repoEmpleados(session("usuario_id"), $paginar, $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos);
       $paginas = $modelo->pagEmpleados(session("usuario_id"), $paginar, $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos);
       $totales = $modelo->totalesEmpleados(session("usuario_id"), $supervisa["supervisa"], $supervisa["supervisaTodo"], $divisiones, $cargos);
