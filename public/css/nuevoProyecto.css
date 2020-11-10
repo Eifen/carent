@@ -1,1 +1,123 @@
-html{overflow-x:hidden}[v-cloak]{display:none}#app{background-color:#e9ecef}#app .wrapper-forms{min-height:calc(100vh - 62px);padding-bottom:50px;padding-top:100px}@media (max-width:575px){#app .wrapper-forms{padding-bottom:0;padding-top:50px}}#app .wrapper-forms form{background-color:#fff;border:1px solid rgba(0,0,0,.13);border-radius:3px;margin-bottom:50px;padding:15px;transition:all .3s}#app .wrapper-forms form:hover{box-shadow:0 5px 5px 0 rgba(0,0,0,.18)}#app .wrapper-forms form>div #lista-cliente .btn,#app .wrapper-forms form>div #lista-gerente .btn,#app .wrapper-forms form>div #lista-socio .btn{border:none;box-shadow:none!important;padding:0!important}#app .wrapper-forms form>div #lista-cliente .dropdown-menu,#app .wrapper-forms form>div #lista-gerente .dropdown-menu,#app .wrapper-forms form>div #lista-socio .dropdown-menu{width:100%}#app .wrapper-forms form>div #lista-cliente .dropdown-menu .dropdown-item,#app .wrapper-forms form>div #lista-gerente .dropdown-menu .dropdown-item,#app .wrapper-forms form>div #lista-socio .dropdown-menu .dropdown-item{padding:.25rem .7rem;white-space:normal}#app .wrapper-forms form>div.form-group .titulo-indicar-horas{color:#c00;margin-top:30px;text-decoration:underline}#app .wrapper-forms form>div.form-group label{color:#091f40}#app .wrapper-forms form>div.form-group label.label-warning{color:#c00}#app .wrapper-forms form>div.form-group .form-control{border-radius:2px}#app .wrapper-forms form>div.form-group .form-control:disabled{cursor:not-allowed}#app .wrapper-forms form>div.form-group .form-control-plaintext{font-weight:600}#app .wrapper-forms form>fieldset .alert{margin-bottom:10px!important}#app .wrapper-forms form .multiselect.multiselect--disabled,#app .wrapper-forms form .multiselect.multiselect--disabled .multiselect__select{background-color:transparent}#app .wrapper-forms form .multiselect .multiselect__select{height:calc(1.5em + .5rem + 2px);min-height:calc(1.5em + .5rem + 2px)}#app .wrapper-forms form .multiselect .multiselect__select:before{border-color:#343a40 transparent transparent}#app .wrapper-forms form .multiselect .multiselect__tags{border:1px solid #ced4da;height:calc(1.5em + .5rem + 2px);min-height:calc(1.5em + .5rem + 2px);padding:2px 40px 0 8px}#app .wrapper-forms form .multiselect .multiselect__tags .multiselect__tag{margin-top:1px}#app .wrapper-forms form .multiselect .multiselect__tags .multiselect__placeholder{color:#495057}#app .wrapper-forms form .multiselect .multiselect__tags .multiselect__input{font-size:.875rem;height:calc(1.5em + .5rem + 2px);min-height:calc(1.5em + .5rem + 2px)}#app .wrapper-forms form .multiselect .multiselect__tags .multiselect__input::-moz-placeholder{color:#495057}#app .wrapper-forms form .multiselect .multiselect__tags .multiselect__input:-ms-input-placeholder{color:#495057}#app .wrapper-forms form .multiselect .multiselect__tags .multiselect__input::placeholder{color:#495057}#app .wrapper-forms .wrapper-alert{margin-top:15px}#app .wrapper-forms .wrapper-alert>div{padding-left:0;padding-right:0}#app .wrapper-forms .wrapper-alert>div .alert{margin-bottom:0;text-align:center;width:100%}
+html {
+  overflow-x: hidden;
+}
+[v-cloak] {
+  display: none;
+}
+#app {
+  background-color: #E9ECEF;
+}
+#app .wrapper-forms {
+  min-height: calc(100vh - 62px);
+  padding-bottom: 50px;
+  padding-top: 100px;
+}
+@media (max-width: 575px) {
+  #app .wrapper-forms {
+    padding-bottom: 0px;
+    padding-top: 50px;
+  }
+}
+#app .wrapper-forms form {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.13);
+  border-radius: 3px;
+  margin-bottom: 50px;
+  padding: 15px;
+  transition: all 0.3s;
+}
+#app .wrapper-forms form:hover {
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+}
+#app .wrapper-forms form > div #lista-cliente .btn,
+#app .wrapper-forms form > div #lista-socio .btn,
+#app .wrapper-forms form > div #lista-gerente .btn {
+  border: none;
+  box-shadow: none !important;
+  padding: 0px !important;
+}
+#app .wrapper-forms form > div #lista-cliente .dropdown-menu,
+#app .wrapper-forms form > div #lista-socio .dropdown-menu,
+#app .wrapper-forms form > div #lista-gerente .dropdown-menu {
+  width: 100%;
+}
+#app .wrapper-forms form > div #lista-cliente .dropdown-menu .dropdown-item,
+#app .wrapper-forms form > div #lista-socio .dropdown-menu .dropdown-item,
+#app .wrapper-forms form > div #lista-gerente .dropdown-menu .dropdown-item {
+  padding: 0.25rem 0.7rem;
+  white-space: normal;
+}
+#app .wrapper-forms form > div.form-group .titulo-indicar-horas {
+  color: #cc0000;
+  margin-top: 30px;
+  text-decoration: underline;
+}
+#app .wrapper-forms form > div.form-group label {
+  color: #091F40;
+}
+#app .wrapper-forms form > div.form-group label.label-warning {
+  color: #cc0000;
+}
+#app .wrapper-forms form > div.form-group .form-control {
+  border-radius: 2px;
+}
+#app .wrapper-forms form > div.form-group .form-control:disabled {
+  cursor: not-allowed;
+}
+#app .wrapper-forms form > div.form-group .form-control-plaintext {
+  font-weight: 600;
+}
+#app .wrapper-forms form > fieldset .alert {
+  margin-bottom: 10px !important;
+}
+#app .wrapper-forms form .multiselect.multiselect--disabled {
+  background-color: transparent;
+}
+#app .wrapper-forms form .multiselect.multiselect--disabled .multiselect__select {
+  background-color: transparent;
+}
+#app .wrapper-forms form .multiselect .multiselect__select {
+  height: calc(1.5em + 0.5rem + 2px);
+  min-height: calc(1.5em + 0.5rem + 2px);
+}
+#app .wrapper-forms form .multiselect .multiselect__select:before {
+  border-color: #343A40 transparent transparent;
+}
+#app .wrapper-forms form .multiselect .multiselect__tags {
+  border: 1px solid #ced4da;
+  height: calc(1.5em + 0.5rem + 2px);
+  min-height: calc(1.5em + 0.5rem + 2px);
+  padding: 2px 40px 0 8px;
+}
+#app .wrapper-forms form .multiselect .multiselect__tags .multiselect__tag {
+  margin-top: 1px;
+}
+#app .wrapper-forms form .multiselect .multiselect__tags .multiselect__placeholder {
+  color: #495057;
+}
+#app .wrapper-forms form .multiselect .multiselect__tags .multiselect__input {
+  font-size: 0.875rem;
+  height: calc(1.5em + 0.5rem + 2px);
+  min-height: calc(1.5em + 0.5rem + 2px);
+}
+#app .wrapper-forms form .multiselect .multiselect__tags .multiselect__input::-moz-placeholder {
+  color: #495057;
+}
+#app .wrapper-forms form .multiselect .multiselect__tags .multiselect__input:-ms-input-placeholder {
+  color: #495057;
+}
+#app .wrapper-forms form .multiselect .multiselect__tags .multiselect__input::placeholder {
+  color: #495057;
+}
+#app .wrapper-forms .wrapper-alert {
+  margin-top: 15px;
+}
+#app .wrapper-forms .wrapper-alert > div {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+#app .wrapper-forms .wrapper-alert > div .alert {
+  margin-bottom: 0px;
+  text-align: center;
+  width: 100%;
+}
