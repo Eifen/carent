@@ -345,6 +345,7 @@
           const registros = [];
           datos.forEach((item, i) => {
 
+            var variante = "";
             switch(item.id_estatus){
 
               case 1: variante = "success"; break;
