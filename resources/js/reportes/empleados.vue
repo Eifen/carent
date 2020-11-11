@@ -206,6 +206,9 @@
         <template v-slot:cell(numero)="data">
           <b>{{ data.item.numero }}</b>
         </template>
+        <template v-slot:cell(estatus)="data">
+          <b-badge :variant="data.item.variante">{{ data.item.estatus }}</b-badge>
+        </template>
         <template v-slot:custom-foot v-if="tabla.registros.length > 0">
           <b-tr>
             <b-td colspan="8">
@@ -435,6 +438,15 @@
           const registros = [];
           datos.forEach((item, i) => {
 
+            var variante = "";
+            switch(item.id_estatus){
+
+              case 1: variante = "success"; break;
+              case 2: variante = "danger"; break;
+              default: variante = "primary";
+
+            }
+
             const data = {
               numero: (i + 1),
               codigo: item.codigo,
@@ -443,7 +455,8 @@
               division: item.division,
               fecha_ingreso: item.fecha_ingreso,
               fecha_egreso: item.fecha_egreso,
-              estatus: item.estatus
+              estatus: item.estatus,
+              variante: variante
             };
 
             registros.push(data);
@@ -560,6 +573,7 @@
           self.formFiltro.campos.fechaIngreso.value = null;
           self.formFiltro.campos.fechaEgreso.min = null;
           self.formFiltro.campos.fechaEgreso.value = null;
+          self.formFiltro.campos.estatus.value = null;
           self.buscar();
 
         }
