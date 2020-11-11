@@ -421,6 +421,7 @@
           self.formFiltro.campos.rif.value = null;
           self.formFiltro.campos.socio.value = null;
           self.formFiltro.campos.razonSocial.value = null;
+          self.formFiltro.campos.estatus.value = null;
           self.buscar();
 
         }

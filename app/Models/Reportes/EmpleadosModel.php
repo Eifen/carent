@@ -82,17 +82,17 @@ class EmpleadosModel extends Model
 
     }// Fin estatusEmpleado
 
-    function repoEmpleados($id_usuario, $paginar, $supervisa, $supervisaTodo, $divisiones, $cargos, $desde = 0, $empleado = null, $fecha_ingreso = null, $fecha_egreso = null, $estatus = null, $codigo = null){
+    function repoEmpleados($paginar, $filtros){
 
-      if($divisiones == null){
+      if($filtros["divisiones"] == null){
         $sql_division = "";
       }else{
 
         $idsDivision = [];
 
-        if(is_array($divisiones)){
+        if(is_array($filtros["divisiones"])){
 
-          foreach ($divisiones as $key => $item) {
+          foreach ($filtros["divisiones"] as $key => $item) {
 
             if(!isset($item->id)){
               $item = json_decode($item);
@@ -103,7 +103,7 @@ class EmpleadosModel extends Model
 
         }else{
 
-          array_push($idsDivision,$divisiones);
+          array_push($idsDivision,$filtros["divisiones"]);
 
         }
 
@@ -112,15 +112,15 @@ class EmpleadosModel extends Model
 
       }
 
-      if($cargos == null){
+      if($filtros["cargos"] == null){
         $sql_cargos = "";
       }else{
 
         $idsCargo = [];
 
-        if(is_array($cargos)){
+        if(is_array($filtros["cargos"])){
 
-          foreach ($cargos as $key => $item) {
+          foreach ($filtros["cargos"] as $key => $item) {
 
             if(!isset($item->id)){
               $item = json_decode($item);
@@ -132,7 +132,7 @@ class EmpleadosModel extends Model
 
         }else{
 
-          array_push($idsCargo, $cargos);
+          array_push($idsCargo, $filtros["cargos"]);
 
         }
 
@@ -141,40 +141,40 @@ class EmpleadosModel extends Model
 
       }
 
-      if($supervisaTodo OR $supervisa){
+      if($filtros["supervisaTodo"] OR $filtros["supervisa"]){
 
-        if($empleado != null && trim($empleado) != ""){
-          $sql_empleado = 'AND LOWER(CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)) LIKE "%'.strtolower($empleado).'%"';
+        if($filtros["empleado"] != null && trim($filtros["empleado"]) != ""){
+          $sql_empleado = 'AND LOWER(CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)) LIKE "%'.strtolower($filtros["empleado"]).'%"';
         }else{
           $sql_empleado = "";
         }
 
       }else{
 
-        $sql_empleado = 'AND u.id = '.$id_usuario;
+        $sql_empleado = 'AND u.id = '.$filtros["id_usuario"];
 
       }
 
-      if($fecha_ingreso !== null){
-        $sql_fecha_ingreso = 'AND u.fecha_ingreso = "'.$fecha_ingreso.'"';
+      if($filtros["fecha_ingreso"] !== null){
+        $sql_fecha_ingreso = 'AND u.fecha_ingreso = "'.$filtros["fecha_ingreso"].'"';
       }else{
         $sql_fecha_ingreso = '';
       }
 
-      if($fecha_egreso !== null){
-        $sql_fecha_egreso = 'AND u.fecha_egreso = "'.$fecha_egreso.'"';
+      if($filtros["fecha_egreso"] !== null){
+        $sql_fecha_egreso = 'AND u.fecha_egreso = "'.$filtros["fecha_egreso"].'"';
       }else{
         $sql_fecha_egreso = '';
       }
 
-      if($estatus !== null){
-        $sql_estatus = 'AND u.id_estatus = '.$estatus;
+      if($filtros["estatus"] !== null){
+        $sql_estatus = 'AND u.id_estatus = '.$filtros["estatus"];
       }else{
         $sql_estatus = '';
       }
 
-      if($codigo !== null){
-        $sql_codigo = 'AND u.codigo = "'.$codigo.'"';
+      if($filtros["codigo"] !== null){
+        $sql_codigo = 'AND u.codigo LIKE "%'.$filtros["codigo"].'%"';
       }else{
         $sql_codigo = '';
       }
@@ -186,7 +186,8 @@ class EmpleadosModel extends Model
                                   ce.descripcion AS cargo,
                                   d.descripcion AS division,
                                   e.descripcion AS estatus,
-                                  u.codigo
+                                  u.codigo,
+                                  e.valor AS id_estatus
                           FROM tbl_usuario u,
                                tbl_cargo_empleado ce,
                                tbl_division d,
@@ -204,23 +205,23 @@ class EmpleadosModel extends Model
                           '.$sql_codigo.'
                         )t
                         ORDER BY empleado ASC
-                        LIMIT '.$desde.', '.$paginar);
+                        LIMIT '.$paginar["desde"].', '.$paginar["paginar"]);
 
       return $sql;
 
     }
 
-    function totalesEmpleados($id_usuario, $supervisa, $supervisaTodo, $divisiones, $cargos, $empleado = null, $fecha_ingreso = null, $fecha_egreso = null, $estatus = null, $codigo = null){
+    function totalesEmpleados($filtros){
 
-      if($divisiones == null){
+      if($filtros["divisiones"] == null){
         $sql_division = "";
       }else{
 
         $idsDivision = [];
 
-        if(is_array($divisiones)){
+        if(is_array($filtros["divisiones"])){
 
-          foreach ($divisiones as $key => $item) {
+          foreach ($filtros["divisiones"] as $key => $item) {
 
             if(!isset($item->id)){
               $item = json_decode($item);
@@ -231,7 +232,7 @@ class EmpleadosModel extends Model
 
         }else{
 
-          array_push($idsDivision,$divisiones);
+          array_push($idsDivision,$filtros["divisiones"]);
 
         }
 
@@ -240,15 +241,15 @@ class EmpleadosModel extends Model
 
       }
 
-      if($cargos == null){
+      if($filtros["cargos"] == null){
         $sql_cargos = "";
       }else{
 
         $idsCargo = [];
 
-        if(is_array($cargos)){
+        if(is_array($filtros["cargos"])){
 
-          foreach ($cargos as $key => $item) {
+          foreach ($filtros["cargos"] as $key => $item) {
 
             if(!isset($item->id)){
               $item = json_decode($item);
@@ -260,7 +261,7 @@ class EmpleadosModel extends Model
 
         }else{
 
-          array_push($idsCargo, $cargos);
+          array_push($idsCargo, $filtros["cargos"]);
 
         }
 
@@ -269,40 +270,40 @@ class EmpleadosModel extends Model
 
       }
 
-      if($supervisaTodo OR $supervisa){
+      if($filtros["supervisaTodo"] OR $filtros["supervisa"]){
 
-        if($empleado != null && trim($empleado) != ""){
-          $sql_empleado = 'AND LOWER(CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)) LIKE "%'.strtolower($empleado).'%"';
+        if($filtros["empleado"] != null && trim($filtros["empleado"]) != ""){
+          $sql_empleado = 'AND LOWER(CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)) LIKE "%'.strtolower($filtros["empleado"]).'%"';
         }else{
           $sql_empleado = "";
         }
 
       }else{
 
-        $sql_empleado = 'AND u.id = '.$id_usuario;
+        $sql_empleado = 'AND u.id = '.$filtros["id_usuario"];
 
       }
 
-      if($fecha_ingreso !== null){
-        $sql_fecha_ingreso = 'AND u.fecha_ingreso = "'.$fecha_ingreso.'"';
+      if($filtros["fecha_ingreso"] !== null){
+        $sql_fecha_ingreso = 'AND u.fecha_ingreso = "'.$filtros["fecha_ingreso"].'"';
       }else{
         $sql_fecha_ingreso = '';
       }
 
-      if($fecha_egreso !== null){
-        $sql_fecha_egreso = 'AND u.fecha_egreso = "'.$fecha_egreso.'"';
+      if($filtros["fecha_egreso"] !== null){
+        $sql_fecha_egreso = 'AND u.fecha_egreso = "'.$filtros["fecha_egreso"].'"';
       }else{
         $sql_fecha_egreso = '';
       }
 
-      if($estatus !== null){
-        $sql_estatus = 'AND u.id_estatus = '.$estatus;
+      if($filtros["estatus"] !== null){
+        $sql_estatus = 'AND u.id_estatus = '.$filtros["estatus"];
       }else{
         $sql_estatus = '';
       }
 
-      if($codigo !== null){
-        $sql_codigo = 'AND u.codigo = "'.$codigo.'"';
+      if($filtros["codigo"] !== null){
+        $sql_codigo = 'AND u.codigo LIKE "%'.$filtros["codigo"].'%"';
       }else{
         $sql_codigo = '';
       }
@@ -328,17 +329,17 @@ class EmpleadosModel extends Model
 
     }
 
-    function pagEmpleados($id_usuario, $paginar, $supervisa, $supervisaTodo, $divisiones, $cargos, $empleado = null, $fecha_ingreso = null, $fecha_egreso = null, $estatus = null, $codigo = null){
+    function pagEmpleados($paginar, $filtros){
 
-      if($divisiones == null){
+      if($filtros["divisiones"] == null){
         $sql_division = "";
       }else{
 
         $idsDivision = [];
 
-        if(is_array($divisiones)){
+        if(is_array($filtros["divisiones"])){
 
-          foreach ($divisiones as $key => $item) {
+          foreach ($filtros["divisiones"] as $key => $item) {
 
             if(!isset($item->id)){
               $item = json_decode($item);
@@ -349,7 +350,7 @@ class EmpleadosModel extends Model
 
         }else{
 
-          array_push($idsDivision,$divisiones);
+          array_push($idsDivision,$filtros["divisiones"]);
 
         }
 
@@ -358,15 +359,15 @@ class EmpleadosModel extends Model
 
       }
 
-      if($cargos == null){
+      if($filtros["cargos"] == null){
         $sql_cargos = "";
       }else{
 
         $idsCargo = [];
 
-        if(is_array($cargos)){
+        if(is_array($filtros["cargos"])){
 
-          foreach ($cargos as $key => $item) {
+          foreach ($filtros["cargos"] as $key => $item) {
 
             if(!isset($item->id)){
               $item = json_decode($item);
@@ -378,7 +379,7 @@ class EmpleadosModel extends Model
 
         }else{
 
-          array_push($idsCargo, $cargos);
+          array_push($idsCargo, $filtros["cargos"]);
 
         }
 
@@ -387,45 +388,45 @@ class EmpleadosModel extends Model
 
       }
 
-      if($supervisaTodo OR $supervisa){
+      if($filtros["supervisaTodo"] OR $filtros["supervisa"]){
 
-        if($empleado != null && trim($empleado) != ""){
-          $sql_empleado = 'AND LOWER(CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)) LIKE "%'.strtolower($empleado).'%"';
+        if($filtros["empleado"] != null && trim($filtros["empleado"]) != ""){
+          $sql_empleado = 'AND LOWER(CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)) LIKE "%'.strtolower($filtros["empleado"]).'%"';
         }else{
           $sql_empleado = "";
         }
 
       }else{
 
-        $sql_empleado = 'AND u.id = '.$id_usuario;
+        $sql_empleado = 'AND u.id = '.$filtros["id_usuario"];
 
       }
 
-      if($fecha_ingreso !== null){
-        $sql_fecha_ingreso = 'AND u.fecha_ingreso = "'.$fecha_ingreso.'"';
+      if($filtros["fecha_ingreso"] !== null){
+        $sql_fecha_ingreso = 'AND u.fecha_ingreso = "'.$filtros["fecha_ingreso"].'"';
       }else{
         $sql_fecha_ingreso = '';
       }
 
-      if($fecha_egreso !== null){
-        $sql_fecha_egreso = 'AND u.fecha_egreso = "'.$fecha_egreso.'"';
+      if($filtros["fecha_egreso"] !== null){
+        $sql_fecha_egreso = 'AND u.fecha_egreso = "'.$filtros["fecha_egreso"].'"';
       }else{
         $sql_fecha_egreso = '';
       }
 
-      if($estatus !== null){
-        $sql_estatus = 'AND u.id_estatus = '.$estatus;
+      if($filtros["estatus"] !== null){
+        $sql_estatus = 'AND u.id_estatus = '.$filtros["estatus"];
       }else{
         $sql_estatus = '';
       }
 
-      if($codigo !== null){
-        $sql_codigo = 'AND u.codigo = "'.$codigo.'"';
+      if($filtros["codigo"] !== null){
+        $sql_codigo = 'AND u.codigo LIKE "%'.$filtros["codigo"].'%"';
       }else{
         $sql_codigo = '';
       }
 
-      $sql = DB::select('SELECT CEILING( COUNT(1) / '.$paginar.') paginas
+      $sql = DB::select('SELECT CEILING( COUNT(1) / '.$paginar["paginar"].') paginas
                          FROM(
 
                            SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS empleado,

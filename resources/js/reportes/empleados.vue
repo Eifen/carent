@@ -560,6 +560,7 @@
           self.formFiltro.campos.fechaIngreso.value = null;
           self.formFiltro.campos.fechaEgreso.min = null;
           self.formFiltro.campos.fechaEgreso.value = null;
+          self.formFiltro.campos.estatus.value = null;
           self.buscar();
 
         }
