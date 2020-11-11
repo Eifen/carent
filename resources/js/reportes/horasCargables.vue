@@ -580,6 +580,7 @@
           self.formFiltro.campos.fechaHasta.value = null;
           self.formFiltro.campos.fechaHasta.disabled = true;
           self.formFiltro.campos.proyecto.value = null;
+          self.formFiltro.campos.estatus.value = null;
           self.buscar();
 
         },
