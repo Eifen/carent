@@ -6,128 +6,43 @@
       <b-form class="row" v-if="formFiltro.mostrar">
         <b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
-          description="Nombre que se le dío la proyecto"
-          label="Proyecto"
-          label-for="proyecto"
-          id="group-proyecto">
+          description="RIF del Cliente"
+          label="Rif"
+          label-for="rif"
+          id="group-rif">
           <b-form-input
-            :disabled="formFiltro.campos.proyecto.disabled"
-            id="proyecto"
-            ref="proyecto"
+            :disabled="formFiltro.campos.rif.disabled"
+            id="rif"
+            ref="rif"
             size="sm"
             type="text"
-            v-model.trim="formFiltro.campos.proyecto.value"></b-form-input>
+            v-model.trim="formFiltro.campos.rif.value"></b-form-input>
         </b-form-group>
         <b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
-          description="Razón Social del Cliente"
-          label="Cliente"
-          label-for="cliente"
-          id="group-cliente">
+          label="Razón Social"
+          label-for="razonSocial"
+          id="group-razonSocial">
           <b-form-input
-            :disabled="formFiltro.campos.cliente.disabled"
-            id="cliente"
-            ref="cliente"
+            :disabled="formFiltro.campos.razonSocial.disabled"
+            id="razonSocial"
+            ref="razonSocial"
             size="sm"
             type="text"
-            v-model.trim="formFiltro.campos.cliente.value"></b-form-input>
+            v-model.trim="formFiltro.campos.razonSocial.value"></b-form-input>
         </b-form-group>
         <b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
-          description="Nombre del Empleado"
-          label="Empleado"
-          label-for="empleado"
-          id="group-empleado">
+          label="Socio"
+          label-for="socio"
+          id="group-socio">
           <b-form-input
-            :disabled="formFiltro.campos.empleado.disabled"
-            id="empleado"
-            ref="empleado"
+            :disabled="formFiltro.campos.socio.disabled"
+            id="socio"
+            ref="socio"
             size="sm"
             type="text"
-            v-model.trim="formFiltro.campos.empleado.value"></b-form-input>
-        </b-form-group>
-        <b-form-group
-          class="form-group col-12 col-sm-6 col-md-4"
-          label="Divisiones"
-          label-for="divisiones"
-          id="group-divisiones">
-          <multiselect :clear-on-select="false"
-                       :disabled="formFiltro.campos.divisiones.disabled"
-                       :multiple="true"
-                       :options="formFiltro.campos.divisiones.listado"
-                       :preserve-search="true"
-                       :show-labels="false"
-                       id="divisiones"
-                       label="descripcion"
-                       placeholder="Seleccione..."
-                       track-by="descripcion"
-                       v-model="formFiltro.campos.divisiones.value">
-             <template slot="selection"
-                       slot-scope="{ values, search, isOpen }">
-                       <span class="multiselect__single"
-                             v-if="values.length &amp;&amp; !isOpen">{{ values.length }} seleccionado(s)</span>
-             </template>
-          </multiselect>
-        </b-form-group>
-        <b-form-group
-          class="form-group col-12 col-sm-6 col-md-4"
-          label="Cargos"
-          label-for="cargos"
-          id="group-cargos">
-          <multiselect :clear-on-select="false"
-                       :disabled="formFiltro.campos.cargos.disabled"
-                       :multiple="true"
-                       :options="formFiltro.campos.cargos.listado"
-                       :preserve-search="true"
-                       :show-labels="false"
-                       id="cargos"
-                       label="descripcion"
-                       placeholder="Seleccione..."
-                       track-by="descripcion"
-                       v-model="formFiltro.campos.cargos.value">
-             <template slot="selection"
-                       slot-scope="{ values, search, isOpen }">
-                       <span class="multiselect__single"
-                             v-if="values.length &amp;&amp; !isOpen">{{ values.length }} seleccionado(s)</span>
-             </template>
-          </multiselect>
-        </b-form-group>
-        <b-form-group
-          class="form-group col-12 col-sm-6 col-md-4"
-          label="Fecha Desde"
-          label-for="fechaDesde"
-          id="group-fechaDesde">
-          <b-form-datepicker
-            @input="fecha_hasta"
-            :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
-            :disabled="formFiltro.campos.fechaDesde.disabled"
-            :max="formFiltro.campos.fechaDesde.max"
-            id="fechaDesde"
-            label-help="Use las teclas del cursor para navegar por las fechas del calendario"
-            label-no-date-selected="Ninguna fecha seleccionada"
-            locale="es-ES"
-            placeholder="Seleccione una fecha"
-            ref="fechaDesde"
-            size="sm"
-            v-model="formFiltro.campos.fechaDesde.value"></b-form-datepicker>
-        </b-form-group>
-        <b-form-group
-          class="form-group col-12 col-sm-6 col-md-4"
-          label="Fecha Hasta"
-          label-for="fechaHasta"
-          id="group-fechaHasta">
-          <b-form-datepicker
-            :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
-            :disabled="formFiltro.campos.fechaHasta.disabled"
-            :min="formFiltro.campos.fechaHasta.min"
-            id="fechaHasta"
-            label-help="Use las teclas del cursor para navegar por las fechas del calendario"
-            label-no-date-selected="Ninguna fecha seleccionada"
-            locale="es-ES"
-            placeholder="Seleccione una fecha"
-            ref="fechaHasta"
-            size="sm"
-            v-model="formFiltro.campos.fechaHasta.value"></b-form-datepicker>
+            v-model.trim="formFiltro.campos.socio.value"></b-form-input>
         </b-form-group>
         <b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
@@ -170,17 +85,17 @@
     <b-col cols="12">
       <b-row align-h="end" v-cloak v-if="formFiltro.mostrar">
         <b-col cols="12" md="6" lg="4">
-          <b-card class="text-left card-horas-trabajadas">
+          <b-card class="text-left card-clientes">
             <b-card-text>
-              <span class="titulo">TOTAL DE HORAS TRABAJADAS</span>
+              <span class="titulo">TOTAL DE CLIENTES</span>
             </b-card-text>
             <b-card-text>
-              <span class="monto">{{ totales.horasTrabajadas }}</span>
+              <span class="monto">{{ totales.clientes }}</span>
             </b-card-text>
           </b-card>
         </b-col>
         <b-col cols="12" md="6" lg="4" class="wrapper-btn-generar-excel">
-          <download-excel :data="tabla.registros" :name="'horas_cargables.xls'">
+          <download-excel :data="tabla.registros" :name="'clientes.xls'">
             <b-button
               block
               variant="success">
@@ -255,7 +170,7 @@
 </template>
 
 <style lang="less">
-  @import '../../less/reportes/horasCargables.less';
+  @import '../../less/reportes/clientes.less';
 </style>
 
 <script>
@@ -285,41 +200,22 @@
               }
             },
             campos: {
-              cargos:{
-                disabled: true,
-                listado: [],
-                value: []
-              },
-              cliente : {
-                disabled: true,
-                value: ""
-              },
-              divisiones:{
-                disabled: true,
-                listado: [],
-                value: []
-              },
-              empleado: {
-                disabled: true,
-                value: ""
-              },
               estatus: {
                 disabled: true,
                 listado: [],
                 value: null
               },
-              fechaDesde: {
+              razonSocial: {
                 disabled: true,
                 value: null
               },
-              fechaHasta: {
+              rif:{
                 disabled: true,
-                min: null,
                 value: null
               },
-              proyecto : {
+              socio:{
                 disabled: true,
-                value: ""
+                value: null
               }
             },
             mostrar : false
@@ -344,7 +240,7 @@
             registros: []
           },
           totales: {
-            horasTrabajadas: 0
+            clientes: 0
           }
         };
       },
@@ -357,48 +253,40 @@
 
         self = this;
 
-        axios.get('/dataRepHorasCargables')
+        axios.get('/dataRepClientes')
         .then(function (response) {
 
           if(response.status === 200 && response.data.response === true){
 
             self.tabla.encabezado = [
               { key: 'numero', label: '#' },
-              { key: 'proyecto', label: 'Proyecto' },
-              { key: 'cliente', label: 'Cliente' },
-              { key: 'division', label: 'División' },
-              { key: 'empleado', label: 'Empleado' },
-              { key: 'cargo', label: 'Cargo' },
-              { key: 'horas_trabajadas', label: 'Horas' },
+              { key: 'rif', label: 'RIF' },
+              { key: 'razonSocial', label: 'Razón Social' },
+              { key: 'socio', label: 'Socio' },
               { key: 'estatus', label: 'Estatus' }
             ];
 
-            self.tabla.registros = self.registroTabla(response.data.horas);
+            self.tabla.registros = self.registroTabla(response.data.clientes);
 
-            if(response.data.horas.length === 0){
+            if(response.data.clientes.length === 0){
 
-              let mensaje = "No hay proyectos";
+              let mensaje = "No hay clientes";
               self.mostrarAlert(self.tabla.alert, true, "warning", mensaje, false, false, 0);
 
             }
 
-            self.formFiltro.campos.cargos.listado = response.data.cargos;
-            self.formFiltro.campos.divisiones.listado = response.data.divisiones;
             self.formFiltro.campos.estatus.listado = response.data.estatus;
 
-            self.totales.horasTrabajadas = (response.data.totales.horas_trabajadas) ? response.data.totales.horas_trabajadas : 0;
+            self.totales.clientes = (response.data.totales.clientes) ? response.data.totales.clientes : 0;
 
             self.tabla.paginador.paginar = response.data.paginar;
             self.tabla.paginador.numPaginas = response.data.paginas;
             self.tabla.paginador.max = parseInt(response.data.paginas);
 
-            self.formFiltro.campos.cargos.disabled = false;
-            self.formFiltro.campos.cliente.disabled = false;
-            self.formFiltro.campos.divisiones.disabled = false;
-            self.formFiltro.campos.empleado.disabled = false;
+            self.formFiltro.campos.rif.disabled = false;
+            self.formFiltro.campos.socio.disabled = false;
+            self.formFiltro.campos.razonSocial.disabled = false;
             self.formFiltro.campos.estatus.disabled = false;
-            self.formFiltro.campos.fechaDesde.disabled = false;
-            self.formFiltro.campos.proyecto.disabled = false;
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
             self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
             self.formFiltro.mostrar = true;
@@ -468,12 +356,9 @@
 
             const data = {
               numero: (i + 1),
-              proyecto: item.proyecto,
-              cliente: item.cliente,
-              division: item.division,
-              empleado: item.empleado,
-              cargo: item.cargo,
-              horas_trabajadas: item.horas_trabajadas,
+              rif: item.rif,
+              razonSocial: item.razon_social,
+              socio: item.socio,
               estatus: item.estatus,
               variante: variante
             };
@@ -487,74 +372,35 @@
         },
         buscar: function(){
 
-          self.formFiltro.campos.cargos.disabled = true;
-          self.formFiltro.campos.cliente.disabled = true;
-          self.formFiltro.campos.divisiones.disabled = true;
-          self.formFiltro.campos.empleado.disabled = true;
+          self.formFiltro.campos.rif.disabled = true;
+          self.formFiltro.campos.socio.disabled = true;
+          self.formFiltro.campos.razonSocial.disabled = true;
           self.formFiltro.campos.estatus.disabled = true;
-          self.formFiltro.campos.fechaDesde.disabled = true;
-          self.formFiltro.campos.fechaHasta.disabled = true;
-          self.formFiltro.campos.proyecto.disabled = true;
 
           self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
           self.formFiltro.btn.filtrar.disabled = true;
           self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlLoading;
           self.formFiltro.btn.limpiarFiltro.disabled = true;
 
-          //Evaluamos como filtraremos la division
-          if(self.formFiltro.campos.divisiones.value.length === 0 && self.formFiltro.campos.divisiones.listado.length > 1){
-            var param_divisiones = null;
-          }else if(self.formFiltro.campos.divisiones.value.length > 0){
-            var param_divisiones = self.formFiltro.campos.divisiones.value;
-          }else if(self.formFiltro.campos.divisiones.value.length === 0 && self.formFiltro.campos.divisiones.listado.length === 1){
-            var param_divisiones = self.formFiltro.campos.divisiones.listado[0].id;
-          }else{
-            var param_divisiones = null;
-          }
-
-          //Evaluamos como filtraremos los cargos
-          if(self.formFiltro.campos.cargos.value.length === 0 && self.formFiltro.campos.cargos.listado.length > 1){
-            var param_cargos = null;
-          }else if(self.formFiltro.campos.cargos.value.length > 0){
-
-            var param_cargos = [];
-            self.formFiltro.campos.cargos.value.forEach((cargo, index) => {
-              param_cargos.push({id: cargo.id});
-            });
-
-          }else if(self.formFiltro.campos.cargos.value.length === 0 && self.formFiltro.campos.cargos.listado.length === 1){
-            var param_cargos = self.formFiltro.campos.cargos.listado[0].id;
-          }else{
-            var param_cargos = null;
-          }
-
           //Obtenemos los valores
           let desde = (self.tabla.paginador.pagina - 1) * self.tabla.paginador.paginar;
           let parametros = {
-            cargos: param_cargos,
-            cliente: self.formFiltro.campos.cliente.value,
+            rif: self.formFiltro.campos.rif.value,
+            socio: self.formFiltro.campos.socio.value,
             desde: desde,
-            divisiones: param_divisiones,
-            empleado: self.formFiltro.campos.empleado.value,
+            razonSocial: self.formFiltro.campos.razonSocial.value,
             estatus: self.formFiltro.campos.estatus.value,
-            fechaDesde: self.formFiltro.campos.fechaDesde.value,
-            fechaHasta: self.formFiltro.campos.fechaHasta.value,
-            proyecto: self.formFiltro.campos.proyecto.value,
             paginar: self.tabla.paginador.paginar
           };
 
           //Se utiliza el metodo get para su busqueda y se envian con los parametros
-          axios.get('/buscarHorasCargables', {params: parametros})
+          axios.get('/buscarClientes', {params: parametros})
           .then(function (response) {
 
-            self.formFiltro.campos.cargos.disabled = false;
-            self.formFiltro.campos.cliente.disabled = false;
-            self.formFiltro.campos.divisiones.disabled = false;
-            self.formFiltro.campos.empleado.disabled = false;
+            self.formFiltro.campos.rif.disabled = false;
+            self.formFiltro.campos.socio.disabled = false;
+            self.formFiltro.campos.razonSocial.disabled = false;
             self.formFiltro.campos.estatus.disabled = false;
-            self.formFiltro.campos.fechaDesde.disabled = false;
-            self.formFiltro.campos.fechaHasta.disabled = (self.formFiltro.campos.fechaDesde !== null) ? false : true;
-            self.formFiltro.campos.proyecto.disabled = false;
 
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
             self.formFiltro.btn.filtrar.disabled = false;
@@ -565,42 +411,31 @@
             self.tabla.paginador.numPaginas = response.data.paginas;
             self.tabla.paginador.max = parseInt(response.data.paginas);
 
-            self.totales.horasTrabajadas = (response.data.totales.horas_trabajadas) ? response.data.totales.horas_trabajadas : 0;
+            self.totales.clientes = (response.data.totales.clientes) ? response.data.totales.clientes : 0;
 
-            self.tabla.registros = self.registroTabla(response.data.horas);
+            self.tabla.registros = self.registroTabla(response.data.clientes);
 
           }).catch(error => {
 
-          /*  self.formFiltro.proyecto.disabled = false;
-            self.formFiltro.cliente.disabled = false;
-            self.formFiltro.estatus.disabled = false;
+            self.formFiltro.campos.rif.disabled = false;
+            self.formFiltro.campos.socio.disabled = false;
+            self.formFiltro.campos.razonSocial.disabled = false;
+            self.formFiltro.campos.estatus.disabled = false;
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
             self.formFiltro.btn.filtrar.disabled = false;
             self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
-            self.formFiltro.btn.limpiarFiltro.disabled = false;*/
+            self.formFiltro.btn.limpiarFiltro.disabled = false;
 
           });
 
         },
         limpiarFiltro: function(){
 
-          self.formFiltro.campos.cargos.value = [];
-          self.formFiltro.campos.cliente.value = null;
-          self.formFiltro.campos.divisiones.value = [];
-          self.formFiltro.campos.empleado.value = null;
-          self.formFiltro.campos.fechaDesde.value = null;
-          self.formFiltro.campos.fechaHasta.min = null;
-          self.formFiltro.campos.fechaHasta.value = null;
-          self.formFiltro.campos.fechaHasta.disabled = true;
-          self.formFiltro.campos.proyecto.value = null;
+          self.formFiltro.campos.rif.value = null;
+          self.formFiltro.campos.socio.value = null;
+          self.formFiltro.campos.razonSocial.value = null;
           self.formFiltro.campos.estatus.value = null;
           self.buscar();
-
-        },
-        fecha_hasta: function(fecha_desde){
-
-          self.formFiltro.campos.fechaHasta.min = fecha_desde;
-          self.formFiltro.campos.fechaHasta.disabled = false;
 
         }
 

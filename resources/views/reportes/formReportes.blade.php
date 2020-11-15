@@ -61,6 +61,9 @@
         <b-row align-h="center" align-v="center" v-cloak>
           <b-col cols="12">
             <reporte-1 v-if="formReportes.reportes.verReporte.id === 18" :key="formReportes.reportes.verReporte.key"></reporte-1>
+            <reporte-2 v-if="formReportes.reportes.verReporte.id === 19" :key="formReportes.reportes.verReporte.key"></reporte-2>
+            <reporte-3 v-if="formReportes.reportes.verReporte.id === 20" :key="formReportes.reportes.verReporte.key"></reporte-3>
+            <reporte-4 v-if="formReportes.reportes.verReporte.id === 21" :key="formReportes.reportes.verReporte.key"></reporte-4>
           </b-col>
         </b-row>
 

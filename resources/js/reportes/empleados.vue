@@ -6,31 +6,17 @@
       <b-form class="row" v-if="formFiltro.mostrar">
         <b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
-          description="Nombre que se le dío la proyecto"
-          label="Proyecto"
-          label-for="proyecto"
-          id="group-proyecto">
+          description="Código Empleado"
+          label="Código"
+          label-for="codigo"
+          id="group-codigo">
           <b-form-input
-            :disabled="formFiltro.campos.proyecto.disabled"
-            id="proyecto"
-            ref="proyecto"
+            :disabled="formFiltro.campos.codigo.disabled"
+            id="codigo"
+            ref="codigo"
             size="sm"
             type="text"
-            v-model.trim="formFiltro.campos.proyecto.value"></b-form-input>
-        </b-form-group>
-        <b-form-group
-          class="form-group col-12 col-sm-6 col-md-4"
-          description="Razón Social del Cliente"
-          label="Cliente"
-          label-for="cliente"
-          id="group-cliente">
-          <b-form-input
-            :disabled="formFiltro.campos.cliente.disabled"
-            id="cliente"
-            ref="cliente"
-            size="sm"
-            type="text"
-            v-model.trim="formFiltro.campos.cliente.value"></b-form-input>
+            v-model.trim="formFiltro.campos.codigo.value"></b-form-input>
         </b-form-group>
         <b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
@@ -94,40 +80,39 @@
         </b-form-group>
         <b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
-          label="Fecha Desde"
-          label-for="fechaDesde"
-          id="group-fechaDesde">
+          label="Fecha Ingreso"
+          label-for="fechaIngreso"
+          id="group-fechaIngreso">
           <b-form-datepicker
-            @input="fecha_hasta"
             :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
-            :disabled="formFiltro.campos.fechaDesde.disabled"
-            :max="formFiltro.campos.fechaDesde.max"
-            id="fechaDesde"
+            :disabled="formFiltro.campos.fechaIngreso.disabled"
+            :max="formFiltro.campos.fechaIngreso.max"
+            id="fechaIngreso"
             label-help="Use las teclas del cursor para navegar por las fechas del calendario"
             label-no-date-selected="Ninguna fecha seleccionada"
             locale="es-ES"
             placeholder="Seleccione una fecha"
-            ref="fechaDesde"
+            ref="fechaIngreso"
             size="sm"
-            v-model="formFiltro.campos.fechaDesde.value"></b-form-datepicker>
+            v-model="formFiltro.campos.fechaIngreso.value"></b-form-datepicker>
         </b-form-group>
         <b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
-          label="Fecha Hasta"
-          label-for="fechaHasta"
-          id="group-fechaHasta">
+          label="Fecha Egreso"
+          label-for="fechaEgreso"
+          id="group-fechaEgreso">
           <b-form-datepicker
             :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
-            :disabled="formFiltro.campos.fechaHasta.disabled"
-            :min="formFiltro.campos.fechaHasta.min"
-            id="fechaHasta"
+            :disabled="formFiltro.campos.fechaEgreso.disabled"
+            :min="formFiltro.campos.fechaEgreso.min"
+            id="fechaEgreso"
             label-help="Use las teclas del cursor para navegar por las fechas del calendario"
             label-no-date-selected="Ninguna fecha seleccionada"
             locale="es-ES"
             placeholder="Seleccione una fecha"
-            ref="fechaHasta"
+            ref="fechaEgreso"
             size="sm"
-            v-model="formFiltro.campos.fechaHasta.value"></b-form-datepicker>
+            v-model="formFiltro.campos.fechaEgreso.value"></b-form-datepicker>
         </b-form-group>
         <b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
@@ -170,17 +155,17 @@
     <b-col cols="12">
       <b-row align-h="end" v-cloak v-if="formFiltro.mostrar">
         <b-col cols="12" md="6" lg="4">
-          <b-card class="text-left card-horas-trabajadas">
+          <b-card class="text-left card-empleados">
             <b-card-text>
-              <span class="titulo">TOTAL DE HORAS TRABAJADAS</span>
+              <span class="titulo">TOTAL DE EMPLEADOS</span>
             </b-card-text>
             <b-card-text>
-              <span class="monto">{{ totales.horasTrabajadas }}</span>
+              <span class="monto">{{ totales.empleados }}</span>
             </b-card-text>
           </b-card>
         </b-col>
         <b-col cols="12" md="6" lg="4" class="wrapper-btn-generar-excel">
-          <download-excel :data="tabla.registros" :name="'horas_cargables.xls'">
+          <download-excel :data="tabla.registros" :name="'empleados.xls'">
             <b-button
               block
               variant="success">
@@ -255,7 +240,7 @@
 </template>
 
 <style lang="less">
-  @import '../../less/reportes/horasCargables.less';
+  @import '../../less/reportes/empleados.less';
 </style>
 
 <script>
@@ -290,9 +275,9 @@
                 listado: [],
                 value: []
               },
-              cliente : {
+              codigo:{
                 disabled: true,
-                value: ""
+                value: null
               },
               divisiones:{
                 disabled: true,
@@ -301,25 +286,21 @@
               },
               empleado: {
                 disabled: true,
-                value: ""
+                value: null
               },
               estatus: {
                 disabled: true,
                 listado: [],
                 value: null
               },
-              fechaDesde: {
+              fechaIngreso: {
                 disabled: true,
                 value: null
               },
-              fechaHasta: {
+              fechaEgreso: {
                 disabled: true,
                 min: null,
                 value: null
-              },
-              proyecto : {
-                disabled: true,
-                value: ""
               }
             },
             mostrar : false
@@ -344,7 +325,7 @@
             registros: []
           },
           totales: {
-            horasTrabajadas: 0
+            empleados: 0
           }
         };
       },
@@ -357,27 +338,27 @@
 
         self = this;
 
-        axios.get('/dataRepHorasCargables')
+        axios.get('/dataRepEmpleados')
         .then(function (response) {
 
           if(response.status === 200 && response.data.response === true){
 
             self.tabla.encabezado = [
               { key: 'numero', label: '#' },
-              { key: 'proyecto', label: 'Proyecto' },
-              { key: 'cliente', label: 'Cliente' },
-              { key: 'division', label: 'División' },
+              { key: 'codigo', label: 'Código' },
               { key: 'empleado', label: 'Empleado' },
               { key: 'cargo', label: 'Cargo' },
-              { key: 'horas_trabajadas', label: 'Horas' },
+              { key: 'division', label: 'División' },
+              { key: 'fecha_ingreso', label: 'Fecha Ingreso' },
+              { key: 'fecha_egreso', label: 'Fecha Egreso' },
               { key: 'estatus', label: 'Estatus' }
             ];
 
-            self.tabla.registros = self.registroTabla(response.data.horas);
+            self.tabla.registros = self.registroTabla(response.data.empleados);
 
-            if(response.data.horas.length === 0){
+            if(response.data.empleados.length === 0){
 
-              let mensaje = "No hay proyectos";
+              let mensaje = "No hay empleados";
               self.mostrarAlert(self.tabla.alert, true, "warning", mensaje, false, false, 0);
 
             }
@@ -386,19 +367,19 @@
             self.formFiltro.campos.divisiones.listado = response.data.divisiones;
             self.formFiltro.campos.estatus.listado = response.data.estatus;
 
-            self.totales.horasTrabajadas = (response.data.totales.horas_trabajadas) ? response.data.totales.horas_trabajadas : 0;
+            self.totales.empleados = (response.data.totales.empleados) ? response.data.totales.empleados : 0;
 
             self.tabla.paginador.paginar = response.data.paginar;
             self.tabla.paginador.numPaginas = response.data.paginas;
             self.tabla.paginador.max = parseInt(response.data.paginas);
 
             self.formFiltro.campos.cargos.disabled = false;
-            self.formFiltro.campos.cliente.disabled = false;
+            self.formFiltro.campos.codigo.disabled = false;
             self.formFiltro.campos.divisiones.disabled = false;
             self.formFiltro.campos.empleado.disabled = false;
             self.formFiltro.campos.estatus.disabled = false;
-            self.formFiltro.campos.fechaDesde.disabled = false;
-            self.formFiltro.campos.proyecto.disabled = false;
+            self.formFiltro.campos.fechaIngreso.disabled = false;
+            self.formFiltro.campos.fechaEgreso.disabled = false;
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
             self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
             self.formFiltro.mostrar = true;
@@ -468,12 +449,12 @@
 
             const data = {
               numero: (i + 1),
-              proyecto: item.proyecto,
-              cliente: item.cliente,
-              division: item.division,
+              codigo: item.codigo,
               empleado: item.empleado,
               cargo: item.cargo,
-              horas_trabajadas: item.horas_trabajadas,
+              division: item.division,
+              fecha_ingreso: item.fecha_ingreso,
+              fecha_egreso: item.fecha_egreso,
               estatus: item.estatus,
               variante: variante
             };
@@ -488,13 +469,12 @@
         buscar: function(){
 
           self.formFiltro.campos.cargos.disabled = true;
-          self.formFiltro.campos.cliente.disabled = true;
+          self.formFiltro.campos.codigo.disabled = true;
           self.formFiltro.campos.divisiones.disabled = true;
           self.formFiltro.campos.empleado.disabled = true;
           self.formFiltro.campos.estatus.disabled = true;
-          self.formFiltro.campos.fechaDesde.disabled = true;
-          self.formFiltro.campos.fechaHasta.disabled = true;
-          self.formFiltro.campos.proyecto.disabled = true;
+          self.formFiltro.campos.fechaIngreso.disabled = true;
+          self.formFiltro.campos.fechaEgreso.disabled = true;
 
           self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
           self.formFiltro.btn.filtrar.disabled = true;
@@ -532,29 +512,27 @@
           let desde = (self.tabla.paginador.pagina - 1) * self.tabla.paginador.paginar;
           let parametros = {
             cargos: param_cargos,
-            cliente: self.formFiltro.campos.cliente.value,
+            codigo: self.formFiltro.campos.codigo.value,
             desde: desde,
             divisiones: param_divisiones,
             empleado: self.formFiltro.campos.empleado.value,
             estatus: self.formFiltro.campos.estatus.value,
-            fechaDesde: self.formFiltro.campos.fechaDesde.value,
-            fechaHasta: self.formFiltro.campos.fechaHasta.value,
-            proyecto: self.formFiltro.campos.proyecto.value,
+            fechaIngreso: self.formFiltro.campos.fechaIngreso.value,
+            fechaEgreso: self.formFiltro.campos.fechaEgreso.value,
             paginar: self.tabla.paginador.paginar
           };
 
           //Se utiliza el metodo get para su busqueda y se envian con los parametros
-          axios.get('/buscarHorasCargables', {params: parametros})
+          axios.get('/buscarEmpleados', {params: parametros})
           .then(function (response) {
 
             self.formFiltro.campos.cargos.disabled = false;
-            self.formFiltro.campos.cliente.disabled = false;
+            self.formFiltro.campos.codigo.disabled = false;
             self.formFiltro.campos.divisiones.disabled = false;
             self.formFiltro.campos.empleado.disabled = false;
             self.formFiltro.campos.estatus.disabled = false;
-            self.formFiltro.campos.fechaDesde.disabled = false;
-            self.formFiltro.campos.fechaHasta.disabled = (self.formFiltro.campos.fechaDesde !== null) ? false : true;
-            self.formFiltro.campos.proyecto.disabled = false;
+            self.formFiltro.campos.fechaIngreso.disabled = false;
+            self.formFiltro.campos.fechaEgreso.disabled = false;
 
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
             self.formFiltro.btn.filtrar.disabled = false;
@@ -565,19 +543,23 @@
             self.tabla.paginador.numPaginas = response.data.paginas;
             self.tabla.paginador.max = parseInt(response.data.paginas);
 
-            self.totales.horasTrabajadas = (response.data.totales.horas_trabajadas) ? response.data.totales.horas_trabajadas : 0;
+            self.totales.empleados = (response.data.totales.empleados) ? response.data.totales.empleados : 0;
 
-            self.tabla.registros = self.registroTabla(response.data.horas);
+            self.tabla.registros = self.registroTabla(response.data.empleados);
 
           }).catch(error => {
 
-          /*  self.formFiltro.proyecto.disabled = false;
-            self.formFiltro.cliente.disabled = false;
-            self.formFiltro.estatus.disabled = false;
+            self.formFiltro.campos.cargos.disabled = false;
+            self.formFiltro.campos.codigo.disabled = false;
+            self.formFiltro.campos.divisiones.disabled = false;
+            self.formFiltro.campos.empleado.disabled = false;
+            self.formFiltro.campos.estatus.disabled = false;
+            self.formFiltro.campos.fechaIngreso.disabled = false;
+            self.formFiltro.campos.fechaEgreso.disabled = false;
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
             self.formFiltro.btn.filtrar.disabled = false;
             self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
-            self.formFiltro.btn.limpiarFiltro.disabled = false;*/
+            self.formFiltro.btn.limpiarFiltro.disabled = false;
 
           });
 
@@ -585,22 +567,14 @@
         limpiarFiltro: function(){
 
           self.formFiltro.campos.cargos.value = [];
-          self.formFiltro.campos.cliente.value = null;
+          self.formFiltro.campos.codigo.value = null;
           self.formFiltro.campos.divisiones.value = [];
           self.formFiltro.campos.empleado.value = null;
-          self.formFiltro.campos.fechaDesde.value = null;
-          self.formFiltro.campos.fechaHasta.min = null;
-          self.formFiltro.campos.fechaHasta.value = null;
-          self.formFiltro.campos.fechaHasta.disabled = true;
-          self.formFiltro.campos.proyecto.value = null;
+          self.formFiltro.campos.fechaIngreso.value = null;
+          self.formFiltro.campos.fechaEgreso.min = null;
+          self.formFiltro.campos.fechaEgreso.value = null;
           self.formFiltro.campos.estatus.value = null;
           self.buscar();
-
-        },
-        fecha_hasta: function(fecha_desde){
-
-          self.formFiltro.campos.fechaHasta.min = fecha_desde;
-          self.formFiltro.campos.fechaHasta.disabled = false;
 
         }
 
