@@ -45,10 +45,6 @@ Route::get('/formBuscarCliente', function() {return view('cliente/buscarCliente'
 Route::get('/buscarClientes', 'ClienteController@buscarClientes');
 Route::get('/detalleCliente', 'ClienteController@detalleCliente');
 Route::get('/formDetalleFactCliente', function() {return view('cliente/detalleFactcliente');})->middleware('usuario.session');
-Route::get('/buscarClieProyec', 'ClienteController@buscarClieProyec');
-Route::get('/detalleClienteProy', 'ClienteController@detalleClienteProy');
-Route::post('/actualizarFactCliente', 'ClienteController@actualizarFactCliente');
-Route::post('/crearFactCliente', 'ClienteController@crearFactCliente');
 Route::get('/buscarUsuariosS', 'ClienteController@buscarUsuariosS');
 Route::get('/buscarUsuariosG', 'ClienteController@buscarUsuariosG');
 Route::get('/detalleUsuarios', 'ClienteController@detalleUsuario');
