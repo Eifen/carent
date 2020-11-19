@@ -32,13 +32,11 @@
             width: 600px;
         }
 
-        #wrapper_contenido ul {
-          list-style: none;
-          text-align: left;
-        }
-
-        #wrapper_contenido ul li:before {
-          content: '✓';
+        #wrapper_contenido .estatus{
+          color:#091F40;
+          font-size: 35px;
+          font-weight: bold;
+          margin-top: 10px;
         }
 
     </style>
@@ -51,13 +49,8 @@
         <img src="http://201.222.0.202:16000/images/logo-carent.png" height="100" class="img-fluid logo" alt="">
     </div>
     <div id="wrapper_contenido">
-        <p>Se ha registrado una nueva HORA NO CARGABLE con los siguentes datos:</p>
-        <ul>
-          <li class="list-group-item"> <b>Empleado:</b> {{ $empleado }}</li>
-          <li class="list-group-item"> <b>División:</b> {{ $division }}</li>
-          <li class="list-group-item"> <b>Concepto:</b> {{ $concepto }}</li>
-          <li class="list-group-item"> <b>Fecha de carga:</b> {{ $fecha }}</li>
-        </ul>
+        <p>Se ha actualizado el estatus de su hora no cargable a:</p>
+        <p class="estatus">{{ $estatus }}</p>
     </div>
   </div>
 

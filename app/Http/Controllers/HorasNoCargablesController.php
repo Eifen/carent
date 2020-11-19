@@ -241,7 +241,57 @@ class HorasNoCargablesController extends Controller
 
       $modificarHora = $modelo->modificarHorasNoCargables($parametrosUpdate, $id);
 
+      if($modificarHora["respuesta"] && $aprobado_por != null){
+
+        $data = [
+          "id_estatus" => $request->input("estatus"),
+          "id_usuario" => session("usuario_id")
+        ];
+        $parametros_email = $modelo->dataNotificarEstatusHoraCargada($data);
+        $this->notificarEstatusHoraCargada($parametros_email);
+
+      }
+
       return $modificarHora;
+
+    }
+
+    function notificarEstatusHoraCargada($parametros){
+
+      $datos_correo = [
+        "concepto" => $parametros["empleado"]->concepto,
+        "division" => $parametros["empleado"]->division,
+        "empleado" => $parametros["empleado"]->nombre,
+        "fecha" => date("d/m/Y H:i A")
+      ];
+
+      $destinatarios = [];
+
+      foreach ($parametros["supervisores"] as $key => $supervisor) {
+        array_push($destinatarios,$supervisor->correo);
+      }
+
+      $destinatarios = (count($destinatarios) == 0) ?  $parametros["empleado"]->correo : $destinatarios;
+
+      Mail::send('horasNoCargables.emails.horaCargada', $datos_correo, function($message) use ($destinatarios)  {
+
+          $message->from('sistema.carent@crowe.com.ve', 'CARENT')->to($destinatarios)->subject('Estatus de su Hora no cargable');
+
+      });
+
+      if(Mail::failures()){
+
+        return [
+          "message" => "No se pudo enviar el correo, intente nuevamente.",
+          "response" => false
+        ];
+
+      }
+
+      return [
+        "message" => "Enviamos sus datos a su correo, por favor revise!.",
+        "response" => true
+      ];
 
     }
 

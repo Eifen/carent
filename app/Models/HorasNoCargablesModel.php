@@ -540,6 +540,46 @@ class HorasNoCargablesModel extends Model
 
     }
 
+    function dataNotificarEstatusHoraCargada($data){
+
+      $data_usuario = DB::select('SELECT cu.correo_principal AS correo
+                                  FROM tbl_contacto_usuario cu
+                                  AND cu.id_usuario = '.$data["id_usuario"]);
+
+      $data_supervisores = DB::select('SELECT * FROM(
+                                        SELECT DISTINCT u.id,
+                                               CONCAT(
+                                                 u.nombre_1," ",
+                                                 u.nombre_2," ",
+                                                 u.apellido_1," ",
+                                                 u.apellido_2
+                                               ) AS nombre,
+                                               cu.correo_principal AS correo
+                                        FROM tbl_usuario u,
+                                             tbl_cargo_supervisa cs,
+                                             tbl_contacto_usuario cu
+                                        WHERE u.id_cargo = cs.id_cargo_supervisor
+                                        AND u.id = cu.id_usuario
+                                        AND u.id_division = '.$data["id_division"].'
+                                        AND cs.id_cargo_supervisor IN(
+                                           SELECT cs2.id_cargo_supervisor FROM tbl_cargo_supervisa cs2 WHERE cs2.id_cargo = '.$data_usuario[0]->id_cargo.'
+                                        )
+                                        GROUP BY u.id,
+                                                 u.nombre_1,
+                                                 u.nombre_2,
+                                                 u.apellido_1,
+                                                 u.apellido_2,
+                                                 cu.correo_principal
+                                        )t
+                                    ORDER BY nombre ASC');
+
+        return [
+          "empleado" => $data_usuario[0],
+          "supervisores" => $data_supervisores
+        ];
+
+    }
+
     function eliminarHorasNoCargables($id){
 
       if(DB::table('tbl_horas_no_cargables')->where("id",$id)->update(array("id_estatus" => 4))){
