@@ -258,24 +258,12 @@ class HorasNoCargablesController extends Controller
 
     function notificarEstatusHoraCargada($parametros){
 
-      $datos_correo = [
-        "concepto" => $parametros["empleado"]->concepto,
-        "division" => $parametros["empleado"]->division,
-        "empleado" => $parametros["empleado"]->nombre,
-        "fecha" => date("d/m/Y H:i A")
-      ];
+      $destinatario = $parametros["correo"];
+      $estatus = $parametros["estatus"];
 
-      $destinatarios = [];
+      Mail::send('horasNoCargables.emails.horaCargada', ["estatus" => $estatus], function($message) use ($destinatario)  {
 
-      foreach ($parametros["supervisores"] as $key => $supervisor) {
-        array_push($destinatarios,$supervisor->correo);
-      }
-
-      $destinatarios = (count($destinatarios) == 0) ?  $parametros["empleado"]->correo : $destinatarios;
-
-      Mail::send('horasNoCargables.emails.horaCargada', $datos_correo, function($message) use ($destinatarios)  {
-
-          $message->from('sistema.carent@crowe.com.ve', 'CARENT')->to($destinatarios)->subject('Estatus de su Hora no cargable');
+          $message->from('sistema.carent@crowe.com.ve', 'CARENT')->to($destinatario)->subject('Estatus de su Hora no cargable');
 
       });
 
