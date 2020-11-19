@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <style>
+
+        #body{
+            padding:20px;
+            width:100%;
+        }
+
+        #wrapper_logo{
+            display:block;
+            margin-bottom: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            width:600px;
+        }
+
+        #wrapper_contenido{
+            background-color: #E9ECEF;
+            border: 1px solid #F6A81C;
+            border-radius: 4px;
+            color: #2D323C;
+            display: block;
+            font-size:16px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 15px;
+            text-align: center;
+            width: 600px;
+        }
+
+        #wrapper_contenido .estatus{
+          color:#091F40;
+          font-size: 35px;
+          font-weight: bold;
+          margin-top: 10px;
+        }
+
+    </style>
+
+</head>
+<body>
+
+  <div id='body'>
+    <div id="wrapper_logo">
+        <img src="http://201.222.0.202:16000/images/logo-carent.png" height="100" class="img-fluid logo" alt="">
+    </div>
+    <div id="wrapper_contenido">
+        <p>Se ha actualizado el estatus de su hora no cargable a:</p>
+        <p class="estatus">{{ $estatus }}</p>
+    </div>
+  </div>
+
+</body>
+</html>
