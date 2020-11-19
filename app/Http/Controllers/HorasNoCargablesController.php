@@ -263,7 +263,7 @@ class HorasNoCargablesController extends Controller
 
       Mail::send('horasNoCargables.emails.estatusHoraCargada', ["estatus" => $estatus], function($message) use ($destinatario)  {
 
-          $message->from('sistema.carent@crowe.com.ve', 'CARENT')->to($destinatario)->subject('Estatus de su Hora no cargable');
+          $message->from('sistema.carent@crowe.com.ve', 'CARENT')->to($destinatario)->subject('Estatus de su Hora No Cargable');
 
       });
 
