@@ -1,0 +1,279 @@
+<?php
+
+namespace App\Models\Reportes;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
+
+class HorasProyectosModel extends Model
+{
+
+
+    function proyectos(){
+
+      $proyectos = DB::select('SELECT p.id AS id_proyecto,
+                                      p.descripcion
+                                FROM tbl_proyecto p');
+
+      return $proyectos;
+
+    }// Fin proyectos
+
+    function cargos(){
+
+      $cargos = DB::select('SELECT ce.id,
+                                         ce.descripcion
+                                FROM tbl_cargo_empleado ce');
+
+      return $cargos;
+
+    }// Fin cargos
+
+    function divisiones(){
+
+      $divisiones = DB::select('SELECT d.id,
+                                      d.descripcion
+                                FROM tbl_division d');
+
+      return $divisiones;
+
+    }// Fin divisiones
+   
+    function repoCantidadHorasProy($id_usuario, $paginar, $divisiones, $cargos, $desde = 0, $proyecto = null, $empleado = null, $cliente = null){
+
+      if($divisiones == null){
+        $sql_division = "";
+      }else{
+
+        $idsDivision = [];
+
+        if(is_array($divisiones)){
+
+          foreach ($divisiones as $key => $item) {
+
+            if(!isset($item->id)){
+              $item = json_decode($item);
+            }
+
+            array_push($idsDivision,$item->id);
+          }
+
+        }else{
+
+          array_push($idsDivision,$divisiones);
+
+        }
+
+        $idsDivision = implode(",", $idsDivision);
+        $sql_division = "AND u.id_division IN(".$idsDivision.")";
+
+      }
+
+      if($cargos == null){
+        $sql_cargos = "";
+      }else{
+
+        $idsCargo = [];
+
+        if(is_array($cargos)){
+
+          foreach ($cargos as $key => $item) {
+
+            if(!isset($item->id)){
+              $item = json_decode($item);
+            }
+
+            array_push($idsCargo, $item->id);
+
+          }
+
+        }else{
+
+          array_push($idsCargo, $cargos);
+
+        }
+
+        $idsCargo = implode(",", $idsCargo);
+        $sql_cargos = "AND ce.id IN(".$idsCargo.")";
+
+      }
+
+      if($proyecto != null && trim($proyecto) != ""){
+        $sql_proyecto = 'AND LOWER(p.descripcion) LIKE "%'.strtolower($proyecto).'%"';
+      }else{
+        $sql_proyecto = "";
+      }
+
+      if($cliente != null && trim($cliente) != ""){
+        $sql_cliente = 'AND LOWER(c.razon_social) LIKE "%'.strtolower($cliente).'%"';
+      }else{
+        $sql_cliente = "";
+      }
+
+      if($empleado != null && trim($empleado) != ""){
+          $sql_empleado = 'AND LOWER(CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)) LIKE "%'.strtolower($empleado).'%"';
+        }else{
+          $sql_empleado = "";
+        }
+
+      $sql = DB::select('SELECT p.id AS id_proyecto,
+                                p.descripcion AS proyecto,
+                                u.id_division,
+                                d.descripcion AS division,
+                                u.id_cargo,
+                                ce.descripcion AS cargo,
+                                CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS empleado,
+                                c.razon_social AS cliente,
+                                TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(hc.horas_trabajadas))),"%H") horas_trabajadas,
+                                (SELECT SUM(pd.horas_contratadas) FROM tbl_proyecto_divisiones pd WHERE pa.id_proyecto = pd.id_proyecto) horas_contratadas
+                         FROM tbl_horas_cargables hc,
+                              tbl_proyecto_analista pa,
+                              tbl_usuario u,
+                              tbl_proyecto p,
+                              tbl_cliente c,
+                              tbl_division d,
+                              tbl_cargo_empleado ce
+                         WHERE hc.id_proy_analista = pa.id
+                         AND pa.id_analista = u.id
+                         AND pa.id_proyecto = p.id
+                         AND p.id_cliente = c.id
+                         AND u.id_division = d.id
+                         AND u.id_cargo = ce.id
+                         '.$sql_cargos.'
+                         '.$sql_division.'
+                         '.$sql_proyecto.'
+                         '.$sql_cliente.'
+                         '.$sql_empleado.'
+                         GROUP BY p.id,
+                                  p.descripcion,
+                                  u.nombre_1,
+                                  u.nombre_2,
+                                  u.apellido_1,
+                                  u.apellido_2,
+                                  c.id,
+                                  c.razon_social, 
+                                  u.id_division,
+                                  u.id_cargo
+                          ORDER BY p.id ASC, u.id_cargo DESC
+                         LIMIT '.$desde.', '.$paginar);
+
+      return $sql;
+
+    }
+
+    function pagCantidadHorasProy($id_usuario, $paginar, $divisiones, $cargos, $proyecto = null, $empleado = null, $cliente = null){
+
+      if($divisiones == null){
+        $sql_division = "";
+      }else{
+
+        $idsDivision = [];
+
+        if(is_array($divisiones)){
+
+          foreach ($divisiones as $key => $item) {
+
+            if(!isset($item->id)){
+              $item = json_decode($item);
+            }
+
+            array_push($idsDivision,$item->id);
+          }
+
+        }else{
+
+          array_push($idsDivision,$divisiones);
+
+        }
+
+        $idsDivision = implode(",", $idsDivision);
+        $sql_division = "AND u.id_division IN(".$idsDivision.")";
+
+      }
+
+      if($cargos == null){
+        $sql_cargos = "";
+      }else{
+
+        $idsCargo = [];
+
+        if(is_array($cargos)){
+
+          foreach ($cargos as $key => $item) {
+
+            if(!isset($item->id)){
+              $item = json_decode($item);
+            }
+
+            array_push($idsCargo, $item->id);
+
+          }
+
+        }else{
+
+          array_push($idsCargo, $cargos);
+
+        }
+
+        $idsCargo = implode(",", $idsCargo);
+        $sql_cargos = "AND ce.id IN(".$idsCargo.")";
+
+      }
+
+      if($proyecto != null && trim($proyecto) != ""){
+        $sql_proyecto = 'AND LOWER(p.descripcion) LIKE "%'.strtolower($proyecto).'%"';
+      }else{
+        $sql_proyecto = "";
+      }
+
+      if($cliente != null && trim($cliente) != ""){
+        $sql_cliente = 'AND LOWER(c.razon_social) LIKE "%'.strtolower($cliente).'%"';
+      }else{
+        $sql_cliente = "";
+      }
+
+      if($empleado != null && trim($empleado) != ""){
+          $sql_empleado = 'AND LOWER(CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)) LIKE "%'.strtolower($empleado).'%"';
+        }else{
+          $sql_empleado = "";
+        }
+
+
+      $sql = DB::select('SELECT CEILING( COUNT(1) / '.$paginar.') paginas
+                         FROM(
+
+                           SELECT p.descripcion AS proyecto,
+                                  u.id_division,
+                                  u.id_cargo,
+                                  ce.descripcion AS cargo
+                           FROM tbl_horas_cargables hc,
+                                tbl_proyecto_analista pa,
+                                tbl_usuario u,
+                                tbl_proyecto p,
+                                tbl_cliente c,
+                                tbl_division d,
+                                tbl_cargo_empleado ce
+                           WHERE hc.id_proy_analista = pa.id
+                           AND pa.id_analista = u.id
+                           AND pa.id_proyecto = p.id
+                           AND p.id_cliente = c.id
+                           AND u.id_division = d.id
+                           AND u.id_cargo = ce.id
+                           '.$sql_cargos.'
+                           '.$sql_division.'
+                           '.$sql_proyecto.'
+                           '.$sql_cliente.'
+                           '.$sql_empleado.'
+                           GROUP BY p.descripcion,
+                                    u.id_division,
+                                    u.id_cargo,
+                                    c.id,
+                                    ce.descripcion
+                         )t'
+                       );
+
+      return $sql[0]->paginas;
+
+    }
+
+}
