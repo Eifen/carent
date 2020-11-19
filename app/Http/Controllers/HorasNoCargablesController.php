@@ -261,7 +261,7 @@ class HorasNoCargablesController extends Controller
       $destinatario = $parametros["correo"];
       $estatus = $parametros["estatus"];
 
-      Mail::send('horasNoCargables.emails.horaCargada', ["estatus" => $estatus], function($message) use ($destinatario)  {
+      Mail::send('horasNoCargables.emails.estatusHoraCargada', ["estatus" => $estatus], function($message) use ($destinatario)  {
 
           $message->from('sistema.carent@crowe.com.ve', 'CARENT')->to($destinatario)->subject('Estatus de su Hora no cargable');
 

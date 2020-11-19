@@ -544,12 +544,12 @@ class HorasNoCargablesModel extends Model
 
       $data_usuario = DB::select('SELECT cu.correo_principal AS correo
                                   FROM tbl_contacto_usuario cu
-                                  AND cu.id_usuario = '.$data["id_usuario"]);
+                                  WHERE cu.id_usuario = '.$data["id_usuario"]);
 
       $data_estatus = DB::select('SELECT e.descripcion estatus
                                   FROM tbl_estatus e
                                   WHERE e.tabla = "tbl_horas_no_cargables"
-                                  AND e.valor = '$data["id_estatus"]);
+                                  AND e.valor = '.$data["id_estatus"]);
 
         return [
           "correo" => $data_usuario[0]->correo,
