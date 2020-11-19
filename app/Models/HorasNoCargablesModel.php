@@ -442,6 +442,63 @@ class HorasNoCargablesModel extends Model
 
     }// Fin registrarHorasNoCargables
 
+    function dataNotificarHoraCargada($data){
+
+      $data_usuario = DB::select('SELECT CONCAT(
+                                           u.nombre_1," ",
+                                           u.nombre_2," ",
+                                           u.apellido_1," ",
+                                           u.apellido_2
+                                         ) AS nombre,
+                                         d.descripcion AS division,
+                                         (
+                                             SELECT c.descripcion
+                                             FROM tbl_concepto_horas_no_cargables c
+                                             WHERE c.id = '.$data["id_concepto"].'
+                                         ) AS concepto,
+                                         u.id_cargo,
+                                         cu.correo_principal AS correo
+                                  FROM tbl_usuario u,
+                                       tbl_division d,
+                                       tbl_contacto_usuario cu
+                                  WHERE u.id_division = d.id
+                                  AND u.id = cu.id_usuario
+                                  AND u.id = '.$data["id_usuario"]);
+
+      $data_supervisores = DB::select('SELECT * FROM(
+                                        SELECT DISTINCT u.id,
+                                               CONCAT(
+                                                 u.nombre_1," ",
+                                                 u.nombre_2," ",
+                                                 u.apellido_1," ",
+                                                 u.apellido_2
+                                               ) AS nombre,
+                                               cu.correo_principal AS correo
+                                        FROM tbl_usuario u,
+                                             tbl_cargo_supervisa cs,
+                                             tbl_contacto_usuario cu
+                                        WHERE u.id_cargo = cs.id_cargo_supervisor
+                                        AND u.id = cu.id_usuario
+                                        AND u.id_division = '.$data["id_division"].'
+                                        AND cs.id_cargo_supervisor IN(
+                                           SELECT cs2.id_cargo_supervisor FROM tbl_cargo_supervisa cs2 WHERE cs2.id_cargo = '.$data_usuario[0]->id_cargo.'
+                                        )
+                                        GROUP BY u.id,
+                                                 u.nombre_1,
+                                                 u.nombre_2,
+                                                 u.apellido_1,
+                                                 u.apellido_2,
+                                                 cu.correo_principal
+                                        )t
+                                    ORDER BY nombre ASC');
+
+        return [
+          "empleado" => $data_usuario[0],
+          "supervisores" => $data_supervisores
+        ];
+
+    }
+
     function modificarHorasNoCargables($parametros, $id){
 
       $id_usuario = DB::table('tbl_horas_no_cargables')->where('id', $id)->first();

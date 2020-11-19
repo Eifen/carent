@@ -168,9 +168,56 @@ class HorasNoCargablesController extends Controller
         $modeloAudit = new AuditoriaLogModel();
         $modeloAudit->logs_auditoria($parametros);
 
+        $data = [
+          "id_concepto" => $request->input("concepto"),
+          "id_division" => session("division_id"),
+          "id_usuario" => session("usuario_id")
+        ];
+        $parametros_email = $modelo->dataNotificarHoraCargada($data);
+        $this->notificarHoraCargada($parametros_email);
+
       }
 
       return $resgitrarHora;
+
+    }
+
+    function notificarHoraCargada($parametros){
+
+      $datos_correo = [
+        "concepto" => $parametros["empleado"]->concepto,
+        "division" => $parametros["empleado"]->division,
+        "empleado" => $parametros["empleado"]->nombre,
+        "fecha" => date("d/m/Y H:i A")
+      ];
+
+      $destinatarios = [];
+
+      foreach ($parametros["supervisores"] as $key => $supervisor) {
+        array_push($destinatarios,$supervisor->correo);
+      }
+
+      $destinatarios = (count($destinatarios) == 0) ?  $parametros["empleado"]->correo : $destinatarios;
+
+      Mail::send('horasNoCargables.emails.horaCargada', $datos_correo, function($message) use ($destinatarios)  {
+
+          $message->from('sistema.carent@crowe.com.ve', 'CARENT')->to($destinatarios)->subject('Registro de Hora no cargable');
+
+      });
+
+      if(Mail::failures()){
+
+        return [
+          "message" => "No se pudo enviar el correo, intente nuevamente.",
+          "response" => false
+        ];
+
+      }
+
+      return [
+        "message" => "Enviamos sus datos a su correo, por favor revise!.",
+        "response" => true
+      ];
 
     }
 
