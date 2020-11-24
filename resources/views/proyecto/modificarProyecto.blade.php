@@ -227,6 +227,9 @@
                     ref="monto"
                     type="text"
                     v-model.trim="$v.form.campos.monto.$model"></b-form-input>
+                    <b-input-group-append is-text>
+                      <b-icon icon="plus-square-fill"></b-icon>
+                    </b-input-group-append>
                 </b-input-group>
               </b-form-group>
               <b-form-group
@@ -335,17 +338,22 @@
                     :invalid-feedback="form.camposAtributos.divisiones.divisiones[index].horas.invalidFeedback"
                     class="col-12 col-sm-3"
                     label="Horas">
-                    <b-form-input
-                      @input="horaDivision(index)"
-                      :disabled="form.camposAtributos.divisiones.disabled"
-                      :formatter="cantidadHora"
-                      :number="true"
-                      :ref="'hora-'+index"
-                      :state="form.camposAtributos.divisiones.divisiones[index].horas.state"
-                      class="form-control hora-asignada"
-                      placeholder="0"
-                      size="sm"
-                      v-model="form.camposAtributos.divisiones.divisiones[index].horas.value"></b-form-input>
+                    <b-input-group>
+                      <b-form-input
+                        @input="horaDivision(index)"
+                        :disabled="form.camposAtributos.divisiones.disabled"
+                        :formatter="cantidadHora"
+                        :number="true"
+                        :ref="'hora-'+index"
+                        :state="form.camposAtributos.divisiones.divisiones[index].horas.state"
+                        class="form-control hora-asignada"
+                        placeholder="0"
+                        size="sm"
+                        v-model="form.camposAtributos.divisiones.divisiones[index].horas.value"></b-form-input>
+                        <b-input-group-append is-text>
+                          <b-icon icon="plus-square-fill"></b-icon>
+                        </b-input-group-append>
+                      </b-input-group>
                   </b-form-group>
                 </b-row>
               </b-form-group>
