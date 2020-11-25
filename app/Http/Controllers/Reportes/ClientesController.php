@@ -39,7 +39,7 @@ class ClientesController extends Controller
 
     }
 
-    function buscarClientes(Request $request){
+    function consultarClientes(Request $request){
 
       $modelo = new ClientesModel();
 
