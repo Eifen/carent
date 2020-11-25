@@ -336,35 +336,6 @@ class ClienteModel extends Model
     }
   }
 
-  function buscarClieProyec($idCliente){
-
-    $clientes = DB::select('SELECT *
-                            FROM tbl_proyecto
-                            WHERE id_cliente = '.$idCliente.'
-                            ORDER BY fecha_contratacion DESC');
-    if(count($clientes) > 0){
-      return $clientes;
-    }else{
-      return array();
-    }
-    }
-
-    function buscarClieProyect($idCliente){
-
-    $clientes = DB::select('SELECT p.*
-                            FROM tbl_proyecto p
-                            LEFT JOIN tbl_cliente_facturacion f
-                              ON f.id_proyecto = p.id
-                            WHERE p.id_cliente = '.$idCliente.'
-                              AND f.id_proyecto is not null
-                             ORDER BY fecha_contratacion DESC');
-    if(count($clientes) > 0){
-      return $clientes;
-    }else{
-      return array();
-    }
-    }
-
   function detalleCliente($id_cliente){
 
     $info = DB::select('SELECT id,
@@ -382,24 +353,6 @@ class ClienteModel extends Model
                                 (SELECT pa.nombre FROM tbl_paises pa WHERE pa.id = id_pais) pais
                           FROM tbl_cliente
                           WHERE id = '.$id_cliente.'
-                        ');
-    if(count($info) > 0)
-    {
-      return $info[0];
-    }else{
-      return array();
-    }
-  }
-
-  function detalleClienteProy($idclienteProy){
-
-    $info = DB::select('SELECT UPPER(descripcion) AS descripcion,
-                               fecha_contratacion,
-                               id,
-                               id_cliente,
-                               id_estatus
-                          FROM tbl_proyecto
-                          WHERE id = '.$idclienteProy.'
                         ');
     if(count($info) > 0)
     {
@@ -478,84 +431,6 @@ class ClienteModel extends Model
       return array();
     }
   }
-
-  function CrearFactCliente($parametros){
-
-    DB::beginTransaction();
-
-    $data = array(  "id_cliente" => $parametros["id_cliente"],
-                    "id_proyecto" => $parametros["id_proyecto"],
-                    "id_parroquia_factura" => $parametros["parroquiafa"],
-                    "ciudad_factura" => $parametros["ciudad_factura"],
-                    "avenida_calle_factura" => $parametros["avenida_calle_factura"],
-                    "edificio_quinta_factura" => $parametros["edificio_quinta_factura"],
-                    "piso_factura" => $parametros["piso_factura"],
-                    "numero_factura" => $parametros["numero_factura"],
-                    "telefono_factura" => $parametros["telefono_factura"],
-                    "fax_factura" => $parametros["fax_factura"],
-                    "email_factura" => $parametros["correo_factura"],
-                    "id_estatus" => 1);
-    $contacto = DB::table('tbl_cliente_facturacion')->insert($data);
-
-    $cliente = DB::select('SELECT c.razon_social FROM tbl_cliente c WHERE c.id = '.$parametros["id_cliente"].'');
-    $proyecto = DB::select('SELECT UPPER(p.descripcion) AS descripcion FROM tbl_proyecto p WHERE p.id = '.$parametros["id_proyecto"].'');
-
-    if($contacto){
-
-      DB::commit();
-      return array(
-        "proyecto" => $proyecto[0]->descripcion,
-        "razon_social" => $cliente[0]->razon_social,
-        "response" => true,
-        "message" => "Detalle de Facturacion del Cliente Creada con Éxito."
-      );
-
-    }else{
-
-      DB::rollBack();
-      return array("response" => false, "message" => "Error al tratar de crear el cliente.");
-
-    }
-  }// Fin crearCliente
-
-  function actualizarFactCliente($parametros){
-
-    DB::beginTransaction();
-
-    try {
-
-      $data = array(
-                    "id_parroquia_factura" => $parametros["parroquiafa"],
-                    "ciudad_factura" => $parametros["ciudad_factura"],
-                    "avenida_calle_factura" => $parametros["avenida_calle_factura"],
-                    "edificio_quinta_factura" => $parametros["edificio_quinta_factura"],
-                    "piso_factura" => $parametros["piso_factura"],
-                    "numero_factura" => $parametros["numero_factura"],
-                    "telefono_factura" => $parametros["telefono_factura"],
-                    "fax_factura" => $parametros["fax_factura"],
-                    "email_factura" => $parametros["correo_factura"]);
-        $contacto = DB::table('tbl_cliente_facturacion')->where("id", $parametros["id_fact_cliente"])->update($data);
-
-        $cliente = DB::select('SELECT c.razon_social FROM tbl_cliente c WHERE c.id = '.$parametros["id_cliente"].'');
-        $proyecto = DB::select('SELECT UPPER(p.descripcion) AS descripcion FROM tbl_proyecto p WHERE p.id = '.$parametros["id_proyecto"].'');
-
-        DB::commit();
-
-      return array(
-        "proyecto" => $proyecto[0]->descripcion,
-        "razon_social" => $cliente[0]->razon_social,
-        "response" => true,
-        "message" => "Factura Cliente actualizada con Éxito!."
-      );
-
-    } catch(\Illuminate\Database\QueryException $ex){
-
-      DB::rollBack();
-      return array("response" => false, "message" => "Error al tratar de actualizar la información la factura del cliente.");
-
-    }
-
-  }// Fin
 
   function modificarCliente($parametros){
 

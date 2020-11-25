@@ -394,7 +394,7 @@
           };
 
           //Se utiliza el metodo get para su busqueda y se envian con los parametros
-          axios.get('/buscarClientes', {params: parametros})
+          axios.get('/consultarClientes', {params: parametros})
           .then(function (response) {
 
             self.formFiltro.campos.rif.disabled = false;
