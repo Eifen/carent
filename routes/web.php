@@ -133,10 +133,7 @@ Route::get('/buscarClientesProyectos', 'Reportes\ClientesProyectoController@busc
 Route::get('/dataRepEmpleados', 'Reportes\EmpleadosController@dataRepEmpleados')->middleware('usuario.session');
 Route::get('/buscarEmpleados', 'Reportes\EmpleadosController@buscarEmpleados')->middleware('usuario.session');
 Route::get('/dataRepClientes', 'Reportes\ClientesController@dataRepClientes')->middleware('usuario.session');
-<<<<<<< HEAD
 Route::get('/buscarClientes', 'Reportes\ClientesController@buscarClientes')->middleware('usuario.session');
 Route::get('/dataRepHorasProyectos', 'Reportes\HorasProyectosController@dataRepHorasProyectos')->middleware('usuario.session');
 Route::get('/buscarHorasProyectos', 'Reportes\HorasProyectosController@buscarHorasProyectos')->middleware('usuario.session');
-=======
 Route::get('/consultarClientes', 'Reportes\ClientesController@consultarClientes')->middleware('usuario.session');
->>>>>>> calidad
