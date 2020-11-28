@@ -45,10 +45,6 @@ Route::get('/formBuscarCliente', function() {return view('cliente/buscarCliente'
 Route::get('/buscarClientes', 'ClienteController@buscarClientes');
 Route::get('/detalleCliente', 'ClienteController@detalleCliente');
 Route::get('/formDetalleFactCliente', function() {return view('cliente/detalleFactcliente');})->middleware('usuario.session');
-Route::get('/buscarClieProyec', 'ClienteController@buscarClieProyec');
-Route::get('/detalleClienteProy', 'ClienteController@detalleClienteProy');
-Route::post('/actualizarFactCliente', 'ClienteController@actualizarFactCliente');
-Route::post('/crearFactCliente', 'ClienteController@crearFactCliente');
 Route::get('/buscarUsuariosS', 'ClienteController@buscarUsuariosS');
 Route::get('/buscarUsuariosG', 'ClienteController@buscarUsuariosG');
 Route::get('/detalleUsuarios', 'ClienteController@detalleUsuario');
@@ -132,3 +128,11 @@ Route::get('/formReportes', 'Reportes\ReportesController@formReportes')->middlew
 Route::get('/dataInicialFormReportes', 'Reportes\ReportesController@dataInicialFormReportes')->middleware('usuario.session');
 Route::get('/dataRepHorasCargables', 'Reportes\HorasCargablesController@dataRepHorasCargables')->middleware('usuario.session');
 Route::get('/buscarHorasCargables', 'Reportes\HorasCargablesController@buscarHorasCargables')->middleware('usuario.session');
+Route::get('/dataRepClientesProyectos', 'Reportes\ClientesProyectoController@dataRepClientesProyectos')->middleware('usuario.session');
+Route::get('/buscarClientesProyectos', 'Reportes\ClientesProyectoController@buscarClientesProyectos')->middleware('usuario.session');
+Route::get('/dataRepEmpleados', 'Reportes\EmpleadosController@dataRepEmpleados')->middleware('usuario.session');
+Route::get('/buscarEmpleados', 'Reportes\EmpleadosController@buscarEmpleados')->middleware('usuario.session');
+Route::get('/dataRepClientes', 'Reportes\ClientesController@dataRepClientes')->middleware('usuario.session');
+Route::get('/dataRepHorasProyectos', 'Reportes\HorasProyectosController@dataRepHorasProyectos')->middleware('usuario.session');
+Route::get('/buscarHorasProyectos', 'Reportes\HorasProyectosController@buscarHorasProyectos')->middleware('usuario.session');
+Route::get('/consultarClientes', 'Reportes\ClientesController@consultarClientes')->middleware('usuario.session');

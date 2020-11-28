@@ -46,7 +46,7 @@
 
   <div id='body'>
     <div id="wrapper_logo">
-        <img src="https://github.com/sofguar/carent/blob/master/public/images/logo-carent.png?raw=true" height="100" class="img-fluid logo" alt="">
+        <img src="http://201.222.0.202:16000/images/logo-carent.png" height="100" class="img-fluid logo" alt="">
     </div>
     <div id="wrapper_contenido">
         <p>Se ha solicitado la recuperación de su contraseña, si usted no ha realizado esta acción por favor notificar al administrador del sistema.</p>

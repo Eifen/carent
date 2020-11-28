@@ -1,1 +1,107 @@
-html{overflow-x:hidden}[v-cloak]{display:none}#app{background-color:#e9ecef;min-height:100vh}#app>.row:nth-child(2){margin-bottom:40px;margin-top:40px}#app>.row form{background-color:#fff;border:1px solid rgba(0,0,0,.13);border-radius:3px;margin-bottom:50px;margin-left:0;margin-right:0;padding:15px;transition:all .3s}#app>.row form:hover{box-shadow:0 5px 5px 0 rgba(0,0,0,.18)}#app>.row form>div #lista-cliente .btn,#app>.row form>div #lista-gerente .btn,#app>.row form>div #lista-socio .btn{border:none;box-shadow:none!important;padding:0!important}#app>.row form>div #lista-cliente .dropdown-menu,#app>.row form>div #lista-gerente .dropdown-menu,#app>.row form>div #lista-socio .dropdown-menu{width:100%}#app>.row form>div #lista-cliente .dropdown-menu .dropdown-item,#app>.row form>div #lista-gerente .dropdown-menu .dropdown-item,#app>.row form>div #lista-socio .dropdown-menu .dropdown-item{padding:.25rem .7rem;white-space:normal}#app>.row form>div.form-group .titulo-indicar-horas{color:#c00;margin-top:30px;text-decoration:underline}#app>.row form>div.form-group label{color:#091f40}#app>.row form>div.form-group label.label-warning{color:#c00}#app>.row form>div.form-group .form-control{border-radius:2px}#app>.row form>div.form-group .form-control:disabled{cursor:not-allowed}#app>.row form>div.form-group .form-control-plaintext{font-weight:600}#app>.row form>fieldset .alert{margin-bottom:10px!important}#app>.row form .multiselect.multiselect--disabled,#app>.row form .multiselect.multiselect--disabled .multiselect__select{background-color:transparent}#app>.row form .multiselect .multiselect__select{height:calc(1.5em + .5rem + 2px);min-height:calc(1.5em + .5rem + 2px)}#app>.row form .multiselect .multiselect__select:before{border-color:#343a40 transparent transparent}#app>.row form .multiselect .multiselect__tags{border:1px solid #ced4da;height:calc(1.5em + .5rem + 2px);min-height:calc(1.5em + .5rem + 2px);padding:2px 40px 0 8px}#app>.row form .multiselect .multiselect__tags .multiselect__tag{margin-top:1px}#app>.row form .multiselect .multiselect__tags .multiselect__placeholder{color:#495057}#app>.row form .multiselect .multiselect__tags .multiselect__input{font-size:.875rem;height:calc(1.5em + .5rem + 2px);min-height:calc(1.5em + .5rem + 2px)}#app>.row form .multiselect .multiselect__tags .multiselect__input::-moz-placeholder{color:#495057}#app>.row form .multiselect .multiselect__tags .multiselect__input:-ms-input-placeholder{color:#495057}#app>.row form .multiselect .multiselect__tags .multiselect__input::placeholder{color:#495057}
+html {
+  overflow-x: hidden;
+}
+[v-cloak] {
+  display: none;
+}
+#app {
+  background-color: #E9ECEF;
+  min-height: calc(100vh);
+}
+#app > .row:nth-child(2) {
+  margin-bottom: 40px;
+  margin-top: 40px;
+}
+#app > .row form {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.13);
+  border-radius: 3px;
+  margin-bottom: 50px;
+  margin-left: 0px;
+  margin-right: 0px;
+  padding: 15px;
+  transition: all 0.3s;
+}
+#app > .row form:hover {
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+}
+#app > .row form > div #lista-cliente .btn,
+#app > .row form > div #lista-socio .btn,
+#app > .row form > div #lista-gerente .btn {
+  border: none;
+  box-shadow: none !important;
+  padding: 0px !important;
+}
+#app > .row form > div #lista-cliente .dropdown-menu,
+#app > .row form > div #lista-socio .dropdown-menu,
+#app > .row form > div #lista-gerente .dropdown-menu {
+  width: 100%;
+}
+#app > .row form > div #lista-cliente .dropdown-menu .dropdown-item,
+#app > .row form > div #lista-socio .dropdown-menu .dropdown-item,
+#app > .row form > div #lista-gerente .dropdown-menu .dropdown-item {
+  padding: 0.25rem 0.7rem;
+  white-space: normal;
+}
+#app > .row form > div.form-group .titulo-indicar-horas {
+  color: #cc0000;
+  margin-top: 30px;
+  text-decoration: underline;
+}
+#app > .row form > div.form-group label {
+  color: #091F40;
+}
+#app > .row form > div.form-group label.label-warning {
+  color: #cc0000;
+}
+#app > .row form > div.form-group .form-control {
+  border-radius: 2px;
+}
+#app > .row form > div.form-group .form-control:disabled {
+  cursor: not-allowed;
+}
+#app > .row form > div.form-group .form-control-plaintext {
+  font-weight: 600;
+}
+#app > .row form > fieldset .alert {
+  margin-bottom: 10px !important;
+}
+#app > .row form .multiselect.multiselect--disabled {
+  background-color: transparent;
+}
+#app > .row form .multiselect.multiselect--disabled .multiselect__select {
+  background-color: transparent;
+}
+#app > .row form .multiselect .multiselect__select {
+  height: calc(1.5em + 0.5rem + 2px);
+  min-height: calc(1.5em + 0.5rem + 2px);
+}
+#app > .row form .multiselect .multiselect__select:before {
+  border-color: #343A40 transparent transparent;
+}
+#app > .row form .multiselect .multiselect__tags {
+  border: 1px solid #ced4da;
+  height: calc(1.5em + 0.5rem + 2px);
+  min-height: calc(1.5em + 0.5rem + 2px);
+  padding: 2px 40px 0 8px;
+}
+#app > .row form .multiselect .multiselect__tags .multiselect__tag {
+  margin-top: 1px;
+}
+#app > .row form .multiselect .multiselect__tags .multiselect__placeholder {
+  color: #495057;
+}
+#app > .row form .multiselect .multiselect__tags .multiselect__input {
+  font-size: 0.875rem;
+  height: calc(1.5em + 0.5rem + 2px);
+  min-height: calc(1.5em + 0.5rem + 2px);
+}
+#app > .row form .multiselect .multiselect__tags .multiselect__input::-moz-placeholder {
+  color: #495057;
+}
+#app > .row form .multiselect .multiselect__tags .multiselect__input:-ms-input-placeholder {
+  color: #495057;
+}
+#app > .row form .multiselect .multiselect__tags .multiselect__input::placeholder {
+  color: #495057;
+}
