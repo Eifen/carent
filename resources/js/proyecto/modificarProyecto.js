@@ -209,7 +209,52 @@ new Vue({
       },
       mostrar: false
     },
-    loading: true
+    loading: true,
+    modalAgregarMonto: {
+      alert: {
+        contador: false,
+        iconCerrar: false,
+        mensaje: "",
+        mostrar: false,
+        ocultarSeg: 0,
+        variante: ""
+      },
+      botones: {
+        cancelar: {
+          disabled: false,
+          html: "No, deseo cancelar esta acción",
+          show: false
+        },
+        confirmar: {
+          html: "Si, quiero agregar el monto!",
+          show: true
+        },
+        submit: {
+          disabled: false,
+          html: "",
+          htmlInit: "Agregar monto",
+          htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
+          show: true
+        }
+      },
+      footer: {
+        hide: true
+      },
+      form: {
+        campos: {
+          montoAdicional: {
+            autonumeric: null,
+            decPlace: 2,
+            decString: ",",
+            disabled: true,
+            invalidFeedback: "",
+            state: null,
+            thouSep: ".",
+            value: null
+          }
+        }
+      }
+    }
   },
   validations: {
     form:{
@@ -248,6 +293,17 @@ new Vue({
         horas: {
           required,
           minValue: minValue(1)
+        }
+      }
+    },
+    modalAgregarMonto: {
+      form: {
+        campos: {
+          montoAdicional: {
+            value: {
+              required
+            }
+          }
         }
       }
     }
@@ -370,12 +426,47 @@ new Vue({
 
     }, 1000);
 
+    self.$refs["modal-agregar-monto"].$on('shown', () => {
+
+      self.enableDisabledForm(self.modalAgregarMonto.form.campos);
+
+      self.modalAgregarMonto.botones.submit.html = self.modalAgregarMonto.botones.submit.htmlInit;
+      self.modalAgregarMonto.botones.submit.show = true;
+      self.modalAgregarMonto.botones.cancelar.show = false;
+
+      if(self.form.camposAtributos.monto.autonumeric === null){
+
+        let montoA = self.$refs["montoAdicional"].$el
+
+        self.modalAgregarMonto.form.campos.montoAdicional.autonumeric = new AutoNumeric(montoA, {
+          decimalPlaces: 2,
+          decimalCharacter: ',',
+          digitGroupSeparator: '.',
+          emptyInputBehavior: 0,
+          maximumValue: '99999999999999999999.99',
+          minimumValue: 0,
+          modifyValueOnWheel: false
+        });
+
+      }
+
+    });
+
+    self.$refs["modal-agregar-monto"].$on('hidden', () => {
+
+      self.modalAgregarMonto.footer.hide = true;
+
+      self.enableDisabledForm(self.modalAgregarMonto.form.campos);
+      self.mostrarAlertForm(self.modalAgregarMonto.alert);
+
+    });
+
   },
   methods:{
 
     buscarCliente: function(){
 
-      self.limpiarMensajeError(self.form.camposAtributos.cliente);
+      self.cleanFieldForm(self.form.camposAtributos.cliente);
       self.$refs["ref-lista-cliente"].hide();
       self.form.camposAtributos.cliente.listaDropdown.listado = [];
       self.form.camposAtributos.cliente.listaDropdown.noResultado = false;
@@ -461,7 +552,7 @@ new Vue({
     },
     buscarSocio: function(){
 
-      self.limpiarMensajeError(self.form.camposAtributos.socio);
+      self.cleanFieldForm(self.form.camposAtributos.socio);
       self.$refs["ref-lista-socio"].hide();
       self.form.camposAtributos.socio.listaDropdown.listado = [];
       self.form.camposAtributos.socio.listaDropdown.noResultado = false;
@@ -521,7 +612,7 @@ new Vue({
     },
     buscarGerente: function(){
 
-      self.limpiarMensajeError(self.form.camposAtributos.gerente);
+      self.cleanFieldForm(self.form.camposAtributos.gerente);
       self.$refs["ref-lista-gerente"].hide();
       self.form.camposAtributos.gerente.listaDropdown.listado = [];
       self.form.camposAtributos.gerente.listaDropdown.noResultado = false;
@@ -589,7 +680,7 @@ new Vue({
         self.form.camposAtributos.monto.disabled = true;
       }
 
-      self.limpiarMensajeError(self.form.camposAtributos.monto);
+      self.cleanFieldForm(self.form.camposAtributos.monto);
 
     },
     confirmarModificarProyecto: function(){
@@ -609,8 +700,6 @@ new Vue({
         }
 
       });
-
-      var formValido = true;
 
       const arrayCampos = Object.keys(self.form.campos);
       for(var i = 0; i <= (arrayCampos.length - 1); i++){
@@ -873,7 +962,7 @@ new Vue({
     },
     horaDivision: function(index){
 
-      self.limpiarMensajeError(self.form.camposAtributos.divisiones.divisiones[index].horas);
+      self.cleanFieldForm(self.form.camposAtributos.divisiones.divisiones[index].horas);
       self.horasTotales();
 
     },
@@ -889,7 +978,7 @@ new Vue({
 
       self.form.campos.horas = total;
 
-      self.limpiarMensajeError(self.form.camposAtributos.horas);
+      self.cleanFieldForm(self.form.camposAtributos.horas);
 
     },
     gerenteDivision: function(index, id_division, id_gerente = null){
@@ -940,13 +1029,7 @@ new Vue({
 
       self.form.campos.horas = total;
 
-      self.limpiarMensajeError(self.form.camposAtributos.horas);
-
-    },
-    limpiarMensajeError: function(objeto){
-
-      objeto.state = null;
-      objeto.invalidFeedback = "";
+      self.cleanFieldForm(self.form.camposAtributos.horas);
 
     },
     mostrarAlertForm: function(alert, mostrar = false, variante = "", mensaje = "", iconCerrar = false, contador = false, ocultarSeg = 0){
@@ -972,6 +1055,90 @@ new Vue({
       }
 
     },
+    agregar_monto_adicional: function(){
+
+      var formValido = true;
+
+      self.mostrarAlertForm(self.modalAgregarMonto.alert);
+
+      Object.keys(self.modalAgregarMonto.form.campos).forEach((indice, i) => {
+
+        if(self.modalAgregarMonto.form.campos[indice].hasOwnProperty("state")){
+          self.modalAgregarMonto.form.campos[indice].state = (self.modalAgregarMonto.form.campos[indice].state === true) ? true : null;
+        }
+
+        if(self.modalAgregarMonto.form.campos[indice].hasOwnProperty("invalidFeedback")){
+          self.modalAgregarMonto.form.campos[indice].invalidFeedback = "";
+        }
+
+      });
+
+      const arrayCampos = Object.keys(self.modalAgregarMonto.form.campos);
+      for(var i = 0; i <= (arrayCampos.length - 1); i++){
+
+        let indice = arrayCampos[i];
+        const campo = self.$v.modalAgregarMonto.form.campos[indice].value;
+        campo.$touch();
+
+        if(campo.$invalid){
+
+          self.modalAgregarMonto.form.campos[indice].state = false;
+          const valorCampo = self.$v.modalAgregarMonto.form.campos[indice].value.$model;
+
+          const arrayParams = Object.keys(campo.$params);
+          for(var j = 0; j <= (arrayParams.length - 1); j++){
+
+            let mensajeError = self.validadorMensajes(arrayParams[j], campo);
+            self.modalAgregarMonto.form.campos[indice].invalidFeedback = mensajeError.mensaje;
+
+            if(!mensajeError.respuesta){
+              break
+            }
+
+          }
+
+          zenscroll.toY(self.$refs[indice].$el);
+          formValido = false;
+          break;
+
+        }
+
+      }
+
+      if(formValido){
+
+        /*self.form.botones.confirmar.show = false;
+        self.form.botones.submit.show = true;
+        self.form.botones.cancelar.show = true;*/
+
+        self.mostrarAlertForm(self.modalAgregarMonto.alert, true, "warning", "¿Está seguro de agregar este monto adicional?.", false, false, 0);
+        self.modalAgregarMonto.footer.hide = false;
+
+      }
+
+    },
+    cleanFieldForm: function(field){
+
+      field.state = null;
+      field.disabled = false;
+
+    },
+    enableDisabledForm: function(form){
+
+      Object.keys(form).forEach((indice, i) => {
+
+        if(form[indice].hasOwnProperty("state")){
+          form[indice].state = null;
+        }
+
+        if(form[indice].hasOwnProperty("disabled")){
+          form[indice].disabled = false;
+        }
+
+      });
+
+    }
+
   }// Fin methods
 
 });

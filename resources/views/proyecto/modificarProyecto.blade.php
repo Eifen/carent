@@ -15,12 +15,12 @@
     </head>
     <body>
 
-      <div id="app" class="container-fluid" v-on:keypress="keyboard">
+      <div id="app" class="container-fluid" v-on:keypress="keyboard" v-cloak>
 
         <loading :loading="loading" v-show="loading"></loading>
-        <menu-principal v-cloak></menu-principal>
+        <menu-principal></menu-principal>
 
-        <b-row align-h="center" v-cloak>
+        <b-row align-h="center">
           <b-col cols="12" md="4" lg="2">
             <b-button
               block
@@ -30,7 +30,7 @@
           </b-col>
         </b-row>
 
-        <b-row align-h="center" align-v="center" v-cloak>
+        <b-row align-h="center" align-v="center">
           <b-col cols="12" md="9" lg="8" v-if="form.mostrar">
             <h4>Estas Modificando un Proyecto</h4>
             <b-form class="row">
@@ -42,7 +42,7 @@
                 label-for="descripcion"
                 id="group-descripcion">
                 <b-form-input
-                  @input="limpiarMensajeError(form.camposAtributos.descripcion)"
+                  @input="cleanFieldForm(form.camposAtributos.descripcion)"
                   :disabled="form.camposAtributos.descripcion.disabled"
                   :state="form.camposAtributos.descripcion.state"
                   autocomplete="off"
@@ -90,7 +90,7 @@
                 label-for="estatus"
                 id="group-estatus">
                 <b-form-select
-                  @change="limpiarMensajeError(form.camposAtributos.estatus)"
+                  @change="cleanFieldForm(form.camposAtributos.estatus)"
                   :disabled="form.camposAtributos.estatus.disabled"
                   :options="comboEstatus"
                   :state="form.camposAtributos.estatus.state"
@@ -111,7 +111,7 @@
                 label-for="fechaContratacion"
                 id="group-fechaContratacion">
                 <b-form-datepicker
-                  @input="limpiarMensajeError(form.camposAtributos.fechaContratacion)"
+                  @input="cleanFieldForm(form.camposAtributos.fechaContratacion)"
                   :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
                   :disabled="form.camposAtributos.fechaContratacion.disabled"
                   :max="form.camposAtributos.fechaContratacion.max"
@@ -219,7 +219,7 @@
                 id="group-monto">
                 <b-input-group :prepend="form.camposAtributos.montoEn.simbolo" size="sm">
                   <b-form-input
-                    @input="limpiarMensajeError(form.camposAtributos.monto)"
+                    @input="cleanFieldForm(form.camposAtributos.monto)"
                     :disabled="form.camposAtributos.monto.disabled"
                     :state="form.camposAtributos.monto.state"
                     autocomplete="off"
@@ -227,8 +227,12 @@
                     ref="monto"
                     type="text"
                     v-model.trim="$v.form.campos.monto.$model"></b-form-input>
-                    <b-input-group-append is-text>
-                      <b-icon icon="plus-square-fill"></b-icon>
+                    <b-input-group-append v-b-modal="'modal-agregar-monto'">
+                      <b-button
+                        size="sm"
+                        variant="success">
+                        Montos Adicionales
+                      </b-button>
                     </b-input-group-append>
                 </b-input-group>
               </b-form-group>
@@ -240,7 +244,7 @@
                 label-for="empresa"
                 id="group-empresa">
                 <b-form-select
-                  @change="limpiarMensajeError(form.camposAtributos.empresa)"
+                  @change="cleanFieldForm(form.camposAtributos.empresa)"
                   :disabled="form.camposAtributos.empresa.disabled"
                   :options="comboEmpresas"
                   :state="form.camposAtributos.empresa.state"
@@ -260,7 +264,7 @@
                 label-for="divisiones"
                 id="group-divisiones">
                 <multiselect @input="asignarHoras"
-                             @Open="limpiarMensajeError(form.camposAtributos.divisiones)"
+                             @Open="cleanFieldForm(form.camposAtributos.divisiones)"
                              :clear-on-select="false"
                              :close-on-select="false"
                              :disabled="form.camposAtributos.divisiones.disabled"
@@ -317,7 +321,7 @@
                     class="col-12 col-sm-5"
                     label="Gerente">
                     <b-form-select
-                      @change="limpiarMensajeError(form.camposAtributos.divisiones.divisiones[index].gerente)"
+                      @change="cleanFieldForm(form.camposAtributos.divisiones.divisiones[index].gerente)"
                       :disabled="form.camposAtributos.divisiones.divisiones[index].gerente.disabled"
                       :options="form.camposAtributos.divisiones.divisiones[index].gerente.listado"
                       :ref="'division-'+index"
@@ -405,6 +409,66 @@
             </b-row>
           </b-col>
         </b-row>
+
+        <b-modal
+          :hide-footer="modalAgregarMonto.footer.hide"
+          :id="'modal-agregar-monto'"
+          :no-close-on-backdrop="true"
+          :ref="'modal-agregar-monto'"
+          centered
+          size="lg">
+          <template v-slot:modal-title>
+            Montos adicionales para el proyecto
+          </template>
+          <b-form>
+            <b-form-group
+              label="Monto Adicional"
+              label-for="montoAdicional"
+              id="laber-montoAdicional">
+              <b-input-group size="sm">
+                <b-form-input
+                  @input="cleanFieldForm(modalAgregarMonto.form.campos.montoAdicional)"
+                  :disabled="modalAgregarMonto.form.campos.montoAdicional.disabled"
+                  :state="modalAgregarMonto.form.campos.montoAdicional.state"
+                  autocomplete="off"
+                  id="montoAdicional"
+                  ref="montoAdicional"
+                  type="text"
+                  v-model.trim="$v.modalAgregarMonto.form.campos.montoAdicional.value.$model"></b-form-input>
+                <b-input-group-append v-b-modal="'modal-agregar-monto'">
+                  <b-button
+                    @click="agregar_monto_adicional"
+                    :disabled="modalAgregarMonto.botones.submit.disabled"
+                    size="sm"
+                    v-html="modalAgregarMonto.botones.submit.html"
+                    v-if="modalAgregarMonto.botones.submit.show"
+                    variant="success">
+                  </b-button>
+                </b-input-group-append>
+                <b-form-invalid-feedback>
+                    @{{ modalAgregarMonto.form.campos.montoAdicional.invalidFeedback }}
+                </b-form-invalid-feedback>
+              </b-input-group>
+            </b-form-group>
+          </b-form>
+          <template v-slot:modal-footer="{ ok, cancel, hide }">
+            <alert :contador="modalAgregarMonto.alert.contador"
+                   :icono-cerrar="modalAgregarMonto.alert.iconCerrar"
+                   :mensaje="modalAgregarMonto.alert.mensaje"
+                   :mostrar="modalAgregarMonto.alert.mostrar"
+                   :ocultar-seg="modalAgregarMonto.alert.ocultarSeg"
+                   :variante="modalAgregarMonto.alert.variante">
+            </alert>
+            <b-button
+              @click="cancel()"
+              :disabled="modalAgregarMonto.botones.cancelar.disabled"
+              size="sm"
+              v-html="modalAgregarMonto.botones.cancelar.html"
+              v-if="modalAgregarMonto.botones.cancelar.show"
+              variant="danger">
+            </b-button>
+          </template>
+        </b-modal>
 
       </div>
       <script src="{{ mix('/js/modificarProyecto.js') }}"></script>

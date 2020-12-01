@@ -154,3 +154,88 @@ html{
   }// Fin > .row
 
 }// Fin #modificarProyecto
+
+.modal{
+
+  /*&[id^="modal-eliminar-"]{
+
+    .modal-dialog{
+
+      .modal-body{
+        border-top-right-radius: calc(0.3rem - 1px);
+        border-top-left-radius: calc(0.3rem - 1px);
+        padding: 0px;
+      }
+
+    }
+
+  }*/
+
+  .modal-dialog{
+
+    .modal-header{
+      padding: 0.25rem 1rem;
+    }
+
+    .modal-body{
+
+      form{
+        padding: 0px;
+
+        > div{
+
+          &.form-group{
+
+            label{
+              color:#091F40;
+            }
+
+            .form-control{
+              border-radius: 2px;
+
+              &:disabled{
+                cursor: not-allowed;
+              }
+
+            }
+
+            .btn{
+
+              &:disabled{
+                cursor: not-allowed;
+              }
+
+              &.btn-outline-success{
+                border: 2px solid;
+                font-weight: 600;
+
+
+
+              }
+
+            }
+
+          }// Fin .form-group
+
+        }
+
+      }// Fin form
+
+      .alert{
+        margin-bottom: 0px;
+      }
+
+    }// Fin .modal-body
+
+    footer{
+      padding: 0.25rem 1rem !important;
+
+      .alert{
+        margin: 10px 0px 10px 0px;
+      }
+
+    }
+
+  }// Fin .modal-dialog
+
+}// Fin .modal
