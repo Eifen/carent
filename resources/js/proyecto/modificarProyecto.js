@@ -1306,7 +1306,7 @@ new Vue({
 
         const monto = {
           numero: (i + 1),
-          monto: item.monto,
+          monto: self.form.camposAtributos.montoEn.simbolo+item.monto_formatted,
           fecha: item.fecha,
           id: item.id
         };
@@ -1318,7 +1318,7 @@ new Vue({
 
       return {
         registros: registros,
-        total: total
+        total: self.form.camposAtributos.montoEn.simbolo+total
       };
 
     },

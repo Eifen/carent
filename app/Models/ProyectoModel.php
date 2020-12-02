@@ -919,6 +919,7 @@ class ProyectoModel extends Model
 
       $montos = DB::select('SELECT m.id,
                                    m.monto,
+                                   FORMAT(m.monto,2,"de_DE") AS monto_formatted,
                                    DATE_FORMAT(m.fecha, "%d/%m/%Y") AS fecha
                             FROM tbl_proy_monto_adicional m
                             WHERE m.id_proyecto = ?
