@@ -145,9 +145,46 @@ html {
 .modal .modal-dialog .modal-body .alert {
   margin-bottom: 0px;
 }
+.modal .modal-dialog .modal-body .table {
+  transition: all 0.3s;
+}
+.modal .modal-dialog .modal-body .table:hover {
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+}
+.modal .modal-dialog .modal-body .table thead tr th {
+  background-color: #091F40;
+  color: white;
+  text-align: center;
+}
+.modal .modal-dialog .modal-body .table tbody tr {
+  transition: all 0.3s;
+}
+.modal .modal-dialog .modal-body .table tbody tr:hover {
+  background-color: rgba(246, 168, 28, 0.5);
+}
+.modal .modal-dialog .modal-body .table tbody tr th {
+  text-align: center;
+}
+.modal .modal-dialog .modal-body .table tbody tr td {
+  text-align: center;
+}
+.modal .modal-dialog .modal-body .table tbody tr td .icono {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.modal .modal-dialog .modal-body .table tbody tr td .icono:hover {
+  cursor: pointer;
+}
+.modal .modal-dialog .modal-body .table tbody tr td .icono:hover.bi-trash {
+  color: #DD3D31;
+}
 .modal .modal-dialog footer {
   padding: 0.25rem 1rem !important;
 }
 .modal .modal-dialog footer .alert {
   margin: 10px 0px 10px 0px;
+}
+.modal .modal-dialog footer button {
+  margin-left: 0px;
+  margin-right: 0px;
 }

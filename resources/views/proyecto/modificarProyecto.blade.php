@@ -425,7 +425,7 @@
               label="Monto Adicional"
               label-for="montoAdicional"
               id="laber-montoAdicional">
-              <b-input-group size="sm">
+              <b-input-group size="sm" :prepend="form.camposAtributos.montoEn.simbolo">
                 <b-form-input
                   @input="cleanFieldForm(modalAgregarMonto.form.campos.montoAdicional)"
                   :disabled="modalAgregarMonto.form.campos.montoAdicional.disabled"
@@ -451,6 +451,53 @@
               </b-input-group>
             </b-form-group>
           </b-form>
+
+          <b-table
+            :busy="modalAgregarMonto.montosAdicionales.cargando"
+            :fields="modalAgregarMonto.montosAdicionales.encabezado"
+            :items="modalAgregarMonto.montosAdicionales.registros"
+            :small="true"
+            foot-clone
+            hover
+            responsive
+            show-empty>
+            <template v-slot:table-busy>
+              <div class="text-center text-primary">
+                <b-spinner class="align-middle"></b-spinner>
+              </div>
+            </template>
+            <template v-slot:empty="scope" v-if="modalAgregarMonto.montosAdicionales.alert.mostrar">
+              <alert :contador="modalAgregarMonto.montosAdicionales.alert.contador"
+                     :icono-cerrar="modalAgregarMonto.montosAdicionales.alert.iconCerrar"
+                     :mensaje="modalAgregarMonto.montosAdicionales.alert.mensaje"
+                     :mostrar="modalAgregarMonto.montosAdicionales.alert.mostrar"
+                     :ocultar-seg="modalAgregarMonto.montosAdicionales.alert.ocultarSeg"
+                     :variante="modalAgregarMonto.montosAdicionales.alert.variante">
+              </alert>
+            </template>
+            <template v-slot:cell(numero)="data">
+              <b>@{{ data.item.numero }}</b>
+            </template>
+            <template v-slot:cell(opciones)="data">
+              <b-icon-trash
+                :id="'eliminar-'+data.item.id"
+                class="icono"
+                v-on:click="eliminar_monto(data.item.id)"></b-icon-trash>
+              <b-tooltip :target="'eliminar-'+data.item.id" triggers="hover">
+                Eliminar monto
+              </b-tooltip>
+            </template>
+            <template #foot(numero)="numero">
+              <div class="text-center">Total</div>
+            </template>
+            <template #foot(monto)="data">
+              <div class="text-center">@{{ modalAgregarMonto.montosAdicionales.total }}</div>
+            </template>
+            <template #foot(fecha)="data">
+              <div class="text-center"></div>
+            </template>
+          </b-table>
+
           <template v-slot:modal-footer="{ ok, cancel, hide }">
             <alert :contador="modalAgregarMonto.alert.contador"
                    :icono-cerrar="modalAgregarMonto.alert.iconCerrar"
@@ -460,13 +507,22 @@
                    :variante="modalAgregarMonto.alert.variante">
             </alert>
             <b-button
-              @click="cancel()"
+              @click="cancelarAgregarMonto"
               :disabled="modalAgregarMonto.botones.cancelar.disabled"
+              block
               size="sm"
               v-html="modalAgregarMonto.botones.cancelar.html"
               v-if="modalAgregarMonto.botones.cancelar.show"
               variant="danger">
             </b-button>
+            <b-button
+              @click="agregarMontoAdicional"
+              :disabled="modalAgregarMonto.botones.confirmar.disabled"
+              block
+              size="sm"
+              v-html="modalAgregarMonto.botones.confirmar.html"
+              v-if="modalAgregarMonto.botones.confirmar.show"
+              variant="success"></b-button>
           </template>
         </b-modal>
 

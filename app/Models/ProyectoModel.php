@@ -866,7 +866,6 @@ class ProyectoModel extends Model
 
     }
 
-
     function modHorasAnalistaProy($horas_asignadas,$horasComparar,$idAnaProy, $idProyecto){
 
       DB::beginTransaction();
@@ -906,5 +905,38 @@ class ProyectoModel extends Model
 
     }
 
+    function agregarMontoAdicionalProy($parametros){
+
+      if(DB::table('tbl_proy_monto_adicional')->insert($parametros)){
+        return true;
+      }else{
+        return false;
+      }
+
+    }
+
+    function montosAdicionesProy($id_proyecto){
+
+      $montos = DB::select('SELECT m.id,
+                                   m.monto,
+                                   DATE_FORMAT(m.fecha, "%d/%m/%Y") AS fecha
+                            FROM tbl_proy_monto_adicional m
+                            WHERE m.id_proyecto = ?
+                            AND m.id_estatus = 1
+                            ORDER BY m.id DESC', [$id_proyecto]);
+
+      return $montos;
+
+    }
+
+    function eliminarMontosAdicionesProy($id_monto){
+
+      if(DB::table('tbl_proy_monto_adicional')->where("id", $id_monto)->update(["id_estatus" => 2])){
+        return true;
+      }else{
+        return false;
+      }
+
+    }
 
 }
