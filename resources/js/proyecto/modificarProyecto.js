@@ -1107,7 +1107,7 @@ new Vue({
             value: item.hasOwnProperty('horas_contratadas') ? item.horas_contratadas : 0,
           },
           id: item.id,
-          idDivProy: item.id_div_proy
+          idDivProy: item.id_proy_div
         }
 
         let id_gerente = item.hasOwnProperty('id_gerente') ? item.id_gerente : null;
@@ -1547,7 +1547,7 @@ new Vue({
 
       axios.get('/horasAdicionesProyDiv',{
         params: {
-          id_div_proy: self.modalAgregarMonto.idDivProy
+          id_proy_div: self.modalAgregarMonto.idDivProy
         }
       }).then(function (response) {
 

@@ -506,9 +506,9 @@ class ProyectoController extends Controller
 
       $modelo = new ProyectoModel();
 
-      $id_div_proy = $request->input("id_div_proy");
+      $id_proy_div = $request->input("id_proy_div");
 
-      $horas = $modelo->horasAdicionesProyDiv($id_div_proy);
+      $horas = $modelo->horasAdicionesProyDiv($id_proy_div);
 
       return [
         "horas" => $horas
@@ -528,7 +528,7 @@ class ProyectoController extends Controller
       );
 
       $agregar_horas = $modelo->agregarHoraAdicionalProyDiv($parametros);
-      $horas = $modelo->horasAdicionesProyDiv($request->input("id_div_proy"));
+      $horas = $modelo->horasAdicionesProyDiv($request->input("id_proy_div"));
 
       if($agregar_horas){
 
