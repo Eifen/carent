@@ -356,7 +356,7 @@
                         v-model="form.camposAtributos.divisiones.divisiones[index].horas.value"></b-form-input>
                         <b-input-group-append>
                           <b-button
-                            @click="modalAgregarHoraAdicional(division.idDivProy, division.descripcion)"
+                            @click="modalAgregarHoraAdicional(division.idProyDiv, division.descripcion)"
                             :disabled="modalAgregarMonto.botones.submit.disabled"
                             size="sm"
                             v-b-tooltip.hover title="Agregar horas adicionales"
