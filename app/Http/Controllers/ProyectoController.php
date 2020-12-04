@@ -256,7 +256,8 @@ class ProyectoController extends Controller
       $proyectos = $modelo->proyectosDivision($id_usuario, $infoUsuario->id_division);
       $estatus = $modelo->estatusProyectos();
 
-        return array("proyectos" => $proyectos, "estatus" => $estatus);
+      return array("proyectos" => $proyectos, "estatus" => $estatus);
+
     }
 
     function buscardiviProyectos(Request $request){
@@ -426,5 +427,153 @@ class ProyectoController extends Controller
 
     }
 
+    function agregarMontoAdicionalProy(Request $request){
+
+      $modelo = new ProyectoModel();
+
+      $parametros = array(
+        "monto" => $request->input("monto"),
+        "id_proyecto" => $request->input("id_proyecto"),
+        "fecha" => date("Y-m-d"),
+        "id_estatus" => 1
+      );
+
+      $agregar_monto = $modelo->agregarMontoAdicionalProy($parametros);
+      $montos = $modelo->montosAdicionesProy($request->input("id_proyecto"));
+
+      if($agregar_monto){
+
+        return [
+          "message" => "Monto agregado con éxito!",
+          "montos" => $montos,
+          "response" => true
+        ];
+
+      }else{
+
+        return [
+          "message" => "Ocurrió un error al tratar de agregar el monto!",
+          "response" => false
+        ];
+
+      }
+
+    }
+
+    function montosAdicionesProy(Request $request){
+
+      $modelo = new ProyectoModel();
+
+      $id_proyecto = $request->input("id_proyecto");
+
+      $montos = $modelo->montosAdicionesProy($id_proyecto);
+
+      return [
+        "montos" => $montos
+      ];
+
+    }
+
+    function eliminarMontosAdicionesProy(Request $request){
+
+      $modelo = new ProyectoModel();
+
+      $id_proyecto = $request->input("id_proyecto");
+      $id_monto = $request->input("id_monto");
+
+      if($modelo->eliminarMontosAdicionesProy($id_monto)){
+
+        $montos = $modelo->montosAdicionesProy($id_proyecto);
+
+        return [
+          "message" => "Monto eliminado con éxito!",
+          "montos" => $montos,
+          "response" => true
+        ];
+
+      }else{
+
+        return [
+          "message" => "Error al momento de eliminar el monto.",
+          "response" => false
+        ];
+
+      }
+
+    }
+
+    function horasAdicionesProyDiv(Request $request){
+
+      $modelo = new ProyectoModel();
+
+      $id_proy_div = $request->input("id_proy_div");
+
+      $horas = $modelo->horasAdicionesProyDiv($id_proy_div);
+
+      return [
+        "horas" => $horas
+      ];
+
+    }
+
+    function agregarHoraAdicionalProyDiv(Request $request){
+
+      $modelo = new ProyectoModel();
+
+      $parametros = array(
+        "horas" => $request->input("horas"),
+        "id_proy_div" => $request->input("id_proy_div"),
+        "fecha" => date("Y-m-d"),
+        "id_estatus" => 1
+      );
+
+      $agregar_horas = $modelo->agregarHoraAdicionalProyDiv($parametros);
+      $horas = $modelo->horasAdicionesProyDiv($request->input("id_proy_div"));
+
+      if($agregar_horas){
+
+        return [
+          "message" => "Horas agregadas con éxito!",
+          "horas" => $horas,
+          "response" => true
+        ];
+
+      }else{
+
+        return [
+          "message" => "Ocurrió un error al tratar de agregar las horas!",
+          "response" => false
+        ];
+
+      }
+
+    }
+
+    function eliminarHoraAdicionalProyDiv(Request $request){
+
+      $modelo = new ProyectoModel();
+
+      $id = $request->input("id");
+
+      if($modelo->eliminarHoraAdicionalProyDiv($id)){
+
+        $horas = $modelo->horasAdicionesProyDiv($request->input("id_proy_div"));
+
+        return [
+          "message" => "horas eliminadas con éxito!",
+          "horas" => $horas,
+          "response" => true
+        ];
+
+      }else{
+
+        return [
+          "message" => "Error al momento de eliminar las horas.",
+          "response" => false
+        ];
+
+      }
+
+    }
 
 }
