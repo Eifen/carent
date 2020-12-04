@@ -1,6 +1,6 @@
 require('bootstrap');
 import Vue from 'vue';
-import { BootstrapVue } from 'bootstrap-vue';
+import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import zenscroll from 'zenscroll';
@@ -17,6 +17,7 @@ Vue.component('menu-principal', require('../components/menuPrincipal.vue').defau
 Vue.component('loading',require('../components/loading.vue').default);
 Vue.component('alert',require('../components/alert.vue').default);
 Vue.use(BootstrapVue);
+Vue.use(BootstrapVueIcons);
 Vue.use(Vuelidate);
 
 const datosIniciales = () => {
@@ -208,7 +209,127 @@ new Vue({
       },
       mostrar: false
     },
-    loading: true
+    loading: true,
+    modalAgregarHora: {
+      alert: {
+        contador: false,
+        iconCerrar: false,
+        mensaje: "",
+        mostrar: false,
+        ocultarSeg: 0,
+        variante: ""
+      },
+      botones: {
+        cancelar: {
+          disabled: false,
+          html: "No, deseo cancelar esta acción",
+          show: false
+        },
+        confirmar: {
+          html: "Si, quiero agregar el monto!",
+          show: true
+        },
+        submit: {
+          disabled: false,
+          html: "",
+          htmlInit: "Agregar horas",
+          htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
+          show: false
+        }
+      },
+      footer: {
+        hide: true
+      },
+      form: {
+        campos: {
+          horaAdicional: {
+            autonumeric: null,
+            decPlace: 2,
+            decString: ",",
+            disabled: true,
+            invalidFeedback: "",
+            state: null,
+            thouSep: ".",
+            value: null
+          }
+        }
+      },
+      horasAdicionales: {
+        alert:{
+          contador: false,
+          iconCerrar: false,
+          mensaje: "",
+          mostrar: false,
+          ocultarSeg: 0,
+          variante: ""
+        },
+        cargando: true,
+        encabezado: [],
+        registros: [],
+        total: 0
+      }
+    },
+    modalAgregarMonto: {
+      alert: {
+        contador: false,
+        iconCerrar: false,
+        mensaje: "",
+        mostrar: false,
+        ocultarSeg: 0,
+        variante: ""
+      },
+      botones: {
+        cancelar: {
+          disabled: false,
+          html: "No, deseo cancelar esta acción",
+          show: false
+        },
+        confirmar: {
+          html: "Si, quiero agregar el monto!",
+          show: true
+        },
+        submit: {
+          disabled: false,
+          html: "",
+          htmlInit: "Agregar monto",
+          htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
+          show: false
+        }
+      },
+      division: "",
+      footer: {
+        hide: true
+      },
+      form: {
+        campos: {
+          montoAdicional: {
+            autonumeric: null,
+            decPlace: 2,
+            decString: ",",
+            disabled: true,
+            invalidFeedback: "",
+            state: null,
+            thouSep: ".",
+            value: null
+          }
+        }
+      },
+      idProyDiv: null,
+      montosAdicionales: {
+        alert:{
+          contador: false,
+          iconCerrar: false,
+          mensaje: "",
+          mostrar: false,
+          ocultarSeg: 0,
+          variante: ""
+        },
+        cargando: true,
+        encabezado: [],
+        registros: [],
+        total: 0
+      }
+    }
   },
   validations: {
     form:{
@@ -247,6 +368,28 @@ new Vue({
         horas: {
           required,
           minValue: minValue(1)
+        }
+      }
+    },
+    modalAgregarHora: {
+      form: {
+        campos: {
+          horaAdicional: {
+            value: {
+              required
+            }
+          }
+        }
+      }
+    },
+    modalAgregarMonto: {
+      form: {
+        campos: {
+          montoAdicional: {
+            value: {
+              required
+            }
+          }
         }
       }
     }
@@ -315,6 +458,20 @@ new Vue({
       self.form.camposAtributos.monto.disabled = false;
       self.form.camposAtributos.divisiones.disabled = false;
 
+      self.modalAgregarMonto.montosAdicionales.encabezado = [
+        { key: 'numero', label: '#' },
+        { key: 'monto', label: 'Monto' },
+        { key: 'fecha', label: 'De Fecha' },
+        { key: 'opciones', label: ' ' }
+      ];
+
+      self.modalAgregarHora.horasAdicionales.encabezado = [
+        { key: 'numero', label: '#' },
+        { key: 'horas', label: 'Horas' },
+        { key: 'fecha', label: 'De Fecha' },
+        { key: 'opciones', label: ' ' }
+      ];
+
       var data = [];
       for (var i = 0; i < dataInit.infodivi.length; i++) {
         for (var j = 0; j < self.comboDivisiones.length; j++) {
@@ -369,12 +526,123 @@ new Vue({
 
     }, 1000);
 
+    self.$refs["modal-agregar-monto"].$on('shown', () => {
+
+      self.enableDisabledForm(self.modalAgregarMonto.form.campos, false);
+
+      self.modalAgregarMonto.botones.submit.html = self.modalAgregarMonto.botones.submit.htmlInit;
+      self.modalAgregarMonto.botones.submit.show = true;
+      self.modalAgregarMonto.botones.cancelar.show = false;
+      self.modalAgregarMonto.botones.confirmar.show = false;
+
+      if(self.modalAgregarMonto.form.campos.montoAdicional.autonumeric === null){
+
+        let montoA = self.$refs["montoAdicional"].$el
+
+        self.modalAgregarMonto.form.campos.montoAdicional.autonumeric = new AutoNumeric(montoA, {
+          decimalPlaces: 2,
+          decimalCharacter: ',',
+          digitGroupSeparator: '.',
+          emptyInputBehavior: 0,
+          maximumValue: '99999999999999999999.99',
+          minimumValue: 0,
+          modifyValueOnWheel: false
+        });
+
+      }
+
+      self.montosAdicionales();
+
+    });
+
+    self.$refs["modal-agregar-monto"].$on('hidden', () => {
+
+      self.modalAgregarMonto.footer.hide = true;
+
+      self.modalAgregarMonto.botones.confirmar.show = false;
+      self.modalAgregarMonto.botones.cancelar.show = false;
+      self.modalAgregarMonto.botones.submit.show = true;
+      self.modalAgregarMonto.botones.confirmar.disabled = false;
+      self.modalAgregarMonto.botones.cancelar.disabled = false;
+      self.modalAgregarMonto.botones.submit.html = self.modalAgregarMonto.botones.submit.htmlInit;
+      self.modalAgregarMonto.botones.submit.disabled = false;
+
+      self.modalAgregarMonto.form.campos.montoAdicional.autonumeric = null;
+      self.modalAgregarMonto.form.campos.montoAdicional.value = null;
+
+      self.modalAgregarMonto.montosAdicionales.registros = [];
+      self.modalAgregarMonto.montosAdicionales.total = 0;
+
+      self.enableDisabledForm(self.modalAgregarMonto.form.campos, false);
+      self.mostrarAlertForm(self.modalAgregarMonto.alert);
+
+      self.modalAgregarMonto.montosAdicionales.cargando = true;
+
+    });
+
+    self.$refs["modal-agregar-hora"].$on('shown', () => {
+
+      self.enableDisabledForm(self.modalAgregarHora.form.campos, false);
+
+      self.modalAgregarHora.botones.submit.html = self.modalAgregarHora.botones.submit.htmlInit;
+      self.modalAgregarHora.botones.submit.show = true;
+      self.modalAgregarHora.botones.cancelar.show = false;
+      self.modalAgregarHora.botones.confirmar.show = false;
+
+      if(self.modalAgregarHora.form.campos.horaAdicional.autonumeric === null){
+
+        let horaA = self.$refs["horaAdicional"].$el
+
+        self.modalAgregarHora.form.campos.horaAdicional.autonumeric = new AutoNumeric(horaA, {
+          decimalPlaces: 0,
+          decimalCharacter: ',',
+          digitGroupSeparator: '.',
+          emptyInputBehavior: 0,
+          maximumValue: '99999999999999999999',
+          minimumValue: 0,
+          modifyValueOnWheel: false
+        });
+
+      }
+
+      self.horasAdicionales();
+
+    });
+
+    self.$refs["modal-agregar-hora"].$on('hidden', () => {
+
+      self.modalAgregarHora.footer.hide = true;
+
+      self.modalAgregarHora.botones.confirmar.show = false;
+      self.modalAgregarHora.botones.cancelar.show = false;
+      self.modalAgregarHora.botones.submit.show = true;
+      self.modalAgregarHora.botones.confirmar.disabled = false;
+      self.modalAgregarHora.botones.cancelar.disabled = false;
+      self.modalAgregarHora.botones.submit.html = self.modalAgregarHora.botones.submit.htmlInit;
+      self.modalAgregarHora.botones.submit.disabled = false;
+
+      self.modalAgregarHora.form.campos.horaAdicional.autonumeric = null;
+      self.modalAgregarHora.form.campos.horaAdicional.value = null;
+
+      self.modalAgregarHora.horasAdicionales.registros = [];
+      self.modalAgregarHora.horasAdicionales.total = 0;
+
+      self.enableDisabledForm(self.modalAgregarHora.form.campos, false);
+      self.mostrarAlertForm(self.modalAgregarHora.alert);
+
+      self.modalAgregarHora.horasAdicionales.cargando = true;
+
+      self.modalAgregarMonto.idProyDiv = null;
+      self.modalAgregarHora.division = "";
+
+    });
+
   },
   methods:{
 
     buscarCliente: function(){
 
-      self.limpiarMensajeError(self.form.camposAtributos.cliente);
+      self.cleanFieldForm(self.form.camposAtributos.cliente);
       self.$refs["ref-lista-cliente"].hide();
       self.form.camposAtributos.cliente.listaDropdown.listado = [];
       self.form.camposAtributos.cliente.listaDropdown.noResultado = false;
@@ -460,7 +728,7 @@ new Vue({
     },
     buscarSocio: function(){
 
-      self.limpiarMensajeError(self.form.camposAtributos.socio);
+      self.cleanFieldForm(self.form.camposAtributos.socio);
       self.$refs["ref-lista-socio"].hide();
       self.form.camposAtributos.socio.listaDropdown.listado = [];
       self.form.camposAtributos.socio.listaDropdown.noResultado = false;
@@ -520,7 +788,7 @@ new Vue({
     },
     buscarGerente: function(){
 
-      self.limpiarMensajeError(self.form.camposAtributos.gerente);
+      self.cleanFieldForm(self.form.camposAtributos.gerente);
       self.$refs["ref-lista-gerente"].hide();
       self.form.camposAtributos.gerente.listaDropdown.listado = [];
       self.form.camposAtributos.gerente.listaDropdown.noResultado = false;
@@ -588,7 +856,7 @@ new Vue({
         self.form.camposAtributos.monto.disabled = true;
       }
 
-      self.limpiarMensajeError(self.form.camposAtributos.monto);
+      self.cleanFieldForm(self.form.camposAtributos.monto);
 
     },
     confirmarModificarProyecto: function(){
@@ -608,8 +876,6 @@ new Vue({
         }
 
       });
-
-      var formValido = true;
 
       const arrayCampos = Object.keys(self.form.campos);
       for(var i = 0; i <= (arrayCampos.length - 1); i++){
@@ -716,7 +982,7 @@ new Vue({
         id_moneda: self.form.campos.montoEn,
         monto: self.form.camposAtributos.monto.autonumeric.get(),
         empresa: self.form.campos.empresa
-      }
+      };
 
       self.form.botones.cancelar.disabled = true;
       self.form.botones.submit.disabled = true;
@@ -840,7 +1106,8 @@ new Vue({
             state: null,
             value: item.hasOwnProperty('horas_contratadas') ? item.horas_contratadas : 0,
           },
-          id: item.id
+          id: item.id,
+          idProyDiv: item.id_proy_div
         }
 
         let id_gerente = item.hasOwnProperty('id_gerente') ? item.id_gerente : null;
@@ -872,7 +1139,7 @@ new Vue({
     },
     horaDivision: function(index){
 
-      self.limpiarMensajeError(self.form.camposAtributos.divisiones.divisiones[index].horas);
+      self.cleanFieldForm(self.form.camposAtributos.divisiones.divisiones[index].horas);
       self.horasTotales();
 
     },
@@ -888,7 +1155,7 @@ new Vue({
 
       self.form.campos.horas = total;
 
-      self.limpiarMensajeError(self.form.camposAtributos.horas);
+      self.cleanFieldForm(self.form.camposAtributos.horas);
 
     },
     gerenteDivision: function(index, id_division, id_gerente = null){
@@ -939,13 +1206,7 @@ new Vue({
 
       self.form.campos.horas = total;
 
-      self.limpiarMensajeError(self.form.camposAtributos.horas);
-
-    },
-    limpiarMensajeError: function(objeto){
-
-      objeto.state = null;
-      objeto.invalidFeedback = "";
+      self.cleanFieldForm(self.form.camposAtributos.horas);
 
     },
     mostrarAlertForm: function(alert, mostrar = false, variante = "", mensaje = "", iconCerrar = false, contador = false, ocultarSeg = 0){
@@ -971,6 +1232,600 @@ new Vue({
       }
 
     },
+    agregar_monto_adicional: function(){
+
+      var formValido = true;
+
+      self.mostrarAlertForm(self.modalAgregarMonto.alert);
+
+      Object.keys(self.modalAgregarMonto.form.campos).forEach((indice, i) => {
+
+        if(self.modalAgregarMonto.form.campos[indice].hasOwnProperty("state")){
+          self.modalAgregarMonto.form.campos[indice].state = (self.modalAgregarMonto.form.campos[indice].state === true) ? true : null;
+        }
+
+        if(self.modalAgregarMonto.form.campos[indice].hasOwnProperty("invalidFeedback")){
+          self.modalAgregarMonto.form.campos[indice].invalidFeedback = "";
+        }
+
+      });
+
+      const arrayCampos = Object.keys(self.modalAgregarMonto.form.campos);
+      for(var i = 0; i <= (arrayCampos.length - 1); i++){
+
+        let indice = arrayCampos[i];
+        const campo = self.$v.modalAgregarMonto.form.campos[indice].value;
+        campo.$touch();
+
+        if(campo.$invalid){
+
+          self.modalAgregarMonto.form.campos[indice].state = false;
+          const valorCampo = self.$v.modalAgregarMonto.form.campos[indice].value.$model;
+
+          const arrayParams = Object.keys(campo.$params);
+          for(var j = 0; j <= (arrayParams.length - 1); j++){
+
+            let mensajeError = self.validadorMensajes(arrayParams[j], campo);
+            self.modalAgregarMonto.form.campos[indice].invalidFeedback = mensajeError.mensaje;
+
+            if(!mensajeError.respuesta){
+              break
+            }
+
+          }
+
+          zenscroll.toY(self.$refs[indice].$el);
+          formValido = false;
+          break;
+
+        }
+
+      }
+
+      if(formValido){
+
+        self.modalAgregarMonto.botones.submit.disabled = true;
+        self.modalAgregarMonto.botones.confirmar.show = true;
+        self.modalAgregarMonto.botones.cancelar.show = true;
+
+        self.mostrarAlertForm(self.modalAgregarMonto.alert, true, "warning", "¿Está seguro de agregar este monto adicional?", false, false, 0);
+        self.modalAgregarMonto.footer.hide = false;
+
+      }
+
+    },
+    cleanFieldForm: function(field){
+
+      field.state = null;
+      field.disabled = false;
+
+    },
+    enableDisabledForm: function(form, disabled){
+
+      Object.keys(form).forEach((indice, i) => {
+
+        if(form[indice].hasOwnProperty("state")){
+          form[indice].state =  null;
+        }
+
+        if(form[indice].hasOwnProperty("disabled")){
+          form[indice].disabled = disabled;
+        }
+
+      });
+
+    },
+    cancelarAgregarMonto: function(){
+
+      self.modalAgregarMonto.botones.confirmar.show = false;
+      self.modalAgregarMonto.botones.cancelar.show = false;
+      self.modalAgregarMonto.botones.submit.show = true;
+      self.modalAgregarMonto.botones.submit.disabled = false;
+
+      self.mostrarAlertForm(self.modalAgregarMonto.alert);
+      self.modalAgregarMonto.footer.hide = true;
+
+    },
+    agregarMontoAdicional: function(){
+
+      self.mostrarAlertForm(self.modalAgregarMonto.alert);
+
+      //Obtenemos valores
+      let parametros = {
+        monto: self.modalAgregarMonto.form.campos.montoAdicional.autonumeric.get(),
+        id_proyecto: self.idProyecto
+      }
+
+      self.modalAgregarMonto.botones.confirmar.disabled = true;
+      self.modalAgregarMonto.botones.cancelar.disabled = true;
+      self.modalAgregarMonto.botones.submit.html = self.modalAgregarMonto.botones.submit.htmlLoading;
+
+      self.enableDisabledForm(self.modalAgregarMonto.form.campos, true);
+
+      axios.post('/agregarMontoAdicionalProy', parametros)
+      .then(function (response) {
+
+        if(response.status === 200 && response.data.response === true){
+
+          self.modalAgregarMonto.form.campos.montoAdicional.autonumeric.set(0);
+          self.modalAgregarMonto.form.campos.montoAdicional.value = 0;
+
+          self.enableDisabledForm(self.modalAgregarMonto.form.campos, false);
+
+          self.$nextTick(() => {
+            self.$v.$reset();
+          });
+
+          self.mostrarAlertForm(self.modalAgregarMonto.alert, true, "success", response.data.message, true, true, 3);
+
+          self.modalAgregarMonto.botones.confirmar.show = false;
+          self.modalAgregarMonto.botones.cancelar.show = false;
+          self.modalAgregarMonto.botones.confirmar.disabled = false;
+          self.modalAgregarMonto.botones.cancelar.disabled = false;
+
+          let data = self.registroTablaMontos(response.data.montos);
+          self.modalAgregarMonto.montosAdicionales.registros = data.registros;
+          self.modalAgregarMonto.montosAdicionales.total = data.total;
+
+          setTimeout(function(){
+
+            self.modalAgregarMonto.botones.submit.html = self.modalAgregarMonto.botones.submit.htmlInit;
+            self.modalAgregarMonto.botones.submit.disabled = false;
+            self.modalAgregarMonto.footer.hide = true;
+
+          }, 3000);
+
+        }else{
+
+          throw response.data;
+
+        }
+
+      })
+      .catch(error => {
+
+        self.enableDisabledForm(self.modalAgregarMonto.form.campos, false);
+
+        self.modalAgregarMonto.botones.confirmar.disabled = false;
+        self.modalAgregarMonto.botones.cancelar.disabled = false;
+        self.modalAgregarMonto.botones.confirmar.show = false;
+        self.modalAgregarMonto.botones.cancelar.show = false;
+        self.modalAgregarMonto.botones.submit.html = self.modalAgregarMonto.botones.submit.htmlInit;
+        self.modalAgregarMonto.botones.submit.disabled = false;
+
+        if(error.message){
+
+          var mensaje = error.message;
+          var variante = "warning";
+
+        }else{
+
+          var mensaje = "Existe un error!, consulte con el administrador del sistema.";
+          var variante = "danger";
+
+        }
+
+        self.mostrarAlertForm(self.modalAgregarMonto.alert, true, variante, mensaje, false, false, 0);
+
+      });
+
+    },
+    montosAdicionales: function(){
+
+      axios.get('/montosAdicionesProy',{
+        params: {
+          id_proyecto: self.idProyecto
+        }
+      }).then(function (response) {
+
+        if(response.data.montos.length === 0){
+
+          let mensaje = "No hay montos adicionales cargados";
+          self.mostrarAlertForm(self.modalAgregarMonto.montosAdicionales.alert, true, "warning", mensaje, false, false, 0);
+
+        }
+
+        let data = self.registroTablaMontos(response.data.montos);
+        self.modalAgregarMonto.montosAdicionales.registros = data.registros;
+        self.modalAgregarMonto.montosAdicionales.total = data.total;
+
+        self.modalAgregarMonto.montosAdicionales.cargando = false;
+
+      }).catch(error => {
+
+        let mensaje = "Ocurrió un error!";
+        self.mostrarAlertForm(self.modalAgregarMonto.montosAdicionales.alert, true, "warning", mensaje, false, false, 0);
+        self.modalAgregarMonto.montosAdicionales.cargando = false;
+        self.modalAgregarMonto.form.campos.montoAdicional.disabled = true;
+        self.modalAgregarMonto.botones.submit.disabled = true;
+
+      });
+
+    },
+    registroTablaMontos: function(datos){
+
+      const registros = [];
+      var total = 0;
+      datos.forEach((item, i) => {
+
+        const monto = {
+          numero: (i + 1),
+          monto: self.form.camposAtributos.montoEn.simbolo+item.monto_formatted,
+          fecha: item.fecha,
+          id: item.id
+        };
+
+        registros.push(monto);
+        total = total + parseFloat(item.monto);
+
+      });
+
+      return {
+        registros: registros,
+        total: self.form.camposAtributos.montoEn.simbolo+total
+      };
+
+    },
+    eliminar_monto: async function(id_monto){
+
+      await self.mostrarAlertForm(self.modalAgregarMonto.alert);
+
+      self.enableDisabledForm(self.modalAgregarMonto.form.campos, false);
+
+      self.modalAgregarMonto.botones.confirmar.disabled = false;
+      self.modalAgregarMonto.botones.cancelar.disabled = false;
+      self.modalAgregarMonto.botones.confirmar.show = false;
+      self.modalAgregarMonto.botones.cancelar.show = false;
+      self.modalAgregarMonto.botones.submit.html = self.modalAgregarMonto.botones.submit.htmlInit;
+      self.modalAgregarMonto.botones.submit.disabled = false;
+
+      //Obtenemos valores
+      let parametros = {
+        id_monto: id_monto,
+        id_proyecto: self.idProyecto
+      }
+
+      axios.post('/eliminarMontosAdicionesProy', parametros).then(async function (response) {
+
+        if(response.data.response){
+
+          if(response.data.montos.length === 0){
+
+            let mensaje = "No hay montos adicionales cargados";
+            await self.mostrarAlertForm(self.modalAgregarMonto.montosAdicionales.alert, true, "warning", mensaje, false, false, 0);
+
+          }
+
+          let data = self.registroTablaMontos(response.data.montos);
+          self.modalAgregarMonto.montosAdicionales.registros = data.registros;
+          self.modalAgregarMonto.montosAdicionales.total = data.total;
+
+          self.modalAgregarMonto.footer.hide = false;
+          await self.mostrarAlertForm(self.modalAgregarMonto.alert, true, "success", response.data.message, false, false, 0);
+
+          setTimeout(function(){
+
+            self.modalAgregarMonto.botones.submit.html = self.modalAgregarMonto.botones.submit.htmlInit;
+            self.modalAgregarMonto.botones.submit.disabled = false;
+            self.modalAgregarMonto.footer.hide = true;
+
+          }, 3000);
+
+        }else{
+          throw response.data;
+        }
+
+      }).catch(error => {
+
+        if(error.message){
+
+          var mensaje = error.message;
+          var variante = "warning";
+
+        }else{
+
+          var mensaje = "Existe un error!, consulte con el administrador del sistema.";
+          var variante = "danger";
+
+        }
+
+        self.mostrarAlertForm(self.modalAgregarMonto.alert, true, variante, mensaje, false, false, 0);
+        self.modalAgregarMonto.footer.hide = false;
+
+      });
+
+    },
+    modalAgregarHoraAdicional: function(id, division){
+
+      self.modalAgregarMonto.idProyDiv = id;
+      self.modalAgregarHora.division = division;
+
+      self.$refs['modal-agregar-hora'].show();
+
+    },
+    horasAdicionales: function(){
+
+      axios.get('/horasAdicionesProyDiv',{
+        params: {
+          id_proy_div: self.modalAgregarMonto.idProyDiv
+        }
+      }).then(function (response) {
+
+        if(response.data.horas.length === 0){
+
+          let mensaje = "No hay horas adicionales cargadas";
+          self.mostrarAlertForm(self.modalAgregarHora.horasAdicionales.alert, true, "warning", mensaje, false, false, 0);
+
+        }
+
+        let data = self.registroTablaHoras(response.data.horas);
+        self.modalAgregarHora.horasAdicionales.registros = data.registros;
+        self.modalAgregarHora.horasAdicionales.total = data.total;
+
+        self.modalAgregarHora.horasAdicionales.cargando = false;
+
+      }).catch(error => {
+
+        let mensaje = "Ocurrió un error!";
+        self.mostrarAlertForm(self.modalAgregarHora.horasAdicionales.alert, true, "warning", mensaje, false, false, 0);
+        self.modalAgregarHora.horasAdicionales.cargando = false;
+        self.modalAgregarHora.form.campos.horaAdicional.disabled = true;
+        self.modalAgregarHora.botones.submit.disabled = true;
+
+      });
+
+    },
+    registroTablaHoras: function(datos){
+
+      const registros = [];
+      var total = 0;
+      datos.forEach((item, i) => {
+
+        const horas = {
+          numero: (i + 1),
+          horas: item.horas,
+          fecha: item.fecha,
+          id: item.id
+        };
+
+        registros.push(horas);
+        total = total + parseFloat(item.horas);
+
+      });
+
+      return {
+        registros: registros,
+        total: total
+      };
+
+    },
+    agregarHoraAdicional: function(){
+
+      var formValido = true;
+
+      self.mostrarAlertForm(self.modalAgregarHora.alert);
+
+      Object.keys(self.modalAgregarHora.form.campos).forEach((indice, i) => {
+
+        if(self.modalAgregarHora.form.campos[indice].hasOwnProperty("state")){
+          self.modalAgregarHora.form.campos[indice].state = (self.modalAgregarHora.form.campos[indice].state === true) ? true : null;
+        }
+
+        if(self.modalAgregarHora.form.campos[indice].hasOwnProperty("invalidFeedback")){
+          self.modalAgregarHora.form.campos[indice].invalidFeedback = "";
+        }
+
+      });
+
+      const arrayCampos = Object.keys(self.modalAgregarHora.form.campos);
+      for(var i = 0; i <= (arrayCampos.length - 1); i++){
+
+        let indice = arrayCampos[i];
+        const campo = self.$v.modalAgregarHora.form.campos[indice].value;
+        campo.$touch();
+
+        if(campo.$invalid){
+
+          self.modalAgregarHora.form.campos[indice].state = false;
+          const valorCampo = self.$v.modalAgregarHora.form.campos[indice].value.$model;
+
+          const arrayParams = Object.keys(campo.$params);
+          for(var j = 0; j <= (arrayParams.length - 1); j++){
+
+            let mensajeError = self.validadorMensajes(arrayParams[j], campo);
+            self.modalAgregarHora.form.campos[indice].invalidFeedback = mensajeError.mensaje;
+
+            if(!mensajeError.respuesta){
+              break
+            }
+
+          }
+
+          zenscroll.toY(self.$refs[indice].$el);
+          formValido = false;
+          break;
+
+        }
+
+      }
+
+      if(formValido){
+
+        self.modalAgregarHora.botones.submit.disabled = true;
+        self.modalAgregarHora.botones.confirmar.show = true;
+        self.modalAgregarHora.botones.cancelar.show = true;
+
+        self.mostrarAlertForm(self.modalAgregarHora.alert, true, "warning", "¿Está seguro de agregar estas horas adicionales?", false, false, 0);
+        self.modalAgregarHora.footer.hide = false;
+
+      }
+
+    },
+    cancelarAgregarHora: function(){
+
+      self.modalAgregarHora.botones.confirmar.show = false;
+      self.modalAgregarHora.botones.cancelar.show = false;
+      self.modalAgregarHora.botones.submit.show = true;
+      self.modalAgregarHora.botones.submit.disabled = false;
+
+      self.mostrarAlertForm(self.modalAgregarHora.alert);
+      self.modalAgregarHora.footer.hide = true;
+
+    },
+    confirmarAgregarHoraAdicional: function(){
+
+      self.mostrarAlertForm(self.modalAgregarHora.alert);
+
+      //Obtenemos valores
+      let parametros = {
+        horas: self.modalAgregarHora.form.campos.horaAdicional.autonumeric.get(),
+        id_proy_div: self.modalAgregarMonto.idProyDiv
+      }
+
+      self.modalAgregarHora.botones.confirmar.disabled = true;
+      self.modalAgregarHora.botones.cancelar.disabled = true;
+      self.modalAgregarHora.botones.submit.html = self.modalAgregarHora.botones.submit.htmlLoading;
+
+      self.enableDisabledForm(self.modalAgregarHora.form.campos, true);
+
+      axios.post('/agregarHoraAdicionalProyDiv', parametros)
+      .then(function (response) {
+
+        if(response.status === 200 && response.data.response === true){
+
+          self.modalAgregarHora.form.campos.horaAdicional.autonumeric.set(0);
+          self.modalAgregarHora.form.campos.horaAdicional.value = 0;
+
+          self.enableDisabledForm(self.modalAgregarHora.form.campos, false);
+
+          self.$nextTick(() => {
+            self.$v.$reset();
+          });
+
+          self.mostrarAlertForm(self.modalAgregarHora.alert, true, "success", response.data.message, true, true, 3);
+
+          self.modalAgregarHora.botones.confirmar.show = false;
+          self.modalAgregarHora.botones.cancelar.show = false;
+          self.modalAgregarHora.botones.confirmar.disabled = false;
+          self.modalAgregarHora.botones.cancelar.disabled = false;
+
+          let data = self.registroTablaHoras(response.data.horas);
+          self.modalAgregarHora.horasAdicionales.registros = data.registros;
+          self.modalAgregarHora.horasAdicionales.total = data.total;
+
+          setTimeout(function(){
+
+            self.modalAgregarHora.botones.submit.html = self.modalAgregarHora.botones.submit.htmlInit;
+            self.modalAgregarHora.botones.submit.disabled = false;
+            self.modalAgregarHora.footer.hide = true;
+
+          }, 3000);
+
+        }else{
+
+          throw response.data;
+
+        }
+
+      })
+      .catch(error => {
+
+        self.enableDisabledForm(self.modalAgregarHora.form.campos, false);
+
+        self.modalAgregarHora.botones.confirmar.disabled = false;
+        self.modalAgregarHora.botones.cancelar.disabled = false;
+        self.modalAgregarHora.botones.confirmar.show = false;
+        self.modalAgregarHora.botones.cancelar.show = false;
+        self.modalAgregarHora.botones.submit.html = self.modalAgregarHora.botones.submit.htmlInit;
+        self.modalAgregarHora.botones.submit.disabled = false;
+
+        if(error.message){
+
+          var mensaje = error.message;
+          var variante = "warning";
+
+        }else{
+
+          var mensaje = "Existe un error!, consulte con el administrador del sistema.";
+          var variante = "danger";
+
+        }
+
+        self.mostrarAlertForm(self.modalAgregarHora.alert, true, variante, mensaje, false, false, 0);
+
+      });
+
+    },
+    eliminar_hora: async function(id){
+
+      await self.mostrarAlertForm(self.modalAgregarHora.alert);
+
+      self.enableDisabledForm(self.modalAgregarHora.form.campos, false);
+
+      self.modalAgregarHora.botones.confirmar.disabled = false;
+      self.modalAgregarHora.botones.cancelar.disabled = false;
+      self.modalAgregarHora.botones.confirmar.show = false;
+      self.modalAgregarHora.botones.cancelar.show = false;
+      self.modalAgregarHora.botones.submit.html = self.modalAgregarHora.botones.submit.htmlInit;
+      self.modalAgregarHora.botones.submit.disabled = false;
+
+      //Obtenemos valores
+      let parametros = {
+        id: id,
+        id_proy_div: self.modalAgregarMonto.idProyDiv
+      }
+
+      axios.post('/eliminarHoraAdicionalProyDiv', parametros).then(async function (response) {
+
+        if(response.data.response){
+
+          if(response.data.horas.length === 0){
+
+            let mensaje = "No hay montos adicionales cargados";
+            await self.mostrarAlertForm(self.modalAgregarHora.horasAdicionales.alert, true, "warning", mensaje, false, false, 0);
+
+          }
+
+          let data = self.registroTablaHoras(response.data.horas);
+          self.modalAgregarHora.horasAdicionales.registros = data.registros;
+          self.modalAgregarHora.horasAdicionales.total = data.total;
+
+          self.modalAgregarMonto.footer.hide = false;
+          await self.mostrarAlertForm(self.modalAgregarHora.alert, true, "success", response.data.message, false, false, 0);
+
+          setTimeout(function(){
+
+            self.modalAgregarHora.botones.submit.html = self.modalAgregarHora.botones.submit.htmlInit;
+            self.modalAgregarHora.botones.submit.disabled = false;
+            self.modalAgregarHora.footer.hide = true;
+
+          }, 3000);
+
+        }else{
+          throw response.data;
+        }
+
+      }).catch(error => {
+
+        if(error.message){
+
+          var mensaje = error.message;
+          var variante = "warning";
+
+        }else{
+
+          var mensaje = "Existe un error!, consulte con el administrador del sistema.";
+          var variante = "danger";
+
+        }
+
+        self.mostrarAlertForm(self.modalAgregarHora.alert, true, variante, mensaje, false, false, 0);
+        self.modalAgregarHora.footer.hide = false;
+
+      });
+
+    }
+
   }// Fin methods
 
 });
