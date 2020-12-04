@@ -314,7 +314,7 @@ new Vue({
           }
         }
       },
-      idDivProy: null,
+      idProyDiv: null,
       montosAdicionales: {
         alert:{
           contador: false,
@@ -632,7 +632,7 @@ new Vue({
 
       self.modalAgregarHora.horasAdicionales.cargando = true;
 
-      self.modalAgregarMonto.idDivProy = null;
+      self.modalAgregarMonto.idProyDiv = null;
       self.modalAgregarHora.division = "";
 
     });
@@ -1107,7 +1107,7 @@ new Vue({
             value: item.hasOwnProperty('horas_contratadas') ? item.horas_contratadas : 0,
           },
           id: item.id,
-          idDivProy: item.id_proy_div
+          idProyDiv: item.id_proy_div
         }
 
         let id_gerente = item.hasOwnProperty('id_gerente') ? item.id_gerente : null;
@@ -1537,7 +1537,7 @@ new Vue({
     },
     modalAgregarHoraAdicional: function(id, division){
 
-      self.modalAgregarMonto.idDivProy = id;
+      self.modalAgregarMonto.idProyDiv = id;
       self.modalAgregarHora.division = division;
 
       self.$refs['modal-agregar-hora'].show();
@@ -1547,7 +1547,7 @@ new Vue({
 
       axios.get('/horasAdicionesProyDiv',{
         params: {
-          id_proy_div: self.modalAgregarMonto.idDivProy
+          id_proy_div: self.modalAgregarMonto.idProyDiv
         }
       }).then(function (response) {
 
@@ -1679,7 +1679,7 @@ new Vue({
       //Obtenemos valores
       let parametros = {
         horas: self.modalAgregarHora.form.campos.horaAdicional.autonumeric.get(),
-        id_proy_div: self.modalAgregarMonto.idDivProy
+        id_proy_div: self.modalAgregarMonto.idProyDiv
       }
 
       self.modalAgregarHora.botones.confirmar.disabled = true;
@@ -1772,7 +1772,7 @@ new Vue({
       //Obtenemos valores
       let parametros = {
         id: id,
-        id_proy_div: self.modalAgregarMonto.idDivProy
+        id_proy_div: self.modalAgregarMonto.idProyDiv
       }
 
       axios.post('/eliminarHoraAdicionalProyDiv', parametros).then(async function (response) {

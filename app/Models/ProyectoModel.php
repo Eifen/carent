@@ -466,7 +466,7 @@ class ProyectoModel extends Model
                                    WHERE u.id = pd.id_gerente
                                  ) nombre_gerente,
                                  pd.horas_contratadas,
-                                 pd.id AS id_div_proy
+                                 pd.id AS id_proy_div
                           FROM tbl_proyecto_divisiones pd,
                                tbl_division d
                           WHERE pd.id_proyecto = '.$id_proyecto.'
