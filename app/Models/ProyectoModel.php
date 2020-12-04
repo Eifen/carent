@@ -465,7 +465,8 @@ class ProyectoModel extends Model
                                    FROM tbl_usuario u
                                    WHERE u.id = pd.id_gerente
                                  ) nombre_gerente,
-                                 pd.horas_contratadas
+                                 pd.horas_contratadas,
+                                 pd.id AS id_div_proy
                           FROM tbl_proyecto_divisiones pd,
                                tbl_division d
                           WHERE pd.id_proyecto = '.$id_proyecto.'
@@ -937,6 +938,20 @@ class ProyectoModel extends Model
       }else{
         return false;
       }
+
+    }
+
+    function horasAdicionesProyDiv($id_proy_div){
+
+      $horas = DB::select('SELECT h.id,
+                                  h.horas,
+                                  DATE_FORMAT(h.fecha, "%d/%m/%Y") AS fecha
+                            FROM tbl_proy_div_horas_adic h
+                            WHERE h.id_proy_div = ?
+                            AND m.id_estatus = 1
+                            ORDER BY h.id DESC', [$id_proy_div]);
+
+      return $horas;
 
     }
 

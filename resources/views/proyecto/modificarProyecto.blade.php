@@ -354,8 +354,15 @@
                         placeholder="0"
                         size="sm"
                         v-model="form.camposAtributos.divisiones.divisiones[index].horas.value"></b-form-input>
-                        <b-input-group-append is-text>
-                          <b-icon icon="plus-square-fill"></b-icon>
+                        <b-input-group-append>
+                          <b-button
+                            @click="agregar_hora_adicional(division.idDivProy, division.descripcion)"
+                            :disabled="modalAgregarMonto.botones.submit.disabled"
+                            size="sm"
+                            v-b-tooltip.hover title="Agregar horas adicionales"
+                            variant="success">
+                            <b-icon icon="plus"></b-icon>
+                          </b-button>
                         </b-input-group-append>
                       </b-input-group>
                   </b-form-group>
@@ -435,7 +442,7 @@
                   ref="montoAdicional"
                   type="text"
                   v-model.trim="$v.modalAgregarMonto.form.campos.montoAdicional.value.$model"></b-form-input>
-                <b-input-group-append v-b-modal="'modal-agregar-monto'">
+                <b-input-group-append>
                   <b-button
                     @click="agregar_monto_adicional"
                     :disabled="modalAgregarMonto.botones.submit.disabled"
@@ -522,6 +529,122 @@
               size="sm"
               v-html="modalAgregarMonto.botones.confirmar.html"
               v-if="modalAgregarMonto.botones.confirmar.show"
+              variant="success"></b-button>
+          </template>
+        </b-modal>
+
+        <b-modal
+          :hide-footer="modalAgregarHora.footer.hide"
+          :id="'modal-agregar-hora'"
+          :no-close-on-backdrop="true"
+          :ref="'modal-agregar-hora'"
+          centered
+          size="lg">
+          <template v-slot:modal-title>
+            Horas adicionales para @{{ modalAgregarHora.division }}
+          </template>
+          <b-form>
+            <b-form-group
+              label="Horas Adicionales"
+              label-for="horaAdicional"
+              id="laber-horaAdicional">
+              <b-input-group size="sm">
+                <b-form-input
+                  @input="cleanFieldForm(modalAgregarHora.form.campos.horaAdicional)"
+                  :disabled="modalAgregarHora.form.campos.horaAdicional.disabled"
+                  :state="modalAgregarHora.form.campos.horaAdicional.state"
+                  autocomplete="off"
+                  id="horaAdicional"
+                  ref="horaAdicional"
+                  type="text"
+                  v-model.trim="$v.modalAgregarHora.form.campos.horaAdicional.value.$model"></b-form-input>
+                <b-input-group-append>
+                  <b-button
+                    @click="agregar_hora_adicional"
+                    :disabled="modalAgregarHora.botones.submit.disabled"
+                    size="sm"
+                    v-html="modalAgregarHora.botones.submit.html"
+                    v-if="modalAgregarHora.botones.submit.show"
+                    variant="success">
+                  </b-button>
+                </b-input-group-append>
+                <b-form-invalid-feedback>
+                    @{{ modalAgregarHora.form.campos.horaAdicional.invalidFeedback }}
+                </b-form-invalid-feedback>
+              </b-input-group>
+            </b-form-group>
+          </b-form>
+
+          <b-table
+            :busy="modalAgregarHora.horasAdicionales.cargando"
+            :fields="modalAgregarHora.horasAdicionales.encabezado"
+            :items="modalAgregarHora.horasAdicionales.registros"
+            :small="true"
+            foot-clone
+            hover
+            responsive
+            show-empty>
+            <template v-slot:table-busy>
+              <div class="text-center text-primary">
+                <b-spinner class="align-middle"></b-spinner>
+              </div>
+            </template>
+            <template v-slot:empty="scope" v-if="modalAgregarHora.horasAdicionales.alert.mostrar">
+              <alert :contador="modalAgregarHora.horasAdicionales.alert.contador"
+                     :icono-cerrar="modalAgregarHora.horasAdicionales.alert.iconCerrar"
+                     :mensaje="modalAgregarHora.horasAdicionales.alert.mensaje"
+                     :mostrar="modalAgregarHora.horasAdicionales.alert.mostrar"
+                     :ocultar-seg="modalAgregarHora.horasAdicionales.alert.ocultarSeg"
+                     :variante="modalAgregarHora.horasAdicionales.alert.variante">
+              </alert>
+            </template>
+            <template v-slot:cell(numero)="data">
+              <b>@{{ data.item.numero }}</b>
+            </template>
+            <template v-slot:cell(opciones)="data">
+              <b-icon-trash
+                :id="'eliminar-'+data.item.id"
+                class="icono"
+                v-on:click="eliminar_hora(data.item.id)"></b-icon-trash>
+              <b-tooltip :target="'eliminar-'+data.item.id" triggers="hover">
+                Eliminar hora
+              </b-tooltip>
+            </template>
+            <template #foot(numero)="numero">
+              <div class="text-center">Total</div>
+            </template>
+            <template #foot(monto)="data">
+              <div class="text-center">@{{ modalAgregarHora.horasAdicionales.total }}</div>
+            </template>
+            <template #foot(fecha)="data">
+              <div class="text-center"></div>
+            </template>
+          </b-table>
+
+          <template v-slot:modal-footer="{ ok, cancel, hide }">
+            <alert :contador="modalAgregarHora.alert.contador"
+                   :icono-cerrar="modalAgregarHora.alert.iconCerrar"
+                   :mensaje="modalAgregarHora.alert.mensaje"
+                   :mostrar="modalAgregarHora.alert.mostrar"
+                   :ocultar-seg="modalAgregarHora.alert.ocultarSeg"
+                   :variante="modalAgregarHora.alert.variante">
+            </alert>
+            <b-button
+              @click="cancelarAgregarHora"
+              :disabled="modalAgregarHora.botones.cancelar.disabled"
+              block
+              size="sm"
+              v-html="modalAgregarHora.botones.cancelar.html"
+              v-if="modalAgregarHora.botones.cancelar.show"
+              variant="danger">
+            </b-button>
+            <b-button
+              @click="agregarHoraAdicional"
+              :disabled="modalAgregarHora.botones.confirmar.disabled"
+              block
+              size="sm"
+              v-html="modalAgregarHora.botones.confirmar.html"
+              v-if="modalAgregarHora.botones.confirmar.show"
               variant="success"></b-button>
           </template>
         </b-modal>

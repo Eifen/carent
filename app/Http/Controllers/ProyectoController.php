@@ -502,4 +502,18 @@ class ProyectoController extends Controller
 
     }
 
+    function horasAdicionesProyDiv(Request $request){
+
+      $modelo = new ProyectoModel();
+
+      $id_div_proy = $request->input("id_div_proy");
+
+      $horas = $modelo->horasAdicionesProyDiv($id_div_proy);
+
+      return [
+        "horas" => $horas
+      ];
+
+    }
+
 }

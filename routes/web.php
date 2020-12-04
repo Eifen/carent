@@ -102,6 +102,7 @@ Route::get('/buscarSocioProyecto', 'ProyectoController@buscarSocioProyecto');
 Route::get('/buscarGerenteProyecto', 'ProyectoController@buscarGerenteProyecto');
 Route::get('/proyectoGerentesDivision', 'ProyectoController@proyectoGerentesDivision');
 Route::get('/montosAdicionesProy', 'ProyectoController@montosAdicionesProy');
+Route::get('/horasAdicionesProyDiv', 'ProyectoController@horasAdicionesProyDiv');
 
 Route::post('/crearProyecto', 'ProyectoController@crearProyecto');
 Route::post('/modificarProyecto', 'ProyectoController@modificarProyecto');
