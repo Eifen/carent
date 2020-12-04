@@ -516,4 +516,64 @@ class ProyectoController extends Controller
 
     }
 
+    function agregarHoraAdicionalProyDiv(Request $request){
+
+      $modelo = new ProyectoModel();
+
+      $parametros = array(
+        "horas" => $request->input("horas"),
+        "id_proy_div" => $request->input("id_proy_div"),
+        "fecha" => date("Y-m-d"),
+        "id_estatus" => 1
+      );
+
+      $agregar_horas = $modelo->agregarHoraAdicionalProyDiv($parametros);
+      $horas = $modelo->horasAdicionesProyDiv($request->input("id_div_proy"));
+
+      if($agregar_horas){
+
+        return [
+          "message" => "Horas agregadas con éxito!",
+          "horas" => $horas,
+          "response" => true
+        ];
+
+      }else{
+
+        return [
+          "message" => "Ocurrió un error al tratar de agregar las horas!",
+          "response" => false
+        ];
+
+      }
+
+    }
+
+    function eliminarHoraAdicionalProyDiv(Request $request){
+
+      $modelo = new ProyectoModel();
+
+      $id = $request->input("id");
+
+      if($modelo->eliminarHoraAdicionalProyDiv($id)){
+
+        $horas = $modelo->horasAdicionesProyDiv($request->input("id_proy_div"));
+
+        return [
+          "message" => "horas eliminadas con éxito!",
+          "horas" => $horas,
+          "response" => true
+        ];
+
+      }else{
+
+        return [
+          "message" => "Error al momento de eliminar las horas.",
+          "response" => false
+        ];
+
+      }
+
+    }
+
 }

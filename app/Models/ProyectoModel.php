@@ -948,10 +948,30 @@ class ProyectoModel extends Model
                                   DATE_FORMAT(h.fecha, "%d/%m/%Y") AS fecha
                             FROM tbl_proy_div_horas_adic h
                             WHERE h.id_proy_div = ?
-                            AND m.id_estatus = 1
+                            AND h.id_estatus = 1
                             ORDER BY h.id DESC', [$id_proy_div]);
 
       return $horas;
+
+    }
+
+    function agregarHoraAdicionalProyDiv($parametros){
+
+      if(DB::table('tbl_proy_div_horas_adic')->insert($parametros)){
+        return true;
+      }else{
+        return false;
+      }
+
+    }
+
+    function eliminarHoraAdicionalProyDiv($id){
+
+      if(DB::table('tbl_proy_div_horas_adic')->where("id", $id)->update(["id_estatus" => 2])){
+        return true;
+      }else{
+        return false;
+      }
 
     }
 

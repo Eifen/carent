@@ -356,7 +356,7 @@
                         v-model="form.camposAtributos.divisiones.divisiones[index].horas.value"></b-form-input>
                         <b-input-group-append>
                           <b-button
-                            @click="agregar_hora_adicional(division.idDivProy, division.descripcion)"
+                            @click="modalAgregarHoraAdicional(division.idDivProy, division.descripcion)"
                             :disabled="modalAgregarMonto.botones.submit.disabled"
                             size="sm"
                             v-b-tooltip.hover title="Agregar horas adicionales"
@@ -560,7 +560,7 @@
                   v-model.trim="$v.modalAgregarHora.form.campos.horaAdicional.value.$model"></b-form-input>
                 <b-input-group-append>
                   <b-button
-                    @click="agregar_hora_adicional"
+                    @click="agregarHoraAdicional"
                     :disabled="modalAgregarHora.botones.submit.disabled"
                     size="sm"
                     v-html="modalAgregarHora.botones.submit.html"
@@ -613,7 +613,7 @@
             <template #foot(numero)="numero">
               <div class="text-center">Total</div>
             </template>
-            <template #foot(monto)="data">
+            <template #foot(horas)="data">
               <div class="text-center">@{{ modalAgregarHora.horasAdicionales.total }}</div>
             </template>
             <template #foot(fecha)="data">
@@ -639,7 +639,7 @@
               variant="danger">
             </b-button>
             <b-button
-              @click="agregarHoraAdicional"
+              @click="confirmarAgregarHoraAdicional"
               :disabled="modalAgregarHora.botones.confirmar.disabled"
               block
               size="sm"

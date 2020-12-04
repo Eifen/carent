@@ -108,6 +108,8 @@ Route::post('/crearProyecto', 'ProyectoController@crearProyecto');
 Route::post('/modificarProyecto', 'ProyectoController@modificarProyecto');
 Route::post('/agregarMontoAdicionalProy', 'ProyectoController@agregarMontoAdicionalProy');
 Route::post('/eliminarMontosAdicionesProy', 'ProyectoController@eliminarMontosAdicionesProy');
+Route::post('/agregarHoraAdicionalProyDiv', 'ProyectoController@agregarHoraAdicionalProyDiv');
+Route::post('/eliminarHoraAdicionalProyDiv', 'ProyectoController@eliminarHoraAdicionalProyDiv');
 
 /*
   Módulo Facturación
