@@ -101,10 +101,15 @@ Route::get('/buscarClienteProyecto', 'ProyectoController@buscarClienteProyecto')
 Route::get('/buscarSocioProyecto', 'ProyectoController@buscarSocioProyecto');
 Route::get('/buscarGerenteProyecto', 'ProyectoController@buscarGerenteProyecto');
 Route::get('/proyectoGerentesDivision', 'ProyectoController@proyectoGerentesDivision');
+Route::get('/montosAdicionesProy', 'ProyectoController@montosAdicionesProy');
+Route::get('/horasAdicionesProyDiv', 'ProyectoController@horasAdicionesProyDiv');
 
 Route::post('/crearProyecto', 'ProyectoController@crearProyecto');
 Route::post('/modificarProyecto', 'ProyectoController@modificarProyecto');
-
+Route::post('/agregarMontoAdicionalProy', 'ProyectoController@agregarMontoAdicionalProy');
+Route::post('/eliminarMontosAdicionesProy', 'ProyectoController@eliminarMontosAdicionesProy');
+Route::post('/agregarHoraAdicionalProyDiv', 'ProyectoController@agregarHoraAdicionalProyDiv');
+Route::post('/eliminarHoraAdicionalProyDiv', 'ProyectoController@eliminarHoraAdicionalProyDiv');
 
 /*
   Módulo Facturación
@@ -136,7 +141,11 @@ Route::get('/dataRepClientes', 'Reportes\ClientesController@dataRepClientes')->m
 Route::get('/dataRepHorasProyectos', 'Reportes\HorasProyectosController@dataRepHorasProyectos')->middleware('usuario.session');
 Route::get('/buscarHorasProyectos', 'Reportes\HorasProyectosController@buscarHorasProyectos')->middleware('usuario.session');
 <<<<<<< HEAD
+<<<<<<< HEAD
 Route::get('/consultarClientes', 'Reportes\ClientesController@consultarClientes')->middleware('usuario.session');
 =======
 Route::get('/consultarClientes', 'Reportes\ClientesController@consultarClientes')->middleware('usuario.session');
 >>>>>>> #357
+=======
+Route::get('/consultarClientes', 'Reportes\ClientesController@consultarClientes')->middleware('usuario.session');
+>>>>>>> 8b8d640e593f01ce3465af7666852b2e0439d879
