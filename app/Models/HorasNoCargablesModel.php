@@ -483,6 +483,7 @@ class HorasNoCargablesModel extends Model
                                         AND cs.id_cargo_supervisor IN(
                                            SELECT cs2.id_cargo_supervisor FROM tbl_cargo_supervisa cs2 WHERE cs2.id_cargo = '.$data_usuario[0]->id_cargo.'
                                         )
+                                        AND cs.id_cargo_supervisor NOT IN(16)
                                         GROUP BY u.id,
                                                  u.nombre_1,
                                                  u.nombre_2,

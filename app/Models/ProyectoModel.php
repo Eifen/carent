@@ -465,7 +465,8 @@ class ProyectoModel extends Model
                                    FROM tbl_usuario u
                                    WHERE u.id = pd.id_gerente
                                  ) nombre_gerente,
-                                 pd.horas_contratadas
+                                 pd.horas_contratadas,
+                                 pd.id AS id_proy_div
                           FROM tbl_proyecto_divisiones pd,
                                tbl_division d
                           WHERE pd.id_proyecto = '.$id_proyecto.'
@@ -866,7 +867,6 @@ class ProyectoModel extends Model
 
     }
 
-
     function modHorasAnalistaProy($horas_asignadas,$horasComparar,$idAnaProy, $idProyecto){
 
       DB::beginTransaction();
@@ -906,5 +906,73 @@ class ProyectoModel extends Model
 
     }
 
+    function agregarMontoAdicionalProy($parametros){
+
+      if(DB::table('tbl_proy_monto_adicional')->insert($parametros)){
+        return true;
+      }else{
+        return false;
+      }
+
+    }
+
+    function montosAdicionesProy($id_proyecto){
+
+      $montos = DB::select('SELECT m.id,
+                                   m.monto,
+                                   FORMAT(m.monto,2,"de_DE") AS monto_formatted,
+                                   DATE_FORMAT(m.fecha, "%d/%m/%Y") AS fecha
+                            FROM tbl_proy_monto_adicional m
+                            WHERE m.id_proyecto = ?
+                            AND m.id_estatus = 1
+                            ORDER BY m.id DESC', [$id_proyecto]);
+
+      return $montos;
+
+    }
+
+    function eliminarMontosAdicionesProy($id_monto){
+
+      if(DB::table('tbl_proy_monto_adicional')->where("id", $id_monto)->update(["id_estatus" => 2])){
+        return true;
+      }else{
+        return false;
+      }
+
+    }
+
+    function horasAdicionesProyDiv($id_proy_div){
+
+      $horas = DB::select('SELECT h.id,
+                                  h.horas,
+                                  DATE_FORMAT(h.fecha, "%d/%m/%Y") AS fecha
+                            FROM tbl_proy_div_horas_adic h
+                            WHERE h.id_proy_div = ?
+                            AND h.id_estatus = 1
+                            ORDER BY h.id DESC', [$id_proy_div]);
+
+      return $horas;
+
+    }
+
+    function agregarHoraAdicionalProyDiv($parametros){
+
+      if(DB::table('tbl_proy_div_horas_adic')->insert($parametros)){
+        return true;
+      }else{
+        return false;
+      }
+
+    }
+
+    function eliminarHoraAdicionalProyDiv($id){
+
+      if(DB::table('tbl_proy_div_horas_adic')->where("id", $id)->update(["id_estatus" => 2])){
+        return true;
+      }else{
+        return false;
+      }
+
+    }
 
 }
