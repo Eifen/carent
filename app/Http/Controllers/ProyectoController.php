@@ -91,6 +91,7 @@ class ProyectoController extends Controller
       $descripcion = strtoupper($request->input("descripcion"));
       $cliente = $request->input("cliente");
       $socio = $request->input("socio");
+      $socioCalidad = $request->input("socioCalidad");
       $gerente = $request->input("gerente");
       $fechaContratacion = $request->input("fechaContratacion");
       $divisiones = $request->input("divisiones");
@@ -99,7 +100,7 @@ class ProyectoController extends Controller
       $monto = $request->input("monto");
       $empresa = $request->input("empresa");
 
-      $response = $modelo->crearProyecto($descripcion,$cliente,$socio,$gerente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto,$empresa);
+      $response = $modelo->crearProyecto($descripcion,$cliente,$socio,$socioCalidad,$gerente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto,$empresa);
 
       if($response["response"]){
 
@@ -205,6 +206,7 @@ class ProyectoController extends Controller
       $descripcion = strtoupper($request->input("descripcion"));
       $cliente = $request->input("cliente");
       $socio = $request->input("socio");
+      $socioCalidad = $request->input("socioCalidad");
       $gerente = $request->input("gerente");
       $fechaContratacion = $request->input("fechaContratacion");
       $divisiones = $request->input("divisiones");
@@ -220,6 +222,7 @@ class ProyectoController extends Controller
         "fecha_contratacion" => $fechaContratacion,
         "id_estatus" => $estatus,
         "id_socio" => $socio,
+        "id_socio_calidad" => $socioCalidad,
         "id_gerente" => $gerente,
         "id_moneda" => $id_moneda,
         "monto" => $monto,

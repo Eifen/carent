@@ -144,7 +144,7 @@ class ProyectoModel extends Model
 
     }
 
-    function crearProyecto($descripcion,$cliente,$socio,$gerente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto,$empresa){
+    function crearProyecto($descripcion,$cliente,$socio,$socioCalidad,$gerente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto,$empresa){
 
       DB::beginTransaction();
 
@@ -155,6 +155,7 @@ class ProyectoModel extends Model
                     "id_moneda" => $id_moneda,
                     "monto" => $monto,
                     "id_socio" => $socio,
+                    "id_socio_calidad" => $socioCalidad,
                     "id_gerente" => $gerente,
                     "id_empresa" => $empresa);
 
@@ -429,6 +430,11 @@ class ProyectoModel extends Model
                                    FROM tbl_usuario u1
                                    WHERE u1.id = p.id_socio
                                  ) nombre_socio,
+                                 (
+                                   SELECT CONCAT(u3.nombre_1," ",u3.nombre_2," ",u3.apellido_1," ",u3.apellido_2)
+                                   FROM tbl_usuario u3
+                                   WHERE u3.id = p.id_socio_calidad
+                                 ) nombre_socio_calidad,
                                  (
                                    SELECT CONCAT(u2.nombre_1," ",u2.nombre_2," ",u2.apellido_1," ",u2.apellido_2)
                                    FROM tbl_usuario u2

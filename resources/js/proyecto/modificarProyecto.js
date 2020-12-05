@@ -107,6 +107,7 @@ new Vue({
         estatus: null,
         fechaContratacion: null,
         socio: null,
+        socioCalidad: null,
         gerente: null,
         montoEn: null,
         monto: null,
@@ -155,6 +156,21 @@ new Vue({
           disabled: true,
           help: "",
           helpInit: "Socio que lleva el proyecto",
+          helpLoading: '<i class="fas fa-cog fa-spin"></i> buscando',
+          invalidFeedback: "",
+          listaDropdown: {
+            listado: [],
+            noResultado: false
+          },
+          state: null,
+          valor: null,
+          valorBlur: null,
+          valorFocus: null
+        },
+        socioCalidad: {
+          disabled: true,
+          help: "",
+          helpInit: "Socio de calidad",
           helpLoading: '<i class="fas fa-cog fa-spin"></i> buscando',
           invalidFeedback: "",
           listaDropdown: {
@@ -350,6 +366,9 @@ new Vue({
         socio: {
           required
         },
+        socioCalidad: {
+          required
+        },
         gerente: {
           required
         },
@@ -431,6 +450,10 @@ new Vue({
       self.form.camposAtributos.socio.valorFocus = dataInit.info.nombre_socio;
       self.form.camposAtributos.socio.valorBlur = dataInit.info.nombre_socio;
       self.form.campos.socio = dataInit.info.id_socio;
+      self.form.camposAtributos.socioCalidad.valor = dataInit.info.nombre_socio_calidad;
+      self.form.camposAtributos.socioCalidad.valorFocus = dataInit.info.nombre_socio_calidad;
+      self.form.camposAtributos.socioCalidad.valorBlur = dataInit.info.nombre_socio_calidad;
+      self.form.campos.socioCalidad = dataInit.info.id_socio_calidad;
       self.form.camposAtributos.gerente.valor = dataInit.info.nombre_gerente;
       self.form.camposAtributos.gerente.valorFocus = dataInit.info.nombre_gerente;
       self.form.camposAtributos.gerente.valorBlur = dataInit.info.nombre_gerente;
@@ -451,6 +474,9 @@ new Vue({
       self.form.camposAtributos.socio.state = true;
       self.form.camposAtributos.socio.disabled = false;
       self.form.camposAtributos.socio.help = self.form.camposAtributos.socio.helpInit;
+      self.form.camposAtributos.socioCalidad.state = true;
+      self.form.camposAtributos.socioCalidad.disabled = false;
+      self.form.camposAtributos.socioCalidad.help = self.form.camposAtributos.socioCalidad.helpInit;
       self.form.camposAtributos.gerente.state = true;
       self.form.camposAtributos.gerente.disabled = false;
       self.form.camposAtributos.gerente.help = self.form.camposAtributos.gerente.helpInit;
@@ -726,38 +752,38 @@ new Vue({
       self.form.camposAtributos[indice].invalidFeedback = "Debe seleccionar una opción válida";
 
     },
-    buscarSocio: function(){
+    buscarSocio: function(tipoSocio){
 
-      self.cleanFieldForm(self.form.camposAtributos.socio);
-      self.$refs["ref-lista-socio"].hide();
-      self.form.camposAtributos.socio.listaDropdown.listado = [];
-      self.form.camposAtributos.socio.listaDropdown.noResultado = false;
-      self.form.campos.socio = null;
-      self.form.camposAtributos.socio.valorFocus = null;
-      self.form.camposAtributos.socio.valorBlur = null;
+      self.cleanFieldForm(self.form.camposAtributos[tipoSocio]);
+      self.$refs["ref-lista-"+tipoSocio].hide();
+      self.form.camposAtributos[tipoSocio].listaDropdown.listado = [];
+      self.form.camposAtributos[tipoSocio].listaDropdown.noResultado = false;
+      self.form.campos[tipoSocio] = null;
+      self.form.camposAtributos[tipoSocio].valorFocus = null;
+      self.form.camposAtributos[tipoSocio].valorBlur = null;
 
-      if(self.form.camposAtributos.socio.valor !== ''){
+      if(self.form.camposAtributos[tipoSocio].valor !== ''){
 
-        self.form.camposAtributos.socio.help = self.form.camposAtributos.socio.helpLoading;
+        self.form.camposAtributos[tipoSocio].help = self.form.camposAtributos[tipoSocio].helpLoading;
 
         axios.get('/buscarSocioProyecto',{
           params: {
-            nombreSocio: self.form.camposAtributos.socio.valor
+            nombreSocio: self.form.camposAtributos[tipoSocio].valor
           }
         })
         .then(function (response) {
 
-          self.form.camposAtributos.socio.help = self.form.camposAtributos.socio.helpInit;
+          self.form.camposAtributos[tipoSocio].help = self.form.camposAtributos[tipoSocio].helpInit;
 
           if(response.status === 200 && response.data.response === true){
 
-            self.form.camposAtributos.socio.listaDropdown.listado = response.data.socios;
+            self.form.camposAtributos[tipoSocio].listaDropdown.listado = response.data.socios;
 
             if(response.data.socios.length === 0){
-              self.form.camposAtributos.socio.listaDropdown.noResultado = true;
+              self.form.camposAtributos[tipoSocio].listaDropdown.noResultado = true;
             }
 
-            self.mostrarListado("ref-lista-socio");
+            self.mostrarListado("ref-lista-"+tipoSocio);
 
           }else{
 
@@ -768,22 +794,22 @@ new Vue({
         })
         .catch(error => {
 
-          self.form.camposAtributos.socio.help = self.form.camposAtributos.socio.helpInit;
-          self.form.camposAtributos.socio.invalidFeedback = "Ocurrio un error, intenta nuevamente; con este error no podrás generar el proyecto.";
-          self.form.camposAtributos.socio.state = false;
+          self.form.camposAtributos[tipoSocio].help = self.form.camposAtributos[tipoSocio].helpInit;
+          self.form.camposAtributos[tipoSocio].invalidFeedback = "Ocurrio un error, intenta nuevamente; con este error no podrás generar el proyecto.";
+          self.form.camposAtributos[tipoSocio].state = false;
 
         });
 
       }// Fin if
 
     },
-    elegirSocio: function(id, nombre){
+    elegirSocio: function(id, nombre, tipoSocio){
 
-      self.form.camposAtributos.socio.valor = nombre;
-      self.form.camposAtributos.socio.valorFocus = nombre;
-      self.form.camposAtributos.socio.valorBlur = nombre;
-      self.form.camposAtributos.socio.state = true;
-      self.form.campos.socio = id;
+      self.form.camposAtributos[tipoSocio].valor = nombre;
+      self.form.camposAtributos[tipoSocio].valorFocus = nombre;
+      self.form.camposAtributos[tipoSocio].valorBlur = nombre;
+      self.form.camposAtributos[tipoSocio].state = true;
+      self.form.campos[tipoSocio] = id;
 
     },
     buscarGerente: function(){
@@ -976,6 +1002,7 @@ new Vue({
         cliente: self.form.campos.cliente,
         fechaContratacion: self.form.campos.fechaContratacion,
         socio: self.form.campos.socio,
+        socioCalidad: self.form.campos.socioCalidad,
         gerente: self.form.campos.gerente,
         divisiones: divisiones,
         estatus: self.form.campos.estatus,
