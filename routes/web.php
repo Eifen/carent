@@ -45,10 +45,6 @@ Route::get('/formBuscarCliente', function() {return view('cliente/buscarCliente'
 Route::get('/buscarClientes', 'ClienteController@buscarClientes');
 Route::get('/detalleCliente', 'ClienteController@detalleCliente');
 Route::get('/formDetalleFactCliente', function() {return view('cliente/detalleFactcliente');})->middleware('usuario.session');
-Route::get('/buscarClieProyec', 'ClienteController@buscarClieProyec');
-Route::get('/detalleClienteProy', 'ClienteController@detalleClienteProy');
-Route::post('/actualizarFactCliente', 'ClienteController@actualizarFactCliente');
-Route::post('/crearFactCliente', 'ClienteController@crearFactCliente');
 Route::get('/buscarUsuariosS', 'ClienteController@buscarUsuariosS');
 Route::get('/buscarUsuariosG', 'ClienteController@buscarUsuariosG');
 Route::get('/detalleUsuarios', 'ClienteController@detalleUsuario');
@@ -105,10 +101,15 @@ Route::get('/buscarClienteProyecto', 'ProyectoController@buscarClienteProyecto')
 Route::get('/buscarSocioProyecto', 'ProyectoController@buscarSocioProyecto');
 Route::get('/buscarGerenteProyecto', 'ProyectoController@buscarGerenteProyecto');
 Route::get('/proyectoGerentesDivision', 'ProyectoController@proyectoGerentesDivision');
+Route::get('/montosAdicionesProy', 'ProyectoController@montosAdicionesProy');
+Route::get('/horasAdicionesProyDiv', 'ProyectoController@horasAdicionesProyDiv');
 
 Route::post('/crearProyecto', 'ProyectoController@crearProyecto');
 Route::post('/modificarProyecto', 'ProyectoController@modificarProyecto');
-
+Route::post('/agregarMontoAdicionalProy', 'ProyectoController@agregarMontoAdicionalProy');
+Route::post('/eliminarMontosAdicionesProy', 'ProyectoController@eliminarMontosAdicionesProy');
+Route::post('/agregarHoraAdicionalProyDiv', 'ProyectoController@agregarHoraAdicionalProyDiv');
+Route::post('/eliminarHoraAdicionalProyDiv', 'ProyectoController@eliminarHoraAdicionalProyDiv');
 
 /*
   Módulo Facturación
@@ -137,6 +138,6 @@ Route::get('/buscarClientesProyectos', 'Reportes\ClientesProyectoController@busc
 Route::get('/dataRepEmpleados', 'Reportes\EmpleadosController@dataRepEmpleados')->middleware('usuario.session');
 Route::get('/buscarEmpleados', 'Reportes\EmpleadosController@buscarEmpleados')->middleware('usuario.session');
 Route::get('/dataRepClientes', 'Reportes\ClientesController@dataRepClientes')->middleware('usuario.session');
-Route::get('/buscarClientes', 'Reportes\ClientesController@buscarClientes')->middleware('usuario.session');
 Route::get('/dataRepHorasProyectos', 'Reportes\HorasProyectosController@dataRepHorasProyectos')->middleware('usuario.session');
 Route::get('/buscarHorasProyectos', 'Reportes\HorasProyectosController@buscarHorasProyectos')->middleware('usuario.session');
+Route::get('/consultarClientes', 'Reportes\ClientesController@consultarClientes')->middleware('usuario.session');

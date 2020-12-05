@@ -118,6 +118,7 @@ class HorasProyectosModel extends Model
 
       $sql = DB::select('SELECT p.id AS id_proyecto,
                                 p.descripcion AS proyecto,
+                                CONCAT(m.simbolo," ", p.monto) AS monto ,
                                 u.id_division,
                                 d.descripcion AS division,
                                 u.id_cargo,
@@ -132,11 +133,13 @@ class HorasProyectosModel extends Model
                               tbl_proyecto p,
                               tbl_cliente c,
                               tbl_division d,
-                              tbl_cargo_empleado ce
+                              tbl_cargo_empleado ce,
+                              tbl_monedas m
                          WHERE hc.id_proy_analista = pa.id
                          AND pa.id_analista = u.id
                          AND pa.id_proyecto = p.id
                          AND p.id_cliente = c.id
+                         AND p.id_moneda = m.id
                          AND u.id_division = d.id
                          AND u.id_cargo = ce.id
                          '.$sql_cargos.'
@@ -153,7 +156,8 @@ class HorasProyectosModel extends Model
                                   c.id,
                                   c.razon_social, 
                                   u.id_division,
-                                  u.id_cargo
+                                  u.id_cargo,
+                                  m.id
                           ORDER BY p.id ASC, u.id_cargo DESC
                          LIMIT '.$desde.', '.$paginar);
 
@@ -252,13 +256,15 @@ class HorasProyectosModel extends Model
                                 tbl_proyecto p,
                                 tbl_cliente c,
                                 tbl_division d,
-                                tbl_cargo_empleado ce
+                                tbl_cargo_empleado ce,
+                                tbl_monedas m
                            WHERE hc.id_proy_analista = pa.id
                            AND pa.id_analista = u.id
                            AND pa.id_proyecto = p.id
                            AND p.id_cliente = c.id
                            AND u.id_division = d.id
                            AND u.id_cargo = ce.id
+                           AND p.id_moneda = m.id
                            '.$sql_cargos.'
                            '.$sql_division.'
                            '.$sql_proyecto.'
@@ -268,7 +274,8 @@ class HorasProyectosModel extends Model
                                     u.id_division,
                                     u.id_cargo,
                                     c.id,
-                                    ce.descripcion
+                                    ce.descripcion,
+                                    m.id
                          )t'
                        );
 

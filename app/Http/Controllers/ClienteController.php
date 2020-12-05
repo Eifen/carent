@@ -75,20 +75,6 @@ class ClienteController extends Controller
     return $response;
   }
 
-  function buscarClieProyec(Request $request){
-
-    $modelo = new ClienteModel();
-    $idCliente = (int) $request->input("idCliente");
-    $permisoCrear = $modelo->permisoCrear(session("usuario_id"), 7);
-    $clienteProy = $modelo->buscarClieProyec($idCliente);
-    if(!empty($clienteProy)){
-      $response = array("response" => true, "clienteProy" => $clienteProy, "permisoCrear" => $permisoCrear);
-    }else{
-      $response = array("response" => false, "message" => "No se encontraron resultados");
-    }
-    return $response;
-  }
-
   function detalleUsuario(Request $request){
 
     $modelo = new ClienteModel();
@@ -170,40 +156,6 @@ class ClienteController extends Controller
     return $response;
   }
 
-  function detalleClienteProy(Request $request){
-
-    $modelo = new ClienteModel();
-    $permisoActualizar = $modelo->permisoActualizar(session("usuario_id"), 7);
-    $permisoCrear = $modelo->permisoCrear(session("usuario_id"), 7);
-    $idclienteProy = (int) $request->input("idclienteProy");
-    $infoClienteProy = $modelo->detalleClienteProy($idclienteProy);
-    $infoFactCliente = $modelo->detalleFactCliente($infoClienteProy->id, $infoClienteProy->id_cliente);
-    $estados_factura = $modelo->estados();
-    if (!empty($infoFactCliente)) {
-      if($infoFactCliente->id_estado_factura !== NULL){
-        $municipios_factura = $modelo->municipios($infoFactCliente->id_estado_factura);
-        $parroquias_factura = $modelo->parroquias($infoFactCliente->id_municipio_factura);
-      }
-    }else{
-      $municipios_factura = array();
-      $parroquias_factura = array();
-    }
-
-    if(!empty($infoClienteProy)){
-      $response = array("response" => true,
-                        "infoproy" => $infoClienteProy,
-                        "infoFactCliente" => $infoFactCliente,
-                        "estadosfa" => $estados_factura,
-                        "municipiosfa" => $municipios_factura,
-                        "parroquiasfa" => $parroquias_factura,
-                        "permisoActualizar" => $permisoActualizar,
-                        "permisoCrear" => $permisoCrear);
-    }else{
-      $response = array("response" => false, "message" => "No se encontraron resultados");
-    }
-    return $response;
-  }
-
   function formModificarCliente($idCliente, Request $request){
 
     $request->session()->put('id_cliente_mod', $idCliente);
@@ -229,83 +181,7 @@ class ClienteController extends Controller
     return $response;
   }
 
-  function crearFactCliente(Request $request){
-
-    $modelo = new ClienteModel();
-
-    $parametros = array(
-      "id_cliente" => (int) $request->input("id_cliente"),
-      "id_proyecto" => (int) $request->input("id_proyecto"),
-      "parroquiafa" => $request->input("parroquiafa"),
-      "ciudad_factura" => mb_strtoupper($request->input("ciudad_factura")),
-      "avenida_calle_factura" => mb_strtoupper($request->input("avenida_calle_factura")),
-      "edificio_quinta_factura" => mb_strtoupper($request->input("edificio_quinta_factura")),
-      "piso_factura" => mb_strtoupper($request->input("piso_factura")),
-      "numero_factura" => $request->input("numero_factura"),
-      "telefono_factura" => $request->input("telefono_factura"),
-      "fax_factura" => $request->input("fax_factura"),
-      "correo_factura" => strtolower($request->input("correo_factura"))
-    );
-
-    $response = $modelo->CrearFactCliente($parametros);
-
-    if($response["response"]){
-
-      $parametros = [
-        "accion" => 'Registro del detalle de facturacion del cliente: '. $response["razon_social"] .'. proyecto: '.$response["proyecto"],
-        "direccion_ip" => $request->session()->get('direccion_ip'),
-        "fecha" => date("Y-m-d H:i:s"),
-        "tabla" => 'tbl_cliente_facturacion',
-        "usuario_id" => $request->session()->get('usuario_id')
-      ];
-
-      $modeloAudit = new AuditoriaLogModel();
-      $modeloAudit->logs_auditoria($parametros);
-
-    }
-
-    return $response;
-
-  }
-
-  function actualizarFactCliente(Request $request){
-
-    $modelo = new ClienteModel();
-      $parametros = array(
-        "id_cliente" => (int) $request->input("id_cliente"),
-        "id_proyecto" => (int) $request->input("id_proyecto"),
-        "id_fact_cliente" => (int) $request->input("id_fact_cliente"),
-        "parroquiafa" => $request->input("parroquiafa"),
-        "ciudad_factura" => mb_strtoupper($request->input("ciudad_factura")),
-        "avenida_calle_factura" => mb_strtoupper($request->input("avenida_calle_factura")),
-        "edificio_quinta_factura" => mb_strtoupper($request->input("edificio_quinta_factura")),
-        "piso_factura" => mb_strtoupper($request->input("piso_factura")),
-        "numero_factura" => $request->input("numero_factura"),
-        "telefono_factura" => $request->input("telefono_factura"),
-        "fax_factura" => $request->input("fax_factura"),
-        "correo_factura" => strtolower($request->input("correo_factura"))
-      );
-      $response = $modelo->actualizarFactCliente($parametros);
-
-      if($response["response"]){
-
-        $parametros = [
-          "accion" => 'Modificacion del detalle de facturacion del cliente: '. $response["razon_social"] .'. proyecto: '.$response["proyecto"],
-          "direccion_ip" => $request->session()->get('direccion_ip'),
-          "fecha" => date("Y-m-d H:i:s"),
-          "tabla" => 'tbl_cliente_facturacion',
-          "usuario_id" => $request->session()->get('usuario_id')
-        ];
-
-        $modeloAudit = new AuditoriaLogModel();
-        $modeloAudit->logs_auditoria($parametros);
-
-      }
-
-      return $response;
-  }
-
-    function modificarCliente(Request $request){
+  function modificarCliente(Request $request){
 
     $modelo = new ClienteModel();
 

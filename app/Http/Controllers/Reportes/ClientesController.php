@@ -39,7 +39,7 @@ class ClientesController extends Controller
 
     }
 
-    function buscarClientes(Request $request){
+    function consultarClientes(Request $request){
 
       $modelo = new ClientesModel();
 
@@ -58,7 +58,11 @@ class ClientesController extends Controller
       $paginas = $modelo->pagClientes($paginar, $filtros);
       $totales = $modelo->totalesClientes($filtros);
 
-      return array("clientes" => $clientes, "paginas" => $paginas, "totales" => $totales);
+      return [
+        "clientes" => $clientes,
+        "paginas" => $paginas,
+        "totales" => $totales
+      ];
 
     }
 

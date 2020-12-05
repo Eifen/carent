@@ -144,7 +144,7 @@ class ProyectoModel extends Model
 
     }
 
-    function crearProyecto($descripcion,$cliente,$socio,$gerente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto,$empresa){
+    function crearProyecto($descripcion,$cliente,$socio,$socioCalidad,$gerente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto,$empresa){
 
       DB::beginTransaction();
 
@@ -155,6 +155,7 @@ class ProyectoModel extends Model
                     "id_moneda" => $id_moneda,
                     "monto" => $monto,
                     "id_socio" => $socio,
+                    "id_socio_calidad" => $socioCalidad,
                     "id_gerente" => $gerente,
                     "id_empresa" => $empresa);
 
@@ -430,6 +431,11 @@ class ProyectoModel extends Model
                                    WHERE u1.id = p.id_socio
                                  ) nombre_socio,
                                  (
+                                   SELECT CONCAT(u3.nombre_1," ",u3.nombre_2," ",u3.apellido_1," ",u3.apellido_2)
+                                   FROM tbl_usuario u3
+                                   WHERE u3.id = p.id_socio_calidad
+                                 ) nombre_socio_calidad,
+                                 (
                                    SELECT CONCAT(u2.nombre_1," ",u2.nombre_2," ",u2.apellido_1," ",u2.apellido_2)
                                    FROM tbl_usuario u2
                                    WHERE u2.id = p.id_gerente
@@ -465,7 +471,8 @@ class ProyectoModel extends Model
                                    FROM tbl_usuario u
                                    WHERE u.id = pd.id_gerente
                                  ) nombre_gerente,
-                                 pd.horas_contratadas
+                                 pd.horas_contratadas,
+                                 pd.id AS id_proy_div
                           FROM tbl_proyecto_divisiones pd,
                                tbl_division d
                           WHERE pd.id_proyecto = '.$id_proyecto.'
@@ -866,7 +873,6 @@ class ProyectoModel extends Model
 
     }
 
-
     function modHorasAnalistaProy($horas_asignadas,$horasComparar,$idAnaProy, $idProyecto){
 
       DB::beginTransaction();
@@ -906,5 +912,73 @@ class ProyectoModel extends Model
 
     }
 
+    function agregarMontoAdicionalProy($parametros){
+
+      if(DB::table('tbl_proy_monto_adicional')->insert($parametros)){
+        return true;
+      }else{
+        return false;
+      }
+
+    }
+
+    function montosAdicionesProy($id_proyecto){
+
+      $montos = DB::select('SELECT m.id,
+                                   m.monto,
+                                   FORMAT(m.monto,2,"de_DE") AS monto_formatted,
+                                   DATE_FORMAT(m.fecha, "%d/%m/%Y") AS fecha
+                            FROM tbl_proy_monto_adicional m
+                            WHERE m.id_proyecto = ?
+                            AND m.id_estatus = 1
+                            ORDER BY m.id DESC', [$id_proyecto]);
+
+      return $montos;
+
+    }
+
+    function eliminarMontosAdicionesProy($id_monto){
+
+      if(DB::table('tbl_proy_monto_adicional')->where("id", $id_monto)->update(["id_estatus" => 2])){
+        return true;
+      }else{
+        return false;
+      }
+
+    }
+
+    function horasAdicionesProyDiv($id_proy_div){
+
+      $horas = DB::select('SELECT h.id,
+                                  h.horas,
+                                  DATE_FORMAT(h.fecha, "%d/%m/%Y") AS fecha
+                            FROM tbl_proy_div_horas_adic h
+                            WHERE h.id_proy_div = ?
+                            AND h.id_estatus = 1
+                            ORDER BY h.id DESC', [$id_proy_div]);
+
+      return $horas;
+
+    }
+
+    function agregarHoraAdicionalProyDiv($parametros){
+
+      if(DB::table('tbl_proy_div_horas_adic')->insert($parametros)){
+        return true;
+      }else{
+        return false;
+      }
+
+    }
+
+    function eliminarHoraAdicionalProyDiv($id){
+
+      if(DB::table('tbl_proy_div_horas_adic')->where("id", $id)->update(["id_estatus" => 2])){
+        return true;
+      }else{
+        return false;
+      }
+
+    }
 
 }

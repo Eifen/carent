@@ -123,7 +123,7 @@
                 id="group-socio">
                 <b-form-input
                   @blur="valorBlur('socio')"
-                  @input="buscarSocio"
+                  @input="buscarSocio('socio')"
                   :disabled="form.camposAtributos.socio.disabled"
                   :state="form.camposAtributos.socio.state"
                   autocomplete="off"
@@ -138,12 +138,42 @@
                     :key="key"
                     v-for="(socio, key) in form.camposAtributos.socio.listaDropdown.listado"
                     v-if="form.camposAtributos.socio.listaDropdown.listado.length > 0"
-                    v-on:click="elegirSocio(socio.id, socio.nombre)"> @{{ socio.nombre }} </b-dropdown-item-button>
+                    v-on:click="elegirSocio(socio.id, socio.nombre, 'socio')"> @{{ socio.nombre }} </b-dropdown-item-button>
                   <b-dropdown-item-button
                     v-if="form.camposAtributos.socio.listaDropdown.noResultado"
                     v-on:click="listadoNoValido('socio')">No se encontrarón socios, intente con otro nombre!</b-dropdown-item-button>
                 </b-dropdown>
                 <b-form-text id="socio-help" v-html="form.camposAtributos.socio.help"></b-form-text>
+              </b-form-group>
+              <b-form-group
+                :invalid-feedback="form.camposAtributos.socioCalidad.invalidFeedback"
+                class="col-12 col-sm-6"
+                label="Socio de Calidad"
+                label-for="socioCalidad"
+                id="group-socioCalidad">
+                <b-form-input
+                  @blur="valorBlur('socioCalidad')"
+                  @input="buscarSocio('socioCalidad')"
+                  :disabled="form.camposAtributos.socioCalidad.disabled"
+                  :state="form.camposAtributos.socioCalidad.state"
+                  autocomplete="off"
+                  id="socioCalidad"
+                  ref="socioCalidad"
+                  size="sm"
+                  type="text"
+                  v-on:focus="valorFocus('socioCalidad')"
+                  v-model.trim="form.camposAtributos.socioCalidad.valor"></b-form-input>
+                <b-dropdown id="lista-socioCalidad" variant="link" no-caret block ref="ref-lista-socioCalidad">
+                  <b-dropdown-item-button
+                    :key="key"
+                    v-for="(socioCalidad, key) in form.camposAtributos.socioCalidad.listaDropdown.listado"
+                    v-if="form.camposAtributos.socioCalidad.listaDropdown.listado.length > 0"
+                    v-on:click="elegirSocio(socioCalidad.id, socioCalidad.nombre, 'socioCalidad')"> @{{ socioCalidad.nombre }} </b-dropdown-item-button>
+                  <b-dropdown-item-button
+                    v-if="form.camposAtributos.socioCalidad.listaDropdown.noResultado"
+                    v-on:click="listadoNoValido('socioCalidad')">No se encontrarón socios, intente con otro nombre!</b-dropdown-item-button>
+                </b-dropdown>
+                <b-form-text id="socioCalidad-help" v-html="form.camposAtributos.socioCalidad.help"></b-form-text>
               </b-form-group>
               <b-form-group
                 :invalid-feedback="form.camposAtributos.gerente.invalidFeedback"
