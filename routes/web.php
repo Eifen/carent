@@ -140,12 +140,4 @@ Route::get('/buscarEmpleados', 'Reportes\EmpleadosController@buscarEmpleados')->
 Route::get('/dataRepClientes', 'Reportes\ClientesController@dataRepClientes')->middleware('usuario.session');
 Route::get('/dataRepHorasProyectos', 'Reportes\HorasProyectosController@dataRepHorasProyectos')->middleware('usuario.session');
 Route::get('/buscarHorasProyectos', 'Reportes\HorasProyectosController@buscarHorasProyectos')->middleware('usuario.session');
-<<<<<<< HEAD
-<<<<<<< HEAD
 Route::get('/consultarClientes', 'Reportes\ClientesController@consultarClientes')->middleware('usuario.session');
-=======
-Route::get('/consultarClientes', 'Reportes\ClientesController@consultarClientes')->middleware('usuario.session');
->>>>>>> #357
-=======
-Route::get('/consultarClientes', 'Reportes\ClientesController@consultarClientes')->middleware('usuario.session');
->>>>>>> 8b8d640e593f01ce3465af7666852b2e0439d879
