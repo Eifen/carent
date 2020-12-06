@@ -217,7 +217,7 @@
           </div>
         </div>
         <div id="modal-asignar-menu" class="modal fade" tabindex="-1" role="dialog" v-cloak>
-          <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
               <div class="modal-header">
                 <h4>Asignar los Menus</h4>

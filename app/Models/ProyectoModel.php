@@ -733,7 +733,8 @@ class ProyectoModel extends Model
                                  UPPER(p.descripcion) AS proyecto,
                                  (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = p.id_cliente) cliente,
                                  (SELECT d.id FROM tbl_proyecto_divisiones d WHERE d.id_proyecto = '.$id_proyecto.' AND d.id_division = '.$id_division.' )id_proyecto_division,
-                                 (SELECT (d.horas_contratadas + ph.horas) FROM tbl_proyecto_divisiones d, tbl_proy_div_horas_adic ph WHERE d.id_proyecto = '.$id_proyecto.' AND d.id_division = '.$id_division.' AND d.id  = ph.id_proy_div)horas_contratadas
+                                 (SELECT SUM(d.horas_contratadas) FROM tbl_proyecto_divisiones d WHERE d.id_proyecto = '.$id_proyecto.' AND d.id_division = '.$id_division.')horas_contratadas,
+                                 (SELECT SUM(ph.horas) FROM tbl_proyecto_divisiones d, tbl_proy_div_horas_adic ph WHERE d.id_proyecto = '.$id_proyecto.' AND d.id_division = '.$id_division.' AND d.id  = ph.id_proy_div)horas_adicionales
                           FROM tbl_proyecto p
                           WHERE p.id = '.$id_proyecto.'');
 
