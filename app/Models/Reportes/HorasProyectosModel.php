@@ -118,6 +118,7 @@ class HorasProyectosModel extends Model
 
       $sql = DB::select('SELECT p.id AS id_proyecto,
                                 p.descripcion AS proyecto,
+                                (SELECT CONCAT(m.simbolo," ", p.monto + SUM(pm.monto)) FROM tbl_proy_monto_adicional pm WHERE p.id = pm.id_proyecto) montoA,
                                 CONCAT(m.simbolo," ", p.monto) AS monto ,
                                 u.id_division,
                                 d.descripcion AS division,
@@ -126,7 +127,8 @@ class HorasProyectosModel extends Model
                                 CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS empleado,
                                 c.razon_social AS cliente,
                                 TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(hc.horas_trabajadas))),"%H") horas_trabajadas,
-                                (SELECT SUM(pd.horas_contratadas) FROM tbl_proyecto_divisiones pd WHERE pa.id_proyecto = pd.id_proyecto) horas_contratadas
+                                (SELECT SUM(pd.horas_contratadas) FROM tbl_proyecto_divisiones pd WHERE pa.id_proyecto = pd.id_proyecto) horas_contratadas,
+                                (SELECT SUM(ph.horas) FROM tbl_proyecto_divisiones pd, tbl_proy_div_horas_adic ph WHERE pd.id_proyecto = p.id AND pd.id  = ph.id_proy_div) horas_adicional
                          FROM tbl_horas_cargables hc,
                               tbl_proyecto_analista pa,
                               tbl_usuario u,

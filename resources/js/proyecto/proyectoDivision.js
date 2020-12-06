@@ -93,6 +93,7 @@ new Vue({
     proyectoBusqueda: [],
     horasComparar: [],
     horas_cargadas: 0,
+    horas_contratadas: 0,
     diferencia: 0,
     permisoVer: false,
     permisoCrear: false,
@@ -335,6 +336,7 @@ new Vue({
 
       self.detalleDproyecto.error = false;
       self.horas_cargadas = 0;
+      self.horas_contratadas = 0;
       $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
 
       let parametros = {
@@ -348,6 +350,7 @@ new Vue({
 
           self.detalleDproyecto.data = response.data.infoDproyecto;
           self.detalleAproyecto.data = response.data.infoAproyecto;
+          self.horas_contratadas = parseFloat(self.detalleDproyecto.data[0].horas_contratadas) + parseFloat(self.detalleDproyecto.data[0].horas_adicional);
           for (var i = 0; i < self.detalleAproyecto.data.length; i++) {
             if (self.detalleAproyecto.data[i].horas_cargadas != null) {
               self.horas_cargadas = parseFloat(self.detalleAproyecto.data[i].horas_cargadas) + self.horas_cargadas;
