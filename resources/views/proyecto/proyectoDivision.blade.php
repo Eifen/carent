@@ -140,7 +140,7 @@
                   </div>
                   <div class="form-group col-12 col-sm-6">
                     <label>Horas Contratadas</label>
-                    <input class="form-control" type="text" disabled v-bind:value="Dproyecto.horas_contratadas">
+                    <input class="form-control" type="text" disabled v-bind:value="horas_contratadas">
                   </div>
                   <div class="form-group col-12 col-sm-6">
                     <label>Total de Horas Cargadas</label>
