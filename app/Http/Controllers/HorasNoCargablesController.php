@@ -171,7 +171,8 @@ class HorasNoCargablesController extends Controller
         $data = [
           "id_concepto" => $request->input("concepto"),
           "id_division" => session("division_id"),
-          "id_usuario" => session("usuario_id")
+          "id_usuario" => session("usuario_id"),
+          "horas_cargadas" => date("d/m/Y h:i:s A", strtotime($request->input("fechaDesde"))).' - '.date("d/m/Y h:i:s A", strtotime($request->input("fechaHasta")))
         ];
         $parametros_email = $modelo->dataNotificarHoraCargada($data);
         $this->notificarHoraCargada($parametros_email);
@@ -188,7 +189,8 @@ class HorasNoCargablesController extends Controller
         "concepto" => $parametros["empleado"]->concepto,
         "division" => $parametros["empleado"]->division,
         "empleado" => $parametros["empleado"]->nombre,
-        "fecha" => date("d/m/Y H:i A")
+        "fecha" => date("d/m/Y H:i A"),
+        "horas_cargadas" => $parametros["horas_cargadas"]
       ];
 
       $destinatarios = [];
