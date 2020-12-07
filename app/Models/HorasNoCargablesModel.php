@@ -495,6 +495,7 @@ class HorasNoCargablesModel extends Model
 
         return [
           "empleado" => $data_usuario[0],
+          "horas_cargadas" => $data["horas_cargadas"],
           "supervisores" => $data_supervisores
         ];
 
