@@ -452,6 +452,7 @@
             self.formFiltro.campos.proyecto.disabled = false;
             self.formFiltro.campos.razonSocial.disabled = false;
             self.formFiltro.campos.estatus.disabled = false;
+            self.formFiltro.campos.monedas.disabled = false;
 
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
             self.formFiltro.btn.filtrar.disabled = false;
@@ -464,7 +465,9 @@
 
             self.totales.proyectos = (response.data.totales.proyectos) ? response.data.totales.proyectos : 0;
 
-            self.tabla.registros = self.registroTabla(response.data.clientes);
+            let resgitros = self.registroTabla(response.data.registros)
+            self.tabla.registros = resgitros[0];
+            self.tabla.registrosExcel = resgitros[1];
 
           }).catch(error => {
 
@@ -472,6 +475,7 @@
             self.formFiltro.campos.proyecto.disabled = false;
             self.formFiltro.campos.razonSocial.disabled = false;
             self.formFiltro.campos.estatus.disabled = false;
+            self.formFiltro.campos.monedas.disabled = false;
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
             self.formFiltro.btn.filtrar.disabled = false;
             self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;

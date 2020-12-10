@@ -44,7 +44,7 @@ class facturadoCliProyController extends Controller
 
     function filtrarCliProy(Request $request){
 
-      $modelo = new ClientesModel();
+      $modelo = new facturadoCliProyModel();
 
       $paginar = [
         "desde" => $request->input("desde"),
