@@ -42,7 +42,7 @@ class facturadoCliProyController extends Controller
 
     }
 
-    function consultarClientes(Request $request){
+    function filtrarCliProy(Request $request){
 
       $modelo = new ClientesModel();
 
@@ -53,17 +53,17 @@ class facturadoCliProyController extends Controller
       $filtros = [
         "razon_social" => $request->input("razonSocial"),
         "rif" => $request->input("rif"),
-        "socio" => $request->input("socio"),
-        "estatus" => $request->input("estatus")
+        "proyecto" => $request->input("proyecto"),
+        "estatus" => $request->input("estatus"),
+        "monedas" => $request->input("monedas")
       ];
-      $estatus = $modelo->estatusClientes();
-      $clientes = $modelo->repoClientes($paginar, $filtros);
-      $paginas = $modelo->pagClientes($paginar, $filtros);
-      $totales = $modelo->totalesClientes($filtros);
+      $registros = $modelo->repFacturadoCliProy($paginar, $filtros);
+      $paginas = $modelo->pagFacturadoCliProy($paginar, $filtros);
+      $totales = $modelo->totalesFacturadoCliProy($filtros);
 
       return [
-        "clientes" => $clientes,
         "paginas" => $paginas,
+        "registros" => $registros,
         "totales" => $totales
       ];
 

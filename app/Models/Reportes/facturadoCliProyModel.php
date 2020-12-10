@@ -23,7 +23,7 @@ class facturadoCliProyModel extends Model
     function monedas(){
 
       $sql = DB::select('SELECT m.id,
-                                m.moneda
+                                m.moneda AS descripcion
                          FROM tbl_monedas m
                          ORDER BY m.moneda ASC');
 

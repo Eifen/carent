@@ -46,6 +46,21 @@
         </b-form-group>
         <b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
+          label="Monedas"
+          label-for="monedas"
+          id="group-monedas">
+          <select aria-describedby="monedasHelp"
+                  class="form-control form-control-sm"
+                  id="monedas"
+                  data-validar="true"
+                  v-bind:disabled="formFiltro.campos.monedas.disabled"
+                  v-model="formFiltro.campos.monedas.value">
+            <option :value="null" selected>Seleccione...</option>
+            <option v-bind:value="moneda.id" v-for="moneda in formFiltro.campos.monedas.listado">{{ moneda.descripcion }}</option>
+          </select>
+        </b-form-group>
+        <b-form-group
+          class="form-group col-12 col-sm-6 col-md-4"
           label="Estatus"
           label-for="estatus"
           id="group-estatus">
@@ -205,6 +220,11 @@
                 listado: [],
                 value: null
               },
+              monedas: {
+                disabled: true,
+                listado: [],
+                value: null
+              },
               razonSocial: {
                 disabled: true,
                 value: null
@@ -283,6 +303,7 @@
 
             }
 
+            self.formFiltro.campos.monedas.listado = response.data.monedas;
             self.formFiltro.campos.estatus.listado = response.data.estatus;
 
             self.totales.proyectos = (response.data.totales.proyectos) ? response.data.totales.proyectos : 0;
@@ -295,6 +316,7 @@
             self.formFiltro.campos.proyecto.disabled = false;
             self.formFiltro.campos.razonSocial.disabled = false;
             self.formFiltro.campos.estatus.disabled = false;
+            self.formFiltro.campos.monedas.disabled = false;
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
             self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
             self.formFiltro.mostrar = true;
@@ -403,6 +425,7 @@
           self.formFiltro.campos.proyecto.disabled = true;
           self.formFiltro.campos.razonSocial.disabled = true;
           self.formFiltro.campos.estatus.disabled = true;
+          self.formFiltro.campos.monedas.disabled = true;
 
           self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
           self.formFiltro.btn.filtrar.disabled = true;
@@ -417,11 +440,12 @@
             desde: desde,
             razonSocial: self.formFiltro.campos.razonSocial.value,
             estatus: self.formFiltro.campos.estatus.value,
+            monedas: self.formFiltro.campos.monedas.value,
             paginar: self.tabla.paginador.paginar
           };
 
           //Se utiliza el metodo get para su busqueda y se envian con los parametros
-          axios.get('/consultarClientes', {params: parametros})
+          axios.get('/filtrarCliProy', {params: parametros})
           .then(function (response) {
 
             self.formFiltro.campos.rif.disabled = false;
@@ -462,6 +486,7 @@
           self.formFiltro.campos.proyecto.value = null;
           self.formFiltro.campos.razonSocial.value = null;
           self.formFiltro.campos.estatus.value = null;
+          self.formFiltro.campos.monedas.value = null;
           self.buscar();
 
         }
