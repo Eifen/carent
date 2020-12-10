@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 class facturadoCliProyController extends Controller
 {
 
-    function dataRepFacturadoCli(){
+    function dataRepFacturadoCliProy(){
 
       $modelo = new facturadoCliProyModel();
 
@@ -18,21 +18,24 @@ class facturadoCliProyController extends Controller
         "paginar" => 200
       ];
       $filtros = [
+        "estatus" => null,
+        "proyecto" => null,
         "razon_social" => null,
-        "rif" => null,
-        "socio" => null,
-        "estatus" => null
+        "rif" => null
       ];
-      $estatus = $modelo->estatusClientes();
-      $clientes = $modelo->repoClientes($paginar, $filtros);
-      $paginas = $modelo->pagClientes($paginar, $filtros);
-      $totales = $modelo->totalesClientes($filtros);
+
+      $estatus = $modelo->estatusProyectos();
+      $monedas = $modelo->monedas();
+      $registros = $modelo->repFacturadoCliProy($paginar, $filtros);
+      $paginas = $modelo->pagFacturadoCliProy($paginar, $filtros);
+      $totales = $modelo->totalesFacturadoCliProy($filtros);
 
       return [
         "estatus" => $estatus,
-        "clientes" => $clientes,
+        "monedas" => $monedas,
         "paginas" => $paginas,
         "paginar" => $paginar["paginar"],
+        "registros" => $registros,
         "response" => true,
         "totales" => $totales
       ];

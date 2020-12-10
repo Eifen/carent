@@ -33,16 +33,16 @@
         </b-form-group>
         <b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
-          label="Socio"
-          label-for="socio"
-          id="group-socio">
+          label="Proyecto"
+          label-for="proyecto"
+          id="group-proyecto">
           <b-form-input
-            :disabled="formFiltro.campos.socio.disabled"
-            id="socio"
-            ref="socio"
+            :disabled="formFiltro.campos.proyecto.disabled"
+            id="proyecto"
+            ref="proyecto"
             size="sm"
             type="text"
-            v-model.trim="formFiltro.campos.socio.value"></b-form-input>
+            v-model.trim="formFiltro.campos.proyecto.value"></b-form-input>
         </b-form-group>
         <b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
@@ -85,17 +85,17 @@
     <b-col cols="12">
       <b-row align-h="end" v-cloak v-if="formFiltro.mostrar">
         <b-col cols="12" md="6" lg="4">
-          <b-card class="text-left card-clientes">
+          <b-card class="text-left card-proyectos">
             <b-card-text>
-              <span class="titulo">TOTAL DE CLIENTES</span>
+              <span class="titulo">TOTAL DE PROYECTOS/CLIENTES</span>
             </b-card-text>
             <b-card-text>
-              <span class="monto">{{ totales.clientes }}</span>
+              <span class="monto">{{ totales.proyectos }}</span>
             </b-card-text>
           </b-card>
         </b-col>
         <b-col cols="12" md="6" lg="4" class="wrapper-btn-generar-excel">
-          <download-excel :data="tabla.registros" :name="'clientes.xls'">
+          <download-excel :data="tabla.registrosExcel" :name="'clientes.xls'">
             <b-button
               block
               variant="success">
@@ -213,7 +213,7 @@
                 disabled: true,
                 value: null
               },
-              socio:{
+              proyecto:{
                 disabled: true,
                 value: null
               }
@@ -237,10 +237,11 @@
               pagina:1,
               paginar: 0
             },
-            registros: []
+            registros: [],
+            registrosExcel: []
           },
           totales: {
-            clientes: 0
+            proyectos: 0
           }
         };
       },
@@ -253,7 +254,7 @@
 
         self = this;
 
-        axios.get('/dataRepFacturadoCli')
+        axios.get('/dataRepFacturadoCliProy')
         .then(function (response) {
 
           if(response.status === 200 && response.data.response === true){
@@ -262,29 +263,36 @@
               { key: 'numero', label: '#' },
               { key: 'rif', label: 'RIF' },
               { key: 'razonSocial', label: 'Razón Social' },
-              { key: 'socio', label: 'Socio' },
+              { key: 'proyecto', label: 'Proyecto' },
+              { key: 'monto_proyecto', label: 'Monto Proyecto' },
+              { key: 'monto_facturado', label: 'Monto Facturado' },
+              { key: 'monto_notas_credito', label: 'Notas Crédito' },
+              { key: 'monto_gasto', label: 'Gastos' },
+              { key: 'monto_otros_gastos', label: 'Otros Gastos' },
               { key: 'estatus', label: 'Estatus' }
             ];
 
-            self.tabla.registros = self.registroTabla(response.data.clientes);
+            let resgitros = self.registroTabla(response.data.registros)
+            self.tabla.registros = resgitros[0];
+            self.tabla.registrosExcel = resgitros[1];
 
-            if(response.data.clientes.length === 0){
+            if(response.data.registros.length === 0){
 
-              let mensaje = "No hay clientes";
+              let mensaje = "No hay proyectos con facturas asociadas";
               self.mostrarAlert(self.tabla.alert, true, "warning", mensaje, false, false, 0);
 
             }
 
             self.formFiltro.campos.estatus.listado = response.data.estatus;
 
-            self.totales.clientes = (response.data.totales.clientes) ? response.data.totales.clientes : 0;
+            self.totales.proyectos = (response.data.totales.proyectos) ? response.data.totales.proyectos : 0;
 
             self.tabla.paginador.paginar = response.data.paginar;
             self.tabla.paginador.numPaginas = response.data.paginas;
             self.tabla.paginador.max = parseInt(response.data.paginas);
 
             self.formFiltro.campos.rif.disabled = false;
-            self.formFiltro.campos.socio.disabled = false;
+            self.formFiltro.campos.proyecto.disabled = false;
             self.formFiltro.campos.razonSocial.disabled = false;
             self.formFiltro.campos.estatus.disabled = false;
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
@@ -306,7 +314,6 @@
 
 
         });
-
 
       },
       beforeUpdate:function(){},
@@ -343,6 +350,7 @@
         registroTabla: function(datos){
 
           const registros = [];
+          const registrosExcel = [];
           datos.forEach((item, i) => {
 
             var variante = "";
@@ -357,23 +365,42 @@
             const data = {
               numero: (i + 1),
               rif: item.rif,
-              razonSocial: item.razon_social,
-              socio: item.socio,
+              razonSocial: item.cliente,
               estatus: item.estatus,
+              monto_proyecto: item.moneda+' '+item.monto_proyecto_formated,
+              monto_facturado: item.moneda+' '+item.monto_facturado_formated,
+              monto_notas_credito: item.moneda+' '+item.monto_notas_credito_formated,
+              monto_gasto: item.moneda+' '+item.monto_gasto_formated,
+              monto_otros_gastos: item.moneda+' '+item.monto_otros_gastos_formated,
+              proyecto: item.proyecto,
               variante: variante
             };
 
+            const dataExcel = {
+              rif: item.rif,
+              razonSocial: item.cliente,
+              proyecto: item.proyecto,
+              estatus: item.estatus,
+              moneda: item.moneda,
+              monto_proyecto: item.monto_proyecto,
+              monto_facturado: item.monto_facturado,
+              monto_notas_credito: item.monto_notas_credito,
+              monto_gasto: item.monto_gasto,
+              monto_otros_gastos: item.monto_otros_gastos
+            }
+
             registros.push(data);
+            registrosExcel.push(dataExcel);
 
           });
 
-          return registros;
+          return [registros, registrosExcel];
 
         },
         buscar: function(){
 
           self.formFiltro.campos.rif.disabled = true;
-          self.formFiltro.campos.socio.disabled = true;
+          self.formFiltro.campos.proyecto.disabled = true;
           self.formFiltro.campos.razonSocial.disabled = true;
           self.formFiltro.campos.estatus.disabled = true;
 
@@ -386,7 +413,7 @@
           let desde = (self.tabla.paginador.pagina - 1) * self.tabla.paginador.paginar;
           let parametros = {
             rif: self.formFiltro.campos.rif.value,
-            socio: self.formFiltro.campos.socio.value,
+            proyecto: self.formFiltro.campos.proyecto.value,
             desde: desde,
             razonSocial: self.formFiltro.campos.razonSocial.value,
             estatus: self.formFiltro.campos.estatus.value,
@@ -398,7 +425,7 @@
           .then(function (response) {
 
             self.formFiltro.campos.rif.disabled = false;
-            self.formFiltro.campos.socio.disabled = false;
+            self.formFiltro.campos.proyecto.disabled = false;
             self.formFiltro.campos.razonSocial.disabled = false;
             self.formFiltro.campos.estatus.disabled = false;
 
@@ -411,14 +438,14 @@
             self.tabla.paginador.numPaginas = response.data.paginas;
             self.tabla.paginador.max = parseInt(response.data.paginas);
 
-            self.totales.clientes = (response.data.totales.clientes) ? response.data.totales.clientes : 0;
+            self.totales.proyectos = (response.data.totales.proyectos) ? response.data.totales.proyectos : 0;
 
             self.tabla.registros = self.registroTabla(response.data.clientes);
 
           }).catch(error => {
 
             self.formFiltro.campos.rif.disabled = false;
-            self.formFiltro.campos.socio.disabled = false;
+            self.formFiltro.campos.proyecto.disabled = false;
             self.formFiltro.campos.razonSocial.disabled = false;
             self.formFiltro.campos.estatus.disabled = false;
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
@@ -432,7 +459,7 @@
         limpiarFiltro: function(){
 
           self.formFiltro.campos.rif.value = null;
-          self.formFiltro.campos.socio.value = null;
+          self.formFiltro.campos.proyecto.value = null;
           self.formFiltro.campos.razonSocial.value = null;
           self.formFiltro.campos.estatus.value = null;
           self.buscar();
