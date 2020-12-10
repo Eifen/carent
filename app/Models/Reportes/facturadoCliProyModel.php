@@ -57,6 +57,12 @@ class facturadoCliProyModel extends Model
         $sql_proyecto = '';
       }
 
+      if($filtros["monedas"] !== null){
+        $sql_monedas = 'AND p.id_moneda LIKE "'.$filtros["monedas"].'%"';
+      }else{
+        $sql_monedas = '';
+      }
+
       $sql = DB::select('SELECT *,
                                 FORMAT(monto_proyecto,2,"de_DE") AS monto_proyecto_formated,
                                 FORMAT(monto_facturado,2,"de_DE") AS monto_facturado_formated,
@@ -143,6 +149,7 @@ class facturadoCliProyModel extends Model
                           '.$sql_rif.'
                           '.$sql_estatus.'
                           '.$sql_proyecto.'
+                          '.$sql_monedas.'
                           GROUP BY p.id,
                                    p.descripcion,
                                    e.descripcion,
@@ -183,6 +190,12 @@ class facturadoCliProyModel extends Model
         $sql_proyecto = '';
       }
 
+      if($filtros["monedas"] !== null){
+        $sql_monedas = 'AND p.id_moneda LIKE "'.$filtros["monedas"].'%"';
+      }else{
+        $sql_monedas = '';
+      }
+
       $sql = DB::select('SELECT COUNT(1) AS proyectos
                          FROM tbl_proyecto p,
                               tbl_cliente c
@@ -194,7 +207,8 @@ class facturadoCliProyModel extends Model
                          '.$sql_razon_social.'
                          '.$sql_rif.'
                          '.$sql_estatus.'
-                         '.$sql_proyecto);
+                         '.$sql_proyecto.'
+                         '.$sql_monedas);
 
       return $sql[0];
 
@@ -224,6 +238,12 @@ class facturadoCliProyModel extends Model
         $sql_proyecto = 'AND p.descripcion LIKE "'.$filtros["proyecto"].'%"';
       }else{
         $sql_proyecto = '';
+      }
+
+      if($filtros["monedas"] !== null){
+        $sql_monedas = 'AND p.id_moneda LIKE "'.$filtros["monedas"].'%"';
+      }else{
+        $sql_monedas = '';
       }
 
       $sql = DB::select('SELECT CEILING( COUNT(1) / '.$paginar["paginar"].') paginas
@@ -304,6 +324,7 @@ class facturadoCliProyModel extends Model
                           '.$sql_rif.'
                           '.$sql_estatus.'
                           '.$sql_proyecto.'
+                          '.$sql_monedas.'
                           GROUP BY p.id,
                                    p.descripcion,
                                    e.descripcion,
