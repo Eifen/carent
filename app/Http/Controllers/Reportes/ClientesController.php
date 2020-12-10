@@ -53,7 +53,6 @@ class ClientesController extends Controller
         "socio" => $request->input("socio"),
         "estatus" => $request->input("estatus")
       ];
-      $estatus = $modelo->estatusClientes();
       $clientes = $modelo->repoClientes($paginar, $filtros);
       $paginas = $modelo->pagClientes($paginar, $filtros);
       $totales = $modelo->totalesClientes($filtros);

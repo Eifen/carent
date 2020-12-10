@@ -1,0 +1,233 @@
+form{
+  background-color: white;
+  border:1px solid rgba(0,0,0,0.13);
+  border-radius: 3px;
+  margin-bottom: 30px;
+  margin-left:0px !important;
+  margin-right:0px !important;
+  padding: 15px;
+  transition: all .3s;
+
+  &:hover{
+    box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+  }
+
+  > div{
+
+    &.form-group{
+
+      label{
+        color:#091F40;
+      }
+
+      .invalid-feedback{
+        display: block !important;
+      }
+
+      .form-control{
+        border-radius: 2px;
+
+        &.error{
+          border-color: #dc3545;
+        }
+
+        &:disabled{
+          cursor: not-allowed;
+        }
+
+      }
+
+      .multiselect{
+
+        &.multiselect--disabled{
+          min-height: 32px;
+        }
+
+        .multiselect__select{
+          height: 32px;
+          max-height: 50px;
+        }
+
+        .multiselect__tags{
+          height: 32px;
+          max-height: 50px;
+          min-height: 32px;
+          padding: 2px 40px 0 8px;
+
+          .multiselect__single{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+        }
+
+      }// Fin .multiselect
+
+    }// Fin .form-group
+
+  }
+
+}// Fin form
+
+.table{
+  background-color: white;
+  border:1px solid rgba(0,0,0,0.13);
+  border-radius: 3px;
+  margin-bottom: 50px;
+  padding: 15px;
+  transition: all .3s;
+
+  &:hover{
+    box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+  }
+
+  thead{
+
+    tr{
+
+      th{
+        background-color: #0069D9;
+        color:white;
+        text-align: center;
+        vertical-align: middle;
+      }
+
+    }
+
+  }// Fin thead
+
+  tbody{
+
+    tr{
+      transition: all .3s;
+
+      &:hover{
+        background-color: rgba(246,168,28,.5);
+      }
+
+      th{
+        text-align: center;
+      }
+
+      td{
+        text-align: center;
+
+        a{
+          color: #212529 !important;
+        }
+
+        .fas,
+        .far{
+
+          &:hover{
+            cursor: pointer;
+          }
+
+        }
+
+      }// Fin td
+
+    }// Fin tr
+
+  }// Fin tbody
+
+  tfoot{
+
+    tr{
+
+      td{
+
+        > div{
+          display: table;
+          margin-left: auto;
+          margin-right: auto;
+
+          > div{
+            display: table-cell;
+            padding-left: 5px;
+            padding-right: 5px;
+            vertical-align: middle;
+
+            .form-control{
+              max-width: 70px;
+            }
+
+            .icono{
+              color: #091F40;
+              font-size: 1.5rem;
+
+              &:hover{
+                color: #000000;
+                cursor: pointer;
+              }
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }// Fin tfoot
+
+}// Fin table
+
+.card{
+  box-shadow: 0 .15rem 1.55rem 0 rgba(58,59,69,.15);
+  margin-bottom: 30px;
+  transition: all .3s;
+
+  &:hover{
+    box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+  }
+
+  .card-body{
+    padding: 0.85rem;
+  }
+
+  &.card-proyectos{
+    border-left: 4px solid #36B9CC;
+    margin-top: 20px;
+
+    .card-text{
+
+      &:nth-child(1){
+        margin-bottom: 0px;
+      }
+
+      .titulo{
+        color: #36B9CC;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+    }
+
+    .monto{
+      color: rgba(0,0,0,0.8);
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+  }
+
+}// Fin .card
+
+.wrapper-btn-generar-excel{
+
+
+  > div {
+    height: calc(100% - 50px);
+    margin-bottom: 30px;
+    margin-top: 20px;
+  }
+
+  button{
+    height: 100%;
+    font-weight: bold;
+  }
+}
