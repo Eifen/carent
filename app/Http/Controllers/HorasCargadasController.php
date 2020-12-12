@@ -96,6 +96,9 @@ class HorasCargadasController extends Controller
             $modeloAudit = new AuditoriaLogModel();
             $modeloAudit->logs_auditoria($parametros);
           }
+
+          $parametros_email = $modelo->dataNotificarHorasCargadas($response["analista"]);
+          $this->notificarHorasCargadas($parametros_email,$descripcion,$horas_trabajadas,$response["proyecto"]);
           return $response;
         }
         $response = array("response" => false, "message" => "A intentado introducir una actividad en una fecha a futuros acción no permitida"); 
@@ -103,6 +106,47 @@ class HorasCargadasController extends Controller
       }
       $response = array("response" => false, "message" => "A sobrepasado el limite de horas asignadas"); 
         return $response;      
+    }
+
+    function notificarHorasCargadas($parametros, $descripcion, $horas_trabajadas, $proyecto){
+
+      $datos_correo = [
+        "empleado" => $parametros["empleado"]->nombre,
+        "division" => $parametros["empleado"]->division,
+        "proyecto" => $proyecto,
+        "descripcion" => $descripcion,
+        "horas_cargadas" => $horas_trabajadas,
+        "fecha" => date("d/m/Y H:i A"),
+      ];
+
+      $destinatarios = [];
+
+      foreach ($parametros["supervisores"] as $key => $supervisor) {
+        array_push($destinatarios,$supervisor->correo);
+      }
+
+      $destinatarios = (count($destinatarios) == 0) ?  $parametros["empleado"]->correo : $destinatarios;
+
+      Mail::send('horasCargables.emails.horasCargadas', $datos_correo, function($message) use ($destinatarios)  {
+
+          $message->from('sistema.carent@crowe.com.ve', 'CARENT')->to($destinatarios)->subject('Registro de Hora cargable');
+
+      });
+
+      if(Mail::failures()){
+
+        return [
+          "message" => "No se pudo enviar el correo, intente nuevamente.",
+          "response" => false
+        ];
+
+      }
+
+      return [
+        "message" => "Enviamos sus datos a su correo, por favor revise!.",
+        "response" => true
+      ];
+
     }
 
     function detalleModHorasCargadas(Request $request){
@@ -189,8 +233,46 @@ class HorasCargadasController extends Controller
         $modeloAudit->logs_auditoria($parametros);
 
       }
+      $parametros_email = $modelo->dataNotificarEliHorasCargadas($response["analista"]);
+      $this->notificarEliHorasCargadas($parametros_email,$response["descripcion"],$response["horas_trabajadas"],$response["proyecto"]);
 
       return $response;
+
+    }
+
+    function notificarEliHorasCargadas($parametros, $descripcion, $horas_trabajadas, $proyecto){
+
+      $datos_correo = [
+        "empleado" => $parametros["empleado"]->nombre,
+        "division" => $parametros["empleado"]->division,
+        "proyecto" => $proyecto,
+        "descripcion" => $descripcion,
+        "horas_cargadas" => $horas_trabajadas,
+        "fecha" => date("d/m/Y H:i A"),
+      ];
+
+      $destinatarios = [];
+      $destinatarios = $parametros["empleado"]->correo;
+
+      Mail::send('horasCargables.emails.eliHorasCargadas', $datos_correo, function($message) use ($destinatarios)  {
+
+          $message->from('sistema.carent@crowe.com.ve', 'CARENT')->to($destinatarios)->subject('Registro de eliminacion Hora cargable');
+
+      });
+
+      if(Mail::failures()){
+
+        return [
+          "message" => "No se pudo enviar el correo, intente nuevamente.",
+          "response" => false
+        ];
+
+      }
+
+      return [
+        "message" => "Enviamos sus datos a su correo, por favor revise!.",
+        "response" => true
+      ];
 
     }
 
