@@ -20,6 +20,7 @@ class facturadoCliProyController extends Controller
       $filtros = [
         "estatus" => null,
         "proyecto" => null,
+        "monedas" => null,
         "razon_social" => null,
         "rif" => null
       ];
