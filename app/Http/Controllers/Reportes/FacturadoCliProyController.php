@@ -6,7 +6,7 @@ use App\Models\Reportes\facturadoCliProyModel;
 
 use App\Http\Controllers\Controller;
 
-class facturadoCliProyController extends Controller
+class FacturadoCliProyController extends Controller
 {
 
     function dataRepFacturadoCliProy(){
