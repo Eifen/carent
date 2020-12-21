@@ -168,14 +168,14 @@ class HorasNoCargablesController extends Controller
         $modeloAudit = new AuditoriaLogModel();
         $modeloAudit->logs_auditoria($parametros);
 
-        $data = [
+        /*$data = [
           "id_concepto" => $request->input("concepto"),
           "id_division" => session("division_id"),
           "id_usuario" => session("usuario_id"),
           "horas_cargadas" => date("d/m/Y h:i:s A", strtotime($request->input("fechaDesde"))).' - '.date("d/m/Y h:i:s A", strtotime($request->input("fechaHasta")))
         ];
         $parametros_email = $modelo->dataNotificarHoraCargada($data);
-        $this->notificarHoraCargada($parametros_email);
+        $this->notificarHoraCargada($parametros_email);*/
 
       }
 
@@ -245,12 +245,12 @@ class HorasNoCargablesController extends Controller
 
       if($modificarHora["respuesta"] && $aprobado_por != null){
 
-        $data = [
+        /*$data = [
           "id_estatus" => $request->input("estatus"),
           "id_usuario" => session("usuario_id")
         ];
         $parametros_email = $modelo->dataNotificarEstatusHoraCargada($data);
-        $this->notificarEstatusHoraCargada($parametros_email);
+        $this->notificarEstatusHoraCargada($parametros_email);*/
 
       }
 
