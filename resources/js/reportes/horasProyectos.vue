@@ -292,16 +292,22 @@
               { key: 'cargo', label: 'Cargo' },
               { key: 'horas_trabajadas', label: 'Horas Cargadas' },
               { key: 'horas_contratadas', label: 'Horas Contratadas' },
+              { key: 'monto', label: 'Monto' },
             ];
 
             for (var i = 0; i < response.data.horasProyectos.length; i++) {
-              if (self.valor === 1) {
-                self.tabla.horasProyecto.push({proyecto: response.data.horasProyectos[i].proyecto, cliente: response.data.horasProyectos[i].cliente, empleado: "", division:"", cargo: "", horas_trabajadas: "", horas_contratadas: response.data.horasProyectos[i].horas_contratadas});
-                self.valor = 0;
-              }else if(response.data.horasProyectos[i].id_proyecto != response.data.horasProyectos[i-1].id_proyecto){
-                self.tabla.horasProyecto.push({proyecto: response.data.horasProyectos[i].proyecto, cliente: response.data.horasProyectos[i].cliente, empleado: "", division:"", cargo: "", horas_trabajadas: "",horas_contratadas: response.data.horasProyectos[i].horas_contratadas});
+              if (response.data.horasProyectos[i].horas_adicional != null) {
+                response.data.horasProyectos[i].horas_contratadas = parseFloat(response.data.horasProyectos[i].horas_contratadas) + parseFloat(response.data.horasProyectos[i].horas_adicional);
               }
-              self.tabla.horasProyecto.push({proyecto: "", cliente: "", empleado: response.data.horasProyectos[i].empleado, division:response.data.horasProyectos[i].division, cargo: response.data.horasProyectos[i].cargo, horas_trabajadas: response.data.horasProyectos[i].horas_trabajadas, horas_contratadas: ""});
+              if (self.valor === 1) {
+                self.tabla.horasProyecto.push({proyecto: response.data.horasProyectos[i].proyecto, cliente: response.data.horasProyectos[i].cliente, empleado: "", division:"", cargo: "", horas_trabajadas: "", horas_contratadas: response.data.horasProyectos[i].horas_contratadas, monto: response.data.horasProyectos[i].monto});
+                self.valor = 0;
+              }else if(response.data.horasProyectos[i].id_proyecto != response.data.horasProyectos[i-1].id_proyecto && response.data.horasProyectos[i].montoA === null){
+                self.tabla.horasProyecto.push({proyecto: response.data.horasProyectos[i].proyecto, cliente: response.data.horasProyectos[i].cliente, empleado: "", division:"", cargo: "", horas_trabajadas: "",horas_contratadas: response.data.horasProyectos[i].horas_contratadas, monto: response.data.horasProyectos[i].monto});
+              }else if(response.data.horasProyectos[i].id_proyecto != response.data.horasProyectos[i-1].id_proyecto && response.data.horasProyectos[i].montoA != null){
+                self.tabla.horasProyecto.push({proyecto: response.data.horasProyectos[i].proyecto, cliente: response.data.horasProyectos[i].cliente, empleado: "", division:"", cargo: "", horas_trabajadas: "",horas_contratadas: response.data.horasProyectos[i].horas_contratadas, monto: response.data.horasProyectos[i].montoA});
+              }
+              self.tabla.horasProyecto.push({proyecto: "", cliente: "", empleado: response.data.horasProyectos[i].empleado, division:response.data.horasProyectos[i].division, cargo: response.data.horasProyectos[i].cargo, horas_trabajadas: response.data.horasProyectos[i].horas_trabajadas, horas_contratadas: "", monto: ""});
             }
 
             self.tabla.registros = self.registroTabla(self.tabla.horasProyecto);
@@ -391,7 +397,8 @@
               division: item.division,
               cargo: item.cargo,
               horas_trabajadas: item.horas_trabajadas,
-              horas_contratadas: item.horas_contratadas
+              horas_contratadas: item.horas_contratadas,
+              monto: item.monto
             };
 
             registros.push(data);
@@ -457,14 +464,19 @@
           axios.get('/buscarHorasProyectos', {params: parametros})
           .then(function (response) {
 
-            for (var j = 0; j < response.data.horasProyectos.length; j++) {
-              if (self.valor === 1) {
-                self.tabla.horasProyecto.push({proyecto: response.data.horasProyectos[j].proyecto, cliente: response.data.horasProyectos[j].cliente, empleado: "", division:"", cargo: "", horas_trabajadas: "", horas_contratadas: response.data.horasProyectos[j].horas_contratadas});
-                self.valor = 0;
-              }else if(response.data.horasProyectos[j].id_proyecto != response.data.horasProyectos[j-1].id_proyecto){
-                self.tabla.horasProyecto.push({proyecto: response.data.horasProyectos[j].proyecto, cliente: response.data.horasProyectos[j].cliente, empleado: "", division:"", cargo: "", horas_trabajadas: "",horas_contratadas: response.data.horasProyectos[j].horas_contratadas});
+            for (var i = 0; i < response.data.horasProyectos.length; i++) {
+              if (response.data.horasProyectos[i].horas_adicional != null) {
+                response.data.horasProyectos[i].horas_contratadas = parseFloat(response.data.horasProyectos[i].horas_contratadas) + parseFloat(response.data.horasProyectos[i].horas_adicional);
               }
-              self.tabla.horasProyecto.push({proyecto: "", cliente: "", empleado: response.data.horasProyectos[j].empleado, division:response.data.horasProyectos[j].division, cargo: response.data.horasProyectos[j].cargo, horas_trabajadas: response.data.horasProyectos[j].horas_trabajadas, horas_contratadas: ""});
+              if (self.valor === 1) {
+                self.tabla.horasProyecto.push({proyecto: response.data.horasProyectos[i].proyecto, cliente: response.data.horasProyectos[i].cliente, empleado: "", division:"", cargo: "", horas_trabajadas: "", horas_contratadas: response.data.horasProyectos[i].horas_contratadas, monto: response.data.horasProyectos[i].monto});
+                self.valor = 0;
+              }else if(response.data.horasProyectos[i].id_proyecto != response.data.horasProyectos[i-1].id_proyecto && response.data.horasProyectos[i].montoA === null){
+                self.tabla.horasProyecto.push({proyecto: response.data.horasProyectos[i].proyecto, cliente: response.data.horasProyectos[i].cliente, empleado: "", division:"", cargo: "", horas_trabajadas: "",horas_contratadas: response.data.horasProyectos[i].horas_contratadas, monto: response.data.horasProyectos[i].monto});
+              }else if(response.data.horasProyectos[i].id_proyecto != response.data.horasProyectos[i-1].id_proyecto && response.data.horasProyectos[i].montoA != null){
+                self.tabla.horasProyecto.push({proyecto: response.data.horasProyectos[i].proyecto, cliente: response.data.horasProyectos[i].cliente, empleado: "", division:"", cargo: "", horas_trabajadas: "",horas_contratadas: response.data.horasProyectos[i].horas_contratadas, monto: response.data.horasProyectos[i].montoA});
+              }
+              self.tabla.horasProyecto.push({proyecto: "", cliente: "", empleado: response.data.horasProyectos[i].empleado, division:response.data.horasProyectos[i].division, cargo: response.data.horasProyectos[i].cargo, horas_trabajadas: response.data.horasProyectos[i].horas_trabajadas, horas_contratadas: "", monto: ""});
             }
                
             

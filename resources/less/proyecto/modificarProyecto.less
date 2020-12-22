@@ -35,6 +35,7 @@ html{
 
         #lista-cliente,
         #lista-socio,
+        #lista-socioCalidad,
         #lista-gerente{
 
           .btn{
@@ -55,6 +56,7 @@ html{
 
         }// Fin #lista-cliente,
         // #lista-socio,
+        // #lista-socioCalidad,
         // #lista-gerente
 
         &.form-group{
@@ -154,3 +156,153 @@ html{
   }// Fin > .row
 
 }// Fin #modificarProyecto
+
+.modal{
+
+  /*&[id^="modal-eliminar-"]{
+
+    .modal-dialog{
+
+      .modal-body{
+        border-top-right-radius: calc(0.3rem - 1px);
+        border-top-left-radius: calc(0.3rem - 1px);
+        padding: 0px;
+      }
+
+    }
+
+  }*/
+
+  .modal-dialog{
+
+    .modal-header{
+      padding: 0.25rem 1rem;
+    }
+
+    .modal-body{
+
+      form{
+        padding: 0px;
+
+        > div{
+
+          &.form-group{
+
+            label{
+              color:#091F40;
+            }
+
+            .form-control{
+              border-radius: 2px;
+
+              &:disabled{
+                cursor: not-allowed;
+              }
+
+            }
+
+            .btn{
+
+              &:disabled{
+                cursor: not-allowed;
+              }
+
+              &.btn-outline-success{
+                border: 2px solid;
+                font-weight: 600;
+
+
+
+              }
+
+            }
+
+          }// Fin .form-group
+
+        }
+
+      }// Fin form
+
+      .alert{
+        margin-bottom: 0px;
+      }
+
+      .table{
+        transition: all .3s;
+
+        &:hover{
+          box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+        }
+
+        thead{
+
+          tr{
+
+            th{
+              background-color: #091F40;
+              color:white;
+              text-align: center;
+            }
+
+          }
+
+        }// Fin thead
+
+        tbody{
+
+          tr{
+            transition: all .3s;
+
+            &:hover{
+              background-color: rgba(246,168,28,.5);
+            }
+
+            th{
+              text-align: center;
+            }
+
+            td{
+              text-align: center;
+
+              .icono{
+                margin-left: 5px;
+                margin-right: 5px;
+
+                &:hover{
+                  cursor: pointer;
+
+                  &.bi-trash{
+                    color: #DD3D31;
+                  }
+
+                }
+
+              }
+
+            }// Fin td
+
+          }// Fin tr
+
+        }// Fin tbody
+
+      }// Fin table
+
+    }// Fin .modal-body
+
+    footer{
+      padding: 0.25rem 1rem !important;
+
+      .alert{
+        margin: 10px 0px 10px 0px;
+      }
+
+      button{
+        margin-left: 0px;
+        margin-right: 0px;
+      }
+
+    }
+
+  }// Fin .modal-dialog
+
+}// Fin .modal

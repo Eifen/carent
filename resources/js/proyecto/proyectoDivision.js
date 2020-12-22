@@ -93,6 +93,7 @@ new Vue({
     proyectoBusqueda: [],
     horasComparar: [],
     horas_cargadas: 0,
+    horas_contratadas: 0,
     diferencia: 0,
     permisoVer: false,
     permisoCrear: false,
@@ -335,6 +336,7 @@ new Vue({
 
       self.detalleDproyecto.error = false;
       self.horas_cargadas = 0;
+      self.horas_contratadas = 0;
       $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
 
       let parametros = {
@@ -348,6 +350,7 @@ new Vue({
 
           self.detalleDproyecto.data = response.data.infoDproyecto;
           self.detalleAproyecto.data = response.data.infoAproyecto;
+          self.horas_contratadas = parseFloat(self.detalleDproyecto.data[0].horas_contratadas) + parseFloat(self.detalleDproyecto.data[0].horas_adicional);
           for (var i = 0; i < self.detalleAproyecto.data.length; i++) {
             if (self.detalleAproyecto.data[i].horas_cargadas != null) {
               self.horas_cargadas = parseFloat(self.detalleAproyecto.data[i].horas_cargadas) + self.horas_cargadas;
@@ -390,6 +393,9 @@ new Vue({
 
           self.detalleAnalista.data = response.data.analistas;
           self.detalleAsigproyecto.data = response.data.proyecto;
+          if (self.detalleAsigproyecto.data[0].horas_adicionales != null) {
+            self.detalleAsigproyecto.data[0].horas_contratadas = parseFloat(self.detalleAsigproyecto.data[0].horas_contratadas) + parseFloat(self.detalleAsigproyecto.data[0].horas_adicionales);
+          }
           self.form.horas.value = 0;
           for (var i = 0; i < self.detalleAnalista.data.length; i++) {
             self.horasComparar[i] = self.detalleAnalista.data[i].horas_asignadas;
@@ -437,14 +443,15 @@ new Vue({
           if(response.status === 200 && response.data.response === true){
             self.detalleAnalista.data = response.data.analistas;
             self.detalleAsigproyecto.data = response.data.proyecto;
-
-            for (var i = 0; i < self.detalleAnalista.data.length; i++) {
-            self.horasComparar[i] = self.detalleAnalista.data[i].horas_asignadas;
-            if (self.detalleAnalista.data[i].horas_asignadas === null) {
-              self.horasComparar[i] = 0;
+            if (self.detalleAsigproyecto.data[0].horas_adicionales != null) {
+              self.detalleAsigproyecto.data[0].horas_contratadas = parseFloat(self.detalleAsigproyecto.data[0].horas_contratadas) + parseFloat(self.detalleAsigproyecto.data[0].horas_adicionales);
             }
-
-          }
+            for (var i = 0; i < self.detalleAnalista.data.length; i++) {
+              self.horasComparar[i] = self.detalleAnalista.data[i].horas_asignadas;
+              if (self.detalleAnalista.data[i].horas_asignadas === null) {
+                self.horasComparar[i] = 0;
+              }
+            }
             self.actualizar();
           }
         })
@@ -517,6 +524,9 @@ new Vue({
         if(response.status === 200 && response.data.response === true){
           self.detalleAnalista.data = response.data.analistas;
           self.detalleAsigproyecto.data = response.data.proyecto;
+          if (self.detalleAsigproyecto.data[0].horas_adicionales != null) {
+              self.detalleAsigproyecto.data[0].horas_contratadas = parseFloat(self.detalleAsigproyecto.data[0].horas_contratadas) + parseFloat(self.detalleAsigproyecto.data[0].horas_adicionales);
+            }
 
         self.actualizar();
         }else{

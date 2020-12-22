@@ -56,6 +56,7 @@
           <li class="list-group-item"> <b>Empleado:</b> {{ $empleado }}</li>
           <li class="list-group-item"> <b>División:</b> {{ $division }}</li>
           <li class="list-group-item"> <b>Concepto:</b> {{ $concepto }}</li>
+          <li class="list-group-item"> <b>Horas Cargadas:</b> {{ $horas_cargadas }}</li>
           <li class="list-group-item"> <b>Fecha de carga:</b> {{ $fecha }}</li>
         </ul>
     </div>

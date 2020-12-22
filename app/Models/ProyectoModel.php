@@ -144,7 +144,7 @@ class ProyectoModel extends Model
 
     }
 
-    function crearProyecto($descripcion,$cliente,$socio,$gerente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto,$empresa){
+    function crearProyecto($descripcion,$cliente,$socio,$socioCalidad,$gerente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto,$empresa){
 
       DB::beginTransaction();
 
@@ -155,6 +155,7 @@ class ProyectoModel extends Model
                     "id_moneda" => $id_moneda,
                     "monto" => $monto,
                     "id_socio" => $socio,
+                    "id_socio_calidad" => $socioCalidad,
                     "id_gerente" => $gerente,
                     "id_empresa" => $empresa);
 
@@ -430,6 +431,11 @@ class ProyectoModel extends Model
                                    WHERE u1.id = p.id_socio
                                  ) nombre_socio,
                                  (
+                                   SELECT CONCAT(u3.nombre_1," ",u3.nombre_2," ",u3.apellido_1," ",u3.apellido_2)
+                                   FROM tbl_usuario u3
+                                   WHERE u3.id = p.id_socio_calidad
+                                 ) nombre_socio_calidad,
+                                 (
                                    SELECT CONCAT(u2.nombre_1," ",u2.nombre_2," ",u2.apellido_1," ",u2.apellido_2)
                                    FROM tbl_usuario u2
                                    WHERE u2.id = p.id_gerente
@@ -465,7 +471,8 @@ class ProyectoModel extends Model
                                    FROM tbl_usuario u
                                    WHERE u.id = pd.id_gerente
                                  ) nombre_gerente,
-                                 pd.horas_contratadas
+                                 pd.horas_contratadas,
+                                 pd.id AS id_proy_div
                           FROM tbl_proyecto_divisiones pd,
                                tbl_division d
                           WHERE pd.id_proyecto = '.$id_proyecto.'
@@ -486,81 +493,97 @@ class ProyectoModel extends Model
 
       try{
 
-        $update = DB::table('tbl_proyecto')->where("id", $idProyecto)->update($parametros_proyecto);
+        $sql_factura = DB::select('SELECT *
+                                   FROM tbl_factura_proyecto fp
+                                   WHERE fp.id_proyecto = '.$idProyecto.'
+                                   AND fp.id_estatus = 1');
 
-        $divisionCreada = true;
+        if(count($sql_factura) == 0){
 
-        for($i = 0; $i < count($divisiones); $i++){
+          $update = DB::table('tbl_proyecto')->where("id", $idProyecto)->update($parametros_proyecto);
 
-          $actualizar_division = false;
+          $divisionCreada = true;
 
-          for($j = 0; $j < count($divisiones_v); $j++){
+          for($i = 0; $i < count($divisiones); $i++){
 
-            if ($divisiones[$i]["id"] === $divisiones_v[$j]->id) {
-              $actualizar_division = true;
+            $actualizar_division = false;
+
+            for($j = 0; $j < count($divisiones_v); $j++){
+
+              if ($divisiones[$i]["id"] === $divisiones_v[$j]->id) {
+                $actualizar_division = true;
+              }
+
+            }
+
+            if($actualizar_division){
+
+              $data = array(
+                            "horas_contratadas" => $divisiones[$i]["horas"],
+                            "id_gerente" => $divisiones[$i]["id_gerente"]
+                           );
+              $div = DB::table('tbl_proyecto_divisiones')->where([['id_proyecto', '=', $idProyecto],['id_division', '=', $divisiones_v[$i]->id]])->update($data);
+
+            }else{
+
+              $data = array(
+                            "id_proyecto" => $idProyecto,
+                            "id_division" => $divisiones[$i]["id"],
+                            "id_gerente" => $divisiones[$i]["id_gerente"],
+                            "horas_contratadas" => $divisiones[$i]["horas"]
+                           );
+
+              if(!DB::table('tbl_proyecto_divisiones')->insert($data)){
+                throw new Exception('No se pudo asociar la nueva división.');
+                break;
+              }
+
             }
 
           }
 
-          if($actualizar_division){
+          for($i = 0; $i < count($divisiones_v); $i++){
 
-            $data = array(
-                          "horas_contratadas" => $divisiones[$i]["horas"],
-                          "id_gerente" => $divisiones[$i]["id_gerente"]
-                         );
-            $div = DB::table('tbl_proyecto_divisiones')->where([['id_proyecto', '=', $idProyecto],['id_division', '=', $divisiones_v[$i]->id]])->update($data);
+            $eliminar_division = true;
 
-          }else{
+            for($j = 0; $j < count($divisiones); $j++){
 
-            $data = array(
-                          "id_proyecto" => $idProyecto,
-                          "id_division" => $divisiones[$i]["id"],
-                          "id_gerente" => $divisiones[$i]["id_gerente"],
-                          "horas_contratadas" => $divisiones[$i]["horas"]
-                         );
+              if ($divisiones_v[$i]->id === $divisiones[$j]["id"]) {
+                $eliminar_division = false;
+              }
 
-            if(!DB::table('tbl_proyecto_divisiones')->insert($data)){
-              throw new Exception('No se pudo asociar la nueva división.');
-              break;
+            }
+
+            if($eliminar_division) {
+
+              $delete = DB::table('tbl_proyecto_divisiones')->where([['id_proyecto', '=', $idProyecto],['id_division', '=', $divisiones_v[$i]->id]])->delete();
+
+              if(!$delete){
+                throw new Exception('No se pudo eliminar la división.');
+                break;
+              }
+
             }
 
           }
+
+          DB::commit();
+          $client = DB::select('SELECT c.razon_social FROM tbl_cliente c WHERE c.id = '.$parametros_proyecto["id_cliente"].'');
+
+          return array(
+            "cliente" => $client[0]->razon_social,
+            "response" => true,
+            "message" => "Proyecto actualizado con éxito."
+          );
+
+        }else{
+
+          return array(
+            "response" => false,
+            "message" => "El proyecto ya posee un proceso de facturación activo, es decir tiene al menos una factura en estatus activa!."
+          );
 
         }
-
-        for($i = 0; $i < count($divisiones_v); $i++){
-
-          $eliminar_division = true;
-
-          for($j = 0; $j < count($divisiones); $j++){
-
-            if ($divisiones_v[$i]->id === $divisiones[$j]["id"]) {
-              $eliminar_division = false;
-            }
-
-          }
-
-          if($eliminar_division) {
-
-            $delete = DB::table('tbl_proyecto_divisiones')->where([['id_proyecto', '=', $idProyecto],['id_division', '=', $divisiones_v[$i]->id]])->delete();
-
-            if(!$delete){
-              throw new Exception('No se pudo eliminar la división.');
-              break;
-            }
-
-          }
-
-        }
-
-        DB::commit();
-        $client = DB::select('SELECT c.razon_social FROM tbl_cliente c WHERE c.id = '.$parametros_proyecto["id_cliente"].'');
-
-        return array(
-          "cliente" => $client[0]->razon_social,
-          "response" => true,
-          "message" => "Proyecto actualizado con éxito."
-        );
 
       } catch(\Illuminate\Database\QueryException $ex){
 
@@ -687,6 +710,7 @@ class ProyectoModel extends Model
                                UPPER(p.descripcion) descripcion,
                                (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = p.id_cliente) cliente,
                                (SELECT SUM(d.horas_contratadas) FROM tbl_proyecto_divisiones d WHERE d.id_proyecto = '.$idDproyecto.') horas_contratadas,
+                               (SELECT SUM(ph.horas) FROM tbl_proyecto_divisiones d, tbl_proy_div_horas_adic ph WHERE d.id_proyecto = '.$idDproyecto.' AND d.id  = ph.id_proy_div) horas_adicional,
                                p.fecha_contratacion
                           FROM tbl_proyecto p
                           WHERE p.id = '.$idDproyecto.'
@@ -725,7 +749,8 @@ class ProyectoModel extends Model
                                  UPPER(p.descripcion) AS proyecto,
                                  (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = p.id_cliente) cliente,
                                  (SELECT d.id FROM tbl_proyecto_divisiones d WHERE d.id_proyecto = '.$id_proyecto.' AND d.id_division = '.$id_division.' )id_proyecto_division,
-                                 (SELECT d.horas_contratadas FROM tbl_proyecto_divisiones d WHERE d.id_proyecto = '.$id_proyecto.' AND d.id_division = '.$id_division.' )horas_contratadas
+                                 (SELECT SUM(d.horas_contratadas) FROM tbl_proyecto_divisiones d WHERE d.id_proyecto = '.$id_proyecto.' AND d.id_division = '.$id_division.')horas_contratadas,
+                                 (SELECT SUM(ph.horas) FROM tbl_proyecto_divisiones d, tbl_proy_div_horas_adic ph WHERE d.id_proyecto = '.$id_proyecto.' AND d.id_division = '.$id_division.' AND d.id  = ph.id_proy_div)horas_adicionales
                           FROM tbl_proyecto p
                           WHERE p.id = '.$id_proyecto.'');
 
@@ -866,7 +891,6 @@ class ProyectoModel extends Model
 
     }
 
-
     function modHorasAnalistaProy($horas_asignadas,$horasComparar,$idAnaProy, $idProyecto){
 
       DB::beginTransaction();
@@ -906,5 +930,73 @@ class ProyectoModel extends Model
 
     }
 
+    function agregarMontoAdicionalProy($parametros){
+
+      if(DB::table('tbl_proy_monto_adicional')->insert($parametros)){
+        return true;
+      }else{
+        return false;
+      }
+
+    }
+
+    function montosAdicionesProy($id_proyecto){
+
+      $montos = DB::select('SELECT m.id,
+                                   m.monto,
+                                   FORMAT(m.monto,2,"de_DE") AS monto_formatted,
+                                   DATE_FORMAT(m.fecha, "%d/%m/%Y") AS fecha
+                            FROM tbl_proy_monto_adicional m
+                            WHERE m.id_proyecto = ?
+                            AND m.id_estatus = 1
+                            ORDER BY m.id DESC', [$id_proyecto]);
+
+      return $montos;
+
+    }
+
+    function eliminarMontosAdicionesProy($id_monto){
+
+      if(DB::table('tbl_proy_monto_adicional')->where("id", $id_monto)->update(["id_estatus" => 2])){
+        return true;
+      }else{
+        return false;
+      }
+
+    }
+
+    function horasAdicionesProyDiv($id_proy_div){
+
+      $horas = DB::select('SELECT h.id,
+                                  h.horas,
+                                  DATE_FORMAT(h.fecha, "%d/%m/%Y") AS fecha
+                            FROM tbl_proy_div_horas_adic h
+                            WHERE h.id_proy_div = ?
+                            AND h.id_estatus = 1
+                            ORDER BY h.id DESC', [$id_proy_div]);
+
+      return $horas;
+
+    }
+
+    function agregarHoraAdicionalProyDiv($parametros){
+
+      if(DB::table('tbl_proy_div_horas_adic')->insert($parametros)){
+        return true;
+      }else{
+        return false;
+      }
+
+    }
+
+    function eliminarHoraAdicionalProyDiv($id){
+
+      if(DB::table('tbl_proy_div_horas_adic')->where("id", $id)->update(["id_estatus" => 2])){
+        return true;
+      }else{
+        return false;
+      }
+
+    }
 
 }
