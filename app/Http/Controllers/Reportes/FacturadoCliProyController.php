@@ -6,7 +6,7 @@ use App\Models\Reportes\facturadoCliProyModel;
 
 use App\Http\Controllers\Controller;
 
-class facturadoCliProyController extends Controller
+class FacturadoCliProyController extends Controller
 {
 
     function dataRepFacturadoCliProy(){
@@ -20,6 +20,7 @@ class facturadoCliProyController extends Controller
       $filtros = [
         "estatus" => null,
         "proyecto" => null,
+        "monedas" => null,
         "razon_social" => null,
         "rif" => null
       ];
