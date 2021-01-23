@@ -6,73 +6,60 @@
       <b-form class="row" v-if="formFiltro.mostrar">
         <b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
-          description="RIF del Cliente"
-          label="Rif"
-          label-for="rif"
-          id="group-rif">
-          <b-form-input
-            :disabled="formFiltro.campos.rif.disabled"
-            id="rif"
-            ref="rif"
-            size="sm"
-            type="text"
-            v-model.trim="formFiltro.campos.rif.value"></b-form-input>
-        </b-form-group>
-        <b-form-group
-          class="form-group col-12 col-sm-6 col-md-4"
-          label="Razón Social"
-          label-for="razonSocial"
-          id="group-razonSocial">
-          <b-form-input
-            :disabled="formFiltro.campos.razonSocial.disabled"
-            id="razonSocial"
-            ref="razonSocial"
-            size="sm"
-            type="text"
-            v-model.trim="formFiltro.campos.razonSocial.value"></b-form-input>
-        </b-form-group>
-        <b-form-group
-          class="form-group col-12 col-sm-6 col-md-4"
-          label="Proyecto"
-          label-for="proyecto"
-          id="group-proyecto">
-          <b-form-input
-            :disabled="formFiltro.campos.proyecto.disabled"
-            id="proyecto"
-            ref="proyecto"
-            size="sm"
-            type="text"
-            v-model.trim="formFiltro.campos.proyecto.value"></b-form-input>
-        </b-form-group>
-        <b-form-group
-          class="form-group col-12 col-sm-6 col-md-4"
-          label="Monedas"
-          label-for="monedas"
-          id="group-monedas">
-          <select aria-describedby="monedasHelp"
+          label="División"
+          label-for="division"
+          id="group-division">
+          <select @change="empleadosDivision"
+                  aria-describedby="divisionHelp"
                   class="form-control form-control-sm"
-                  id="monedas"
+                  id="division"
                   data-validar="true"
-                  v-bind:disabled="formFiltro.campos.monedas.disabled"
-                  v-model="formFiltro.campos.monedas.value">
+                  v-bind:disabled="formFiltro.campos.divisiones.disabled"
+                  v-model="formFiltro.campos.divisiones.value">
             <option :value="null" selected>Seleccione...</option>
-            <option v-bind:value="moneda.id" v-for="moneda in formFiltro.campos.monedas.listado">{{ moneda.descripcion }}</option>
+            <option v-bind:value="division.id" v-for="division in formFiltro.campos.divisiones.listado">{{ division.descripcion }}</option>
           </select>
         </b-form-group>
         <b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
-          label="Estatus"
-          label-for="estatus"
-          id="group-estatus">
-          <select aria-describedby="estatusHelp"
+          label="Empleado"
+          label-for="empleado"
+          id="group-empleado">
+          <select aria-describedby="empleadoHelp"
                   class="form-control form-control-sm"
-                  id="estatus"
+                  id="empleado"
                   data-validar="true"
-                  v-bind:disabled="formFiltro.campos.estatus.disabled"
-                  v-model="formFiltro.campos.estatus.value">
+                  v-bind:disabled="formFiltro.campos.empleados.disabled"
+                  v-model="formFiltro.campos.empleados.value">
             <option :value="null" selected>Seleccione...</option>
-            <option v-bind:value="estatus.id" v-for="estatus in formFiltro.campos.estatus.listado">{{ estatus.descripcion }}</option>
+            <option v-bind:value="empleado.id" v-for="empleado in formFiltro.campos.empleados.listado">{{ empleado.nombre }}</option>
           </select>
+        </b-form-group>
+        <b-form-group
+          class="form-group col-12 col-sm-6 col-md-4"
+          label="Fecha Desde"
+          label-for="fechaDesde"
+          id="group-fechaDesde">
+          <b-form-datepicker
+            :disabled="formFiltro.campos.fechaDesde.disabled"
+            :locale="'es-VE'"
+            :max="formFiltro.campos.fechaDesde.maxValue"
+            locale="es"
+            size="sm"
+            v-bind="formFiltro.campos.fechaDesde.labels['es-VE'] || {}"
+            v-model="formFiltro.campos.fechaDesde.value"></b-form-datepicker>
+        </b-form-group>
+        <b-form-group
+          class="form-group col-12 col-sm-6 col-md-4"
+          label="Fecha Hasta"
+          label-for="fechaHasta"
+          id="group-fechaHasta">
+          <b-form-datepicker
+            :disabled="formFiltro.campos.fechaHasta.disabled"
+            :max="formFiltro.campos.fechaHasta.maxValue"
+            locale="es"
+            size="sm"
+            v-model="formFiltro.campos.fechaHasta.value"></b-form-datepicker>
         </b-form-group>
         <b-form-group class="col-12 col-sm-6 col-md-2">
           <label>&nbsp;</label>
@@ -192,7 +179,6 @@
 
   import axios from 'axios';
   import alert from '../components/alert.vue';
-  import Multiselect from 'vue-multiselect';
   import JsonExcel from "vue-json-excel";
   var self;
 
@@ -215,26 +201,44 @@
               }
             },
             campos: {
-              estatus: {
+              divisiones: {
                 disabled: true,
                 listado: [],
                 value: null
               },
-              monedas: {
+              empleados: {
                 disabled: true,
                 listado: [],
                 value: null
               },
-              razonSocial: {
+              fechaDesde: {
                 disabled: true,
+                labels: {
+                  'es-VE': {
+                    weekdayHeaderFormat: 'narrow',
+                    labelPrevDecade: 'العقد السابق',
+                    labelPrevYear: 'العام السابق',
+                    labelPrevMonth: 'Mes Anterior',
+                    labelCurrentMonth: 'الشهر الحالي',
+                    labelNextMonth: 'الشهر المقبل',
+                    labelNextYear: 'العام المقبل',
+                    labelNextDecade: 'العقد القادم',
+                    labelToday: 'اليوم',
+                    labelSelected: 'التاريخ المحدد',
+                    labelNoDateSelected: 'لم يتم اختيار تاريخ',
+                    labelCalendar: 'التقويم',
+                    labelNav: 'الملاحة التقويم',
+                    labelHelp: 'استخدم مفاتيح المؤشر للتنقل في التواريخ'
+                  }
+                },
+                maxValue: "",
+                minValue: "",
                 value: null
               },
-              rif:{
+              fechaHasta:{
                 disabled: true,
-                value: null
-              },
-              proyecto:{
-                disabled: true,
+                maxValue: "",
+                minValue: "",
                 value: null
               }
             },
@@ -267,61 +271,22 @@
       },
       components: {
         alert,
-        "downloadExcel": JsonExcel,
-        Multiselect
+        "downloadExcel": JsonExcel
       },
       beforeCreate: function(){
 
         self = this;
 
-        axios.get('/dataRepFacturadoCliProy')
+        axios.get('/dataRepTotalHorasEmp')
         .then(function (response) {
 
           if(response.status === 200 && response.data.response === true){
 
-            self.tabla.encabezado = [
-              { key: 'numero', label: '#' },
-              { key: 'rif', label: 'RIF' },
-              { key: 'razonSocial', label: 'Razón Social' },
-              { key: 'proyecto', label: 'Proyecto' },
-              { key: 'monto_proyecto', label: 'Monto Proyecto' },
-              { key: 'monto_facturado', label: 'Monto Facturado' },
-              { key: 'monto_notas_credito', label: 'Notas Crédito' },
-              { key: 'monto_gasto', label: 'Gastos' },
-              { key: 'monto_otros_gastos', label: 'Otros Gastos' },
-              { key: 'estatus', label: 'Estatus' }
-            ];
-
-            let resgitros = self.registroTabla(response.data.registros)
-            self.tabla.registros = resgitros[0];
-            self.tabla.registrosExcel = resgitros[1];
-
-            if(response.data.registros.length === 0){
-
-              let mensaje = "No hay proyectos con facturas asociadas";
-              self.mostrarAlert(self.tabla.alert, true, "warning", mensaje, false, false, 0);
-
-            }
-
-            self.formFiltro.campos.monedas.listado = response.data.monedas;
-            self.formFiltro.campos.estatus.listado = response.data.estatus;
-
-            self.totales.proyectos = (response.data.totales.proyectos) ? response.data.totales.proyectos : 0;
-
-            self.tabla.paginador.paginar = response.data.paginar;
-            self.tabla.paginador.numPaginas = response.data.paginas;
-            self.tabla.paginador.max = parseInt(response.data.paginas);
-
-            self.formFiltro.campos.rif.disabled = false;
-            self.formFiltro.campos.proyecto.disabled = false;
-            self.formFiltro.campos.razonSocial.disabled = false;
-            self.formFiltro.campos.estatus.disabled = false;
-            self.formFiltro.campos.monedas.disabled = false;
+            self.formFiltro.campos.divisiones.listado = response.data.divisiones;
+            self.formFiltro.campos.divisiones.disabled = false;
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
             self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
             self.formFiltro.mostrar = true;
-
-            self.tabla.cargando = false;
 
             self.$parent.reporteCargado();
 
@@ -356,6 +321,74 @@
             resolve(true);
 
           });
+
+        },
+        empleadosDivision: function(){
+
+          let parametros = {
+            id_division :  self.formFiltro.campos.divisiones.value
+          };
+
+          axios.get('/repTotalHorasEmpEmpleadosDivision', {params: parametros})
+          .then(function (response) {
+
+            if(response.status === 200){
+
+              self.formFiltro.campos.empleados.listado = response.data.empleados;
+              self.formFiltro.campos.empleados.disabled = false;
+              self.formFiltro.campos.fechaDesde.disabled = false;
+
+            }else{
+
+              throw "error";
+
+            }
+
+          })
+          .catch(error => {
+
+
+          });
+
+        },
+        fechaDesdeFiltro: function(fecha_seleccionada){
+          console.log("sape");
+          return;
+
+          self.formFiltro.fechaHasta.value = "";
+
+          var fecha, fecha_desde_max;
+
+          if(fecha_seleccionada !== ""){
+
+            fecha = moment();
+            fecha_desde_max = moment(fecha_seleccionada);
+
+            var fecha_hasta_max = fecha;
+
+            if(fecha_hasta_max.minute() < 30){
+              self.formFiltro.fechaHasta.maxValue = fecha_hasta_max.startOf("hour").toISOString();
+            }else{
+              self.formFiltro.fechaHasta.maxValue = fecha_hasta_max.startOf("hour").add(30, "minutes").toISOString();
+            }
+
+            var fecha_hasta_min = fecha_desde_max;
+            self.formFiltro.fechaHasta.minValue = fecha_hasta_min.add(30, "minutes").toISOString();
+            self.formFiltro.fechaHasta.disabled = false;
+
+          }else{
+
+            fecha = fecha_desde_max = moment();
+
+            if(fecha_desde_max.minute() < 30){
+              fecha_desde_max = fecha_desde_max.startOf("hour").subtract(30, "minute");
+              self.formFiltro.fechaDesde.maxValue = fecha_desde_max.toISOString();
+            }else{
+              fecha_desde_max =  fecha_desde_max.startOf("hour");
+              self.formFiltro.fechaDesde.maxValue = fecha_desde_max.toISOString();
+            }
+
+          }
 
         },
         numeroPagina: function(e){

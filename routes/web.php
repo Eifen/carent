@@ -143,3 +143,5 @@ Route::get('/buscarHorasProyectos', 'Reportes\HorasProyectosController@buscarHor
 Route::get('/consultarClientes', 'Reportes\ClientesController@consultarClientes')->middleware('usuario.session');
 Route::get('/dataRepFacturadoCliProy', 'Reportes\FacturadoCliProyController@dataRepFacturadoCliProy')->middleware('usuario.session');
 Route::get('/filtrarCliProy', 'Reportes\FacturadoCliProyController@filtrarCliProy')->middleware('usuario.session');
+Route::get('/dataRepTotalHorasEmp', 'Reportes\TotalHorasEmpController@dataRepTotalHorasEmp')->middleware('usuario.session');
+Route::get('/repTotalHorasEmpEmpleadosDivision', 'Reportes\TotalHorasEmpController@repTotalHorasEmpEmpleadosDivision')->middleware('usuario.session');
