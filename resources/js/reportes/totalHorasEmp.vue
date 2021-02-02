@@ -12,13 +12,13 @@
           id="group-division">
           <b-form-select
                   @change="empleadosDivision"
+                  :disabled="formFiltro.campos.divisiones.disabled"
                   :state="formFiltro.campos.divisiones.state"
                   class="form-control form-control-sm"
                   id="division"
                   data-validar="true"
                   ref="divisiones"
                   size="sm"
-                  v-bind:disabled="formFiltro.campos.divisiones.disabled"
                   v-model="$v.formFiltro.campos.divisiones.value.$model">
             <option :value="null" selected disabled>Seleccione...</option>
             <option v-bind:value="division.id" v-for="division in formFiltro.campos.divisiones.listado">{{ division.descripcion }}</option>
@@ -32,6 +32,7 @@
           id="group-empleado">
           <b-form-select
                   @change="limpiarMensajeError(formFiltro.campos.empleados)"
+                  :disabled="formFiltro.campos.empleados.disabled"
                   :state="formFiltro.campos.empleados.state"
                   aria-describedby="empleadoHelp"
                   class="form-control form-control-sm"
@@ -39,9 +40,8 @@
                   data-validar="true"
                   ref="empleados"
                   size="sm"
-                  v-bind:disabled="formFiltro.campos.empleados.disabled"
                   v-model="$v.formFiltro.campos.empleados.value.$model">
-            <option :value="null" selected disabled>Seleccione...</option>
+            <option :value="null" selected disabled>{{ formFiltro.campos.empleados.seleccione }}</option>
             <option v-bind:value="empleado.id" v-for="empleado in formFiltro.campos.empleados.listado">{{ empleado.nombre }}</option>
           </b-form-select>
         </b-form-group>
@@ -176,6 +176,7 @@
                 disabled: true,
                 invalidFeedback: '',
                 listado: [],
+                seleccione: "seleccione...",
                 state: null,
                 value: null
               },
@@ -312,7 +313,10 @@
         },
         empleadosDivision: function(){
 
-          self.limpiarMensajeError(self.formFiltro.campos.divisiones)
+          self.limpiarMensajeError(self.formFiltro.campos.divisiones);
+          self.formFiltro.campos.empleados.disabled = true;
+          self.formFiltro.campos.empleados.value = null;
+          self.formFiltro.campos.empleados.seleccione = "buscando!";
 
           let parametros = {
             id_division :  self.formFiltro.campos.divisiones.value
@@ -326,6 +330,7 @@
               self.formFiltro.campos.empleados.listado = response.data.empleados;
               self.formFiltro.campos.empleados.disabled = false;
               self.formFiltro.campos.fechaDesde.disabled = false;
+              self.formFiltro.campos.empleados.seleccione = "seleccione...";
 
             }else{
 

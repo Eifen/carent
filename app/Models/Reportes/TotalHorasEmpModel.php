@@ -37,8 +37,7 @@ class TotalHorasEmpModel extends Model
 
       $sql = DB::select('SELECT p.id AS id_proyecto,
                                 p.descripcion AS proyecto,
-                                CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS empleado,
-                                SEC_TO_TIME(SUM(TIME_TO_SEC(hc.horas_trabajadas))) AS horas_trabajadas
+                                TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(hc.horas_trabajadas))),"%H:%i") AS horas_trabajadas
                          FROM tbl_proyecto_analista pa,
                               tbl_usuario u,
                               tbl_proyecto p,
@@ -48,11 +47,36 @@ class TotalHorasEmpModel extends Model
                          AND hc.id_proy_analista = pa.id
                          AND u.id = '.$parametros["id_usuario"].'
                          AND hc.fecha BETWEEN "'.$parametros["fecha_desde"].'" AND "'.$parametros["fecha_hasta"].'"
-                         GROUP BY p.id, p.descripcion,
-                                  u.nombre_1,
-                                  u.nombre_2,
-                                  u.apellido_1,
-                                  u.apellido_2');
+                         GROUP BY p.id, p.descripcion');
+
+      return $sql;
+
+    }
+
+    function horas_no_cargables($parametros){
+
+      $sql = DB::select('SELECT chnc.descripcion,
+                                CONCAT(
+                                  IF(
+                                     LENGTH(FLOOR(SUM(TIME_TO_SEC(TIMEDIFF(hnc.fecha_hasta, hnc.fecha_desde)))/3600)) = 1,
+                                     CONCAT("0",FLOOR(SUM(TIME_TO_SEC(TIMEDIFF(hnc.fecha_hasta, hnc.fecha_desde)))/3600)),
+                                     FLOOR(SUM(TIME_TO_SEC(TIMEDIFF(hnc.fecha_hasta, hnc.fecha_desde)))/3600)
+                                    ),
+                                  ":",
+                                  IF(
+                                     LENGTH(FLOOR(SUM(TIME_TO_SEC(TIMEDIFF(hnc.fecha_hasta, hnc.fecha_desde)))/60)%60) = 1,
+                                     CONCAT("0",FLOOR(SUM(TIME_TO_SEC(TIMEDIFF(hnc.fecha_hasta, hnc.fecha_desde)))/60)%60),
+                                     FLOOR(SUM(TIME_TO_SEC(TIMEDIFF(hnc.fecha_hasta, hnc.fecha_desde)))/60)%60
+                                    )
+                                ) total
+                         FROM tbl_horas_no_cargables hnc,
+                              tbl_concepto_horas_no_cargables chnc
+                         WHERE hnc.id_concepto = chnc.id
+                         AND hnc.id_usuario = 127
+                         AND hnc.id_estatus IN(1,2)
+                         AND hnc.fecha_desde BETWEEN "'.$parametros["fecha_desde"].' 00:00:00" AND "'.$parametros["fecha_hasta"].' 23:59:00"
+                         AND hnc.fecha_hasta BETWEEN "'.$parametros["fecha_desde"].' 00:00:00" AND "'.$parametros["fecha_hasta"].' 23:59:00"
+                         GROUP BY chnc.descripcion');
 
       return $sql;
 
