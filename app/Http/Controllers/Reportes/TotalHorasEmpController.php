@@ -35,29 +35,20 @@ class TotalHorasEmpController extends Controller
 
     }
 
-    function filtrarCliProy(Request $request){
+    function repTotalHorasInfoEmp(Request $request){
 
-      $modelo = new facturadoCliProyModel();
+      $modelo = new TotalHorasEmpModel();
+      $parametros = [
+        "fecha_desde" => $request->input("fecha_desde"),
+        "fecha_hasta" => $request->input("fecha_hasta"),
+        "id_usuario" => $request->input("empleado")
+      ];
 
-      $paginar = [
-        "desde" => $request->input("desde"),
-        "paginar" => $request->input("paginar")
-      ];
-      $filtros = [
-        "razon_social" => $request->input("razonSocial"),
-        "rif" => $request->input("rif"),
-        "proyecto" => $request->input("proyecto"),
-        "estatus" => $request->input("estatus"),
-        "monedas" => $request->input("monedas")
-      ];
-      $registros = $modelo->repFacturadoCliProy($paginar, $filtros);
-      $paginas = $modelo->pagFacturadoCliProy($paginar, $filtros);
-      $totales = $modelo->totalesFacturadoCliProy($filtros);
+      $horas_cargables = $modelo->horas_cargables($parametros);
 
       return [
-        "paginas" => $paginas,
-        "registros" => $registros,
-        "totales" => $totales
+        "horas_cargables" => $horas_cargables,
+        "response" => true
       ];
 
     }

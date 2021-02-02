@@ -10,7 +10,8 @@
           label="División"
           label-for="division"
           id="group-division">
-          <b-form-select @change="empleadosDivision"
+          <b-form-select
+                  @change="empleadosDivision"
                   :state="formFiltro.campos.divisiones.state"
                   class="form-control form-control-sm"
                   id="division"
@@ -29,7 +30,9 @@
           label="Empleado"
           label-for="empleado"
           id="group-empleado">
-          <b-form-select :state="formFiltro.campos.empleados.state"
+          <b-form-select
+                  @change="limpiarMensajeError(formFiltro.campos.empleados)"
+                  :state="formFiltro.campos.empleados.state"
                   aria-describedby="empleadoHelp"
                   class="form-control form-control-sm"
                   id="empleado"
@@ -67,6 +70,7 @@
           label-for="fechaHasta"
           id="group-fechaHasta">
           <b-form-datepicker
+            @input="limpiarMensajeError(formFiltro.campos.fechaHasta)"
             :disabled="formFiltro.campos.fechaHasta.disabled"
             :locale="'es-VE'"
             :max="formFiltro.campos.fechaHasta.maxValue"
@@ -97,6 +101,15 @@
             v-html="formFiltro.btn.limpiarFiltro.html"
             v-on:click="limpiarFiltro"
             variant="outline-primary"></b-button>
+        </b-form-group>
+        <b-form-group class="col-12">
+          <alert :contador="formFiltro.alert.contador"
+                 :icono-cerrar="formFiltro.alert.iconCerrar"
+                 :mensaje="formFiltro.alert.mensaje"
+                 :mostrar="formFiltro.alert.mostrar"
+                 :ocultar-seg="formFiltro.alert.ocultarSeg"
+                 :variante="formFiltro.alert.variante">
+          </alert>
         </b-form-group>
       </b-form>
     </b-col>
@@ -129,6 +142,14 @@
       data() {
         return {
           formFiltro: {
+            alert: {
+              contador: false,
+              iconCerrar: false,
+              mensaje: "",
+              mostrar: false,
+              ocultarSeg: 0,
+              variante: ""
+            },
             btn: {
               filtrar: {
                 disabled: false,
@@ -321,6 +342,8 @@
         },
         fechaDesdeFiltro: function(fecha_seleccionada){
 
+          self.limpiarMensajeError(self.formFiltro.campos.fechaDesde)
+
           self.formFiltro.campos.fechaHasta.value = null;
           self.formFiltro.campos.fechaHasta.minValue = fecha_seleccionada;
           self.formFiltro.campos.fechaHasta.disabled = false;
@@ -375,60 +398,65 @@
             }
 
           }
-          console.log(formValido);
-          return;
 
-          self.formFiltro.campos.rif.disabled = true;
-          self.formFiltro.campos.proyecto.disabled = true;
-          self.formFiltro.campos.razonSocial.disabled = true;
-          self.formFiltro.campos.estatus.disabled = true;
-          self.formFiltro.campos.monedas.disabled = true;
+          if(formValido){
 
-          self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
-          self.formFiltro.btn.filtrar.disabled = true;
-          self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlLoading;
-          self.formFiltro.btn.limpiarFiltro.disabled = true;
+            Object.keys(self.formFiltro.campos).forEach((indice, i) => {
 
-          //Obtenemos los valores
-          let desde = (self.tabla.paginador.pagina - 1) * self.tabla.paginador.paginar;
-          let parametros = {
-            rif: self.formFiltro.campos.rif.value,
-            proyecto: self.formFiltro.campos.proyecto.value,
-            desde: desde,
-            razonSocial: self.formFiltro.campos.razonSocial.value,
-            estatus: self.formFiltro.campos.estatus.value,
-            monedas: self.formFiltro.campos.monedas.value,
-            paginar: self.tabla.paginador.paginar
-          };
+              if(self.formFiltro.campos[indice].hasOwnProperty("disabled")){
+                self.formFiltro.campos[indice].disabled = true;
+              }
 
-          //Se utiliza el metodo get para su busqueda y se envian con los parametros
-          axios.get('/filtrarCliProy', {params: parametros})
-          .then(function (response) {
+            });
 
-            self.formFiltro.campos.rif.disabled = false;
-            self.formFiltro.campos.proyecto.disabled = false;
-            self.formFiltro.campos.razonSocial.disabled = false;
-            self.formFiltro.campos.estatus.disabled = false;
-            self.formFiltro.campos.monedas.disabled = false;
+            self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
+            self.formFiltro.btn.filtrar.disabled = true;
+            self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlLoading;
+            self.formFiltro.btn.limpiarFiltro.disabled = true;
 
-            self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
-            self.formFiltro.btn.filtrar.disabled = false;
-            self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
-            self.formFiltro.btn.limpiarFiltro.disabled = false;
+            //Obtenemos los valores
+            let parametros = {
+              division: self.formFiltro.campos.divisiones.value,
+              empleado: self.formFiltro.campos.empleados.value,
+              fecha_desde: self.formFiltro.campos.fechaDesde.value,
+              fecha_hasta: self.formFiltro.campos.fechaHasta.value
+            };
 
-          }).catch(error => {
+            //Se utiliza el metodo get para su busqueda y se envian con los parametros
+            axios.get('/repTotalHorasInfoEmp', {params: parametros})
+            .then(function (response) {
 
-            self.formFiltro.campos.rif.disabled = false;
-            self.formFiltro.campos.proyecto.disabled = false;
-            self.formFiltro.campos.razonSocial.disabled = false;
-            self.formFiltro.campos.estatus.disabled = false;
-            self.formFiltro.campos.monedas.disabled = false;
-            self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
-            self.formFiltro.btn.filtrar.disabled = false;
-            self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
-            self.formFiltro.btn.limpiarFiltro.disabled = false;
+              Object.keys(self.formFiltro.campos).forEach((indice, i) => {
 
-          });
+                if(self.formFiltro.campos[indice].hasOwnProperty("disabled")){
+                  self.formFiltro.campos[indice].disabled = false;
+                }
+
+              });
+
+              self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
+              self.formFiltro.btn.filtrar.disabled = false;
+              self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
+              self.formFiltro.btn.limpiarFiltro.disabled = false;
+
+            }).catch(error => {
+
+              Object.keys(self.formFiltro.campos).forEach((indice, i) => {
+
+                if(self.formFiltro.campos[indice].hasOwnProperty("disabled")){
+                  self.formFiltro.campos[indice].disabled = false;
+                }
+
+              });
+
+              self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
+              self.formFiltro.btn.filtrar.disabled = false;
+              self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
+              self.formFiltro.btn.limpiarFiltro.disabled = false;
+
+            });
+
+          }
 
         },
         limpiarFiltro: function(){
