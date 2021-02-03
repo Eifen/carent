@@ -114,8 +114,63 @@
       </b-form>
     </b-col>
 
-    <b-col cols=12>
-
+    <b-col cols=12 md=6>
+      <b-table
+        :busy="tablas.horasCargables.cargando"
+        :empty-text="'No se encontraron resultados'"
+        :fields="tablas.horasCargables.encabezado"
+        :items="tablas.horasCargables.registros"
+        :select-mode="'multi'"
+        :small="true"
+        hover
+        responsive
+        selectable
+        show-empty>
+        <template v-slot:table-busy>
+          <div class="text-center text-primary">
+            <b-spinner class="align-middle"></b-spinner>
+          </div>
+        </template>
+        <template v-slot:empty="scope" v-if="tablas.alert.mostrar">
+          <alert :contador="tablas.horasCargables.alert.contador"
+                 :icono-cerrar="tablas.horasCargables.alert.iconCerrar"
+                 :mensaje="tablas.horasCargables.alert.mensaje"
+                 :mostrar="tablas.horasCargables.alert.mostrar"
+                 :ocultar-seg="tablas.horasCargables.alert.ocultarSeg"
+                 :variante="tablas.horasCargables.alert.variante">
+          </alert>
+        </template>
+        <template v-slot:cell(numero)="data">
+          <b>{{ data.item.numero }}</b>
+        </template>
+        <template v-slot:cell(estatus)="data">
+          <b-badge :variant="data.item.variante">{{ data.item.estatus }}</b-badge>
+        </template>
+        <template v-slot:custom-foot v-if="tablas.horasCargables.registros.length > 0">
+          <b-tr>
+            <b-td colspan="8">
+              <div>
+                <div><b>Página</b></div>
+                <div class="wrapper-input" v-on:keyup="numeroPagina">
+                  <vue-numeric :max="tablas.paginador.max"
+                               :min="1"
+                               :precision="0"
+                               class="form-control text-center form-control-sm"
+                               type="text"
+                               v-model="tablas.horasCargables.paginador.pagina"></vue-numeric>
+                </div>
+                <div><b>de {{ tablas.horasCargables.paginador.numPaginas }}</b></div>
+                <div>
+                  <b-icon-chevron-compact-left class="icono border rounded" v-on:click="paginaAnterior"></b-icon-chevron-compact-left>
+                </div>
+                <div>
+                  <b-icon-chevron-compact-right class="icono border rounded" v-on:click="paginaSiguiente"></b-icon-chevron-compact-right>
+                </div>
+              </div>
+            </b-td>
+          </b-tr>
+        </template>
+      </b-table>
     </b-col>
 
   </b-row>
@@ -219,6 +274,30 @@
               maxValue: "",
               minValue: "",
               value: null
+            }
+          },
+          tablas: {
+            horasCargables: {
+              alert:{
+                contador: false,
+                iconCerrar: false,
+                mensaje: "",
+                mostrar: false,
+                ocultarSeg: 0,
+                variante: ""
+              },
+              cargando: true,
+              encabezado: [],
+              paginador: {
+                max: 0,
+                numPaginas: 0,
+                pagina:1,
+                paginar: 0
+              },
+              registros: []
+            },
+            horasNoCargables: {
+
             }
           }
         };
