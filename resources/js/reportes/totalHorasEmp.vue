@@ -114,7 +114,7 @@
       </b-form>
     </b-col>
 
-    <b-col cols=12 md=6>
+    <b-col cols=12 md=12 lg=6 v-if="tablas.mostrar">
       <b-table
         :busy="tablas.horasCargables.cargando"
         :empty-text="'No se encontraron resultados'"
@@ -125,50 +125,51 @@
         hover
         responsive
         selectable
-        show-empty>
+        show-empty
+        sticky-header>
         <template v-slot:table-busy>
           <div class="text-center text-primary">
             <b-spinner class="align-middle"></b-spinner>
           </div>
         </template>
-        <template v-slot:empty="scope" v-if="tablas.alert.mostrar">
-          <alert :contador="tablas.horasCargables.alert.contador"
-                 :icono-cerrar="tablas.horasCargables.alert.iconCerrar"
-                 :mensaje="tablas.horasCargables.alert.mensaje"
-                 :mostrar="tablas.horasCargables.alert.mostrar"
-                 :ocultar-seg="tablas.horasCargables.alert.ocultarSeg"
-                 :variante="tablas.horasCargables.alert.variante">
-          </alert>
+        <template #thead-top="data">
+          <b-tr>
+            <b-th colspan="2" variant="secondary">Total Horas Cargables:</b-th>
+            <b-th>{{ tablas.horasCargables.total }}</b-th>
+          </b-tr>
         </template>
         <template v-slot:cell(numero)="data">
           <b>{{ data.item.numero }}</b>
         </template>
-        <template v-slot:cell(estatus)="data">
-          <b-badge :variant="data.item.variante">{{ data.item.estatus }}</b-badge>
+      </b-table>
+    </b-col>
+
+    <b-col cols=12 md=12 lg=6 v-if="tablas.mostrar">
+      <b-table
+        :busy="tablas.horasNoCargables.cargando"
+        :empty-text="'No se encontraron resultados'"
+        :fields="tablas.horasNoCargables.encabezado"
+        :items="tablas.horasNoCargables.registros"
+        :select-mode="'multi'"
+        :small="true"
+        hover
+        responsive
+        selectable
+        show-empty
+        sticky-header>
+        <template v-slot:table-busy>
+          <div class="text-center text-primary">
+            <b-spinner class="align-middle"></b-spinner>
+          </div>
         </template>
-        <template v-slot:custom-foot v-if="tablas.horasCargables.registros.length > 0">
+        <template #thead-top="data">
           <b-tr>
-            <b-td colspan="8">
-              <div>
-                <div><b>Página</b></div>
-                <div class="wrapper-input" v-on:keyup="numeroPagina">
-                  <vue-numeric :max="tablas.paginador.max"
-                               :min="1"
-                               :precision="0"
-                               class="form-control text-center form-control-sm"
-                               type="text"
-                               v-model="tablas.horasCargables.paginador.pagina"></vue-numeric>
-                </div>
-                <div><b>de {{ tablas.horasCargables.paginador.numPaginas }}</b></div>
-                <div>
-                  <b-icon-chevron-compact-left class="icono border rounded" v-on:click="paginaAnterior"></b-icon-chevron-compact-left>
-                </div>
-                <div>
-                  <b-icon-chevron-compact-right class="icono border rounded" v-on:click="paginaSiguiente"></b-icon-chevron-compact-right>
-                </div>
-              </div>
-            </b-td>
+            <b-th colspan="2" variant="secondary">Total Horas No Cargables:</b-th>
+            <b-th>{{ tablas.horasNoCargables.total }}</b-th>
           </b-tr>
+        </template>
+        <template v-slot:cell(numero)="data">
+          <b>{{ data.item.numero }}</b>
         </template>
       </b-table>
     </b-col>
@@ -278,14 +279,6 @@
           },
           tablas: {
             horasCargables: {
-              alert:{
-                contador: false,
-                iconCerrar: false,
-                mensaje: "",
-                mostrar: false,
-                ocultarSeg: 0,
-                variante: ""
-              },
               cargando: true,
               encabezado: [],
               paginador: {
@@ -294,11 +287,22 @@
                 pagina:1,
                 paginar: 0
               },
-              registros: []
+              registros: [],
+              total: '00:00'
             },
             horasNoCargables: {
-
-            }
+              cargando: true,
+              encabezado: [],
+              paginador: {
+                max: 0,
+                numPaginas: 0,
+                pagina:1,
+                paginar: 0
+              },
+              registros: [],
+              total: '00:00'
+            },
+            mostrar: false
           }
         };
       },
@@ -368,6 +372,18 @@
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         self.formFiltro.campos.fechaDesde.maxValue = now;
         self.formFiltro.campos.fechaHasta.maxValue = now;
+
+        self.tablas.horasCargables.encabezado = [
+          { key: 'numero', label: '#' },
+          { key: 'proyecto_concepto', label: 'Proyecto' },
+          { key: 'horas', label: 'Horas' }
+        ];
+
+        self.tablas.horasNoCargables.encabezado = [
+          { key: 'numero', label: '#' },
+          { key: 'proyecto_concepto', label: 'Concepto' },
+          { key: 'horas', label: 'Horas' }
+        ];
 
       },
       beforeUpdate:function(){},
@@ -522,6 +538,13 @@
               self.formFiltro.btn.filtrar.disabled = false;
               self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
               self.formFiltro.btn.limpiarFiltro.disabled = false;
+              self.tablas.horasCargables.total = response.data.totales.horas_cargables;
+              self.tablas.horasNoCargables.total = response.data.totales.horas_no_cargables;
+              self.tablas.horasCargables.registros = self.registroTabla(response.data.horas_cargables);
+              self.tablas.horasNoCargables.registros = self.registroTabla(response.data.horas_no_cargables);
+              self.tablas.horasCargables.cargando = false;
+              self.tablas.horasNoCargables.cargando = false;
+              self.tablas.mostrar = true;
 
             }).catch(error => {
 
@@ -585,6 +608,24 @@
 
           objeto.state = null;
           objeto.invalidFeedback = "";
+
+        },
+        registroTabla: function(datos){
+
+          const registros = [];
+          datos.forEach((item, i) => {
+
+            const data = {
+              numero: (i + 1),
+              proyecto_concepto: item.proyecto_concepto,
+              horas: item.horas
+            };
+
+            registros.push(data);
+
+          });
+
+          return registros;
 
         }
       }
