@@ -165,9 +165,9 @@
         </template>
         <template #thead-top="data">
           <b-tr>
-            <b-th variant="secondary"></b-th>
-            <b-th variant="secondary">Total Horas No Cargables:</b-th>
-            <b-th variant="danger">{{ tablas.horasNoCargables.total }}</b-th>
+            <b-th></b-th>
+            <b-th>Total Horas No Cargables:</b-th>
+            <b-th>{{ tablas.horasNoCargables.total }}</b-th>
           </b-tr>
         </template>
         <template v-slot:cell(numero)="data">
