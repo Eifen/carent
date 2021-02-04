@@ -134,8 +134,9 @@
         </template>
         <template #thead-top="data">
           <b-tr>
-            <b-th colspan="2" variant="secondary">Total Horas Cargables:</b-th>
-            <b-th>{{ tablas.horasCargables.total }}</b-th>
+            <b-th variant="secondary"></b-th>
+            <b-th variant="secondary">Total Horas Cargables:</b-th>
+            <b-th variant="secondary">{{ tablas.horasCargables.total }}</b-th>
           </b-tr>
         </template>
         <template v-slot:cell(numero)="data">
@@ -164,8 +165,9 @@
         </template>
         <template #thead-top="data">
           <b-tr>
-            <b-th colspan="2" variant="secondary">Total Horas No Cargables:</b-th>
-            <b-th>{{ tablas.horasNoCargables.total }}</b-th>
+            <b-th variant="secondary"></b-th>
+            <b-th variant="secondary">Total Horas No Cargables:</b-th>
+            <b-th variant="danger">{{ tablas.horasNoCargables.total }}</b-th>
           </b-tr>
         </template>
         <template v-slot:cell(numero)="data">
