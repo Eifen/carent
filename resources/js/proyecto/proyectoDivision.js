@@ -97,6 +97,7 @@ new Vue({
     diferencia: 0,
     permisoVer: false,
     permisoCrear: false,
+    agregar: 1,
     loading: true
   },
   beforeCreate: function(){
@@ -350,7 +351,11 @@ new Vue({
 
           self.detalleDproyecto.data = response.data.infoDproyecto;
           self.detalleAproyecto.data = response.data.infoAproyecto;
+          if (self.detalleDproyecto.data[0].horas_adicional != null) {
           self.horas_contratadas = parseFloat(self.detalleDproyecto.data[0].horas_contratadas) + parseFloat(self.detalleDproyecto.data[0].horas_adicional);
+          }else{
+            self.horas_contratadas = parseFloat(self.detalleDproyecto.data[0].horas_contratadas);
+          }
           for (var i = 0; i < self.detalleAproyecto.data.length; i++) {
             if (self.detalleAproyecto.data[i].horas_cargadas != null) {
               self.horas_cargadas = parseFloat(self.detalleAproyecto.data[i].horas_cargadas) + self.horas_cargadas;
@@ -429,6 +434,9 @@ new Vue({
 
     estados: function(analista,idAnaProy,idDproyecto,id_proyecto_division,e){
 
+      if (self.agregar === 1) {
+        self.agregar = 0;
+
       if(idAnaProy == null){
 
         let parametros = {
@@ -477,10 +485,12 @@ new Vue({
           }
             self.actualizar();
       }else{
+        self.agregar = 1;
         throw response.data;
       }
     })
       }
+    };
 
     },
 
@@ -538,6 +548,7 @@ new Vue({
 
     actualizar: function(){
 
+      self.agregar = 1;
       let parametros = {
         cliente: self.form.cliente.value,
         proyecto: self.form.descripcion.value,
