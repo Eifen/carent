@@ -115,6 +115,16 @@
     </b-col>
 
     <b-col cols=12 md=12 lg=6 v-if="tablas.mostrar">
+
+      <b-card class="text-left card-horas-cargables">
+        <b-card-text>
+          <span class="titulo">HORAS CARGABLES</span>
+        </b-card-text>
+        <b-card-text>
+          <span class="horas">Total de horas: {{ tablas.horasCargables.total }}</span>
+        </b-card-text>
+      </b-card>
+
       <b-table
         :busy="tablas.horasCargables.cargando"
         :empty-text="'No se encontraron resultados'"
@@ -122,6 +132,7 @@
         :items="tablas.horasCargables.registros"
         :select-mode="'multi'"
         :small="true"
+        head-variant="secondary"
         hover
         responsive
         selectable
@@ -131,13 +142,6 @@
           <div class="text-center text-primary">
             <b-spinner class="align-middle"></b-spinner>
           </div>
-        </template>
-        <template #thead-top="data">
-          <b-tr>
-            <b-th variant="secondary"></b-th>
-            <b-th variant="secondary">Total Horas Cargables:</b-th>
-            <b-th variant="secondary">{{ tablas.horasCargables.total }}</b-th>
-          </b-tr>
         </template>
         <template v-slot:cell(numero)="data">
           <b>{{ data.item.numero }}</b>
@@ -146,6 +150,16 @@
     </b-col>
 
     <b-col cols=12 md=12 lg=6 v-if="tablas.mostrar">
+
+      <b-card class="text-left card-horas-no-cargables">
+        <b-card-text>
+          <span class="titulo">HORAS NO CARGABLES</span>
+        </b-card-text>
+        <b-card-text>
+          <span class="horas">Total de horas: {{ tablas.horasNoCargables.total }}</span>
+        </b-card-text>
+      </b-card>
+
       <b-table
         :busy="tablas.horasNoCargables.cargando"
         :empty-text="'No se encontraron resultados'"
@@ -153,6 +167,7 @@
         :items="tablas.horasNoCargables.registros"
         :select-mode="'multi'"
         :small="true"
+        head-variant="secondary"
         hover
         responsive
         selectable
@@ -162,13 +177,6 @@
           <div class="text-center text-primary">
             <b-spinner class="align-middle"></b-spinner>
           </div>
-        </template>
-        <template #thead-top="data">
-          <b-tr>
-            <b-th></b-th>
-            <b-th>Total Horas No Cargables:</b-th>
-            <b-th>{{ tablas.horasNoCargables.total }}</b-th>
-          </b-tr>
         </template>
         <template v-slot:cell(numero)="data">
           <b>{{ data.item.numero }}</b>
