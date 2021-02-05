@@ -469,8 +469,6 @@ new Vue({
 
       });
 
-      var formValido = true;
-
       const arrayCampos = Object.keys(self.form.campos);
       for(var i = 0; i <= (arrayCampos.length - 1); i++){
 

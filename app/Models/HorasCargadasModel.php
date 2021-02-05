@@ -205,6 +205,7 @@ class HorasCargadasModel extends Model
         return array(
           "analista" => $analista[0]->codigo,
           "horas_trabajadas" => $horas[0]->horas_trabajadas,
+          "descripcion" => $horas[0]->descripcion,
           "proyecto" => $proyecto[0]->descripcion,
           "response" => true,
           "message" => "Hora eliminada con exito"
@@ -216,6 +217,85 @@ class HorasCargadasModel extends Model
         return array("response" => false, "message" => "Error al tratar de eliminar horas");
 
       }
+
+    }
+
+    function dataNotificarHorasCargadas($codigo){
+
+      $data_usuario = DB::select('SELECT CONCAT(
+                                           u.nombre_1," ",
+                                           u.nombre_2," ",
+                                           u.apellido_1," ",
+                                           u.apellido_2
+                                         ) AS nombre,
+                                         u.id_division,
+                                         d.descripcion AS division,
+                                         u.id_cargo,
+                                         cu.correo_principal AS correo
+                                  FROM tbl_usuario u,
+                                       tbl_division d,
+                                       tbl_contacto_usuario cu
+                                  WHERE u.id_division = d.id
+                                  AND u.id = cu.id_usuario
+                                  AND u.codigo = '.$codigo);
+
+      $data_supervisores = DB::select('SELECT * FROM(
+                                        SELECT DISTINCT u.id,
+                                               CONCAT(
+                                                 u.nombre_1," ",
+                                                 u.nombre_2," ",
+                                                 u.apellido_1," ",
+                                                 u.apellido_2
+                                               ) AS nombre,
+                                               cu.correo_principal AS correo
+                                        FROM tbl_usuario u,
+                                             tbl_cargo_supervisa cs,
+                                             tbl_contacto_usuario cu
+                                        WHERE u.id_cargo = cs.id_cargo_supervisor
+                                        AND u.id = cu.id_usuario
+                                        AND u.id_division = '.$data_usuario[0]->id_division.'
+                                        AND cs.id_cargo_supervisor IN(
+                                           SELECT cs2.id_cargo_supervisor FROM tbl_cargo_supervisa cs2 WHERE cs2.id_cargo = '.$data_usuario[0]->id_cargo.'
+                                        )
+                                        AND cs.id_cargo_supervisor NOT IN(16)
+                                        GROUP BY u.id,
+                                                 u.nombre_1,
+                                                 u.nombre_2,
+                                                 u.apellido_1,
+                                                 u.apellido_2,
+                                                 cu.correo_principal
+                                        )t
+                                    ORDER BY nombre ASC');
+
+        return [
+          "empleado" => $data_usuario[0],
+          "supervisores" => $data_supervisores
+        ];
+
+    }
+
+     function dataNotificarEliHorasCargadas($codigo){
+
+      $data_usuario = DB::select('SELECT CONCAT(
+                                           u.nombre_1," ",
+                                           u.nombre_2," ",
+                                           u.apellido_1," ",
+                                           u.apellido_2
+                                         ) AS nombre,
+                                         u.id_division,
+                                         d.descripcion AS division,
+                                         u.id_cargo,
+                                         cu.correo_principal AS correo
+                                  FROM tbl_usuario u,
+                                       tbl_division d,
+                                       tbl_contacto_usuario cu
+                                  WHERE u.id_division = d.id
+                                  AND u.id = cu.id_usuario
+                                  AND u.codigo = '.$codigo);
+
+        return [
+          "empleado" => $data_usuario[0]
+        ];
 
     }
 
