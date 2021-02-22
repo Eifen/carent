@@ -18,6 +18,7 @@ Vue.component('reporte-4',require('./clientes.vue').default);
 Vue.component('reporte-5',require('./horasProyectos.vue').default);
 Vue.component('reporte-6',require('./facturadoCliProy.vue').default);
 Vue.component('reporte-7',require('./totalHorasEmp.vue').default);
+Vue.component('reporte-8',require('./totalHorasCarg.vue').default);
 
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
