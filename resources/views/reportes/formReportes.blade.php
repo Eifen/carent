@@ -67,6 +67,7 @@
             <reporte-5 v-if="formReportes.reportes.verReporte.id === 22" :key="formReportes.reportes.verReporte.key"></reporte-5>
             <reporte-6 v-if="formReportes.reportes.verReporte.id === 23" :key="formReportes.reportes.verReporte.key"></reporte-6>
             <reporte-7 v-if="formReportes.reportes.verReporte.id === 24" :key="formReportes.reportes.verReporte.key"></reporte-7>
+            <reporte-8 v-if="formReportes.reportes.verReporte.id === 25" :key="formReportes.reportes.verReporte.key"></reporte-8>
           </b-col>
         </b-row>
 
