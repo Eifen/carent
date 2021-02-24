@@ -100,8 +100,9 @@ class TotalHorasCargModel extends Model
                                   DATE_FORMAT(hnc.fecha_hasta, "%Y-%m-%d") AS fecha_hasta, 
                                   cast(time_to_sec(DATE_FORMAT(hnc.fecha_hasta, "%H:%i:%s"))/ (60 * 60) as decimal(10, 1)) AS hora_hasta 
                              FROM tbl_horas_no_cargables hnc
-                             WHERE hnc.fecha_desde BETWEEN "'.$fecha_desde.' 00:00:00" AND "'.$fecha_hasta.' 23:59:00"
-                             OR hnc.fecha_hasta BETWEEN "'.$fecha_desde.' 00:00:00" AND "'.$fecha_hasta.' 23:59:00"');
+                             WHERE hnc.id_estatus != 2
+                             AND (hnc.fecha_desde BETWEEN "'.$fecha_desde.' 00:00:00" AND "'.$fecha_hasta.' 23:59:00"
+                             OR hnc.fecha_hasta BETWEEN "'.$fecha_desde.' 00:00:00" AND "'.$fecha_hasta.' 23:59:00")');
       $usuarios = DB::select('SELECT u.id,
                                      CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS nombre,
                                      (SELECT CASE 
@@ -128,7 +129,8 @@ class TotalHorasCargModel extends Model
                                       u.apellido_2 ASC
                              ');
       $total_horas_no_cargables = 0;
-      $horas_cargadas = 0; 
+      $horas_cargadas = 0;
+      $total_horas = 0; 
       for ($u=0; $u < count($usuarios) ; $u++) {
         for ($i=0; $i < count($horas) ; $i++) {
           if ($usuarios[$u]->id === $horas[$i]->id_usuario) {
@@ -187,6 +189,7 @@ class TotalHorasCargModel extends Model
         }
         $total[$u] = array('id' => $usuarios[$u]->id, 'nombre' => $usuarios[$u]->nombre, 'total_horas_cargables' => $usuarios[$u]->horas_cargables, 'total_horas_no_cargables' => $total_horas_no_cargables, 'total_horas' => $total_horas);
         $total_horas_no_cargables = 0;
+        $total_horas = 0;
       }
       
       return $total;
