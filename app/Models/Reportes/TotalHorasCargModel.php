@@ -142,8 +142,9 @@ class TotalHorasCargModel extends Model
                              ');
       $total_horas_no_cargables = 0;
       $horas_cargadas = 0;
-      $total_horas = 0; 
       $horas_cargadas_anterior = 0;
+      $porcen_horas_cargables = "0 %";
+      $porcen_horas_no_cargables = "0 %";
       $fecha_desde_anterior = null;
       for ($u=0; $u < count($usuarios) ; $u++) {
         for ($i=0; $i < count($horas) ; $i++) {
@@ -267,9 +268,9 @@ class TotalHorasCargModel extends Model
                             $horas_cargables[$c]->horas_cargadas = $horas_cargables[$c]->horas_cargadas + 0.5;
                           } 
                           while ($acumulado + $horas_carga > 8.0) {
-                             $horas_cargadas = $horas_cargadas - 0.5;
-                             $horas_carga = $horas_carga - 0.5;
-                           } 
+                            $horas_cargadas = $horas_cargadas - 0.5;
+                            $horas_carga = $horas_carga - 0.5;
+                          } 
                         }                         
                       }                   
                     }
@@ -302,14 +303,25 @@ class TotalHorasCargModel extends Model
             }
           }
          $total_horas_no_cargables = $total_horas_no_cargables + $horas_cargadas;
-         $total_horas = $total_horas_no_cargables + $usuarios[$u]->horas_cargables;
          $horas_cargadas = 0;
          $hora_cargada1 = 0;
          $hora_cargada2 = 0;
         }
-        $total[$u] = array('id' => $usuarios[$u]->id, 'nombre' => $usuarios[$u]->nombre, 'total_horas_cargables' => $usuarios[$u]->horas_cargables, 'total_horas_no_cargables' => $total_horas_no_cargables, 'total_horas' => $total_horas);
+        $total_horas = $total_horas_no_cargables + $usuarios[$u]->horas_cargables;
+        if ($total_horas_no_cargables > 0) {
+          $porcen_horas_no_cargables = round($total_horas_no_cargables/$total_horas*100,2);
+          $porcen_horas_no_cargables = "$porcen_horas_no_cargables %";
+        }
+        if ($usuarios[$u]->horas_cargables > 0) {
+          $porcen_horas_cargables = round($usuarios[$u]->horas_cargables/$total_horas*100,2);
+          $porcen_horas_cargables = "$porcen_horas_cargables %";
+        }        
+        
+        $total[$u] = array('id' => $usuarios[$u]->id, 'nombre' => $usuarios[$u]->nombre, 'total_horas_cargables' => $usuarios[$u]->horas_cargables, 'total_horas_no_cargables' => $total_horas_no_cargables, 'total_horas' => $total_horas, 'porcen_horas_cargables' => $porcen_horas_cargables, 'porcen_horas_no_cargables' => $porcen_horas_no_cargables);
         $total_horas_no_cargables = 0;
         $total_horas = 0;
+        $porcen_horas_cargables = "0 %";
+        $porcen_horas_no_cargables = "0 %";
       }
       
       return $total;
