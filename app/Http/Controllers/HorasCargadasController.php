@@ -97,15 +97,15 @@ class HorasCargadasController extends Controller
             $modeloAudit->logs_auditoria($parametros);
           }
 
-          $parametros_email = $modelo->dataNotificarHorasCargadas($response["analista"]);
-          $this->notificarHorasCargadas($parametros_email,$descripcion,$horas_trabajadas,$response["proyecto"]);
+          //$parametros_email = $modelo->dataNotificarHorasCargadas($response["analista"]);
+          //$this->notificarHorasCargadas($parametros_email,$descripcion,$horas_trabajadas,$response["proyecto"]);
           return $response;
         }
-        $response = array("response" => false, "message" => "A intentado introducir una actividad en una fecha a futuros acción no permitida"); 
+        $response = array("response" => false, "message" => "A intentado introducir una actividad en una fecha a futuros acción no permitida");   
         return $response;
       }
-      $response = array("response" => false, "message" => "A sobrepasado el limite de horas asignadas"); 
-        return $response;      
+        $response = array("response" => false, "message" => "A sobrepasado el limite de horas asignadas"); 
+        return $response;  
     }
 
     function notificarHorasCargadas($parametros, $descripcion, $horas_trabajadas, $proyecto){
