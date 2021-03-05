@@ -532,10 +532,13 @@ class ProyectoController extends Controller
 
       $agregar_horas = $modelo->agregarHoraAdicionalProyDiv($parametros);
       $horas = $modelo->horasAdicionesProyDiv($request->input("id_proy_div"));
+      $id_proyecto = (int) session("id_proyecto_mod");
+      $infoProyecto = $modelo->detalleProyectoModificar($id_proyecto);
 
       if($agregar_horas){
 
         return [
+          "info" => $infoProyecto,
           "message" => "Horas agregadas con éxito!",
           "horas" => $horas,
           "response" => true

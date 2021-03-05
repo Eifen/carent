@@ -345,8 +345,10 @@
               { key: 'numero', label: '#' },
               { key: 'nombre', label: 'Empleado' },
               { key: 'total_horas_cargables', label: 'Horas Cargables' },
+              { key: 'porcen_horas_cargables', label: '% Horas Cargables' },
               { key: 'total_horas_no_cargables', label: 'Horas No Cargables' },
-              { key: 'total_horas', label: 'Total' },
+              { key: 'porcen_horas_no_cargables', label: '% Horas No Cargables' },
+              { key: 'total_horas', label: 'Total Horas Cargadas' },
             ];
 
             self.tabla.registros = self.registroTabla(response.data.totales);
@@ -439,7 +441,9 @@
               numero: (i + 1),
               nombre: item.nombre,
               total_horas_cargables: item.total_horas_cargables,
+              porcen_horas_cargables: item.porcen_horas_cargables,
               total_horas_no_cargables: item.total_horas_no_cargables,
+              porcen_horas_no_cargables: item.porcen_horas_no_cargables,
               total_horas: item.total_horas
             };
 
