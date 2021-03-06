@@ -349,6 +349,8 @@
               { key: 'total_horas_no_cargables', label: 'Horas No Cargables' },
               { key: 'porcen_horas_no_cargables', label: '% Horas No Cargables' },
               { key: 'total_horas', label: 'Total Horas Cargadas' },
+              { key: 'exceso', label: 'Exceso Horas Cargadas' },
+
             ];
 
             self.tabla.registros = self.registroTabla(response.data.totales);
@@ -444,7 +446,8 @@
               porcen_horas_cargables: item.porcen_horas_cargables,
               total_horas_no_cargables: item.total_horas_no_cargables,
               porcen_horas_no_cargables: item.porcen_horas_no_cargables,
-              total_horas: item.total_horas
+              total_horas: item.total_horas,
+              exceso: item.exceso,
             };
 
             registros.push(data);
