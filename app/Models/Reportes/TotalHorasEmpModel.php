@@ -140,6 +140,8 @@ class TotalHorasEmpModel extends Model
 
     function sin_cargar_horas_cargables(){
 
+      $fecha = date("Y-m-d");
+
       $sql = DB::select('SELECT id,
                                 nombre,
                                 correo,
@@ -152,8 +154,7 @@ class TotalHorasEmpModel extends Model
                                   (
                                        SELECT DATE_FORMAT(hc3.fecha, "%d/%m/%Y")
                                        FROM tbl_horas_cargables hc3,
-                                            tbl_proyecto_analista pa3,
-                                            tbl_usuario u3
+                                            tbl_proyecto_analista pa3
                                        WHERE hc3.id_proy_analista = pa3.id
                                        AND pa3.id_analista = u.id
                                        ORDER BY hc3.fecha DESC
@@ -170,20 +171,46 @@ class TotalHorasEmpModel extends Model
                                      tbl_usuario u2
                                 WHERE hc.id_proy_analista = pa.id
                                 AND pa.id_analista = u2.id
-                                AND hc.fecha >= DATE_SUB("2021-01-29", INTERVAL 5 DAY)
+                                AND hc.fecha >= DATE_SUB("'.$fecha.'", INTERVAL 5 DAY)
                                 GROUP BY u2.id
 
                              )
+                             AND u.id_estatus = 1
                              ORDER BY u.nombre_1, u.nombre_2, u.apellido_1, u.apellido_2
-                            ) t');
+                            )t');
 
       return $sql;
 
     }
 
     function sin_cargar_horas_no_cargables(){
+      /*REVISAR SQL*/
+      $sql = DB::select('SELECT u.id,
+       CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS nombre,
+       cu.correo_principal AS correo,
+       (
+          SELECT DATE_FORMAT(hnc3.fecha_hasta, "%d/%m/%Y")
+          FROM tbl_horas_no_cargables hnc3
+          WHERE hnc3.id_usuario = u.id
+          AND hnc3.fecha_hasta >= DATE_SUB("2021-07-01", INTERVAL 5 DAY)
+          ORDER BY hnc3.fecha_hasta DESC
+          LIMIT 1
+       ) AS fecha
+FROM tbl_usuario u,
+     tbl_contacto_usuario cu
+WHERE u.id = cu.id_usuario
+AND u.id NOT IN(
 
-      $sql = DB::select('');
+    SELECT u2.id
+    FROM tbl_horas_no_cargables hnc2,
+         tbl_usuario u2
+    WHERE hnc2.id_usuario = u.id
+    AND hnc2.fecha_hasta >= DATE_SUB("2020-07-01", INTERVAL 5 DAY)
+    GROUP BY u2.id
+
+)
+AND u.id_estatus = 1
+ORDER BY u.nombre_1, u.nombre_2, u.apellido_1, u.apellido_2');
 
       return $sql;
 

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Reportes;
 use Illuminate\Http\Request;
 use App\Models\Reportes\TotalHorasEmpModel;
-
+use Mail;
 use App\Http\Controllers\Controller;
 
 class TotalHorasEmpController extends Controller
@@ -62,12 +62,27 @@ class TotalHorasEmpController extends Controller
       $modelo = new TotalHorasEmpModel();
 
       $horas_cargables = $modelo->sin_cargar_horas_cargables();
-      $horas_no_cargables = $modelo->sin_cargar_horas_no_cargables();
+      $destinatarios = ["dmolina101@gmail.com", "carolina.coronel3@gmail.com"];
+      $dias = 5;
+      //$horas_no_cargables = $modelo->sin_cargar_horas_no_cargables();// REVISAR SQL
 
-      return [
-        "horas_cargables" => $horas_cargables,
-        "horas_no_cargables" => $horas_no_cargables
-      ];
+      Mail::send('reportes.emails.repEmpSinCargarHoras', ["empleados" => $horas_cargables, "dias" => $dias], function($message) use ($destinatarios)  {
+
+          $message->from('sistema.carent@crowe.com.ve', 'CARENT')->to($destinatarios)->subject('Reporte Empleados Sin Cargar Horas');
+
+      });
+
+      if(Mail::failures()){
+
+        $response = array("response" => false, "message" => "No se pudo enviar el correo, intente nuevamente.");
+
+      }else{
+
+        $response = array("response" => true, "message" => "Correo enviado.");
+
+      }
+
+      return $response;
 
     }
 
