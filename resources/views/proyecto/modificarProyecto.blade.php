@@ -324,7 +324,7 @@
                 label-for="horas"
                 id="group-horas">
                 <b-form-input
-                  :disabled="form.camposAtributos.horas.disabled"
+                  disabled
                   :state="form.camposAtributos.horas.state"
                   autocomplete="off"
                   id="horas"
@@ -332,6 +332,22 @@
                   size="sm"
                   type="text"
                   v-model="form.campos.horas"></b-form-input>
+              </b-form-group>
+              <b-form-group
+                :invalid-feedback="form.camposAtributos.horas_adicionales.invalidFeedback"
+                class="col-12 col-sm-6"
+                label="Horas Adicionales"
+                label-for="horas_adicionales"
+                id="group-horas_adicionales">
+                <b-form-input
+                  disabled
+                  :state="form.camposAtributos.horas_adicionales.state"
+                  autocomplete="off"
+                  id="horas_adicionales"
+                  ref="horas_adicionales"
+                  size="sm"
+                  type="text"
+                  v-model="form.campos.horas_adicionales"></b-form-input>
               </b-form-group>
               <b-form-group class="col-12" v-if="form.camposAtributos.divisiones.divisiones.length > 0">
                 <b-badge variant="warning">Indica la cantidad de horas por división</b-badge>

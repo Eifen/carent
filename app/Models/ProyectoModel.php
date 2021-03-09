@@ -246,7 +246,10 @@ class ProyectoModel extends Model
 
       $proyectos = DB::select('SELECT p.id,
                                       UPPER(p.descripcion) AS descripcion,
-                                      (SELECT SUM(horas_contratadas) FROM tbl_proyecto_divisiones WHERE id_proyecto = p.id) AS horas_contratadas,
+                                      (SELECT CASE
+                                       WHEN ((SELECT SUM(ph.horas) FROM tbl_proyecto_divisiones d, tbl_proy_div_horas_adic ph WHERE d.id_proyecto = p.id AND d.id  = ph.id_proy_div AND ph.id_estatus = 1) + (SELECT SUM(horas_contratadas) FROM tbl_proyecto_divisiones WHERE id_proyecto = p.id)) > 0 THEN ((SELECT SUM(ph.horas) FROM tbl_proyecto_divisiones d, tbl_proy_div_horas_adic ph WHERE d.id_proyecto = p.id AND d.id  = ph.id_proy_div AND ph.id_estatus = 1) + (SELECT SUM(horas_contratadas) FROM tbl_proyecto_divisiones WHERE id_proyecto = p.id))
+                                       ELSE (SELECT SUM(horas_contratadas) FROM tbl_proyecto_divisiones WHERE id_proyecto = p.id)
+                                       END AS horas_contratadas) AS horas_contratadas,
                                       DATE_FORMAT(p.fecha_contratacion, "%d/%m/%Y") AS fecha_contratacion,
                                       e.descripcion AS estatus,
                                       c.razon_social as cliente,
@@ -423,6 +426,15 @@ class ProyectoModel extends Model
 
       $info = DB::select('SELECT p.*,
                                  (SELECT SUM(horas_contratadas) FROM tbl_proyecto_divisiones WHERE id_proyecto = p.id) AS horas_contratadas,
+                                 (SELECT CASE
+                                       WHEN SUM(ph.horas) > 0 THEN SUM(ph.horas)
+                                       ELSE 0
+                                       END AS horas_adicionales
+                                       FROM tbl_proyecto_divisiones d, 
+                                            tbl_proy_div_horas_adic ph
+                                       WHERE d.id_proyecto = p.id 
+                                       AND d.id  = ph.id_proy_div 
+                                       AND ph.id_estatus = 1)horas_adicionales,
                                  m.simbolo,
                                  c.razon_social,
                                  (
@@ -710,7 +722,7 @@ class ProyectoModel extends Model
                                UPPER(p.descripcion) descripcion,
                                (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = p.id_cliente) cliente,
                                (SELECT SUM(d.horas_contratadas) FROM tbl_proyecto_divisiones d WHERE d.id_proyecto = '.$idDproyecto.') horas_contratadas,
-                               (SELECT SUM(ph.horas) FROM tbl_proyecto_divisiones d, tbl_proy_div_horas_adic ph WHERE d.id_proyecto = '.$idDproyecto.' AND d.id  = ph.id_proy_div) horas_adicional,
+                               (SELECT SUM(ph.horas) FROM tbl_proyecto_divisiones d, tbl_proy_div_horas_adic ph WHERE d.id_proyecto = '.$idDproyecto.' AND d.id  = ph.id_proy_div AND ph.id_estatus = 1) horas_adicional,
                                p.fecha_contratacion
                           FROM tbl_proyecto p
                           WHERE p.id = '.$idDproyecto.'
@@ -750,7 +762,7 @@ class ProyectoModel extends Model
                                  (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = p.id_cliente) cliente,
                                  (SELECT d.id FROM tbl_proyecto_divisiones d WHERE d.id_proyecto = '.$id_proyecto.' AND d.id_division = '.$id_division.' )id_proyecto_division,
                                  (SELECT SUM(d.horas_contratadas) FROM tbl_proyecto_divisiones d WHERE d.id_proyecto = '.$id_proyecto.' AND d.id_division = '.$id_division.')horas_contratadas,
-                                 (SELECT SUM(ph.horas) FROM tbl_proyecto_divisiones d, tbl_proy_div_horas_adic ph WHERE d.id_proyecto = '.$id_proyecto.' AND d.id_division = '.$id_division.' AND d.id  = ph.id_proy_div)horas_adicionales
+                                 (SELECT SUM(ph.horas) FROM tbl_proyecto_divisiones d, tbl_proy_div_horas_adic ph WHERE d.id_proyecto = '.$id_proyecto.' AND d.id_division = '.$id_division.' AND d.id  = ph.id_proy_div AND ph.id_estatus = 1)horas_adicionales
                           FROM tbl_proyecto p
                           WHERE p.id = '.$id_proyecto.'');
 

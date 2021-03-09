@@ -221,7 +221,11 @@ new Vue({
         horas:{
           disabled: true,
           state: null
-        }
+        },
+        horas_adicionales:{
+          disabled: true,
+          state: null
+        },
       },
       mostrar: false
     },
@@ -387,6 +391,10 @@ new Vue({
         horas: {
           required,
           minValue: minValue(1)
+        },
+        horas_adicionales: {
+          required,
+          minValue: minValue(1)
         }
       }
     },
@@ -463,6 +471,7 @@ new Vue({
       self.form.campos.monto = dataInit.info.monto;
       self.comboDivisiones = dataInit.divisiones;
       self.form.campos.horas = dataInit.info.horas_contratadas;
+      self.form.campos.horas_adicionales = dataInit.info.horas_adicionales;
 
       self.asignarHoras(dataInit.infodivi);
 
@@ -1221,21 +1230,7 @@ new Vue({
       });
 
     },
-    horasTotales: function(){
 
-      var total = 0;
-
-      for(var i = 0; i < self.form.camposAtributos.divisiones.divisiones.length; i++){
-        total = total + parseInt(self.form.camposAtributos.divisiones.divisiones[i].horas.value);
-      }
-
-      total = (isNaN(total)) ? 0 : total;
-
-      self.form.campos.horas = total;
-
-      self.cleanFieldForm(self.form.camposAtributos.horas);
-
-    },
     mostrarAlertForm: function(alert, mostrar = false, variante = "", mensaje = "", iconCerrar = false, contador = false, ocultarSeg = 0){
 
       return new Promise(resolve => {
@@ -1722,6 +1717,7 @@ new Vue({
 
           self.modalAgregarHora.form.campos.horaAdicional.autonumeric.set(0);
           self.modalAgregarHora.form.campos.horaAdicional.value = 0;
+          self.form.campos.horas_adicionales = response.data.info.horas_adicionales;
 
           self.enableDisabledForm(self.modalAgregarHora.form.campos, false);
 
