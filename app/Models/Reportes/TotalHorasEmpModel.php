@@ -138,4 +138,47 @@ class TotalHorasEmpModel extends Model
 
     }
 
+    function sin_cargar_horas_cargables(){
+
+      $sql = DB::select('SELECT id,
+                                nombre,
+                                correo,
+                                IFNULL(fecha,  "Nunca ha cargado") AS fecha
+                         FROM(
+
+                           SELECT u.id,
+                                  CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS nombre,
+                                  cu.correo_principal AS correo,
+                                  (
+                                       SELECT DATE_FORMAT(hc3.fecha, "%d/%m/%Y")
+                                       FROM tbl_horas_cargables hc3,
+                                            tbl_proyecto_analista pa3,
+                                            tbl_usuario u3
+                                       WHERE hc3.id_proy_analista = pa3.id
+                                       AND pa3.id_analista = u.id
+                                       ORDER BY hc3.fecha DESC
+                                       LIMIT 1
+                                  ) AS fecha
+                             FROM tbl_usuario u,
+                                  tbl_contacto_usuario cu
+                             WHERE u.id = cu.id_usuario
+                             AND u.id NOT IN(
+
+                                SELECT u2.id
+                                FROM tbl_horas_cargables hc,
+                                     tbl_proyecto_analista pa,
+                                     tbl_usuario u2
+                                WHERE hc.id_proy_analista = pa.id
+                                AND pa.id_analista = u2.id
+                                AND hc.fecha >= DATE_SUB("2021-01-29", INTERVAL 5 DAY)
+                                GROUP BY u2.id
+
+                             )
+                             ORDER BY u.nombre_1, u.nombre_2, u.apellido_1, u.apellido_2
+                            ) t');
+
+      return $sql;
+
+    }
+
 }
