@@ -62,10 +62,11 @@ class TotalHorasEmpController extends Controller
       $modelo = new TotalHorasEmpModel();
 
       $horas_cargables = $modelo->sin_cargar_horas_cargables();
-      //$horas_no_cargables = $modelo->sin_cargar_horas_no_cargables();
+      $horas_no_cargables = $modelo->sin_cargar_horas_no_cargables();
 
       return [
-        "horas_cargables" => $horas_cargables
+        "horas_cargables" => $horas_cargables,
+        "horas_no_cargables" => $horas_no_cargables
       ];
 
     }

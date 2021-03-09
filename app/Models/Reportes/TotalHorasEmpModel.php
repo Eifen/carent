@@ -181,4 +181,12 @@ class TotalHorasEmpModel extends Model
 
     }
 
+    function sin_cargar_horas_no_cargables(){
+
+      $sql = DB::select('');
+
+      return $sql;
+
+    }
+
 }
