@@ -1,4 +1,4 @@
-<p align="center"><img src="https://201.222.0.202:16000/images/logo-carent.png" width="400"></p>
+<p align="center"><img src="https://carent.crowe.com.ve:16000/images/logo-carent.png" width="400"></p>
 
 ## Sobre CARENT
 
