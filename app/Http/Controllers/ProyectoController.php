@@ -564,9 +564,11 @@ class ProyectoController extends Controller
       if($modelo->eliminarHoraAdicionalProyDiv($id)){
 
         $horas = $modelo->horasAdicionesProyDiv($request->input("id_proy_div"));
-
+        $id_proyecto = (int) session("id_proyecto_mod");
+        $infoProyecto = $modelo->detalleProyectoModificar($id_proyecto);
         return [
           "message" => "horas eliminadas con éxito!",
+          "info" => $infoProyecto,
           "horas" => $horas,
           "response" => true
         ];
