@@ -13,9 +13,9 @@ CARENT es un sistema web desarrollado bajo el framework Laravel y VueJS. Para co
 
 Actualmente la aplicación del CARENT posee tareas programada y para ello debemos tener en cuenta o constatar de que en la carpetería de la aplicación exista <b>app/Console/Commands</b>
 
-### Creando Commands:
+#### Creando Commands:
 
-<b style='color:#cc0000'>Nota:</b> este paso se realizará si no existe la carpeta <b>app/Console/Commands</b> o no existe dentro de dicha carpeta el archivo <b>EmpleadoSinCargarHorasCargables.php</b>
+![#cc0000](<b>Nota:</b>) este paso se realizará si no existe la carpeta <b>app/Console/Commands</b> o no existe dentro de dicha carpeta el archivo <b>EmpleadoSinCargarHorasCargables.php</b>
 
 Para saber si el archivo o el comando ya existe debe de ejcutar el siguiente comando por consola:
 
