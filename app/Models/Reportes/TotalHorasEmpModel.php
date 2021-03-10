@@ -203,23 +203,14 @@ class TotalHorasEmpModel extends Model
 
     }
 
-    unction configuracion_tarea_programada($id_tarea_programada){
+    function configuracion_tarea_programada($id_tarea_programada){
 
-      $sql = DB::select('SELECT cu.correo_principal AS correo
-                         FROM tbl_usuario u,
-                              tbl_contacto_usuario cu,
-                              tbl_notificacion_tarea_programada_usuario ntpu
-                         WHERE u.id = cu.id_usuario
-                         AND u.id = ntpu.id_usuario
-                         AND ntpu.id_tarea_programada = ?', [$id_tarea_programada]);
+      $sql = DB::select('SELECT ctp.valor AS dias
+                         FROM tbl_configuracion_tarea_programada ctp
+                         WHERE ctp.id = 1
+                         AND ctp.id = ? ', [$id_tarea_programada]);
 
-      $correos = [];
-
-      foreach ($sql as $dato) {
-        array_push($correos, $dato->correo);
-      }
-
-      return $correos;
+      return $sql[0];
 
     }
 
