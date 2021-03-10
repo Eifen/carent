@@ -46,7 +46,7 @@
 
   <div id='body'>
     <div id="wrapper_logo">
-        <img src="http://201.222.0.202:16000/images/logo-carent.png" height="100" class="img-fluid logo" alt="">
+        <img src="https://carent.crowe.com.ve:16000/images/logo-carent.png" height="100" class="img-fluid logo" alt="">
     </div>
     <div id="wrapper_contenido">
         <p>Se ha actualizado el estatus de su hora no cargable a:</p>
