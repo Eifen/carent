@@ -62,11 +62,10 @@ class TotalHorasEmpController extends Controller
       $modelo = new TotalHorasEmpModel();
 
       $horas_cargables = $modelo->sin_cargar_horas_cargables();
-      $destinatarios = ["dmolina101@gmail.com", "carolina.coronel3@gmail.com"];
-      $dias = 5;
-      //$horas_no_cargables = $modelo->sin_cargar_horas_no_cargables();// REVISAR SQL
+      $destinatarios = $modelo->destinatarios_notificaciones_tarea_programada(1);
+      $config = $modelo->configuracion_tarea_programada(1);
 
-      Mail::send('reportes.emails.repEmpSinCargarHoras', ["empleados" => $horas_cargables, "dias" => $dias], function($message) use ($destinatarios)  {
+      Mail::send('reportes.emails.repEmpSinCargarHoras', ["empleados" => $horas_cargables, "dias" => $config->dias], function($message) use ($destinatarios)  {
 
           $message->from('sistema.carent@crowe.com.ve', 'CARENT')->to($destinatarios)->subject('Reporte Empleados Sin Cargar Horas');
 

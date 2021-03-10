@@ -183,36 +183,43 @@ class TotalHorasEmpModel extends Model
 
     }
 
-    function sin_cargar_horas_no_cargables(){
-      /*REVISAR SQL*/
-      $sql = DB::select('SELECT u.id,
-       CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS nombre,
-       cu.correo_principal AS correo,
-       (
-          SELECT DATE_FORMAT(hnc3.fecha_hasta, "%d/%m/%Y")
-          FROM tbl_horas_no_cargables hnc3
-          WHERE hnc3.id_usuario = u.id
-          AND hnc3.fecha_hasta >= DATE_SUB("2021-07-01", INTERVAL 5 DAY)
-          ORDER BY hnc3.fecha_hasta DESC
-          LIMIT 1
-       ) AS fecha
-FROM tbl_usuario u,
-     tbl_contacto_usuario cu
-WHERE u.id = cu.id_usuario
-AND u.id NOT IN(
+    function destinatarios_notificaciones_tarea_programada($id_tarea_programada){
 
-    SELECT u2.id
-    FROM tbl_horas_no_cargables hnc2,
-         tbl_usuario u2
-    WHERE hnc2.id_usuario = u.id
-    AND hnc2.fecha_hasta >= DATE_SUB("2020-07-01", INTERVAL 5 DAY)
-    GROUP BY u2.id
+      $sql = DB::select('SELECT cu.correo_principal AS correo
+                         FROM tbl_usuario u,
+                              tbl_contacto_usuario cu,
+                              tbl_notificacion_tarea_programada_usuario ntpu
+                         WHERE u.id = cu.id_usuario
+                         AND u.id = ntpu.id_usuario
+                         AND ntpu.id_tarea_programada = ?', [$id_tarea_programada]);
 
-)
-AND u.id_estatus = 1
-ORDER BY u.nombre_1, u.nombre_2, u.apellido_1, u.apellido_2');
+      $correos = [];
 
-      return $sql;
+      foreach ($sql as $dato) {
+        array_push($correos, $dato->correo);
+      }
+
+      return $correos;
+
+    }
+
+    unction configuracion_tarea_programada($id_tarea_programada){
+
+      $sql = DB::select('SELECT cu.correo_principal AS correo
+                         FROM tbl_usuario u,
+                              tbl_contacto_usuario cu,
+                              tbl_notificacion_tarea_programada_usuario ntpu
+                         WHERE u.id = cu.id_usuario
+                         AND u.id = ntpu.id_usuario
+                         AND ntpu.id_tarea_programada = ?', [$id_tarea_programada]);
+
+      $correos = [];
+
+      foreach ($sql as $dato) {
+        array_push($correos, $dato->correo);
+      }
+
+      return $correos;
 
     }
 
