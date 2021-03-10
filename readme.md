@@ -15,7 +15,7 @@ Actualmente la aplicación del CARENT posee tareas programada y para ello debemo
 
 #### Creando Commands:
 
-🚨 <b>Nota:🚨 este paso se realizará si no existe la carpeta <b>app/Console/Commands</b> o no existe dentro de dicha carpeta el archivo <b>EmpleadoSinCargarHorasCargables.php</b>
+🚨🚨🚨 __**Nota:**__ este paso se realizará si no existe la carpeta <b>app/Console/Commands</b> o no existe dentro de dicha carpeta el archivo <b>EmpleadoSinCargarHorasCargables.php</b>
 
 Para saber si el archivo o el comando ya existe debe de ejcutar el siguiente comando por consola:
 
