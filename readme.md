@@ -21,3 +21,11 @@ php artisan list
 Debe de estar en la sección de <b>registered</b> así:
 
 ![Sin título](https://user-images.githubusercontent.com/24720946/110642056-089de400-8189-11eb-97bf-4f11c093c992.jpg)
+
+### Ejecutar tareas programadas
+
+Para ejecutar las tareas programadas solo debes de ejcutar por consola el siguiente comando:
+
+```
+php artisan schedule:run
+```
