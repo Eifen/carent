@@ -148,3 +148,8 @@ Route::get('/repTotalHorasEmpEmpleadosDivision', 'Reportes\TotalHorasEmpControll
 Route::get('/repTotalHorasInfoEmp', 'Reportes\TotalHorasEmpController@repTotalHorasInfoEmp')->middleware('usuario.session');
 Route::get('/dataRepTotalHorasCarg', 'Reportes\TotalHorasCargController@dataRepTotalHorasCarg')->middleware('usuario.session');
 Route::get('/buscarRepTotalHorasCarg', 'Reportes\TotalHorasCargController@buscarRepTotalHorasCarg')->middleware('usuario.session');
+
+/*
+  Rutas para tareas programadas
+*/
+Route::get('/repEmpSinCargarHoras', 'Reportes\TotalHorasEmpController@repEmpSinCargarHoras')->name('test1');
