@@ -1812,6 +1812,7 @@ new Vue({
           let data = self.registroTablaHoras(response.data.horas);
           self.modalAgregarHora.horasAdicionales.registros = data.registros;
           self.modalAgregarHora.horasAdicionales.total = data.total;
+          self.form.campos.horas_adicionales = response.data.info.horas_adicionales;
 
           self.modalAgregarMonto.footer.hide = false;
           await self.mostrarAlertForm(self.modalAgregarHora.alert, true, "success", response.data.message, false, false, 0);
