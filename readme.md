@@ -22,13 +22,32 @@ Debe de estar en la sección de <b>registered</b> así:
 
 ![Sin título](https://user-images.githubusercontent.com/24720946/110642056-089de400-8189-11eb-97bf-4f11c093c992.jpg)
 
-### Ejecutar tareas programadas
+### Ejecutar tareas programadas de manera general
 
 Para ejecutar las tareas programadas solo debes de ejcutar por consola el siguiente comando:
 
 ```
-php artisan schedule:work
+php artisan schedule:run
 ```
+
+### Ejecutar tareas programadas en el servidor
+
+Escribir por consola el siguiente comando si el linux:
+
+```
+* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
+```
+
+### Ejecutar localmente la tarea programada
+
+Por lo general no se agregaría una entrada cron en la máquina de desarrollo local. En su lugar, puede utilizar el comando:
+
+```
+php artisan schedule:work 
+```
+
+Este comando se ejecutará en primer plano e invocará al programador cada minuto hasta que finalice el comando
+
 
 ### Visualizar las tareas programadas activas
 
