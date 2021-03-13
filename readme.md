@@ -29,3 +29,9 @@ Para ejecutar las tareas programadas solo debes de ejcutar por consola el siguie
 ```
 php artisan schedule:run
 ```
+
+### Visualizar las tareas programadas activas
+
+```
+php artisan schedule:list
+```
