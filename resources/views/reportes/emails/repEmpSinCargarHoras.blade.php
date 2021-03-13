@@ -38,7 +38,7 @@
           margin-right: auto;
           margin-top: 5%;
           text-align: center;
-          width: 700px;
+          width: 900px;
         }
 
         #wrapper_tabla table{
@@ -83,6 +83,7 @@
         <thead>
           <tr>
             <th>Nombre</th>
+            <th>División</th>
             <th>Última fecha en la que cargó</th>
           </tr>
         </thead>
@@ -91,6 +92,7 @@
 
             <tr>
               <td>{{ $empleado->nombre }}</td>
+              <td>{{ $empleado->division }}</td>
               <td>{{ $empleado->fecha }}</td>
             </tr>
 
