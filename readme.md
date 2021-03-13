@@ -27,7 +27,7 @@ Debe de estar en la sección de <b>registered</b> así:
 Para ejecutar las tareas programadas solo debes de ejcutar por consola el siguiente comando:
 
 ```
-php artisan schedule:run
+php artisan schedule:work
 ```
 
 ### Visualizar las tareas programadas activas
