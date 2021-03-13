@@ -38,5 +38,7 @@ class EmpleadoSinCargarHorasCargables extends Command
     public function handle()
     {
 
+      app()->call('App\Http\Controllers\Reportes\TotalHorasEmpController@repEmpSinCargarHoras');
+
     }
 }
