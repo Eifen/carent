@@ -75,6 +75,7 @@
         <img src="https://carent.crowe.com.ve:16000/images/logo-carent.png" height="100" class="img-fluid logo" alt="">
     </div>
     <div id="wrapper_contenido">
+        <p><b>Reporte Generado el {{ $fecha_reporte }}</b></p>
         <p>El siguiente listado muestra a los empleados que no han cargado <b>Horas Cargables</b> en <b>{{ $dias }} días</b>:</p>
     </div>
     <div id="wrapper_tabla">
