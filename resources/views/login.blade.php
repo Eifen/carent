@@ -16,13 +16,13 @@
     </head>
     <body>
 
-      <div id="login" class="container-fluid" v-on:keypress="keyboard">
+      <b-container fluid id="login" v-on:keypress="keyboard">
 
         <loading :loading="loading" v-show="loading"></loading>
 
-        <div class="row align-items-center justify-content-center" v-cloak>
-          <div class="col-12 col-sm-9 col-md-6 col-lg-4">
-            <form id="formLogin">
+        <b-row align-h="center" align-v="center" v-cloak>
+          <b-col cols="12" sm="9" md="6" lg="4">
+            <b-form id="formLogin">
               <div class="logo">
                 <img src="/images/logo-carent.png">
               </div>
@@ -65,9 +65,9 @@
                 <a class="recuperarClave" v-on:click="modalRecuperarClave" v-if="linkRecoveryPass">Olvidé mi contraseña</a>
               </div>
               <div v-bind:class="alertLogin.class" role="alert" v-if="alertLogin.show" v-html="alertLogin.message"></div>
-            </form>
-          </div>
-        </div>
+            </b-form>
+          </b-col>
+        </b-row>
 
         <div id="modal-recuperar-clave" class="modal fade" tabindex="-1" role="dialog" v-cloak>
           <div class="modal-dialog modal-dialog-centered" role="document">
@@ -106,7 +106,7 @@
           </div>
         </div>
 
-      </div>
+      </b-container
 
       <script src="{{ mix('/js/login.js') }}"></script>
 
