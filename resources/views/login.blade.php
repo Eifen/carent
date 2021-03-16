@@ -9,14 +9,13 @@
 
         <title>.: CARENT :.</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
-        <link href="{{ mix('/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ mix('/css/fontawesome-free-5.12.0.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ mix('/css/login.css') }}" rel="stylesheet" type="text/css">
 
     </head>
     <body>
 
-      <b-container fluid id="login" v-on:keypress="keyboard">
+      <b-container fluid id="app" v-on:keypress="keyboard">
 
         <loading :loading="loading" v-show="loading"></loading>
 

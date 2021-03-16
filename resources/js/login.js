@@ -1,24 +1,27 @@
-
 require('bootstrap');
 import Vue from 'vue';
 import { BootstrapVue } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
-window.$ = require('jquery');
-window.zenscroll = require('zenscroll');
-window.axios = require('axios');
-window.AutoNumeric = require('autonumeric');
+import zenscroll from 'zenscroll';
+import axios from 'axios';
+import AutoNumeric from 'autonumeric';
+import 'vue-multiselect/dist/vue-multiselect.min.css';
+import Vuelidate from 'vuelidate';
+import { required, minLength, minValue } from 'vuelidate/lib/validators';
 const CryptoJS = require("crypto-js");
 const AES = require("crypto-js/aes");
 var self;
 
 Vue.use(BootstrapVue);
+Vue.use(Vuelidate);
 Vue.component('loading',require('./components/loading.vue').default);
+Vue.component('alert',require('./components/alert.vue').default);
 
 //se declaran todas las varibles
-var app = new Vue({
+new Vue({
 
-  el: '#login',
+  el: '#app',
   data: {
     alertLogin: {
       class: "",
