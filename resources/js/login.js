@@ -1,6 +1,6 @@
 require('bootstrap');
 import Vue from 'vue';
-import { BootstrapVue } from 'bootstrap-vue';
+import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import zenscroll from 'zenscroll';
@@ -13,10 +13,12 @@ const CryptoJS = require("crypto-js");
 const AES = require("crypto-js/aes");
 var self;
 
-Vue.use(BootstrapVue);
-Vue.use(Vuelidate);
+
 Vue.component('loading',require('./components/loading.vue').default);
 Vue.component('alert',require('./components/alert.vue').default);
+Vue.use(BootstrapVue);
+Vue.use(BootstrapVueIcons)
+Vue.use(Vuelidate);
 
 //se declaran todas las varibles
 new Vue({
@@ -36,13 +38,30 @@ new Vue({
     copyRight: `Sofguar © ${new Date().getFullYear()}`,
     formLogin: {
       codigoUsuario: {
-        disabled: false,
-        value: ""
+        autonumeric: null,
+        disabled: true,
+        invalidFeedback: "",
+        state: null,
+        value: null
       },
       clave: {
-        disabled: false,
+        disabled: true,
+        iconShowPass: {
+          icon: "",
+          hide: "eye-slash-fill",
+          show: "eye-fill"
+        },
+        invalidFeedback: "",
         type: "password",
+        state: null,
         value: ""
+      },
+      submit:{
+        disabled: true,
+        html: "Entrar",
+        htmlInit: "Entrar",
+        htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
+        show:true
       }
     },
     formRecovery: {
@@ -51,7 +70,6 @@ new Vue({
         value: ""
       }
     },
-    claseVerClaveIcon: "fas fa-eye",
     iv: null,
     key: null,
     linkRecoveryPass: true,
@@ -113,7 +131,8 @@ new Vue({
   created: function () {},
   mounted: function () {
 
-    new AutoNumeric('.codigoUsuario', {
+    let codigoUsuario = self.$refs["codigoUsuario"].$el
+    self.formLogin.codigoUsuario.autonumeric = new AutoNumeric(codigoUsuario, {
       decimalPlaces: 0,
       decimalCharacter: ',',
       digitGroupSeparator: '',
@@ -127,7 +146,13 @@ new Vue({
       leadingZero: 'keep'
     });
 
-    $('#modal-recuperar-clave').on('hidden.bs.modal', function () {
+    self.formLogin.codigoUsuario.disabled = false;
+    self.formLogin.clave.disabled = false;
+    self.formLogin.clave.iconShowPass.icon = self.formLogin.clave.iconShowPass.show;
+    self.formLogin.submit.html = self.formLogin.submit.htmlInit;
+    self.formLogin.submit.disabled = false;
+
+    /*$('#modal-recuperar-clave').on('hidden.bs.modal', function () {
 
       self.alertRecoveryPass = {
         class : "",
@@ -150,7 +175,7 @@ new Vue({
 
       AutoNumeric.getAutoNumericElement(".codigoRecuperacion").set("");
 
-    });
+    });*/
 
   },
   updated: function () {},
@@ -169,9 +194,11 @@ new Vue({
       return encrypted.toString();
 
     },
-    limpiarMensajeError: function(e){
-      $(e.target).removeClass("error");
-      $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
+    limpiarMensajeError: function(objeto){
+
+      objeto.state = null;
+      objeto.invalidFeedback = "";
+
     },
     modalRecuperarClave: function(){
 
@@ -415,13 +442,8 @@ new Vue({
     },
     verClave: function(e){
 
-      if(self.$refs["clave"].type === "password"){
-        self.formLogin.clave.type = "text";
-        self.claseVerClaveIcon = "fas fa-eye-slash";
-      }else{
-        self.formLogin.clave.type = "password";
-        self.claseVerClaveIcon = "fas fa-eye";
-      }
+      self.formLogin.clave.type = (self.formLogin.clave.type === "text") ? "password" : "text";
+      self.formLogin.clave.iconShowPass.icon = (self.formLogin.clave.type === "text") ? self.formLogin.clave.iconShowPass.hide : self.formLogin.clave.iconShowPass.show;
 
     }
 

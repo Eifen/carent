@@ -21,50 +21,86 @@
 
         <b-row align-h="center" align-v="center" v-cloak>
           <b-col cols="12" sm="9" md="6" lg="4">
-            <b-form id="formLogin">
-              <div class="logo">
-                <img src="/images/logo-carent.png">
-              </div>
-              <div class="form-group">
-                <label for="codigoUsuario">Código de usuario</label>
-                <input aria-describedby="codigoUsuarioHelp"
-                       class="form-control codigoUsuario"
-                       data-validar="true"
-                       data-only-number="true"
-                       ref="codigoUsuario"
-                       type="text"
-                       v-bind:disabled="formLogin.codigoUsuario.disabled"
-                       v-model="formLogin.codigoUsuario.value"
-                       v-on:keyup="limpiarMensajeError">
-                <small id="codigoUsuarioHelp" class="form-text text-muted">Ejemplo: 2209</small>
-                <div class="mensaje"></div>
-              </div>
-              <div class="form-group">
-                <label for="clave">Contraseña</label>
-                <input class="form-control"
-                       ref="clave"
-                       v-bind:disabled="formLogin.clave.disabled"
-                       v-bind:type="formLogin.clave.type"
-                       v-model="formLogin.clave.value"
-                       v-on:keyup="limpiarMensajeError">
-                <div class="ver-clave" v-on:click="verClave">
-                  <i v-bind:class="claseVerClaveIcon"></i>
-                </div>
-                <div class="mensaje"></div>
-              </div>
-              <div>
-                <button class="btn"
-                        type="button"
-                        v-on:click="login"
-                        v-bind:disabled="submitLogin.disabled"
-                        v-html="submitLogin.content"
-                        v-if="submitLogin.show"></button>
-              </div>
-              <div class="wrapper-recovery-pass">
-                <a class="recuperarClave" v-on:click="modalRecuperarClave" v-if="linkRecoveryPass">Olvidé mi contraseña</a>
-              </div>
-              <div v-bind:class="alertLogin.class" role="alert" v-if="alertLogin.show" v-html="alertLogin.message"></div>
-            </b-form>
+            <b-row>
+              <b-col cols="12">
+                <b-form>
+                  <div class="logo">
+                    <b-img src="/images/logo-carent.png" alt="Logo CARENT" center></b-img>
+                  </div>
+                  <b-form-group
+                    :invalid-feedback="formLogin.codigoUsuario.invalidFeedback"
+                    description="Ejemplo: 2209"
+                    label-for="descripcion"
+                    id="group-codigoUsuario">
+                    <b-input-group>
+                      <b-input-group-prepend is-text>
+                        <b-icon icon="person-fill"></b-icon>
+                      </b-input-group-prepend>
+                      <b-form-input
+                        @input="limpiarMensajeError(formLogin.codigoUsuario)"
+                        :disabled="formLogin.codigoUsuario.disabled"
+                        :state="formLogin.codigoUsuario.state"
+                        autocomplete="off"
+                        id="codigoUsuario"
+                        placeholder="Código de usuario"
+                        ref="codigoUsuario"
+                        type="text"></b-form-input>
+                    </b-input-group>
+                  </b-form-group>
+                  <b-form-group
+                    :invalid-feedback="formLogin.clave.invalidFeedback"
+                    label-for="clave"
+                    id="group-clave">
+                    <b-input-group>
+                      <b-input-group-prepend is-text>
+                        <b-icon icon="lock-fill"></b-icon>
+                      </b-input-group-prepend>
+                      <b-form-input
+                        @input="limpiarMensajeError(formLogin.clave)"
+                        :disabled="formLogin.clave.disabled"
+                        :state="formLogin.clave.state"
+                        :type="formLogin.clave.type"
+                        autocomplete="off"
+                        id="clave"
+                        placeholder="Contraseña"
+                        ref="clave">
+                      </b-form-input>
+                      <b-input-group-append is-text>
+                        <b-icon @click="verClave" :icon="formLogin.clave.iconShowPass.icon"></b-icon>
+                      </b-input-group-append>
+                    </b-input-group>
+                  </b-form-group>
+                  <div>
+                    <b-button
+                      @click="login"
+                      :disabled="formLogin.submit.disabled"
+                      block
+                      v-html="formLogin.submit.html"
+                      variant="outline-success"></b-button>
+                  </div>
+                  <div class="wrapper-recovery-pass">
+                    <b-button @click="modalRecuperarClave" block v-if="linkRecoveryPass" variant="link">Olvidé mi contraseña</b-button>
+                  </div>
+                  <div v-bind:class="alertLogin.class" role="alert" v-if="alertLogin.show" v-html="alertLogin.message"></div>
+                </b-form>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col cols="12" class="text-center wrapper-social-icons">
+                <b-link href="https://www.instagram.com/crowe.ve" target="_blank">
+                  <i class="fab fa-instagram"></i>
+                </b-link>
+                <b-link href="https://www.facebook.com/CroweVzla" target="_blank">
+                  <i class="fab fa-facebook-f"></i>
+                </b-link>
+                <b-link href="https://www.youtube.com/channel/UCx7ekjvHFTuGkenLjap-oFQ" target="_blank">
+                  <i class="fab fa-youtube"></i>
+                </b-link>
+                <b-link href="https://twitter.com/crowe_vzla" target="_blank">
+                  <i class="fab fa-twitter"></i>
+                </b-link>
+              </b-col>
+            </b-row>
           </b-col>
         </b-row>
 
@@ -105,7 +141,7 @@
           </div>
         </div>
 
-      </b-container
+      </b-container>
 
       <script src="{{ mix('/js/login.js') }}"></script>
 
