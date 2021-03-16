@@ -25,8 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
 
-        //$schedule->command('registered:empleadoSinCargarHorasCargables')->fridays()->at('18:00');
-        $schedule->command('registered:empleadoSinCargarHorasCargables')->everyMinute();
+        $schedule->command('registered:empleadoSinCargarHorasCargables')->fridays()->at('18:00');
 
     }
 
