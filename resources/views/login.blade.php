@@ -87,16 +87,16 @@
             </b-row>
             <b-row>
               <b-col cols="12" class="text-center wrapper-social-icons">
-                <b-link href="https://www.instagram.com/crowe.ve" target="_blank">
+                <b-link href="https://www.instagram.com/crowe.ve" target="_blank" v-b-tooltip.hover title="Instagram">
                   <i class="fab fa-instagram"></i>
                 </b-link>
-                <b-link href="https://www.facebook.com/CroweVzla" target="_blank">
+                <b-link href="https://www.facebook.com/CroweVzla" target="_blank" v-b-tooltip.hover title="Facebook">
                   <i class="fab fa-facebook-f"></i>
                 </b-link>
-                <b-link href="https://www.youtube.com/channel/UCx7ekjvHFTuGkenLjap-oFQ" target="_blank">
+                <b-link href="https://www.youtube.com/channel/UCx7ekjvHFTuGkenLjap-oFQ" target="_blank" v-b-tooltip.hover title="Youtube">
                   <i class="fab fa-youtube"></i>
                 </b-link>
-                <b-link href="https://twitter.com/crowe_vzla" target="_blank">
+                <b-link href="https://twitter.com/crowe_vzla" target="_blank" v-b-tooltip.hover title="Twitter">
                   <i class="fab fa-twitter"></i>
                 </b-link>
               </b-col>
