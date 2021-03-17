@@ -35,8 +35,15 @@ new Vue({
       message: "",
       show: false
     },
-    copyRight: `Sofguar © ${new Date().getFullYear()}`,
     formLogin: {
+      alert: {
+        contador: false,
+        iconCerrar: false,
+        mensaje: "",
+        mostrar: false,
+        ocultarSeg: 0,
+        variante: ""
+      },
       codigoUsuario: {
         autonumeric: null,
         disabled: true,
@@ -294,6 +301,22 @@ new Vue({
 
       var formValido = true;
 
+      self.mostrarAlert(self.formLogin.alert);
+
+      Object.keys(self.formLogin).forEach((indice, i) => {
+
+        if(self.formLogin[indice].hasOwnProperty("state")){
+          self.formLogin[indice].state = (self.formLogin[indice].state === true) ? true : null;
+        }
+
+        if(self.formLogin[indice].hasOwnProperty("invalidFeedback")){
+          self.formLogin[indice].invalidFeedback = "";
+        }
+
+      });
+
+      return;
+
       $("#formLogin .form-group .mensaje").html("").removeClass("invalid-feedback");
       $("#formLogin .form-group .form-control").removeClass("error");
 
@@ -444,6 +467,22 @@ new Vue({
 
       self.formLogin.clave.type = (self.formLogin.clave.type === "text") ? "password" : "text";
       self.formLogin.clave.iconShowPass.icon = (self.formLogin.clave.type === "text") ? self.formLogin.clave.iconShowPass.hide : self.formLogin.clave.iconShowPass.show;
+
+    },
+    mostrarAlert: function(alert, mostrar = false, variante = "", mensaje = "", iconCerrar = false, contador = false, ocultarSeg = 0){
+
+      return new Promise(resolve => {
+
+        alert.contador = contador;
+        alert.iconCerrar = iconCerrar;
+        alert.mensaje = mensaje;
+        alert.mostrar = mostrar;
+        alert.ocultarSeg = ocultarSeg;
+        alert.variante = variante;
+
+        resolve(true);
+
+      });
 
     }
 

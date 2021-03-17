@@ -78,6 +78,13 @@
                       v-html="formLogin.submit.html"
                       variant="outline-success"></b-button>
                   </div>
+                  <alert :contador="formLogin.alert.contador"
+                         :icono-cerrar="formLogin.alert.iconCerrar"
+                         :mensaje="formLogin.alert.mensaje"
+                         :mostrar="formLogin.alert.mostrar"
+                         :ocultar-seg="formLogin.alert.ocultarSeg"
+                         :variante="formLogin.alert.variante">
+                  </alert>
                   <div class="wrapper-recovery-pass">
                     <b-button @click="modalRecuperarClave" block v-if="linkRecoveryPass" variant="link">Olvidé mi contraseña</b-button>
                   </div>
