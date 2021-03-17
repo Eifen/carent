@@ -44,32 +44,44 @@ new Vue({
         ocultarSeg: 0,
         variante: ""
       },
-      codigoUsuario: {
-        autonumeric: null,
-        disabled: true,
-        invalidFeedback: "",
-        state: null,
-        value: null
-      },
-      clave: {
-        disabled: true,
-        iconShowPass: {
-          icon: "",
-          hide: "eye-slash-fill",
-          show: "eye-fill"
+      botones: {
+        recoveryPass: {
+          disabled: true,
+          html: "",
+          htmlInit: "Olvidé mi contraseña",
+          htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
+          show:true
         },
-        invalidFeedback: "",
-        type: "password",
-        state: null,
-        value: ""
+        submit:{
+          disabled: true,
+          html: "Entrar",
+          htmlInit: "Entrar",
+          htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
+          show:true
+        }
       },
-      submit:{
-        disabled: true,
-        html: "Entrar",
-        htmlInit: "Entrar",
-        htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
-        show:true
-      }
+      campos: {
+        codigoUsuario: {
+          autonumeric: null,
+          disabled: true,
+          invalidFeedback: "",
+          state: null,
+          value: null
+        },
+        clave: {
+          disabled: true,
+          iconShowPass: {
+            icon: "",
+            hide: "eye-slash-fill",
+            show: "eye-fill",
+            value: null
+          },
+          invalidFeedback: "",
+          type: "password",
+          state: null,
+          value: ""
+        }
+      },
     },
     formRecovery: {
       codigoRecuperacion: {
@@ -79,18 +91,28 @@ new Vue({
     },
     iv: null,
     key: null,
-    linkRecoveryPass: true,
     loading: true,
     showSubmitModal: true,
-    submitLogin: {
-      content: "Entrar",
-      disabled: false,
-      show:true
-    },
     submitModalRecoveryPass: {
       content: "Recuperar",
       disabled: false,
       show:true
+    }
+  },
+  validations: {
+    formLogin:{
+      campos:{
+        codigoUsuario: {
+          value: {
+            required
+          }
+        },
+        clave: {
+          value: {
+            required
+          }
+        }
+      }
     }
   },
   beforeCreate: function(){
@@ -115,9 +137,9 @@ new Vue({
     })
     .catch(error => {
 
-      self.formLogin.codigoUsuario.disabled = true;
-      self.formLogin.clave.disabled = true;
-      self.submitLogin.disabled = true;
+      /*self.formLogin.campos.codigoUsuario.disabled = true;
+      self.formLogin.campos.clave.disabled = true;
+      formLogin.botones.submit.disabled = true;
       self.submitModalRecoveryPass.show = false;
       self.alertLogin = {
         class : "alert alert-warning",
@@ -130,7 +152,7 @@ new Vue({
         show: true
       };
 
-      self.loading = false;
+      self.loading = false;*/
 
     });
 
@@ -139,7 +161,7 @@ new Vue({
   mounted: function () {
 
     let codigoUsuario = self.$refs["codigoUsuario"].$el
-    self.formLogin.codigoUsuario.autonumeric = new AutoNumeric(codigoUsuario, {
+    self.formLogin.campos.codigoUsuario.autonumeric = new AutoNumeric(codigoUsuario, {
       decimalPlaces: 0,
       decimalCharacter: ',',
       digitGroupSeparator: '',
@@ -153,11 +175,13 @@ new Vue({
       leadingZero: 'keep'
     });
 
-    self.formLogin.codigoUsuario.disabled = false;
-    self.formLogin.clave.disabled = false;
-    self.formLogin.clave.iconShowPass.icon = self.formLogin.clave.iconShowPass.show;
-    self.formLogin.submit.html = self.formLogin.submit.htmlInit;
-    self.formLogin.submit.disabled = false;
+    self.formLogin.campos.codigoUsuario.disabled = false;
+    self.formLogin.campos.clave.disabled = false;
+    self.formLogin.campos.clave.iconShowPass.icon = self.formLogin.campos.clave.iconShowPass.show;
+    self.formLogin.botones.submit.html = self.formLogin.botones.submit.htmlInit;
+    self.formLogin.botones.submit.disabled = false;
+    self.formLogin.botones.recoveryPass.html = self.formLogin.botones.recoveryPass.htmlInit;
+    self.formLogin.botones.recoveryPass.disabled = false;
 
     /*$('#modal-recuperar-clave').on('hidden.bs.modal', function () {
 
@@ -303,69 +327,77 @@ new Vue({
 
       self.mostrarAlert(self.formLogin.alert);
 
-      Object.keys(self.formLogin).forEach((indice, i) => {
+      Object.keys(self.formLogin.campos).forEach((indice, i) => {
 
-        if(self.formLogin[indice].hasOwnProperty("state")){
-          self.formLogin[indice].state = (self.formLogin[indice].state === true) ? true : null;
+        if(self.formLogin.campos[indice].hasOwnProperty("state")){
+          self.formLogin.campos[indice].state = (self.formLogin.campos[indice].state === true) ? true : null;
         }
 
-        if(self.formLogin[indice].hasOwnProperty("invalidFeedback")){
-          self.formLogin[indice].invalidFeedback = "";
-        }
-
-      });
-
-      return;
-
-      $("#formLogin .form-group .mensaje").html("").removeClass("invalid-feedback");
-      $("#formLogin .form-group .form-control").removeClass("error");
-
-      $("#formLogin .form-group").each(function(index, elemento) {
-
-        var input = $(elemento).find(".form-control")[0];
-        var valido = self.validarValor(input);
-
-        if(!valido.respuesta){
-          $(elemento).find(".mensaje").html(valido.mensaje).addClass("invalid-feedback");
-          $(elemento).find(".form-control").addClass("error");
-          formValido = valido.respuesta;
-          return false;
+        if(self.formLogin.campos[indice].hasOwnProperty("invalidFeedback")){
+          self.formLogin.campos[indice].invalidFeedback = "";
         }
 
       });
+
+      const arrayCampos = Object.keys(self.formLogin.campos);
+      for(var i = 0; i <= (arrayCampos.length - 1); i++){
+
+        let indice = arrayCampos[i];
+        const campo = self.$v.formLogin.campos[indice];
+        campo.$touch();
+
+        if(campo.$invalid){
+
+          self.formLogin.campos[indice].state = false;
+          const valorCampo = self.$v.formLogin.campos[indice].$model;
+
+          const arrayParams = Object.keys(campo.$params);
+          for(var j = 0; j <= (arrayParams.length - 1); j++){
+
+            let mensajeError = self.validadorMensajes(arrayParams[j], campo);
+            self.formLogin.campos[indice].invalidFeedback = mensajeError.mensaje;
+
+            if(!mensajeError.respuesta){
+              break
+            }
+
+          }
+
+          zenscroll.toY(self.$refs[indice].$el);
+          formValido = false;
+          break;
+
+        }
+
+      }
 
       if(formValido){
 
-        self.alertLogin = {
-          class : "",
-          message : "",
-          show: false
-        };
-
         //Obtenemos valores
         let parametros = {
-          codigoUsuario: self.encriptar(self.formLogin.codigoUsuario.value),
-          clave: self.encriptar(self.formLogin.clave.value)
+          codigoUsuario: self.encriptar(self.formLogin.campos.codigoUsuario.value),
+          clave: self.encriptar(self.formLogin.campos.clave.value)
         }
 
-        self.submitLogin.content = '<i class="fas fa-cog fa-spin"></i>';
-        self.submitLogin.disabled = true;
-        self.formLogin.codigoUsuario.disabled = true;
-        self.formLogin.clave.disabled = true;
+        Object.keys(self.formLogin.campos).forEach((indice, i) => {
+
+          if(self.formLogin.campos[indice].hasOwnProperty("disabled")){
+            self.formLogin.campos[indice].disabled = true;
+          }
+
+        });
+
+        self.formLogin.botones.submit.html = self.formLogin.botones.submit.htmlLoading;
+        self.formLogin.botones.submit.disabled = true;
+        self.formLogin.botones.recoveryPass.disabled = true;
 
         axios.post('/login', parametros)
         .then(function (response) {
 
           if(response.status === 200 && response.data.login === true){
 
-            self.submitLogin.show = false;
-            self.linkRecoveryPass = false;
-
-            self.alertLogin = {
-              class : "alert alert-success",
-              message : response.data.message,
-              show: true
-            };
+            self.formLogin.botones.submit.html = self.formLogin.botones.submit.htmlInit;
+            self.mostrarAlert(self.formLogin.alert, true, "success", response.data.message, false, false, 0);
 
             setTimeout(function(){
 
@@ -382,10 +414,17 @@ new Vue({
         })
         .catch(error => {
 
-          self.formLogin.codigoUsuario.disabled = false;
-          self.formLogin.clave.disabled = false;
-          self.submitLogin.content = 'Entrar';
-          self.submitLogin.disabled = false;
+          Object.keys(self.formLogin.campos).forEach((indice, i) => {
+
+            if(self.formLogin.campos[indice].hasOwnProperty("disabled")){
+              self.formLogin.campos[indice].disabled = false;
+            }
+
+          });
+
+          self.formLogin.botones.submit.html = self.formLogin.botones.submit.htmlInit;
+          self.formLogin.botones.submit.disabled = false;
+          self.formLogin.botones.recoveryPass.disabled = false;
 
           if(error.response){
 
@@ -397,63 +436,37 @@ new Vue({
 
           }
 
-          self.alertLogin = {
-            class : "alert alert-warning",
-            message : message,
-            show: true
-          };
+          self.mostrarAlert(self.formLogin.alert, true, "warning", message, false, false, 0);
 
         });
 
       }// Fin if
 
     },
-    validarValor: function(input) {
+    validadorMensajes: function(indice,campo){
 
-      var respuesta = true;
-      var mensaje   = '';
+      var mensaje,
+          respuesta = true;
 
-      if(input.hasAttribute("data-validar")){
-
-        if(input.getAttribute("data-validar") === "true"){
-
-          if(input.type === 'email'){
-
-            let regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            respuesta      = regexEmail.test(input.value);
-            (respuesta === false) ? zenscroll.toY($(input).offset().top - 100) : "" ;
-            mensaje        = "Correo inválido";
-
-          }else if(input.type === 'text' || input.type === 'textarea'){
-
-            if(input.getAttribute("data-min")){
-              let minChar = input.getAttribute("data-min");
-              let numChar = input.value.length
-
-              if(numChar < minChar){
-                respuesta = false;
-                mensaje   = "El campo debe contener al menos "+minChar+" caracteres!";
-                zenscroll.toY($(input).offset().top - 100);
-              }
-
-            }
-
-            if(input.getAttribute("data-only-number")){
-
-              let regexNumber = /^\d+$/;
-              respuesta = regexNumber.test(input.value);
-              mensaje = "Solo números";
-              zenscroll.toY($(input).offset().top - 100);
-
-            }
-
-          }
-
-        }
-
+      if(!campo[indice] && indice === "required"){
+        mensaje = "Este campo es requerido!";
+        respuesta = false;
+      }else if(!campo[indice] && indice === "minLength"){
+        let minChar = campo.$params[indice].min;
+        mensaje = "Debe contener al menos "+minChar+" Caracteres!";
+        respuesta = false;
+      }else if(!campo[indice] && indice === "email"){
+        mensaje = "Correo inválido!";
+        respuesta = false;
+      }else if(!campo[indice] && indice === "minValue"){
+        let minChar = campo.$params[indice].min;
+        mensaje = "El valor mínimo es "+minChar+"!";
+        respuesta = false;
+      }else{
+        mensaje = "";
       }
 
-      return {respuesta: respuesta, mensaje: mensaje};
+      return {mensaje:mensaje, respuesta:respuesta};
 
     },
     keyboard: function(e){
@@ -465,8 +478,8 @@ new Vue({
     },
     verClave: function(e){
 
-      self.formLogin.clave.type = (self.formLogin.clave.type === "text") ? "password" : "text";
-      self.formLogin.clave.iconShowPass.icon = (self.formLogin.clave.type === "text") ? self.formLogin.clave.iconShowPass.hide : self.formLogin.clave.iconShowPass.show;
+      self.formLogin.campos.clave.type = (self.formLogin.campos.clave.type === "text") ? "password" : "text";
+      self.formLogin.campos.clave.iconShowPass.icon = (self.formLogin.campos.clave.type === "text") ? self.formLogin.campos.clave.iconShowPass.hide : self.formLogin.campos.clave.iconShowPass.show;
 
     },
     mostrarAlert: function(alert, mostrar = false, variante = "", mensaje = "", iconCerrar = false, contador = false, ocultarSeg = 0){

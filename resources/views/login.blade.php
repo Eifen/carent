@@ -28,27 +28,28 @@
                     <b-img src="/images/logo-carent.png" alt="Logo CARENT" center></b-img>
                   </div>
                   <b-form-group
-                    :invalid-feedback="formLogin.codigoUsuario.invalidFeedback"
+                    :invalid-feedback="formLogin.campos.codigoUsuario.invalidFeedback"
                     description="Ejemplo: 2209"
-                    label-for="descripcion"
+                    label-for="codigoUsuario"
                     id="group-codigoUsuario">
                     <b-input-group>
                       <b-input-group-prepend is-text>
                         <b-icon icon="person-fill"></b-icon>
                       </b-input-group-prepend>
                       <b-form-input
-                        @input="limpiarMensajeError(formLogin.codigoUsuario)"
-                        :disabled="formLogin.codigoUsuario.disabled"
-                        :state="formLogin.codigoUsuario.state"
+                        @input="limpiarMensajeError(formLogin.campos.codigoUsuario)"
+                        :disabled="formLogin.campos.codigoUsuario.disabled"
+                        :state="formLogin.campos.codigoUsuario.state"
                         autocomplete="off"
                         id="codigoUsuario"
                         placeholder="Código de usuario"
                         ref="codigoUsuario"
-                        type="text"></b-form-input>
+                        type="text"
+                        v-model="$v.formLogin.campos.codigoUsuario.value.$model"></b-form-input>
                     </b-input-group>
                   </b-form-group>
                   <b-form-group
-                    :invalid-feedback="formLogin.clave.invalidFeedback"
+                    :invalid-feedback="formLogin.campos.clave.invalidFeedback"
                     label-for="clave"
                     id="group-clave">
                     <b-input-group>
@@ -56,26 +57,27 @@
                         <b-icon icon="lock-fill"></b-icon>
                       </b-input-group-prepend>
                       <b-form-input
-                        @input="limpiarMensajeError(formLogin.clave)"
-                        :disabled="formLogin.clave.disabled"
-                        :state="formLogin.clave.state"
-                        :type="formLogin.clave.type"
+                        @input="limpiarMensajeError(formLogin.campos.clave)"
+                        :disabled="formLogin.campos.clave.disabled"
+                        :state="formLogin.campos.clave.state"
+                        :type="formLogin.campos.clave.type"
                         autocomplete="off"
                         id="clave"
                         placeholder="Contraseña"
-                        ref="clave">
+                        ref="clave"
+                        v-model="$v.formLogin.campos.clave.value.$model">
                       </b-form-input>
                       <b-input-group-append is-text>
-                        <b-icon @click="verClave" :icon="formLogin.clave.iconShowPass.icon"></b-icon>
+                        <b-icon @click="verClave" :icon="formLogin.campos.clave.iconShowPass.icon"></b-icon>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
                   <div>
                     <b-button
                       @click="login"
-                      :disabled="formLogin.submit.disabled"
+                      :disabled="formLogin.botones.submit.disabled"
                       block
-                      v-html="formLogin.submit.html"
+                      v-html="formLogin.botones.submit.html"
                       variant="outline-success"></b-button>
                   </div>
                   <alert :contador="formLogin.alert.contador"
@@ -86,7 +88,12 @@
                          :variante="formLogin.alert.variante">
                   </alert>
                   <div class="wrapper-recovery-pass">
-                    <b-button @click="modalRecuperarClave" block v-if="linkRecoveryPass" variant="link">Olvidé mi contraseña</b-button>
+                    <b-button
+                      @click="modalRecuperarClave"
+                      :disabled="formLogin.botones.recoveryPass.disabled"
+                      block
+                      v-html="formLogin.botones.recoveryPass.html"
+                      variant="link"></b-button>
                   </div>
                   <div v-bind:class="alertLogin.class" role="alert" v-if="alertLogin.show" v-html="alertLogin.message"></div>
                 </b-form>

@@ -23,6 +23,9 @@ html {
   padding: 15px;
   transition: all 0.3s;
 }
+#app > .row form .alert {
+  margin-top: 15px;
+}
 #app > .row form > div.logo {
   height: 90px;
   margin-bottom: 40px;
