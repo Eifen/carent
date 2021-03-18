@@ -89,14 +89,12 @@
                   </alert>
                   <div class="wrapper-recovery-pass">
                     <b-button
-                      @click="modalRecuperarClave"
                       :disabled="formLogin.botones.recoveryPass.disabled"
                       block
                       v-b-modal.modal-recuperar-clave
                       v-html="formLogin.botones.recoveryPass.html"
                       variant="link"></b-button>
                   </div>
-                  <div v-bind:class="alertLogin.class" role="alert" v-if="alertLogin.show" v-html="alertLogin.message"></div>
                 </b-form>
               </b-col>
             </b-row>

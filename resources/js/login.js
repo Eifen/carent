@@ -183,13 +183,13 @@ new Vue({
       leadingZero: 'keep'
     });
 
-    let codigoUsuarioR = self.$refs["codigoUsuarioR"].$el
+    /*let codigoUsuarioR = self.$refs["codigoUsuarioR"].$el
     self.formRecovery.campos.codigoUsuario.autonumeric = new AutoNumeric(codigoUsuarioR, {
       decimalPlaces: 0,
       decimalCharacter: ',',
       digitGroupSeparator: '',
       leadingZero: 'keep'
-    });
+    });*/
 
     self.formLogin.campos.codigoUsuario.disabled = false;
     self.formLogin.campos.clave.disabled = false;
