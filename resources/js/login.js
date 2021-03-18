@@ -134,7 +134,7 @@ new Vue({
 
     self = this;
 
-    axios.get('/encryptConfigs')
+    axios.get('/encryptConfig')
     .then(function (response) {
 
       if(response.status === 200 && response.data.key && response.data.iv){
@@ -385,7 +385,7 @@ new Vue({
 
     },
     login: function(){
-
+console.log("sss 2");
       var formValido = true;
 
       self.mostrarAlert(self.formLogin.alert);
@@ -412,7 +412,7 @@ new Vue({
         if(campo.$invalid){
 
           self.formLogin.campos[indice].state = false;
-          const valorCampo = self.$v.formLogin.campos[indice].$model;
+          const valorCampo = self.$v.formLogin.campos[indice].value.$model;
 
           const arrayParams = Object.keys(campo.$params);
           for(var j = 0; j <= (arrayParams.length - 1); j++){
