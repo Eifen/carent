@@ -25,16 +25,6 @@ new Vue({
 
   el: '#app',
   data: {
-    alertLogin: {
-      class: "",
-      message: "",
-      show: false
-    },
-    alertRecoveryPass: {
-      class: "",
-      message: "",
-      show: false
-    },
     formLogin: {
       alert: {
         contador: false,
@@ -50,11 +40,11 @@ new Vue({
           html: "",
           htmlInit: "Olvidé mi contraseña",
           htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
-          show:true
+          show: true
         },
         submit:{
           disabled: true,
-          html: "Entrar",
+          html: "",
           htmlInit: "Entrar",
           htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
           show:true
@@ -84,30 +74,55 @@ new Vue({
       },
     },
     formRecovery: {
-      codigoRecuperacion: {
-        disabled: false,
-        value: ""
+      alert: {
+        contador: false,
+        iconCerrar: false,
+        mensaje: "",
+        mostrar: false,
+        ocultarSeg: 0,
+        variante: ""
+      },
+      botones: {
+        submit:{
+          disabled: true,
+          html: "",
+          htmlInit: "Recuperar",
+          htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
+          show: true
+        }
+      },
+      campos: {
+        codigoUsuario: {
+          autonumeric: null,
+          disabled: true,
+          invalidFeedback: "",
+          state: null,
+          value: null
+        }
       }
     },
     iv: null,
     key: null,
-    loading: true,
-    showSubmitModal: true,
-    submitModalRecoveryPass: {
-      content: "Recuperar",
-      disabled: false,
-      show:true
-    }
+    loading: true
   },
   validations: {
-    formLogin:{
-      campos:{
+    formLogin: {
+      campos: {
         codigoUsuario: {
           value: {
             required
           }
         },
         clave: {
+          value: {
+            required
+          }
+        }
+      }
+    },
+    formRecovery: {
+      campos: {
+        codigoUsuario: {
           value: {
             required
           }
@@ -168,7 +183,8 @@ new Vue({
       leadingZero: 'keep'
     });
 
-    new AutoNumeric('.codigoRecuperacion', {
+    let codigoUsuarioR = self.$refs["codigoUsuarioR"].$el
+    self.formRecovery.campos.codigoUsuario.autonumeric = new AutoNumeric(codigoUsuarioR, {
       decimalPlaces: 0,
       decimalCharacter: ',',
       digitGroupSeparator: '',
@@ -182,6 +198,10 @@ new Vue({
     self.formLogin.botones.submit.disabled = false;
     self.formLogin.botones.recoveryPass.html = self.formLogin.botones.recoveryPass.htmlInit;
     self.formLogin.botones.recoveryPass.disabled = false;
+
+    self.formRecovery.campos.codigoUsuario.disabled = false;
+    self.formRecovery.botones.submit.html = self.formRecovery.botones.submit.htmlInit;
+    self.formRecovery.botones.submit.disabled = false;
 
     /*$('#modal-recuperar-clave').on('hidden.bs.modal', function () {
 
@@ -231,61 +251,82 @@ new Vue({
       objeto.invalidFeedback = "";
 
     },
-    modalRecuperarClave: function(){
-
-      $("#modal-recuperar-clave").modal("show");
-
-    },
     recuperarClave: function(){
 
       var formValido = true;
 
-      $("#formRecoveryPass .form-group .mensaje").html("").removeClass("invalid-feedback");
-      $("#formRecoveryPass .form-group .form-control").removeClass("error");
+      self.mostrarAlert(self.formRecovery.alert);
 
-      $("#formRecoveryPass .form-group").each(function(index, elemento) {
+      Object.keys(self.formRecovery.campos).forEach((indice, i) => {
 
-        var input = $(elemento).find(".form-control")[0];
-        var valido = self.validarValor(input);
+        if(self.formRecovery.campos[indice].hasOwnProperty("state")){
+          self.formRecovery.campos[indice].state = (self.formRecovery.campos[indice].state === true) ? true : null;
+        }
 
-        if(!valido.respuesta){
-          $(elemento).find(".mensaje").html(valido.mensaje).addClass("invalid-feedback");
-          $(elemento).find(".form-control").addClass("error");
-          formValido = valido.respuesta;
-          return false;
+        if(self.formRecovery.campos[indice].hasOwnProperty("invalidFeedback")){
+          self.formRecovery.campos[indice].invalidFeedback = "";
         }
 
       });
 
-      if(formValido){
+      const arrayCampos = Object.keys(self.formRecovery.campos);
+      for(var i = 0; i <= (arrayCampos.length - 1); i++){
 
-        self.alertRecoveryPass = {
-          class : "",
-          message : "",
-          show: false
-        };
+        let indice = arrayCampos[i];
+        const campo = self.$v.formRecovery.campos[indice];
+        campo.$touch();
+
+        if(campo.$invalid){
+
+          self.formRecovery.campos[indice].state = false;
+          const valorCampo = self.$v.formRecovery.campos[indice].$model;
+
+          const arrayParams = Object.keys(campo.$params);
+          for(var j = 0; j <= (arrayParams.length - 1); j++){
+
+            let mensajeError = self.validadorMensajes(arrayParams[j], campo);
+            self.formRecovery.campos[indice].invalidFeedback = mensajeError.mensaje;
+
+            if(!mensajeError.respuesta){
+              break
+            }
+
+          }
+
+          zenscroll.toY(self.$refs[indice].$el);
+          formValido = false;
+          break;
+
+        }
+
+      }
+
+      if(formValido){
 
         //Obtenemos valores
         let parametros = {
-          codigoUsuario: self.encriptar(self.formRecovery.codigoRecuperacion.value)
+          codigoUsuario: self.encriptar(self.formRecovery.campos.codigoUsuario.value)
         }
 
-        self.submitModalRecoveryPass.content = '<i class="fas fa-cog fa-spin"></i>';
-        self.submitModalRecoveryPass.disabled = true;
-        self.formRecovery.codigoRecuperacion.disabled = true;
+        Object.keys(self.formRecovery.campos).forEach((indice, i) => {
 
-        axios.post('/recoverylogin', parametros)
+          if(self.formRecovery.campos[indice].hasOwnProperty("disabled")){
+            self.formRecovery.campos[indice].disabled = true;
+          }
+
+        });
+
+        self.formRecovery.botones.submit.html = self.formRecovery.botones.submit.htmlLoading;
+        self.formRecovery.botones.submit.disabled = true;
+
+        axios.post('/recoveryloginsss', parametros)
         .then(function (response) {
 
           if(response.status === 200 && response.data.recovery === true){
 
-            self.submitModalRecoveryPass.show = false;
-
-            self.alertRecoveryPass = {
-              class : "alert alert-success",
-              message : response.data.message,
-              show: true
-            };
+            self.formRecovery.botones.submit.html = self.formRecovery.botones.submit.htmlInit;
+            self.formRecovery.botones.submit.disabled = false;
+            self.mostrarAlert(self.formRecovery.alert, true, "success", response.data.message, false, false, 0);
 
           }else{
 
@@ -296,9 +337,16 @@ new Vue({
         })
         .catch(error => {
 
-          self.formRecovery.codigoRecuperacion.disabled = false;
-          self.submitModalRecoveryPass.content = 'Recuperar';
-          self.submitModalRecoveryPass.disabled = false;
+          Object.keys(self.formRecovery.campos).forEach((indice, i) => {
+
+            if(self.formRecovery.campos[indice].hasOwnProperty("disabled")){
+              self.formRecovery.campos[indice].disabled = false;
+            }
+
+          });
+
+          self.formRecovery.botones.submit.html = self.formRecovery.botones.submit.htmlInit;
+          self.formRecovery.botones.submit.disabled = false;
 
           if(error.response){
 
@@ -310,11 +358,7 @@ new Vue({
 
           }
 
-          self.alertRecoveryPass = {
-            class : "alert alert-warning",
-            message : message,
-            show: true
-          };
+          self.mostrarAlert(self.formRecovery.alert, true, "warning", message, false, false, 0);
 
         });
 

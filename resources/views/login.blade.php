@@ -92,6 +92,7 @@
                       @click="modalRecuperarClave"
                       :disabled="formLogin.botones.recoveryPass.disabled"
                       block
+                      v-b-modal.modal-recuperar-clave
                       v-html="formLogin.botones.recoveryPass.html"
                       variant="link"></b-button>
                   </div>
@@ -118,42 +119,52 @@
           </b-col>
         </b-row>
 
-        <div id="modal-recuperar-clave" class="modal fade" tabindex="-1" role="dialog" v-cloak>
-          <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                Para recuperar su clave solo debe indicar su código de usuario y le llegará a su correo.
-                <form id="formRecoveryPass">
-                  <div class="form-group">
-                    <input class="form-control codigoRecuperacion"
-                           data-validar="true"
-                           data-only-number="true"
-                           ref="codigoRecuperacion" type="text"
-                           v-bind:disabled="formRecovery.codigoRecuperacion.disabled"
-                           v-model="formRecovery.codigoRecuperacion.value"
-                           v-on:keyup="limpiarMensajeError">
-                    <small id="codigoRecuperacionHelp" class="form-text text-muted">Ejemplo: 2209</small>
-                    <div class="mensaje"></div>
-                  </div>
-                </form>
-                <div v-bind:class="alertRecoveryPass.class" role="alert" v-if="alertRecoveryPass.show" v-html="alertRecoveryPass.message"></div>
-              </div>
-              <div class="modal-footer">
-                <button class="btn"
-                        type="button"
-                        v-bind:disabled="submitModalRecoveryPass.disabled"
-                        v-if="submitModalRecoveryPass.show"
-                        v-html="submitModalRecoveryPass.content"
-                        v-on:click="recuperarClave"></button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <b-modal
+          centered
+          id="modal-recuperar-clave"
+          ref="modal-recuperar-clave"
+          v-cloak>
+            Para recuperar su clave solo debe indicar su código de usuario y le llegará a su correo.
+            <b-form>
+              <b-form-group
+                :invalid-feedback="formRecovery.campos.codigoUsuario.invalidFeedback"
+                description="Ejemplo: 2209"
+                label-for="codigoUsuarioR"
+                id="group-codigoUsuarioR">
+                <b-input-group>
+                  <b-input-group-prepend is-text>
+                    <b-icon icon="person-fill"></b-icon>
+                  </b-input-group-prepend>
+                  <b-form-input
+                    @input="limpiarMensajeError(formRecovery.campos.codigoUsuario)"
+                    :disabled="formRecovery.campos.codigoUsuario.disabled"
+                    :state="formRecovery.campos.codigoUsuario.state"
+                    autocomplete="off"
+                    id="codigoUsuarioR"
+                    placeholder="Código de usuario"
+                    ref="codigoUsuarioR"
+                    type="text"
+                    v-model="$v.formRecovery.campos.codigoUsuario.value.$model"></b-form-input>
+                </b-input-group>
+              </b-form-group>
+            </b-form>
+            <template v-slot:modal-footer>
+              <alert :contador="formRecovery.alert.contador"
+                     :icono-cerrar="formRecovery.alert.iconCerrar"
+                     :mensaje="formRecovery.alert.mensaje"
+                     :mostrar="formRecovery.alert.mostrar"
+                     :ocultar-seg="formRecovery.alert.ocultarSeg"
+                     :variante="formRecovery.alert.variante">
+              </alert>
+              <b-button
+                @click="recuperarClave"
+                :disabled="formRecovery.botones.submit.disabled"
+                block
+                v-html="formRecovery.botones.submit.html"
+                v-if="formRecovery.botones.submit.show"
+                variant="outline-success"></b-button>
+            </template>
+        </b-modal>
 
       </b-container>
 
