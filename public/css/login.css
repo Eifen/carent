@@ -24,6 +24,7 @@ html {
   transition: all 0.3s;
 }
 #app > .row form .alert {
+  border-radius: 18px;
   margin-top: 15px;
 }
 #app > .row form > div.logo {
@@ -113,6 +114,9 @@ html {
 #modal-recuperar-clave .modal-dialog .modal-content .modal-body form {
   margin-top: 10px;
 }
+#modal-recuperar-clave .modal-dialog .modal-content .modal-body form .form-group .invalid-feedback {
+  display: block !important;
+}
 #modal-recuperar-clave .modal-dialog .modal-content .modal-body form .form-group .input-group-prepend .input-group-text {
   border-bottom-left-radius: 18px;
   border-top-left-radius: 18px;
@@ -127,9 +131,9 @@ html {
 #modal-recuperar-clave .modal-dialog .modal-content .modal-footer {
   border-top: 0px;
   padding-top: 0.5rem;
-  /*.alert{
-          margin-bottom: 0px;
-        }*/
+}
+#modal-recuperar-clave .modal-dialog .modal-content .modal-footer .alert {
+  border-radius: 18px;
 }
 #modal-recuperar-clave .modal-dialog .modal-content .modal-footer .btn {
   border-radius: 18px;

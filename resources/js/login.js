@@ -345,7 +345,7 @@ new Vue({
 
         self.formRecovery.botones.submit.html = self.formRecovery.botones.submit.htmlLoading;
         self.formRecovery.botones.submit.disabled = true;
-return;
+
         axios.post('/recoveryloginsss', parametros)
         .then(function (response) {
 
@@ -374,6 +374,7 @@ return;
 
           self.formRecovery.botones.submit.html = self.formRecovery.botones.submit.htmlInit;
           self.formRecovery.botones.submit.disabled = false;
+          self.formRecovery.botones.submit.show = false;
 
           if(error.response){
 
@@ -385,7 +386,11 @@ return;
 
           }
 
-          self.mostrarAlert(self.formRecovery.alert, true, "warning", message, false, false, 0);
+          self.mostrarAlert(self.formRecovery.alert, true, "warning", message, true, true, 3);
+
+          setTimeout(function(){
+            self.formRecovery.botones.submit.show = true;
+          }, 3200);
 
         });
 
