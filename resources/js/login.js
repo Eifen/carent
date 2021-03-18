@@ -134,7 +134,7 @@ new Vue({
 
     self = this;
 
-    axios.get('/encryptConfig')
+    axios.get('/encryptConfigs')
     .then(function (response) {
 
       if(response.status === 200 && response.data.key && response.data.iv){
@@ -152,20 +152,17 @@ new Vue({
     })
     .catch(error => {
 
-      /*self.formLogin.campos.codigoUsuario.disabled = true;
+      self.formLogin.campos.codigoUsuario.disabled = true;
       self.formLogin.campos.clave.disabled = true;
-      formLogin.botones.submit.disabled = true;
-      self.submitModalRecoveryPass.show = false;
-      self.alertLogin = {
-        class : "alert alert-warning",
-        message : "Existe un error!, consulte con el administrador del sistema.",
-        show: true
-      };
-      self.alertRecoveryPass = {
-        class : "alert alert-warning",
-        message : "Existe un error!, consulte con el administrador del sistema.",
-        show: true
-      };*/
+      self.formLogin.botones.submit.disabled = true;
+      self.formLogin.botones.recoveryPass.disabled = true;
+
+      self.formRecovery.campos.codigoUsuario.disabled = true;
+      self.formRecovery.botones.submit.show = false;
+
+      let message = "Existe un error!, consulte con el administrador del sistema.";
+      self.mostrarAlert(self.formRecovery.alert, true, "warning", message, false, false, 0);
+      self.mostrarAlert(self.formLogin.alert, true, "warning", message, false, false, 0);
 
       self.loading = false;
 
@@ -229,31 +226,6 @@ new Vue({
     self.formRecovery.campos.codigoUsuario.disabled = false;
     self.formRecovery.botones.submit.html = self.formRecovery.botones.submit.htmlInit;
     self.formRecovery.botones.submit.disabled = false;
-
-    /*$('#modal-recuperar-clave').on('hidden.bs.modal', function () {
-
-      self.alertRecoveryPass = {
-        class : "",
-        message : "",
-        show: false
-      };
-
-      self.submitModalRecoveryPass = {
-        content: "Recuperar",
-        disabled: false,
-        show:true
-      }
-
-      self.formRecovery = {
-        codigoRecuperacion: {
-          disabled: false,
-          value: ""
-        }
-      }
-
-      AutoNumeric.getAutoNumericElement(".codigoRecuperacion").set("");
-
-    });*/
 
   },
   updated: function () {},
@@ -541,17 +513,6 @@ new Vue({
 
       if(!campo[indice] && indice === "required"){
         mensaje = "Este campo es requerido!";
-        respuesta = false;
-      }else if(!campo[indice] && indice === "minLength"){
-        let minChar = campo.$params[indice].min;
-        mensaje = "Debe contener al menos "+minChar+" Caracteres!";
-        respuesta = false;
-      }else if(!campo[indice] && indice === "email"){
-        mensaje = "Correo inválido!";
-        respuesta = false;
-      }else if(!campo[indice] && indice === "minValue"){
-        let minChar = campo.$params[indice].min;
-        mensaje = "El valor mínimo es "+minChar+"!";
         respuesta = false;
       }else{
         mensaje = "";
