@@ -183,13 +183,40 @@ new Vue({
       leadingZero: 'keep'
     });
 
-    /*let codigoUsuarioR = self.$refs["codigoUsuarioR"].$el
-    self.formRecovery.campos.codigoUsuario.autonumeric = new AutoNumeric(codigoUsuarioR, {
-      decimalPlaces: 0,
-      decimalCharacter: ',',
-      digitGroupSeparator: '',
-      leadingZero: 'keep'
-    });*/
+    self.$refs["modal-recuperar-clave"].$on('shown', () => {
+
+      let codigoUsuarioR = self.$refs["codigoUsuarioR"].$el
+      self.formRecovery.campos.codigoUsuario.autonumeric = new AutoNumeric(codigoUsuarioR, {
+        decimalPlaces: 0,
+        decimalCharacter: ',',
+        digitGroupSeparator: '',
+        leadingZero: 'keep'
+      });
+
+    });
+
+    self.$refs["modal-recuperar-clave"].$on('hidden', () => {
+
+      self.formRecovery.campos.codigoUsuario.value = null;
+      self.formRecovery.campos.codigoUsuario.autonumeric.set(0);
+
+      Object.keys(self.formRecovery.campos).forEach((indice, i) => {
+
+        if(self.formRecovery.campos[indice].hasOwnProperty("state")){
+          self.formRecovery.campos[indice].state = null;
+        }
+
+        if(self.formRecovery.campos[indice].hasOwnProperty("invalidFeedback")){
+          self.formRecovery.campos[indice].invalidFeedback = "";
+        }
+
+      });
+
+      self.formRecovery.botones.submit.show = true;
+
+      self.mostrarAlert(self.formRecovery.alert);
+
+    });
 
     self.formLogin.campos.codigoUsuario.disabled = false;
     self.formLogin.campos.clave.disabled = false;
@@ -260,7 +287,7 @@ new Vue({
       Object.keys(self.formRecovery.campos).forEach((indice, i) => {
 
         if(self.formRecovery.campos[indice].hasOwnProperty("state")){
-          self.formRecovery.campos[indice].state = (self.formRecovery.campos[indice].state === true) ? true : null;
+          self.formRecovery.campos[indice].state = null;
         }
 
         if(self.formRecovery.campos[indice].hasOwnProperty("invalidFeedback")){
@@ -318,7 +345,7 @@ new Vue({
 
         self.formRecovery.botones.submit.html = self.formRecovery.botones.submit.htmlLoading;
         self.formRecovery.botones.submit.disabled = true;
-
+return;
         axios.post('/recoveryloginsss', parametros)
         .then(function (response) {
 
@@ -374,7 +401,7 @@ new Vue({
       Object.keys(self.formLogin.campos).forEach((indice, i) => {
 
         if(self.formLogin.campos[indice].hasOwnProperty("state")){
-          self.formLogin.campos[indice].state = (self.formLogin.campos[indice].state === true) ? true : null;
+          self.formLogin.campos[indice].state = null;
         }
 
         if(self.formLogin.campos[indice].hasOwnProperty("invalidFeedback")){
