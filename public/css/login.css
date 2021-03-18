@@ -44,6 +44,9 @@ html {
   height: 100%;
   transition: all 0.3s;
 }
+#app > .row form > div.form-group .invalid-feedback {
+  display: inline-block;
+}
 #app > .row form > div.form-group .input-group-prepend .input-group-text {
   border-bottom-left-radius: 18px;
   border-top-left-radius: 18px;
@@ -115,7 +118,7 @@ html {
   margin-top: 10px;
 }
 #modal-recuperar-clave .modal-dialog .modal-content .modal-body form .form-group .invalid-feedback {
-  display: block !important;
+  display: inline-block;
 }
 #modal-recuperar-clave .modal-dialog .modal-content .modal-body form .form-group .input-group-prepend .input-group-text {
   border-bottom-left-radius: 18px;

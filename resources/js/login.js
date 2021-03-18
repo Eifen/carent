@@ -272,13 +272,13 @@ new Vue({
       for(var i = 0; i <= (arrayCampos.length - 1); i++){
 
         let indice = arrayCampos[i];
-        const campo = self.$v.formRecovery.campos[indice];
+        const campo = self.$v.formRecovery.campos[indice].value;
         campo.$touch();
 
         if(campo.$invalid){
 
           self.formRecovery.campos[indice].state = false;
-          const valorCampo = self.$v.formRecovery.campos[indice].$model;
+          const valorCampo = self.$v.formRecovery.campos[indice].value.$model;
 
           const arrayParams = Object.keys(campo.$params);
           for(var j = 0; j <= (arrayParams.length - 1); j++){
@@ -385,7 +385,7 @@ new Vue({
 
     },
     login: function(){
-console.log("sss 2");
+
       var formValido = true;
 
       self.mostrarAlert(self.formLogin.alert);
@@ -406,7 +406,7 @@ console.log("sss 2");
       for(var i = 0; i <= (arrayCampos.length - 1); i++){
 
         let indice = arrayCampos[i];
-        const campo = self.$v.formLogin.campos[indice];
+        const campo = self.$v.formLogin.campos[indice].value;
         campo.$touch();
 
         if(campo.$invalid){
@@ -510,6 +510,7 @@ console.log("sss 2");
 
       var mensaje,
           respuesta = true;
+
 
       if(!campo[indice] && indice === "required"){
         mensaje = "Este campo es requerido!";
