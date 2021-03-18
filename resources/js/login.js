@@ -346,14 +346,29 @@ new Vue({
         self.formRecovery.botones.submit.html = self.formRecovery.botones.submit.htmlLoading;
         self.formRecovery.botones.submit.disabled = true;
 
-        axios.post('/recoveryloginsss', parametros)
+        axios.post('/recoverylogin', parametros)
         .then(function (response) {
 
           if(response.status === 200 && response.data.recovery === true){
 
             self.formRecovery.botones.submit.html = self.formRecovery.botones.submit.htmlInit;
             self.formRecovery.botones.submit.disabled = false;
-            self.mostrarAlert(self.formRecovery.alert, true, "success", response.data.message, false, false, 0);
+            self.formRecovery.botones.submit.show = false;
+            self.mostrarAlert(self.formRecovery.alert, true, "success", response.data.message, true, true, 3);
+
+            setTimeout(function(){
+
+              self.formRecovery.botones.submit.show = true;
+
+              Object.keys(self.formRecovery.campos).forEach((indice, i) => {
+
+                if(self.formRecovery.campos[indice].hasOwnProperty("disabled")){
+                  self.formRecovery.campos[indice].disabled = false;
+                }
+
+              });
+
+            }, 3200);
 
           }else{
 
