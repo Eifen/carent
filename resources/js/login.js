@@ -165,9 +165,9 @@ new Vue({
         class : "alert alert-warning",
         message : "Existe un error!, consulte con el administrador del sistema.",
         show: true
-      };
+      };*/
 
-      self.loading = false;*/
+      self.loading = false;
 
     });
 
