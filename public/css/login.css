@@ -43,12 +43,6 @@ html {
   height: 100%;
   transition: all 0.3s;
 }
-#app > .row form > div.form-group {
-  position: relative;
-}
-#app > .row form > div.form-group .invalid-feedback {
-  display: block !important;
-}
 #app > .row form > div.form-group .input-group-prepend .input-group-text {
   border-bottom-left-radius: 18px;
   border-top-left-radius: 18px;
@@ -100,7 +94,7 @@ html {
 #modal-recuperar-clave .modal-dialog .modal-content .modal-header {
   border-bottom: 0px;
   color: #022C43;
-  padding: 0.5rem 0.5rem;
+  padding-bottom: 0px;
 }
 #modal-recuperar-clave .modal-dialog .modal-content .modal-header .close {
   color: #022C43;
@@ -113,50 +107,32 @@ html {
   color: #cc0000;
 }
 #modal-recuperar-clave .modal-dialog .modal-content .modal-body {
-  padding: 0.5rem;
+  padding-bottom: 0px;
+  padding-top: 0.5rem;
 }
 #modal-recuperar-clave .modal-dialog .modal-content .modal-body form {
   margin-top: 10px;
 }
-#modal-recuperar-clave .modal-dialog .modal-content .modal-body form .form-group .invalid-feedback {
-  display: block !important;
-}
-#modal-recuperar-clave .modal-dialog .modal-content .modal-body form .form-group label {
-  color: #091F40;
+#modal-recuperar-clave .modal-dialog .modal-content .modal-body form .form-group .input-group-prepend .input-group-text {
+  border-bottom-left-radius: 18px;
+  border-top-left-radius: 18px;
 }
 #modal-recuperar-clave .modal-dialog .modal-content .modal-body form .form-group .form-control {
-  border-radius: 2px;
-}
-#modal-recuperar-clave .modal-dialog .modal-content .modal-body form .form-group .form-control.error {
-  border-color: #dc3545;
+  border-bottom-right-radius: 18px;
+  border-top-right-radius: 18px;
 }
 #modal-recuperar-clave .modal-dialog .modal-content .modal-body form .form-group .form-control:disabled {
   cursor: not-allowed;
 }
-#modal-recuperar-clave .modal-dialog .modal-content .modal-body .alert {
-  margin-bottom: 0px;
-  width: 100%;
-}
 #modal-recuperar-clave .modal-dialog .modal-content .modal-footer {
   border-top: 0px;
-  padding: 0.3rem;
-}
-#modal-recuperar-clave .modal-dialog .modal-content .modal-footer .alert {
-  margin-bottom: 0px;
-  width: 100%;
+  padding-top: 0.5rem;
+  /*.alert{
+          margin-bottom: 0px;
+        }*/
 }
 #modal-recuperar-clave .modal-dialog .modal-content .modal-footer .btn {
-  background-color: #091F40;
-  border: 2px solid #091F40;
-  border-radius: 2px;
-  color: #ffffff;
-  font-weight: 600;
-  padding: 0.375rem 0.75rem;
-  transition: all 0.3s;
-}
-#modal-recuperar-clave .modal-dialog .modal-content .modal-footer .btn:hover {
-  background-color: #F6A81C;
-  color: #091F40;
+  border-radius: 18px;
 }
 #modal-recuperar-clave .modal-dialog .modal-content .modal-footer .btn:disabled {
   cursor: not-allowed;

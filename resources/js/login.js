@@ -86,7 +86,7 @@ new Vue({
         submit:{
           disabled: true,
           html: "",
-          htmlInit: "Recuperar",
+          htmlInit: "Recuperar Contraseña",
           htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
           show: true
         }
