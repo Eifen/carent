@@ -19,7 +19,7 @@ Vue.component('alert',require('./components/alert.vue').default);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons)
 Vue.use(Vuelidate);
-Vue.use(VueSession, true);
+Vue.use(VueSession);
 
 //se declaran todas las varibles
 new Vue({
@@ -108,6 +108,9 @@ new Vue({
     },
     loading: true
   },
+  props: {
+    keys: String
+  },
   validations: {
     formLogin: {
       campos: {
@@ -141,10 +144,7 @@ new Vue({
   created: function () {},
   mounted: function () {
 
-console.log(this.$session.getAll())
-console.log(this.$session.get("encrypt-key"))
     try {
-
 
       let codigoUsuario = self.$refs["codigoUsuario"].$el
       self.formLogin.campos.codigoUsuario.autonumeric = new AutoNumeric(codigoUsuario, {
@@ -244,13 +244,13 @@ console.log(this.$session.get("encrypt-key"))
       return "";
 
     },
-    encriptar: function(valor){
+    encriptar: function(valor, encryptionKey, encryptionIv){
 
-      //let key = CryptoJS.enc.Hex.parse(self.encryption.key);
-      //let iv = CryptoJS.enc.Hex.parse(self.encryption.iv);
+      //let key = CryptoJS.enc.Hex.parse(encryptionKey);
+      //let iv = CryptoJS.enc.Hex.parse(encryptionIv);
 
-      let key = CryptoJS.enc.Base64.parse(self.encryption.key);
-      let iv = CryptoJS.enc.Base64.parse(self.encryption.iv);
+      let key = CryptoJS.enc.Base64.parse(encryptionKey);
+      let iv = CryptoJS.enc.Base64.parse(encryptionIv);
 
       var encrypted = CryptoJS.AES.encrypt(valor, key, {
           iv,
@@ -400,7 +400,7 @@ console.log(this.$session.get("encrypt-key"))
       }// Fin if(formValido)
 
     },
-    login: function(){
+    login: function(encryptionKey, encryptionIv){
 
       var formValido = true;
 
@@ -454,8 +454,8 @@ console.log(this.$session.get("encrypt-key"))
 
         //Obtenemos valores
         let parametros = {
-          codigoUsuario: self.encriptar(self.formLogin.campos.codigoUsuario.value),
-          clave: self.encriptar(self.formLogin.campos.clave.value)
+          codigoUsuario: self.encriptar(self.formLogin.campos.codigoUsuario.value, encryptionKey, encryptionIv),
+          clave: self.encriptar(self.formLogin.campos.clave.value, encryptionKey, encryptionIv)
         }
 
         Object.keys(self.formLogin.campos).forEach((indice, i) => {

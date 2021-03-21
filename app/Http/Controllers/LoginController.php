@@ -21,7 +21,7 @@ class LoginController extends Controller
       $request->session()->put("encrypt-key", $config["key"]);
       $request->session()->put("encrypt-iv", $config["iv"]);
 
-      return view('login');
+      return view('login', $request);
 
     }
 
