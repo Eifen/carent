@@ -8,7 +8,7 @@ use App\Models\ConfigsModel;
 use App\Models\LoginModel;
 use App\Models\AuditoriaLogModel;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
@@ -18,18 +18,14 @@ class LoginController extends Controller
       $modelo = new ConfigsModel();
       $config = $modelo->encryptConfig();
 
-      $request->session()->put("encrypt-key", $config["key"]);
-      $request->session()->put("encrypt-iv", $config["iv"]);
+      Session::put('encrypt-key', $config["key"]);
+      Session::put('encrypt-iv', $config["iv"]);
 
       return view('login', $request);
 
     }
 
     function login(Request $request){
-
-      //$codigoUsuario = $this->desencriptarCryptoJS($request->input("codigoUsuario"));
-    //  $claveForm = $this->encriptarLaravel($this->desencriptarCryptoJS($request->input("clave")));
-      //$claveForm = $this->desencriptarCryptoJS($request->input("clave"));
 
       $parametros = [
         $this->desencriptarCryptoJS($request->input("codigoUsuario")),
@@ -154,9 +150,11 @@ class LoginController extends Controller
       $modelo = new ConfigsModel();
       $config = $modelo->encryptConfig();
 
-      $key = pack("H*", $config["key"]);
-      $iv =  pack("H*", $config["iv"]);
-      $decrypted = openssl_decrypt($valor, 'AES-128-CBC', $key, OPENSSL_ZERO_PADDING, $iv);
+      $key = pack("H*", Session::get("encrypt-key"));
+      $iv = pack("H*", Session::get("encrypt-iv"));
+      //$key = pack("H*", $config["key"]);
+      //$iv =  pack("H*", $config["iv"]);
+      $decrypted = openssl_decrypt($valor, 'AES-256-CBC', $key, OPENSSL_ZERO_PADDING, $iv);
       $decrypted = trim($decrypted);
 
       return $decrypted;

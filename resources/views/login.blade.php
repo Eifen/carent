@@ -155,7 +155,7 @@
                      :variante="formRecovery.alert.variante">
               </alert>
               <b-button
-                @click="recuperarClave"
+                @click="recuperarClave('{{ Session::get('encrypt-key') }}', '{{ Session::get('encrypt-iv') }}')"
                 :disabled="formRecovery.botones.submit.disabled"
                 block
                 v-html="formRecovery.botones.submit.html"

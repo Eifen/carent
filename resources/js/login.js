@@ -9,7 +9,6 @@ import AutoNumeric from 'autonumeric';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 import Vuelidate from 'vuelidate';
 import { required, minLength, minValue } from 'vuelidate/lib/validators';
-import VueSession from 'vue-session';
 const CryptoJS = require("crypto-js");
 const AES = require("crypto-js/aes");
 var self;
@@ -19,7 +18,6 @@ Vue.component('alert',require('./components/alert.vue').default);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons)
 Vue.use(Vuelidate);
-Vue.use(VueSession);
 
 //se declaran todas las varibles
 new Vue({
@@ -246,11 +244,8 @@ new Vue({
     },
     encriptar: function(valor, encryptionKey, encryptionIv){
 
-      //let key = CryptoJS.enc.Hex.parse(encryptionKey);
-      //let iv = CryptoJS.enc.Hex.parse(encryptionIv);
-
-      let key = CryptoJS.enc.Base64.parse(encryptionKey);
-      let iv = CryptoJS.enc.Base64.parse(encryptionIv);
+      let key = CryptoJS.enc.Hex.parse(encryptionKey);
+      let iv = CryptoJS.enc.Hex.parse(encryptionIv);
 
       var encrypted = CryptoJS.AES.encrypt(valor, key, {
           iv,
@@ -266,7 +261,7 @@ new Vue({
       objeto.invalidFeedback = "";
 
     },
-    recuperarClave: function(){
+    recuperarClave: function(encryptionKey, encryptionIv){
 
       var formValido = true;
 
@@ -320,7 +315,7 @@ new Vue({
 
         //Obtenemos valores
         let parametros = {
-          codigoUsuario: self.encriptar(self.formRecovery.campos.codigoUsuario.value)
+          codigoUsuario: self.encriptar(self.formRecovery.campos.codigoUsuario.value, encryptionKey, encryptionIv)
         }
 
         Object.keys(self.formRecovery.campos).forEach((indice, i) => {
