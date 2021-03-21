@@ -8,31 +8,50 @@ use App\Models\ConfigsModel;
 use App\Models\LoginModel;
 use App\Models\AuditoriaLogModel;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cookie;
 
 class LoginController extends Controller
 {
 
-    function index(){
+    function index(Request $request){
+
+      $modelo = new ConfigsModel();
+      $config = $modelo->encryptConfig();
+
+      $request->session()->put("encrypt-key", $config["key"]);
+      $request->session()->put("encrypt-iv", $config["iv"]);
 
       return view('login');
 
     }
 
-    function encryptConfig(Request $request){
-
-      $modelo = new LoginModel();
-      $config = $modelo->encryptConfig();
-
-      return $config;
-
-    }
-
     function login(Request $request){
 
-      $codigoUsuario = $this->desencriptarCryptoJS($request->input("codigoUsuario"));
-      $claveForm = $this->desencriptarCryptoJS($request->input("clave"));
+      //$codigoUsuario = $this->desencriptarCryptoJS($request->input("codigoUsuario"));
+    //  $claveForm = $this->encriptarLaravel($this->desencriptarCryptoJS($request->input("clave")));
+      //$claveForm = $this->desencriptarCryptoJS($request->input("clave"));
+
+      $parametros = [
+        $this->desencriptarCryptoJS($request->input("codigoUsuario")),
+        $this->desencriptarCryptoJS($request->input("clave"))
+      ];
+
+      return $parametros;exit();
 
       $modelo = new LoginModel();
+      $login = $modelo->login($parametros);
+
+      $json = base64_decode($claveForm);
+      $iv = json_decode($json);
+      $iv = $iv->iv;
+
+      $login["ivi"] = $iv;
+
+      return $login;
+
+      exit();
+
+
       $usuario = $modelo->buscarUsuario($codigoUsuario);
       $loginDenegado = $modelo->estatusLoginDenegado($usuario->id_estatus);
 

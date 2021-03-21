@@ -9,22 +9,27 @@ import AutoNumeric from 'autonumeric';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 import Vuelidate from 'vuelidate';
 import { required, minLength, minValue } from 'vuelidate/lib/validators';
+import VueSession from 'vue-session';
 const CryptoJS = require("crypto-js");
 const AES = require("crypto-js/aes");
 var self;
-
 
 Vue.component('loading',require('./components/loading.vue').default);
 Vue.component('alert',require('./components/alert.vue').default);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons)
 Vue.use(Vuelidate);
+Vue.use(VueSession, true);
 
 //se declaran todas las varibles
 new Vue({
 
   el: '#app',
   data: {
+    encryption: {
+      iv: null,
+      key: null
+    },
     formLogin: {
       alert: {
         contador: false,
@@ -101,8 +106,6 @@ new Vue({
         }
       }
     },
-    iv: null,
-    key: null,
     loading: true
   },
   validations: {
@@ -134,23 +137,75 @@ new Vue({
 
     self = this;
 
-    axios.get('/encryptConfig')
-    .then(function (response) {
+  },
+  created: function () {},
+  mounted: function () {
 
-      if(response.status === 200 && response.data.key && response.data.iv){
+console.log(this.$session.getAll())
+console.log(this.$session.get("encrypt-key"))
+    try {
 
-        self.key = response.data.key;
-        self.iv = response.data.iv;
-        self.loading = false;
 
-      }else{
+      let codigoUsuario = self.$refs["codigoUsuario"].$el
+      self.formLogin.campos.codigoUsuario.autonumeric = new AutoNumeric(codigoUsuario, {
+        decimalPlaces: 0,
+        decimalCharacter: ',',
+        digitGroupSeparator: '',
+        leadingZero: 'keep'
+      });
 
-        throw "error";
+      self.$refs["modal-recuperar-clave"].$on('shown', () => {
 
-      }
+        let codigoUsuarioR = self.$refs["codigoUsuarioR"].$el
+        self.formRecovery.campos.codigoUsuario.autonumeric = new AutoNumeric(codigoUsuarioR, {
+          decimalPlaces: 0,
+          decimalCharacter: ',',
+          digitGroupSeparator: '',
+          leadingZero: 'keep'
+        });
 
-    })
-    .catch(error => {
+      });
+
+      self.$refs["modal-recuperar-clave"].$on('hidden', () => {
+
+        self.formRecovery.campos.codigoUsuario.value = null;
+        self.formRecovery.campos.codigoUsuario.autonumeric.set(0);
+
+        Object.keys(self.formRecovery.campos).forEach((indice, i) => {
+
+          if(self.formRecovery.campos[indice].hasOwnProperty("state")){
+            self.formRecovery.campos[indice].state = null;
+          }
+
+          if(self.formRecovery.campos[indice].hasOwnProperty("invalidFeedback")){
+            self.formRecovery.campos[indice].invalidFeedback = "";
+          }
+
+        });
+
+        self.formRecovery.botones.submit.show = true;
+
+        self.mostrarAlert(self.formRecovery.alert);
+
+      });
+
+      self.formLogin.campos.codigoUsuario.disabled = false;
+      self.formLogin.campos.clave.disabled = false;
+      self.formLogin.campos.clave.iconShowPass.icon = self.formLogin.campos.clave.iconShowPass.show;
+      self.formLogin.botones.submit.html = self.formLogin.botones.submit.htmlInit;
+      self.formLogin.botones.submit.disabled = false;
+      self.formLogin.botones.recoveryPass.html = self.formLogin.botones.recoveryPass.htmlInit;
+      self.formLogin.botones.recoveryPass.disabled = false;
+
+      self.formRecovery.campos.codigoUsuario.disabled = false;
+      self.formRecovery.botones.submit.html = self.formRecovery.botones.submit.htmlInit;
+      self.formRecovery.botones.submit.disabled = false;
+
+      self.loading = false;
+
+    }catch(err) {
+
+      self.formLogin.botones.submit.html = self.formLogin.botones.submit.htmlInit;
 
       self.formLogin.campos.codigoUsuario.disabled = true;
       self.formLogin.campos.clave.disabled = true;
@@ -166,75 +221,36 @@ new Vue({
 
       self.loading = false;
 
-    });
-
-  },
-  created: function () {},
-  mounted: function () {
-
-    let codigoUsuario = self.$refs["codigoUsuario"].$el
-    self.formLogin.campos.codigoUsuario.autonumeric = new AutoNumeric(codigoUsuario, {
-      decimalPlaces: 0,
-      decimalCharacter: ',',
-      digitGroupSeparator: '',
-      leadingZero: 'keep'
-    });
-
-    self.$refs["modal-recuperar-clave"].$on('shown', () => {
-
-      let codigoUsuarioR = self.$refs["codigoUsuarioR"].$el
-      self.formRecovery.campos.codigoUsuario.autonumeric = new AutoNumeric(codigoUsuarioR, {
-        decimalPlaces: 0,
-        decimalCharacter: ',',
-        digitGroupSeparator: '',
-        leadingZero: 'keep'
-      });
-
-    });
-
-    self.$refs["modal-recuperar-clave"].$on('hidden', () => {
-
-      self.formRecovery.campos.codigoUsuario.value = null;
-      self.formRecovery.campos.codigoUsuario.autonumeric.set(0);
-
-      Object.keys(self.formRecovery.campos).forEach((indice, i) => {
-
-        if(self.formRecovery.campos[indice].hasOwnProperty("state")){
-          self.formRecovery.campos[indice].state = null;
-        }
-
-        if(self.formRecovery.campos[indice].hasOwnProperty("invalidFeedback")){
-          self.formRecovery.campos[indice].invalidFeedback = "";
-        }
-
-      });
-
-      self.formRecovery.botones.submit.show = true;
-
-      self.mostrarAlert(self.formRecovery.alert);
-
-    });
-
-    self.formLogin.campos.codigoUsuario.disabled = false;
-    self.formLogin.campos.clave.disabled = false;
-    self.formLogin.campos.clave.iconShowPass.icon = self.formLogin.campos.clave.iconShowPass.show;
-    self.formLogin.botones.submit.html = self.formLogin.botones.submit.htmlInit;
-    self.formLogin.botones.submit.disabled = false;
-    self.formLogin.botones.recoveryPass.html = self.formLogin.botones.recoveryPass.htmlInit;
-    self.formLogin.botones.recoveryPass.disabled = false;
-
-    self.formRecovery.campos.codigoUsuario.disabled = false;
-    self.formRecovery.botones.submit.html = self.formRecovery.botones.submit.htmlInit;
-    self.formRecovery.botones.submit.disabled = false;
+    }
 
   },
   updated: function () {},
   methods:{
 
+    getCookies: function(cname){
+
+      var name = cname + "=";
+      var decodedCookie = decodeURIComponent(document.cookie);
+      var ca = decodedCookie.split(';');
+      for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+
+    },
     encriptar: function(valor){
 
-      let key = CryptoJS.enc.Hex.parse(self.key);
-      let iv = CryptoJS.enc.Hex.parse(self.iv);
+      //let key = CryptoJS.enc.Hex.parse(self.encryption.key);
+      //let iv = CryptoJS.enc.Hex.parse(self.encryption.iv);
+
+      let key = CryptoJS.enc.Base64.parse(self.encryption.key);
+      let iv = CryptoJS.enc.Base64.parse(self.encryption.iv);
 
       var encrypted = CryptoJS.AES.encrypt(valor, key, {
           iv,

@@ -14,7 +14,7 @@
 
     </head>
     <body>
-
+{{ Session::get("encrypt-key") }}
       <b-container fluid id="app" v-on:keypress="keyboard">
 
         <loading :loading="loading" v-show="loading"></loading>
@@ -74,7 +74,7 @@
                   </b-form-group>
                   <div>
                     <b-button
-                      @click="login"
+                      @click="login()"
                       :disabled="formLogin.botones.submit.disabled"
                       block
                       v-html="formLogin.botones.submit.html"
