@@ -286,6 +286,7 @@
               { key: 'proyecto', label: 'Proyecto' },
               { key: 'monto_proyecto', label: 'Monto Proyecto' },
               { key: 'monto_facturado', label: 'Monto Facturado' },
+              { key: 'porct_facturado', label: '% Facturado' },
               { key: 'monto_notas_credito', label: 'Notas Crédito' },
               { key: 'monto_gasto', label: 'Gastos' },
               { key: 'monto_otros_gastos', label: 'Otros Gastos' },
@@ -391,6 +392,7 @@
               estatus: item.estatus,
               monto_proyecto: item.moneda+' '+item.monto_proyecto_formated,
               monto_facturado: item.moneda+' '+item.monto_facturado_formated,
+              porct_facturado: item.porct_facturado,
               monto_notas_credito: item.moneda+' '+item.monto_notas_credito_formated,
               monto_gasto: item.moneda+' '+item.monto_gasto_formated,
               monto_otros_gastos: item.moneda+' '+item.monto_otros_gastos_formated,
@@ -406,6 +408,7 @@
               moneda: item.moneda,
               monto_proyecto: item.monto_proyecto,
               monto_facturado: item.monto_facturado,
+              porct_facturado: item.porct_facturado,
               monto_notas_credito: item.monto_notas_credito,
               monto_gasto: item.monto_gasto,
               monto_otros_gastos: item.monto_otros_gastos
