@@ -394,7 +394,7 @@ new Vue({
         },
         horas_adicionales: {
           required,
-          minValue: minValue(1)
+          minValue: minValue(0)
         }
       }
     },
