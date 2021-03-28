@@ -33,6 +33,8 @@ class LoginController extends Controller
         $this->mi_ip()
       ];
 
+      return;
+
       $modelo = new LoginModel();
       $login = $modelo->login($parametros);
 
@@ -42,6 +44,7 @@ class LoginController extends Controller
         $request->session()->put('usuario_id', $login["id_usuario"]);
         $request->session()->put('division_id', $login["id_division"]);
         $request->session()->put('cargo_id', $login["id_cargo"]);
+        $request->session()->put('usuario_ip', $this->mi_ip());
 
       }
 
@@ -51,38 +54,33 @@ class LoginController extends Controller
 
     function recoverylogin(Request $request){
 
-      $codigoUsuario = $this->desencriptarCryptoJS($request->input("codigoUsuario"));
+      $parametros = [
+        $this->desencriptarCryptoJS($request->input("codigoUsuario")),
+        $this->mi_ip()
+      ];
 
       $modelo = new LoginModel();
-      $usuario = $modelo->buscarUsuario($codigoUsuario);
+      $recoveryLogin = $modelo->recoverylogin($parametros);
 
-      if(!empty($usuario)){
+      if($recoveryLogin["response"]){
 
-        $claveDB = $usuario->clave;
-        $claveDB = $this->desencriptarLaravel($claveDB);
-        $correoDestinatario = $usuario->correo_principal;
-
-        Mail::send('emailTemplates.recoveryPassword', ["clave" => $claveDB], function($message) use ($correoDestinatario)  {
+        Mail::send('emailTemplates.recoveryPassword', ["clave" => $recoveryLogin["clave"]], function($message) use ($correoDestinatario)  {
 
             $message->from('sistema.carent@crowe.com.ve', 'CARENT')->to($correoDestinatario)->subject('Recuperación de Contraseña');
 
         });
 
         if(Mail::failures()){
-
-          $response = array("recovery" => false, "message" => "No se pudo enviar el correo, intente nuevamente.");
-
+          $mensaje = "No se pudo enviar el correo, intente nuevamente.";
+        }else{
+          $mensaje = "Enviamos sus datos a su correo, por favor revise!.";
         }
 
-        $response = array("recovery" => true, "message" => "Enviamos sus datos a su correo, por favor revise!.");
-
       }else{
-
-        $response = array("recovery" => false, "message" => "El usuario no existe");
-
+        $mensaje = $recoveryLogin["message"];
       }
 
-      return $response;
+      return ["recovery" => $recoveryLogin["response"], "message" => $mensaje];
 
     }
 
@@ -140,22 +138,6 @@ class LoginController extends Controller
       }
 
       return $direccion;
-
-    }
-
-    private function logs($id_usuario, $tabla, $accion, $ip){
-
-      $modelo = new AuditoriaLogModel();
-
-      $parametros = [
-        "accion" => $accion,
-        "direccion_ip" => $ip,
-        "fecha" => date("Y-m-d H:i:s"),
-        "tabla" => $tabla,
-        "usuario_id" => $id_usuario
-      ];
-
-      return $modelo->logs_auditoria($parametros);
 
     }
 

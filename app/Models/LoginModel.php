@@ -18,6 +18,16 @@ class LoginModel extends Model
 
     }
 
+    function recoverylogin($parametros){
+
+      $funcionario = DB::select('call sp_recuperar_login(?,?,@respuesta)',$parametros);
+      $respuestaSp = DB::select('SELECT @respuesta AS respuesta_json');
+      $respuestaJson = json_decode($respuestaSp[0]->respuesta_json, true);
+
+      return $respuestaJson;
+
+    }
+
     function buscarUsuario($codigo){
 
       $usuario = DB::select('SELECT u.id,
