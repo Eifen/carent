@@ -64,6 +64,8 @@ class LoginController extends Controller
 
       if($recoveryLogin["response"]){
 
+        $correoDestinatario = $recoveryLogin["correo"];
+
         Mail::send('emailTemplates.recoveryPassword', ["clave" => $recoveryLogin["clave"]], function($message) use ($correoDestinatario)  {
 
             $message->from('sistema.carent@crowe.com.ve', 'CARENT')->to($correoDestinatario)->subject('Recuperación de Contraseña');
