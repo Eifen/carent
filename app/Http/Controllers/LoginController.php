@@ -33,8 +33,6 @@ class LoginController extends Controller
         $this->mi_ip()
       ];
 
-      return;
-
       $modelo = new LoginModel();
       $login = $modelo->login($parametros);
 
@@ -45,6 +43,7 @@ class LoginController extends Controller
         $request->session()->put('division_id', $login["id_division"]);
         $request->session()->put('cargo_id', $login["id_cargo"]);
         $request->session()->put('usuario_ip', $this->mi_ip());
+        $request->session()->put('cambiar_clave', $login["cambiar_clave"]);
 
       }
 
