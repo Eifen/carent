@@ -29,68 +29,23 @@ class LoginController extends Controller
 
       $parametros = [
         $this->desencriptarCryptoJS($request->input("codigoUsuario")),
-        $this->desencriptarCryptoJS($request->input("clave"))
+        $this->desencriptarCryptoJS($request->input("clave")),
+        $this->mi_ip()
       ];
-
-      return $parametros;exit();
 
       $modelo = new LoginModel();
       $login = $modelo->login($parametros);
 
-      $json = base64_decode($claveForm);
-      $iv = json_decode($json);
-      $iv = $iv->iv;
+      if($login["response"]){
 
-      $login["ivi"] = $iv;
+        //Se crean las variables de sessión
+        $request->session()->put('usuario_id', $login["id_usuario"]);
+        $request->session()->put('division_id', $login["id_division"]);
+        $request->session()->put('cargo_id', $login["id_cargo"]);
 
-      return $login;
+      }
 
-      exit();
-
-
-      $usuario = $modelo->buscarUsuario($codigoUsuario);
-      $loginDenegado = $modelo->estatusLoginDenegado($usuario->id_estatus);
-
-      if(!empty($usuario)){
-
-        if(!$loginDenegado){
-
-          $claveDB = $usuario->clave;
-          $claveDB = $this->desencriptarLaravel($claveDB);
-
-          if($claveDB === $claveForm){
-
-            $ip = $this->mi_ip();
-
-            //Se crean las variables de sessión
-            $request->session()->put('usuario_id', $usuario->id);
-            $request->session()->put('division_id', $usuario->id_division);
-            $request->session()->put('cargo_id', $usuario->id_cargo);
-            $request->session()->put('direccion_ip', $ip);
-
-            $log_auditoria = $this->logs($usuario->id, "inicio", "Inicio de Sesion", $ip);
-
-            $response = array("login" => true, "message" => "Bienvenido!, espere unos segundo mientras mientras es redireccionado.");
-
-          }else{
-
-            $response = array("login" => false, "message" => "Contraseña inválida");
-
-          }
-
-        }else{
-
-          $response = array("login" => false, "message" => "El usuario está en estatus <b>".$usuario->estatus."</b>");
-
-        }
-
-      }else{
-
-        $response = array("login" => false, "message" => "El usuario no existe");
-
-      }// Fin !empty($usuario)
-
-      return $response;
+      return ["login" => $login["response"], "message" => $login["message"]];
 
     }
 
@@ -152,9 +107,8 @@ class LoginController extends Controller
 
       $key = pack("H*", Session::get("encrypt-key"));
       $iv = pack("H*", Session::get("encrypt-iv"));
-      //$key = pack("H*", $config["key"]);
-      //$iv =  pack("H*", $config["iv"]);
-      $decrypted = openssl_decrypt($valor, 'AES-256-CBC', $key, OPENSSL_ZERO_PADDING, $iv);
+
+      $decrypted = openssl_decrypt($valor, 'AES-128-CBC', $key, OPENSSL_ZERO_PADDING, $iv);
       $decrypted = trim($decrypted);
 
       return $decrypted;

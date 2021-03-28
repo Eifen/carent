@@ -10,17 +10,9 @@ class LoginModel extends Model
 
     function login($parametros){
 
-      DB::beginTransaction();
-
-      $funcionario = DB::select('call sp_login(?,?,@respuesta)',$parametros);
+      $funcionario = DB::select('call sp_login(?,?,?,@respuesta)',$parametros);
       $respuestaSp = DB::select('SELECT @respuesta AS respuesta_json');
       $respuestaJson = json_decode($respuestaSp[0]->respuesta_json, true);
-
-      if($respuestaJson["response"]){
-        DB::commit();
-      }else{
-        DB::rollBack();
-      }
 
       return $respuestaJson;
 
