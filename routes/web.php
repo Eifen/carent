@@ -11,10 +11,14 @@
 |
 */
 
+/* Login */
 Route::get('/', 'LoginController@index')->middleware('usuario.session')->name('loginView');
-Route::get('/encryptConfig', 'ConfigsController@encryptConfig');
 Route::post('/login', 'LoginController@login');
 Route::post('/recoverylogin', 'LoginController@recoverylogin');
+
+
+
+Route::get('/encryptConfig', 'ConfigsController@encryptConfig');
 Route::get('/inicio', 'InicioController@inicio');
 Route::get('/menUsuario', 'InicioController@menUsuario');
 Route::get('/logout', 'LoginController@logout');
