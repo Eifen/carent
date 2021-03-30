@@ -62,7 +62,6 @@
               </div>
               <div class="form-group col-12 col-sm-3">
                 <label>&nbsp;</label>
-                <!--Al hacer clic se invoca el metodo buscar de proyectoDivision.js y envia los valores de las variables para su modificacion-->
                 <button class="btn filtrar"
                         type="button"
                         v-on:click="buscar"
@@ -79,10 +78,8 @@
 
           </div>
           <div class="col-12 wrapper-form" v-if="form.mostrar">
-
             <table class="table">
               <thead>
-                <!--Dependiendo de los permisos que posea el usuario se les hablitara o no las columnas-->
                 <tr>
                   <th scope="col">Cliente</th>
                   <th scope="col">Proyecto</th>
@@ -106,6 +103,7 @@
                   <td v-if= "permisoCrear">
                     <a v-bind:href="'/formCargarHoras/'+proyecto.id_proy_analista" target="_self">
                     <i class="fas fa-user-edit" v-if= "proyecto.permisoCrear"></i>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -170,7 +168,7 @@
             </div>
           </div>
         </div>
-        <div id="modal-asignar-Aproyecto" class="modal fade" tabindex="-1" role="dialog" v-cloak>
+        <div id="modal-asignar-Aproyecto" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" v-cloak>
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -197,54 +195,120 @@
                     <input class="form-control" type="text" disabled v-bind:value="Asigproyecto.horas_contratadas">
                   </div>
                   <div class="form-group col-12 col-sm-6">
-                <label for="horas">Total de Horas Asignadas</label>
-                <input aria-describedby="horasHelp"
-                       class="form-control"
-                       id="horas"
-                       v-bind:disabled="form.horas.disabled"
-                       v-model="form.horas.value"
-                       type="text">
-                <div class="mensaje"></div>
-              </div>
+                    <label for="horas">Total de Horas Asignadas</label>
+                    <input :disabled="form.camposAtributos.horas.disabled"
+                           :state="form.camposAtributos.horas.state"
+                           aria-describedby="horasHelp"
+                           class="form-control"
+                           id="horas"
+                           v-bind:disabled="form.horas.disabled"
+                           v-model="form.horas.value"
+                           type="text">
+                    <div class="mensaje"></div>
+                  </div>
+                  <div class="form-group col-12 col-sm-12">
+                    <label for="empleados">Empleados</label>
+                    <multiselect @input="asignarEmpleado"
+                                 @Open="limpiarMensajeErrorMultiselect"
+                                 :clear-on-select="false"
+                                 :close-on-select="false"
+                                 :disabled="form.camposAtributos.empleados.disabled"
+                                 :multiple="true"
+                                 :options="comboEmpleados"
+                                 :show-labels="false"
+                                 clase="form-control form-control-sm"
+                                 id="empleados"
+                                 label="nombre"
+                                 placeholder="Seleccione..."
+                                 ref="empleados"
+                                 track-by="nombre"
+                                 v-model="$v.form.campos.empleados.$model"></multiselect>
+                    <div class="mensaje"></div>
+                  </div>
                 </form>
                 <div class="row wrapper-alert">
-              <div class="col-12">
-                <div v-bind:class="alertForm.class" role="alert" v-if="alertForm.show" v-html="alertForm.message"></div>
+                  <div class="col-12">
+                    <div v-bind:class="alertForm.class" role="alert" v-if="alertForm.show" v-html="alertForm.message">
+                    </div>
+                  </div>
+                </div>
+                <h5 v-if="permisoAsignar">Asignar Horas</h5>
+                <form class="row">
+                  <b-form-group :key="index" class="col-12" v-for="(empleado, index) in form.camposAtributos.empleados.empleados">
+                    <b-row>
+                    <b-form-group
+                      class="col-12 col-sm-4"
+                      label="Empleado">
+                      <b-form-input
+                        :value="empleado.nombre+`:`"
+                        plaintext
+                        readonly
+                        size="sm">
+                      </b-form-input>
+                    </b-form-group>
+                    <b-form-group
+                      class="col-12 col-sm-2"
+                      label="Cargo">
+                      <b-form-input
+                        :value="empleado.cargo+``"
+                        plaintext
+                        readonly
+                        size="sm">
+                      </b-form-input>
+                    </b-form-group>
+                    <b-form-group
+                    :invalid-feedback="form.camposAtributos.empleados.empleados[index].horas.invalidFeedback"
+                    class="col-12 col-sm-2"
+                    label="Horas">
+                    <b-form-input
+                      @input="horaEmpleado(index)"
+                      :disabled="form.camposAtributos.empleados.disabled"
+                      :formatter="cantidadHora"
+                      :number="true"
+                      :ref="'hora-'+index"
+                      :state="form.camposAtributos.empleados.empleados[index].horas.state"
+                      class="form-control hora-asignada"
+                      placeholder="0"
+                      size="sm"
+                      v-model="form.camposAtributos.empleados.empleados[index].horas.value"></b-form-input>
+                  </b-form-group>
+                  <b-form-group
+                    class="col-12 col-sm-3"
+                    label="Horas Cargadas">
+                    <b-form-input
+                      :value="empleado.horas_cargadas+``"
+                      plaintext
+                      readonly
+                      size="sm">
+                    </b-form-input>
+                  </b-form-group>
+                  <b-form-group
+                    class="col-12 col-sm-1"
+                    label="Ver"
+                    v-if= "empleado.permisoCarga">
+                    <a v-bind:href="'/formCargarHoras/'+empleado.idAnaProy" target="_self"><i class="fas fa-user-edit" v-if= "empleado.permisoCarga"></i>
+                    </a>                                          
+                  </b-form-group>
+                </form>
               </div>
-              </div>
-                <h5>Asignar</h5>
-                <table class="table" v-for="proyecto in detalleAsigproyecto.data">
-              <thead>
-                <tr>
-                  <th scope="col">Nombre</th>
-                  <th scope="col">Cargo</th>
-                  <th scope="col">Estatus</th>
-                  <th scope="col">Asignar horas</th>
-                  <th scope="col">Horas Cargadas</th>
-                  <th scope="col">Ver Horas Cargadas</th>
-                </tr>
-              </thead>
-              <tbody v-for="Asigproyecto in detalleAsigproyecto.data">
-                <tr v-for="analista in detalleAnalista.data">
-                  <th scope="row">@{{ analista.nombre }}</th>
-                  <td>@{{ analista.cargo }}</td>
-                  <td><input type="checkbox" v-on:change="estados(analista.id,analista.idAnaProy,proyecto.id,proyecto.id_proyecto_division, $event)" v-model="analista.estatus" ></td>
-                  <td><input @keypress="formatoHoraAsignada"
-                             @keyup="horasTotales"
-                             v-model="analista.horas_asignadas"
-                             v-mask="'#####'"
-                             :disabled="analista.estatus != 1"
-                             v-on:keyup="asigna(analista.id,analista.idAnaProy,proyecto.id,Asigproyecto.horas_contratadas, $event)"
-                             class="form-control hora-asignada"
-                             type="text"></td>
-                  <td>@{{ analista.suma }}</td>
-                  <td>
-                    <a v-bind:href="'/formCargarHoras/'+analista.idAnaProy" target="_self">
-                    <i class="fas fa-user-edit" v-if= "analista.permisoCrear"></i>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+              <div class="row justify-content-center wrapper-subtmit" v-for="Asigproyecto in detalleAsigproyecto.data">
+                <div class="col-12">
+                  <div v-bind:class="alertFormA.class" role="alert" v-if="alertFormA.show" v-html="alertFormA.message">
+                  </div>
+                </div>
+                <div class="modal-footer" v-if="permisoAsignar">
+                  <button class="btn asignar"
+                          type="button"
+                          v-on:click= "asignarAnalista(Asigproyecto.horas_contratadas, $event)"
+                          v-bind:disabled="form.btn.asignar.disabled"
+                          v-html="form.btn.asignar.html"></button>
+                </div>
+                <div class="modal-footer" v-if="permisoCerrar">
+                  <button class="btn cerrar"
+                          type="button"
+                          v-on:click= "cerrarModal"
+                          v-html="form.btn.cerrar.html"></button>
+                </div>
               </div>
             </div>
           </div>
