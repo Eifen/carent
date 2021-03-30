@@ -8,53 +8,24 @@ use Illuminate\Database\Eloquent\Model;
 class LoginModel extends Model
 {
 
-    function buscarUsuario($codigo){
+    function login($parametros){
 
-      $usuario = DB::select('SELECT u.id,
-                                    u.clave,
-                                    u.avatar,
-                                    u.id_estatus,
-                                    e.descripcion AS estatus,
-                                    cu.correo_principal,
-                                    cu.correo_secundario,
-                                    cu.telefono_principal,
-                                    cu.telefono_secundario,
-                                    u.id_division,
-                                    u.id_cargo
-                             FROM tbl_usuario u,
-                                  tbl_estatus e,
-                                  tbl_contacto_usuario cu
-                             WHERE codigo = "'.$codigo.'"
-                             AND e.tabla = "tbl_usuario"
-                             AND e.valor = u.id_estatus
-                             AND u.id = cu.id_usuario');
+      $funcionario = DB::select('call sp_login(?,?,?,@respuesta)',$parametros);
+      $respuestaSp = DB::select('SELECT @respuesta AS respuesta_json');
+      $respuestaJson = json_decode($respuestaSp[0]->respuesta_json, true);
 
-      if(count($usuario) > 0){
+      return $respuestaJson;
 
-        return $usuario[0];
+    }
 
-      }else{
+    function recoverylogin($parametros){
 
-        return array();
+      $funcionario = DB::select('call sp_recuperar_login(?,?,@respuesta)',$parametros);
+      $respuestaSp = DB::select('SELECT @respuesta AS respuesta_json');
+      $respuestaJson = json_decode($respuestaSp[0]->respuesta_json, true);
 
-      }
+      return $respuestaJson;
 
-    }// Fin buscarUsuario
-
-    function estatusLoginDenegado($id_estatus){
-
-      $estatus = DB::select('SELECT * FROM tbl_estatus_login_denegado WHERE id_estatus = '.$id_estatus);
-
-      if(count($estatus) > 0){
-
-        return true;
-
-      }else{
-
-        return false;
-
-      }
-
-    }// Fin estatusLoginDenegado
+    }
 
 }

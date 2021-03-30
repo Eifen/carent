@@ -13,18 +13,20 @@ const CryptoJS = require("crypto-js");
 const AES = require("crypto-js/aes");
 var self;
 
-
 Vue.component('loading',require('./components/loading.vue').default);
 Vue.component('alert',require('./components/alert.vue').default);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons)
 Vue.use(Vuelidate);
 
-//se declaran todas las varibles
 new Vue({
 
   el: '#app',
   data: {
+    encryption: {
+      iv: null,
+      key: null
+    },
     formLogin: {
       alert: {
         contador: false,
@@ -101,9 +103,10 @@ new Vue({
         }
       }
     },
-    iv: null,
-    key: null,
     loading: true
+  },
+  props: {
+    keys: String
   },
   validations: {
     formLogin: {
@@ -134,23 +137,72 @@ new Vue({
 
     self = this;
 
-    axios.get('/encryptConfig')
-    .then(function (response) {
+  },
+  created: function () {},
+  mounted: function () {
 
-      if(response.status === 200 && response.data.key && response.data.iv){
+    try {
 
-        self.key = response.data.key;
-        self.iv = response.data.iv;
-        self.loading = false;
+      let codigoUsuario = self.$refs["codigoUsuario"].$el
+      self.formLogin.campos.codigoUsuario.autonumeric = new AutoNumeric(codigoUsuario, {
+        decimalPlaces: 0,
+        decimalCharacter: ',',
+        digitGroupSeparator: '',
+        leadingZero: 'keep'
+      });
 
-      }else{
+      self.$refs["modal-recuperar-clave"].$on('shown', () => {
 
-        throw "error";
+        let codigoUsuarioR = self.$refs["codigoUsuarioR"].$el
+        self.formRecovery.campos.codigoUsuario.autonumeric = new AutoNumeric(codigoUsuarioR, {
+          decimalPlaces: 0,
+          decimalCharacter: ',',
+          digitGroupSeparator: '',
+          leadingZero: 'keep'
+        });
 
-      }
+      });
 
-    })
-    .catch(error => {
+      self.$refs["modal-recuperar-clave"].$on('hidden', () => {
+
+        self.formRecovery.campos.codigoUsuario.value = null;
+        self.formRecovery.campos.codigoUsuario.autonumeric.set(0);
+
+        Object.keys(self.formRecovery.campos).forEach((indice, i) => {
+
+          if(self.formRecovery.campos[indice].hasOwnProperty("state")){
+            self.formRecovery.campos[indice].state = null;
+          }
+
+          if(self.formRecovery.campos[indice].hasOwnProperty("invalidFeedback")){
+            self.formRecovery.campos[indice].invalidFeedback = "";
+          }
+
+        });
+
+        self.formRecovery.botones.submit.show = true;
+
+        self.mostrarAlert(self.formRecovery.alert);
+
+      });
+
+      self.formLogin.campos.codigoUsuario.disabled = false;
+      self.formLogin.campos.clave.disabled = false;
+      self.formLogin.campos.clave.iconShowPass.icon = self.formLogin.campos.clave.iconShowPass.show;
+      self.formLogin.botones.submit.html = self.formLogin.botones.submit.htmlInit;
+      self.formLogin.botones.submit.disabled = false;
+      self.formLogin.botones.recoveryPass.html = self.formLogin.botones.recoveryPass.htmlInit;
+      self.formLogin.botones.recoveryPass.disabled = false;
+
+      self.formRecovery.campos.codigoUsuario.disabled = false;
+      self.formRecovery.botones.submit.html = self.formRecovery.botones.submit.htmlInit;
+      self.formRecovery.botones.submit.disabled = false;
+
+      self.loading = false;
+
+    }catch(err) {
+
+      self.formLogin.botones.submit.html = self.formLogin.botones.submit.htmlInit;
 
       self.formLogin.campos.codigoUsuario.disabled = true;
       self.formLogin.campos.clave.disabled = true;
@@ -166,75 +218,16 @@ new Vue({
 
       self.loading = false;
 
-    });
-
-  },
-  created: function () {},
-  mounted: function () {
-
-    let codigoUsuario = self.$refs["codigoUsuario"].$el
-    self.formLogin.campos.codigoUsuario.autonumeric = new AutoNumeric(codigoUsuario, {
-      decimalPlaces: 0,
-      decimalCharacter: ',',
-      digitGroupSeparator: '',
-      leadingZero: 'keep'
-    });
-
-    self.$refs["modal-recuperar-clave"].$on('shown', () => {
-
-      let codigoUsuarioR = self.$refs["codigoUsuarioR"].$el
-      self.formRecovery.campos.codigoUsuario.autonumeric = new AutoNumeric(codigoUsuarioR, {
-        decimalPlaces: 0,
-        decimalCharacter: ',',
-        digitGroupSeparator: '',
-        leadingZero: 'keep'
-      });
-
-    });
-
-    self.$refs["modal-recuperar-clave"].$on('hidden', () => {
-
-      self.formRecovery.campos.codigoUsuario.value = null;
-      self.formRecovery.campos.codigoUsuario.autonumeric.set(0);
-
-      Object.keys(self.formRecovery.campos).forEach((indice, i) => {
-
-        if(self.formRecovery.campos[indice].hasOwnProperty("state")){
-          self.formRecovery.campos[indice].state = null;
-        }
-
-        if(self.formRecovery.campos[indice].hasOwnProperty("invalidFeedback")){
-          self.formRecovery.campos[indice].invalidFeedback = "";
-        }
-
-      });
-
-      self.formRecovery.botones.submit.show = true;
-
-      self.mostrarAlert(self.formRecovery.alert);
-
-    });
-
-    self.formLogin.campos.codigoUsuario.disabled = false;
-    self.formLogin.campos.clave.disabled = false;
-    self.formLogin.campos.clave.iconShowPass.icon = self.formLogin.campos.clave.iconShowPass.show;
-    self.formLogin.botones.submit.html = self.formLogin.botones.submit.htmlInit;
-    self.formLogin.botones.submit.disabled = false;
-    self.formLogin.botones.recoveryPass.html = self.formLogin.botones.recoveryPass.htmlInit;
-    self.formLogin.botones.recoveryPass.disabled = false;
-
-    self.formRecovery.campos.codigoUsuario.disabled = false;
-    self.formRecovery.botones.submit.html = self.formRecovery.botones.submit.htmlInit;
-    self.formRecovery.botones.submit.disabled = false;
+    }
 
   },
   updated: function () {},
   methods:{
 
-    encriptar: function(valor){
+    encriptar: function(valor, encryptionKey, encryptionIv){
 
-      let key = CryptoJS.enc.Hex.parse(self.key);
-      let iv = CryptoJS.enc.Hex.parse(self.iv);
+      let key = CryptoJS.enc.Hex.parse(encryptionKey);
+      let iv = CryptoJS.enc.Hex.parse(encryptionIv);
 
       var encrypted = CryptoJS.AES.encrypt(valor, key, {
           iv,
@@ -250,7 +243,7 @@ new Vue({
       objeto.invalidFeedback = "";
 
     },
-    recuperarClave: function(){
+    recuperarClave: function(encryptionKey, encryptionIv){
 
       var formValido = true;
 
@@ -304,7 +297,7 @@ new Vue({
 
         //Obtenemos valores
         let parametros = {
-          codigoUsuario: self.encriptar(self.formRecovery.campos.codigoUsuario.value)
+          codigoUsuario: self.encriptar(self.formRecovery.campos.codigoUsuario.value, encryptionKey, encryptionIv)
         }
 
         Object.keys(self.formRecovery.campos).forEach((indice, i) => {
@@ -384,7 +377,7 @@ new Vue({
       }// Fin if(formValido)
 
     },
-    login: function(){
+    login: function(encryptionKey, encryptionIv){
 
       var formValido = true;
 
@@ -438,8 +431,8 @@ new Vue({
 
         //Obtenemos valores
         let parametros = {
-          codigoUsuario: self.encriptar(self.formLogin.campos.codigoUsuario.value),
-          clave: self.encriptar(self.formLogin.campos.clave.value)
+          codigoUsuario: self.encriptar(self.formLogin.campos.codigoUsuario.value, encryptionKey, encryptionIv),
+          clave: self.encriptar(self.formLogin.campos.clave.value, encryptionKey, encryptionIv)
         }
 
         Object.keys(self.formLogin.campos).forEach((indice, i) => {

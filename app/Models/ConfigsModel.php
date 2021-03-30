@@ -10,13 +10,8 @@ class ConfigsModel extends Model
 
     function encryptConfig(){
 
-      $key = DB::select('SELECT valor FROM tbl_configuracion WHERE nombre = "encrypt-key"');
-      $key = $key[0]->valor;
-
-      $iv = DB::select('SELECT valor FROM tbl_configuracion WHERE nombre = "encrypt-iv"');
-      $iv = $iv[0]->valor;
-
-      return array("key" => $key, "iv" => $iv);
+      $sql = DB::select('SELECT * FROM vw_config_encryption LIMIT 1');
+      return ["key" => $sql[0]->key, "iv" => $sql[0]->iv];
 
     }// Fin encryptConfig
 

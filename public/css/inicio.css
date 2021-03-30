@@ -8,7 +8,7 @@ html {
 [v-cloak] {
   display: none;
 }
-#inicio {
+#app {
   background-color: #E9ECEF;
   background-image: url(/images/fondo-inicio.png?c9d94bb56d21f177b561b2e0688233c0);
   background-position: center center;

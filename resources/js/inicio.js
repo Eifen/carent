@@ -11,7 +11,7 @@ Vue.use(BootstrapVue);
 
 new Vue({
 
-  el: '#inicio',
+  el: '#app',
   data: {
     loading: true
   },

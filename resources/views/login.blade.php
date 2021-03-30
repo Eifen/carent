@@ -5,7 +5,6 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <meta name="robots" content="{{ env('META_ROBOT') }}">
 
         <title>.: CARENT :.</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
@@ -74,7 +73,7 @@
                   </b-form-group>
                   <div>
                     <b-button
-                      @click="login"
+                      @click="login('{{ Session::get('encrypt-key') }}', '{{ Session::get('encrypt-iv') }}')"
                       :disabled="formLogin.botones.submit.disabled"
                       block
                       v-html="formLogin.botones.submit.html"
@@ -155,7 +154,7 @@
                      :variante="formRecovery.alert.variante">
               </alert>
               <b-button
-                @click="recuperarClave"
+                @click="recuperarClave('{{ Session::get('encrypt-key') }}', '{{ Session::get('encrypt-iv') }}')"
                 :disabled="formRecovery.botones.submit.disabled"
                 block
                 v-html="formRecovery.botones.submit.html"
