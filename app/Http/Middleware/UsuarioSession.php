@@ -18,8 +18,10 @@ class UsuarioSession
 
        $uri = $request->route()->uri();
 
-       if(session()->has("usuario_id") && $uri == "/") {
+       if(session()->has("usuario_id") && $uri == "/" && session()->get('cambiar_clave') == false) {
            return redirect('/inicio');
+       }else if(session()->has("usuario_id") && $uri == "/" && session()->get('cambiar_clave') == true){
+           return redirect('/cambiarClave');
        }else if(!session()->has("usuario_id") && $uri != "/"){
            return redirect('/');
        }

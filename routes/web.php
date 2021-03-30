@@ -17,7 +17,6 @@ Route::post('/login', 'LoginController@login');
 Route::post('/recoverylogin', 'LoginController@recoverylogin');
 
 
-
 Route::get('/encryptConfig', 'ConfigsController@encryptConfig');
 Route::get('/inicio', 'InicioController@inicio');
 Route::get('/menUsuario', 'InicioController@menUsuario');
