@@ -19,7 +19,6 @@ Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons)
 Vue.use(Vuelidate);
 
-//se declaran todas las varibles
 new Vue({
 
   el: '#app',

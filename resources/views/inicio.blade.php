@@ -14,18 +14,20 @@
     </head>
     <body>
 
-      <div id="inicio" class="container-fluid">
+      <b-container fluid id="app" v-cloak>
 
         <loading :loading="loading" v-show="loading"></loading>
 
         <menu-principal v-cloak></menu-principal>
 
-        <div class="row align-items-center justify-content-center" v-cloak>
-          <div class="col-12 col-sm-9 col-md-6 col-lg-4"></div>
-        </div>
-      </div>
+        <b-row align-h="center" align-v="center" v-cloak>
+          <b-col cols="12" sm="9" md="6" lg="4"></b-col>
+        </b-row>
+
+      </b-container>
 
       <script src="{{ mix('/js/inicio.js') }}"></script>
 
     </body>
+
 </html>
