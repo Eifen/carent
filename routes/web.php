@@ -16,13 +16,16 @@ Route::get('/', 'LoginController@index')->middleware('usuario.session')->name('l
 Route::post('/login', 'LoginController@login');
 Route::post('/recoverylogin', 'LoginController@recoverylogin');
 
-
-Route::get('/encryptConfig', 'ConfigsController@encryptConfig');
-Route::get('/inicio', 'InicioController@inicio');
+/* Inicio */
+Route::get('/inicio', 'InicioController@inicio')->middleware('usuario.session')->name('loginView');;
 Route::get('/menUsuario', 'InicioController@menUsuario');
 Route::get('/logout', 'LoginController@logout');
-Route::get('/cambiarClave', 'InicioController@cambiarClave')->middleware('usuario.session');
+Route::get('/cambiarClave', 'InicioController@cambiarClave')/*->middleware('usuario.session')*/;
 Route::post('/guardarNuevaClave', 'InicioController@guardarNuevaClave');
+
+
+Route::get('/encryptConfig', 'ConfigsController@encryptConfig');
+
 Route::get('/formNuevoUsuario', function() {return view('usuario/nuevoUsuario');})->middleware('usuario.session');
 Route::get('/dataInicialNuevoUsuario','UsuarioController@dataInicialNuevoUsuario')->middleware('usuario.session');
 Route::get('/estados', 'UsuarioController@estados');
