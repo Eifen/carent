@@ -81,7 +81,7 @@ class InicioModel extends Model
           }else{
             $sql[0]->submenu = [];
           }
-          
+
           return $sql[0];
 
         }else{
@@ -152,6 +152,13 @@ class InicioModel extends Model
         return array("response" => false, "message" => "No se pudo actualizar la Contraseña, por favor intente nuevamente!");
 
       }
+
+    }
+
+    function informacion_usuario($id_usuario){
+
+      $sql = DB::select('SELECT * FROM vw_usuario_variables_sesion WHERE id_usuario = '.$id_usuario);
+      return $sql[0];
 
     }
 

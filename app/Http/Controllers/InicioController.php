@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\ConfigsModel;
 use App\Models\InicioModel;
+use Illuminate\Support\Facades\Session;
 
 class InicioController extends Controller
 {
@@ -25,7 +26,20 @@ class InicioController extends Controller
       $modelo = new InicioModel();
       $menus = $modelo->menUsuario(session("usuario_id"));
 
+      $this->variables_sesion($request);
+
       return $menus;
+
+    }
+
+    private function variables_sesion($request){
+
+      $modelo = new InicioModel();
+      $data = $modelo->informacion_usuario(session("usuario_id"));
+
+      $request->session()->put('avatar', $data->avatar);
+      $request->session()->put('cargo_id', $data->id_cargo);
+      $request->session()->put('division_id', $data->id_division);
 
     }
 

@@ -40,8 +40,6 @@ class LoginController extends Controller
 
         //Se crean las variables de sessión
         $request->session()->put('usuario_id', $login["id_usuario"]);
-        /*$request->session()->put('division_id', $login["id_division"]);
-        $request->session()->put('cargo_id', $login["id_cargo"]);*/
         $request->session()->put('usuario_ip', $this->mi_ip());
         $request->session()->put('cambiar_clave', $login["cambiar_clave"]);
 
