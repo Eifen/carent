@@ -9,7 +9,9 @@ window.AutoNumeric = require('autonumeric');
 import VueTheMask from 'vue-the-mask';
 import Multiselect from 'vue-multiselect';
 import VueNumeric from 'vue-numeric';
+import Vuelidate from 'vuelidate';
 import 'vue-multiselect/dist/vue-multiselect.min.css';
+import { required, minLength, minValue } from 'vuelidate/lib/validators';
 var self;
 
 Vue.use(VueTheMask);
@@ -18,6 +20,7 @@ Vue.component('menu-principal', require('../components/menuPrincipal.vue').defau
 Vue.component('loading',require('../components/loading.vue').default);
 Vue.use(VueNumeric);
 Vue.use(BootstrapVue);
+Vue.use(Vuelidate);
 
 new Vue({
 
@@ -28,11 +31,17 @@ new Vue({
       message: "",
       show: false
     },
+    alertFormA: {
+      class: "",
+      message: "",
+      show: false
+    },
     alert:{
       message: "",
       mostrar: false
     },
     comboEstatus: [],
+    comboEmpleados: [],
     form: {
       btn: {
         filtrar: {
@@ -40,7 +49,35 @@ new Vue({
           html: "",
           htmlInit: "Buscar Proyecto",
           htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
+        },
+        asignar: {
+          disabled: false,
+          html: "",
+          htmlInit: "Realizar Asignación",
+          htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
+        },
+        cerrar: {
+          disabled: false,
+          html: "",
+          htmlInit: "Terminar Asignación",
+          htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
         }
+      },
+      camposAtributos: {
+        empleados: {
+          disabled: true,
+          empleados: [],
+          invalidFeedback: "",
+          state: null,
+          value:""
+        },
+        horas:{
+          disabled: true,
+          state: null
+        }
+      },
+      campos: {
+        empleados: null
       },
       cliente:{
         disabled: true,
@@ -88,10 +125,13 @@ new Vue({
       data: []
     },
     permisoActualizar: false,
+    permisoAsignar: false,
+    permisoCerrar: false,
     proyectosD: [],
     proyectos: [],
     proyectoBusqueda: [],
     horasComparar: [],
+    asignados: [],
     horas_cargadas: 0,
     horas_contratadas: 0,
     diferencia: 0,
@@ -99,6 +139,19 @@ new Vue({
     permisoCrear: false,
     agregar: 1,
     loading: true
+  },
+  validations: {
+    form:{
+      campos:{
+        empleados: {
+          required
+        },
+        horas: {
+          required,
+          minValue: minValue(1)
+        }
+      }
+    }
   },
   beforeCreate: function(){
 
@@ -131,6 +184,7 @@ new Vue({
           }
         }
         if (Object.entries(self.proyectos).length === 0) {
+          self.form.mostrar = false;
           var message = "No posee proyectos asignados";
           self.alertForm = {
             class : "alert alert-warning",
@@ -193,39 +247,40 @@ new Vue({
 
     asignarHoras: function(valor){
 
-      self.form.horas.asignar = (valor.length > 0) ? true : false;
+      self.form.camposAtributos.empleados.empleados = [];
+      self.permisoAsignar = true;
 
-      if(!self.form.horas.asignar){
-        self.form.horas.value = 0;
-        $("#horas").parent().find(".mensaje").html("").removeClass("invalid-feedback");
-        $("#horas").removeClass("error");
-      }
+      valor.forEach(function(item, index){
 
-    },
+          const empleado = {
 
-    formatoHoraAsignada: function(input){
+            id: item.id,
+            idAnaProy: item.idAnaProy,
+            permisoCarga: item.permisoCarga,
+            nombre: item.nombre,
+            cargo: item.cargo,
+            horas: {
+              invalidFeedback: "",
+              state: null,
+              value: item.hasOwnProperty('horas_asignadas') ? item.horas_asignadas : 0
+            },
+            horas_cargadas: item.horas_cargadas,
+            horas_asignadas: item.horas_asignadas
+          }
+          self.$set(self.form.camposAtributos.empleados.empleados, index, empleado);
+        
 
-      let regex = /^\d+$/;
-
-      if(!regex.test(input.key)){
-        input.preventDefault();
-        self.horasTotales();
-      }
-
-      $("#horas").parent().find(".mensaje").html("").removeClass("invalid-feedback");
-      $("#horas").removeClass("error");
-
-    },
-    horasTotales: function(){
-
-      var total = 0;
-
-      $(".hora-asignada").each(function(index,item){
-        let hora = ($(item).val().trim() === "") ? 0 : parseInt($(item).val());
-        total = parseInt(total) + hora;
       });
 
-      self.form.horas.value = total;
+      if(self.form.camposAtributos.empleados.empleados.length === 0){
+        self.form.horas.value = 0;
+        self.permisoAsignar = false;
+        self.permisoCerrar = false;
+        self.form.camposAtributos.horas.invalidFeedback = "";
+        self.form.camposAtributos.horas.state = null;
+      }
+
+      self.horasTotales();
 
     },
 
@@ -382,8 +437,99 @@ new Vue({
 
     },
 
+    asignarEmpleado: function(valor){
+
+      var val = 0;
+      var empleadosAsignados = [];
+      self.permisoAsignar = true;
+      empleadosAsignados = self.form.camposAtributos.empleados.empleados;
+      self.form.camposAtributos.empleados.empleados = [];
+
+        valor.forEach(function(item, index){
+
+          val = 0;
+          for (var i = 0; i < empleadosAsignados.length; i++) {
+            if(empleadosAsignados[i].id === item.id){
+              const empleado = {
+                id: empleadosAsignados[i].id,
+                idAnaProy: empleadosAsignados[i].idAnaProy,
+                permisoCarga: empleadosAsignados[i].permisoCarga,
+                nombre: empleadosAsignados[i].nombre,
+                cargo: empleadosAsignados[i].cargo,
+                horas: empleadosAsignados[i].horas,
+                horas_cargadas: empleadosAsignados[i].horas_cargadas,
+                horas_asignadas: empleadosAsignados[i].horas_asignadas   
+              }
+              self.$set(self.form.camposAtributos.empleados.empleados, index, empleado);
+              val = 1;
+            }
+          }
+          if (val == 0 ) {
+            const empleado = {
+                id: item.id,
+                idAnaProy: item.idAnaProy,
+                permisoCarga: item.permisoCarga,
+                nombre: item.nombre,
+                cargo: item.cargo,
+                horas: {
+                  invalidFeedback: "",
+                  state: null,
+                  value: 0,
+                },
+                horas_cargadas: item.horas_cargadas,
+                horas_asignadas: item.horas_asignadas                
+              }
+            self.$set(self.form.camposAtributos.empleados.empleados, index, empleado);
+          }          
+
+        });
+
+      if(self.form.camposAtributos.empleados.empleados.length === 0){
+        self.permisoAsignar = false;
+        self.permisoCerrar = false;
+        self.form.horas.value = 0;
+        self.form.camposAtributos.horas.invalidFeedback = "";
+        self.form.camposAtributos.horas.state = null;
+      }
+      self.horasTotales();
+
+    },
+
+    horaEmpleado: function(index){
+
+      self.limpiarMensajeError2(self.form.camposAtributos.empleados.empleados[index].horas);
+      self.horasTotales();
+
+    },
+
+    horasTotales: function(){
+      var total = 0;
+      
+      for(var i = 0; i < self.form.camposAtributos.empleados.empleados.length; i++){
+        total = total + parseInt(self.form.camposAtributos.empleados.empleados[i].horas.value);
+      }
+
+      total = (isNaN(total)) ? 0 : total;
+
+      self.form.horas.value = total;
+      self.limpiarMensajeError2(self.form.camposAtributos.horas);
+
+    },
+
+    limpiarMensajeError2: function(objeto){
+
+      objeto.state = null;
+      objeto.invalidFeedback = "";
+
+    },
+
     asignarAnalistaProyecto: function(idDproyecto,e){
 
+      self.form.camposAtributos.empleados.empleados = [];
+      self.form.campos.empleados = null;
+      self.form.horas.value = 0;
+      self.asignados = [];
+      self.permisoCerrar = false;
       self.detalleAsigproyecto.error = false;
       $(e.target).removeClass("far fa-edit").addClass("fa-cog fa-spin");
 
@@ -398,18 +544,27 @@ new Vue({
 
           self.detalleAnalista.data = response.data.analistas;
           self.detalleAsigproyecto.data = response.data.proyecto;
+          self.comboEmpleados = response.data.empleados;
+          self.form.camposAtributos.empleados.disabled = false;
+          self.form.btn.asignar.disabled = false;
+          self.form.btn.asignar.html = self.form.btn.asignar.htmlInit;
+
           if (self.detalleAsigproyecto.data[0].horas_adicionales != null) {
             self.detalleAsigproyecto.data[0].horas_contratadas = parseFloat(self.detalleAsigproyecto.data[0].horas_contratadas) + parseFloat(self.detalleAsigproyecto.data[0].horas_adicionales);
           }
-          self.form.horas.value = 0;
-          for (var i = 0; i < self.detalleAnalista.data.length; i++) {
-            self.horasComparar[i] = self.detalleAnalista.data[i].horas_asignadas;
-            if (self.detalleAnalista.data[i].horas_asignadas === null) {
-              self.horasComparar[i] = 0;
+          var a = 0;
+          for (var i = 0; i < self.comboEmpleados.length; i++) {
+            if (self.comboEmpleados[i].id_estatus > 0) {
+            self.asignados[a] = self.comboEmpleados[i];
+            a = a + 1; 
             }
           }
-          for (var i = 0; i < self.horasComparar.length; i++) {
-            self.form.horas.value = self.horasComparar[i] + self.form.horas.value;
+          if (self.asignados.length > 0) {
+            self.form.btn.cerrar.disabled = false;
+            self.form.btn.cerrar.html = self.form.btn.cerrar.htmlInit;
+            self.permisoCerrar = true;
+            self.form.campos.empleados = self.asignados;
+            self.asignarHoras(self.asignados);
           }
 
           $('#modal-asignar-Aproyecto').modal("show");
@@ -432,72 +587,20 @@ new Vue({
 
     },
 
-    estados: function(analista,idAnaProy,idDproyecto,id_proyecto_division,e){
+    asignarAnalista: function(horas_contratadas,e){
 
-      if (self.agregar === 1) {
-        self.agregar = 0;
-
-      if(idAnaProy == null){
-
-        let parametros = {
-          estado: 1,
-          idDproyecto: idDproyecto,
-          idUsuario: analista,
-          id_proyecto_division: id_proyecto_division,
-        };
-
-        axios.get('/agregarAnalistaProy', {params: parametros})
-        .then(function (response) {
-          if(response.status === 200 && response.data.response === true){
-            self.detalleAnalista.data = response.data.analistas;
-            self.detalleAsigproyecto.data = response.data.proyecto;
-            if (self.detalleAsigproyecto.data[0].horas_adicionales != null) {
-              self.detalleAsigproyecto.data[0].horas_contratadas = parseFloat(self.detalleAsigproyecto.data[0].horas_contratadas) + parseFloat(self.detalleAsigproyecto.data[0].horas_adicionales);
-            }
-            for (var i = 0; i < self.detalleAnalista.data.length; i++) {
-              self.horasComparar[i] = self.detalleAnalista.data[i].horas_asignadas;
-              if (self.detalleAnalista.data[i].horas_asignadas === null) {
-                self.horasComparar[i] = 0;
-              }
-            }
-            self.actualizar();
-          }
-        })
-
-      }else{
-        let parametros = {
-          idAnaProy: idAnaProy,
-          idDproyecto: idDproyecto,
-        };
-
-        axios.get('/modAnalistaProy', {params: parametros})
-        .then(function (response) {
-          if(response.status === 200 && response.data.response === true){
-            self.detalleAnalista.data = response.data.analistas;
-            self.detalleAsigproyecto.data = response.data.proyecto;
-
-            for (var i = 0; i < self.detalleAnalista.data.length; i++) {
-            self.horasComparar[i] = self.detalleAnalista.data[i].horas_asignadas;
-            if (self.detalleAnalista.data[i].horas_asignadas === null) {
-              self.horasComparar[i] = 0;
-            }
-
-          }
-            self.actualizar();
-      }else{
-        self.agregar = 1;
-        throw response.data;
-      }
-    })
-      }
-    };
-
-    },
-
-    asigna: function(analista,idAnaProy,idDproyecto,horas_contratadas,e){
-
+      var formValido = true;
       var total2 = [];
+      self.form.btn.asignar.disabled = true;
+      self.form.btn.asignar.html = self.form.btn.asignar.htmlLoading;
+      self.form.btn.cerrar.disabled = false;
+      self.form.btn.cerrar.html = self.form.btn.cerrar.htmlLoading;
       self.alertForm = {
+        class : "",
+        message : "",
+        show: false
+      };
+      self.alertFormA = {
           class : "",
           message : "",
           show: false
@@ -505,44 +608,80 @@ new Vue({
 
       if (self.form.horas.value > horas_contratadas) {
         var message = "Se a sobrepasado el maximo de horas que puede asignar.";
-          self.alertForm = {
-            class : "alert alert-warning",
-            message : message,
-            show: true
-          };
+        self.alertForm = {
+          class : "alert alert-warning",
+          message : message,
+          show: true
+        };
+        setTimeout(function(){
+              self.alertForm = {
+              class: "",
+              message: "",
+              show: false
+              };
+            }, 1500);
+        self.form.btn.asignar.disabled = false;
+        self.form.btn.asignar.html = self.form.btn.asignar.htmlInit;
+        self.form.btn.cerrar.disabled = false;
+        self.form.btn.cerrar.html = self.form.btn.cerrar.htmlInit;
       }else{
-        $(".hora-asignada").each(function(index,item){
-        let hora = ($(item).val().trim() === "") ? 0 : parseInt($(item).val());
-        total2.push({hora});
-      });
 
-      for (var i = 0; i < total2.length; i++) {
-          total2[i] = total2[i]["hora"];
-
+      for(var i = 0; i < self.form.camposAtributos.empleados.empleados.length; i++){
+        const hora = self.form.camposAtributos.empleados.empleados[i].horas.value;
+        if(hora < 1){
+          self.form.camposAtributos.empleados.empleados[i].horas.invalidFeedback = "Debe ser mayor a 0";
+          self.form.camposAtributos.empleados.empleados[i].horas.state = false;
+          formValido = false;
+          zenscroll.toY(self.$refs['hora-'+i].$el);
+          self.form.btn.asignar.disabled = false;
+          self.form.btn.asignar.html = self.form.btn.asignar.htmlInit;
+          self.form.btn.cerrar.disabled = false;
+          self.form.btn.cerrar.html = self.form.btn.cerrar.htmlInit;
+          break
+        }
       }
 
-      let parametros = {
-        idAnaProy: idAnaProy,
-        idDproyecto: idDproyecto,
-        horas_asignadas: total2,
-        horasComparar: self.horasComparar,
+      if (formValido) {
 
-      };
+        const empleados = [];
+          self.form.camposAtributos.empleados.empleados.forEach((item, i) => {
+          let hora = parseInt(item.horas.value);
+          empleados.push({id: item.id, idAnaProy: item.idAnaProy, horas: hora});
+        });
 
-      axios.get('/asigHorasAnalistaProy', {params: parametros})
-      .then(function (response) {
-        if(response.status === 200 && response.data.response === true){
-          self.detalleAnalista.data = response.data.analistas;
-          self.detalleAsigproyecto.data = response.data.proyecto;
-          if (self.detalleAsigproyecto.data[0].horas_adicionales != null) {
-              self.detalleAsigproyecto.data[0].horas_contratadas = parseFloat(self.detalleAsigproyecto.data[0].horas_contratadas) + parseFloat(self.detalleAsigproyecto.data[0].horas_adicionales);
+        let parametros = {
+          id_proyecto: self.detalleAsigproyecto.data[0].id,
+          id_proyecto_division: self.detalleAsigproyecto.data[0].id_proyecto_division,
+          empleados: empleados
+        };
+
+        axios.get('/asigHorasAnalistaProy', {params: parametros})
+          .then(function (response) {
+            if(response.status === 200 && response.data.response === true){
+
+              self.form.btn.asignar.disabled = false;
+              self.form.btn.asignar.html = self.form.btn.asignar.htmlInit;
+              self.alertFormA = {
+                class : "alert alert-success",
+                message : response.data.message,
+                show: true
+              };
+              setTimeout(function(){
+                self.alertFormA = {
+                class: "",
+                message: "",
+                show: false
+                };
+              }, 1500);
+              self.permisoCerrar = true;
+              self.form.btn.cerrar.disabled = false;
+              self.form.btn.cerrar.html = self.form.btn.cerrar.htmlInit;
+            self.actualizar();
+            }else{
+              throw response.data;
             }
-
-        self.actualizar();
-        }else{
-          throw response.data;
+          })
         }
-      })
       }
     },
 
@@ -593,6 +732,18 @@ new Vue({
 
     },
 
+    cantidadHora(value){
+
+      let regex = /^(?:[1-9][0-9]*)$/;
+
+      if(regex.test(value)){
+        return value;
+      }else{
+        return "";
+      }
+
+    },
+
     formCargarHoras: function(idProyecto,idUsuario,e){
 
 
@@ -602,6 +753,11 @@ new Vue({
       };
 
       axios.get('/formCargarHoras', {params: parametros})
+
+    },
+
+    cerrarModal: function(){
+      $("#modal-asignar-Aproyecto").modal("hide");
 
     }
 
