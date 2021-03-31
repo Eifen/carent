@@ -279,7 +279,7 @@ var app = new Vue({
           if(response.status === 200 && response.data.response === true){
 
             self.formCambiarClave.botones.submit.html = self.formCambiarClave.botones.submit.htmlInit;
-            self.mostrarAlert(self.formCambiarClave.alert, true, "success", response.data.message, false, false, 0);
+            self.mostrarAlert(self.formCambiarClave.alert, true, "success", response.data.message, false, true, 3);
 
             setTimeout(function(){
 
