@@ -31,39 +31,14 @@ class InicioController extends Controller
       $modelo = new ConfigsModel();
 
       $parametros = [
+        session("usuario_id"),
         $modelo->desencriptarCryptoJS($request->input("claveActual")),
-        $modelo->desencriptarCryptoJS($request->input("nuevaClave"))
+        $modelo->desencriptarCryptoJS($request->input("nuevaClave")),
+        session("usuario_ip")
       ];
 
-      return $parametros;
-
-      exit();
-
       $modelo = new InicioModel();
-
-      $claveActual = $modelo->contraseñaActualUsuario($request->session()->get('usuario_id'));
-      $claveActual = $this->desencriptarLaravel($claveActual->clave);
-
-      if(!empty($claveActual)){
-
-        $claveActualForm = $this->desencriptarCryptoJS($request->input("claveActual"));
-        $nuevaClave = $this->encriptarLaravel($this->desencriptarCryptoJS($request->input("nuevaClave")));
-
-        if($claveActual === $claveActualForm){
-
-          $response = $modelo->actualizarContraseña($request->session()->get('usuario_id'), $nuevaClave);
-
-        }else{
-
-          $response = array("response" => false, "message" => "La contraseña actual es inválida!");
-
-        }
-
-      }else{
-
-        $response = array("response" => false, "message" => "Ocurrio un error al tratar de actualizar la contraseña, por favor intente nuevamente!");
-
-      }
+      $response = $modelo->guardarNuevaClave($parametros);
 
       return $response;
 
