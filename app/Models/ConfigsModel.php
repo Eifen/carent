@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Session;
 
 class ConfigsModel extends Model
 {
@@ -123,6 +125,18 @@ class ConfigsModel extends Model
       }
 
       return $arbolMenu;
+
+    }
+
+    function desencriptarCryptoJS($valor){
+
+      $key = pack("H*", Session::get("encrypt-key"));
+      $iv = pack("H*", Session::get("encrypt-iv"));
+
+      $decrypted = openssl_decrypt($valor, 'AES-128-CBC', $key, OPENSSL_ZERO_PADDING, $iv);
+      $decrypted = trim($decrypted);
+
+      return $decrypted;
 
     }
 

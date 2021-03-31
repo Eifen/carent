@@ -104,7 +104,7 @@ var app = new Vue({
         repetirNuevaClave: {
           value: {
             required,
-            igualA: sameAs('nuevaClave')
+            igualA: sameAs(function(){ return this.formCambiarClave.campos.nuevaClave.value;})
           }
         }
       }
@@ -258,36 +258,34 @@ var app = new Vue({
 
         //Obtenemos valores
         let parametros = {
-          claveActual: self.encriptar(self.formCambiarClave.campos.claveActual.value),
-          nuevaClave: self.encriptar(self.formCambiarClave.campos.nuevaClave.value)
+          claveActual: self.encriptar(self.formCambiarClave.campos.claveActual.value,encryptionKey,encryptionIv),
+          nuevaClave: self.encriptar(self.formCambiarClave.campos.nuevaClave.value,encryptionKey,encryptionIv)
         }
-console.log(parametros)
-        return;
 
-        self.submit.content = '<i class="fas fa-cog fa-spin"></i>';
-        self.submit.disabled = true;
-        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-          self.form[indiceObjecto].disabled = true;
+        Object.keys(self.formCambiarClave.campos).forEach((indice, i) => {
+
+          if(self.formCambiarClave.campos[indice].hasOwnProperty("disabled")){
+            self.formCambiarClave.campos[indice].disabled = true;
+          }
+
         });
+
+        self.formCambiarClave.botones.submit.html = self.formCambiarClave.botones.submit.htmlLoading;
+        self.formCambiarClave.botones.submit.disabled = true;
 
         axios.post('/guardarNuevaClave', parametros)
         .then(function (response) {
 
           if(response.status === 200 && response.data.response === true){
 
-            self.submit.show = false;
-
-            self.alert = {
-              class : "alert alert-success",
-              message : response.data.message,
-              show: true
-            };
+            self.formCambiarClave.botones.submit.html = self.formCambiarClave.botones.submit.htmlInit;
+            self.mostrarAlert(self.formCambiarClave.alert, true, "success", response.data.message, false, false, 0);
 
             setTimeout(function(){
 
               window.location.href = "/cambiarClave";
 
-            }, 5000);
+            }, 3000);
 
           }else{
 
@@ -298,11 +296,16 @@ console.log(parametros)
         })
         .catch(error => {
 
-          Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-            self.form[indiceObjecto].disabled = false;
+          Object.keys(self.formCambiarClave.campos).forEach((indice, i) => {
+
+            if(self.formCambiarClave.campos[indice].hasOwnProperty("disabled")){
+              self.formCambiarClave.campos[indice].disabled = false;
+            }
+
           });
-          self.submit.content = 'Cambiar Contraseña';
-          self.submit.disabled = false;
+
+          self.formCambiarClave.botones.submit.html = self.formCambiarClave.botones.submit.htmlInit;
+          self.formCambiarClave.botones.submit.disabled = false;
 
           if(error.response){
 
@@ -314,11 +317,7 @@ console.log(parametros)
 
           }
 
-          self.alert = {
-            class : "alert alert-warning",
-            message : message,
-            show: true
-          };
+          self.mostrarAlert(self.formCambiarClave.alert, true, "warning", message, false, false, 0);
 
         });
 
@@ -329,11 +328,11 @@ console.log(parametros)
 
       var mensaje,
           respuesta = true;
-console.log(campo[indice])
+
       if(!campo[indice] && indice === "required"){
         mensaje = "Este campo es requerido!";
         respuesta = false;
-      }else if(!campo[indice] && indice === "igualA" ){
+      }else if(!campo[indice] && indice === "igualA"){
         mensaje = "El valor debe ser igual al campo anterior";
         respuesta = false;
       }else{

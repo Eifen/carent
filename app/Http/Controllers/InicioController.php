@@ -22,17 +22,22 @@ class InicioController extends Controller
 
     function cambiarClave(Request $request){
 
-      $modelo = new ConfigsModel();
-      $config = $modelo->encryptConfig();
-
-      Session::put('encrypt-key', $config["key"]);
-      Session::put('encrypt-iv', $config["iv"]);
-
       return view('cambiarClave');
 
     }
 
     function guardarNuevaClave(Request $request){
+
+      $modelo = new ConfigsModel();
+
+      $parametros = [
+        $modelo->desencriptarCryptoJS($request->input("claveActual")),
+        $modelo->desencriptarCryptoJS($request->input("nuevaClave"))
+      ];
+
+      return $parametros;
+
+      exit();
 
       $modelo = new InicioModel();
 
