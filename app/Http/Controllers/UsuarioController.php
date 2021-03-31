@@ -118,7 +118,7 @@ class UsuarioController extends Controller
 
               $parametros = [
                 "accion" => 'Registro de Usuario Codigo: '.$codigoUsuario,
-                "direccion_ip" => $request->session()->get('direccion_ip'),
+                "direccion_ip" => $request->session()->get('usuario_ip'),
                 "fecha" => date("Y-m-d H:i:s"),
                 "tabla" => 'tbl_usuario',
                 "usuario_id" => $request->session()->get('usuario_id')
@@ -265,7 +265,7 @@ class UsuarioController extends Controller
         "codigoUsuario" => $this->desencriptarCryptoJS($request->input("codigoUsuario")),
         "usuario_id" => $request->session()->get('usuario_id'),
         "fecha" => date("Y-m-d H:i:s"),
-        "direccion_ip" => $request->session()->get('direccion'),
+        "direccion_ip" => $request->session()->get('usuario_ip'),
         "fechaIngreso" => $fecha_ingreso,
         "fechaEgreso" => $fecha_egreso,
         "tipoDocumento" => $request->input("tipoDocumento"),
@@ -278,7 +278,7 @@ class UsuarioController extends Controller
 
         $parametros = [
           "accion" => 'Modificacion del Usuario Codigo: '.$parametros["codigoUsuario"],
-          "direccion_ip" => $request->session()->get('direccion_ip'),
+          "direccion_ip" => $request->session()->get('usuario_ip'),
           "fecha" => date("Y-m-d H:i:s"),
           "tabla" => 'tbl_usuario',
           "usuario_id" => $request->session()->get('usuario_id')

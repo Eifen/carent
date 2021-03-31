@@ -106,7 +106,7 @@ class ProyectoController extends Controller
 
         $parametros = [
           "accion" => 'Registro del proyecto: '.$descripcion.'. Cliente: '.$response["cliente"],
-          "direccion_ip" => $request->session()->get('direccion_ip'),
+          "direccion_ip" => $request->session()->get('usuario_ip'),
           "fecha" => date("Y-m-d H:i:s"),
           "tabla" => 'tbl_proyecto',
           "usuario_id" => $request->session()->get('usuario_id')
@@ -235,7 +235,7 @@ class ProyectoController extends Controller
 
         $parametros = [
           "accion" => 'Modificacion del proyecto: '.$descripcion.'. Cliente: '.$response["cliente"],
-          "direccion_ip" => $request->session()->get('direccion_ip'),
+          "direccion_ip" => $request->session()->get('usuario_ip'),
           "fecha" => date("Y-m-d H:i:s"),
           "tabla" => 'tbl_proyecto',
           "usuario_id" => $request->session()->get('usuario_id')
@@ -317,14 +317,14 @@ class ProyectoController extends Controller
       $id_proyecto_division = $request->input("id_proyecto_division");
       $usuario_id = $request->session()->get('usuario_id');
       $fecha = date("Y-m-d H:i:s");
-      $direccion_ip = $request->session()->get('direccion');
+      $direccion_ip = $request->session()->get('usuario_ip');
       $analis = $modelo->agregarAnalistaProy($estado,$idUsuario,$idProyecto,$id_proyecto_division);
 
       if($analis["response"]){
 
         $parametros = [
           "accion" => 'Asignacion del analista codigo: '.$analis["analista"].'. Al proyecto: '.$analis["proyecto"],
-          "direccion_ip" => $request->session()->get('direccion_ip'),
+          "direccion_ip" => $request->session()->get('usuario_ip'),
           "fecha" => date("Y-m-d H:i:s"),
           "tabla" => 'tbl_proyecto_analista',
           "usuario_id" => $request->session()->get('usuario_id')
@@ -365,7 +365,7 @@ class ProyectoController extends Controller
 
         $parametros = [
           "accion" => $analis["accion"],
-          "direccion_ip" => $request->session()->get('direccion_ip'),
+          "direccion_ip" => $request->session()->get('usuario_ip'),
           "fecha" => date("Y-m-d H:i:s"),
           "tabla" => 'tbl_proyecto_analista',
           "usuario_id" => $request->session()->get('usuario_id')
@@ -401,7 +401,7 @@ class ProyectoController extends Controller
 
           $parametros = [
             "accion" => $analis["horas"],
-            "direccion_ip" => $request->session()->get('direccion_ip'),
+            "direccion_ip" => $request->session()->get('usuario_ip'),
             "fecha" => date("Y-m-d H:i:s"),
             "tabla" => 'tbl_proyecto_analista',
             "usuario_id" => $request->session()->get('usuario_id')

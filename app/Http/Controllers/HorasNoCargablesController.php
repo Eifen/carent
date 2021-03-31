@@ -53,7 +53,7 @@ class HorasNoCargablesController extends Controller
 
         $parametros = [
           "accion" => 'Registro del concepto de horas no cargables: '.$concepto,
-          "direccion_ip" => $request->session()->get('direccion_ip'),
+          "direccion_ip" => $request->session()->get('usuario_ip'),
           "fecha" => date("Y-m-d H:i:s"),
           "tabla" => 'tbl_concepto_horas_no_cargables',
           "usuario_id" => $request->session()->get('usuario_id')
@@ -159,7 +159,7 @@ class HorasNoCargablesController extends Controller
 
         $parametros = [
           "accion" => 'Registro de de horas no cargables al usuario codigo: '.$resgitrarHora["analista"],
-          "direccion_ip" => $request->session()->get('direccion_ip'),
+          "direccion_ip" => $request->session()->get('usuario_ip'),
           "fecha" => date("Y-m-d H:i:s"),
           "tabla" => 'tbl_horas_no_cargables',
           "usuario_id" => $request->session()->get('usuario_id')

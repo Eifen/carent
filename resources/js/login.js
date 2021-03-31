@@ -515,13 +515,6 @@ new Vue({
       return {mensaje:mensaje, respuesta:respuesta};
 
     },
-    keyboard: function(e){
-
-      if (e.keyCode === 13){
-        self.login();
-      }
-
-    },
     verClave: function(e){
 
       self.formLogin.campos.clave.type = (self.formLogin.campos.clave.type === "text") ? "password" : "text";

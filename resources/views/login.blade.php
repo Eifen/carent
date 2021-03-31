@@ -14,7 +14,7 @@
     </head>
     <body>
 
-      <b-container fluid id="app" v-on:keypress="keyboard">
+      <b-container fluid id="app">
 
         <loading :loading="loading" v-show="loading"></loading>
 
