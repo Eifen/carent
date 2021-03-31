@@ -1,13 +1,12 @@
-/*@font-face {
-  font-family: "Rawline";
-  src: url("../../fonts/rawline/rawline-600.ttf");
-}*/
-
 html{
   overflow-x: hidden;
 }
 
-#cambiarClave{
+[v-cloak] {
+  display: none;
+}
+
+#app{
   background-color: #E9ECEF;
   min-height: 100vh;
 
@@ -17,45 +16,52 @@ html{
     form{
       background-color: white;
       border:1px solid rgba(0,0,0,0.13);
-      border-radius: 3px;
+      border-radius: 18px;
+      box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
       padding: 15px;
       transition: all .3s;
 
-      &:hover{
-        box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+      .alert{
+        border-radius: 18px;
+        margin-top: 15px;
       }
 
       > div{
 
-        &.logo{
-          margin-bottom: 40px;
-          margin-top: 30px;
-          text-align: center;
-
-          img{
-            height: 90px;
-            width: auto;
-          }
-
-        }
-
         &.form-group{
-          position: relative;
-
-          label{
-            color:#091F40;
-          }
 
           .invalid-feedback{
-            display: block !important;
+            display: inline-block;
+          }
+
+          .input-group-prepend{
+
+            .input-group-text{
+              border-bottom-left-radius: 18px;
+              border-top-left-radius: 18px;
+            }
+
+          }
+
+          .input-group-append{
+
+            .input-group-text{
+              border-bottom-right-radius: 18px;
+              border-top-right-radius: 18px;
+              transition: all .3s;
+
+              &:hover{
+                color: #007BFF;
+                cursor: pointer;
+              }
+
+            }
+
           }
 
           .form-control{
-            border-radius: 2px;
-
-            &.error{
-              border-color: #dc3545;
-            }
+            border-bottom-left-radius: 18px;
+            border-top-left-radius: 18px;
 
             &:disabled{
               cursor: not-allowed;
@@ -63,34 +69,10 @@ html{
 
           }
 
-          .ver-clave{
-            top: 40px;
-            position: absolute;
-            right: 6px;
-            transition: all .3s;
-
-            &:hover{
-              color:#F6A81C;
-              cursor: pointer;
-            }
-
-          }
-
         }// Fin .form-group
 
         .btn{
-          background-color: #091F40;
-          border: 2px solid #091F40;
-          border-radius: 2px;
-          color: rgba(255,255,255,1);
-          font-weight: 600;
-          transition: all .3s;
-          width: 100%;
-
-          &:hover{
-            background-color: #F6A81C;
-            color: #091F40;
-          }
+          border-radius: 18px;
 
           &:disabled{
             cursor: not-allowed;
@@ -98,11 +80,6 @@ html{
 
         }
 
-      }
-
-      .alert{
-        margin-bottom: 0px;
-        margin-top: 10px;
       }
 
     }// Fin form

@@ -6,7 +6,6 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 import zenscroll from 'zenscroll';
 import axios from 'axios';
 import AutoNumeric from 'autonumeric';
-import 'vue-multiselect/dist/vue-multiselect.min.css';
 import Vuelidate from 'vuelidate';
 import { required, minLength, minValue } from 'vuelidate/lib/validators';
 const CryptoJS = require("crypto-js");
@@ -105,9 +104,6 @@ new Vue({
     },
     loading: true
   },
-  props: {
-    keys: String
-  },
   validations: {
     formLogin: {
       campos: {
@@ -142,6 +138,8 @@ new Vue({
   mounted: function () {
 
     try {
+
+      self.formLogin.campos.clave.iconShowPass.icon = self.formLogin.campos.clave.iconShowPass.show;
 
       let codigoUsuario = self.$refs["codigoUsuario"].$el
       self.formLogin.campos.codigoUsuario.autonumeric = new AutoNumeric(codigoUsuario, {
@@ -188,7 +186,6 @@ new Vue({
 
       self.formLogin.campos.codigoUsuario.disabled = false;
       self.formLogin.campos.clave.disabled = false;
-      self.formLogin.campos.clave.iconShowPass.icon = self.formLogin.campos.clave.iconShowPass.show;
       self.formLogin.botones.submit.html = self.formLogin.botones.submit.htmlInit;
       self.formLogin.botones.submit.disabled = false;
       self.formLogin.botones.recoveryPass.html = self.formLogin.botones.recoveryPass.htmlInit;
@@ -503,7 +500,6 @@ new Vue({
 
       var mensaje,
           respuesta = true;
-
 
       if(!campo[indice] && indice === "required"){
         mensaje = "Este campo es requerido!";

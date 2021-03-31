@@ -22,6 +22,12 @@ class InicioController extends Controller
 
     function cambiarClave(Request $request){
 
+      $modelo = new ConfigsModel();
+      $config = $modelo->encryptConfig();
+
+      Session::put('encrypt-key', $config["key"]);
+      Session::put('encrypt-iv', $config["iv"]);
+
       return view('cambiarClave');
 
     }
