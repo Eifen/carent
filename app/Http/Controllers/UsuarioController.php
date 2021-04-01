@@ -79,8 +79,11 @@ class UsuarioController extends Controller
     function crearUsuario(Request $request){
 
       $modelo = new UsuarioModel();
+      $modeloConfig = new ConfigsModel();
 
-      $codigoUsuario = $this->desencriptarCryptoJS($request->input("codigoUsuario"));
+      $encryptConfig = $modeloConfig->encryptConfig();
+
+      $codigoUsuario = $modeloConfig->desencriptarCryptoJS($request->input("codigoUsuario"));
       $usuario = $modelo->buscarUsuario($codigoUsuario);
 
       if(empty($usuario)){
@@ -100,7 +103,7 @@ class UsuarioController extends Controller
               "cedula" => $request->input("cedula"),
               "fechaNacimiento" => $fecha_nacimiento,
               "codigoUsuario" => $codigoUsuario,
-              "clave" => $this->encriptarLaravel($request->input("cedula")),
+              "clave" => $request->input("cedula"),
               "correoPrincipal" => strtolower($request->input("correoPrincipal")),
               "correoSecundario" => strtolower($request->input("correoSecundario")),
               "telefono1" => $request->input("telefono1"),
@@ -109,7 +112,8 @@ class UsuarioController extends Controller
               "division" => $request->input("division"),
               "cargo" => $request->input("cargo"),
               "fechaIngreso" => $fecha_ingreso,
-              "tipoDocumento" => $request->input("tipoDocumento")
+              "tipoDocumento" => $request->input("tipoDocumento"),
+              "keysecret" => $encryptConfig["key"]
             );
 
             $response = $modelo->crearUsuario($parametros);
@@ -262,7 +266,7 @@ class UsuarioController extends Controller
         "division" => $request->input("division"),
         "cargo" => $request->input("cargo"),
         "estatus" => $request->input("estatus"),
-        "codigoUsuario" => $this->desencriptarCryptoJS($request->input("codigoUsuario")),
+        "codigoUsuario" => $modeloConfig->desencriptarCryptoJS($request->input("codigoUsuario")),
         "usuario_id" => $request->session()->get('usuario_id'),
         "fecha" => date("Y-m-d H:i:s"),
         "direccion_ip" => $request->session()->get('usuario_ip'),
@@ -297,20 +301,6 @@ class UsuarioController extends Controller
 
       $encrypted = Crypt::encryptString($valor);
       return $encrypted;
-
-    }
-
-    private function desencriptarCryptoJS($valor){
-
-      $modelo = new ConfigsModel();
-      $config = $modelo->encryptConfig();
-
-      $key = pack("H*", $config["key"]);
-      $iv =  pack("H*", $config["iv"]);
-      $decrypted = openssl_decrypt($valor, 'AES-128-CBC', $key, OPENSSL_ZERO_PADDING, $iv);
-      $decrypted = trim($decrypted);
-
-      return $decrypted;
 
     }
 
