@@ -104,7 +104,10 @@ var app = new Vue({
         repetirNuevaClave: {
           value: {
             required,
-            igualA: sameAs(function(){ return this.formCambiarClave.campos.nuevaClave.value;})
+            igualA: sameAs(function(){ return this.formCambiarClave.campos.nuevaClave.value;}),
+            noIgualA: function(){
+              return (this.formCambiarClave.campos.nuevaClave.value === this.formCambiarClave.campos.claveActual.value) ? false : true;
+            }
           }
         }
       }
@@ -303,6 +306,9 @@ var app = new Vue({
         respuesta = false;
       }else if(!campo[indice] && indice === "igualA"){
         mensaje = "El valor debe ser igual al campo anterior";
+        respuesta = false;
+      }else if(!campo[indice] && indice === "noIgualA"){
+        mensaje = "La nueva contraseña no debe ser a la actual";
         respuesta = false;
       }else{
         mensaje = "";

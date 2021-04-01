@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use App\Models\ConfigsModel;
@@ -41,38 +42,20 @@ class InicioController extends Controller
       $response = $modelo->guardarNuevaClave($parametros);
 
       if($response["response"]){
+
         $request->session()->put('cambiar_clave',false);
+
+        $correoDestinatario = session("usuario_correo");
+
+        Mail::send('emailTemplates.passChangedByUser', [], function($message) use ($correoDestinatario)  {
+
+            $message->from('sistema.carent@crowe.com.ve', 'CARENT')->to($correoDestinatario)->subject('🚨 Se ha actualizado su contraseña en CARENT');
+
+        });
+
       }
 
       return $response;
-
-    }
-
-    private function encriptarLaravel($valor){
-
-      $encrypted = Crypt::encryptString($valor);
-      return $encrypted;
-
-    }
-
-    private function desencriptarLaravel($valor){
-
-      $decrypted = Crypt::decryptString($valor);
-      return $decrypted;
-
-    }
-
-    private function desencriptarCryptoJS($valor){
-
-      $modelo = new ConfigsModel();
-      $config = $modelo->encryptConfig();
-
-      $key = pack("H*", $config["key"]);
-      $iv =  pack("H*", $config["iv"]);
-      $decrypted = openssl_decrypt($valor, 'AES-128-CBC', $key, OPENSSL_ZERO_PADDING, $iv);
-      $decrypted = trim($decrypted);
-
-      return $decrypted;
 
     }
 
