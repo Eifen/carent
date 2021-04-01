@@ -245,6 +245,7 @@ class UsuarioController extends Controller
     function modificarUsuario(Request $request){
 
       $modelo = new UsuarioModel();
+      $modeloConfig = new ConfigsModel();
 
       $fecha_nacimiento = (trim($request->input("fechaNacimiento")) == "") ? null : date("Y-m-d H:i:s", strtotime($request->input("fechaNacimiento")));
       $fecha_ingreso = (trim($request->input("fechaIngreso")) == "") ? null : date("Y-m-d H:i:s", strtotime($request->input("fechaIngreso")));
