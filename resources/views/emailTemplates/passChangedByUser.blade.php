@@ -43,7 +43,7 @@
     </div>
     <div id="wrapper_contenido">
         <p>Se ha actualizado su contraseña en el sistema CARENT.</p>
-        <p>✋🛑 Si usted no fue quien realizó esta acción por favor notificarlo con la División de Tecnología</p>
+        <p>✋🛑 Si usted no fue quien realizó esta acción por favor notificarlo con la <b>División de Tecnología</b></p>
     </div>
   </div>
 
