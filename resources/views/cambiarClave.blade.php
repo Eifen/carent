@@ -123,7 +123,7 @@
           id="mostrarModalCambioClave"
           ref="mostrarModalCambioClave"
           v-cloak>
-            <p class="text-center">El sistema ha detectado que debe modificar su contraseña!</p>
+            <p class="text-center">El sistema ha detectado que debe modificar su contraseña</p>
             <template v-slot:modal-footer>
               <b-button
                 @click="$refs['mostrarModalCambioClave'].hide()"
