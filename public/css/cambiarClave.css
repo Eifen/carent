@@ -52,3 +52,21 @@ html {
 #app > .row form > div .btn:disabled {
   cursor: not-allowed;
 }
+.modal .modal-dialog .modal-content {
+  background-color: #ffffff;
+  border-radius: 18px !important;
+}
+.modal .modal-dialog .modal-content .modal-body {
+  padding-bottom: 0px;
+  padding-top: 0.5rem;
+}
+.modal .modal-dialog .modal-content .modal-footer {
+  border-top: 0px;
+  padding-top: 0.5rem;
+}
+.modal .modal-dialog .modal-content .modal-footer .btn {
+  border-radius: 18px;
+}
+.modal .modal-dialog .modal-content .modal-footer .btn:disabled {
+  cursor: not-allowed;
+}

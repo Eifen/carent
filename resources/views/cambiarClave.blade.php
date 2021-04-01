@@ -14,6 +14,13 @@
     </head>
     <body>
 
+      <script>
+
+        var mostrarModalCambioClave = {{ Session::get('cambiar_clave') }}
+        mostrarModalCambioClave = (mostrarModalCambioClave) ? 1 : 0;
+
+      </script>
+
       <b-container fluid id="app">
 
         <loading :loading="loading" v-show="loading"></loading>
@@ -107,6 +114,23 @@
 
           </b-col>
         </b-row>
+
+        <b-modal
+          :hide-header="true"
+          :no-close-on-backdrop="true"
+          :no-close-on-esc="true"
+          centered
+          id="mostrarModalCambioClave"
+          ref="mostrarModalCambioClave"
+          v-cloak>
+            <p class="text-center">El sistema ha detectado que debe modificar su contraseña!</p>
+            <template v-slot:modal-footer>
+              <b-button
+                @click="$refs['mostrarModalCambioClave'].hide()"
+                block
+                variant="primary">Ok</b-button>
+            </template>
+        </b-modal>
 
       </b-container>
 

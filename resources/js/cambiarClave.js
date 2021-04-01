@@ -15,7 +15,7 @@ Vue.component('menu-principal', require('./components/menuPrincipal.vue').defaul
 Vue.component('loading',require('./components/loading.vue').default);
 Vue.component('alert',require('./components/alert.vue').default);
 Vue.use(BootstrapVue);
-Vue.use(BootstrapVueIcons)
+Vue.use(BootstrapVueIcons);
 Vue.use(Vuelidate);
 
 var app = new Vue({
@@ -123,40 +123,9 @@ var app = new Vue({
       self.formCambiarClave.campos.nuevaClave.iconShowPass.icon = self.formCambiarClave.campos.nuevaClave.iconShowPass.show;
       self.formCambiarClave.campos.repetirNuevaClave.iconShowPass.icon = self.formCambiarClave.campos.repetirNuevaClave.iconShowPass.show;
 
-      /*self.$refs["modal-recuperar-clave"].$on('shown', () => {
-
-        let codigoUsuarioR = self.$refs["codigoUsuarioR"].$el
-        self.formRecovery.campos.codigoUsuario.autonumeric = new AutoNumeric(codigoUsuarioR, {
-          decimalPlaces: 0,
-          decimalCharacter: ',',
-          digitGroupSeparator: '',
-          leadingZero: 'keep'
-        });
-
-      });
-
-      self.$refs["modal-recuperar-clave"].$on('hidden', () => {
-
-        self.formRecovery.campos.codigoUsuario.value = null;
-        self.formRecovery.campos.codigoUsuario.autonumeric.set(0);
-
-        Object.keys(self.formRecovery.campos).forEach((indice, i) => {
-
-          if(self.formRecovery.campos[indice].hasOwnProperty("state")){
-            self.formRecovery.campos[indice].state = null;
-          }
-
-          if(self.formRecovery.campos[indice].hasOwnProperty("invalidFeedback")){
-            self.formRecovery.campos[indice].invalidFeedback = "";
-          }
-
-        });
-
-        self.formRecovery.botones.submit.show = true;
-
-        self.mostrarAlert(self.formRecovery.alert);
-
-      });*/
+      if(mostrarModalCambioClave){
+        self.$refs["mostrarModalCambioClave"].show();
+      }
 
       self.formCambiarClave.campos.claveActual.disabled = false;
       self.formCambiarClave.campos.nuevaClave.disabled = false;

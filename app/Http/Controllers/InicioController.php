@@ -40,6 +40,10 @@ class InicioController extends Controller
       $modelo = new InicioModel();
       $response = $modelo->guardarNuevaClave($parametros);
 
+      if($response["response"]){
+        $request->session()->put('cambiar_clave',false);
+      }
+
       return $response;
 
     }
