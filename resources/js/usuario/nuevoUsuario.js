@@ -418,7 +418,6 @@ new Vue({
           fechaNacimiento: self.form.fechaNacimiento.value,
           codigoUsuario: self.encriptar(self.form.codigoUsuario.value),
           cedula: AutoNumeric.getAutoNumericElement("#cedula").getNumber(),
-          clave: self.encriptar(self.form.cedula.value),
           parroquia: self.form.parroquia.value,
           division: self.form.division.value,
           cargo: self.form.cargo.value,

@@ -27,9 +27,11 @@ class LoginController extends Controller
 
     function login(Request $request){
 
+      $modelo = new ConfigsModel();
+
       $parametros = [
-        $this->desencriptarCryptoJS($request->input("codigoUsuario")),
-        $this->desencriptarCryptoJS($request->input("clave")),
+        $modelo->desencriptarCryptoJS($request->input("codigoUsuario")),
+        $modelo->desencriptarCryptoJS($request->input("clave")),
         $this->mi_ip()
       ];
 
@@ -39,11 +41,12 @@ class LoginController extends Controller
       if($login["response"]){
 
         //Se crean las variables de sessión
-        $request->session()->put('usuario_id', $login["id_usuario"]);
-        /*$request->session()->put('division_id', $login["id_division"]);
-        $request->session()->put('cargo_id', $login["id_cargo"]);*/
-        $request->session()->put('usuario_ip', $this->mi_ip());
         $request->session()->put('cambiar_clave', $login["cambiar_clave"]);
+        $request->session()->put('cargo_id', $login["id_cargo"]);
+        $request->session()->put('division_id', $login["id_division"]);
+        $request->session()->put('usuario_correo', $login["correo_usuario"]);
+        $request->session()->put('usuario_id', $login["id_usuario"]);
+        $request->session()->put('usuario_ip', $this->mi_ip());
 
       }
 
@@ -53,8 +56,10 @@ class LoginController extends Controller
 
     function recoverylogin(Request $request){
 
+      $modelo = new ConfigsModel();
+
       $parametros = [
-        $this->desencriptarCryptoJS($request->input("codigoUsuario")),
+        $modelo->desencriptarCryptoJS($request->input("codigoUsuario")),
         $this->mi_ip()
       ];
 
@@ -82,35 +87,6 @@ class LoginController extends Controller
       }
 
       return ["recovery" => $recoveryLogin["response"], "message" => $mensaje];
-
-    }
-
-    private function encriptarLaravel($valor){
-
-      $encrypted = Crypt::encryptString($valor);
-      return $encrypted;
-
-    }
-
-    private function desencriptarLaravel($valor){
-
-      $decrypted = Crypt::decryptString($valor);
-      return $decrypted;
-
-    }
-
-    private function desencriptarCryptoJS($valor){
-
-      $modelo = new ConfigsModel();
-      $config = $modelo->encryptConfig();
-
-      $key = pack("H*", Session::get("encrypt-key"));
-      $iv = pack("H*", Session::get("encrypt-iv"));
-
-      $decrypted = openssl_decrypt($valor, 'AES-128-CBC', $key, OPENSSL_ZERO_PADDING, $iv);
-      $decrypted = trim($decrypted);
-
-      return $decrypted;
 
     }
 

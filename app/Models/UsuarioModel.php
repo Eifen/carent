@@ -152,7 +152,7 @@ class UsuarioModel extends Model
                     "id_division" => $parametros["division"],
                     "id_parroquia" => $parametros["parroquia"],
                     "id_estatus" => 1,
-                    "clave" => $parametros["clave"],
+                    "clave" => DB::raw('AES_ENCRYPT("'.$parametros["clave"].'", "'.$parametros["keysecret"].'")'),
                     "fecha_ingreso" => $parametros["fechaIngreso"]);
 
       $idUsuario = DB::table('tbl_usuario')->insertGetId($data);
@@ -425,7 +425,7 @@ class UsuarioModel extends Model
         $contacto = DB::table('tbl_contacto_usuario')->where("id_usuario",$parametros["idUsuario"])->update($data);
 
         DB::commit();
-        
+
         return array("response" => true, "message" => "Usuario actualizado con Éxito!.");
 
       } catch(\Illuminate\Database\QueryException $ex){
@@ -512,7 +512,7 @@ class UsuarioModel extends Model
 
         $menu->submenu = [];
         return $menu;
-        
+
       }else{
 
         if(!property_exists($menu, "submenu")){

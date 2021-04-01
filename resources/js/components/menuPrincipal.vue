@@ -1,4 +1,5 @@
 <template>
+
   <b-navbar id="nav-menu-principal" toggleable="lg" type="light" variant="light">
 
     <b-navbar-brand href="/">
