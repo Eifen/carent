@@ -6,7 +6,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 import zenscroll from 'zenscroll';
 import axios from 'axios';
 import Vuelidate from 'vuelidate';
-import { required, minLength, minValue, sameAs } from 'vuelidate/lib/validators';
+import { required, minLength, sameAs } from 'vuelidate/lib/validators';
 const CryptoJS = require("crypto-js");
 const AES = require("crypto-js/aes");
 var self;
@@ -98,6 +98,7 @@ var app = new Vue({
         },
         nuevaClave: {
           value: {
+            minLength: minLength(8),
             required
           }
         },
@@ -309,6 +310,10 @@ var app = new Vue({
         respuesta = false;
       }else if(!campo[indice] && indice === "noIgualA"){
         mensaje = "La nueva contraseña no debe ser a la actual";
+        respuesta = false;
+      }else if(!campo[indice] && indice === "minLength"){
+        let minChar = campo.$params[indice].min;
+        mensaje = "Debe contener al menos "+minChar+" caracteres!";
         respuesta = false;
       }else{
         mensaje = "";
