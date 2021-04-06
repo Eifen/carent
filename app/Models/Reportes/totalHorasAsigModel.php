@@ -5,7 +5,7 @@ namespace App\Models\Reportes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
-class totalHorasAsigModel extends Model
+class TotalHorasAsigModel extends Model
 {
 
   function divisiones(){

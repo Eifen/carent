@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Reportes;
 use Illuminate\Http\Request;
-use App\Models\Reportes\totalHorasAsigModel;
+use App\Models\Reportes\TotalHorasAsigModel;
 
 use App\Http\Controllers\Controller;
 
-class totalHorasAsigController extends Controller
+class TotalHorasAsigController extends Controller
 {
 
     function dataRepTotalHorasAsig(){
 
-      $modelo = new totalHorasAsigModel();
+      $modelo = new TotalHorasAsigModel();
 
       $paginar = 200;
       $divisiones = $modelo->divisiones();
@@ -33,7 +33,7 @@ class totalHorasAsigController extends Controller
 
     function buscarTotalHorasAsig(Request $request){
 
-      $modelo = new totalHorasAsigModel();
+      $modelo = new TotalHorasAsigModel();
 
       $division = $modelo->divisiones();
       $paginar = $request->input("paginar");
