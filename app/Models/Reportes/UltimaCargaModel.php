@@ -195,7 +195,6 @@ class UltimaCargaModel extends Model
           array_push($idsCargo, $cargos);
 
         }
-
         $idsCargo = implode(",", $idsCargo);
         $sql_cargos = "AND ce.id IN(".$idsCargo.")";
 
