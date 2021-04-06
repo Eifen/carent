@@ -40,7 +40,6 @@ class UltimaCargaController extends Controller
       $divisiones = ($request->input("divisiones") == null) ? $division : $request->input("divisiones");
       $cargos = ($request->input("cargos") == null) ? $cargos : $request->input("cargos");
       $empleado = $request->input("empleado");
-
       $ultimaCarga = $modelo->ultimaCarga($paginar, $divisiones, $cargos, $empleado, $desde);
       $paginas = $modelo->pagCantidadUltimaCarga( $paginar, $divisiones, $cargos); 
 
