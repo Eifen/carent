@@ -308,7 +308,7 @@ class UsuarioController extends Controller
     function detalleMenu(Request $request){
 
       $modelo = new UsuarioModel();
-      $modelo_menu = new InicioModel();
+      $modelo_menu = new ConfigsModel();
       $id_usuario = (int) $request->input("idUsuario");
       $datosUsuario = $modelo->divisionUsu($id_usuario);
       $infoMenuUsuario = $modelo_menu->menUsuario($id_usuario);
