@@ -248,7 +248,7 @@
             self.tabla.encabezado = [
               { key: 'numero', label: '#' },
               { key: 'nombre', label: 'Empleado' },
-              { key: 'division', label: 'Division' },
+              { key: 'division', label: 'División' },
               { key: 'cargo', label: 'Cargo' },
               { key: 'fecha', label: 'Fecha De Ultima Carga De Hora' },
             ];
