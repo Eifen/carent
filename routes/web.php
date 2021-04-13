@@ -11,15 +11,22 @@
 |
 */
 
+/* Login */
 Route::get('/', 'LoginController@index')->middleware('usuario.session')->name('loginView');
-Route::get('/encryptConfig', 'ConfigsController@encryptConfig');
 Route::post('/login', 'LoginController@login');
 Route::post('/recoverylogin', 'LoginController@recoverylogin');
-Route::get('/inicio', 'InicioController@inicio');
-Route::get('/menUsuario', 'InicioController@menUsuario');
+
+/* Configuraciones generales */
+Route::get('/encryptConfig', 'ConfigsController@encryptConfig');
+Route::get('/menUsuario', 'ConfigsController@menUsuario');
+
+/* Inicio */
+Route::get('/inicio', 'InicioController@inicio')->middleware('usuario.session')->name('loginView');;
 Route::get('/logout', 'LoginController@logout');
-Route::get('/cambiarClave', 'InicioController@cambiarClave')->middleware('usuario.session');
+Route::get('/cambiarClave', 'InicioController@cambiarClave')/*->middleware('usuario.session')*/;
 Route::post('/guardarNuevaClave', 'InicioController@guardarNuevaClave');
+
+
 Route::get('/formNuevoUsuario', function() {return view('usuario/nuevoUsuario');})->middleware('usuario.session');
 Route::get('/dataInicialNuevoUsuario','UsuarioController@dataInicialNuevoUsuario')->middleware('usuario.session');
 Route::get('/estados', 'UsuarioController@estados');
@@ -150,6 +157,10 @@ Route::get('/dataRepTotalHorasCarg', 'Reportes\TotalHorasCargController@dataRepT
 Route::get('/buscarRepTotalHorasCarg', 'Reportes\TotalHorasCargController@buscarRepTotalHorasCarg')->middleware('usuario.session');
 Route::get('/dataRepTotalHorasProyectos', 'Reportes\TotalHorasProyectosController@dataRepTotalHorasProyectos')->middleware('usuario.session');
 Route::get('/buscarTotalHorasProyectos', 'Reportes\TotalHorasProyectosController@buscarTotalHorasProyectos')->middleware('usuario.session');
+Route::get('/dataRepTotalHorasAsig', 'Reportes\TotalHorasAsigController@dataRepTotalHorasAsig')->middleware('usuario.session');
+Route::get('/buscarTotalHorasAsig', 'Reportes\TotalHorasAsigController@buscarTotalHorasAsig')->middleware('usuario.session');
+Route::get('/dataRepUltimaCarga', 'Reportes\UltimaCargaController@dataRepUltimaCarga')->middleware('usuario.session');
+Route::get('/buscarUltimaCarga', 'Reportes\UltimaCargaController@buscarUltimaCarga')->middleware('usuario.session');
 
 /*
   Rutas para tareas programadas

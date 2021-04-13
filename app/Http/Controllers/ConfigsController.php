@@ -19,4 +19,13 @@ class ConfigsController extends Controller
 
     }
 
+    function menUsuario(Request $request){
+
+      $modelo = new ConfigsModel();
+      $menus = $modelo->menUsuario(session("usuario_id"));
+
+      return $menus;
+
+    }
+
 }

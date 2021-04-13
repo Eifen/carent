@@ -106,7 +106,7 @@ class ProyectoController extends Controller
 
         $parametros = [
           "accion" => 'Registro del proyecto: '.$descripcion.'. Cliente: '.$response["cliente"],
-          "direccion_ip" => $request->session()->get('direccion_ip'),
+          "direccion_ip" => $request->session()->get('usuario_ip'),
           "fecha" => date("Y-m-d H:i:s"),
           "tabla" => 'tbl_proyecto',
           "usuario_id" => $request->session()->get('usuario_id')
@@ -235,7 +235,7 @@ class ProyectoController extends Controller
 
         $parametros = [
           "accion" => 'Modificacion del proyecto: '.$descripcion.'. Cliente: '.$response["cliente"],
-          "direccion_ip" => $request->session()->get('direccion_ip'),
+          "direccion_ip" => $request->session()->get('usuario_ip'),
           "fecha" => date("Y-m-d H:i:s"),
           "tabla" => 'tbl_proyecto',
           "usuario_id" => $request->session()->get('usuario_id')
@@ -299,9 +299,10 @@ class ProyectoController extends Controller
       $id_usuario = $request->session()->get('usuario_id');
       $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
       $datosProyecto = $modelo->datosProyecto($id_proyecto,$infoUsuario->id_division);
-      $analistas = $modelo->analistasProyecto($id_usuario,11,$id_proyecto,$infoUsuario->id_division);
+      //$analistas = $modelo->analistasProyecto($id_usuario,11,$id_proyecto,$infoUsuario->id_division);
+      $empleados = $modelo->empleadosProyecto($id_proyecto,$infoUsuario->id_division);
       if(!empty($datosProyecto)){
-      return array("response" => true,"analistas" => $analistas, "proyecto" => $datosProyecto);
+      return array("response" => true, "proyecto" => $datosProyecto, "empleados" => $empleados);
       }else{
         $response = array("response" => false, "message" => "No se encontraron resultados");
       }
@@ -317,14 +318,14 @@ class ProyectoController extends Controller
       $id_proyecto_division = $request->input("id_proyecto_division");
       $usuario_id = $request->session()->get('usuario_id');
       $fecha = date("Y-m-d H:i:s");
-      $direccion_ip = $request->session()->get('direccion');
+      $direccion_ip = $request->session()->get('usuario_ip');
       $analis = $modelo->agregarAnalistaProy($estado,$idUsuario,$idProyecto,$id_proyecto_division);
 
       if($analis["response"]){
 
         $parametros = [
           "accion" => 'Asignacion del analista codigo: '.$analis["analista"].'. Al proyecto: '.$analis["proyecto"],
-          "direccion_ip" => $request->session()->get('direccion_ip'),
+          "direccion_ip" => $request->session()->get('usuario_ip'),
           "fecha" => date("Y-m-d H:i:s"),
           "tabla" => 'tbl_proyecto_analista',
           "usuario_id" => $request->session()->get('usuario_id')
@@ -365,7 +366,7 @@ class ProyectoController extends Controller
 
         $parametros = [
           "accion" => $analis["accion"],
-          "direccion_ip" => $request->session()->get('direccion_ip'),
+          "direccion_ip" => $request->session()->get('usuario_ip'),
           "fecha" => date("Y-m-d H:i:s"),
           "tabla" => 'tbl_proyecto_analista',
           "usuario_id" => $request->session()->get('usuario_id')
@@ -388,37 +389,30 @@ class ProyectoController extends Controller
     function asigHorasAnalistaProy(Request $request){
 
       $modelo = new ProyectoModel();
-      $idAnaProy = $request->input("idAnaProy");
-      $idProyecto = $request->input("idDproyecto");
-      $horas_asignadas = $request->input("horas_asignadas");
-      $horasComparar = $request->input("horasComparar");
-      $usuario_id = $request->session()->get('usuario_id');
-      $analis = $modelo->modHorasAnalistaProy($horas_asignadas, $horasComparar, $idAnaProy, $idProyecto);
 
-      if($analis["response"]){
+      $id_proyecto_division = $request->input("id_proyecto_division");
+      $id_proyecto = $request->input("id_proyecto");
+      $empleados = $request->input("empleados");
+      //$usuario_id = $request->session()->get('usuario_id');
+      $horasAsignadas = $modelo->asigHorasAnalistaProy($id_proyecto_division, $id_proyecto, $empleados);
 
-        $modeloAudit = new AuditoriaLogModel();
+      //if($analis["response"]){
 
-          $parametros = [
-            "accion" => $analis["horas"],
-            "direccion_ip" => $request->session()->get('direccion_ip'),
-            "fecha" => date("Y-m-d H:i:s"),
-            "tabla" => 'tbl_proyecto_analista',
-            "usuario_id" => $request->session()->get('usuario_id')
-          ];
+        //$modeloAudit = new AuditoriaLogModel();
 
-          $modeloAudit->logs_auditoria($parametros);
+          //$parametros = [
+            //"accion" => $analis["horas"],
+            //"direccion_ip" => $request->session()->get('direccion_ip'),
+            //"fecha" => date("Y-m-d H:i:s"),
+            //"tabla" => 'tbl_proyecto_analista',
+            //"usuario_id" => $request->session()->get('usuario_id')
+          //];
 
+          //$modeloAudit->logs_auditoria($parametros);
 
+      //}
 
-      }
-
-      $id_usuario = $request->session()->get('usuario_id');
-      $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
-      $datosProyecto = $modelo->datosProyecto($idProyecto,$infoUsuario->id_division);
-      $analistas = $modelo->analistasProyecto($id_usuario,11,$idProyecto,$infoUsuario->id_division);
-
-      $response = array("response" => true, "analis" => $analis,"analistas" => $analistas, "proyecto" => $datosProyecto);
+      $response = array("response" => true, "message" => "Analistas agregados con éxitos!");
       return $response;
 
     }

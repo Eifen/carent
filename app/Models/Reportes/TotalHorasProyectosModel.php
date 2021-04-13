@@ -34,7 +34,7 @@ class TotalHorasProyectosModel extends Model
 
     }// Fin estatusProyectos
    
-    function repoTotalHorasProy($paginar, $desde = 0, $proyecto = null, $empleado = null, $cliente = null, $estatus = null){
+    function repoTotalHorasProy($paginar, $desde = 0, $proyecto = null, $empleado = null, $empleadoC = null, $cliente = null, $estatus = null){
 
       if($proyecto != null && trim($proyecto) != ""){
         $sql_proyecto = 'AND LOWER(p.descripcion) LIKE "%'.strtolower($proyecto).'%"';
@@ -49,9 +49,15 @@ class TotalHorasProyectosModel extends Model
       }
 
       if($empleado !== null){
-        $sql_empleado = 'AND u.id = '.$empleado;
+        $sql_empleado = 'AND p.id_socio = '.$empleado;
       }else{
         $sql_empleado = "";
+      }
+
+      if($empleadoC !== null){
+        $sql_empleadoC = 'AND p.id_socio_calidad = '.$empleadoC;
+      }else{
+        $sql_empleadoC = "";
       }
 
       if($estatus !== null){
@@ -112,6 +118,7 @@ class TotalHorasProyectosModel extends Model
                          '.$sql_proyecto.'
                          '.$sql_cliente.'
                          '.$sql_empleado.'
+                         '.$sql_empleadoC.'
                          '.$sql_estatus.'
                          GROUP BY p.id,
                                   p.descripcion,
@@ -128,7 +135,7 @@ class TotalHorasProyectosModel extends Model
 
     }
 
-    function pagCantidadTotalHorasProy($paginar, $proyecto = null, $empleado = null, $cliente = null, $estatus = null){
+    function pagCantidadTotalHorasProy($paginar, $proyecto = null, $empleado = null, $empleadoC = null, $cliente = null, $estatus = null){
 
       if($proyecto != null && trim($proyecto) != ""){
         $sql_proyecto = 'AND LOWER(p.descripcion) LIKE "%'.strtolower($proyecto).'%"';
@@ -146,6 +153,12 @@ class TotalHorasProyectosModel extends Model
         $sql_empleado = 'AND u.id = '.$empleado;
       }else{
         $sql_empleado = "";
+      }
+
+      if($empleadoC !== null){
+        $sql_empleadoC = 'AND p.id_socio_calidad = '.$empleadoC;
+      }else{
+        $sql_empleadoC = "";
       }
 
       if($estatus !== null){
@@ -169,6 +182,7 @@ class TotalHorasProyectosModel extends Model
                            '.$sql_proyecto.'
                            '.$sql_cliente.'
                            '.$sql_empleado.'
+                           '.$sql_empleadoC.'
                            '.$sql_estatus.'
                            GROUP BY p.id,
                                   p.descripcion,

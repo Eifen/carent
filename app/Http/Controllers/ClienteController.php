@@ -113,7 +113,7 @@ class ClienteController extends Controller
 
       $parametros = [
         "accion" => 'Registro del cliente codigo: '.$codigoCliente,
-        "direccion_ip" => $request->session()->get('direccion_ip'),
+        "direccion_ip" => $request->session()->get('usuario_ip'),
         "fecha" => date("Y-m-d H:i:s"),
         "tabla" => 'tbl_cliente',
         "usuario_id" => $request->session()->get('usuario_id')
@@ -200,7 +200,7 @@ class ClienteController extends Controller
       "estatus" => $request->input("estatus"),
       "usuario_id" => $request->session()->get('usuario_id'),
       "fecha" => date("Y-m-d H:i:s"),
-      "direccion_ip" => $request->session()->get('direccion'),
+      "direccion_ip" => $request->session()->get('usuario_ip'),
     );
 
     $response = $modelo->modificarCliente($parametros);
@@ -209,7 +209,7 @@ class ClienteController extends Controller
 
       $parametros = [
         "accion" => 'Modificación del cliente: '. $request->input("codigoCliente"),
-        "direccion_ip" => $request->session()->get('direccion_ip'),
+        "direccion_ip" => $request->session()->get('usuario_ip'),
         "fecha" => date("Y-m-d H:i:s"),
         "tabla" => 'tbl_cliente',
         "usuario_id" => $request->session()->get('usuario_id')

@@ -38,10 +38,11 @@ class TotalHorasProyectosController extends Controller
       $desde = $request->input("desde");
       $cliente = $request->input("cliente");      
       $id_usuario = $request->input("empleado");
+      $id_usuario_Calidad = $request->input("empleadoC");
       $proyecto = $request->input("proyecto");
       $estatus = $request->input("estatus");
-      $totalHorasProyectos = $modelo->repoTotalHorasProy($paginar, $desde, $proyecto, $id_usuario, $cliente, $estatus);      
-      $paginas = $modelo->pagCantidadTotalHorasProy($paginar, $proyecto, $id_usuario, $cliente, $estatus);
+      $totalHorasProyectos = $modelo->repoTotalHorasProy($paginar, $desde, $proyecto, $id_usuario, $id_usuario_Calidad,$cliente, $estatus);      
+      $paginas = $modelo->pagCantidadTotalHorasProy($paginar, $proyecto, $id_usuario, $id_usuario_Calidad, $cliente, $estatus);
 
 
       return array("totalHorasProyectos" => $totalHorasProyectos, "paginas" => $paginas);

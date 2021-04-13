@@ -35,7 +35,7 @@
 
         <b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
-          label="Empleado"
+          label="Socio"
           label-for="empleado"
           id="group-empleado">
           <select aria-describedby="empleadoHelp"
@@ -46,6 +46,22 @@
                   v-model="formFiltro.campos.empleado.value">
             <option :value="null" selected>Seleccione...</option>
             <option v-bind:value="empleado.id" v-for="empleado in formFiltro.campos.empleado.listado">{{ empleado.nombre }}</option>
+          </select>
+        </b-form-group>
+
+        <b-form-group
+          class="form-group col-12 col-sm-6 col-md-4"
+          label="Socio Calidad"
+          label-for="empleadoC"
+          id="group-empleadoC">
+          <select aria-describedby="empleadoCHelp"
+                  class="form-control form-control-sm"
+                  id="empleadoC"
+                  data-validar="true"
+                  v-bind:disabled="formFiltro.campos.empleadoC.disabled"
+                  v-model="formFiltro.campos.empleadoC.value">
+            <option :value="null" selected>Seleccione...</option>
+            <option v-bind:value="empleadoC.id" v-for="empleadoC in formFiltro.campos.empleadoC.listado">{{ empleadoC.nombre }}</option>
           </select>
         </b-form-group>
 
@@ -200,6 +216,11 @@
                 listado: [],
                 value: null
               },
+              empleadoC: {
+                disabled: true,
+                listado: [],
+                value: null
+              },
               estatus: {
                 disabled: true,
                 listado: [],
@@ -265,6 +286,7 @@
             ];
 
             self.formFiltro.campos.empleado.listado = response.data.empleados;
+            self.formFiltro.campos.empleadoC.listado = response.data.empleados;
             self.formFiltro.campos.estatus.listado = response.data.estatus;
             self.tabla.horasProyecto = response.data.totalHorasProyectos
             self.tabla.registros = self.registroTabla(self.tabla.horasProyecto);
@@ -281,6 +303,7 @@
             self.tabla.paginador.max = parseInt(response.data.paginas);
 
             self.formFiltro.campos.empleado.disabled = false;
+            self.formFiltro.campos.empleadoC.disabled = false;
             self.formFiltro.campos.estatus.disabled = false;
             self.formFiltro.campos.cliente.disabled = false;
             self.formFiltro.campos.proyecto.disabled = false;
@@ -367,6 +390,7 @@
           self.formFiltro.campos.proyecto.disabled = true;
           self.formFiltro.campos.estatus.disabled = true;
           self.formFiltro.campos.empleado.disabled = true;
+          self.formFiltro.campos.empleadoC.disabled = true;
 
           self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
           self.formFiltro.btn.filtrar.disabled = true;
@@ -377,6 +401,7 @@
           let desde = (self.tabla.paginador.pagina - 1) * self.tabla.paginador.paginar;
           let parametros = {
             empleado: self.formFiltro.campos.empleado.value,
+            empleadoC: self.formFiltro.campos.empleadoC.value,
             cliente: self.formFiltro.campos.cliente.value,
             desde: desde,
             proyecto: self.formFiltro.campos.proyecto.value,
@@ -400,6 +425,7 @@
             }
             self.formFiltro.campos.cliente.disabled = false;
             self.formFiltro.campos.empleado.disabled = false;
+            self.formFiltro.campos.empleadoC.disabled = false;
             self.formFiltro.campos.proyecto.disabled = false;
             self.formFiltro.campos.estatus.disabled = false;
 
@@ -422,6 +448,7 @@
 
           self.formFiltro.campos.cliente.value = null;
           self.formFiltro.campos.empleado.value = null;
+          self.formFiltro.campos.empleadoC.value = null;
           self.formFiltro.campos.proyecto.value = null;
           self.formFiltro.campos.estatus.value = null;
           self.buscar();
