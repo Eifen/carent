@@ -68,7 +68,8 @@ class facturadoCliProyModel extends Model
                                 FORMAT(monto_facturado,2,"de_DE") AS monto_facturado_formated,
                                 FORMAT(monto_notas_credito,2,"de_DE") AS monto_notas_credito_formated,
                                 FORMAT(monto_gasto,2,"de_DE") AS monto_gasto_formated,
-                                FORMAT(monto_otros_gastos,2,"de_DE") AS monto_otros_gastos_formated
+                                FORMAT(monto_otros_gastos,2,"de_DE") AS monto_otros_gastos_formated,
+                                CONCAT(ROUND(((monto_facturado/(monto_proyecto + monto_notas_credito + monto_gasto + monto_otros_gastos))*100),2)," %") AS porct_facturado
                          FROM(
                            SELECT p.id AS id_proyecto,
                                   p.descripcion AS proyecto,

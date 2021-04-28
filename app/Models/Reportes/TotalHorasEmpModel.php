@@ -145,7 +145,8 @@ class TotalHorasEmpModel extends Model
       $sql = DB::select('SELECT id,
                                 nombre,
                                 correo,
-                                IFNULL(fecha,  "Nunca ha cargado") AS fecha
+                                IFNULL(fecha,  "Nunca ha cargado") AS fecha,
+                                division
                          FROM(
 
                            SELECT u.id,
@@ -159,10 +160,13 @@ class TotalHorasEmpModel extends Model
                                        AND pa3.id_analista = u.id
                                        ORDER BY hc3.fecha DESC
                                        LIMIT 1
-                                  ) AS fecha
+                                  ) AS fecha,
+                                  d.descripcion AS division
                              FROM tbl_usuario u,
-                                  tbl_contacto_usuario cu
+                                  tbl_contacto_usuario cu,
+                                  tbl_division d
                              WHERE u.id = cu.id_usuario
+                             AND u.id_division = d.id
                              AND u.id NOT IN(
 
                                 SELECT u2.id

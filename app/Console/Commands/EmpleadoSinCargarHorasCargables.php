@@ -38,5 +38,9 @@ class EmpleadoSinCargarHorasCargables extends Command
     public function handle()
     {
 
+      $controller = app()->make('App\Http\Controllers\Reportes\TotalHorasEmpController');
+      app()->call([$controller, 'repEmpSinCargarHoras'], []);
+      // EL último [] es para los parametros si se necesita [id => 1, opt => 2]
+
     }
 }

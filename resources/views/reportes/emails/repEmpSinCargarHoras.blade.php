@@ -38,7 +38,7 @@
           margin-right: auto;
           margin-top: 5%;
           text-align: center;
-          width: 700px;
+          width: 900px;
         }
 
         #wrapper_tabla table{
@@ -75,6 +75,7 @@
         <img src="https://carent.crowe.com.ve:16000/images/logo-carent.png" height="100" class="img-fluid logo" alt="">
     </div>
     <div id="wrapper_contenido">
+        <p><b>Reporte Generado el {{ $fecha_reporte }}</b></p>
         <p>El siguiente listado muestra a los empleados que no han cargado <b>Horas Cargables</b> en <b>{{ $dias }} días</b>:</p>
     </div>
     <div id="wrapper_tabla">
@@ -82,6 +83,7 @@
         <thead>
           <tr>
             <th>Nombre</th>
+            <th>División</th>
             <th>Última fecha en la que cargó</th>
           </tr>
         </thead>
@@ -90,6 +92,7 @@
 
             <tr>
               <td>{{ $empleado->nombre }}</td>
+              <td>{{ $empleado->division }}</td>
               <td>{{ $empleado->fecha }}</td>
             </tr>
 

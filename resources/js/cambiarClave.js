@@ -1,94 +1,167 @@
 require('bootstrap');
 import Vue from 'vue';
-import { BootstrapVue } from 'bootstrap-vue';
+import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
-window.$ = require('jquery');
-window.zenscroll = require('zenscroll');
-window.axios = require('axios');
+import zenscroll from 'zenscroll';
+import axios from 'axios';
+import Vuelidate from 'vuelidate';
+import { required, minLength, sameAs } from 'vuelidate/lib/validators';
 const CryptoJS = require("crypto-js");
 const AES = require("crypto-js/aes");
 var self;
 
 Vue.component('menu-principal', require('./components/menuPrincipal.vue').default);
+Vue.component('loading',require('./components/loading.vue').default);
+Vue.component('alert',require('./components/alert.vue').default);
 Vue.use(BootstrapVue);
+Vue.use(BootstrapVueIcons);
+Vue.use(Vuelidate);
 
 var app = new Vue({
 
-  el: '#cambiarClave',
+  el: '#app',
   data: {
-    alert: {
-      class: "",
-      message: "",
-      show: false
+    encryption: {
+      iv: null,
+      key: null
     },
-    form: {
-      claveActual: {
-        disabled: false,
-        type: "password"
+    formCambiarClave: {
+      alert: {
+        contador: false,
+        iconCerrar: false,
+        mensaje: "",
+        mostrar: false,
+        ocultarSeg: 0,
+        variante: ""
       },
-      nuevaClave: {
-        disabled: false,
-        type: "password"
+      botones: {
+        submit:{
+          disabled: true,
+          html: "",
+          htmlInit: "Cambiar Contraseña",
+          htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
+          show:true
+        }
       },
-      repetirNuevaClave: {
-        disabled: false,
-        type: "password"
+      campos: {
+        claveActual: {
+          disabled: true,
+          iconShowPass: {
+            icon: "",
+            hide: "eye-slash-fill",
+            show: "eye-fill",
+            value: null
+          },
+          invalidFeedback: "",
+          type: "password",
+          state: null,
+          value: ""
+        },
+        nuevaClave: {
+          disabled: true,
+          iconShowPass: {
+            icon: "",
+            hide: "eye-slash-fill",
+            show: "eye-fill",
+            value: null
+          },
+          invalidFeedback: "",
+          type: "password",
+          state: null,
+          value: ""
+        },
+        repetirNuevaClave: {
+          disabled: true,
+          iconShowPass: {
+            icon: "",
+            hide: "eye-slash-fill",
+            show: "eye-fill",
+            value: null
+          },
+          invalidFeedback: "",
+          type: "password",
+          state: null,
+          value: ""
+        }
       }
     },
-    claseVerClaveIcon: {
-      claveActual: "fas fa-eye",
-      nuevaClave: "fas fa-eye",
-      repetirNuevaClave: "fas fa-eye"
-    },
-    iv: null,
-    key: null,
-    submit: {
-      content: "Cambiar Contraseña",
-      disabled: false,
-      show:true
+    loading: true
+  },
+  validations: {
+    formCambiarClave: {
+      campos: {
+        claveActual: {
+          value: {
+            required
+          }
+        },
+        nuevaClave: {
+          value: {
+            minLength: minLength(8),
+            required
+          }
+        },
+        repetirNuevaClave: {
+          value: {
+            required,
+            igualA: sameAs(function(){ return this.formCambiarClave.campos.nuevaClave.value;}),
+            noIgualA: function(){
+              return (this.formCambiarClave.campos.nuevaClave.value === this.formCambiarClave.campos.claveActual.value) ? false : true;
+            }
+          }
+        }
+      }
     }
   },
   beforeCreate: function(){
 
     self = this;
 
-    axios.get('/encryptConfig')
-    .then(function (response) {
+  },
+  mounted: function () {
 
-      if(response.status === 200 && response.data.key && response.data.iv){
+    try {
 
-        self.key = response.data.key;
-        self.iv = response.data.iv;
+      self.formCambiarClave.campos.claveActual.iconShowPass.icon = self.formCambiarClave.campos.claveActual.iconShowPass.show;
+      self.formCambiarClave.campos.nuevaClave.iconShowPass.icon = self.formCambiarClave.campos.nuevaClave.iconShowPass.show;
+      self.formCambiarClave.campos.repetirNuevaClave.iconShowPass.icon = self.formCambiarClave.campos.repetirNuevaClave.iconShowPass.show;
 
-      }else{
-
-        throw "error";
-
+      if(mostrarModalCambioClave){
+        self.$refs["mostrarModalCambioClave"].show();
       }
 
-    })
-    .catch(error => {
+      self.formCambiarClave.campos.claveActual.disabled = false;
+      self.formCambiarClave.campos.nuevaClave.disabled = false;
+      self.formCambiarClave.campos.repetirNuevaClave.disabled = false;
+      self.formCambiarClave.botones.submit.html = self.formCambiarClave.botones.submit.htmlInit;
+      self.formCambiarClave.botones.submit.disabled = false;
 
-      Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-        self.form[indiceObjecto].disabled = true;
-      });
-      self.submit.disabled = true;
-      self.alert = {
-        class : "alert alert-warning",
-        message : "Existe un error!, consulte con el administrador del sistema.",
-        show: true
-      };
+      self.loading = false;
 
-    });
+    }catch(err) {
+
+      self.formCambiarClave.botones.submit.html = self.formCambiarClave.botones.submit.htmlInit;
+
+      self.formCambiarClave.campos.claveActual.disabled = true;
+      self.formCambiarClave.campos.nuevaClave.disabled = true;
+      self.formCambiarClave.campos.repetirNuevaClave.disabled = true;
+      self.formCambiarClave.botones.submit.disabled = true;
+
+      let message = "Existe un error!, consulte con el administrador del sistema.";
+      self.mostrarAlert(self.formCambiarClave.alert, true, "warning", message, false, false, 0);
+
+      self.loading = false;
+
+    }
 
   },
   methods:{
 
-    encriptar: function(valor){
+    encriptar: function(valor, encryptionKey, encryptionIv){
 
-      let key = CryptoJS.enc.Hex.parse(self.key);
-      let iv = CryptoJS.enc.Hex.parse(self.iv);
+      let key = CryptoJS.enc.Hex.parse(encryptionKey);
+      let iv = CryptoJS.enc.Hex.parse(encryptionIv);
 
       var encrypted = CryptoJS.AES.encrypt(valor, key, {
           iv,
@@ -98,74 +171,94 @@ var app = new Vue({
       return encrypted.toString();
 
     },
-    limpiarMensajeError: function(refName,e){
+    limpiarMensajeError: function(objeto){
 
-      if(self.$refs[refName].value.trim() === ""){
-        self.$refs[refName].value = "";
-      }
+      objeto.state = null;
+      objeto.invalidFeedback = "";
 
-      $(e.target).removeClass("error");
-      $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
     },
-    cambiarContrasena: function(){
+    cambiarContrasena: function(encryptionKey, encryptionIv){
 
       var formValido = true;
 
-      $("form .form-group .mensaje").html("").removeClass("invalid-feedback");
-      $("form .form-group .form-control").removeClass("error");
+      self.mostrarAlert(self.formCambiarClave.alert);
 
-      $("form .form-group").each(function(index, elemento) {
+      Object.keys(self.formCambiarClave.campos).forEach((indice, i) => {
 
-        var input = $(elemento).find(".form-control")[0];
-        var valido = self.validarValor(input);
+        if(self.formCambiarClave.campos[indice].hasOwnProperty("state")){
+          self.formCambiarClave.campos[indice].state = null;
+        }
 
-        if(!valido.respuesta){
-          $(elemento).find(".mensaje").html(valido.mensaje).addClass("invalid-feedback");
-          $(elemento).find(".form-control").addClass("error");
-          formValido = valido.respuesta;
-          return false;
+        if(self.formCambiarClave.campos[indice].hasOwnProperty("invalidFeedback")){
+          self.formCambiarClave.campos[indice].invalidFeedback = "";
         }
 
       });
 
-      if(formValido){
+      const arrayCampos = Object.keys(self.formCambiarClave.campos);
+      for(var i = 0; i <= (arrayCampos.length - 1); i++){
 
-        self.alert = {
-          class : "",
-          message : "",
-          show: false
-        };
+        let indice = arrayCampos[i];
+        const campo = self.$v.formCambiarClave.campos[indice].value;
+        campo.$touch();
+
+        if(campo.$invalid){
+
+          self.formCambiarClave.campos[indice].state = false;
+          const valorCampo = self.$v.formCambiarClave.campos[indice].value.$model;
+
+          const arrayParams = Object.keys(campo.$params);
+          for(var j = 0; j <= (arrayParams.length - 1); j++){
+
+            let mensajeError = self.validadorMensajes(arrayParams[j], campo);
+            self.formCambiarClave.campos[indice].invalidFeedback = mensajeError.mensaje;
+
+            if(!mensajeError.respuesta){
+              break
+            }
+
+          }
+
+          zenscroll.toY(self.$refs[indice].$el);
+          formValido = false;
+          break;
+
+        }
+
+      }
+
+      if(formValido){
 
         //Obtenemos valores
         let parametros = {
-          claveActual: self.encriptar(self.$refs["claveActual"].value),
-          nuevaClave: self.encriptar(self.$refs["nuevaClave"].value)
+          claveActual: self.encriptar(self.formCambiarClave.campos.claveActual.value,encryptionKey,encryptionIv),
+          nuevaClave: self.encriptar(self.formCambiarClave.campos.nuevaClave.value,encryptionKey,encryptionIv)
         }
 
-        self.submit.content = '<i class="fas fa-cog fa-spin"></i>';
-        self.submit.disabled = true;
-        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-          self.form[indiceObjecto].disabled = true;
+        Object.keys(self.formCambiarClave.campos).forEach((indice, i) => {
+
+          if(self.formCambiarClave.campos[indice].hasOwnProperty("disabled")){
+            self.formCambiarClave.campos[indice].disabled = true;
+          }
+
         });
+
+        self.formCambiarClave.botones.submit.html = self.formCambiarClave.botones.submit.htmlLoading;
+        self.formCambiarClave.botones.submit.disabled = true;
 
         axios.post('/guardarNuevaClave', parametros)
         .then(function (response) {
 
           if(response.status === 200 && response.data.response === true){
 
-            self.submit.show = false;
-
-            self.alert = {
-              class : "alert alert-success",
-              message : response.data.message,
-              show: true
-            };
+            self.formCambiarClave.botones.submit.html = self.formCambiarClave.botones.submit.htmlInit;
+            self.mostrarAlert(self.formCambiarClave.alert, true, "success", response.data.message, false, true, 3);
 
             setTimeout(function(){
 
               window.location.href = "/cambiarClave";
 
-            }, 5000);
+            }, 3000);
 
           }else{
 
@@ -176,11 +269,16 @@ var app = new Vue({
         })
         .catch(error => {
 
-          Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-            self.form[indiceObjecto].disabled = false;
+          Object.keys(self.formCambiarClave.campos).forEach((indice, i) => {
+
+            if(self.formCambiarClave.campos[indice].hasOwnProperty("disabled")){
+              self.formCambiarClave.campos[indice].disabled = false;
+            }
+
           });
-          self.submit.content = 'Cambiar Contraseña';
-          self.submit.disabled = false;
+
+          self.formCambiarClave.botones.submit.html = self.formCambiarClave.botones.submit.htmlInit;
+          self.formCambiarClave.botones.submit.disabled = false;
 
           if(error.response){
 
@@ -192,84 +290,58 @@ var app = new Vue({
 
           }
 
-          self.alert = {
-            class : "alert alert-warning",
-            message : message,
-            show: true
-          };
+          self.mostrarAlert(self.formCambiarClave.alert, true, "warning", message, false, false, 0);
 
         });
 
       }// Fin if
 
     },
-    validarValor: function(input) {
+    validadorMensajes: function(indice,campo){
 
-      var respuesta = true;
-      var mensaje   = '';
+      var mensaje,
+          respuesta = true;
 
-      if(input.hasAttribute("data-validar")){
-
-        if(input.getAttribute("data-validar") === "true"){
-
-          if(input.type === 'password'){
-
-            if(input.getAttribute("data-min")){
-              let minChar = input.getAttribute("data-min");
-              let numChar = input.value.length
-
-              if(numChar < minChar){
-                respuesta = false;
-                mensaje   = "El campo debe contener al menos "+minChar+" caracteres!";
-                zenscroll.toY($(input).offset().top - 100);
-              }
-
-            }
-
-            if(input.getAttribute("data-equal")){
-
-              let id = input.getAttribute("data-equal");
-              let valor = self.$refs[id].value;
-
-              if(valor !== input.value){
-                respuesta = false;
-                mensaje   = 'La Contraseña no coincide con el campo "Nueva Contraseña"!';
-                zenscroll.toY($(input).offset().top - 100);
-              }
-
-            }
-
-          }
-
-        }
-
+      if(!campo[indice] && indice === "required"){
+        mensaje = "Este campo es requerido!";
+        respuesta = false;
+      }else if(!campo[indice] && indice === "igualA"){
+        mensaje = "El valor debe ser igual al campo anterior";
+        respuesta = false;
+      }else if(!campo[indice] && indice === "noIgualA"){
+        mensaje = "La nueva contraseña no debe ser a la actual";
+        respuesta = false;
+      }else if(!campo[indice] && indice === "minLength"){
+        let minChar = campo.$params[indice].min;
+        mensaje = "Debe contener al menos "+minChar+" caracteres!";
+        respuesta = false;
+      }else{
+        mensaje = "";
       }
 
-      return {respuesta: respuesta, mensaje: mensaje};
+      return {mensaje:mensaje, respuesta:respuesta};
 
     },
-    keyboard: function(e){
+    verClave: function(campo){
 
-      if (e.keyCode === 13){
-        self.login();
-      }
+      campo.type = (campo.type === "text") ? "password" : "text";
+      campo.icon = (campo.type === "text") ? campo.iconShowPass.hide : campo.iconShowPass.show;
 
     },
-    verClave: function(e){
+    mostrarAlert: function(alert, mostrar = false, variante = "", mensaje = "", iconCerrar = false, contador = false, ocultarSeg = 0){
 
-      if(e.target.nodeName === "I"){
-        var id = e.target.parentNode.getAttribute("data-input");
-      }else{
-        var id = e.target.getAttribute("data-input");
-      }
+      return new Promise(resolve => {
 
-      if(self.$refs[id].type === "password"){
-        self.form[id].type = "text";
-        self.claseVerClaveIcon[id] = "fas fa-eye-slash";
-      }else{
-        self.form[id].type = "password";
-        self.claseVerClaveIcon[id] = "fas fa-eye";
-      }
+        alert.contador = contador;
+        alert.iconCerrar = iconCerrar;
+        alert.mensaje = mensaje;
+        alert.mostrar = mostrar;
+        alert.ocultarSeg = ocultarSeg;
+        alert.variante = variante;
+
+        resolve(true);
+
+      });
 
     }
 

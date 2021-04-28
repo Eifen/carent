@@ -815,120 +815,114 @@ class ProyectoModel extends Model
 
     }
 
-    function agregarAnalistaProy($estado,$idUsuario,$idProyecto,$id_proyecto_division){
+    function empleadosProyecto($id_proyecto,$id_division){
 
-      DB::beginTransaction();
+      $info = DB::select('SELECT u.id,
+                                 CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)AS nombre,
+                                 c.descripcion AS cargo,
+                                 (SELECT CASE 
+                                  WHEN SUM(cast(time_to_sec(hc.horas_trabajadas) / (60 * 60) as decimal(10, 1))) > 0 THEN SUM(cast(time_to_sec(hc.horas_trabajadas) / (60 * 60) as decimal(10, 1)))
+                                  ELSE 0
+                                  END AS horas_cargadas
+                                  FROM tbl_horas_cargables hc,
+                                       tbl_proyecto_analista pa 
+                                  WHERE hc.id_proy_analista = pa.id
+                                  AND pa.id_proyecto = '.$id_proyecto.'
+                                  AND pa.id_analista = u.id) horas_cargadas,
+                                  (SELECT CASE 
+                                  WHEN pa.id  > 0 THEN "true"
+                                  ELSE "false"
+                                  END AS permisoCarga
+                                  FROM tbl_proyecto_analista pa 
+                                  WHERE pa.id_proyecto = '.$id_proyecto.'
+                                  AND pa.id_analista = u.id) permisoCarga,
 
-      $data = array("id_estatus" => $estado,
-                    "id_analista" => $idUsuario,
-                    "id_proyecto" => $idProyecto,
-                    "id_proyecto_division" => $id_proyecto_division);
+                                  (SELECT CASE 
+                                  WHEN pa.id  > 0 THEN pa.id
+                                  ELSE 0
+                                  END AS idAnaProy
+                                  FROM tbl_proyecto_analista pa 
+                                  WHERE pa.id_proyecto = '.$id_proyecto.'
+                                  AND pa.id_analista = u.id) idAnaProy,
 
-      $analistaAgregado = DB::table('tbl_proyecto_analista')->insertGetId($data);
-
-      if($analistaAgregado){
-
-        $proyecto = DB::select('SELECT UPPER(p.descripcion) AS descripcion FROM tbl_proyecto p WHERE p.id = '.$idProyecto.'');
-        $analista = DB::select('SELECT u.codigo FROM tbl_usuario u WHERE u.id = '.$idUsuario.'');
-
-        DB::commit();
-
-        return array(
-          "analista" => $analista[0]->codigo,
-          "proyecto" => $proyecto[0]->descripcion,
-          "response" => true,
-          "message" => "Analista agregado con éxito."
-        );
-
-      }else{
-
-        DB::rollBack();
-        return array("response" => false, "message" => "Error al tratar de crear el analista.");
-
-      }
-
-    }
-
-    function estatusAnalistaProy($idAnaProy){
-
-      $info = DB::select('SELECT id_estatus
-                          FROM tbl_proyecto_analista
-                          WHERE id = '.$idAnaProy.'');
+                                  (SELECT a.horas_asignadas FROM tbl_proyecto_analista a WHERE a.id_proyecto = '.$id_proyecto.' AND a.id_analista = u.id) horas_asignadas,
+                                  (SELECT a.id_estatus FROM tbl_proyecto_analista a WHERE a.id_proyecto = '.$id_proyecto.' AND a.id_analista = u.id) id_estatus
+                          FROM tbl_usuario u,
+                               tbl_cargo_empleado c
+                          WHERE u.id_division = '.$id_division.'
+                          AND u.id_estatus = 1
+                          AND c.id = u.id_cargo
+                          ORDER BY u.id_cargo DESC, nombre DESC');
 
       if(count($info) > 0){
-
-        return $info[0];
-
+        return $info;
       }else{
-
         return array();
-
       }
-
     }
 
-    function modAnalistaProy($estado,$idAnaProy,$idProyecto){
+    function asigHorasAnalistaProy($id_proyecto_division, $id_proyecto, $empleados){
 
       DB::beginTransaction();
 
-      try{
-
-        $data = array("id_estatus" => $estado);
-
-        $update = DB::table('tbl_proyecto_analista')->where("id",$idAnaProy)->update($data);
-
-        DB::commit();
-        $info = db::select('SELECT * FROM tbl_proyecto_analista WHERE id = '.$idAnaProy.'');
-        $analista = db::select('SELECT u.codigo FROM tbl_usuario u WHERE u.id = (SELECT a.id_analista  FROM tbl_proyecto_analista a WHERE a.id = '.$idAnaProy.')');
-        $proyecto = DB::select('SELECT UPPER(p.descripcion) AS descripcion FROM tbl_proyecto p WHERE p.id = '.$idProyecto.'');
-
-        if ($info[0]->id_estatus === 1) {
-          $accion = 'Asignacion del analista codigo: '.$analista[0]->codigo.'. Al proyecto: '.$proyecto[0]->descripcion;
-        }else if($info[0]->id_estatus === 0){
-          $accion = 'Eliminacion del analista codigo: '.$analista[0]->codigo.'. Del proyecto: '.$proyecto[0]->descripcion;
+      $horasAnalista = DB::select('SELECT *
+                                   FROM tbl_proyecto_analista
+                                   WHERE id_proyecto_division = '.$id_proyecto_division.'
+                                   AND id_proyecto = '.$id_proyecto.'');
+      foreach ($empleados as $key => $item) {
+        if(!isset($item->id)){
+          $item = json_decode($item);
         }
-
-        return array(
-          "accion" => $accion,
-          "response" => true,
-          "message" => "Analista actualizado con éxito."
-        );
-
-      } catch(\Illuminate\Database\QueryException $ex){
-
-        DB::rollBack();
-        return array("response" => false, "message" => "Error al tratar de actualizar la información del proyecto.");
-
-      }
-
-    }
-
-    function modHorasAnalistaProy($horas_asignadas,$horasComparar,$idAnaProy, $idProyecto){
-
-      DB::beginTransaction();
-
-      try{
-
-        $analista = db::select('SELECT u.codigo FROM tbl_usuario u WHERE u.id = (SELECT a.id_analista  FROM tbl_proyecto_analista a WHERE a.id = '.$idAnaProy.')');
-        $proyecto = DB::select('SELECT UPPER(p.descripcion) AS descripcion FROM tbl_proyecto p WHERE p.id = '.$idProyecto.'');
-        $horas = [];
-
-        for($i = 0; $i < count($horas_asignadas); $i++){
-
-          if ($horas_asignadas[$i] != $horasComparar[$i]) {
-
-            $data = array("horas_asignadas" => $horas_asignadas[$i]);
-            $update = DB::table('tbl_proyecto_analista')->where("id",$idAnaProy)->update($data);
-
-            $horas = 'total de horas asignadas: '.$horas_asignadas[$i].'. Al analista codigo: '.$analista[0]->codigo.' en el proyecto: '.$proyecto[0]->descripcion;
-
+        $id_usuario = $item->id;
+        $horas = $item->horas;
+        $idAnaProy = $item->idAnaProy;
+        $agregar = 1;
+        for ($j=0; $j < count($horasAnalista); $j++) { 
+          if ($horasAnalista[$j]->id_analista === $id_usuario) {
+            $agregar = 0;
+            if ($horasAnalista[$j]->horas_asignadas != $horas) {
+              $data = array("horas_asignadas" => $horas,
+                            "id_estatus" => 1);
+              $update = DB::table('tbl_proyecto_analista')->where("id",$horasAnalista[$j]->id)->update($data);
+            }else{
+              $data = array("id_estatus" => 1);
+              $update = DB::table('tbl_proyecto_analista')->where("id",$horasAnalista[$j]->id)->update($data);
+            }
           }
-
         }
+        if ($agregar == 1) {
+          $data = array(
+                      "id_proyecto" => $id_proyecto,
+                      "id_proyecto_division" => $id_proyecto_division,
+                      "id_analista" => $id_usuario,
+                      "horas_asignadas" => $horas,
+                      "id_estatus" => 1
+                     );
+          $analistaAgregado = DB::table('tbl_proyecto_analista')->insertGetId($data);
+        }
+      }  
+
+      for ($i=0; $i < count($horasAnalista); $i++) { 
+        $analista = 0;
+        foreach ($empleados as $key => $item) {
+          if(!isset($item->id)){
+            $item = json_decode($item);
+          }
+          $id_usuario = $item->id;    
+          if ($horasAnalista[$i]->id_analista === $id_usuario) {
+            $analista = 1;
+          }
+        }
+        if ($analista == 0) {
+          $data = array("id_estatus" => 0);
+          $update = DB::table('tbl_proyecto_analista')->where("id",$horasAnalista[$i]->id)->update($data);
+        }
+      }
+
+      try{
 
         DB::commit();
         return array(
-          "horas" => $horas,
           "response" => true,
           "message" => "Analista actualizado con éxito."
         );
