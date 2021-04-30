@@ -263,6 +263,7 @@
               { key: 'rif', label: 'RIF' },
               { key: 'razonSocial', label: 'Razón Social' },
               { key: 'socio', label: 'Socio' },
+              { key: 'codigo', label: 'Código' },
               { key: 'estatus', label: 'Estatus' }
             ];
 
@@ -359,6 +360,7 @@
               rif: item.rif,
               razonSocial: item.razon_social,
               socio: item.socio,
+              codigo: item.codigo,
               estatus: item.estatus,
               variante: variante
             };

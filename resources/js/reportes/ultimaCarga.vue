@@ -247,6 +247,7 @@
 
             self.tabla.encabezado = [
               { key: 'numero', label: '#' },
+              { key: 'codigo', label: 'Código' },
               { key: 'nombre', label: 'Empleado' },
               { key: 'division', label: 'División' },
               { key: 'cargo', label: 'Cargo' },
@@ -333,6 +334,7 @@
 
             const data = {
               numero: (i + 1),
+              codigo: item.codigo,
               nombre: item.nombre,
               division: item.division,
               cargo: item.cargo,
