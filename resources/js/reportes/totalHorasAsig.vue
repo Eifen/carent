@@ -315,6 +315,7 @@
 
             self.tabla.encabezado = [
               { key: 'numero', label: '#' },
+              { key: 'codigo', label: 'Código' },
               { key: 'nombre', label: 'Empleado' },
               { key: 'division', label: 'Division' },
               { key: 'horas_cargadas_fecha', label: "Horas Cargadas. Desde: "
@@ -411,6 +412,7 @@
 
             const data = {
               numero: (i + 1),
+              codigo: item.codigo,
               nombre: item.nombre,
               division: item.division,
               horas_cargadas_fecha: item.horas_cargadas_fecha,

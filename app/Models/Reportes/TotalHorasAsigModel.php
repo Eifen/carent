@@ -57,6 +57,7 @@ class TotalHorasAsigModel extends Model
 
       $sql = DB::select('SELECT u.id,
                                 CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS nombre,
+                                u.codigo,
                                 d.descripcion AS division,
                                 (SELECT CASE 
                                         WHEN SUM(cast(time_to_sec(hc.horas_trabajadas) / (60 * 60) as decimal(10, 1))) > 0 THEN SUM(cast(time_to_sec(hc.horas_trabajadas) / (60 * 60) as decimal(10, 1)))
@@ -103,7 +104,7 @@ class TotalHorasAsigModel extends Model
           ".round($sql[$i]->tota_horas_cargadas / $sql[$i]->total_horas_asignadas*100, 2)." %"; 
 
         }
-        $horas_asignadas[$i] = array('id' => $sql[$i]->id, 'nombre' => $sql[$i]->nombre, 'division' => $sql[$i]->division, 'tota_horas_cargadas' => $sql[$i]->tota_horas_cargadas, 'total_horas_asignadas' => $sql[$i]->total_horas_asignadas, 'horas_cargadas_fecha' => $sql[$i]->horas_cargadas_fecha,'porcentaje' => $porcentaje);
+        $horas_asignadas[$i] = array('id' => $sql[$i]->id, 'codigo' => $sql[$i]->codigo,'nombre' => $sql[$i]->nombre, 'division' => $sql[$i]->division, 'tota_horas_cargadas' => $sql[$i]->tota_horas_cargadas, 'total_horas_asignadas' => $sql[$i]->total_horas_asignadas, 'horas_cargadas_fecha' => $sql[$i]->horas_cargadas_fecha,'porcentaje' => $porcentaje);
       }
 
       return $horas_asignadas;
@@ -151,6 +152,7 @@ class TotalHorasAsigModel extends Model
 
                            SELECT u.id,
                                   CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS nombre,
+                                  u.codigo,
                                   d.descripcion AS division
                            FROM tbl_usuario u,                              
                                 tbl_division d

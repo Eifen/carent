@@ -368,6 +368,7 @@
               { key: 'cliente', label: 'Cliente' },
               { key: 'division', label: 'División' },
               { key: 'empleado', label: 'Empleado' },
+              { key: 'codigo', label: 'Código' },
               { key: 'cargo', label: 'Cargo' },
               { key: 'horas_trabajadas', label: 'Horas' },
               { key: 'estatus', label: 'Estatus' }
@@ -472,6 +473,7 @@
               cliente: item.cliente,
               division: item.division,
               empleado: item.empleado,
+              codigo: item.codigo,
               cargo: item.cargo,
               horas_trabajadas: item.horas_trabajadas,
               estatus: item.estatus,

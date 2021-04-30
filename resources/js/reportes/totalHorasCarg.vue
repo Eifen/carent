@@ -343,6 +343,7 @@
 
             self.tabla.encabezado = [
               { key: 'numero', label: '#' },
+              { key: 'codigo', label: 'Código' },
               { key: 'nombre', label: 'Empleado' },
               { key: 'total_horas_cargables', label: 'Horas Cargables' },
               { key: 'porcen_horas_cargables', label: '% Horas Cargables' },
@@ -441,6 +442,7 @@
 
             const data = {
               numero: (i + 1),
+              codigo: item.codigo,
               nombre: item.nombre,
               total_horas_cargables: item.total_horas_cargables,
               porcen_horas_cargables: item.porcen_horas_cargables,
