@@ -269,7 +269,7 @@ class TotalHorasNoCargModel extends Model
           return $resultado;
         }        
 
-      return $horas;
+      return $resultado;
 
     }// Fin
 
