@@ -34,7 +34,20 @@ class TotalHorasProyectosModel extends Model
 
     }// Fin estatusProyectos
    
-    function repoTotalHorasProy($paginar, $desde = 0, $proyecto = null, $empleado = null, $empleadoC = null, $cliente = null, $estatus = null){
+    function repoTotalHorasProy($id_usuario, $paginar, $fecha_hasta, $fecha_desde = null, $desde = 0, $proyecto = null, $empleado = null, $empleadoC = null, $cliente = null, $estatus = null){
+
+      if($id_usuario == 1 || $id_usuario == 140 || $id_usuario == 144 || $id_usuario == 146 || $id_usuario == 154){
+        $sql_asignado = "";
+      }else{
+        $sql_asignado = ' AND (p.id_socio = '.$id_usuario.' OR p.id_socio_calidad = '.$id_usuario.' OR p.id_gerente = '.$id_usuario.' OR p.id = (SELECT a.id_proyecto FROM tbl_proyecto_analista a WHERE p.id = a.id_proyecto AND a.id_analista = '.$id_usuario.') OR p.id = (SELECT pd.id_proyecto FROM tbl_proyecto_divisiones pd WHERE p.id = pd.id_proyecto AND pd.id_gerente = '.$id_usuario.'))';
+      }
+
+      if($fecha_desde !== null){
+        $sql_fecha = 'AND p.fecha_contratacion BETWEEN "'.$fecha_desde.'" AND "'.$fecha_hasta.'"';
+      }else{
+        $sql_fecha = "";
+      }
+
 
       if($proyecto != null && trim($proyecto) != ""){
         $sql_proyecto = 'AND LOWER(p.descripcion) LIKE "%'.strtolower($proyecto).'%"';
@@ -120,6 +133,8 @@ class TotalHorasProyectosModel extends Model
                          '.$sql_empleado.'
                          '.$sql_empleadoC.'
                          '.$sql_estatus.'
+                         '.$sql_asignado.'
+                         '.$sql_fecha.'
                          GROUP BY p.id,
                                   p.descripcion,
                                   u.nombre_1,
@@ -135,7 +150,19 @@ class TotalHorasProyectosModel extends Model
 
     }
 
-    function pagCantidadTotalHorasProy($paginar, $proyecto = null, $empleado = null, $empleadoC = null, $cliente = null, $estatus = null){
+    function pagCantidadTotalHorasProy($id_usuario, $paginar, $fecha_hasta, $fecha_desde = null, $proyecto = null, $empleado = null, $empleadoC = null, $cliente = null, $estatus = null){
+
+      if($id_usuario == 1 || $id_usuario == 140 || $id_usuario == 144 || $id_usuario == 146 || $id_usuario == 154){
+        $sql_asignado = "";
+      }else{
+        $sql_asignado = ' AND (p.id_socio = '.$id_usuario.' OR p.id_socio_calidad = '.$id_usuario.' OR p.id_gerente = '.$id_usuario.' OR p.id = (SELECT a.id_proyecto FROM tbl_proyecto_analista a WHERE p.id = a.id_proyecto AND a.id_analista = '.$id_usuario.') OR p.id = (SELECT pd.id_proyecto FROM tbl_proyecto_divisiones pd WHERE p.id = pd.id_proyecto AND pd.id_gerente = '.$id_usuario.'))';
+      }
+
+      if($fecha_desde !== null){
+        $sql_fecha = 'AND p.fecha_contratacion BETWEEN "'.$fecha_desde.'" AND "'.$fecha_hasta.'"';
+      }else{
+        $sql_fecha = "";
+      }
 
       if($proyecto != null && trim($proyecto) != ""){
         $sql_proyecto = 'AND LOWER(p.descripcion) LIKE "%'.strtolower($proyecto).'%"';
@@ -184,6 +211,8 @@ class TotalHorasProyectosModel extends Model
                            '.$sql_empleado.'
                            '.$sql_empleadoC.'
                            '.$sql_estatus.'
+                           '.$sql_asignado.'
+                           '.$sql_fecha.'
                            GROUP BY p.id,
                                   p.descripcion,
                                   u.nombre_1,

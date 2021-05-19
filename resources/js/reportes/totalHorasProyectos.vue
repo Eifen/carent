@@ -64,7 +64,43 @@
             <option v-bind:value="empleadoC.id" v-for="empleadoC in formFiltro.campos.empleadoC.listado">{{ empleadoC.nombre }}</option>
           </select>
         </b-form-group>
-
+        <b-form-group
+          :invalid-feedback="formFiltro.campos.fechaDesde.invalidFeedback"
+          class="form-group col-12 col-sm-6 col-md-4"
+          label="Fecha de Contratación Desde"
+          label-for="fechaDesde"
+          id="group-fechaDesde">
+          <b-form-datepicker
+            @input="fechaDesdeFiltro"
+            :disabled="formFiltro.campos.fechaDesde.disabled"
+            :locale="'es-VE'"
+            :max="formFiltro.campos.fechaDesde.maxValue"
+            :state="formFiltro.campos.fechaDesde.state"
+            locale="es"
+            size="sm"
+            ref="fechaDesde"
+            v-bind="formFiltro.traduccionCalendario.labels['es-VE'] || {}"
+            v-model="$v.formFiltro.campos.fechaDesde.value.$model"></b-form-datepicker>
+        </b-form-group>
+        <b-form-group
+          :invalid-feedback="formFiltro.campos.fechaHasta.invalidFeedback"
+          class="form-group col-12 col-sm-6 col-md-4"
+          label="Fecha de Contratación Hasta"
+          label-for="fechaHasta"
+          id="group-fechaHasta">
+          <b-form-datepicker
+            @input="limpiarMensajeError(formFiltro.campos.fechaHasta)"
+            :disabled="formFiltro.campos.fechaHasta.disabled"
+            :locale="'es-VE'"
+            :max="formFiltro.campos.fechaHasta.maxValue"
+            :min="formFiltro.campos.fechaHasta.minValue"
+            :state="formFiltro.campos.fechaHasta.state"
+            locale="es"
+            size="sm"
+            ref="fechaHasta"
+            v-bind="formFiltro.traduccionCalendario.labels['es-VE'] || {}"
+            v-model="$v.formFiltro.campos.fechaHasta.value.$model"></b-form-datepicker>
+        </b-form-group>
         <b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
           label="Estatus"
@@ -189,6 +225,8 @@
   import alert from '../components/alert.vue';
   import Multiselect from 'vue-multiselect';
   import JsonExcel from "vue-json-excel";
+  import Vuelidate from 'vuelidate';
+  import { required, minLength, minValue } from 'vuelidate/lib/validators';
   import zenscroll from 'zenscroll';
   var self;
 
@@ -233,9 +271,47 @@
               proyecto : {
                 disabled: true,
                 value: ""
+              },
+              fechaDesde: {
+                disabled: true,
+                invalidFeedback: '',
+                maxValue: "",
+                state: null,
+                value: null
+              },
+              fechaHasta:{
+                disabled: true,
+                invalidFeedback: '',
+                maxValue: "",
+                minValue: "",
+                state: null,
+                value: null
               }
             },
-            mostrar : false
+            mostrar : false,
+            traduccionCalendario: {
+              labels: {
+                'es-VE': {
+                  weekdayHeaderFormat: 'narrow',
+                  labelPrevDecade: 'Década Anterior',
+                  labelPrevYear: 'Año Anterior',
+                  labelPrevMonth: 'Mes Anterior',
+                  labelCurrentMonth: 'Mes Actualي',
+                  labelNextMonth: 'Siguiente Mes',
+                  labelNextYear: 'Siguiente Año',
+                  labelNextDecade: 'Siguiente Década',
+                  labelToday: 'Hoy',
+                  labelSelected: 'Seleccionado',
+                  labelNoDateSelected: 'Ninguna fecha seleccionada',
+                  labelCalendar: 'Calendario',
+                  labelNav: 'Navegación de calendario',
+                  labelHelp: 'Use las teclas del cursor para navegar por las fechas del calendario'
+                }
+              },
+              maxValue: "",
+              minValue: "",
+              value: null
+            }
           },
           tabla: {
             alert:{
@@ -264,7 +340,22 @@
         "downloadExcel": JsonExcel,
         Multiselect
       },
-
+      validations: {
+        formFiltro:{
+          campos:{
+            fechaDesde: {
+              value: {
+                required
+              }
+            },
+            fechaHasta: {
+              value: {
+                required
+              }
+            }
+          }
+        }
+      },
       beforeCreate: function(){
 
         self = this;
@@ -307,6 +398,7 @@
             self.formFiltro.campos.estatus.disabled = false;
             self.formFiltro.campos.cliente.disabled = false;
             self.formFiltro.campos.proyecto.disabled = false;
+            self.formFiltro.campos.fechaDesde.disabled = false;
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
             self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
             self.formFiltro.mostrar = true;
@@ -327,6 +419,14 @@
 
         });
 
+
+      },
+      created: function(){
+
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        self.formFiltro.campos.fechaDesde.maxValue = now;
+        self.formFiltro.campos.fechaHasta.maxValue = now;
 
       },
       beforeUpdate:function(){},
@@ -360,6 +460,21 @@
           self.tabla.paginador.pagina = ((self.tabla.paginador.pagina + 1) > self.tabla.paginador.max) ? self.tabla.paginador.pagina : (self.tabla.paginador.pagina + 1);
           self.buscar();
         },
+        fechaDesdeFiltro: function(fecha_seleccionada){
+
+          self.limpiarMensajeError(self.formFiltro.campos.fechaDesde)
+
+          self.formFiltro.campos.fechaHasta.value = null;
+          self.formFiltro.campos.fechaHasta.minValue = fecha_seleccionada;
+          self.formFiltro.campos.fechaHasta.disabled = false;
+
+        },
+        limpiarMensajeError: function(objeto){
+
+          objeto.state = null;
+          objeto.invalidFeedback = "";
+
+        },
         registroTabla: function(datos){
 
           const registros = [];
@@ -391,6 +506,9 @@
           self.formFiltro.campos.estatus.disabled = true;
           self.formFiltro.campos.empleado.disabled = true;
           self.formFiltro.campos.empleadoC.disabled = true;
+          self.formFiltro.campos.fechaDesde.disabled = true;
+          self.formFiltro.campos.fechaHasta.disabled = true;
+
 
           self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
           self.formFiltro.btn.filtrar.disabled = true;
@@ -406,7 +524,9 @@
             desde: desde,
             proyecto: self.formFiltro.campos.proyecto.value,
             paginar: self.tabla.paginador.paginar,
-            estatus: self.formFiltro.campos.estatus.value
+            estatus: self.formFiltro.campos.estatus.value,
+            fecha_desde: self.formFiltro.campos.fechaDesde.value,
+            fecha_hasta: self.formFiltro.campos.fechaHasta.value
           };
 
           //Se utiliza el metodo get para su busqueda y se envian con los parametros
@@ -428,6 +548,11 @@
             self.formFiltro.campos.empleadoC.disabled = false;
             self.formFiltro.campos.proyecto.disabled = false;
             self.formFiltro.campos.estatus.disabled = false;
+            self.formFiltro.campos.fechaDesde.disabled = false;
+            self.formFiltro.campos.fechaHasta.disabled = false;
+            if (self.formFiltro.campos.fechaDesde.value === null) {
+              self.formFiltro.campos.fechaHasta.disabled = true;
+            }
 
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
             self.formFiltro.btn.filtrar.disabled = false;
@@ -440,7 +565,8 @@
 
           }).catch(error => {
 
-
+            self.formFiltro.campos.fechaDesde.disabled = false;
+            self.formFiltro.campos.fechaHasta.disabled = false;
           });
 
         },
@@ -451,6 +577,9 @@
           self.formFiltro.campos.empleadoC.value = null;
           self.formFiltro.campos.proyecto.value = null;
           self.formFiltro.campos.estatus.value = null;
+          self.formFiltro.campos.fechaDesde.value = null;
+          self.formFiltro.campos.fechaHasta.disabled = true;
+          self.formFiltro.campos.fechaHasta.value = null;
           self.buscar();
 
         },

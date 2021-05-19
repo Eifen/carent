@@ -8,18 +8,36 @@ use Illuminate\Database\Eloquent\Model;
 class TotalHorasAsigModel extends Model
 {
 
-  function divisiones(){
+  function divisionUsuario($usuario_id){
+
+      $divisionUsuario = DB::select('SELECT u.id_division
+                                     FROM tbl_usuario u
+                                     WHERE u.id = '.$usuario_id.'');
+
+      return $divisionUsuario[0]->id_division;
+
+    }// Fin divisionUsuario
+
+    function divisiones($usuario_div, $usuario_id){
+
+      if($usuario_id == 1 || $usuario_id == 140 || $usuario_id == 144 || $usuario_id == 146 || $usuario_id == 154){
+        $sql_division = "";
+      }else{
+        $sql_division = 'AND d.id = '.$usuario_div.'';
+      }
 
       $divisiones = DB::select('SELECT d.id,
-                                      d.descripcion
-                                FROM tbl_division d');
+                                       d.descripcion
+                                FROM tbl_division d
+                                WHERE d.id_estatus = 1
+                                '.$sql_division.'');
 
       return $divisiones;
 
     }// Fin divisiones
 
    
-    function horasAsignadas($paginar, $fecha_desde, $fecha_hasta, $divisiones, $empleado = null, $desde = 0){
+    function horasAsignadas($id_usuario, $paginar, $fecha_desde, $fecha_hasta, $divisiones, $empleado = null, $desde = 0){
 
       if($divisiones == null){
         $sql_division = "";
