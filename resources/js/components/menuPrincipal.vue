@@ -6,9 +6,13 @@
       <b-img src="/images/logo-carent-menu-expandido.png" fluid alt="SETA"></b-img>
     </b-navbar-brand>
 
-    <b-navbar-toggle target="menu-principal"></b-navbar-toggle>
+    <b-icon
+      @click="visible = !visible"
+      :aria-expanded="visible ? 'true' : 'false'"
+      :class="visible ? null : 'collapsed'"
+      icon="list"></b-icon>
 
-    <b-collapse id="menu-principal" is-nav>
+    <b-collapse id="menu-principal" is-nav v-model="visible">
 
       <b-navbar-nav id="wrapper-menu-items">
         <menuItem v-for="(item, index) in menu"
@@ -63,8 +67,6 @@
 
   #wrapper-menu-items{
 
-
-
     .dropdown-submenu {
       position: relative;
 
@@ -118,14 +120,14 @@
 
 <script>
 
-  window.$ = require('jquery');
+  /*window.$ = require('jquery');*/
   import axios from 'axios';
   import menuItem from './itemMenuPrincipal';
   var self;
 
   export default {
       data() {
-        return {"menu" : []};
+        return {"menu" : [], "visible": true};
       },
       components: {
         menuItem
@@ -158,8 +160,8 @@
       },
       updated: function(){
 
-        $("ul.dropdown-menu [data-toggle='dropdown']").on("click", function(event) {
-console.log("sapeee");
+        /*$("ul.dropdown-menu [data-toggle='dropdown']").on("click", function(event) {
+
           event.preventDefault();
           event.stopPropagation();
 
@@ -174,7 +176,7 @@ console.log("sapeee");
             $('.dropdown-submenu .show').removeClass("show");
           });
 
-        });
+        });*/
 
       },
       methods: {}
