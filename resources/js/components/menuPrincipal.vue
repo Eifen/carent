@@ -6,7 +6,7 @@
       <b-img src="/images/logo-carent-menu-expandido.png" fluid alt="SETA"></b-img>
     </b-navbar-brand>
 
-    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+    <b-navbar-toggle target="menu-principal"></b-navbar-toggle>
 
     <b-collapse id="menu-principal" is-nav>
 
@@ -63,6 +63,8 @@
 
   #wrapper-menu-items{
 
+
+
     .dropdown-submenu {
       position: relative;
 
@@ -72,6 +74,15 @@
         margin-top: 0px;
         margin-left: 0px;
         top: 10;
+
+        a{
+
+          @media (max-width: 991px) {
+            padding: 0.25rem 1.5rem;
+          }
+
+        }
+
       }
 
     }
@@ -148,7 +159,7 @@
       updated: function(){
 
         $("ul.dropdown-menu [data-toggle='dropdown']").on("click", function(event) {
-
+console.log("sapeee");
           event.preventDefault();
           event.stopPropagation();
 

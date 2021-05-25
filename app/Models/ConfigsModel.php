@@ -23,13 +23,18 @@ class ConfigsModel extends Model
                                   m.id_menu_padre,
                                   m.descripcion,
                                   m.url,
-                                  m.visible
+                                  m.visible,
+                                  (
+                                      SELECT m2.orden
+                                      FROM tbl_menu m2
+                                      WHERE m2.id = m.id_menu_padre
+                                  ) AS orden
                            FROM tbl_menu m,
                                 tbl_menu_usuario mu
                            WHERE m.id = mu.id_menu
                            AND mu.id_usuario = "'.$id_usuario.'"
                            AND m.id_estatus = 1
-                           ORDER BY m.id_menu_padre ASC');
+                           ORDER BY orden, m.id_menu_padre ASC');
 
       if(count($menus) > 0){
 

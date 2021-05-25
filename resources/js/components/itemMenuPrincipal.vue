@@ -5,25 +5,16 @@
 
 <template>
 
-  <li class="nav-item dropdown dropdown-submenu" v-if="hasSubmenu">
-    <a class="nav-link dropdown-toggle" :id="'navbarDropdown-'+id" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      {{ descripcion }}
-    </a>
-    <ul class="dropdown-menu" :aria-labelledby="'navbarDropdown-'+id">
-      <menuItem v-for="(itemSubmenu, index) in submenus"
-                :descripcion="itemSubmenu.descripcion"
-                :hasSubmenu="(Object.keys(itemSubmenu.submenu).length > 0) ? true : false"
-                :key="index"
-                :submenus="itemSubmenu.submenu"
-                :url="itemSubmenu.url"></menuItem>
-    </ul>
-  </li>
+  <b-nav-item-dropdown class="dropdown-submenu" :text="descripcion" right v-if="hasSubmenu">
+    <menuItem v-for="(itemSubmenu, index) in submenus"
+              :descripcion="itemSubmenu.descripcion"
+              :hasSubmenu="(Object.keys(itemSubmenu.submenu).length > 0) ? true : false"
+              :key="index"
+              :submenus="itemSubmenu.submenu"
+              :url="itemSubmenu.url"></menuItem>
+  </b-nav-item-dropdown>
 
-  <li class="nav-item" v-else>
-     <a class="nav-link" id="'navbarDropdown-'+id" aria-haspopup="true" :href="url">
-       {{ descripcion }}
-     </a>
-  </li>
+  <b-nav-item :href="url" id="'navbarDropdown-'+id" v-else> {{ descripcion }} </b-nav-item>
 
 </template>
 
