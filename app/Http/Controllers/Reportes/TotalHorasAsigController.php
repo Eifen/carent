@@ -14,11 +14,10 @@ class TotalHorasAsigController extends Controller
       $modelo = new TotalHorasAsigModel();
 
       $paginar = 200;
-      $usuario_div = $modelo->divisionUsuario(session("usuario_id"));
-      $divisiones = $modelo->divisiones($usuario_div,session("usuario_id"));
+      $divisiones = $modelo->divisiones();
       $fecha_desde = date("Y-01-01");
       $fecha_hasta = date("Y-m-d");      
-      $horas_asignadas = $modelo ->horasAsignadas(session("usuario_id"),$paginar, $fecha_desde, $fecha_hasta, $divisiones);      
+      $horas_asignadas = $modelo ->horasAsignadas($paginar, $fecha_desde, $fecha_hasta, $divisiones);      
       $paginas = 1;      
       return [
         "divisiones" => $divisiones,
@@ -36,8 +35,7 @@ class TotalHorasAsigController extends Controller
 
       $modelo = new TotalHorasAsigModel();
 
-      $usuario_div = $modelo->divisionUsuario(session("usuario_id"));
-      $divisiones = $modelo->divisiones($usuario_div,session("usuario_id"));
+      $division = $modelo->divisiones();
       $paginar = $request->input("paginar");
       $paginas = 1;
       $desde = $request->input("desde");
@@ -53,7 +51,7 @@ class TotalHorasAsigController extends Controller
       $empleado = $request->input("empleado");
 
 
-      $horas_asignadas = $modelo->horasAsignadas(session("usuario_id"),$paginar, $fecha_desde, $fecha_hasta, $divisiones, $empleado, $desde);
+      $horas_asignadas = $modelo->horasAsignadas($paginar, $fecha_desde, $fecha_hasta, $divisiones, $empleado, $desde);
 
       return [
         "divisiones" => $divisiones,

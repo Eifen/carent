@@ -161,8 +161,6 @@ Route::get('/dataRepTotalHorasAsig', 'Reportes\TotalHorasAsigController@dataRepT
 Route::get('/buscarTotalHorasAsig', 'Reportes\TotalHorasAsigController@buscarTotalHorasAsig')->middleware('usuario.session');
 Route::get('/dataRepUltimaCarga', 'Reportes\UltimaCargaController@dataRepUltimaCarga')->middleware('usuario.session');
 Route::get('/buscarUltimaCarga', 'Reportes\UltimaCargaController@buscarUltimaCarga')->middleware('usuario.session');
-Route::get('/dataRepTotalNoHorasCarg', 'Reportes\TotalHorasNoCargController@dataRepTotalNoHorasCarg')->middleware('usuario.session');
-Route::get('/buscarRepTotalHorasNoCarg', 'Reportes\TotalHorasNoCargController@buscarRepTotalHorasNoCarg')->middleware('usuario.session');
 
 /*
   Rutas para tareas programadas

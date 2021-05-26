@@ -15,8 +15,7 @@ class HorasProyectosController extends Controller
 
       $paginar = 200;
       $cargos = $modelo->cargos();
-      $usuario_div = $modelo->divisionUsuario(session("usuario_id"));
-      $divisiones = $modelo->divisiones($usuario_div,session("usuario_id"));
+      $divisiones = $modelo->divisiones();
       $horasProyectos = $modelo->repoCantidadHorasProy(session("usuario_id"),$paginar,$divisiones, $cargos);
       $paginas = $modelo->pagCantidadHorasProy(session("usuario_id"), $paginar, $divisiones, $cargos);
 
@@ -35,8 +34,7 @@ class HorasProyectosController extends Controller
 
       $modelo = new HorasProyectosModel();
 
-      $usuario_div = $modelo->divisionUsuario(session("usuario_id"));
-      $divisiones = $modelo->divisiones($usuario_div,session("usuario_id"));
+      $division = $modelo->divisiones();
       $cargo = $modelo->cargos();
       $paginar = $request->input("paginar");
       $desde = $request->input("desde");

@@ -49,7 +49,6 @@ class ClientesModel extends Model
       $sql = DB::select('SELECT c.rif,
                                 c.razon_social,
                                 CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS socio,
-                                u.codigo,
                                 e.descripcion AS estatus,
                                 e.valor AS id_estatus
                           FROM tbl_cliente c,
@@ -143,7 +142,6 @@ class ClientesModel extends Model
                            SELECT c.rif,
                                   c.razon_social,
                                   CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS socio,
-                                  u.codigo,
                                   e.descripcion AS estatus
                            FROM tbl_cliente c,
                                 tbl_usuario u,
