@@ -22,7 +22,6 @@
     "/js/ingresosGastos.js": "/js/ingresosGastos.js",
     "/js/agregarIngresosGastos.js": "/js/agregarIngresosGastos.js",
     "/js/formReportes.js": "/js/formReportes.js",
-    "/css/nuevoUsuario.css": "/css/nuevoUsuario.css",
     "/css/cambiarClave.css": "/css/cambiarClave.css",
     "/css/error/permiso.css": "/css/error/permiso.css",
     "/css/inicio.css": "/css/inicio.css",
@@ -45,6 +44,7 @@
     "/css/nuevoCliente.css": "/css/nuevoCliente.css",
     "/css/modificarUsuario.css": "/css/modificarUsuario.css",
     "/css/buscarUsuario.css": "/css/buscarUsuario.css",
+    "/css/nuevoUsuario.css": "/css/nuevoUsuario.css",
     "/css/bootstrap.min.css": "/css/bootstrap.min.css",
     "/css/fontawesome-free-5.12.0.css": "/css/fontawesome-free-5.12.0.css"
 }

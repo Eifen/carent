@@ -57,7 +57,7 @@ class ConfigsModel extends Model
       foreach($menus as $menu){
 
         $ramaTmp = $this->ramas($menu);
-        $rama[$ramaTmp->id] = $ramaTmp;
+        $rama["'".$ramaTmp->id."'"] = $ramaTmp;
         $arbolMenu = $this->unirRamas($arbolMenu, $rama);
 
       }// Fin foreach
@@ -91,7 +91,7 @@ class ConfigsModel extends Model
         if($sql[0]->id_menu_padre === 0){
 
           if($menu->visible === 1){
-            $sql[0]->submenu[$menu->id] = $menu;
+            $sql[0]->submenu["'".$menu->id."'"] = $menu;
           }else{
             $sql[0]->submenu = [];
           }
@@ -100,7 +100,7 @@ class ConfigsModel extends Model
 
         }else{
 
-          $sql[0]->submenu[$menu->id] = $menu;
+          $sql[0]->submenu["'".$menu->id."'"] = $menu;
 
           $ramaMenu = $this->ramas($sql[0]);
           return $ramaMenu;

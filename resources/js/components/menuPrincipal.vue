@@ -7,12 +7,16 @@
     </b-navbar-brand>
 
     <b-icon
-      @click="visible = !visible"
-      :aria-expanded="visible ? 'true' : 'false'"
-      :class="visible ? null : 'collapsed'"
+      @click="menuShow = !menuShow"
+      @mouseleave="menuHamburguer.animation = 'fade'"
+      @mouseover="menuHamburguer.animation = ''"
+      :animation="menuHamburguer.animation"
+      :aria-expanded="(menuShow) ? 'true' : 'false'"
+      :class="(menuShow) ? 'hamburguer-menu' : 'hamburguer-menu collapsed'"
+      font-scale="1.8"
       icon="list"></b-icon>
 
-    <b-collapse id="menu-principal" is-nav v-model="visible">
+    <b-collapse id="menu-principal" is-nav v-model="menuShow">
 
       <b-navbar-nav id="wrapper-menu-items">
         <menuItem v-for="(item, index) in menu"
@@ -50,6 +54,20 @@
 
     img{
       height: 35px;
+    }
+
+  }
+
+  .hamburguer-menu{
+    color: #091F40;
+    display: none;
+
+    @media (max-width: 991px) {
+      display: inherit;
+    }
+
+    &:hover{
+      cursor: pointer;
     }
 
   }
@@ -120,14 +138,20 @@
 
 <script>
 
-  /*window.$ = require('jquery');*/
+  window.$ = require('jquery');
   import axios from 'axios';
   import menuItem from './itemMenuPrincipal';
   var self;
 
   export default {
       data() {
-        return {"menu" : [], "visible": true};
+        return {
+          "menu" : [],
+          "menuHamburguer" : {
+            "animation" : "fade"
+          },
+          "menuShow" : false
+        };
       },
       components: {
         menuItem
