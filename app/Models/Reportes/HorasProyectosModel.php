@@ -29,17 +29,41 @@ class HorasProyectosModel extends Model
 
     }// Fin cargos
 
-    function divisiones(){
+    function divisionUsuario($usuario_id){
+
+      $divisionUsuario = DB::select('SELECT u.id_division
+                                     FROM tbl_usuario u
+                                     WHERE u.id = '.$usuario_id.'');
+
+      return $divisionUsuario[0]->id_division;
+
+    }// Fin divisionUsuario
+
+    function divisiones($usuario_div, $usuario_id){
+
+      if($usuario_id == 1 || $usuario_id == 140 || $usuario_id == 144 || $usuario_id == 146 || $usuario_id == 154){
+        $sql_division = "";
+      }else{
+        $sql_division = 'AND d.id = '.$usuario_div.'';
+      }
 
       $divisiones = DB::select('SELECT d.id,
-                                      d.descripcion
-                                FROM tbl_division d');
+                                       d.descripcion
+                                FROM tbl_division d
+                                WHERE d.id_estatus = 1
+                                '.$sql_division.'');
 
       return $divisiones;
 
     }// Fin divisiones
    
     function repoCantidadHorasProy($id_usuario, $paginar, $divisiones, $cargos, $desde = 0, $proyecto = null, $empleado = null, $cliente = null){
+
+      if($id_usuario == 1 || $id_usuario == 140 || $id_usuario == 144 || $id_usuario == 146 || $id_usuario == 154){
+        $sql_asignado = "";
+      }else{
+        $sql_asignado = 'AND (p.id_socio = '.$id_usuario.' OR p.id_socio_calidad = '.$id_usuario.' OR p.id_gerente = '.$id_usuario.' OR pa.id_analista = '.$id_usuario.' OR p.id = (SELECT pd.id_proyecto FROM tbl_proyecto_divisiones pd WHERE p.id = pd.id_proyecto AND pd.id_gerente = '.$id_usuario.'))';
+      }
 
       if($divisiones == null){
         $sql_division = "";
@@ -125,6 +149,7 @@ class HorasProyectosModel extends Model
                                 u.id_cargo,
                                 ce.descripcion AS cargo,
                                 CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS empleado,
+                                u.codigo,
                                 c.razon_social AS cliente,
                                 TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(hc.horas_trabajadas))),"%H") horas_trabajadas,
                                 (SELECT SUM(pd.horas_contratadas) FROM tbl_proyecto_divisiones pd WHERE pa.id_proyecto = pd.id_proyecto) horas_contratadas,
@@ -144,6 +169,7 @@ class HorasProyectosModel extends Model
                          AND p.id_moneda = m.id
                          AND u.id_division = d.id
                          AND u.id_cargo = ce.id
+                         '.$sql_asignado.'
                          '.$sql_cargos.'
                          '.$sql_division.'
                          '.$sql_proyecto.'
@@ -155,6 +181,7 @@ class HorasProyectosModel extends Model
                                   u.nombre_2,
                                   u.apellido_1,
                                   u.apellido_2,
+                                  u.codigo,
                                   c.id,
                                   c.razon_social, 
                                   u.id_division,

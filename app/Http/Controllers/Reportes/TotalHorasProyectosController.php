@@ -16,8 +16,9 @@ class TotalHorasProyectosController extends Controller
       $paginar = 200;
       $empleados = $modelo->empleados();
       $estatus = $modelo->estatusProyectos();
-      $totalHorasProyectos = $modelo->repoTotalHorasProy($paginar);
-      $paginas = $modelo->pagCantidadTotalHorasProy($paginar);
+      $fecha_hasta = date("Y-m-d");
+      $totalHorasProyectos = $modelo->repoTotalHorasProy(session("usuario_id"), $paginar, $fecha_hasta);
+      $paginas = $modelo->pagCantidadTotalHorasProy(session("usuario_id"), $paginar,$fecha_hasta);
 
       return [
         "empleados" => $empleados,
@@ -41,8 +42,13 @@ class TotalHorasProyectosController extends Controller
       $id_usuario_Calidad = $request->input("empleadoC");
       $proyecto = $request->input("proyecto");
       $estatus = $request->input("estatus");
-      $totalHorasProyectos = $modelo->repoTotalHorasProy($paginar, $desde, $proyecto, $id_usuario, $id_usuario_Calidad,$cliente, $estatus);      
-      $paginas = $modelo->pagCantidadTotalHorasProy($paginar, $proyecto, $id_usuario, $id_usuario_Calidad, $cliente, $estatus);
+      $fecha_desde = $request->input("fecha_desde");
+      $fecha_hasta = $request->input("fecha_hasta");
+      if ($fecha_hasta === null) {
+        $fecha_hasta = date("Y-m-d"); 
+      } 
+      $totalHorasProyectos = $modelo->repoTotalHorasProy(session("usuario_id"), $paginar, $fecha_hasta, $fecha_desde, $desde, $proyecto, $id_usuario, $id_usuario_Calidad,$cliente, $estatus);      
+      $paginas = $modelo->pagCantidadTotalHorasProy(session("usuario_id"), $paginar, $fecha_hasta, $fecha_desde, $proyecto, $id_usuario, $id_usuario_Calidad, $cliente, $estatus);
 
 
       return array("totalHorasProyectos" => $totalHorasProyectos, "paginas" => $paginas);
