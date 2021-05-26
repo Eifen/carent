@@ -10,10 +10,9 @@ html {
 }
 #app {
   background-color: #E9ECEF;
-  background-image: url(/images/fondo-inicio.png?5574b959bd7b611029e19cd569b4948a);
+  background-image: url(/images/fondo-inicio.png?c9d94bb56d21f177b561b2e0688233c0);
   background-position: center center;
   background-repeat: no-repeat;
   background-size: 25%;
   height: 100vh;
 }
-
