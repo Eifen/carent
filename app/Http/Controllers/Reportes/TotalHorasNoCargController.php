@@ -9,13 +9,17 @@ use App\Http\Controllers\Controller;
 class TotalHorasNoCargController extends Controller
 {
 
-    function dataRepTotalNoHorasCarg(){
+    function dataRepTotalNoHorasCarg(Request $request){
 
       $modelo = new TotalHorasNoCargModel();
 
       $paginar = 200;
       $cargos = $modelo->cargos();
-      $divisiones = $modelo->divisiones();
+
+
+      $usuario_id = $request->session()->get('usuario_id');
+      $usuario_div = $modelo->divisionUsuario($usuario_id);
+      $divisiones = $modelo->divisiones($usuario_div, $usuario_id);      
       $concepto = $modelo->concepto();
       $fecha_desde = date("Y-01-01");
       $fecha_hasta = date("Y-m-d");      
@@ -37,7 +41,9 @@ class TotalHorasNoCargController extends Controller
 
       $modelo = new TotalHorasNoCargModel();
 
-      $division = $modelo->divisiones();
+      $usuario_id = $request->session()->get('usuario_id');
+      $usuario_div = $modelo->divisionUsuario($usuario_id);
+      $divisiones = $modelo->divisiones($usuario_div, $usuario_id); 
       $concepto = $modelo->concepto();
       $cargo = $modelo->cargos();
       $paginar = $request->input("paginar");

@@ -1,6 +1,6 @@
 require('bootstrap');
 import Vue from 'vue';
-import { BootstrapVue } from 'bootstrap-vue';
+import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import vSelect from "vue-select";
@@ -18,6 +18,7 @@ Vue.component('menu-principal', require('../components/menuPrincipal.vue').defau
 Vue.component('loading',require('../components/loading.vue').default);
 Vue.component("v-select", vSelect);
 Vue.use(BootstrapVue);
+Vue.use(BootstrapVueIcons);
 
 const errorInit = () => {
 
@@ -193,7 +194,7 @@ new Vue({
         self.form.pais.value = dataInit.infoClie.pais;
         self.id_pais = dataInit.infoClie.id_pais;
         self.form.direccion.value = dataInit.infoClie.direccion;
-        
+
         self.form.telefono_fiscal.value = dataInit.infoClie.telefono_fiscal;
         self.form.pagina_web.value = dataInit.infoClie.pagina_web;
         self.form.email_fiscal.value = dataInit.infoClie.email_fiscal;
@@ -316,7 +317,7 @@ new Vue({
       }
 
     },
-    
+
     tipoFiltro: function(e){
 
       let opcion = parseInt(e.target.value);
@@ -334,7 +335,7 @@ new Vue({
       }
 
     },
-    
+
     evaluarCampo: function(id, e){
 
       if(e.target.type === 'text'){
@@ -389,7 +390,7 @@ new Vue({
 
       self.form.telefono_fiscal.value = "";
       self.form.telefono_fiscal.disabled = false;
-      self.id_pais = self.form.pais.value.id;      
+      self.id_pais = self.form.pais.value.id;
       self.form.telefono_fiscal.value = self.form.pais.value.codigo_telf;
     },
 

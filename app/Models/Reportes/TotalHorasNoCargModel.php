@@ -18,11 +18,29 @@ class TotalHorasNoCargModel extends Model
 
     }// Fin cargos
 
-    function divisiones(){
+    function divisionUsuario($usuario_id){
+
+      $divisionUsuario = DB::select('SELECT u.id_division
+                                     FROM tbl_usuario u
+                                     WHERE u.id = '.$usuario_id.'');
+
+      return $divisionUsuario[0]->id_division;
+
+    }// Fin divisionUsuario
+
+    function divisiones($usuario_div, $usuario_id){
+
+      if($usuario_id == 1 || $usuario_id == 140 || $usuario_id == 144 || $usuario_id == 146 || $usuario_id == 154){
+        $sql_division = "";
+      }else{
+        $sql_division = 'AND d.id = '.$usuario_div.'';
+      }
 
       $divisiones = DB::select('SELECT d.id,
-                                      d.descripcion
-                                FROM tbl_division d');
+                                       d.descripcion
+                                FROM tbl_division d
+                                WHERE d.id_estatus = 1
+                                '.$sql_division.'');
 
       return $divisiones;
 
@@ -158,6 +176,7 @@ class TotalHorasNoCargModel extends Model
       $id_concepto = 0;
       $horas_no = 0;
       $total = 0;
+      $resultado = [];
         for ($i=0; $i < count($horas) ; $i++) {         
 
             while ($fecha_desde > $horas[$i]->fecha_desde) {

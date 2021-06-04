@@ -1,6 +1,6 @@
 require('bootstrap');
 import Vue from 'vue';
-import { BootstrapVue } from 'bootstrap-vue';
+import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 window.zenscroll = require('zenscroll');
@@ -20,6 +20,7 @@ Vue.component('loading',require('../components/loading.vue').default);
 Vue.component('datetime', Datetime);
 Vue.use(VueNumeric);
 Vue.use(BootstrapVue);
+Vue.use(BootstrapVueIcons);
 
 new Vue({
 
@@ -571,7 +572,7 @@ new Vue({
       $(".multiselect .multiselect__tags").removeClass("error");
     },
     limpiarMensajeError: function(e){
-      
+
       if(typeof e.target === "undefined"){
         var el = $(e);
       }else{
