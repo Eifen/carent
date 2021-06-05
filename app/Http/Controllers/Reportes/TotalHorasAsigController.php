@@ -37,7 +37,7 @@ class TotalHorasAsigController extends Controller
       $modelo = new TotalHorasAsigModel();
 
       $usuario_div = $modelo->divisionUsuario(session("usuario_id"));
-      $divisiones = $modelo->divisiones($usuario_div,session("usuario_id"));
+      $division = $modelo->divisiones($usuario_div,session("usuario_id"));
       $paginar = $request->input("paginar");
       $paginas = 1;
       $desde = $request->input("desde");

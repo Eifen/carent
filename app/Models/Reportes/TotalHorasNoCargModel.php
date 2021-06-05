@@ -162,7 +162,7 @@ class TotalHorasNoCargModel extends Model
                              '.$sql_division.'
                              '.$sql_cargos.'
                              '.$sql_concepto.'
-                             AND hnc.id_estatus IN(1,2)
+                             AND hnc.id_estatus = 2
                              AND (hnc.fecha_desde BETWEEN "'.$fecha_desde.' 00:00:00" AND "'.$fecha_hasta.' 23:59:00"
                              OR hnc.fecha_hasta BETWEEN "'.$fecha_desde.' 00:00:00" AND "'.$fecha_hasta.' 23:59:00")
                              ORDER BY hnc.id_usuario ASC,

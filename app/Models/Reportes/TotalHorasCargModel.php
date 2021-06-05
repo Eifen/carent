@@ -100,7 +100,7 @@ class TotalHorasCargModel extends Model
                                   DATE_FORMAT(hnc.fecha_hasta, "%Y-%m-%d") AS fecha_hasta, 
                                   cast(time_to_sec(DATE_FORMAT(hnc.fecha_hasta, "%H:%i:%s"))/ (60 * 60) as decimal(10, 1)) AS hora_hasta 
                              FROM tbl_horas_no_cargables hnc
-                             WHERE hnc.id_estatus IN(1,2)
+                             WHERE hnc.id_estatus = 2
                              AND (hnc.fecha_desde BETWEEN "'.$fecha_desde.' 00:00:00" AND "'.$fecha_hasta.' 23:59:00"
                              OR hnc.fecha_hasta BETWEEN "'.$fecha_desde.' 00:00:00" AND "'.$fecha_hasta.' 23:59:00")
                              ORDER BY hnc.id_usuario ASC,

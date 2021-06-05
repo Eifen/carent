@@ -43,7 +43,7 @@ class TotalHorasNoCargController extends Controller
 
       $usuario_id = $request->session()->get('usuario_id');
       $usuario_div = $modelo->divisionUsuario($usuario_id);
-      $divisiones = $modelo->divisiones($usuario_div, $usuario_id); 
+      $division = $modelo->divisiones($usuario_div, $usuario_id); 
       $concepto = $modelo->concepto();
       $cargo = $modelo->cargos();
       $paginar = $request->input("paginar");

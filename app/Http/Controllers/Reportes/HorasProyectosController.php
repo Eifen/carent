@@ -36,7 +36,7 @@ class HorasProyectosController extends Controller
       $modelo = new HorasProyectosModel();
 
       $usuario_div = $modelo->divisionUsuario(session("usuario_id"));
-      $divisiones = $modelo->divisiones($usuario_div,session("usuario_id"));
+      $division = $modelo->divisiones($usuario_div,session("usuario_id"));
       $cargo = $modelo->cargos();
       $paginar = $request->input("paginar");
       $desde = $request->input("desde");
