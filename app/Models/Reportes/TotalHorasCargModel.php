@@ -100,13 +100,14 @@ class TotalHorasCargModel extends Model
                                   DATE_FORMAT(hnc.fecha_hasta, "%Y-%m-%d") AS fecha_hasta, 
                                   cast(time_to_sec(DATE_FORMAT(hnc.fecha_hasta, "%H:%i:%s"))/ (60 * 60) as decimal(10, 1)) AS hora_hasta 
                              FROM tbl_horas_no_cargables hnc
-                             WHERE hnc.id_estatus IN(1,2)
+                             WHERE hnc.id_estatus = 2
                              AND (hnc.fecha_desde BETWEEN "'.$fecha_desde.' 00:00:00" AND "'.$fecha_hasta.' 23:59:00"
                              OR hnc.fecha_hasta BETWEEN "'.$fecha_desde.' 00:00:00" AND "'.$fecha_hasta.' 23:59:00")
                              ORDER BY hnc.id_usuario ASC,
                                       hnc.fecha_desde');
       $usuarios = DB::select('SELECT u.id,
                                      CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS nombre,
+                                     u.codigo,
                                      (SELECT CASE 
                                       WHEN SUM(cast(time_to_sec(h.horas_trabajadas) / (60 * 60) as decimal(10, 1))) > 0 THEN SUM(cast(time_to_sec(h.horas_trabajadas) / (60 * 60) as decimal(10, 1)))
                                       ELSE 0
@@ -170,7 +171,16 @@ class TotalHorasCargModel extends Model
               $horas[$i]->fecha_hasta = date("Y-m-d", strtotime($horas[$i]->fecha_hasta."- 1 days"));
               $horas[$i]->hora_hasta = 17.0;
             }
-            if ($horas[$i]->fecha_desde === $horas[$i]->fecha_hasta) {
+            $fecha_especial = date("Y-m-d", strtotime($horas[$i]->fecha_desde."+ 1 days"));
+            if ($horas[$i]->hora_hasta < 6.0 && $fecha_especial === $horas[$i]->fecha_hasta) {
+              while ($horas[$i]->hora_desde != $horas[$i]->hora_hasta) {
+                $horas[$i]->hora_desde = $horas[$i]->hora_desde + 0.5;
+                $horas_cargadas = $horas_cargadas + 0.5;
+                if ($horas[$i]->hora_desde == 24.0) {
+                  $horas[$i]->hora_desde = 0;
+                }
+              }              
+            }elseif ($horas[$i]->fecha_desde === $horas[$i]->fecha_hasta) {
               if ($horas[$i]->hora_desde < 12.0 && $horas[$i]->hora_hasta > 13.0) {
                 $hora_cargada1 = 12.0 - $horas[$i]->hora_desde;
                 $hora_cargada2 = $horas[$i]->hora_hasta - 13.0;
@@ -343,7 +353,7 @@ class TotalHorasCargModel extends Model
           $porcen_horas_cargables = "$porcen_horas_cargables %";
         }        
         
-        $total[$u] = array('id' => $usuarios[$u]->id, 'nombre' => $usuarios[$u]->nombre, 'total_horas_cargables' => $usuarios[$u]->horas_cargables, 'total_horas_no_cargables' => $total_horas_no_cargables, 'total_horas' => $total_horas, 'porcen_horas_cargables' => $porcen_horas_cargables, 'porcen_horas_no_cargables' => $porcen_horas_no_cargables, 'exceso' => $exceso, 'maximo_horas' => $maximo_horas);        
+        $total[$u] = array('id' => $usuarios[$u]->id, 'codigo' => $usuarios[$u]->codigo, 'nombre' => $usuarios[$u]->nombre, 'total_horas_cargables' => $usuarios[$u]->horas_cargables, 'total_horas_no_cargables' => $total_horas_no_cargables, 'total_horas' => $total_horas, 'porcen_horas_cargables' => $porcen_horas_cargables, 'porcen_horas_no_cargables' => $porcen_horas_no_cargables, 'exceso' => $exceso, 'maximo_horas' => $maximo_horas);        
         $total_horas_no_cargables = 0;  
         $total_horas = 0;
         $exceso = 0;

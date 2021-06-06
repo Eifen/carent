@@ -96,6 +96,7 @@ class UltimaCargaModel extends Model
 
       $sql = DB::select('SELECT u.id,
                                 CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS nombre,
+                                u.codigo,
                                 d.descripcion AS division,
                                 ce.descripcion AS cargo,
                                 (SELECT DATE_FORMAT(hnc.fecha_hasta, "%d-%m-%Y") 
@@ -135,7 +136,7 @@ class UltimaCargaModel extends Model
         }else{
           $fecha = "No ha cargado nada hasta la fecha"; 
         }
-        $ultimaCarga[$i] = array('id' => $sql[$i]->id, 'nombre' => $sql[$i]->nombre, 'division' => $sql[$i]->division, 'cargo' => $sql[$i]->cargo, 'fecha' => $fecha);
+        $ultimaCarga[$i] = array('id' => $sql[$i]->id, 'codigo' => $sql[$i]->codigo, 'nombre' => $sql[$i]->nombre, 'division' => $sql[$i]->division, 'cargo' => $sql[$i]->cargo, 'fecha' => $fecha);
       }
 
       return $ultimaCarga;
@@ -211,6 +212,7 @@ class UltimaCargaModel extends Model
 
                            SELECT u.id,
                                   CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS nombre,
+                                  u.codigo,
                                   d.descripcion AS division,
                                   ce.descripcion AS cargo
                            FROM tbl_usuario u,                              

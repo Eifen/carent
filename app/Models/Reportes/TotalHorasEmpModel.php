@@ -145,7 +145,7 @@ class TotalHorasEmpModel extends Model
       $sql = DB::select('SELECT id,
                                 nombre,
                                 correo,
-                                IFNULL(fecha,  "Nunca ha cargado") AS fecha,
+                                IFNULL(fecha, "Nunca ha cargado") AS fecha,
                                 division
                          FROM(
 

@@ -1,6 +1,6 @@
 require('bootstrap');
 import Vue from 'vue';
-import { BootstrapVue } from 'bootstrap-vue';
+import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 window.zenscroll = require('zenscroll');
@@ -20,6 +20,7 @@ Vue.component('menu-principal', require('../components/menuPrincipal.vue').defau
 Vue.component('loading',require('../components/loading.vue').default);
 Vue.use(VueNumeric);
 Vue.use(BootstrapVue);
+Vue.use(BootstrapVueIcons);
 Vue.use(Vuelidate);
 
 new Vue({
@@ -177,7 +178,7 @@ new Vue({
             self.permisoCrear = true;
           }
           if (self.proyectosD[i].permiso === 1 || self.proyectosD[i].permiso === 2 || self.proyectosD[i].permiso === 3) {
-            self.permisoActualizar = true; 
+            self.permisoActualizar = true;
           }
           if (self.proyectosD[i].permiso === 1 || self.proyectosD[i].permiso === 2) {
             self.permisoVer = true;
@@ -268,7 +269,7 @@ new Vue({
             horas_asignadas: item.horas_asignadas
           }
           self.$set(self.form.camposAtributos.empleados.empleados, index, empleado);
-        
+
 
       });
 
@@ -357,7 +358,7 @@ new Vue({
                 self.permisoCrear = true;
               }
               if (self.proyectosD[i].permiso === 1 || self.proyectosD[i].permiso === 2 || self.proyectosD[i].permiso === 3) {
-                self.permisoActualizar = true; 
+                self.permisoActualizar = true;
               }
               if (self.proyectosD[i].permiso === 1 || self.proyectosD[i].permiso === 2) {
                 self.permisoVer = true;
@@ -371,7 +372,7 @@ new Vue({
               if (self.proyectosD[i].permiso === 1 || self.proyectosD[i].permiso === 2) {
                 self.permisoVer = true;
               }
-            }            
+            }
           }
         }
 
@@ -458,7 +459,7 @@ new Vue({
                 cargo: empleadosAsignados[i].cargo,
                 horas: empleadosAsignados[i].horas,
                 horas_cargadas: empleadosAsignados[i].horas_cargadas,
-                horas_asignadas: empleadosAsignados[i].horas_asignadas   
+                horas_asignadas: empleadosAsignados[i].horas_asignadas
               }
               self.$set(self.form.camposAtributos.empleados.empleados, index, empleado);
               val = 1;
@@ -477,10 +478,10 @@ new Vue({
                   value: 0,
                 },
                 horas_cargadas: item.horas_cargadas,
-                horas_asignadas: item.horas_asignadas                
+                horas_asignadas: item.horas_asignadas
               }
             self.$set(self.form.camposAtributos.empleados.empleados, index, empleado);
-          }          
+          }
 
         });
 
@@ -504,7 +505,7 @@ new Vue({
 
     horasTotales: function(){
       var total = 0;
-      
+
       for(var i = 0; i < self.form.camposAtributos.empleados.empleados.length; i++){
         total = total + parseInt(self.form.camposAtributos.empleados.empleados[i].horas.value);
       }
@@ -556,7 +557,7 @@ new Vue({
           for (var i = 0; i < self.comboEmpleados.length; i++) {
             if (self.comboEmpleados[i].id_estatus > 0) {
             self.asignados[a] = self.comboEmpleados[i];
-            a = a + 1; 
+            a = a + 1;
             }
           }
           if (self.asignados.length > 0) {
@@ -715,7 +716,7 @@ new Vue({
               }
               if (self.proyectosD[i].permiso === 1 || self.proyectosD[i].permiso === 2) {
               }
-            }            
+            }
           }
         }
 
