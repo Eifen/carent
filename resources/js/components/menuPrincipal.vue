@@ -6,9 +6,17 @@
       <b-img src="/images/logo-carent-menu-expandido.png" fluid alt="SETA"></b-img>
     </b-navbar-brand>
 
-    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+    <b-icon
+      @click="menuShow = !menuShow"
+      @mouseleave="menuHamburguer.animation = 'fade'"
+      @mouseover="menuHamburguer.animation = ''"
+      :animation="menuHamburguer.animation"
+      :aria-expanded="(menuShow) ? 'true' : 'false'"
+      :class="(menuShow) ? 'hamburguer-menu' : 'hamburguer-menu collapsed'"
+      font-scale="1.8"
+      icon="list"></b-icon>
 
-    <b-collapse id="menu-principal" is-nav>
+    <b-collapse id="menu-principal" is-nav v-model="menuShow">
 
       <b-navbar-nav id="wrapper-menu-items">
         <menuItem v-for="(item, index) in menu"
@@ -50,6 +58,20 @@
 
   }
 
+  .hamburguer-menu{
+    color: #091F40;
+    display: none;
+
+    @media (max-width: 991px) {
+      display: inherit;
+    }
+
+    &:hover{
+      cursor: pointer;
+    }
+
+  }
+
   .nav-link{
     color: #000000 !important;
     transition: all .3s;
@@ -72,6 +94,15 @@
         margin-top: 0px;
         margin-left: 0px;
         top: 10;
+
+        a{
+
+          @media (max-width: 991px) {
+            padding: 0.25rem 1.5rem;
+          }
+
+        }
+
       }
 
     }
@@ -114,7 +145,13 @@
 
   export default {
       data() {
-        return {"menu" : []};
+        return {
+          "menu" : [],
+          "menuHamburguer" : {
+            "animation" : "fade"
+          },
+          "menuShow" : false
+        };
       },
       components: {
         menuItem
@@ -147,7 +184,7 @@
       },
       updated: function(){
 
-        $("ul.dropdown-menu [data-toggle='dropdown']").on("click", function(event) {
+        /*$("ul.dropdown-menu [data-toggle='dropdown']").on("click", function(event) {
 
           event.preventDefault();
           event.stopPropagation();
@@ -163,7 +200,7 @@
             $('.dropdown-submenu .show').removeClass("show");
           });
 
-        });
+        });*/
 
       },
       methods: {}

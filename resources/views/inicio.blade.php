@@ -15,7 +15,6 @@
     <body>
 
       <b-container fluid id="app" v-cloak>
-
         <loading :loading="loading" v-show="loading"></loading>
 
         <menu-principal v-cloak></menu-principal>

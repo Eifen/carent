@@ -33,7 +33,7 @@ const mix = require('laravel-mix');
     .js('resources/js/horasNoCargables/formHorasNoCargables.js', 'public/js/formHorasNoCargables.js')
     .js('resources/js/facturacion/ingresosGastos.js', 'public/js/ingresosGastos.js')
     .js('resources/js/facturacion/agregarIngresosGastos.js', 'public/js/agregarIngresosGastos.js')
-    .js('resources/js/reportes/formReportes.js', 'public/js/formReportes.js')
+    .js('resources/js/reportes/formReportes.js', 'public/js/formReportes.js').vue({ version: 2 })
     .less('resources/less/login.less', 'public/css/login.css')
     .less('resources/less/inicio.less', 'public/css/inicio.css')
     .less('resources/less/error/permiso.less', 'public/css/error/permiso.css')

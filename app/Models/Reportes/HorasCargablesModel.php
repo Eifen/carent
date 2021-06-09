@@ -189,6 +189,7 @@ class HorasCargablesModel extends Model
                                 u.id_cargo,
                                 ce.descripcion AS cargo,
                                 CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS empleado,
+                                u.codigo,
                                 c.id AS id_cliente,
                                 c.razon_social AS cliente,
                                 TIME_FORMAT(SEC_TO_TIME(SUM(TIME_TO_SEC(hc.horas_trabajadas))),"%H:%i") horas_trabajadas,

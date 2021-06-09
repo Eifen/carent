@@ -1,6 +1,6 @@
 require('bootstrap');
 import Vue from 'vue';
-import { BootstrapVue } from 'bootstrap-vue';
+import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import vSelect from "vue-select";
@@ -18,6 +18,7 @@ Vue.component('menu-principal', require('../components/menuPrincipal.vue').defau
 Vue.component('loading',require('../components/loading.vue').default);
 Vue.component("v-select", vSelect);
 Vue.use(BootstrapVue);
+Vue.use(BootstrapVueIcons);
 
 new Vue({
 
@@ -251,7 +252,7 @@ new Vue({
       }
 
     },
-    
+
     tipoFiltro: function(e){
 
       let opcion = parseInt(e.target.value);
