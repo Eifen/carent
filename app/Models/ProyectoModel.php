@@ -818,6 +818,7 @@ class ProyectoModel extends Model
     function empleadosProyecto($id_proyecto,$id_division){
 
       $info = DB::select('SELECT u.id,
+                                 u.id_estatus,
                                  CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)AS nombre,
                                  c.descripcion AS cargo,
                                  (SELECT CASE 
@@ -850,8 +851,8 @@ class ProyectoModel extends Model
                           FROM tbl_usuario u,
                                tbl_cargo_empleado c
                           WHERE u.id_division = '.$id_division.'
-                          AND u.id_estatus = 1
                           AND c.id = u.id_cargo
+                          AND (u.id_estatus = 1 OR (SELECT SUM(a.horas_asignadas) FROM tbl_proyecto_analista a WHERE a.id_proyecto = '.$id_proyecto.' AND a.id_analista = u.id) > 0)
                           ORDER BY u.id_cargo DESC, nombre DESC');
 
       if(count($info) > 0){
@@ -865,10 +866,51 @@ class ProyectoModel extends Model
 
       DB::beginTransaction();
 
-      $horasAnalista = DB::select('SELECT *
-                                   FROM tbl_proyecto_analista
-                                   WHERE id_proyecto_division = '.$id_proyecto_division.'
-                                   AND id_proyecto = '.$id_proyecto.'');
+      $horasAnalista = DB::select('SELECT pa.id,
+                                          pa.id_proyecto,
+                                          pa.id_proyecto_division,
+                                          pa.id_analista,
+                                          pa.horas_asignadas,
+                                          pa.id_estatus,
+                                          (SELECT SUM(cast(time_to_sec(hc.horas_trabajadas) / (60 * 60) as decimal(10, 1))) AS horas_cargadas
+                                            FROM tbl_horas_cargables hc 
+                                            WHERE hc.id_proy_analista = pa.id) horas_cargadas
+                                   FROM tbl_proyecto_analista pa
+                                   WHERE pa.id_proyecto_division = '.$id_proyecto_division.'
+                                   AND pa.id_proyecto = '.$id_proyecto.'');
+      for ($i=0; $i < count($horasAnalista); $i++) { 
+        $analista = 0;
+        foreach ($empleados as $key => $item) {
+          if(!isset($item->id)){
+            $item = json_decode($item);
+          }
+          $id_usuario = $item->id;
+          $horas_cargadas = $item->horas_cargadas;
+          $horas = $item->horas;    
+          if ($horasAnalista[$i]->id_analista === $id_usuario) {
+            $analista = 1;
+            if ($horas_cargadas > $horas) {
+              $response = array(
+               "response" => false,
+               "message" => "Las horas asignadas no pueden ser inferior a las horas cargadas por los empleados."
+              );
+              return $response;
+            }
+          }
+          if ($analista == 0) {
+            if ($horasAnalista[$i]->horas_cargadas != null) {
+              $response = array(
+               "response" => false,
+               "message" => "Un analista ya posee horas cargadas, no puede ser eliminado."
+              );
+              return $response;
+            }            
+          }
+        }
+      }
+
+
+
       foreach ($empleados as $key => $item) {
         if(!isset($item->id)){
           $item = json_decode($item);
