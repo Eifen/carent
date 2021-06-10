@@ -392,9 +392,13 @@ class ProyectoController extends Controller
 
       $id_proyecto_division = $request->input("id_proyecto_division");
       $id_proyecto = $request->input("id_proyecto");
-      $empleados = $request->input("empleados");
+      $empleadosA = $request->input("empleados");
       //$usuario_id = $request->session()->get('usuario_id');
-      $horasAsignadas = $modelo->asigHorasAnalistaProy($id_proyecto_division, $id_proyecto, $empleados);
+      $response = $modelo->asigHorasAnalistaProy($id_proyecto_division, $id_proyecto, $empleadosA);
+
+      $id_usuario = $request->session()->get('usuario_id');
+      $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
+      $empleados = $modelo->empleadosProyecto($id_proyecto,$infoUsuario->id_division);
 
       //if($analis["response"]){
 
@@ -412,7 +416,7 @@ class ProyectoController extends Controller
 
       //}
 
-      $response = array("response" => true, "message" => "Analistas agregados con éxitos!");
+      $response = array("response" => $response, "empleados" => $empleados);
       return $response;
 
     }
