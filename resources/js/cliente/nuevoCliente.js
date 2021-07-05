@@ -3,22 +3,28 @@ import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import zenscroll from 'zenscroll';
+import axios from 'axios';
+import Vuelidate from 'vuelidate';
+import AutoNumeric from 'autonumeric';
+import VueNumeric from 'vue-numeric';
+import { required, requiredIf, maxLength, minLength } from 'vuelidate/lib/validators';
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
-window.zenscroll = require('zenscroll');
-window.axios = require('axios');
-window.AutoNumeric = require('autonumeric');
 import VueTheMask from 'vue-the-mask';
-const CryptoJS = require("crypto-js");
-const AES = require("crypto-js/aes");
 var self;
 
-Vue.use(VueTheMask);
-Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
 Vue.component('loading',require('../components/loading.vue').default);
+Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
+Vue.component('alert',require('../components/alert.vue').default);
+Vue.component('confirm',require('../components/confirm.vue').default);
 Vue.component("v-select", vSelect);
+Vue.use(VueTheMask);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
+Vue.use(VueNumeric);
+Vue.use(Vuelidate);
+
 
 new Vue({
 
@@ -33,93 +39,206 @@ new Vue({
         pattern: /[0-9]/,
         transform: v => v.toLocaleUpperCase()
       }
-    },
-    alertForm: {
-      class: "",
-      message: "",
-      show: false
-    },
-    comboEstadosfi: [],
-    comboMunicipiosfi: [],
-    comboParroquiasfi: [],
-
-    refreshForm: false,
-    form: {
-      codigoCliente:{
-        disabled: false,
-        value: ""
-      },
-      rif:{
-        disabled: false,
-        value: ""
-      },
-      nit:{
-        disabled: false,
-        value: ""
-      },
-      razon_social:{
-        disabled: false,
-        value: ""
-      },
-      pais: {
-        disabled: false,
-        validar: true,
-        value: ""
-      },
-      direccion:{
-        disabled: false,
-        maxlength: 500,
-        value: ""
-      },
-      telefono_fiscal: {
-        disabled: true,
-        value: ""
-      },
-      pagina_web: {
-        disabled: false,
-        value: ""
-      },
-      email_fiscal: {
-        disabled: false,
-        value: ""
-      },
-      empleado: {
-        checked: false
-      }
-    },
+    },  
     alert:{
       message: "",
       mostrar: false
     },
-    formSearch: {
-      submit: {
-        disabled: true,
-        html: "Buscar"
-      },
-      inputSearch: {
-        disabled: true,
-        value: ""
-      },
-      select: {
-        disabled:false,
-        value: ""
-      }
-    },
-    usuarios: {
+    alertGeneral: {
+      contador: false,
+      iconCerrar: false,
+      mensaje: "",
       mostrar: false,
-      registros: []
+      ocultarSeg: 0,
+      variante: ""
     },
-    detalleUsuario: {
-      error: false,
-      data: []
+    formFiltro: {
+      btn: {
+        filtrar: {
+          disabled: false,
+          html: "",
+          htmlInit: "Buscar Socio",
+          htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
+        },
+        limpiarFiltro: {
+          disabled: false,
+          html: "",
+          htmlInit: "Limpiar Selección",
+          htmlLoading: "<i class='fas fa-cog fa-spin'></i>"
+        }
+      },
+      nombre: {
+        disabled: true,
+        value: ""
+      },
+      id_usuario:{
+        value: ""
+      },
+      mostrar: false,
+      modal: false,
     },
-    loading: true,
-    submitCrear: {
-      content: "Crear Nuevo Cliente",
-      disabled: false,
-      show:true
+    form: {
+      campos:{
+        codigoCliente: null,
+        codigoUsuario: null,
+        nombre: null,
+        rif: null,
+        razon_social: null,
+        direccion: null,
+        pais: null,
+        telefono_fiscal: null,
+        pagina_web: null,
+        email_fiscal: null,
+      },
+      camposAtributos:{
+        codigoCliente:{
+          disabled: true,
+          invalidFeedback: "",
+          state: null
+        },
+        codigoUsuario:{
+          disabled: true,
+          invalidFeedback: "",
+          state: null
+        },
+        nombre:{
+          disabled: true,
+          invalidFeedback: "",
+          state: null
+        },
+        rif:{
+          disabled: true,
+          invalidFeedback: "",
+          state: null
+        },
+        razon_social:{
+          disabled: true,
+          invalidFeedback: "",
+          state: null
+        },
+        direccion:{
+          disabled: true,
+          invalidFeedback: "",
+          state: null
+        },
+        pais: {
+          disabled: true,
+          invalidFeedback: "",
+          state: null
+        },
+        telefono_fiscal:{
+          disabled: true,
+          invalidFeedback: "",
+          state: null
+        },
+        pagina_web:{
+          disabled: true,
+          invalidFeedback: "",
+          state: null
+        },
+        email_fiscal:{
+          disabled: true,
+          invalidFeedback: "",
+          state: null
+        },
+      },
+      mostrar: false,
+      alert: {
+        contador: false,
+        iconCerrar: false,
+        mensaje: "",
+        mostrar: false,
+        ocultarSeg: 0,
+        variante: ""
+      },
+      botones: {
+        cancelar: {
+          disabled: false,
+          html: "No, deseo cancelar esta acción",
+          show: false
+        },
+        confirmar: {
+          html: "Crear Cliente",
+          show: true
+        },
+        submit: {
+          disabled: false,
+          html: "",
+          htmlInit: "Si, estoy seguro de crear este cliente",
+          htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
+          show: false
+        },
+        refresh: {
+          html: "Quiero crear un nuevo Cliente!",
+          show: false
+        },
+      },
     },
     comboPaises: [],
+    paises: [], 
+    loading: true,
+    modalDetalleUsuario: {
+      alert: {
+        contador: false,
+        iconCerrar: false,
+        mensaje: "",
+        mostrar: false,
+        ocultarSeg: 0,
+        variante: ""
+      },
+      footer: {
+        hide: true
+      },
+      agregarSocio: {
+        alert:{
+          contador: false,
+          iconCerrar: false,
+          mensaje: "",
+          mostrar: false,
+          ocultarSeg: 0,
+          variante: ""
+        },
+        cargando: true,
+        encabezado: [],
+        registros: [],
+        total: 0
+      },
+    },
+  },
+  validations: {
+    form:{
+      campos:{
+        codigoCliente: {
+          required
+        },
+        codigoUsuario: {
+          required
+        },
+        nombre: {
+          required
+        },
+        rif: {
+          required
+        },
+        razon_social: {
+          required
+        },
+        direccion: {
+          required
+        },
+        pais: {
+          required
+        },
+        telefono_fiscal: {
+          required
+        },
+        pagina_web: {
+        },
+        email_fiscal: {
+          required
+        },
+      },
+    }
   },
   beforeCreate: function(){
 
@@ -130,12 +249,39 @@ new Vue({
 
       if(response.status === 200 && response.data.response === true){
 
-        self.form.codigoCliente.value = response.data.codigo;
-        self.comboPaises = response.data.paises;
+        response.data.paises.forEach((item, i) => {
+          self.comboPaises.push({text:item.nombre, value: item.id, codigo_telf: item.codigo_telf});
+        });
+        self.paises = response.data.paises
+
+        self.form.campos.codigoCliente = response.data.codigo;
+        self.formFiltro.nombre.disabled = false;
+        self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
+        self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
+        self.form.botones.submit.html = self.form.botones.submit.htmlInit;
+
+        self.form.camposAtributos.rif.disabled = false;
+        self.form.camposAtributos.razon_social.disabled = false;
+        self.form.camposAtributos.pais.disabled = false;
+        self.form.camposAtributos.direccion.disabled = false;
+        self.form.camposAtributos.pagina_web.disabled = false;
+        self.form.camposAtributos.email_fiscal.disabled = false;
+
+
+        self.formFiltro.mostrar = true;
+        self.form.mostrar = true;
         self.loading = false;
+
+        self.modalDetalleUsuario.agregarSocio.encabezado = [
+          { key: 'numero', label: '#' },
+          { key: 'codigo', label: 'Codigo' },
+          { key: 'nombre', label: 'Nombre' },
+          { key: 'opciones', label: ' ' }
+        ];
 
       }else{
 
+        self.mostrarAlertForm(self.alertGeneral, true, "warning", "Existe un error!, consulte con el administrador del sistema.", false, false, 0);
         throw "error";
 
       }
@@ -149,25 +295,33 @@ new Vue({
 
       });
 
-      self.submitCrear.disabled = true;
-
-      self.alertForm = {
-        class : "alert alert-warning",
-        message : "Existe un error!, consulte con el administrador del sistema.",
-        show: true
-      };
+      self.alert.mostrar = true;
+      self.alert.message = (error.data.message) ? error.data.message : "Ocurrió un error!, por favor intente recargando la página.";
       self.loading = false;
 
     });
 
+    
+
   },
   created: function () {},
-   mounted: function () {
-
-    new AutoNumeric('#nit', {
-      decimalPlaces: 0,
-      decimalCharacter: ',',
-      digitGroupSeparator: '.'
+  mounted: function () {
+    self.$refs["modal-detalle-usuario"].$on('shown', () => {
+      self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
+      self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlLoading;
+      self.formFiltro.nombre.disabled = true;
+      self.formFiltro.btn.filtrar.disabled = true;
+      self.formFiltro.btn.limpiarFiltro.disabled = true;
+      self.formFiltro.modal = false;
+      self.modalDetalleUsuario.agregarSocio.registros = [];
+      self.modalDetalleUsuario.agregarSocio.cargando = true;
+      self.buscar();
+    });
+    self.$refs["modal-detalle-usuario"].$on('hidden', () => {
+      self.modalDetalleUsuario.footer.hide = true;
+      self.modalDetalleUsuario.agregarSocio.registros = [];
+      self.modalDetalleUsuario.agregarSocio.cargando = true;
+      self.mostrarAlertForm(self.modalDetalleUsuario.alert);
     });
   },
 
@@ -176,132 +330,231 @@ new Vue({
 
     buscar: function(e){
 
-      self.alert.mostrar = false;
-      self.usuarios.mostrar = false;
-
-      if(self.formSearch.inputSearch.value.trim() !== ""){
-
-        self.formSearch.submit.html = '<i class="fas fa-cog fa-spin"></i>';
-        self.formSearch.submit.disabled = true;
-        // Obtenemos lo valores
-        let parametros = {
-          buscarPor: self.formSearch.select.value,
-          dato: self.formSearch.inputSearch.value
-        };
-        //Se utiliza el metodo get para su busqueda y se envian con los parametros
-        axios.get('/buscarUsuariosS', {params: parametros})
-        .then(function (response) {
-
-          self.formSearch.submit.html = 'Buscar';
-          self.formSearch.submit.disabled = false;
-
-          if(response.status === 200 && response.data.response === true){
+      self.mostrarAlertForm(self.modalDetalleUsuario.agregarSocio.alert);
+      // Obtenemos lo valores
+      let parametros = {
+        nombre: self.formFiltro.nombre.value
+      };
 
 
-            self.usuarios.registros = response.data.usuarios;
-            $('#modal-detalle-usuario').modal("show");
+      axios.get('/buscarUsuariosS', {params: parametros})
+      .then(function (response) {
 
-          }else{
+        if(response.status === 200 && response.data.response === true){
 
-            throw response.data;
+          self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
+          self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
+          self.formFiltro.nombre.disabled = false;
+          self.formFiltro.btn.filtrar.disabled = false;
+          self.formFiltro.btn.limpiarFiltro.disabled = false;
+          self.formFiltro.modal = true;
+
+          if(response.data.usuarios.length === 0){
+
+            let mensaje = "No se encontraron coincidencias";
+            self.mostrarAlertForm(self.modalDetalleUsuario.agregarSocio.alert, true, "warning", mensaje, false, false, 0);
 
           }
+          let data = self.registroTablaSocios(response.data.usuarios);
+          self.modalDetalleUsuario.agregarSocio.registros = data.registros;
 
-        })
-        .catch(error => {
+          self.$refs['modal-detalle-usuario'].show();
+          self.modalDetalleUsuario.agregarSocio.cargando = false;
 
-          self.formSearch.submit.html = 'Buscar';
-          self.formSearch.submit.disabled = false;
+        }else{
 
-          self.alert.mostrar = true;
+          let mensaje = "Ocurrió un error!";
+          self.mostrarAlertForm(self.modalDetalleUsuario.agregarSocio.alert, true, "warning", mensaje, false, false, 0);
+          self.modalDetalleUsuario.agregarSocio.cargando = false;
+          throw response.data;
 
-          self.usuarios.registros = [];
-          self.usuarios.mostrar = false;
+        }
 
-          if(error.response){
+      })
+      .catch(error => {
 
-            var message = "Existe un error!, consulte con el administrador del sistema.";
+        self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
+        self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
+        self.formFiltro.nombre.disabled = false;
+        self.formFiltro.btn.filtrar.disabled = false;
+        self.formFiltro.btn.limpiarFiltro.disabled = false;
+        self.formFiltro.modal = false;
+        let mensaje = "Ocurrió un error!!";
+        self.mostrarAlertForm(self.modalDetalleUsuario.agregarSocio.alert, true, "warning", mensaje, false, false, 0);
+        self.modalDetalleUsuario.agregarSocio.cargando = false;
 
-          }else{
-
-            var message = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema.";
-
-          }
-
-          self.alertForm = {
-            class : "alert alert-warning",
-            message : message,
-            show: true
-          };
-          setTimeout(function(){
-              self.alertForm = {
-              class: "",
-              message: "",
-              show: false
-              };
-            }, 1000);
-
-        });
-
-      }else{
-
-        $(".inputSearch").parent().find(".mensaje").html("Campo requerido").addClass("invalid-feedback");
-        $(".inputSearch").addClass("error");
-        zenscroll.toY($(".inputSearch").offset().top - 100);
-
-      }
-
-    },
-
-    tipoFiltro: function(e){
-
-      let opcion = parseInt(e.target.value);
-      let valoresPermitidos = [1,2,3,4];
-
-      self.usuarios.mostrar = false;
-      self.usuarios.registros = [];
-
-      if(valoresPermitidos.includes(opcion)){
-        self.formSearch.inputSearch.disabled = false;
-        self.formSearch.submit.disabled = false;
-      }else{
-        self.formSearch.inputSearch.disabled = true;
-        self.formSearch.submit.disabled = true;
-      }
-
-    },
-    evaluarCampo: function(id, e){
-
-      if(e.target.type === 'text'){
-        self.formSearch[id].value = (e.target.value.trim() === "") ? "" : $(e.target).val();
-      }
-
-      if(id === "inputSearch" && self.formSearch["inputSearch"].value.trim() === ""){
-        self.usuarios.registros = [];
-        self.usuarios.mostrar = false;
-      }
-
-      self.limpiarMensajeError(e);
+      });
 
     },
 
     SelecionarUsuario: function(idUsuario,e){
 
-      self.detalleUsuario.error = false;
-      $(e.target).removeClass("fa-check-square").addClass("fa-cog fa-spin");
-      // Obtenemos lo valores
-      let parametros = {
-        idUsuario: idUsuario
+      self.$refs['modal-detalle-usuario'].hide();
+      for (var i = self.modalDetalleUsuario.agregarSocio.registros.length - 1; i >= 0; i--) {
+        if(self.modalDetalleUsuario.agregarSocio.registros[i].id === idUsuario){
+          self.formFiltro.id_usuario.value = self.modalDetalleUsuario.agregarSocio.registros[i].id ;
+          self.form.campos.nombre = self.modalDetalleUsuario.agregarSocio.registros[i].nombre;
+          self.form.campos.codigoUsuario = self.modalDetalleUsuario.agregarSocio.registros[i].codigo;
+        }
+      }
+
+    },
+
+
+    registroTablaSocios: function(datos){
+
+      const registros = [];
+      datos.forEach((item, i) => {
+
+        const usuarios = {
+          numero: (i + 1),
+          codigo: item.codigo,
+          nombre: item.nombre,
+          id: item.id
+        };
+
+        registros.push(usuarios);
+
+      });
+
+      return {
+        registros: registros
       };
-      //Se utiliza el metodo get para Obtener los detalles y se envian con los parametros
-      axios.get('/detalleUsuarios', {params: parametros})
+
+    },
+
+    pais: function(){
+
+      self.form.camposAtributos.telefono_fiscal.disabled = false;
+      self.form.campos.telefono_fiscal = null;
+      for (var i = 0; i < self.paises.length; i++) {
+        if(self.paises[i].id === self.form.campos.pais){
+          self.form.campos.telefono_fiscal = self.paises[i].codigo_telf;
+        }
+      }
+    },
+
+    confirmarCrearCliente: function(){
+
+      var formValido = true;
+
+      self.mostrarAlertForm(self.form.alert);
+
+      Object.keys(self.form.camposAtributos).forEach((indice, i) => {
+
+        if(self.form.camposAtributos[indice].hasOwnProperty("state")){
+          self.form.camposAtributos[indice].state = (self.form.camposAtributos[indice].state === true) ? true : null;
+        }
+
+        if(self.form.camposAtributos[indice].hasOwnProperty("invalidFeedback")){
+          self.form.camposAtributos[indice].invalidFeedback = "";
+        }
+
+      });
+
+      const arrayCampos = Object.keys(self.form.campos);
+      for(var i = 0; i <= (arrayCampos.length - 1); i++){
+
+        let indice = arrayCampos[i];
+        const campo = self.$v.form.campos[indice];
+        campo.$touch();
+
+        if(campo.$invalid){
+
+          self.form.camposAtributos[indice].state = false;
+          const valorCampo = self.$v.form.campos[indice].$model;
+
+          const arrayParams = Object.keys(campo.$params);
+          for(var j = 0; j <= (arrayParams.length - 1); j++){
+
+            let mensajeError = self.validadorMensajes(arrayParams[j], campo);
+            self.form.camposAtributos[indice].invalidFeedback = mensajeError.mensaje;
+
+            if(!mensajeError.respuesta){
+              break
+            }
+
+          }
+
+          zenscroll.toY(self.$refs[indice].$el);
+          formValido = false;
+          break;
+
+        }
+
+      }
+
+      if(formValido){
+
+        self.form.botones.confirmar.show = false;
+        self.form.botones.submit.show = true;
+        self.form.botones.cancelar.show = true;
+
+        self.mostrarAlertForm(self.form.alert, true, "warning", "¿Estas seguro de crear este cliente?", false, false, 0);
+
+      }
+
+    },
+
+    cancelarCrearCliente: function(){
+
+      self.form.botones.confirmar.show = true;
+      self.form.botones.submit.show = false;
+      self.form.botones.cancelar.show = false;
+
+      self.mostrarAlertForm(self.form.alert);
+
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    crear: async function(){
+
+      self.mostrarAlertForm(self.form.alert);
+
+      //Obtenemos valores
+      let parametros = {
+        idUsuario: self.formFiltro.id_usuario.value,
+        codigoCliente: self.form.campos.codigoCliente,
+        rif: self.form.campos.rif,
+        razon_social:  self.form.campos.razon_social,
+        pais: self.form.campos.pais,
+        direccion: self.form.campos.direccion,
+        telefono_fiscal: self.form.campos.telefono_fiscal,
+        pagina_web: self.form.campos.pagina_web,
+        email_fiscal: self.form.campos.email_fiscal
+      };
+
+      self.form.botones.cancelar.disabled = true;
+      self.form.botones.submit.disabled = true;
+      self.form.botones.submit.html = self.form.botones.submit.htmlLoading;
+
+      Object.keys(self.form.camposAtributos).forEach((indice, i) => {
+        self.form.camposAtributos[indice].disabled = true;
+      });
+
+      axios.post('/crearCliente', parametros)
       .then(function (response) {
 
         if(response.status === 200 && response.data.response === true){
 
-          self.usuarios.mostrar = true;
-          self.detalleUsuario.data = response.data.info;
-          $(e.target).removeClass("fa-cog fa-spin").addClass("fa-check-square");
+          self.form.botones.cancelar.show = false;
+          self.form.botones.submit.show = false;
+          self.form.botones.refresh.show = true;
+
+          self.mostrarAlertForm(self.form.alert, true, "success", response.data.message, true, true, 10);
+
 
         }else{
 
@@ -312,258 +565,122 @@ new Vue({
       })
       .catch(error => {
 
-        self.detalleUsuario.error = true;
-        $('#modal-detalle-usuario').modal("show");
-        $(e.target).removeClass("fa-check-square").addClass("fa-cog fa-spin");
+        Object.keys(self.form.camposAtributos).forEach((indice, i) => {
+          self.form.camposAtributos[indice].disabled = false;
+        });
+
+        self.form.botones.submit.disabled = false;
+        self.form.botones.submit.html = self.form.botones.submit.htmlInit
+        self.form.botones.cancelar.disabled = false;
+
+        if(error.message){
+
+          var mensaje = error.message;
+          var variante = "warning";
+
+        }else{
+
+          var mensaje = "Existe un error!, consulte con el administrador del sistema.";
+          var variante = "danger";
+
+        }
+
+        self.mostrarAlertForm(self.form.alert, true, variante, mensaje, true, true, 10);
 
       });
 
     },
 
-    pais: function(){
 
-      self.form.telefono_fiscal.disabled = false;
-      self.form.telefono_fiscal.value = "";
-      self.form.telefono_fiscal.value = self.form.pais.value.codigo_telf;
-    },
 
-    valuesForm: function(e){
 
-      if(e.target.type === 'text' || e.target.type === 'textarea' || e.target.type === 'email'){
-        self.form[e.target.id].value = (e.target.value.trim() === "") ? "" : $(e.target).val();
-      }
 
-      self.limpiarMensajeError(e);
 
-    },
-    limpiarMensajeError: function(e){
-      $(e.target).removeClass("error");
-      $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
-    },
-    campoOpcionalARequerido: function(e){
 
-      self.valuesForm(e);
-      self.form[e.target.id].validar = (self.form[e.target.id].value.length > 0 && self.form[e.target.id].validar === false) ? true : false;
+    mostrarAlertForm: function(alert, mostrar = false, variante = "", mensaje = "", iconCerrar = false, contador = false, ocultarSeg = 0){
 
-    },
-    crear: function(){
+      return new Promise(resolve => {
 
-      var formValido = true;
+        alert.contador = contador;
+        alert.iconCerrar = iconCerrar;
+        alert.mensaje = mensaje;
+        alert.mostrar = mostrar;
+        alert.ocultarSeg = ocultarSeg;
+        alert.variante = variante;
 
-      $("form .form-group .mensaje").html("").removeClass("invalid-feedback");
-      $("form .form-group .form-control").removeClass("error");
-
-      $("form .form-group").each(function(index, elemento) {
-
-        if($(elemento).find(".form-control").length > 0){
-
-          var input = $(elemento).find(".form-control")[0];
-          var valido = self.validarValor(input);
-
-          if(!valido.respuesta){
-            $(elemento).find(".mensaje").html(valido.mensaje).addClass("invalid-feedback");
-            $(elemento).find(".form-control").addClass("error");
-            formValido = valido.respuesta;
-            return false;
-          }
-
-        }
+        resolve(true);
 
       });
 
-      if(formValido){
-
-        self.alertForm = {
-          class : "",
-          message : "",
-          show: false
-        };
-
-        //Obtenemos valores
-        let parametros = {
-          idUsuario: self.detalleUsuario.data.id,
-          codigoCliente: self.form.codigoCliente.value,
-          rif: self.form.rif.value,
-          nit: AutoNumeric.getAutoNumericElement("#nit").getNumber(),
-          razon_social:  self.form.razon_social.value,
-          pais: self.form.pais.value.id,
-          direccion: self.form.direccion.value,
-          telefono_fiscal: self.form.telefono_fiscal.value,
-          pagina_web: self.form.pagina_web.value,
-          email_fiscal: self.form.email_fiscal.value,
-        }
-
-        self.submitCrear.content = '<i class="fas fa-cog fa-spin"></i>';
-        self.submitCrear.disabled = true;
-
-        Object.keys(self.form).forEach(function(indiceObjecto, indice) {
-          self.form[indiceObjecto].disabled = true;
-        });
-        //Se utiliza el metodo post para crear el cliente y se envian con los parametros
-        axios.post('/crearCliente', parametros)
-        .then(function (response) {
-
-          if(response.status === 200 && response.data.response === true){
-
-            self.submitCrear.show = false;
-            self.refreshForm = true;
-
-            self.alertForm = {
-              class : "alert alert-success",
-              message : response.data.message,
-              show: true
-            };
-
-          }else{
-
-            throw response.data;
-
-          }
-
-        })
-        .catch(error => {
-
-          var indices = ["rif","nit","razon_social","pais","direccion","telefono_fiscal","pagina_web","email_fiscal"];
-
-          indices.forEach(function(indiceObjecto, indice) {
-            self.form[indiceObjecto].disabled = false;
-          });
-          self.submitCrear.content = 'Crear Nuevo Cliente';
-          self.submitCrear.disabled = false;
-
-          if(error.response){
-
-            var message = "Existe un error!, consulte con el administrador del sistema.";
-
-          }else{
-
-            var message = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema.";
-
-          }
-
-          self.alertForm = {
-            class : "alert alert-warning",
-            message : message,
-            show: true
-          };
-
-        });
-
-      }// Fin if
-
     },
-    validarValor: function(input) {
 
-      var respuesta = true;
-      var mensaje   = '';
+    validadorMensajes: function(indice,campo){
 
-      if(input.hasAttribute("data-validar")){
+      var mensaje,
+          respuesta = true;
 
-        if(input.getAttribute("data-validar") === "true"){
-
-          if(input.type === 'email'){
-
-            let regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            respuesta      = regexEmail.test(input.value);
-
-            if(!respuesta){
-              zenscroll.toY($(input).offset().top - 100);
-              mensaje        = "Correo inválido";
-            }
-
-          }else if(input.type === 'text' || input.type === 'textarea'){
-
-            if(input.getAttribute("data-min") && !input.getAttribute("data-name-lastname")){
-
-              let minChar = (Number(input.getAttribute("data-min")) === 0) ? 1 : input.getAttribute("data-min");
-              let numChar = input.value.length
-              let regexName = /^[a-zA-Z ']+$/;
-
-              if(numChar < minChar){
-
-                respuesta = false;
-                mensaje   = "El campo debe contener al menos "+minChar+" caracteres!";
-                zenscroll.toY($(input).offset().top - 100);
-
-              }
-
-            }else if(input.getAttribute("data-min") && input.getAttribute("data-name-lastname")){
-
-              let minChar = input.getAttribute("data-min");
-              let numChar = input.value.length
-              let regexName = /^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/;
-
-              if(numChar < minChar){
-
-                respuesta = false;
-                mensaje   = "El campo debe contener al menos "+minChar+" caracteres!";
-                zenscroll.toY($(input).offset().top - 100);
-
-              }else if(!regexName.test(input.value)){
-
-                respuesta = false;
-                mensaje = "Solo se permiten letras y este caracter (',´)!";
-                zenscroll.toY($(input).offset().top - 100);
-
-              }
-
-            }else if(input.getAttribute("data-name-lastname")){
-
-              if(input.value.length > 0){
-
-                let regexName = /^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/;
-                respuesta = regexName.test(input.value);
-
-                if(!respuesta){
-                  mensaje = "Solo se permiten letras y este caracter (')!";
-                  zenscroll.toY($(input).offset().top - 100);
-                }
-
-              }
-
-            }else if(input.getAttribute("data-only-number")){
-
-              var valor = (input.getAttribute("data-formated-number")) ? AutoNumeric.getAutoNumericElement("#"+input.id).getNumber() : input.value;
-
-              let regexNumber = /^\d+$/;
-              respuesta = regexNumber.test(valor);
-
-              if(!respuesta){
-                mensaje = "Solo números";
-                zenscroll.toY($(input).offset().top - 100);
-              }
-
-            }
-
-          }else if(input.type === "select-one"){
-
-            if(input.value === ""){
-              respuesta = false;
-              mensaje = "Debe seleccionar una opción!";
-              zenscroll.toY($(input).offset().top - 100);
-            }
-
-          }
-
-        }
-
+      if(!campo[indice] && indice === "required"){
+        mensaje = "Este campo es requerido!";
+        respuesta = false;
+      }else if(!campo[indice] && indice === "minLength"){
+        let minChar = campo.$params[indice].min;
+        mensaje = "Debe contener al menos "+minChar+" Caracteres!";
+        respuesta = false;
+      }else if(!campo[indice] && indice === "email"){
+        mensaje = "Correo inválido!";
+        respuesta = false;
+      }else if(!campo[indice] && indice === "minValue"){
+        let minChar = campo.$params[indice].min;
+        mensaje = "El valor mínimo es "+minChar+"!";
+        respuesta = false;
+      }else{
+        mensaje = "";
       }
 
-      return {respuesta: respuesta, mensaje: mensaje};
+      return {mensaje:mensaje, respuesta:respuesta};
 
+    },
+
+    cleanFieldForm: function(field){
+
+      field.state = null;
+      field.disabled = false;
+
+    },
+
+    limpiarFiltro: function(){
+
+      self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
+      self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlLoading;
+      self.form.campos.nombre = null;
+      self.form.campos.codigoUsuario = null;
+      self.formFiltro.id_usuario.value = "";
+        
+
+      self.formFiltro.btn.filtrar.disabled = true;
+      self.formFiltro.btn.limpiarFiltro.disabled = true;
+      self.formFiltro.nombre.disabled = true;
+
+      
+      self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
+      self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
+
+      self.formFiltro.btn.filtrar.disabled = false;
+      self.formFiltro.btn.limpiarFiltro.disabled = false;
+      self.formFiltro.nombre.disabled = false;
+    },
+
+    refreshView: function(){
+      window.location.href = "/formNuevoCliente";
     },
 
     keyboard: function(e){
 
       if (e.keyCode === 13){
-        self.crear();
+        e.preventDefault();
       }
 
     },
-    refreshView: function(){
-      window.location.href = "/formNuevoCliente";
-    }
-
   }// Fin methods
 
 });

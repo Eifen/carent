@@ -50,9 +50,8 @@ class ClienteController extends Controller
   function buscarUsuariosS(Request $request){
 
     $modelo = new ClienteModel();
-    $buscarPor = (int) $request->input("buscarPor");
-    $dato = strtolower($request->input("dato"));
-    $usuarios = $modelo->buscarUsuarios($buscarPor, $dato);
+    $nombre = $request->input("nombre");
+    $usuarios = $modelo->buscarUsuarios($nombre);
     if(!empty($usuarios)){
       $response = array("response" => true, "usuarios" => $usuarios);
     }else{
@@ -95,16 +94,17 @@ class ClienteController extends Controller
     $pais = $request->input("pais");
 
     $parametros = array(
-        "idUsuario" => (int) $request->input("idUsuario"),
+        session("usuario_id"),
+        "idUsuario" => $request->input("idUsuario"),
         "codigoCliente" => $codigoCliente,
         "rif" => $request->input("rif"),
-        "nit" => $request->input("nit"),
-        "razon_social" => mb_strtoupper ($request->input("razon_social")),
+        "razon_social" => $request->input("razon_social"),
         "id_pais" => $request->input("pais"),
         "direccion" => $request->input("direccion"),
         "telefono_fiscal" => $request->input("telefono_fiscal"),
         "pagina_web" => $request->input("pagina_web"),
-        "email_fiscal" => strtolower($request->input("email_fiscal"))
+        "email_fiscal" => $request->input("email_fiscal"),
+        session("usuario_ip")
     );
 
     $response = $modelo->crearCliente($parametros);
@@ -190,7 +190,6 @@ class ClienteController extends Controller
       "idUsuario" => (int) $request->input("idUsuario"),
       "codigoCliente" => (int) $request->input("codigoCliente"),
       "rif" => $request->input("rif"),
-      "nit" => $request->input("nit"),
       "razon_social" => mb_strtoupper ($request->input("razon_social")),
       "id_pais" => $request->input("pais"),
       "direccion" => $request->input("direccion"),

@@ -1,7 +1,3 @@
-/*@font-face {
-  font-family: "Rawline";
-  src: url("../../fonts/rawline/rawline-600.ttf");
-}*/
 html {
   overflow-x: hidden;
 }
@@ -12,8 +8,9 @@ html {
   background-color: #E9ECEF;
 }
 #nuevoCliente .wrapper-forms {
+  min-height: calc(100vh - 62px);
   padding-bottom: 50px;
-  padding-top: 100px;
+  padding-top: 50px;
 }
 @media (max-width: 575px) {
   #nuevoCliente .wrapper-forms {
@@ -21,7 +18,33 @@ html {
     padding-top: 50px;
   }
 }
+#nuevoCliente .wrapper-forms .titulo-principal {
+  color: rgba(0, 0, 0, 0.7);
+  margin-bottom: 20px;
+}
 #nuevoCliente .wrapper-forms form {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.13);
+  border-radius: 3px;
+  margin-bottom: 50px;
+  margin-left: 0px;
+  margin-right: 0px;
+  padding: 15px;
+  transition: all 0.3s;
+}
+#nuevoCliente .wrapper-forms form:hover {
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+}
+#nuevoCliente .wrapper-forms form > div.form-group label {
+  color: #091F40;
+}
+#nuevoCliente .wrapper-forms form > div.form-group .form-control {
+  border-radius: 2px;
+}
+#nuevoCliente .wrapper-forms form > div.form-group .form-control:disabled {
+  cursor: not-allowed;
+}
+#nuevoCliente .wrapper-forms .table {
   background-color: white;
   border: 1px solid rgba(0, 0, 0, 0.13);
   border-radius: 3px;
@@ -29,95 +52,65 @@ html {
   padding: 15px;
   transition: all 0.3s;
 }
-#nuevoCliente .wrapper-forms form:hover {
+#nuevoCliente .wrapper-forms .table:hover {
   box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
 }
-#nuevoCliente .wrapper-forms form > div.logo {
-  margin-bottom: 40px;
-  margin-top: 30px;
+#nuevoCliente .wrapper-forms .table thead tr th {
+  background-color: #091F40;
+  color: white;
+  text-align: center;
+  vertical-align: middle;
+}
+#nuevoCliente .wrapper-forms .table tbody tr {
+  transition: all 0.3s;
+}
+#nuevoCliente .wrapper-forms .table tbody tr:hover {
+  background-color: rgba(246, 168, 28, 0.5);
+}
+#nuevoCliente .wrapper-forms .table tbody tr th {
   text-align: center;
 }
-#nuevoCliente .wrapper-forms form > div.logo img {
-  height: 90px;
-  width: auto;
+#nuevoCliente .wrapper-forms .table tbody tr td {
+  text-align: center;
 }
-#nuevoCliente .wrapper-forms form > div.wrapper-required-legend {
-  margin-bottom: 20px;
+#nuevoCliente .wrapper-forms .table tbody tr td a {
+  color: #212529 !important;
 }
-#nuevoCliente .wrapper-forms form > div.wrapper-required-legend .campo-obligatorio {
-  color: #cc0000;
-}
-#nuevoCliente .wrapper-forms form > div.form-group .campo-obligatorio {
-  color: #cc0000;
-}
-#nuevoCliente .wrapper-forms form > div.form-group label {
-  color: #091F40;
-}
-#nuevoCliente .wrapper-forms form > div.form-group label.label-warning {
-  color: #cc0000;
-}
-#nuevoCliente .wrapper-forms form > div.form-group .invalid-feedback {
-  display: block !important;
-}
-#nuevoCliente .wrapper-forms form > div.form-group .form-control {
-  border-radius: 2px;
-}
-#nuevoCliente .wrapper-forms form > div.form-group .form-control.error {
-  border-color: #dc3545;
-}
-#nuevoCliente .wrapper-forms form > div.form-group .form-control:disabled {
-  cursor: not-allowed;
-}
-#nuevoCliente .wrapper-forms form > div.wrapper-recovery-pass {
-  margin-bottom: 10px;
-  margin-top: 10px;
-}
-#nuevoCliente .wrapper-forms form > div.wrapper-recovery-pass .recuperarClave {
-  color: #007BFF;
-  transition: all 0.3s;
-}
-#nuevoCliente .wrapper-forms form > div.wrapper-recovery-pass .recuperarClave:hover {
+#nuevoCliente .wrapper-forms .table tbody tr td .fas:hover,
+#nuevoCliente .wrapper-forms .table tbody tr td .far:hover {
   cursor: pointer;
-  text-decoration: underline;
 }
-#nuevoCliente .wrapper-forms .wrapper-subtmit > div {
-  padding-left: 0px;
-  padding-right: 0px;
+#nuevoCliente .wrapper-forms .table tfoot tr td > div {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
 }
-#nuevoCliente .wrapper-forms .wrapper-subtmit > div .btn {
-  background-color: #091F40;
-  border: 2px solid #091F40;
-  border-radius: 2px;
-  color: #ffffff;
-  font-weight: 600;
-  transition: all 0.3s;
-  width: 100%;
+#nuevoCliente .wrapper-forms .table tfoot tr td > div > div {
+  display: table-cell;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: middle;
 }
-#nuevoCliente .wrapper-forms .wrapper-subtmit > div .btn:hover {
-  background-color: #F6A81C;
+#nuevoCliente .wrapper-forms .table tfoot tr td > div > div .form-control {
+  max-width: 70px;
+}
+#nuevoCliente .wrapper-forms .table tfoot tr td > div > div .icono {
   color: #091F40;
+  font-size: 1.5rem;
 }
-#nuevoCliente .wrapper-forms .wrapper-subtmit > div .btn:disabled {
-  cursor: not-allowed;
+#nuevoCliente .wrapper-forms .table tfoot tr td > div > div .icono:hover {
+  color: #000000;
+  cursor: pointer;
 }
-#nuevoCliente .wrapper-forms .wrapper-refrescar > div {
-  padding-left: 0px;
-  padding-right: 0px;
-}
-#nuevoCliente .wrapper-forms .wrapper-refrescar > div .btn {
-  background-color: #091F40;
-  border: 2px solid #091F40;
+#nuevoCliente .wrapper-forms .btn {
   border-radius: 2px;
-  color: #ffffff;
   font-weight: 600;
-  transition: all 0.3s;
-  width: 100%;
 }
-#nuevoCliente .wrapper-forms .wrapper-refrescar > div .btn:hover {
-  background-color: #F6A81C;
-  color: #091F40;
+#nuevoCliente .wrapper-forms .btn:hover {
+  background-color: #F6A81C !important;
+  color: #091F40 !important;
 }
-#nuevoCliente .wrapper-forms .wrapper-refrescar > div .btn:disabled {
+#nuevoCliente .wrapper-forms .btn:disabled {
   cursor: not-allowed;
 }
 #nuevoCliente .wrapper-forms .wrapper-alert {
@@ -129,6 +122,90 @@ html {
 }
 #nuevoCliente .wrapper-forms .wrapper-alert > div .alert {
   margin-bottom: 0px;
+  text-align: center;
   width: 100%;
+}
+.modal {
+  /*&[id^="modal-eliminar-"]{
+
+    .modal-dialog{
+
+      .modal-body{
+        border-top-right-radius: calc(0.3rem - 1px);
+        border-top-left-radius: calc(0.3rem - 1px);
+        padding: 0px;
+      }
+
+    }
+
+  }*/
+}
+.modal .modal-dialog .modal-header {
+  padding: 0.25rem 1rem;
+}
+.modal .modal-dialog .modal-body form {
+  padding: 0px;
+}
+.modal .modal-dialog .modal-body form > div.form-group label {
+  color: #091F40;
+}
+.modal .modal-dialog .modal-body form > div.form-group .form-control {
+  border-radius: 2px;
+}
+.modal .modal-dialog .modal-body form > div.form-group .form-control:disabled {
+  cursor: not-allowed;
+}
+.modal .modal-dialog .modal-body form > div.form-group .btn:disabled {
+  cursor: not-allowed;
+}
+.modal .modal-dialog .modal-body form > div.form-group .btn.btn-outline-success {
+  border: 2px solid;
+  font-weight: 600;
+}
+.modal .modal-dialog .modal-body .alert {
+  margin-bottom: 0px;
+}
+.modal .modal-dialog .modal-body .table {
+  transition: all 0.3s;
+}
+.modal .modal-dialog .modal-body .table:hover {
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+}
+.modal .modal-dialog .modal-body .table thead tr th {
+  background-color: #091F40;
+  color: white;
+  text-align: center;
+}
+.modal .modal-dialog .modal-body .table tbody tr {
+  transition: all 0.3s;
+}
+.modal .modal-dialog .modal-body .table tbody tr:hover {
+  background-color: rgba(246, 168, 28, 0.5);
+}
+.modal .modal-dialog .modal-body .table tbody tr th {
+  text-align: center;
+}
+.modal .modal-dialog .modal-body .table tbody tr td {
+  text-align: center;
+}
+.modal .modal-dialog .modal-body .table tbody tr td .icono {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.modal .modal-dialog .modal-body .table tbody tr td .icono:hover {
+  cursor: pointer;
+}
+.modal .modal-dialog .modal-body .table tbody tr td .icono:hover.bi-trash {
+  color: #DD3D31;
+}
+.modal .modal-dialog footer {
+  padding: 0.25rem 1rem !important;
+}
+.modal .modal-dialog footer .alert {
+  margin: 10px 0px 10px 0px;
+}
+.modal .modal-dialog footer button {
+  margin-left: 0px;
+  margin-right: 0px;
 }
 
