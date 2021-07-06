@@ -95,15 +95,15 @@ class ClienteController extends Controller
 
     $parametros = array(
         session("usuario_id"),
-        "idUsuario" => $request->input("idUsuario"),
-        "codigoCliente" => $codigoCliente,
-        "rif" => $request->input("rif"),
-        "razon_social" => $request->input("razon_social"),
-        "id_pais" => $request->input("pais"),
-        "direccion" => $request->input("direccion"),
-        "telefono_fiscal" => $request->input("telefono_fiscal"),
-        "pagina_web" => $request->input("pagina_web"),
-        "email_fiscal" => $request->input("email_fiscal"),
+        $request->input("idUsuario"),
+        $codigoCliente,
+        $request->input("rif"),
+        $request->input("razon_social"),
+        $request->input("pais"),
+        $request->input("direccion"),
+        $request->input("telefono_fiscal"),
+        $request->input("pagina_web"),
+        $request->input("email_fiscal"),
         session("usuario_ip")
     );
 
