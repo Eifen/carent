@@ -24,14 +24,14 @@
             <h5>Consultar Cliente</h5>
             <b-form class="row">
               <b-form-group class="col-12 col-md-4">
-                <select class="form-control"
-                        v-bind:disabled="formSearch.select.disabled"
-                        v-model="formSearch.select.value"
-                        v-on:change="tipoFiltro">
-                        <option value="" selected disabled>Consultar por</option>
-                        <option value="1">Código  del Cliente</option>
-                        <option value="2">Nombre o Razón Social</option>
-                </select>
+                <b-form-select 
+                    :options="consultarPor" 
+                    size="sm"
+                    v-model="consultarPor.value">
+                   <template v-slot:first>
+                      <option :value="null" disabled="true">Consultar por</option>
+                   </template>
+                </b-form-select>
               </b-form-group>
               <b-form-group class="col-12 col-md-6">
                 <b-form-input class="form-control inputSearch"
