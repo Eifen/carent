@@ -25,6 +25,7 @@
             <b-form class="row">
               <b-form-group class="col-12 col-md-4">
                 <b-form-select
+                    @change="tipoFiltro"
                     :options="consultarPor.options"
                     size="sm"
                     v-model="consultarPor.value">
@@ -36,11 +37,11 @@
               <b-form-group class="col-12 col-md-6">
                 <b-form-input class="form-control inputSearch"
                        :disabled="formSearch.inputSearch.disabled"
+                       :formatter="(evaluarCampo)"
                        id="inputSearch"
                        ref="inputSearch"
                        size="sm"
                        type="text"
-                       v-on:keyup="evaluarCampo('inputSearch', $event)"
                        v-model="formSearch.inputSearch.value">
                 </b-form-input>
                 <div class="mensaje"></div>
