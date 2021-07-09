@@ -45,7 +45,15 @@ new Vue({
       error: false,
       data: []
     },
-    permisoActualizar: false
+    permisoActualizar: false,
+
+    consultarPor: {
+       options: [
+        {text: "Código  del Cliente", value: 1},
+        {text: "Nombre o Razón Social", value: 2},
+       ],
+       value: null
+    },
   },
   beforeCreate: function(){
 
@@ -206,5 +214,4 @@ new Vue({
 
     }
   }// Fin methods
-
 });

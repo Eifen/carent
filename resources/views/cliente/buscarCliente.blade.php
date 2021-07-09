@@ -15,43 +15,46 @@
     </head>
     <body>
 
-      <div id="buscarCliente" class="container-fluid" v-on:submit.prevent="buscar">
+      <b-container fluid id="buscarCliente" v-on:submit.prevent="buscar">
         <loading :loading="loading" v-show="loading"></loading>
         <menu-principal v-cloak></menu-principal>
 
-        <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
-          <div class="col-12 col-sm-11 col-md-10 col-lg-8 col-xl-7">
-            <form class="row">
-              <div class="form-group col-12 col-md-4">
+        <b-row align-h="center" align-v="center" class="justify-content-center wrapper-forms" v-cloak>
+          <b-col cols="col-12 col-sm-11 col-md-10 col-lg-8 col-xl-7">
+            <h5>Consultar Cliente</h5>
+            <b-form class="row">
+              <b-form-group class="col-12 col-md-4">
                 <select class="form-control"
                         v-bind:disabled="formSearch.select.disabled"
                         v-model="formSearch.select.value"
                         v-on:change="tipoFiltro">
-                  <option value="" selected disabled>Consultar por</option>
-                  <option value="1">Código  del Cliente</option>
-                  <option value="2">Nombre o Razón Social</option>
+                        <option value="" selected disabled>Consultar por</option>
+                        <option value="1">Código  del Cliente</option>
+                        <option value="2">Nombre o Razón Social</option>
                 </select>
-              </div>
-              <div class="form-group col-12 col-md-6">
-                <input class="form-control inputSearch"
+              </b-form-group>
+              <b-form-group class="col-12 col-md-6">
+                <b-form-input class="form-control inputSearch"
+                       :disabled="formSearch.inputSearch.disabled"
+                       id="inputSearch"
                        ref="inputSearch"
                        type="text"
-                       v-bind:disabled="formSearch.inputSearch.disabled"
                        v-on:keyup="evaluarCampo('inputSearch', $event)"
                        v-model="formSearch.inputSearch.value">
+                </b-form-input>
                 <div class="mensaje"></div>
-              </div>
-              <div class="form-group col-12 col-md-2">
+              </b-form-group>
+              <b-form-group class="col-12 col-md-2">
                 <!--Al hacer clic se invoca el metodo buscar de buscarCliente.js -->
-                <button class="btn btn-primary"
-                        type="button"
-                        v-bind:disabled="formSearch.submit.disabled"
-                        v-html="formSearch.submit.html"
-                        v-on:click="buscar">
-                </button>
-              </div>
-            </form>
-          </div>
+                <b-button
+                  :disabled="formSearch.submit.disabled"
+                  block    
+                  v-html="formSearch.submit.html"
+                  v-on:click="buscar"
+                  variant="primary">
+              </b-form-group>
+            </b-form>
+          </b-col>
           <div class="col-12" v-show="clientes.mostrar">
             <table class="table">
               <thead>
@@ -85,7 +88,7 @@
           <div class="col-12 col-sm-11 col-md-10 col-lg-8 col-xl-7" v-if="alert.mostrar">
             <div class="alert alert-warning text-center" v-html="alert.message"></div>
           </div>
-        </div>
+        </b-row>
         <div id="modal-detalle-cliente" class="modal fade" tabindex="-1" role="dialog" v-cloak>
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
@@ -162,8 +165,7 @@
             </div>
           </div>
         </div>
-
-      </div>
+      </b-container>
 
       <script src="{{ mix('/js/buscarCliente.js') }}"></script>
 
