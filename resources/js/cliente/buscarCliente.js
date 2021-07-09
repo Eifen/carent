@@ -46,7 +46,6 @@ new Vue({
       data: []
     },
     permisoActualizar: false,
-
     consultarPor: {
        options: [
         {text: "Código  del Cliente", value: 1},

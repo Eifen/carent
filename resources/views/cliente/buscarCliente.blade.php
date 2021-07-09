@@ -24,8 +24,8 @@
             <h5>Consultar Cliente</h5>
             <b-form class="row">
               <b-form-group class="col-12 col-md-4">
-                <b-form-select 
-                    :options="consultarPor" 
+                <b-form-select
+                    :options="consultarPor.options"
                     size="sm"
                     v-model="consultarPor.value">
                    <template v-slot:first>
@@ -38,6 +38,7 @@
                        :disabled="formSearch.inputSearch.disabled"
                        id="inputSearch"
                        ref="inputSearch"
+                       size="sm"
                        type="text"
                        v-on:keyup="evaluarCampo('inputSearch', $event)"
                        v-model="formSearch.inputSearch.value">
@@ -48,7 +49,8 @@
                 <!--Al hacer clic se invoca el metodo buscar de buscarCliente.js -->
                 <b-button
                   :disabled="formSearch.submit.disabled"
-                  block    
+                  block
+                  size="sm"
                   v-html="formSearch.submit.html"
                   v-on:click="buscar"
                   variant="primary">
