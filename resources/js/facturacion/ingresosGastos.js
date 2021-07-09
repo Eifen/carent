@@ -103,7 +103,7 @@ new Vue({
             { key: 'cliente', label: 'Cliente' },
             { key: 'fecha_contratacion', label: 'Fecha Contrato' },
             { key: 'monto_contratado', label: 'Monto Contratado' },
-            'estatus',
+            'estatus'
           ];
         }
 
