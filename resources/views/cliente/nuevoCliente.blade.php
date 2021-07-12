@@ -29,7 +29,7 @@
               </b-form-group>
               <b-form-group
                 class="form-group col-12 col-sm-6"
-                label="Nombre"
+                label="Nombre del Socio:"
                 label-for="nombre"
                 id="group-nombre">
                 <b-form-input
@@ -59,12 +59,11 @@
                   @click="limpiarFiltro"
                   variant="outline-primary">
               </b-form-group>
-
               <b-form-group
                 :invalid-feedback="form.camposAtributos.codigoUsuario.invalidFeedback"
                 class="col-12 col-sm-6"
                 description="Código del Socio Seleccionado"
-                label="Código del Socion"
+                label="Código del Socio"
                 label-for="codigoUsuario"
                 id="group-codigoUsuario">
                 <b-form-input
@@ -79,7 +78,6 @@
                   type="text"
                   v-model="$v.form.campos.codigoUsuario.$model"></b-form-input>
               </b-form-group>
-
               <b-form-group
                 :invalid-feedback="form.camposAtributos.nombre.invalidFeedback"
                 class="col-12 col-sm-6"
@@ -99,11 +97,9 @@
                   type="text"
                   v-model="$v.form.campos.nombre.$model"></b-form-input>
               </b-form-group>
-
               <b-form-group class="col-12">
                 <h5>Datos del Clientes</h5>
               </b-form-group>
-
               <b-form-group
                 :invalid-feedback="form.camposAtributos.codigoCliente.invalidFeedback"
                 class="col-12 col-sm-6"
@@ -123,8 +119,6 @@
                   type="text"
                   v-model="$v.form.campos.codigoCliente.$model"></b-form-input>
               </b-form-group>
-
-
               <b-form-group
                 :invalid-feedback="form.camposAtributos.rif.invalidFeedback"
                 class="col-12 col-sm-6"
@@ -145,8 +139,6 @@
                   type="text"
                   v-model="$v.form.campos.rif.$model"></the-mask>
               </b-form-group>
-
-
               <b-form-group
                 :invalid-feedback="form.camposAtributos.razon_social.invalidFeedback"
                 class="col-12 col-sm-6"
@@ -166,10 +158,6 @@
                   type="text"
                   v-model="$v.form.campos.razon_social.$model"></b-form-input>
               </b-form-group>
-
-
-
-
               <b-form-group
                 :invalid-feedback="form.camposAtributos.direccion.invalidFeedback"
                 class="col-12 col-sm-6"
@@ -189,10 +177,6 @@
                   type="text"
                   v-model="$v.form.campos.direccion.$model"></b-form-textarea>
               </b-form-group>
-
-
-
-
               <b-form-group
                 :invalid-feedback="form.camposAtributos.pais.invalidFeedback"
                 class="col-12 col-sm-6"
@@ -216,9 +200,6 @@
                   </template>
                 </b-form-select>
               </b-form-group>
-
-
-
               <b-form-group
                 :invalid-feedback="form.camposAtributos.telefono_fiscal.invalidFeedback"
                 class="col-12 col-sm-6"
@@ -239,8 +220,6 @@
                   type="text"
                   v-model="$v.form.campos.telefono_fiscal.$model"></b-form-input>
               </b-form-group>
-
-
               <b-form-group
                 :invalid-feedback="form.camposAtributos.pagina_web.invalidFeedback"
                 class="col-12 col-sm-6"
@@ -260,8 +239,6 @@
                   type="text"
                   v-model="$v.form.campos.pagina_web.$model"></b-form-input>
               </b-form-group>
-
-
               <b-form-group
                 :invalid-feedback="form.camposAtributos.email_fiscal.invalidFeedback"
                 class="col-12 col-sm-6"
@@ -281,13 +258,6 @@
                   type="email"
                   v-model="$v.form.campos.email_fiscal.$model"></b-form-input>
               </b-form-group>
-
-
-
-
-
-
-
               <b-form-group class="col-12">
                 <alert :contador="form.alert.contador"
                        :icono-cerrar="form.alert.iconCerrar"
@@ -296,6 +266,7 @@
                        :ocultar-seg="form.alert.ocultarSeg"
                        :variante="form.alert.variante">
                 </alert>
+                <b-form-group></b-form-group>
                 <b-button
                   @click="confirmarCrearCliente"
                   block
@@ -327,21 +298,6 @@
                   v-if="form.botones.refresh.show"
                   variant="primary">Quiero crear un nuevo cliente</b-button>
               </b-form-group>
-
-
-              
-              
-
-
-
-
-
-
-
-
-
-
-
             </b-form>
           </b-col>
           <b-col sm="11" md="9" lg="8" v-cloak>
@@ -358,71 +314,52 @@
             </b-row>
           </b-col>
 
+
         </b-row>
-
-
-
-
-
-
-
-
-
-
-
-
         <b-modal
-                :hide-footer="modalDetalleUsuario.footer.hide"
-                :id="'modal-detalle-usuario'"
-                :no-close-on-backdrop="false"
-                :ref="'modal-detalle-usuario'"
-                centered
-                size="lg">
-
-                <template v-slot:modal-title>
-                  Agregar Socio
-                </template>
-
-                <b-table
-                  :busy="modalDetalleUsuario.agregarSocio.cargando"
-                  :fields="modalDetalleUsuario.agregarSocio.encabezado"
-                  :items="modalDetalleUsuario.agregarSocio.registros"
-                  :small="true"
-                  hover
-                  responsive
-                  show-empty>
-                  <template v-slot:table-busy>
-                    <div class="text-center text-primary">
-                      <b-spinner class="align-middle"></b-spinner>
-                    </div>
-                  </template>
-                  <template v-slot:empty="scope" v-if="modalDetalleUsuario.agregarSocio.alert.mostrar">
-                    <alert :contador="modalDetalleUsuario.agregarSocio.alert.contador"
-                           :icono-cerrar="modalDetalleUsuario.agregarSocio.alert.iconCerrar"
-                           :mensaje="modalDetalleUsuario.agregarSocio.alert.mensaje"
-                           :mostrar="modalDetalleUsuario.agregarSocio.alert.mostrar"
-                           :ocultar-seg="modalDetalleUsuario.agregarSocio.alert.ocultarSeg"
-                           :variante="modalDetalleUsuario.agregarSocio.alert.variante">
-                    </alert>
-                  </template>
-                  <template v-slot:cell(opciones)="data">
-                    <b-icon-check
-                      :id="'selecionar-'+data.item.id"
-                      class="icono"
-                      v-on:click="SelecionarUsuario(data.item.id)">
-                    </b-icon-check>
-                    <b-tooltip :target="'selecionar-'+data.item.id" triggers="hover">
-                      Seleccionar Socio
-                    </b-tooltip>
-                  </template>
-                </b-table>
-
-              </b-modal>
-
-
-
-
-
+          :hide-footer="modalDetalleUsuario.footer.hide"
+          :id="'modal-detalle-usuario'"
+          :no-close-on-backdrop="false"
+          :ref="'modal-detalle-usuario'"
+          centered
+          size="lg">
+          <template v-slot:modal-title>
+            Agregar Socio
+          </template>
+          <b-table
+            :busy="modalDetalleUsuario.agregarSocio.cargando"
+            :fields="modalDetalleUsuario.agregarSocio.encabezado"
+            :items="modalDetalleUsuario.agregarSocio.registros"
+            :small="true"
+            hover
+            responsive
+            show-empty>
+            <template v-slot:table-busy>
+              <div class="text-center text-primary">
+                <b-spinner class="align-middle"></b-spinner>
+              </div>
+            </template>
+            <template v-slot:empty="scope" v-if="modalDetalleUsuario.agregarSocio.alert.mostrar">
+              <alert :contador="modalDetalleUsuario.agregarSocio.alert.contador"
+                     :icono-cerrar="modalDetalleUsuario.agregarSocio.alert.iconCerrar"
+                     :mensaje="modalDetalleUsuario.agregarSocio.alert.mensaje"
+                     :mostrar="modalDetalleUsuario.agregarSocio.alert.mostrar"
+                     :ocultar-seg="modalDetalleUsuario.agregarSocio.alert.ocultarSeg"
+                     :variante="modalDetalleUsuario.agregarSocio.alert.variante">
+              </alert>
+            </template>
+            <template v-slot:cell(opciones)="data">
+              <b-icon-check
+                :id="'selecionar-'+data.item.id"
+                class="icono"
+                v-on:click="SelecionarUsuario(data.item.id)">
+              </b-icon-check>
+              <b-tooltip :target="'selecionar-'+data.item.id" triggers="hover">
+                Seleccionar Socio
+              </b-tooltip>
+            </template>
+          </b-table>
+        </b-modal>
       </b-container>
       <script src="{{ mix('/js/nuevoCliente.js') }}"></script>
     </body>

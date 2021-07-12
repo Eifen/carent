@@ -506,19 +506,6 @@ new Vue({
 
     },
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     crear: async function(){
 
       self.mostrarAlertForm(self.form.alert);
@@ -590,13 +577,7 @@ new Vue({
       });
 
     },
-
-
-
-
-
-
-
+    
     mostrarAlertForm: function(alert, mostrar = false, variante = "", mensaje = "", iconCerrar = false, contador = false, ocultarSeg = 0){
 
       return new Promise(resolve => {
