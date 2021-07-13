@@ -45,14 +45,7 @@ new Vue({
       error: false,
       data: []
     },
-    permisoActualizar: false,
-    consultarPor: {
-       options: [
-        {text: "Código  del Cliente", value: 1},
-        {text: "Nombre o Razón Social", value: 2},
-       ],
-       value: null
-    },
+    permisoActualizar: false
   },
   beforeCreate: function(){
 
@@ -142,30 +135,26 @@ new Vue({
       }
 
     },
-    tipoFiltro: function(){
+    tipoFiltro: function(e){
 
-      if(self.consultarPor.value !== null){
+      let opcion = parseInt(e.target.value);
+      let valoresPermitidos = [1,2,3,4];
+
+      self.clientes.mostrar = false;
+      self.clientes.registros = [];
+
+      if(valoresPermitidos.includes(opcion)){
         self.formSearch.inputSearch.disabled = false;
         self.formSearch.submit.disabled = false;
       }else{
         self.formSearch.inputSearch.disabled = true;
-        self.formSearch.submit.disabled = false;
+        self.formSearch.submit.disabled = true;
       }
 
     },
-    evaluarCampo: function(value){
+    evaluarCampo: function(id, e){
 
-      if(self.consultarPor.value === 1){
-
-        return value.replace(/[^0-9]/g, '');
-
-      }else{
-
-        return value;
-
-      }
-
-      /*if(e.target.type === 'text'){
+      if(e.target.type === 'text'){
         self.formSearch[id].value = (e.target.value.trim() === "") ? "" : $(e.target).val();
       }
 
@@ -175,7 +164,7 @@ new Vue({
       }
 
       self.limpiarMensajeError(e);
-      */
+
     },
     limpiarMensajeError: function(e){
       $(e.target).removeClass("error");
@@ -216,6 +205,6 @@ new Vue({
       });
 
     }
-
   }// Fin methods
+
 });
