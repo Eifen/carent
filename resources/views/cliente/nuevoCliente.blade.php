@@ -5,7 +5,6 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <meta name="robots" content="{{ env('META_ROBOT') }}">
 
         <title>.: CARENT :.</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
@@ -14,239 +13,354 @@
 
     </head>
     <body>
-
-      <div id="nuevoCliente" class="container-fluid" v-on:keypress="keyboard">
+      <b-container fluid id="nuevoCliente" v-on:keypress="keyboard">
         <loading :loading="loading" v-show="loading"></loading>
         <menu-principal v-cloak></menu-principal>
-        <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
-          <div class="col-12 col-sm-11 col-md-9 col-lg-8">
-            <h3>Estas Creando a un Nuevo Cliente</h3>
-             <form class="row">
-              <div class="form-group col-12 col-md-4">
-                <select class="form-control"
-                        v-bind:disabled="formSearch.select.disabled"
-                        v-model="formSearch.select.value"
-                        v-on:change="tipoFiltro">
-                  <option value="" selected disabled>Agregar Socio Por</option>
-                  <option value="1">Código de usuario</option>
-                  <option value="2">Cédula</option>
-                  <option value="3">Primer o segundo nombre</option>
-                  <option value="4">Primer o segundo apellido</option>
-                </select>
-              </div>
-              <div class="form-group col-12 col-md-6">
-                <input class="form-control inputSearch"
-                       ref="inputSearch"
-                       type="text"
-                       v-bind:disabled="formSearch.inputSearch.disabled"
-                       v-on:keyup="evaluarCampo('inputSearch', $event)"
-                       v-model="formSearch.inputSearch.value">
-                <div class="mensaje"></div>
-              </div>
-              <!--Al hacer clic se invoca el metodo buscar de crearCliente.js y abre la modal-->
-              <div class="form-group col-12 col-md-2">
-                <button class="btn btn-primary"
-                        type="button"
-                        v-bind:disabled="formSearch.submit.disabled"
-                        v-html="formSearch.submit.html"
-                        v-on:click="buscar">
-                </button>
-              </div>
-              <div id="modal-detalle-usuario" class="modal fade" tabindex="-1" role="dialog" v-cloak>
-                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                  <div class="modal-content">
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <th scope="col">Código</th>
-                          <th scope="col">Cédula</th>
-                          <th scope="col">Nombre</th>
-                          <th scope="col"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <!-- Se llena la tabla con los valores que tiene usuarios.registros obtenidos de crearCliente.js -->
-                        <tr v-for="usuario in usuarios.registros">
-                          <th scope="row">@{{ usuario.codigo }}</th>
-                          <td>@{{ usuario.cedula }}</td>
-                          <td>@{{ usuario.nombre }}</td>
-                          <td>
-                            <i class="fas fa-check-square" data-dismiss="modal" v-on:click="SelecionarUsuario(usuario.id, $event)"></i>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            <form class="row" v-if="!detalleUsuario.error">
-                  <div class="form-group col-12 col-sm-6" v-show="usuarios.mostrar">
-                    <label>Código</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleUsuario.data.codigo">
-                  </div>
-                  <div class="form-group col-12 col-sm-6" v-show="usuarios.mostrar">
-                    <label>Nombre</label>
-                    <input class="form-control" type="text" disabled v-bind:value="detalleUsuario.data.nombre">
-                  </div>
-            </form>
-            <div class="row wrapper-alert">
-              <div class="col-12">
-                <div v-bind:class="alertForm.class" role="alert" v-if="alertForm.show" v-html="alertForm.message"></div>
-              </div>
-            </div>
-          </form>
-            <form class="row">
-              <div class="col-12 wrapper-required-legend">
-                <b>Campos obligatorios (<span class="campo-obligatorio">*</span>)</b>
-              </div>
-              <div class="form-group col-12 col-sm-6">
-                <label for="codigoCliente">Código del Cliente <span class="campo-obligatorio">*</span></label>
-                <input aria-describedby="codigoClienteHelp"
-                       class="form-control"
-                       data-validar="true"
-                       data-only-number="true"
-                       id="codigoCliente"
-                       v-bind:disabled="form.codigoCliente.disabled"
-                       v-model="form.codigoCliente.value"
-                       v-on:keyup="valuesForm"
-                       disabled
-                       type="text">
-                <small id="codigoClienteHelp" class="form-text">Ejemplo: 2209</small>
-                <div class="mensaje"></div>
-              </div>
-              <div class="form-group col-12 col-sm-6">
-                <label for="rif">Rif<span class="campo-obligatorio">*</span> </label>
-                <the-mask mask="F- MMMMMMMMMM" :tokens="hexTokens"
-                          class="form-control"
-                          id="rif"
-                          v-bind:disabled="form.rif.disabled"
-                          v-model="form.rif.value"
-                          v-on:keyup="valuesForm"
-                          type="text"></the-mask>
-                <small id="rifHelp" class="form-text">V-, E-, P-, G-, J-, C-</small>
-                <div class="mensaje"></div>
-              </div>
-              <div class="form-group col-12 col-sm-6">
-                <label for="nit">Nit</label>
-                <input class="form-control"
-                       data-formated-number="true"
-                       data-only-number="true"
-                       data-validar="true"
-                       id="nit"
-                       v-bind:disabled="form.nit.disabled"
-                       v-model="form.nit.value"
-                       v-on:keyup="valuesForm"
-                       type="text">
-                <small id="nitHelp" class="form-text">Ejemplo: 123456789</small>
-                <div class="mensaje"></div>
-              </div>
-              <div class="form-group col-12 col-sm-6">
-                <label for="razon_social">Nombre o Razón social<span class="campo-obligatorio">*</span></label>
-                <input aria-describedby="razon_socialHelp"
-                       class="form-control text-lowercase"
-                       data-min="3"
-                       data-validar="true"
-                       id="razon_social"
-                       v-bind:disabled="form.razon_social.disabled"
-                       v-model="form.razon_social.value"
-                       v-on:keyup="valuesForm"
-                       type="text">
-                <small id="razon_socialHelp" class="form-text text-muted">Ejemplo: Banco...</small>
-                <div class="mensaje"></div>
-              </div>
-            </form>
-            <h5>Direccion Fiscal</h5>
-            <form class="row">
-              <div class="form-group col-12 col-sm-6">
-                <label for="pais">Pais<span class="campo-obligatorio">*</span></label>
-                <v-select @input="pais"
-                :options="comboPaises"
-                          label="nombre"                          
-                          id="pais"
-                          v-model="form.pais.value"
-                          v-bind:data-validar="form.pais.validar"
-                          v-bind:disable="form.pais.disable"
-                          placeholder="Seleccione..."
-                          type="text"></v-select>
-              </div>
-              <div class="form-group col-12 col-sm-6"></div>
-              <div class="form-group col-24 col-sm-12">
-                <label for="direccion">Dirección<span class="campo-obligatorio">*</span></label>
-                <textarea :disabled="form.direccion.disabled"
-                          :maxlength="form.direccion.maxlength"
-                          class="form-control form-control-sm"
-                          data-validar="true"
-                          rows="3"
-                          v-model="form.direccion.value"
-                          data-min="10"></textarea>
-              </div>              
-              <div class="form-group col-12 col-sm-6">
-                <label for="telefono_fiscal">Nº de Teléfono Principal<span class="campo-obligatorio">*</span></label>
-                <input aria-describedby="telefono_fiscalHelp"
-                       class="form-control"
-                       id="telefono_fiscal"
-                       v-bind:disabled="form.telefono_fiscal.disabled"
-                       v-mask="'+ ################'"
-                       v-model="form.telefono_fiscal.value"
-                       v-on:keyup="valuesForm"
-                       type="text">
-                <small id="telefono_fiscalHelp" class="form-text text-muted">Ejemplo: + 584241234567</small>
-                <div class="mensaje"></div>
-              </div>
+        <b-row align-h="center" align-v="center" v-if="alert.mostrar === false && formFiltro.mostrar" class="wrapper-forms" v-cloak>
+          <b-col cols="12 col-sm-10" v-if="formFiltro.mostrar">
+            <b-row v-cloak>
+              <b-col cols="12" sm="11" md="9" lg="8" v-if="form.mostrar">
+                <h4 class="titulo-principal">Estas creando un nuevo cliente</h4>
+              </b-col>
+            </b-row>
+            <b-form class="row">
+              <b-form-group class="col-12">
+                <h5>Agregar Socio:</h5>
+              </b-form-group>
+              <b-form-group
+                class="form-group col-12 col-sm-6"
+                label="Nombre del Socio:"
+                label-for="nombre"
+                id="group-nombre">
+                <b-form-input
+                  :disabled="formFiltro.nombre.disabled"
+                  id="nombre"
+                  ref="nombre"
+                  size="sm"
+                  type="text"
+                  v-model.trim="formFiltro.nombre.value"></b-form-input>
+              </b-form-group>
+              <b-form-group class="col-12 col-sm-3" v-b-modal="'modal-detalle-usuario'">
+                <label>&nbsp;</label>
+                <b-button
+                  :disabled="formFiltro.btn.filtrar.disabled"
+                  block
+                  size="sm"
+                  v-html="formFiltro.btn.filtrar.html"
+                  variant="primary">
+              </b-form-group>
+              <b-form-group class="col-12 col-sm-3">
+                <label>&nbsp;</label>
+                <b-button
+                  :disabled="formFiltro.btn.limpiarFiltro.disabled"
+                  block
+                  size="sm"
+                  v-html="formFiltro.btn.limpiarFiltro.html"
+                  @click="limpiarFiltro"
+                  variant="outline-primary">
+              </b-form-group>
+              <b-form-group
+                :invalid-feedback="form.camposAtributos.codigoUsuario.invalidFeedback"
+                class="col-12 col-sm-6"
+                description="Código del Socio Seleccionado"
+                label="Código del Socio"
+                label-for="codigoUsuario"
+                id="group-codigoUsuario">
+                <b-form-input
+                  @input="cleanFieldForm(form.camposAtributos.codigoUsuario)"
+                  :disabled="form.camposAtributos.codigoUsuario.disabled"
+                  :state="form.camposAtributos.codigoUsuario.state"
+                  autocomplete="off"
+                  class="text-uppercase"
+                  id="codigoUsuario"
+                  ref="codigoUsuario"
+                  size="sm"
+                  type="text"
+                  v-model="$v.form.campos.codigoUsuario.$model"></b-form-input>
+              </b-form-group>
+              <b-form-group
+                :invalid-feedback="form.camposAtributos.nombre.invalidFeedback"
+                class="col-12 col-sm-6"
+                description="Nombre del Socio Seleccionado"
+                label="Nombre"
+                label-for="nombre"
+                id="group-nombre">
+                <b-form-input
+                  @input="cleanFieldForm(form.camposAtributos.nombre)"
+                  :disabled="form.camposAtributos.nombre.disabled"
+                  :state="form.camposAtributos.nombre.state"
+                  autocomplete="off"
+                  class="text-uppercase"
+                  id="nombre"
+                  ref="nombre"
+                  size="sm"
+                  type="text"
+                  v-model="$v.form.campos.nombre.$model"></b-form-input>
+              </b-form-group>
+              <b-form-group class="col-12">
+                <h5>Datos del Clientes</h5>
+              </b-form-group>
+              <b-form-group
+                :invalid-feedback="form.camposAtributos.codigoCliente.invalidFeedback"
+                class="col-12 col-sm-6"
+                description="Código del Cliente"
+                label="Código del Cliente"
+                label-for="codigoCliente"
+                id="group-codigoCliente">
+                <b-form-input
+                  @input="cleanFieldForm(form.camposAtributos.codigoCliente)"
+                  :disabled="form.camposAtributos.codigoCliente.disabled"
+                  :state="form.camposAtributos.codigoCliente.state"
+                  autocomplete="off"
+                  class="text-uppercase"
+                  id="codigoCliente"
+                  ref="codigoCliente"
+                  size="sm"
+                  type="text"
+                  v-model="$v.form.campos.codigoCliente.$model"></b-form-input>
+              </b-form-group>
+              <b-form-group
+                :invalid-feedback="form.camposAtributos.rif.invalidFeedback"
+                class="col-12 col-sm-6"
+                description="Iniciar con: V-, E-, P-, G-, J-, C-"
+                label="Rif"
+                label-for="rif"
+                id="group-rif">
+                <the-mask
+                  mask="F- MMMMMMMMMM" :tokens="hexTokens"
+                  @input="cleanFieldForm(form.camposAtributos.rif)"
+                  :disabled="form.camposAtributos.rif.disabled"
+                  :state="form.camposAtributos.rif.state"
+                  autocomplete="off"
+                  class="text-uppercase form-control form-control-sm"
+                  id="rif"
+                  ref="rif"
+                  size="sm"
+                  type="text"
+                  v-model="$v.form.campos.rif.$model"></the-mask>
+              </b-form-group>
+              <b-form-group
+                :invalid-feedback="form.camposAtributos.razon_social.invalidFeedback"
+                class="col-12 col-sm-6"
+                description="Ejemplo: Banco..."
+                label="Nombre o Razón social"
+                label-for="razon_social"
+                id="group-razon_social">
+                <b-form-input
+                  @input="cleanFieldForm(form.camposAtributos.razon_social)"
+                  :disabled="form.camposAtributos.razon_social.disabled"
+                  :state="form.camposAtributos.razon_social.state"
+                  autocomplete="off"
+                  class="text-uppercase"
+                  id="razon_social"
+                  ref="razon_social"
+                  size="sm"
+                  type="text"
+                  v-model="$v.form.campos.razon_social.$model"></b-form-input>
+              </b-form-group>
+              <b-form-group
+                :invalid-feedback="form.camposAtributos.direccion.invalidFeedback"
+                class="col-12 col-sm-6"
+                description="Dirección del cliente"
+                label="Dirección"
+                label-for="direccion"
+                id="group-direccion">
+                <b-form-textarea
+                  @input="cleanFieldForm(form.camposAtributos.direccion)"
+                  :disabled="form.camposAtributos.direccion.disabled"
+                  :state="form.camposAtributos.direccion.state"
+                  autocomplete="off"
+                  class="text-none"
+                  id="direccion"
+                  ref="direccion"
+                  size="sm"
+                  type="text"
+                  v-model="$v.form.campos.direccion.$model"></b-form-textarea>
+              </b-form-group>
+              <b-form-group
+                :invalid-feedback="form.camposAtributos.pais.invalidFeedback"
+                class="col-12 col-sm-6"
+                description="Pais del Cliente"
+                label="Pais"
+                label-for="pais"
+                id="group-pais">
+                <b-form-select
+                  @change="cleanFieldForm(form.camposAtributos.pais)"
+                  @input="pais"
+                  :disabled="form.camposAtributos.pais.disabled"
+                  :options="comboPaises"
+                  :state="form.camposAtributos.pais.state"
+                  :value="null"
+                  id="pais"
+                  ref="pais"
+                  size="sm"
+                  v-model="$v.form.campos.pais.$model">
+                  <template v-slot:first>
+                    <option :value="null" disabled="true">Seleccione una opción</option>
+                  </template>
+                </b-form-select>
+              </b-form-group>
+              <b-form-group
+                :invalid-feedback="form.camposAtributos.telefono_fiscal.invalidFeedback"
+                class="col-12 col-sm-6"
+                description="Ejemplo: + 584241234567"
+                label="Nº de Teléfono Principal"
+                label-for="telefono_fiscal"
+                id="group-telefono_fiscal">
+                <b-form-input
+                  @input="cleanFieldForm(form.camposAtributos.telefono_fiscal)"
+                  :disabled="form.camposAtributos.telefono_fiscal.disabled"
+                  :state="form.camposAtributos.telefono_fiscal.state"
+                  autocomplete="off"
+                  class="text-uppercase"
+                  v-mask="'+ ################'"
+                  id="telefono_fiscal"
+                  ref="telefono_fiscal"
+                  size="sm"
+                  type="text"
+                  v-model="$v.form.campos.telefono_fiscal.$model"></b-form-input>
+              </b-form-group>
+              <b-form-group
+                :invalid-feedback="form.camposAtributos.pagina_web.invalidFeedback"
+                class="col-12 col-sm-6"
+                description="Ejemplo: https://www.crowe.com/ve"
+                label="Página web"
+                label-for="pagina_web"
+                id="group-pagina_web">
+                <b-form-input
+                  @input="cleanFieldForm(form.camposAtributos.pagina_web)"
+                  :disabled="form.camposAtributos.pagina_web.disabled"
+                  :state="form.camposAtributos.pagina_web.state"
+                  autocomplete="off"
+                  class="text-none"
+                  id="pagina_web"
+                  ref="pagina_web"
+                  size="sm"
+                  type="text"
+                  v-model="$v.form.campos.pagina_web.$model"></b-form-input>
+              </b-form-group>
+              <b-form-group
+                :invalid-feedback="form.camposAtributos.email_fiscal.invalidFeedback"
+                class="col-12 col-sm-6"
+                description="Ejemplo: sistema.carent@crowe.com.ve"
+                label="Correo Electrónico"
+                label-for="email_fiscal"
+                id="group-email_fiscal">
+                <b-form-input
+                  @input="cleanFieldForm(form.camposAtributos.email_fiscal)"
+                  :disabled="form.camposAtributos.email_fiscal.disabled"
+                  :state="form.camposAtributos.email_fiscal.state"
+                  autocomplete="off"
+                  class="text-none"
+                  id="email_fiscal"
+                  ref="email_fiscal"
+                  size="sm"
+                  type="email"
+                  v-model="$v.form.campos.email_fiscal.$model"></b-form-input>
+              </b-form-group>
+              <b-form-group class="col-12">
+                <alert :contador="form.alert.contador"
+                       :icono-cerrar="form.alert.iconCerrar"
+                       :mensaje="form.alert.mensaje"
+                       :mostrar="form.alert.mostrar"
+                       :ocultar-seg="form.alert.ocultarSeg"
+                       :variante="form.alert.variante">
+                </alert>
+                <b-form-group></b-form-group>
+                <b-button
+                  @click="confirmarCrearCliente"
+                  block
+                  size="sm"
+                  v-html="form.botones.confirmar.html"
+                  v-if="form.botones.confirmar.show"
+                  variant="warning"></b-button>
+                <b-button
+                  @click="cancelarCrearCliente"
+                  :disabled="form.botones.cancelar.disabled"
+                  block
+                  size="sm"
+                  v-html="form.botones.cancelar.html"
+                  v-if="form.botones.cancelar.show"
+                  variant="danger"></b-button>
+                <b-button
+                  @click="crear"
+                  :disabled="form.botones.submit.disabled"
+                  block
+                  size="sm"
+                  v-html="form.botones.submit.html"
+                  v-if="form.botones.submit.show"
+                  variant="success"></b-button>
+                  <b-button
+                  @click="refreshView"
+                  block
+                  size="sm"
+                  v-html="form.botones.refresh.html"
+                  v-if="form.botones.refresh.show"
+                  variant="primary">Quiero crear un nuevo cliente</b-button>
+              </b-form-group>
+            </b-form>
+          </b-col>
+          <b-col sm="11" md="9" lg="8" v-cloak>
+            <b-row class="row wrapper-alert">
+              <b-col cols="12">
+                <alert :contador="alertGeneral.contador"
+                       :icono-cerrar="alertGeneral.iconCerrar"
+                       :mensaje="alertGeneral.mensaje"
+                       :mostrar="alertGeneral.mostrar"
+                       :ocultar-seg="alertGeneral.ocultarSeg"
+                       :variante="alertGeneral.variante">
+                </alert>
+              </b-col>
+            </b-row>
+          </b-col>
 
-              <div class="form-group col-12 col-sm-6">
-                <label for="pagina_web">Pagina web</label>
-                <input aria-describedby="pagina_webHelp"
-                       class="form-control"
-                       id="pagina_web"
-                       v-bind:disabled="form.pagina_web.disabled"
-                       v-model="form.pagina_web.value"
-                       v-on:keyup="valuesForm"
-                       type="text">
-                <small id="pagina_webHelp" class="form-text text-muted"></small>
-                <div class="mensaje"></div>
-              </div>
 
-               <div class="form-group col-12 col-sm-6">
-                <label for="email_fiscal">Email Cliente <span class="campo-obligatorio">*</span></label>
-                <input aria-describedby="email_fiscalHelp"
-                       class="form-control text-lowercase"
-                       data-validar="true"
-                       id="email_fiscal"
-                       v-bind:disabled="form.email_fiscal.disabled"
-                       v-model="form.email_fiscal.value"
-                       v-on:keyup="valuesForm"
-                       type="email">
-                <small id="email_fiscalHelp" class="form-text text-muted">Ejemplo: correo@dominio.com</small>
-                <div class="mensaje"></div>
+        </b-row>
+        <b-modal
+          :hide-footer="modalDetalleUsuario.footer.hide"
+          :id="'modal-detalle-usuario'"
+          :no-close-on-backdrop="false"
+          :ref="'modal-detalle-usuario'"
+          centered
+          size="lg">
+          <template v-slot:modal-title>
+            Agregar Socio
+          </template>
+          <b-table
+            :busy="modalDetalleUsuario.agregarSocio.cargando"
+            :fields="modalDetalleUsuario.agregarSocio.encabezado"
+            :items="modalDetalleUsuario.agregarSocio.registros"
+            :small="true"
+            hover
+            responsive
+            show-empty>
+            <template v-slot:table-busy>
+              <div class="text-center text-primary">
+                <b-spinner class="align-middle"></b-spinner>
               </div>
-            </form>
-            <div class="row justify-content-center wrapper-subtmit">
-              <div class="col-12 col-md-6 col-lg-4">
-                <!--Al hacer clic se invoca el metodo crear de crearCliente.js y envia los valores de las variables para su modificacion-->
-                <button class="btn"
-                        type="button"
-                        v-on:click="crear"
-                        v-bind:disabled="submitCrear.disabled"
-                        v-html="submitCrear.content"
-                        v-if="submitCrear.show"></button>
-              </div>
-            </div>
-            <div class="row justify-content-center wrapper-refrescar" v-if="refreshForm">
-              <div class="col-12 col-md-6 col-lg-4">
-                <button class="btn"
-                        type="button"
-                        v-on:click="refreshView">Agregar un nuevo cliente</button>
-              </div>
-            </div>
-            <div class="row wrapper-alert">
-              <div class="col-12">
-                <div v-bind:class="alertForm.class" role="alert" v-if="alertForm.show" v-html="alertForm.message"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+            </template>
+            <template v-slot:empty="scope" v-if="modalDetalleUsuario.agregarSocio.alert.mostrar">
+              <alert :contador="modalDetalleUsuario.agregarSocio.alert.contador"
+                     :icono-cerrar="modalDetalleUsuario.agregarSocio.alert.iconCerrar"
+                     :mensaje="modalDetalleUsuario.agregarSocio.alert.mensaje"
+                     :mostrar="modalDetalleUsuario.agregarSocio.alert.mostrar"
+                     :ocultar-seg="modalDetalleUsuario.agregarSocio.alert.ocultarSeg"
+                     :variante="modalDetalleUsuario.agregarSocio.alert.variante">
+              </alert>
+            </template>
+            <template v-slot:cell(opciones)="data">
+              <b-icon-check
+                :id="'selecionar-'+data.item.id"
+                class="icono"
+                v-on:click="SelecionarUsuario(data.item.id)">
+              </b-icon-check>
+              <b-tooltip :target="'selecionar-'+data.item.id" triggers="hover">
+                Seleccionar Socio
+              </b-tooltip>
+            </template>
+          </b-table>
+        </b-modal>
+      </b-container>
       <script src="{{ mix('/js/nuevoCliente.js') }}"></script>
     </body>
 </html>

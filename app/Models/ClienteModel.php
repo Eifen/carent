@@ -8,25 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class ClienteModel extends Model
 {
 
-  function buscarUsuarios($opcionBusqueda, $dato){
+  function buscarUsuarios($nombre = null){
 
-    switch ((int) $opcionBusqueda) {
-      case 1:
-        $condicion = "WHERE u.codigo LIKE '%".$dato."%'";
-      break;
-      case 2:
-        $condicion = "WHERE udi.documento LIKE '%".$dato."%'";
-      break;
-      case 3:
-        $condicion = "WHERE (u.nombre_1 LIKE '%".$dato."%' OR u.nombre_2 LIKE '%".$dato."%')";
-      break;
-      case 4:
-        $condicion = "WHERE (u.apellido_1 LIKE '%".$dato."%' OR u.apellido_2 LIKE '%".$dato."%')";
-      break;
-      default:
-        $condicion = "WHERE u.codigo LIKE '%".$dato."%'";
-      break;
+    if($nombre != null && trim($nombre) != ""){
+      $sql_nombre = 'AND LOWER(CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2)) LIKE "%'.strtolower($nombre).'%"';
+    }else{
+      $sql_nombre = "";
     }
+
     $usuario = DB::select('SELECT u.id,
                                    u.codigo,
                                    u.avatar,
@@ -40,19 +29,15 @@ class ClienteModel extends Model
                                  tbl_estatus e,
                                  tbl_contacto_usuario cu,
                                  tbl_usuario_documento_identidad udi
-                            '.$condicion.'
+                            WHERE u.id_cargo IN(16,17)
                             AND e.tabla = "tbl_usuario"
                             AND e.valor = u.id_estatus
                             AND u.id = cu.id_usuario
-                            AND u.id = udi.id_usuario');
-    $usuarios = [];
-    for($i = 0; $i < count($usuario); $i++){
-      if ($usuario[$i]->id_cargo === 16 || $usuario[$i]->id_cargo === 17) {
-        $usuarios[$i] = $usuario[$i];
-      }
-    }
-    if(count($usuarios) > 0){
-      return $usuarios;
+                            AND u.id = udi.id_usuario
+                            '.$sql_nombre.'
+                            ORDER BY nombre ASC');
+    if(count($usuario) > 0){
+      return $usuario;
     }
       return array();
   }
@@ -234,28 +219,11 @@ class ClienteModel extends Model
 
   function crearCliente($parametros){
 
-    DB::beginTransaction();
-    $data = array("id_usuario_socio" => $parametros["idUsuario"],
-                  "codigo" => $parametros["codigoCliente"],
-                  "rif" => $parametros["rif"],
-                  "nit" => $parametros["nit"],
-                  "razon_social" => $parametros["razon_social"],
-                  "id_pais" => $parametros["id_pais"],
-                  "direccion" => $parametros["direccion"],
-                  "telefono_fiscal" => $parametros["telefono_fiscal"],
-                  "pagina_web" => $parametros["pagina_web"],
-                  "email_fiscal" => $parametros["email_fiscal"],
-                  "id_estatus" => 1);
+    $funcionario = DB::select('call sp_nuevo_cliente(?,?,?,?,?,?,?,?,?,?,?,@respuesta)',$parametros);
+    $respuestaSp = DB::select('SELECT @respuesta AS respuesta_json');
+    $respuestaJson = json_decode($respuestaSp[0]->respuesta_json, true);
 
-    $contacto = DB::table('tbl_cliente')->insert($data);
-
-    if($contacto){
-      DB::commit();
-      return array("response" => true, "message" => "Cliente Creado con Éxito.");
-    }else{
-      DB::rollBack();
-      return array("response" => false, "message" => "Error al tratar de crear el cliente.");
-    }
+    return $respuestaJson;
 
   }// Fin crearCliente
 
@@ -344,7 +312,6 @@ class ClienteModel extends Model
                                 (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE id_usuario_socio = id) nombre,
                                 codigo,
                                 rif,
-                                nit,
                                 razon_social,
                                 direccion,
                                 telefono_fiscal,
@@ -413,7 +380,6 @@ class ClienteModel extends Model
                                 (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE id_usuario_socio = id) nombre,
                                  codigo,
                                  rif,
-                                 nit,
                                  razon_social,
                                  direccion,
                                  telefono_fiscal,
@@ -441,7 +407,6 @@ class ClienteModel extends Model
       $data = array(
                     "id_usuario_socio" => $parametros["idUsuario"],
                     "rif" => $parametros["rif"],
-                    "nit" => $parametros["nit"],
                     "razon_social" => $parametros["razon_social"],
                     "id_pais" => $parametros["id_pais"],
                     "direccion" => $parametros["direccion"],
