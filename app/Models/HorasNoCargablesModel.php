@@ -175,7 +175,7 @@ class HorasNoCargablesModel extends Model
 
     }// Fin supervisaA
 
-    function horasCargadas($paginar, $desde, $id_empleado = null, $id_division = null, $supervisa, $supervisaTodo, $id_concepto = null, $id_estatus = null, $fechaDesde = null, $fechaHasta = null){
+    function horasCargadas($paginar, $desde, $id_empleado = null,  $supervisa, $supervisaTodo, $id_division = null, $id_concepto = null, $id_estatus = null, $fechaDesde = null, $fechaHasta = null){
 
       if($supervisaTodo){
         $sql_division = "";
