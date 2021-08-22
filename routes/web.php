@@ -163,7 +163,8 @@ Route::get('/dataRepUltimaCarga', 'Reportes\UltimaCargaController@dataRepUltimaC
 Route::get('/buscarUltimaCarga', 'Reportes\UltimaCargaController@buscarUltimaCarga')->middleware('usuario.session');
 Route::get('/dataRepTotalNoHorasCarg', 'Reportes\TotalHorasNoCargController@dataRepTotalNoHorasCarg')->middleware('usuario.session');
 Route::get('/buscarRepTotalHorasNoCarg', 'Reportes\TotalHorasNoCargController@buscarRepTotalHorasNoCarg')->middleware('usuario.session');
-
+Route::get('/dataRepUltimaCargaHorasNo', 'Reportes\UltimaCargaHorasNoCargablesController@dataRepUltimaCargaHorasNo')->middleware('usuario.session');
+Route::get('/buscarUltimaCargaHorasNo', 'Reportes\UltimaCargaHorasNoCargablesController@buscarUltimaCargaHorasNo')->middleware('usuario.session');
 /*
   Rutas para tareas programadas
 */
