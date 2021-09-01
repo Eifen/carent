@@ -647,7 +647,8 @@ new Vue({
         const empleados = [];
           self.form.camposAtributos.empleados.empleados.forEach((item, i) => {
           let hora = parseInt(item.horas.value);
-          empleados.push({id: item.id, idAnaProy: item.idAnaProy, horas: hora});
+          let horas_cargadas = parseInt(item.horas_cargadas);
+          empleados.push({id: item.id, idAnaProy: item.idAnaProy, horas: hora, horas_cargadas: horas_cargadas});
         });
 
         let parametros = {
@@ -658,13 +659,13 @@ new Vue({
 
         axios.get('/asigHorasAnalistaProy', {params: parametros})
           .then(function (response) {
-            if(response.status === 200 && response.data.response === true){
+            if(response.status === 200 && response.data.response.response === true){
 
               self.form.btn.asignar.disabled = false;
               self.form.btn.asignar.html = self.form.btn.asignar.htmlInit;
               self.alertFormA = {
                 class : "alert alert-success",
-                message : response.data.message,
+                message : response.data.response.message,
                 show: true
               };
               setTimeout(function(){
@@ -679,7 +680,44 @@ new Vue({
               self.form.btn.cerrar.html = self.form.btn.cerrar.htmlInit;
             self.actualizar();
             }else{
-              throw response.data;
+
+              self.alertFormA = {
+                class : "alert alert-danger",
+                message : response.data.response.message,
+                show: true
+              };
+              setTimeout(function(){
+                self.alertFormA = {
+                class: "",
+                message: "",
+                show: false
+                };
+              }, 3000);
+              self.comboEmpleados = response.data.empleados;
+              self.form.camposAtributos.empleados.disabled = false;
+              self.form.btn.asignar.disabled = false;
+              self.form.btn.asignar.html = self.form.btn.asignar.htmlInit;
+
+              if (self.detalleAsigproyecto.data[0].horas_adicionales != null) {
+                self.detalleAsigproyecto.data[0].horas_contratadas = parseFloat(self.detalleAsigproyecto.data[0].horas_contratadas) + parseFloat(self.detalleAsigproyecto.data[0].horas_adicionales);
+              }
+              var a = 0;
+              for (var i = 0; i < self.comboEmpleados.length; i++) {
+                if (self.comboEmpleados[i].id_estatus > 0) {
+                self.asignados[a] = self.comboEmpleados[i];
+                a = a + 1;
+                }
+              }
+              if (self.asignados.length > 0) {
+                self.form.btn.cerrar.disabled = false;
+                self.form.btn.cerrar.html = self.form.btn.cerrar.htmlInit;
+                self.permisoCerrar = true;
+                self.form.campos.empleados = self.asignados;
+                self.asignarHoras(self.asignados);
+              }
+
+              $('#modal-asignar-Aproyecto').modal("show");
+              $(e.target).removeClass("fa-cog fa-spin").addClass("far fa-edit");
             }
           })
         }

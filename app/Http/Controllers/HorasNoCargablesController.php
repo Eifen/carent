@@ -87,7 +87,7 @@ class HorasNoCargablesController extends Controller
 
         $paginar = 50;
         $supervisa = $modelo->supervisaA(session("cargo_id"), session("division_id"), session("usuario_id"));
-        $horas = $modelo->horasCargadas($paginar, 0, session("usuario_id"), session("division_id"), $supervisa["supervisa"], $supervisa["supervisaTodo"]);
+        $horas = $modelo->horasCargadas($paginar, 0, session("usuario_id"), $supervisa["supervisa"], $supervisa["supervisaTodo"]);
         $cantidadPaginas = $modelo->cantidadPaginasHorasCargadas($paginar, session("usuario_id"), session("division_id"), $supervisa["supervisa"], $supervisa["supervisaTodo"]);
 
         return [
@@ -124,7 +124,7 @@ class HorasNoCargablesController extends Controller
       $supervisaTodo = $request->input("supervisaTodo");
       $fechaDesde = ($request->input("fecha_desde") == "") ? null : date("Y-m-d H:i:s", strtotime($request->input("fecha_desde")));
       $fechaHasta = ($request->input("fecha_hasta") == "") ? null : date("Y-m-d H:i:s", strtotime($request->input("fecha_hasta")));
-      $horas = $modelo->horasCargadas($paginar, $desde, $empleado, $division, $supervisa, $supervisaTodo, $concepto, $estatus, $fechaDesde, $fechaHasta);
+      $horas = $modelo->horasCargadas($paginar, $desde, $empleado, $supervisa, $supervisaTodo, $division, $concepto, $estatus, $fechaDesde, $fechaHasta);
       $cantidadPaginas = $modelo->cantidadPaginasHorasCargadas($paginar, $empleado, $division, $supervisa, $supervisaTodo, $concepto, $estatus, $fechaDesde, $fechaHasta);
 
       return [
