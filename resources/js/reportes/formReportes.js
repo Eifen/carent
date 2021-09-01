@@ -23,7 +23,7 @@ Vue.component('reporte-9',require('./totalHorasProyectos.vue').default);
 Vue.component('reporte-10',require('./totalHorasAsig.vue').default);
 Vue.component('reporte-11',require('./ultimaCarga.vue').default);
 Vue.component('reporte-12',require('./horasNoCargables.vue').default);
-Vue.component('reporte-13',require('./UltimaCargaHorasNoCargables.vue').default);
+Vue.component('reporte-13',require('./ultimaCargaNoCargables.vue').default);
 
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
