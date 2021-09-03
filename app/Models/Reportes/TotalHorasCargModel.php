@@ -362,19 +362,7 @@ class TotalHorasCargModel extends Model
         $porcen_carga_total = round($total_horas/$maximo_horas*100,2);
         $porcen_carga_total = "$porcen_carga_total %";       
         
-        $total[$u] = array('id' => $usuarios[$u]->id, 
-                           'codigo' => $usuarios[$u]->codigo, 
-                           'nombre' => $usuarios[$u]->nombre, 
-                           'total_horas_cargables' => $usuarios[$u]->horas_cargables, 
-                           'total_horas_no_cargables' => $total_horas_no_cargables, 
-                           'total_horas' => $total_horas,
-                           'porcen_carga_cliente' => $porcen_carga_cliente, 
-                           'porcen_carga_no_cliente' => $porcen_carga_no_cliente, 
-                           'porcen_horas_cargables' => $porcen_horas_cargables, 
-                           'porcen_horas_no_cargables' => $porcen_horas_no_cargables, 
-                           'porcen_carga_total' => $porcen_carga_total, 
-                           'exceso' => $exceso,
-                           'maximo_horas' => $maximo_horas);        
+        $total[$u] = array('id' => $usuarios[$u]->id, 'codigo' => $usuarios[$u]->codigo, 'nombre' => $usuarios[$u]->nombre, 'total_horas_cargables' => $usuarios[$u]->horas_cargables, 'total_horas_no_cargables' => $total_horas_no_cargables, 'total_horas' => $total_horas,'porcen_carga_cliente' => $porcen_carga_cliente, 'porcen_carga_no_cliente' => $porcen_carga_no_cliente, 'porcen_horas_cargables' => $porcen_horas_cargables, 'porcen_horas_no_cargables' => $porcen_horas_no_cargables, 'porcen_carga_total' => $porcen_carga_total, 'exceso' => $exceso, 'maximo_horas' => $maximo_horas);        
         $total_horas_no_cargables = 0;  
         $total_horas = 0;
         $exceso = 0;
