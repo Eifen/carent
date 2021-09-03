@@ -147,7 +147,10 @@ class TotalHorasCargModel extends Model
       $horas_cargadas = 0;
       $horas_cargadas_anterior = 0;
       $porcen_horas_cargables = "0 %";
+      $porcen_carga_cliente = "0 %";
+      $porcen_carga_no_cliente = "0 %";
       $porcen_horas_no_cargables = "0 %";
+      $porcen_carga_total = "0 %";
       $fecha_desde_anterior = null;
       $fecha_desde_mod = $fecha_desde;
       $fecha_hasta_mod = $fecha_hasta;
@@ -347,21 +350,44 @@ class TotalHorasCargModel extends Model
         if ($total_horas_no_cargables > 0) {
           $porcen_horas_no_cargables = round($total_horas_no_cargables/$total_horas*100,2);
           $porcen_horas_no_cargables = "$porcen_horas_no_cargables %";
+          $porcen_carga_no_cliente = round($total_horas_no_cargables/$maximo_horas*100,2);
+          $porcen_carga_no_cliente = "$porcen_carga_no_cliente %";
         }
         if ($usuarios[$u]->horas_cargables > 0) {
           $porcen_horas_cargables = round($usuarios[$u]->horas_cargables/$total_horas*100,2);
           $porcen_horas_cargables = "$porcen_horas_cargables %";
-        }        
+          $porcen_carga_cliente = round($usuarios[$u]->horas_cargables/$maximo_horas*100,2);
+          $porcen_carga_cliente = "$porcen_carga_cliente %";
+        }
+        $porcen_carga_total = round($total_horas/$maximo_horas*100,2);
+        $porcen_carga_total = "$porcen_carga_total %";       
         
-        $total[$u] = array('id' => $usuarios[$u]->id, 'codigo' => $usuarios[$u]->codigo, 'nombre' => $usuarios[$u]->nombre, 'total_horas_cargables' => $usuarios[$u]->horas_cargables, 'total_horas_no_cargables' => $total_horas_no_cargables, 'total_horas' => $total_horas, 'porcen_horas_cargables' => $porcen_horas_cargables, 'porcen_horas_no_cargables' => $porcen_horas_no_cargables, 'exceso' => $exceso, 'maximo_horas' => $maximo_horas);        
+        $total[$u] = array('id' => $usuarios[$u]->id, 
+                           'codigo' => $usuarios[$u]->codigo, 
+                           'nombre' => $usuarios[$u]->nombre, 
+                           'total_horas_cargables' => $usuarios[$u]->horas_cargables, 
+                           'total_horas_no_cargables' => $total_horas_no_cargables, 
+                           'total_horas' => $total_horas,
+                           'porcen_carga_cliente' => $porcen_carga_cliente, 
+                           'porcen_carga_no_cliente' => $porcen_carga_no_cliente, 
+                           'porcen_horas_cargables' => $porcen_horas_cargables, 
+                           'porcen_horas_no_cargables' => $porcen_horas_no_cargables, 
+                           'porcen_carga_total' => $porcen_carga_total, 
+                           'exceso' => $exceso);        
         $total_horas_no_cargables = 0;  
         $total_horas = 0;
         $exceso = 0;
         $porcen_horas_cargables = "0 %";
+        $porcen_carga_cliente = "0 %";
         $porcen_horas_no_cargables = "0 %";
+        $porcen_carga_total = "0 %";
+        $porcen_carga_no_cliente = "0 %";
       }
       
-      return $total;
+      return [
+       "total" => $total,
+       "maximo_horas" => $maximo_horas
+      ];
 
     }// Fin
 
