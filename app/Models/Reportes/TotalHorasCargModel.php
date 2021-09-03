@@ -373,7 +373,8 @@ class TotalHorasCargModel extends Model
                            'porcen_horas_cargables' => $porcen_horas_cargables, 
                            'porcen_horas_no_cargables' => $porcen_horas_no_cargables, 
                            'porcen_carga_total' => $porcen_carga_total, 
-                           'exceso' => $exceso);        
+                           'exceso' => $exceso,
+                           'maximo_horas' => $maximo_horas);        
         $total_horas_no_cargables = 0;  
         $total_horas = 0;
         $exceso = 0;
@@ -384,10 +385,7 @@ class TotalHorasCargModel extends Model
         $porcen_carga_no_cliente = "0 %";
       }
       
-      return [
-       "total" => $total,
-       "maximo_horas" => $maximo_horas
-      ];
+      return $total;
 
     }// Fin
 

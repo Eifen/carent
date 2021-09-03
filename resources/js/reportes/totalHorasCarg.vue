@@ -362,7 +362,7 @@
               { key: 'porcen_horas_no_cargables', label: '% Horas No Cargables' },
               { key: 'porcen_carga_no_cliente', label: '% Cargabilidad No Clientes' },
               { key: 'total_horas', label: 'Total Horas Cargadas' },
-              { key: 'porcen_carga_total', label: '% Carga total (Ref: '+parseInt(response.data.maximo_horas)+')' },
+              { key: 'porcen_carga_total', label: '% Carga total (Ref: '+parseInt(response.data.totales[0].maximo_horas)+' Horas)' },
               { key: 'exceso', label: 'Exceso Horas Cargadas' },
 
             ];
@@ -376,7 +376,7 @@
 
             }
 
-            self.maximo_horas = parseInt(response.data.maximo_horas);
+            self.maximo_horas = parseInt(response.data.totales[0].maximo_horas);
             self.formFiltro.campos.cargos.listado = response.data.cargos;
             self.formFiltro.campos.divisiones.listado = response.data.divisiones;        
 
@@ -560,7 +560,7 @@
             self.formFiltro.btn.limpiarFiltro.disabled = false;
 
             // Se le asigna los valores a las variables
-            self.maximo_horas = parseInt(response.data.maximo_horas);
+            self.maximo_horas = parseInt(response.data.totales[0].maximo_horas);
             self.tabla.paginador.numPaginas = response.data.paginas;
             self.tabla.paginador.max = parseInt(response.data.paginas);
 
@@ -574,7 +574,7 @@
               { key: 'porcen_horas_no_cargables', label: '% Horas No Cargables' },
               { key: 'porcen_carga_no_cliente', label: '% Cargabilidad No Clientes' },
               { key: 'total_horas', label: 'Total Horas Cargadas' },
-              { key: 'porcen_carga_total', label: '% Carga total (Ref: '+parseInt(response.data.maximo_horas)+'Horas)' },
+              { key: 'porcen_carga_total', label: '% Carga total (Ref: '+parseInt(response.data.totales[0].maximo_horas)+' Horas)' },
               { key: 'exceso', label: 'Exceso Horas Cargadas' },
 
             ];
