@@ -23,7 +23,8 @@ class TotalHorasCargController extends Controller
       return [
         "cargos" => $cargos,
         "divisiones" => $divisiones,
-        "totales" => $totales,
+        "totales" => $totales["total"],
+        "maximo_horas" => $totales["maximo_horas"],
         "paginas" => $paginas,
         "paginar" => $paginar,
         "response" => true,
@@ -57,7 +58,8 @@ class TotalHorasCargController extends Controller
       return [
         "cargos" => $cargos,
         "divisiones" => $divisiones,
-        "totales" => $totales,
+        "totales" => $totales["total"],
+        "maximo_horas" => $totales["maximo_horas"],
         "paginas" => $paginas,
         "paginar" => $paginar,
         "response" => true,
