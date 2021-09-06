@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.0
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 04-06-2021 a las 18:40:38
--- Versión del servidor: 8.0.24
--- Versión de PHP: 8.0.6
+-- Tiempo de generación: 06-09-2021 a las 18:36:22
+-- Versión del servidor: 10.4.20-MariaDB
+-- Versión de PHP: 8.0.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -92,64 +92,65 @@ END$$
 
 CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_login` (IN `p_codigo_usuario` VARCHAR(6), IN `p_clave` TEXT, IN `p_ip` VARCHAR(39), OUT `p_respuesta` TEXT)  BEGIN
 
-  DECLARE v_usuario_existe BOOLEAN;
-  DECLARE v_id_usuario INT;
-  DECLARE v_clave TEXT;
-  DECLARE v_estatus TEXT;
-  DECLARE v_id_estatus INT;
-  DECLARE v_id_cargo INT;
-  DECLARE v_id_division INT;
-  DECLARE v_correo TEXT;
-  DECLARE v_estatus_denegado BOOLEAN;
-  DECLARE v_encrypt_iv TEXT;
-  DECLARE v_encrypt_key TEXT;
-  DECLARE v_sql_bitacora TEXT;
-  DECLARE v_fecha_login DATETIME;
-  DECLARE v_cambiar_clave BOOLEAN;
+DECLARE v_usuario_existe BOOLEAN;
+DECLARE v_id_usuario INT;
+DECLARE v_clave TEXT;
+DECLARE v_estatus TEXT;
+DECLARE v_id_estatus INT;
+DECLARE v_id_cargo INT;
+DECLARE v_id_division INT;
+DECLARE v_correo TEXT;
+DECLARE v_estatus_denegado BOOLEAN;
+DECLARE v_encrypt_iv TEXT;
+DECLARE v_encrypt_key TEXT;
+DECLARE v_sql_bitacora TEXT;
+DECLARE v_fecha_login DATETIME;
+DECLARE v_cambiar_clave BOOLEAN;
 
-  DECLARE v_custom_msg_error TEXT DEFAULT NULL;
-  DECLARE v_sql_string TEXT DEFAULT NULL;
-  DECLARE custom_error CONDITION FOR SQLSTATE '45000';
+DECLARE v_custom_msg_error TEXT DEFAULT NULL;
+DECLARE v_sql_string TEXT DEFAULT NULL;
+DECLARE custom_error CONDITION FOR SQLSTATE '45000';
 
-  DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
-      BEGIN
+DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
+  BEGIN
 
-        ROLLBACK;
+    GET DIAGNOSTICS CONDITION 1 @code = RETURNED_SQLSTATE, @error_string = MESSAGE_TEXT;
 
-        GET DIAGNOSTICS CONDITION 1 @code = RETURNED_SQLSTATE, @error_string = MESSAGE_TEXT;
+    SELECT CONCAT('Error con el código ',@code,': ',@error_string) INTO v_custom_msg_error;
 
-        SELECT CONCAT('Error con el código ',@code,': ',@error_string) INTO v_custom_msg_error;
+    ROLLBACK;
 
-        CALL sp_mensaje_bd(1,1,"sp_login",v_custom_msg_error,NULL,1,@response);
-        SET p_respuesta = '{
-                            "message":"Ocurrió un error a la hora de autenticar al usuario!",
-                            "response":false
-						   }';
+    CALL sp_mensaje_bd(1,1,"sp_login",v_custom_msg_error,NULL,1,@response);
+    SET p_respuesta = '{
+					  "message":"Ocurrió un error a la hora de autenticar al usuario!",
+					  "response":false
+					}';
 
-        COMMIT;
+    COMMIT;
 
-    END;
-  DECLARE EXIT HANDLER FOR custom_error
-    BEGIN
+  END;
+
+DECLARE EXIT HANDLER FOR custom_error
+	BEGIN
 
 	  ROLLBACK;
 
-      IF v_custom_msg_error IS NOT NULL THEN
-        CALL sp_mensaje_bd(1,1,"sp_login",v_custom_msg_error,v_sql_string,1,@response);
-      END IF;
+	  IF v_custom_msg_error IS NOT NULL THEN
+		CALL sp_mensaje_bd(1,1,"sp_login",v_custom_msg_error,v_sql_string,1,@response);
+	  END IF;
 
-      IF p_respuesta = "" OR p_respuesta IS NULL THEN
-        SET p_respuesta = '{
-                            "message":"Ocurrió un error a la hora de autenticar al usuario!",
-                            "response":false
+	  IF p_respuesta = "" OR p_respuesta IS NULL THEN
+		SET p_respuesta = '{
+							"message":"Ocurrió un error a la hora de autenticar al usuario!",
+							"response":false
 						   }';
 	  END IF;
 
 	  COMMIT;
 
-    END;
+	END;
 
-  START TRANSACTION;
+START TRANSACTION;
 
   SELECT IF(COUNT(1) > 0,TRUE, FALSE)
   INTO v_usuario_existe
@@ -326,6 +327,65 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_mensaje_bd` (IN `p_id_tipo_objet
 
 END$$
 
+CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_nuevo_cliente` (IN `p_id_usuario` INT, IN `p_id_usuario_socio` INT, IN `p_codigo_cliente` INT, IN `p_rif` VARCHAR(30), IN `p_razon_social` VARCHAR(60), IN `p_id_pais` INT, IN `p_direccion` TEXT, IN `p_telefono_fiscal` VARCHAR(30), IN `p_pagina_web` VARCHAR(150), IN `p_email_fiscal` VARCHAR(100), IN `p_ip_accion` VARCHAR(40), OUT `p_respuesta` TEXT)  BEGIN
+DECLARE v_fecha_creacion_cliente DATE;
+DECLARE v_sql_bitacora TEXT;
+
+DECLARE v_custom_msg_error TEXT DEFAULT NULL;
+DECLARE v_sql_string TEXT DEFAULT NULL;
+DECLARE custom_error CONDITION FOR SQLSTATE '45000';
+
+DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
+    BEGIN 
+      
+        GET DIAGNOSTICS CONDITION 1 @code = RETURNED_SQLSTATE, @error_string = MESSAGE_TEXT;
+        SELECT CONCAT('Error con el código ',@code,': ',@error_string) INTO v_custom_msg_error; 
+        
+        ROLLBACK;
+        
+        CALL sp_mensaje_bd(1,1,"sp_nuevo_cliente",v_custom_msg_error,NULL,1,@response);
+        SET p_respuesta = '{ 
+          "message":"Ocurrió un error a la hora de crear el cliente!",
+      	  "response": false
+    	}';
+      COMMIT;  
+  END;
+  DECLARE EXIT HANDLER FOR custom_error 
+    BEGIN
+      ROLLBACK;
+        IF v_custom_msg_error IS NOT NULL THEN
+          CALL sp_mensaje_bd(1,1,"sp_nuevo_cliente",v_custom_msg_error,v_sql_string,1,@response);
+        END IF;
+        IF p_respuesta = "" OR p_respuesta IS NULL THEN
+          SET p_respuesta = '{
+            "message": "Ocurrió un error a la hora tratar de actualizar su contraseña!",
+            "response": false
+      }';
+        END IF;
+      COMMIT;
+  END;
+  START TRANSACTION;
+SELECT DATE_ADD(CURDATE(), INTERVAL 60 DAY) INTO v_fecha_creacion_cliente;
+INSERT INTO tbl_cliente(id, id_usuario_socio, codigo, rif, nit, razon_social, id_pais, direccion, telefono_fiscal, pagina_web, email_fiscal, id_estatus) VALUES (null, p_id_usuario_socio, p_codigo_cliente, p_rif, null, p_razon_social, p_id_pais, p_direccion, p_telefono_fiscal, p_pagina_web, p_email_fiscal, 1);
+SET v_sql_bitacora = CONCAT('INSERT INTO tbl_cliente (id, id_usuario_socio, codigo, rif, nit, razon_social, id_pais, direccion, telefono_fiscal, pagina_web, email_fiscal, id_estatus) VALUES (null, "',p_id_usuario_socio,'", "',p_codigo_cliente,'", "',p_rif,'", null, "',p_razon_social,'", "',p_id_pais,'", "',p_direccion,'", "',p_telefono_fiscal,'", "',p_pagina_web,'", "',p_email_fiscal,'", 1)');
+SET @nuevo_valor = CONCAT('{"id_usuario_socio": "',p_id_usuario_socio,'", "codigo": "',p_codigo_cliente,'", "rif": "',p_rif,'", "razon_social": "',p_razon_social,'", "id_pais": "',p_id_pais,'", "direccion": "',p_direccion,'", "telefono_fiscal": "',p_telefono_fiscal,'", "pagina_web": "',p_pagina_web,'", "email_fiscal": "',p_email_fiscal,'", "id_estatus": ",1,"}');
+CALL sp_bitacora(1,"crear_cliente",p_id_usuario,p_id_usuario,"tbl_cliente",v_sql_bitacora,@valor_anterior,@nuevo_valor,p_ip_accion,@response);
+SET @v_respuesta_otro_sp = JSON_UNQUOTE(JSON_EXTRACT(@response,'$.response'));
+IF @v_respuesta_otro_sp = "true" THEN
+SET p_respuesta = CONCAT('{
+"message": "Cliente Creado con Éxito.",
+"response":true
+}');
+COMMIT;
+ELSE
+SET p_respuesta = '{
+"message":"Ocurrió un error a la hora de crear el cliente, no se pudo registrar en Bitácora!",
+"response":false
+}';
+ROLLBACK;
+END IF;
+END$$
+
 CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_recuperar_login` (IN `p_codigo_usuario` VARCHAR(6), IN `p_ip` VARCHAR(39), OUT `p_respuesta` TEXT)  BEGIN
 
 	DECLARE v_usuario_existe BOOLEAN;
@@ -340,12 +400,12 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_recuperar_login` (IN `p_codigo_u
     DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
       BEGIN
 
-        ROLLBACK;
-
         GET DIAGNOSTICS CONDITION 1 @code = RETURNED_SQLSTATE, @error_string = MESSAGE_TEXT;
 
         SELECT CONCAT('Error con el código ',@code,': ',@error_string) INTO v_custom_msg_error;
-
+	
+		ROLLBACK;
+    
         CALL sp_mensaje_bd(1,1,"sp_recuperar_login",v_custom_msg_error,NULL,1,@response);
         SET p_respuesta = '{
                             "message":"Ocurrió un error a la hora de recuperar la contraseña del usuario!",
@@ -439,11 +499,11 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_resetar_claves_usuarios` (OUT `p
   DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
       BEGIN
 
-        ROLLBACK;
-
         GET DIAGNOSTICS CONDITION 1 @code = RETURNED_SQLSTATE, @error_string = MESSAGE_TEXT;
 
         SELECT CONCAT('Error con el código ',@code,': ',@error_string) INTO v_custom_msg_error;
+
+		ROLLBACK;
 
         CALL sp_mensaje_bd(1,1,"sp_resetar_claves_usuarios",v_custom_msg_error,NULL,1,@response);
         SET p_respuesta = '{
@@ -497,9 +557,7 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_resetar_claves_usuarios` (OUT `p
    SET p_respuesta = '{
 						"message":"Contraseñas actualizadas!",
 						"response":true
-
-
-			  }';
+			          }';
 
    SET SQL_SAFE_UPDATES = 1;
 
@@ -520,12 +578,12 @@ CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_usuario_cambia_su_clave` (IN `p_
   DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
     BEGIN
 
-      ROLLBACK;
-
       GET DIAGNOSTICS CONDITION 1 @code = RETURNED_SQLSTATE, @error_string = MESSAGE_TEXT;
 
       SELECT CONCAT('Error con el código ',@code,': ',@error_string) INTO v_custom_msg_error;
-
+	  
+      ROLLBACK;
+      
       CALL sp_mensaje_bd(1,1,"sp_usuario_cambia_su_clave",v_custom_msg_error,NULL,1,@response);
 	  SET p_respuesta = '{
 						  "message":"Ocurrió un error a la hora tratar de actualizar su contraseña!",
@@ -632,12 +690,12 @@ DELIMITER ;
 --
 
 CREATE TABLE `logs_auditoria` (
-  `id` int NOT NULL,
-  `usuario_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `usuario_id` int(11) DEFAULT NULL,
   `fecha` datetime DEFAULT NULL,
-  `direccion_ip` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `accion` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `tabla` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
+  `direccion_ip` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `accion` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tabla` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -1061,8 +1119,8 @@ DELIMITER ;
 --
 
 CREATE TABLE `tbl_accion_bitacora` (
-  `id` int NOT NULL,
-  `accion` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` int(11) NOT NULL,
+  `accion` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -1082,16 +1140,16 @@ INSERT INTO `tbl_accion_bitacora` (`id`, `accion`) VALUES
 --
 
 CREATE TABLE `tbl_bitacora` (
-  `id` int NOT NULL,
-  `id_accion_bitacora` int NOT NULL COMMENT 'Que acción del CRUD esta realizando ejemplo INSERT, DELETE, UPDATE o SELECT',
-  `descripcion_accion` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Aquí se coloca la acción literal de lo que esta sucediendo, ejemplo login, empresa eliminada, logout',
-  `ip_accion` varchar(39) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Dirección IP de donde se esta ejecutando la acción, puede ser IPV4 o IPV6',
-  `id_usuario` int NOT NULL,
-  `id_registro` int NOT NULL,
-  `tabla` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `sentencia_sql` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `valor_anterior` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `nuevo_valor` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `id` int(11) NOT NULL,
+  `id_accion_bitacora` int(11) NOT NULL COMMENT 'Que acción del CRUD esta realizando ejemplo INSERT, DELETE, UPDATE o SELECT',
+  `descripcion_accion` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Aquí se coloca la acción literal de lo que esta sucediendo, ejemplo login, empresa eliminada, logout',
+  `ip_accion` varchar(39) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Dirección IP de donde se esta ejecutando la acción, puede ser IPV4 o IPV6',
+  `id_usuario` int(11) NOT NULL,
+  `id_registro` int(11) NOT NULL,
+  `tabla` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `sentencia_sql` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `valor_anterior` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nuevo_valor` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `fecha_registro` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1116,12 +1174,12 @@ INSERT INTO `tbl_bitacora` (`id`, `id_accion_bitacora`, `descripcion_accion`, `i
 --
 
 CREATE TABLE `tbl_cargo_empleado` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `descripcion` varchar(50) NOT NULL,
-  `id_tipo_cargo` int NOT NULL,
-  `orden` int NOT NULL,
-  `id_estatus` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `id_tipo_cargo` int(11) NOT NULL,
+  `orden` int(11) NOT NULL,
+  `id_estatus` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_cargo_empleado`
@@ -1178,9 +1236,9 @@ INSERT INTO `tbl_cargo_empleado` (`id`, `descripcion`, `id_tipo_cargo`, `orden`,
 --
 
 CREATE TABLE `tbl_cargo_supervisa` (
-  `id` int NOT NULL,
-  `id_cargo` int NOT NULL,
-  `id_cargo_supervisor` int NOT NULL
+  `id` int(11) NOT NULL,
+  `id_cargo` int(11) NOT NULL,
+  `id_cargo_supervisor` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -1387,11 +1445,11 @@ INSERT INTO `tbl_cargo_supervisa` (`id`, `id_cargo`, `id_cargo_supervisor`) VALU
 --
 
 CREATE TABLE `tbl_ciudades` (
-  `id_ciudad` int NOT NULL,
-  `id_estado` int NOT NULL,
+  `id_ciudad` int(11) NOT NULL,
+  `id_estado` int(11) NOT NULL,
   `ciudad` varchar(200) NOT NULL,
-  `capital` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `capital` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_ciudades`
@@ -1904,19 +1962,19 @@ INSERT INTO `tbl_ciudades` (`id_ciudad`, `id_estado`, `ciudad`, `capital`) VALUE
 --
 
 CREATE TABLE `tbl_cliente` (
-  `id` int NOT NULL,
-  `id_usuario_socio` int NOT NULL,
-  `codigo` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `id_usuario_socio` int(11) NOT NULL,
+  `codigo` int(11) DEFAULT NULL,
   `rif` varchar(15) NOT NULL,
-  `nit` int DEFAULT NULL,
+  `nit` int(11) DEFAULT NULL,
   `razon_social` varchar(500) NOT NULL,
-  `id_pais` int NOT NULL,
+  `id_pais` int(11) NOT NULL,
   `direccion` text NOT NULL,
   `telefono_fiscal` varchar(20) NOT NULL,
-  `pagina_web` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `pagina_web` varchar(250) DEFAULT NULL,
   `email_fiscal` varchar(100) NOT NULL,
-  `id_estatus` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `id_estatus` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_cliente`
@@ -2076,19 +2134,19 @@ DELIMITER ;
 --
 
 CREATE TABLE `tbl_cliente_facturacion` (
-  `id` bigint UNSIGNED NOT NULL,
-  `id_cliente` int DEFAULT NULL,
-  `id_proyecto` int DEFAULT NULL,
-  `id_parroquia_factura` int DEFAULT NULL,
-  `avenida_calle_factura` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `edificio_quinta_factura` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `piso_factura` varchar(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `numero_factura` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `ciudad_factura` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `telefono_factura` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `fax_factura` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `email_factura` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `id_estatus` int DEFAULT NULL
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `id_cliente` int(11) DEFAULT NULL,
+  `id_proyecto` int(11) DEFAULT NULL,
+  `id_parroquia_factura` int(11) DEFAULT NULL,
+  `avenida_calle_factura` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `edificio_quinta_factura` varchar(25) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `piso_factura` varchar(3) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `numero_factura` varchar(5) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ciudad_factura` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `telefono_factura` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `fax_factura` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email_factura` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id_estatus` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -2110,10 +2168,10 @@ DELIMITER ;
 --
 
 CREATE TABLE `tbl_concepto_factura` (
-  `id` int NOT NULL,
-  `descripcion` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `id_tipo_concepto_factura` int NOT NULL,
-  `id_estatus` int NOT NULL
+  `id` int(11) NOT NULL,
+  `descripcion` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_tipo_concepto_factura` int(11) NOT NULL,
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -2134,9 +2192,9 @@ INSERT INTO `tbl_concepto_factura` (`id`, `descripcion`, `id_tipo_concepto_factu
 --
 
 CREATE TABLE `tbl_concepto_horas_no_cargables` (
-  `id` int NOT NULL,
-  `descripcion` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `id_estatus` int NOT NULL
+  `id` int(11) NOT NULL,
+  `descripcion` varchar(250) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -2179,11 +2237,11 @@ DELIMITER ;
 --
 
 CREATE TABLE `tbl_configuracion` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `nombre` varchar(50) NOT NULL,
   `valor` varchar(255) NOT NULL,
   `descripcion` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_configuracion`
@@ -2201,10 +2259,10 @@ INSERT INTO `tbl_configuracion` (`id`, `nombre`, `valor`, `descripcion`) VALUES
 --
 
 CREATE TABLE `tbl_configuracion_tarea_programada` (
-  `id` int NOT NULL,
-  `id_tarea_programada` int NOT NULL,
-  `descripcion` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `valor` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` int(11) NOT NULL,
+  `id_tarea_programada` int(11) NOT NULL,
+  `descripcion` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `valor` text COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -2221,13 +2279,13 @@ INSERT INTO `tbl_configuracion_tarea_programada` (`id`, `id_tarea_programada`, `
 --
 
 CREATE TABLE `tbl_contacto_usuario` (
-  `id` int NOT NULL,
-  `id_usuario` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
   `correo_principal` varchar(255) NOT NULL,
   `correo_secundario` varchar(255) DEFAULT NULL,
   `telefono_principal` varchar(30) DEFAULT NULL,
   `telefono_secundario` varchar(30) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_contacto_usuario`
@@ -2413,10 +2471,10 @@ INSERT INTO `tbl_contacto_usuario` (`id`, `id_usuario`, `correo_principal`, `cor
 --
 
 CREATE TABLE `tbl_division` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `descripcion` varchar(50) NOT NULL,
-  `id_estatus` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `id_estatus` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_division`
@@ -2450,9 +2508,9 @@ INSERT INTO `tbl_division` (`id`, `descripcion`, `id_estatus`) VALUES
 --
 
 CREATE TABLE `tbl_empresa` (
-  `id` int NOT NULL,
-  `razon_social` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `id_estatus` int NOT NULL
+  `id` int(11) NOT NULL,
+  `razon_social` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -2470,10 +2528,10 @@ INSERT INTO `tbl_empresa` (`id`, `razon_social`, `id_estatus`) VALUES
 --
 
 CREATE TABLE `tbl_estados` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `estado` varchar(250) NOT NULL,
   `iso_3166-2` varchar(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_estados`
@@ -2513,11 +2571,11 @@ INSERT INTO `tbl_estados` (`id`, `estado`, `iso_3166-2`) VALUES
 --
 
 CREATE TABLE `tbl_estatus` (
-  `id` int NOT NULL,
-  `tabla` varchar(60) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `valor` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `tabla` varchar(60) NOT NULL,
+  `valor` int(11) NOT NULL,
   `descripcion` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_estatus`
@@ -2564,8 +2622,8 @@ INSERT INTO `tbl_estatus` (`id`, `tabla`, `valor`, `descripcion`) VALUES
 --
 
 CREATE TABLE `tbl_estatus_login_denegado` (
-  `id_estatus` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='Estatus de usuario los cuales no se les permite el acceso';
+  `id_estatus` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Estatus de usuario los cuales no se les permite el acceso';
 
 --
 -- Volcado de datos para la tabla `tbl_estatus_login_denegado`
@@ -2583,20 +2641,20 @@ INSERT INTO `tbl_estatus_login_denegado` (`id_estatus`) VALUES
 --
 
 CREATE TABLE `tbl_factura_proyecto` (
-  `id` int NOT NULL,
-  `id_proyecto` int NOT NULL,
-  `concepto` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `id_concepto_factura` int NOT NULL,
-  `numero_factura` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `id_proyecto` int(11) NOT NULL,
+  `concepto` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id_concepto_factura` int(11) NOT NULL,
+  `numero_factura` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `monto_factura` decimal(25,2) NOT NULL,
-  `numero_control` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `observaciones` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `numero_control` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `observaciones` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `fecha_factura` date DEFAULT NULL,
   `fecha_cobro_factura` date DEFAULT NULL,
   `fecha_registro` date DEFAULT NULL,
-  `id_facturador` int NOT NULL,
-  `id_factura_anular` int DEFAULT NULL,
-  `id_estatus` int NOT NULL
+  `id_facturador` int(11) NOT NULL,
+  `id_factura_anular` int(11) DEFAULT NULL,
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -2928,10 +2986,10 @@ INSERT INTO `tbl_factura_proyecto` (`id`, `id_proyecto`, `concepto`, `id_concept
 --
 
 CREATE TABLE `tbl_horas_cargables` (
-  `id` int NOT NULL,
-  `id_proy_analista` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_proy_analista` int(11) NOT NULL,
   `fecha` date NOT NULL,
-  `descripcion` varchar(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `descripcion` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `horas_trabajadas` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -13110,16 +13168,16 @@ DELIMITER ;
 --
 
 CREATE TABLE `tbl_horas_no_cargables` (
-  `id` int NOT NULL,
-  `id_concepto` int NOT NULL,
-  `id_usuario` int NOT NULL,
-  `id_division` int NOT NULL,
-  `aprobado_por` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `id_concepto` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `id_division` int(11) NOT NULL,
+  `aprobado_por` int(11) DEFAULT NULL,
   `fecha_desde` datetime NOT NULL COMMENT 'El formato de la fecha es UTC',
   `fecha_hasta` datetime NOT NULL COMMENT 'El formato de la fecha es UTC',
   `fecha_aprobacion` datetime DEFAULT NULL,
-  `observacion` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `id_estatus` int NOT NULL
+  `observacion` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -20530,14 +20588,14 @@ INSERT INTO `tbl_horas_no_cargables` (`id`, `id_concepto`, `id_usuario`, `id_div
 --
 
 CREATE TABLE `tbl_mensaje_bd` (
-  `id` int NOT NULL,
-  `id_tipo_objeto_bd` int NOT NULL,
-  `id_tipo_mensaje_bd` int NOT NULL,
-  `nombre_objeto` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `mensaje` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_tipo_objeto_bd` int(11) NOT NULL,
+  `id_tipo_mensaje_bd` int(11) NOT NULL,
+  `nombre_objeto` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `mensaje` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `fecha` datetime NOT NULL,
-  `consulta_sql` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `id_estatus` int NOT NULL
+  `consulta_sql` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -20547,18 +20605,18 @@ CREATE TABLE `tbl_mensaje_bd` (
 --
 
 CREATE TABLE `tbl_menu` (
-  `id` int NOT NULL,
-  `id_menu_padre` int NOT NULL,
-  `descripcion` varchar(70) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `url` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `orden` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_menu_padre` int(11) NOT NULL,
+  `descripcion` varchar(70) NOT NULL,
+  `url` varchar(30) NOT NULL,
+  `orden` int(11) NOT NULL,
   `visible` tinyint(1) NOT NULL,
   `C` tinyint(1) NOT NULL,
   `R` tinyint(1) NOT NULL,
   `U` tinyint(1) NOT NULL,
   `D` tinyint(1) NOT NULL,
-  `id_estatus` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `id_estatus` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_menu`
@@ -20598,14 +20656,14 @@ INSERT INTO `tbl_menu` (`id`, `id_menu_padre`, `descripcion`, `url`, `orden`, `v
 --
 
 CREATE TABLE `tbl_menu_usuario` (
-  `id` int NOT NULL,
-  `id_usuario` int NOT NULL,
-  `id_menu` int NOT NULL,
-  `C` int NOT NULL,
-  `R` int NOT NULL,
-  `U` int NOT NULL,
-  `D` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `id` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `id_menu` int(11) NOT NULL,
+  `C` int(11) NOT NULL,
+  `R` int(11) NOT NULL,
+  `U` int(11) NOT NULL,
+  `D` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_menu_usuario`
@@ -21033,11 +21091,11 @@ INSERT INTO `tbl_menu_usuario` (`id`, `id_usuario`, `id_menu`, `C`, `R`, `U`, `D
 --
 
 CREATE TABLE `tbl_monedas` (
-  `id` int NOT NULL,
-  `moneda` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `simbolo` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `orden` int NOT NULL,
-  `id_estatus` int NOT NULL
+  `id` int(11) NOT NULL,
+  `moneda` varchar(25) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `simbolo` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `orden` int(11) NOT NULL,
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -21056,10 +21114,10 @@ INSERT INTO `tbl_monedas` (`id`, `moneda`, `simbolo`, `orden`, `id_estatus`) VAL
 --
 
 CREATE TABLE `tbl_municipios` (
-  `id` int NOT NULL,
-  `id_estado` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_estado` int(11) NOT NULL,
   `municipio` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_municipios`
@@ -21409,10 +21467,10 @@ INSERT INTO `tbl_municipios` (`id`, `id_estado`, `municipio`) VALUES
 --
 
 CREATE TABLE `tbl_notificacion_tarea_programada_usuario` (
-  `id` int NOT NULL,
-  `id_usuario` int NOT NULL,
-  `id_tarea_programada` int NOT NULL,
-  `id_estatus` int NOT NULL
+  `id` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `id_tarea_programada` int(11) NOT NULL,
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -21430,10 +21488,10 @@ INSERT INTO `tbl_notificacion_tarea_programada_usuario` (`id`, `id_usuario`, `id
 --
 
 CREATE TABLE `tbl_paises` (
-  `id` int NOT NULL,
-  `nombre` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `iso3` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `codigo_telf` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL
+  `id` int(11) NOT NULL,
+  `nombre` varchar(300) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `iso3` varchar(300) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `codigo_telf` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -21695,10 +21753,10 @@ INSERT INTO `tbl_paises` (`id`, `nombre`, `iso3`, `codigo_telf`) VALUES
 --
 
 CREATE TABLE `tbl_parroquias` (
-  `id` int NOT NULL,
-  `id_municipio` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_municipio` int(11) NOT NULL,
   `parroquia` varchar(250) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_parroquias`
@@ -22851,18 +22909,18 @@ INSERT INTO `tbl_parroquias` (`id`, `id_municipio`, `parroquia`) VALUES
 --
 
 CREATE TABLE `tbl_proyecto` (
-  `id` int NOT NULL,
-  `descripcion` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `id_cliente` int NOT NULL,
-  `id_socio` int NOT NULL,
-  `id_socio_calidad` int NOT NULL,
-  `id_gerente` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `descripcion` text NOT NULL,
+  `id_cliente` int(11) NOT NULL,
+  `id_socio` int(11) NOT NULL,
+  `id_socio_calidad` int(11) NOT NULL,
+  `id_gerente` int(11) NOT NULL,
   `fecha_contratacion` date NOT NULL,
   `monto` decimal(25,2) NOT NULL,
-  `id_moneda` int NOT NULL,
-  `id_empresa` int NOT NULL,
-  `id_estatus` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `id_moneda` int(11) NOT NULL,
+  `id_empresa` int(11) NOT NULL,
+  `id_estatus` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_proyecto`
@@ -23019,12 +23077,12 @@ DELIMITER ;
 --
 
 CREATE TABLE `tbl_proyecto_analista` (
-  `id` int UNSIGNED NOT NULL,
-  `id_proyecto` int NOT NULL,
-  `id_proyecto_division` int DEFAULT NULL,
-  `id_analista` int NOT NULL,
-  `horas_asignadas` int DEFAULT NULL,
-  `id_estatus` int NOT NULL
+  `id` int(10) UNSIGNED NOT NULL,
+  `id_proyecto` int(11) NOT NULL,
+  `id_proyecto_division` int(11) DEFAULT NULL,
+  `id_analista` int(11) NOT NULL,
+  `horas_asignadas` int(11) DEFAULT NULL,
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -23743,12 +23801,12 @@ DELIMITER ;
 --
 
 CREATE TABLE `tbl_proyecto_divisiones` (
-  `id` int NOT NULL,
-  `id_division` int NOT NULL,
-  `id_proyecto` int NOT NULL,
-  `id_gerente` int NOT NULL,
-  `horas_contratadas` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `id` int(11) NOT NULL,
+  `id_division` int(11) NOT NULL,
+  `id_proyecto` int(11) NOT NULL,
+  `id_gerente` int(11) NOT NULL,
+  `horas_contratadas` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_proyecto_divisiones`
@@ -23958,11 +24016,11 @@ INSERT INTO `tbl_proyecto_divisiones` (`id`, `id_division`, `id_proyecto`, `id_g
 --
 
 CREATE TABLE `tbl_proy_div_horas_adic` (
-  `id` int NOT NULL,
-  `id_proy_div` int NOT NULL,
-  `horas` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_proy_div` int(11) NOT NULL,
+  `horas` int(11) NOT NULL,
   `fecha` date NOT NULL COMMENT 'fecha en que se registro',
-  `id_estatus` int NOT NULL
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -23993,11 +24051,11 @@ INSERT INTO `tbl_proy_div_horas_adic` (`id`, `id_proy_div`, `horas`, `fecha`, `i
 --
 
 CREATE TABLE `tbl_proy_monto_adicional` (
-  `id` int NOT NULL,
-  `id_proyecto` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `id_proyecto` int(11) NOT NULL,
   `monto` decimal(25,2) NOT NULL,
   `fecha` date NOT NULL COMMENT 'fecha en que se registro',
-  `id_estatus` int NOT NULL
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -24014,9 +24072,9 @@ INSERT INTO `tbl_proy_monto_adicional` (`id`, `id_proyecto`, `monto`, `fecha`, `
 --
 
 CREATE TABLE `tbl_tarea_programada` (
-  `id` int NOT NULL,
-  `descripcion` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `id_estatus` int NOT NULL
+  `id` int(11) NOT NULL,
+  `descripcion` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -24033,8 +24091,8 @@ INSERT INTO `tbl_tarea_programada` (`id`, `descripcion`, `id_estatus`) VALUES
 --
 
 CREATE TABLE `tbl_tipo_cargo` (
-  `id` int NOT NULL,
-  `descripcion` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` int(11) NOT NULL,
+  `descripcion` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -24053,8 +24111,8 @@ INSERT INTO `tbl_tipo_cargo` (`id`, `descripcion`) VALUES
 --
 
 CREATE TABLE `tbl_tipo_concepto_factura` (
-  `id` int NOT NULL,
-  `descripcion` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` int(11) NOT NULL,
+  `descripcion` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -24073,10 +24131,10 @@ INSERT INTO `tbl_tipo_concepto_factura` (`id`, `descripcion`) VALUES
 --
 
 CREATE TABLE `tbl_tipo_contacto` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `descripcion` varchar(30) NOT NULL,
-  `estatus` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `estatus` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_tipo_contacto`
@@ -24094,10 +24152,10 @@ INSERT INTO `tbl_tipo_contacto` (`id`, `descripcion`, `estatus`) VALUES
 --
 
 CREATE TABLE `tbl_tipo_documento_identidad` (
-  `id` int NOT NULL,
-  `abreviatura` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `descripcion` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `id_estatus` int NOT NULL
+  `id` int(11) NOT NULL,
+  `abreviatura` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `descripcion` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -24115,8 +24173,8 @@ INSERT INTO `tbl_tipo_documento_identidad` (`id`, `abreviatura`, `descripcion`, 
 --
 
 CREATE TABLE `tbl_tipo_mensaje_bd` (
-  `id` int NOT NULL,
-  `descripcion` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` int(11) NOT NULL,
+  `descripcion` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -24134,8 +24192,8 @@ INSERT INTO `tbl_tipo_mensaje_bd` (`id`, `descripcion`) VALUES
 --
 
 CREATE TABLE `tbl_tipo_objeto_bd` (
-  `id` int NOT NULL,
-  `descripcion` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` int(11) NOT NULL,
+  `descripcion` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -24152,7 +24210,7 @@ INSERT INTO `tbl_tipo_objeto_bd` (`id`, `descripcion`) VALUES
 --
 
 CREATE TABLE `tbl_usuario` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `codigo` varchar(6) NOT NULL,
   `clave` blob NOT NULL,
   `fecha_cambio_clave` date DEFAULT NULL,
@@ -24161,16 +24219,16 @@ CREATE TABLE `tbl_usuario` (
   `apellido_1` varchar(20) NOT NULL,
   `apellido_2` varchar(20) DEFAULT NULL,
   `fecha_nacimiento` datetime DEFAULT NULL COMMENT 'El formato de la fecha es UTC',
-  `id_cargo` int DEFAULT NULL,
-  `id_division` int DEFAULT NULL,
-  `id_parroquia` int DEFAULT NULL,
+  `id_cargo` int(11) DEFAULT NULL,
+  `id_division` int(11) DEFAULT NULL,
+  `id_parroquia` int(11) DEFAULT NULL,
   `avatar` varchar(30) DEFAULT NULL,
   `fecha_ingreso` datetime DEFAULT NULL COMMENT 'El formato de la fecha es UTC',
   `fecha_egreso` datetime DEFAULT NULL COMMENT 'El formato de la fecha es UTC',
   `fecha_login` datetime DEFAULT NULL,
   `ip_login` varchar(39) DEFAULT NULL,
-  `id_estatus` int NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `id_estatus` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_usuario`
@@ -24368,10 +24426,10 @@ DELIMITER ;
 --
 
 CREATE TABLE `tbl_usuario_documento_identidad` (
-  `id` int NOT NULL,
-  `id_usuario` int NOT NULL,
-  `id_tipo_documento_identidad` int NOT NULL,
-  `documento` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `id_tipo_documento_identidad` int(11) NOT NULL,
+  `documento` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -24576,8 +24634,8 @@ DELIMITER ;
 -- (Véase abajo para la vista actual)
 --
 CREATE TABLE `vw_config_encryption` (
-`iv` varchar(255)
-,`key` varchar(255)
+`key` varchar(255)
+,`iv` varchar(255)
 );
 
 -- --------------------------------------------------------
@@ -24587,7 +24645,7 @@ CREATE TABLE `vw_config_encryption` (
 --
 DROP TABLE IF EXISTS `vw_config_encryption`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` SQL SECURITY DEFINER VIEW `vw_config_encryption`  AS SELECT (select `c`.`valor` from `tbl_configuracion` `c` where (`c`.`nombre` = 'encrypt-key') limit 1) AS `key`, (select `c`.`valor` from `tbl_configuracion` `c` where (`c`.`nombre` = 'encrypt-iv') limit 1) AS `iv` ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`127.0.0.1` SQL SECURITY DEFINER VIEW `vw_config_encryption`  AS SELECT (select `c`.`valor` from `tbl_configuracion` `c` where `c`.`nombre` = 'encrypt-key' limit 1) AS `key`, (select `c`.`valor` from `tbl_configuracion` `c` where `c`.`nombre` = 'encrypt-iv' limit 1) AS `iv` ;
 
 --
 -- Índices para tablas volcadas
@@ -24886,247 +24944,247 @@ ALTER TABLE `tbl_usuario_documento_identidad`
 -- AUTO_INCREMENT de la tabla `logs_auditoria`
 --
 ALTER TABLE `logs_auditoria`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=351;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=351;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_accion_bitacora`
 --
 ALTER TABLE `tbl_accion_bitacora`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_bitacora`
 --
 ALTER TABLE `tbl_bitacora`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=914;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=914;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cargo_empleado`
 --
 ALTER TABLE `tbl_cargo_empleado`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cargo_supervisa`
 --
 ALTER TABLE `tbl_cargo_supervisa`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=289;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=289;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_ciudades`
 --
 ALTER TABLE `tbl_ciudades`
-  MODIFY `id_ciudad` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=523;
+  MODIFY `id_ciudad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=523;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cliente`
 --
 ALTER TABLE `tbl_cliente`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cliente_facturacion`
 --
 ALTER TABLE `tbl_cliente_facturacion`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_concepto_factura`
 --
 ALTER TABLE `tbl_concepto_factura`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_concepto_horas_no_cargables`
 --
 ALTER TABLE `tbl_concepto_horas_no_cargables`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_configuracion`
 --
 ALTER TABLE `tbl_configuracion`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_configuracion_tarea_programada`
 --
 ALTER TABLE `tbl_configuracion_tarea_programada`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_contacto_usuario`
 --
 ALTER TABLE `tbl_contacto_usuario`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=180;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=180;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_division`
 --
 ALTER TABLE `tbl_division`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_empresa`
 --
 ALTER TABLE `tbl_empresa`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_estados`
 --
 ALTER TABLE `tbl_estados`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_estatus`
 --
 ALTER TABLE `tbl_estatus`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_factura_proyecto`
 --
 ALTER TABLE `tbl_factura_proyecto`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=316;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=316;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_horas_cargables`
 --
 ALTER TABLE `tbl_horas_cargables`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11246;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11246;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_horas_no_cargables`
 --
 ALTER TABLE `tbl_horas_no_cargables`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7381;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7381;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_mensaje_bd`
 --
 ALTER TABLE `tbl_mensaje_bd`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_menu`
 --
 ALTER TABLE `tbl_menu`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_menu_usuario`
 --
 ALTER TABLE `tbl_menu_usuario`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=526;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=526;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_monedas`
 --
 ALTER TABLE `tbl_monedas`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_municipios`
 --
 ALTER TABLE `tbl_municipios`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=463;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=463;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_notificacion_tarea_programada_usuario`
 --
 ALTER TABLE `tbl_notificacion_tarea_programada_usuario`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_paises`
 --
 ALTER TABLE `tbl_paises`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=247;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=247;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_parroquias`
 --
 ALTER TABLE `tbl_parroquias`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1139;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1139;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_proyecto`
 --
 ALTER TABLE `tbl_proyecto`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=134;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=134;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_proyecto_analista`
 --
 ALTER TABLE `tbl_proyecto_analista`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=701;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=701;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_proyecto_divisiones`
 --
 ALTER TABLE `tbl_proyecto_divisiones`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=202;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=202;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_proy_div_horas_adic`
 --
 ALTER TABLE `tbl_proy_div_horas_adic`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_proy_monto_adicional`
 --
 ALTER TABLE `tbl_proy_monto_adicional`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_tarea_programada`
 --
 ALTER TABLE `tbl_tarea_programada`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_tipo_concepto_factura`
 --
 ALTER TABLE `tbl_tipo_concepto_factura`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_tipo_contacto`
 --
 ALTER TABLE `tbl_tipo_contacto`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_tipo_documento_identidad`
 --
 ALTER TABLE `tbl_tipo_documento_identidad`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_tipo_mensaje_bd`
 --
 ALTER TABLE `tbl_tipo_mensaje_bd`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_tipo_objeto_bd`
 --
 ALTER TABLE `tbl_tipo_objeto_bd`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_usuario`
 --
 ALTER TABLE `tbl_usuario`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=180;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=180;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_usuario_documento_identidad`
 --
 ALTER TABLE `tbl_usuario_documento_identidad`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=180;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=180;
 
 --
 -- Restricciones para tablas volcadas
@@ -25136,14 +25194,14 @@ ALTER TABLE `tbl_usuario_documento_identidad`
 -- Filtros para la tabla `tbl_bitacora`
 --
 ALTER TABLE `tbl_bitacora`
-  ADD CONSTRAINT `tbl_bitacora_ibfk_1` FOREIGN KEY (`id_accion_bitacora`) REFERENCES `tbl_accion_bitacora` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `tbl_bitacora_ibfk_1` FOREIGN KEY (`id_accion_bitacora`) REFERENCES `tbl_accion_bitacora` (`id`);
 
 --
 -- Filtros para la tabla `tbl_cargo_supervisa`
 --
 ALTER TABLE `tbl_cargo_supervisa`
-  ADD CONSTRAINT `tbl_cargo_supervisa_ibfk_1` FOREIGN KEY (`id_cargo`) REFERENCES `tbl_cargo_empleado` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `tbl_cargo_supervisa_ibfk_2` FOREIGN KEY (`id_cargo_supervisor`) REFERENCES `tbl_cargo_empleado` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `tbl_cargo_supervisa_ibfk_1` FOREIGN KEY (`id_cargo`) REFERENCES `tbl_cargo_empleado` (`id`),
+  ADD CONSTRAINT `tbl_cargo_supervisa_ibfk_2` FOREIGN KEY (`id_cargo_supervisor`) REFERENCES `tbl_cargo_empleado` (`id`);
 
 --
 -- Filtros para la tabla `tbl_ciudades`
@@ -25155,13 +25213,13 @@ ALTER TABLE `tbl_ciudades`
 -- Filtros para la tabla `tbl_cliente_facturacion`
 --
 ALTER TABLE `tbl_cliente_facturacion`
-  ADD CONSTRAINT `tbl_cliente_facturacion_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `tbl_cliente` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `tbl_cliente_facturacion_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `tbl_cliente` (`id`);
 
 --
 -- Filtros para la tabla `tbl_concepto_factura`
 --
 ALTER TABLE `tbl_concepto_factura`
-  ADD CONSTRAINT `tbl_concepto_factura_ibfk_1` FOREIGN KEY (`id_tipo_concepto_factura`) REFERENCES `tbl_tipo_concepto_factura` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `tbl_concepto_factura_ibfk_1` FOREIGN KEY (`id_tipo_concepto_factura`) REFERENCES `tbl_tipo_concepto_factura` (`id`);
 
 --
 -- Filtros para la tabla `tbl_contacto_usuario`
@@ -25173,24 +25231,24 @@ ALTER TABLE `tbl_contacto_usuario`
 -- Filtros para la tabla `tbl_factura_proyecto`
 --
 ALTER TABLE `tbl_factura_proyecto`
-  ADD CONSTRAINT `tbl_factura_proyecto_ibfk_1` FOREIGN KEY (`id_concepto_factura`) REFERENCES `tbl_concepto_factura` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `tbl_factura_proyecto_ibfk_2` FOREIGN KEY (`id_proyecto`) REFERENCES `tbl_proyecto` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `tbl_factura_proyecto_ibfk_1` FOREIGN KEY (`id_concepto_factura`) REFERENCES `tbl_concepto_factura` (`id`),
+  ADD CONSTRAINT `tbl_factura_proyecto_ibfk_2` FOREIGN KEY (`id_proyecto`) REFERENCES `tbl_proyecto` (`id`);
 
 --
 -- Filtros para la tabla `tbl_horas_no_cargables`
 --
 ALTER TABLE `tbl_horas_no_cargables`
-  ADD CONSTRAINT `tbl_horas_no_cargables_ibfk_1` FOREIGN KEY (`id_concepto`) REFERENCES `tbl_concepto_horas_no_cargables` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `tbl_horas_no_cargables_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `tbl_usuario` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `tbl_horas_no_cargables_ibfk_3` FOREIGN KEY (`aprobado_por`) REFERENCES `tbl_usuario` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `tbl_horas_no_cargables_ibfk_4` FOREIGN KEY (`id_division`) REFERENCES `tbl_division` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `tbl_horas_no_cargables_ibfk_1` FOREIGN KEY (`id_concepto`) REFERENCES `tbl_concepto_horas_no_cargables` (`id`),
+  ADD CONSTRAINT `tbl_horas_no_cargables_ibfk_2` FOREIGN KEY (`id_usuario`) REFERENCES `tbl_usuario` (`id`),
+  ADD CONSTRAINT `tbl_horas_no_cargables_ibfk_3` FOREIGN KEY (`aprobado_por`) REFERENCES `tbl_usuario` (`id`),
+  ADD CONSTRAINT `tbl_horas_no_cargables_ibfk_4` FOREIGN KEY (`id_division`) REFERENCES `tbl_division` (`id`);
 
 --
 -- Filtros para la tabla `tbl_mensaje_bd`
 --
 ALTER TABLE `tbl_mensaje_bd`
-  ADD CONSTRAINT `tbl_mensaje_bd_ibfk_1` FOREIGN KEY (`id_tipo_mensaje_bd`) REFERENCES `tbl_tipo_mensaje_bd` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `tbl_mensaje_bd_ibfk_2` FOREIGN KEY (`id_tipo_objeto_bd`) REFERENCES `tbl_tipo_objeto_bd` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `tbl_mensaje_bd_ibfk_1` FOREIGN KEY (`id_tipo_mensaje_bd`) REFERENCES `tbl_tipo_mensaje_bd` (`id`),
+  ADD CONSTRAINT `tbl_mensaje_bd_ibfk_2` FOREIGN KEY (`id_tipo_objeto_bd`) REFERENCES `tbl_tipo_objeto_bd` (`id`);
 
 --
 -- Filtros para la tabla `tbl_menu_usuario`
@@ -25215,18 +25273,18 @@ ALTER TABLE `tbl_parroquias`
 -- Filtros para la tabla `tbl_proyecto`
 --
 ALTER TABLE `tbl_proyecto`
-  ADD CONSTRAINT `tbl_proyecto_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `tbl_cliente` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `tbl_proyecto_ibfk_2` FOREIGN KEY (`id_gerente`) REFERENCES `tbl_usuario` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `tbl_proyecto_ibfk_3` FOREIGN KEY (`id_moneda`) REFERENCES `tbl_monedas` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `tbl_proyecto_ibfk_4` FOREIGN KEY (`id_empresa`) REFERENCES `tbl_empresa` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `tbl_proyecto_ibfk_1` FOREIGN KEY (`id_cliente`) REFERENCES `tbl_cliente` (`id`),
+  ADD CONSTRAINT `tbl_proyecto_ibfk_2` FOREIGN KEY (`id_gerente`) REFERENCES `tbl_usuario` (`id`),
+  ADD CONSTRAINT `tbl_proyecto_ibfk_3` FOREIGN KEY (`id_moneda`) REFERENCES `tbl_monedas` (`id`),
+  ADD CONSTRAINT `tbl_proyecto_ibfk_4` FOREIGN KEY (`id_empresa`) REFERENCES `tbl_empresa` (`id`);
 
 --
 -- Filtros para la tabla `tbl_proyecto_analista`
 --
 ALTER TABLE `tbl_proyecto_analista`
-  ADD CONSTRAINT `tbl_proyecto_analista_ibfk_1` FOREIGN KEY (`id_proyecto`) REFERENCES `tbl_proyecto` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `tbl_proyecto_analista_ibfk_2` FOREIGN KEY (`id_analista`) REFERENCES `tbl_usuario` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `tbl_proyecto_analista_ibfk_3` FOREIGN KEY (`id_proyecto_division`) REFERENCES `tbl_proyecto_divisiones` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `tbl_proyecto_analista_ibfk_1` FOREIGN KEY (`id_proyecto`) REFERENCES `tbl_proyecto` (`id`),
+  ADD CONSTRAINT `tbl_proyecto_analista_ibfk_2` FOREIGN KEY (`id_analista`) REFERENCES `tbl_usuario` (`id`),
+  ADD CONSTRAINT `tbl_proyecto_analista_ibfk_3` FOREIGN KEY (`id_proyecto_division`) REFERENCES `tbl_proyecto_divisiones` (`id`);
 
 --
 -- Filtros para la tabla `tbl_proyecto_divisiones`
@@ -25239,13 +25297,13 @@ ALTER TABLE `tbl_proyecto_divisiones`
 -- Filtros para la tabla `tbl_proy_div_horas_adic`
 --
 ALTER TABLE `tbl_proy_div_horas_adic`
-  ADD CONSTRAINT `tbl_proy_div_horas_adic_ibfk_1` FOREIGN KEY (`id_proy_div`) REFERENCES `tbl_proyecto_divisiones` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `tbl_proy_div_horas_adic_ibfk_1` FOREIGN KEY (`id_proy_div`) REFERENCES `tbl_proyecto_divisiones` (`id`);
 
 --
 -- Filtros para la tabla `tbl_proy_monto_adicional`
 --
 ALTER TABLE `tbl_proy_monto_adicional`
-  ADD CONSTRAINT `tbl_proy_monto_adicional_ibfk_1` FOREIGN KEY (`id_proyecto`) REFERENCES `tbl_proyecto` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `tbl_proy_monto_adicional_ibfk_1` FOREIGN KEY (`id_proyecto`) REFERENCES `tbl_proyecto` (`id`);
 
 --
 -- Filtros para la tabla `tbl_usuario`
@@ -25259,8 +25317,8 @@ ALTER TABLE `tbl_usuario`
 -- Filtros para la tabla `tbl_usuario_documento_identidad`
 --
 ALTER TABLE `tbl_usuario_documento_identidad`
-  ADD CONSTRAINT `tbl_usuario_documento_identidad_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `tbl_usuario` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `tbl_usuario_documento_identidad_ibfk_2` FOREIGN KEY (`id_tipo_documento_identidad`) REFERENCES `tbl_tipo_documento_identidad` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `tbl_usuario_documento_identidad_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `tbl_usuario` (`id`),
+  ADD CONSTRAINT `tbl_usuario_documento_identidad_ibfk_2` FOREIGN KEY (`id_tipo_documento_identidad`) REFERENCES `tbl_tipo_documento_identidad` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
