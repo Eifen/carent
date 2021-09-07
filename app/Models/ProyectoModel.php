@@ -897,15 +897,15 @@ class ProyectoModel extends Model
               return $response;
             }
           }
-          if ($analista == 0) {
-            if ($horasAnalista[$i]->horas_cargadas != null) {
-              $response = array(
-               "response" => false,
-               "message" => "Un analista ya posee horas cargadas, no puede ser eliminado."
-              );
-              return $response;
-            }            
-          }
+        }
+        if ($analista == 0) {
+          if ($horasAnalista[$i]->horas_cargadas != null) {
+            $response = array(
+             "response" => false,
+             "message" => "Un analista ya posee horas cargadas, no puede ser eliminado."
+            );
+            return $response;
+          }            
         }
       }
 
