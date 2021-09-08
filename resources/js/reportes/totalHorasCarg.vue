@@ -126,6 +126,16 @@
 
     <b-col cols="12">
       <b-row align-h="end" v-cloak v-if="formFiltro.mostrar">
+        <b-col cols="12" md="6" lg="4">
+          <b-card class="text-left card-horas">
+            <b-card-text>
+              <span class="titulo">CANTIDAD DE HORAS DE TRABAJO</span>
+            </b-card-text>
+            <b-card-text>
+              <span class="monto">{{ maximo_horas }}</span>
+            </b-card-text>
+          </b-card>
+        </b-col>
         <b-col cols="12" md="6" lg="4" class="wrapper-btn-generar-excel">
           <download-excel :data="tabla.registros" :name="'RepTotalHorasCarg.xls'">
             <b-button
@@ -287,6 +297,7 @@
               value: null
             }
           },
+          maximo_horas: 0,
           tabla: {
             alert:{
               contador: false,
@@ -344,11 +355,14 @@
             self.tabla.encabezado = [
               { key: 'numero', label: '#' },
               { key: 'nombre', label: 'Empleado' },
-              { key: 'total_horas_cargables', label: 'Horas Cargables' },
-              { key: 'porcen_horas_cargables', label: '% Horas Cargables' },
+              { key: 'total_horas_cargables', label: 'Horas Clientes' },
+              { key: 'porcen_horas_cargables', label: '% Horas Clientes' },
+              { key: 'porcen_carga_cliente', label: '% Cargabilidad A Clientes' },
               { key: 'total_horas_no_cargables', label: 'Horas No Cargables' },
               { key: 'porcen_horas_no_cargables', label: '% Horas No Cargables' },
+              { key: 'porcen_carga_no_cliente', label: '% Cargabilidad No Clientes' },
               { key: 'total_horas', label: 'Total Horas Cargadas' },
+              { key: 'porcen_carga_total', label: '% Carga total (Ref: '+parseInt(response.data.totales[0].maximo_horas)+' Horas)' },
               { key: 'exceso', label: 'Exceso Horas Cargadas' },
 
             ];
@@ -362,6 +376,7 @@
 
             }
 
+            self.maximo_horas = parseInt(response.data.totales[0].maximo_horas);
             self.formFiltro.campos.cargos.listado = response.data.cargos;
             self.formFiltro.campos.divisiones.listado = response.data.divisiones;        
 
@@ -444,9 +459,12 @@
               nombre: item.nombre,
               total_horas_cargables: item.total_horas_cargables,
               porcen_horas_cargables: item.porcen_horas_cargables,
+              porcen_carga_cliente: item.porcen_carga_cliente,
               total_horas_no_cargables: item.total_horas_no_cargables,
               porcen_horas_no_cargables: item.porcen_horas_no_cargables,
+              porcen_carga_no_cliente: item.porcen_carga_no_cliente,
               total_horas: item.total_horas,
+              porcen_carga_total: item.porcen_carga_total,
               exceso: item.exceso,
             };
 
@@ -542,11 +560,33 @@
             self.formFiltro.btn.limpiarFiltro.disabled = false;
 
             // Se le asigna los valores a las variables
+            self.maximo_horas = parseInt(response.data.totales[0].maximo_horas);
             self.tabla.paginador.numPaginas = response.data.paginas;
             self.tabla.paginador.max = parseInt(response.data.paginas);
 
+            self.tabla.encabezado = [
+              { key: 'numero', label: '#' },
+              { key: 'nombre', label: 'Empleado' },
+              { key: 'total_horas_cargables', label: 'Horas Clientes' },
+              { key: 'porcen_horas_cargables', label: '% Horas Clientes' },
+              { key: 'porcen_carga_cliente', label: '% Cargabilidad A Clientes' },
+              { key: 'total_horas_no_cargables', label: 'Horas No Cargables' },
+              { key: 'porcen_horas_no_cargables', label: '% Horas No Cargables' },
+              { key: 'porcen_carga_no_cliente', label: '% Cargabilidad No Clientes' },
+              { key: 'total_horas', label: 'Total Horas Cargadas' },
+              { key: 'porcen_carga_total', label: '% Carga total (Ref: '+parseInt(response.data.totales[0].maximo_horas)+' Horas)' },
+              { key: 'exceso', label: 'Exceso Horas Cargadas' },
+
+            ];
 
             self.tabla.registros = self.registroTabla(response.data.totales);
+
+            if(response.data.totales.length === 0){
+
+              let mensaje = "No hay carga de hora de los empleados";
+              self.mostrarAlert(self.tabla.alert, true, "warning", mensaje, false, false, 0);
+
+            }
 
           }).catch(error => {
 
