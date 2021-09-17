@@ -880,36 +880,36 @@ class ProyectoModel extends Model
                                    AND pa.id_proyecto = '.$id_proyecto.'');
       for ($i=0; $i < count($horasAnalista); $i++) { 
         $analista = 0;
-        foreach ($empleados as $key => $item) {
-          if(!isset($item->id)){
-            $item = json_decode($item);
-          }
-          $id_usuario = $item->id;
-          $horas_cargadas = $item->horas_cargadas;
-          $horas = $item->horas;    
-          if ($horasAnalista[$i]->id_analista === $id_usuario) {
-            $analista = 1;
-            if ($horas_cargadas > $horas) {
-              $response = array(
-               "response" => false,
-               "message" => "Las horas asignadas no pueden ser inferior a las horas cargadas por los empleados."
-              );
-              return $response;
+        if ($horasAnalista[$i]->id_estatus === 1) {
+          foreach ($empleados as $key => $item) {
+            if(!isset($item->id)){
+              $item = json_decode($item);
+            }
+            $id_usuario = $item->id;
+            $horas_cargadas = $item->horas_cargadas;
+            $horas = $item->horas;    
+            if ($horasAnalista[$i]->id_analista === $id_usuario) {
+              $analista = 1;
+              if ($horas_cargadas > $horas) {
+                $response = array(
+                 "response" => false,
+                 "message" => "Las horas asignadas no pueden ser inferior a las horas cargadas por los empleados."
+                );
+                return $response;
+              }
             }
           }
-        }
-        if ($analista == 0) {
-          if ($horasAnalista[$i]->horas_cargadas != null) {
-            $response = array(
-             "response" => false,
-             "message" => "Un analista ya posee horas cargadas, no puede ser eliminado."
-            );
-            return $response;
-          }            
-        }
+          if ($analista == 0) {
+            if ($horasAnalista[$i]->horas_cargadas != null) {
+              $response = array(
+               "response" => false,
+               "message" => "Un analista ya posee horas cargadas, no puede ser eliminado."
+              );
+              return $response;
+            }            
+          }
+        }        
       }
-
-
 
       foreach ($empleados as $key => $item) {
         if(!isset($item->id)){
