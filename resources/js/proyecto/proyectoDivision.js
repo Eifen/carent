@@ -698,9 +698,6 @@ new Vue({
               self.form.btn.asignar.disabled = false;
               self.form.btn.asignar.html = self.form.btn.asignar.htmlInit;
 
-              if (self.detalleAsigproyecto.data[0].horas_adicionales != null) {
-                self.detalleAsigproyecto.data[0].horas_contratadas = parseFloat(self.detalleAsigproyecto.data[0].horas_contratadas) + parseFloat(self.detalleAsigproyecto.data[0].horas_adicionales);
-              }
               var a = 0;
               for (var i = 0; i < self.comboEmpleados.length; i++) {
                 if (self.comboEmpleados[i].id_estatus > 0) {
