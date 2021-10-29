@@ -165,15 +165,19 @@ class TotalHorasCargModel extends Model
       }
       for ($u=0; $u < count($usuarios) ; $u++) {
         for ($i=0; $i < count($horas) ; $i++) {
+          
           if ($usuarios[$u]->id === $horas[$i]->id_usuario) {
+            //Arreglo para cuando la fecha desde del filtro es mayor a la conseguida
             while ($fecha_desde > $horas[$i]->fecha_desde) {
               $horas[$i]->fecha_desde = date("Y-m-d", strtotime($horas[$i]->fecha_desde."+ 1 days"));
               $horas[$i]->hora_desde = 8.0;
             }
+            //Arreglo para cuando la fecha hasta del filtro es menor a la conseguida
             while ($fecha_hasta < $horas[$i]->fecha_hasta) {
               $horas[$i]->fecha_hasta = date("Y-m-d", strtotime($horas[$i]->fecha_hasta."- 1 days"));
               $horas[$i]->hora_hasta = 17.0;
             }
+            //arreglo para los que cargan entre la noche de un dia a la mañana del siguiente
             $fecha_especial = date("Y-m-d", strtotime($horas[$i]->fecha_desde."+ 1 days"));
             if ($horas[$i]->hora_hasta < 6.0 && $fecha_especial === $horas[$i]->fecha_hasta) {
               while ($horas[$i]->hora_desde != $horas[$i]->hora_hasta) {
@@ -182,7 +186,8 @@ class TotalHorasCargModel extends Model
                 if ($horas[$i]->hora_desde == 24.0) {
                   $horas[$i]->hora_desde = 0;
                 }
-              }              
+              }
+            //validacion cuando la fecha desde y hasta coinciden
             }elseif ($horas[$i]->fecha_desde === $horas[$i]->fecha_hasta) {
               if ($horas[$i]->hora_desde < 12.0 && $horas[$i]->hora_hasta > 13.0) {
                 $hora_cargada1 = 12.0 - $horas[$i]->hora_desde;
@@ -336,6 +341,7 @@ class TotalHorasCargModel extends Model
          $horas_cargadas = 0;
          $hora_cargada1 = 0;
          $hora_cargada2 = 0;
+         $horas_cargadas_anterior = null;
         }
         if ($total_horas_no_cargables < 0) {
           $total_horas_no_cargables = 0;
