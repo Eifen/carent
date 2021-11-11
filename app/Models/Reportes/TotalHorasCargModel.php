@@ -126,10 +126,7 @@ class TotalHorasCargModel extends Model
                              '.$sql_cargos.'
                              '.$sql_division.'
                              '.$sql_empleado.'
-                             ORDER BY u.nombre_1 ASC,
-                                      u.nombre_2 ASC,
-                                      u.apellido_1 ASC,
-                                      u.apellido_2 ASC
+                             ORDER BY nombre ASC
                              ');
       $horas_cargables = DB::select('SELECT h.id,
                                             a.id_analista,
@@ -143,19 +140,47 @@ class TotalHorasCargModel extends Model
                                       h.fecha ASC,
                                       horas_cargadas ASC
                              ');
-      $total_horas_no_cargables = 0;
+
+      $horas_arregladas = [];
+      $dia = 0;
+      $nueva_desde = 0;
       $horas_cargadas = 0;
-      $horas_cargadas_anterior = 0;
-      $porcen_horas_cargables = "0 %";
-      $porcen_carga_cliente = "0 %";
-      $porcen_carga_no_cliente = "0 %";
-      $porcen_horas_no_cargables = "0 %";
-      $porcen_carga_total = "0 %";
-      $fecha_desde_anterior = null;
+      $hora_cargada1 = 0;
+      $hora_cargada2 = 0;
+      $inicio = 1;
+      $medio = 0;
+      $k = 0;
+      $l = 0;
+      $h = 0;
+      $f = 0;
+      $g = 0;
+      $comienzo = 1;
+      $hora_guardada = 0;
+      $fecha_guardada = 0;
+      $ultimo_valor = 0;
+      $v_cargables = 0;
+      $v_no_cargables = 0;
+      $s = 0;
+      $exceso_cargable = 0;
+      $exceso_no_cargable = 0;
+      $id_usuario_guardado = 0;
+      $exceso_cargable_guardado = 0;
+      $exceso_no_cargable_guardado = 0;
+      $t_horas_cargables = 0;
+      $t_exceso_cargables = 0;
+      $t_horas_no_cargables = 0;
+      $t_exceso_no_cargables = 0;
       $fecha_desde_mod = $fecha_desde;
       $fecha_hasta_mod = $fecha_hasta;
-      $fecha_anterior = null;
       $maximo_horas = 0;
+      $t_horas_cargadas = 0;
+      $exceso = 0;
+      $porcen_horas_cargables = "0 %";
+      $porcen_carga_cliente = "0 %";
+      $porcen_horas_no_cargables = "0 %";
+      $porcen_carga_total = "0 %";
+      $porcen_carga_no_cliente = "0 %";
+
       while ( $fecha_hasta_mod >= $fecha_desde_mod) {
         $diaM = date('w',strtotime($fecha_desde_mod));
         if ($diaM === "1" || $diaM === "2" || $diaM === "3" || $diaM === "4" || $diaM === "5") {
@@ -163,222 +188,249 @@ class TotalHorasCargModel extends Model
         }
         $fecha_desde_mod = date("Y-m-d", strtotime($fecha_desde_mod."+ 1 days"));
       }
-      for ($u=0; $u < count($usuarios) ; $u++) {
-        for ($i=0; $i < count($horas) ; $i++) {
-          
-          if ($usuarios[$u]->id === $horas[$i]->id_usuario) {
-            //Arreglo para cuando la fecha desde del filtro es mayor a la conseguida
-            while ($fecha_desde > $horas[$i]->fecha_desde) {
-              $horas[$i]->fecha_desde = date("Y-m-d", strtotime($horas[$i]->fecha_desde."+ 1 days"));
-              $horas[$i]->hora_desde = 8.0;
-            }
-            //Arreglo para cuando la fecha hasta del filtro es menor a la conseguida
-            while ($fecha_hasta < $horas[$i]->fecha_hasta) {
-              $horas[$i]->fecha_hasta = date("Y-m-d", strtotime($horas[$i]->fecha_hasta."- 1 days"));
-              $horas[$i]->hora_hasta = 17.0;
-            }
-            //arreglo para los que cargan entre la noche de un dia a la mañana del siguiente
-            $fecha_especial = date("Y-m-d", strtotime($horas[$i]->fecha_desde."+ 1 days"));
-            if ($horas[$i]->hora_hasta < 6.0 && $fecha_especial === $horas[$i]->fecha_hasta) {
-              while ($horas[$i]->hora_desde != $horas[$i]->hora_hasta) {
-                $horas[$i]->hora_desde = $horas[$i]->hora_desde + 0.5;
-                $horas_cargadas = $horas_cargadas + 0.5;
-                if ($horas[$i]->hora_desde == 24.0) {
-                  $horas[$i]->hora_desde = 0;
-                }
-              }
-            //validacion cuando la fecha desde y hasta coinciden
-            }elseif ($horas[$i]->fecha_desde === $horas[$i]->fecha_hasta) {
-              if ($horas[$i]->hora_desde < 12.0 && $horas[$i]->hora_hasta > 13.0) {
-                $hora_cargada1 = 12.0 - $horas[$i]->hora_desde;
-                $hora_cargada2 = $horas[$i]->hora_hasta - 13.0;
-                $horas_cargadas = $hora_cargada1 + $hora_cargada2;
-              }elseif ($horas[$i]->hora_desde == 12 && $horas[$i]->hora_hasta > 14) {
-                $horas_cargadas = $horas[$i]->hora_hasta - $horas[$i]->hora_desde - 1.0;
-              }elseif ($horas[$i]->hora_desde == 12.5 && $horas[$i]->hora_hasta > 14){
-                $horas_cargadas = $horas[$i]->hora_hasta - $horas[$i]->hora_desde - 0.5;
-              }else{
-                $horas_cargadas = $horas[$i]->hora_hasta - $horas[$i]->hora_desde;
-              }
-              for ($c=0; $c < count($horas_cargables) ; $c++) { 
-                if ($horas_cargables[$c]->id_analista === $horas[$i]->id_usuario) {
-                  if ($fecha_desde_anterior != $horas_cargables[$c]->fecha) {
-                    $horas_cargadas_anterior = 0;
-                  }
-                  if ($horas_cargables[$c]->fecha === $horas[$i]->fecha_desde && $horas_cargadas_anterior === 0) {
-                    if ($horas_cargadas + $horas_cargables[$c]->horas_cargadas >= 8.0) {
-                      $horas_cargadas = 0;
-                      while (8.0 > $horas_cargables[$c]->horas_cargadas) {
-                        $horas_cargadas = $horas_cargadas + 0.5;
-                        $horas_cargables[$c]->horas_cargadas = $horas_cargables[$c]->horas_cargadas + 0.5;
-                      }
-                      $horas_cargadas_anterior = $horas_cargadas + $horas_cargables[$c]->horas_cargadas;
-                    }else{
-                      $horas_cargadas2 = $horas_cargadas;
-                      $horas_cargadas_anterior = $horas_cargadas + $horas_cargables[$c]->horas_cargadas;
-                    }
-                  }elseif ($horas_cargables[$c]->fecha === $fecha_desde_anterior && $horas_cargadas_anterior > 0) {
-                    if ($horas_cargadas_anterior < 8) {
-                      $limite = $horas_cargadas2 + $horas_cargadas; 
-                      if ($limite >= $horas_cargadas_anterior) {
-                        $horas_cargadas = 0;
-                        while ($limite > $horas_cargadas_anterior) {
-                          $horas_cargadas = $horas_cargadas + 0.5;
-                          $horas_cargadas_anterior = $horas_cargadas_anterior + 0.5;
-                        }
-                      }else{
-                          $horas_cargadas = $limite - $horas_cargadas_anterior;
-                      }                      
-                    }else{
-                      $horas_cargadas = 0;
-                    }
-                  }
-                  $fecha_desde_anterior = $horas[$i]->fecha_desde;
-                }
-              }
+
+      for ($i=0; $i < count($horas); $i++) { 
+        //Arreglo para cuando la fecha desde del filtro es mayor a la conseguida
+        while ($fecha_desde > $horas[$i]->fecha_desde) {
+          $horas[$i]->fecha_desde = date("Y-m-d", strtotime($horas[$i]->fecha_desde."+ 1 days"));
+          $horas[$i]->hora_desde = 8.0;
+        }
+        //Arreglo para cuando la fecha hasta del filtro es menor a la conseguida
+        while ($fecha_hasta < $horas[$i]->fecha_hasta) {
+          $horas[$i]->fecha_hasta = date("Y-m-d", strtotime($horas[$i]->fecha_hasta."- 1 days"));
+          $horas[$i]->hora_hasta = 17.0;
+        }
+
+        if ($horas[$i]->fecha_desde === $horas[$i]->fecha_hasta) {
+          if ($horas[$i]->hora_desde < 12.0 && $horas[$i]->hora_hasta > 13.0) {
+            $hora_cargada1 = 12.0 - $horas[$i]->hora_desde;
+            $hora_cargada2 = $horas[$i]->hora_hasta - 13.0;
+            $horas_cargadas = $hora_cargada1 + $hora_cargada2;
+          }elseif ($horas[$i]->hora_desde == 12 && $horas[$i]->hora_hasta > 14) {
+            $horas_cargadas = $horas[$i]->hora_hasta - $horas[$i]->hora_desde - 1.0;
+          }elseif ($horas[$i]->hora_desde == 12.5 && $horas[$i]->hora_hasta > 14){
+            $horas_cargadas = $horas[$i]->hora_hasta - $horas[$i]->hora_desde - 0.5;
+          }else{
+            $horas_cargadas = $horas[$i]->hora_hasta - $horas[$i]->hora_desde;
+          }
+          $horas_arregladas[$k] = array('id_usuario' => $horas[$i]->id_usuario, 'fecha' => $horas[$i]->fecha_desde, 'horas_cargadas' => $horas_cargadas);
+          $k++; 
+        }else{
+          $dia = date('w',strtotime($horas[$i]->fecha_desde));
+          if ($dia === "1" || $dia === "2" || $dia === "3" || $dia === "4" || $dia === "5") {      
+            if ($horas[$i]->hora_desde < 12.0) {
+              $hora_cargada1 = 12.0 - $horas[$i]->hora_desde;
+              $horas_cargadas = $hora_cargada1 + 4.0;
+            }elseif ($horas[$i]->hora_desde == 12) {
+              $horas_cargadas = 17 - $horas[$i]->hora_desde - 1.0;
+            }elseif ($horas[$i]->hora_desde == 12.5) {
+              $horas_cargadas = 17 - $horas[$i]->hora_desde - 0.5;
             }else{
-              $dia = date('w',strtotime($horas[$i]->fecha_desde));
-              if ($dia === "1" || $dia === "2" || $dia === "3" || $dia === "4" || $dia === "5") {      
-                if ($horas[$i]->hora_desde < 12.0) {
-                  $hora_cargada1 = 12.0 - $horas[$i]->hora_desde;
-                  $horas_cargadas = $hora_cargada1 + 4.0;
-                }elseif ($horas[$i]->hora_desde == 12) {
-                  $horas_cargadas = 17 - $horas[$i]->hora_desde - 1.0;
-                }elseif ($horas[$i]->hora_desde == 12.5) {
-                  $horas_cargadas = 17 - $horas[$i]->hora_desde - 0.5;
-                }else{
-                  $horas_cargadas = 17 - $horas[$i]->hora_desde;
-                }
-                for ($c=0; $c < count($horas_cargables) ; $c++) { 
-                  if ($horas_cargables[$c]->id_analista === $horas[$i]->id_usuario) {
-                    if ($horas_cargables[$c]->fecha === $horas[$i]->fecha_desde && $horas[$i]->fecha_desde != $fecha_anterior) {
-                      if ($horas_cargadas + $horas_cargables[$c]->horas_cargadas >= 8.0) {
-                        $horas_cargadas = 0;
-                        while (8.0 > $horas_cargables[$c]->horas_cargadas) {
-                          $horas_cargadas = $horas_cargadas + 0.5;
-                          $horas_cargables[$c]->horas_cargadas = $horas_cargables[$c]->horas_cargadas + 0.5;
-                        }
-                      }
-                    }
-                    if ($horas[$i]->fecha_desde === $fecha_anterior && $horas_cargables[$c]->fecha === $fecha_anterior) {
-                      $horas_cargadas = $horas_cargadas - $horas_cargables[$c]->horas_cargadas;
-                    }
-                  }
-                  $fecha_anterior = $horas_cargables[$c]->fecha;
-                }
+              $horas_cargadas = 17 - $horas[$i]->hora_desde;
+            }
+            $horas_arregladas[$k] = array('id_usuario' => $horas[$i]->id_usuario, 'fecha' => $horas[$i]->fecha_desde, 'horas_cargadas' => $horas_cargadas);
+            $k++;
+          }
+          $nueva_desde = date("Y-m-d", strtotime($horas[$i]->fecha_desde."+ 1 days"));
+          $dia = date("w", strtotime($nueva_desde));     
+          while ($nueva_desde != $horas[$i]->fecha_hasta) {
+            if ($dia === "1" || $dia === "2" || $dia === "3" || $dia === "4" || $dia === "5") {
+              $horas_arregladas[$k] = array('id_usuario' => $horas[$i]->id_usuario, 'fecha' => $nueva_desde, 'horas_cargadas' => 8.0);
+              $k++;
+            }
+            $nueva_desde = date("Y-m-d",strtotime($nueva_desde."+ 1 days"));
+            $dia = date("w", strtotime($nueva_desde));
+          }
+          if ($dia === "1" || $dia === "2" || $dia === "3" || $dia === "4" || $dia === "5") {
+            if ($horas[$i]->hora_hasta > 13.0) {
+              $hora_cargada1 = 4.0;
+              $hora_cargada2 = $horas[$i]->hora_hasta - 13.0;
+              $horas_cargadas = $hora_cargada1 + $hora_cargada2;
+            }else{
+              $horas_cargadas = $horas[$i]->hora_hasta - 8.0;
+            }
+            $horas_arregladas[$k] = array('id_usuario' => $horas[$i]->id_usuario, 'fecha' => $nueva_desde, 'horas_cargadas' => $horas_cargadas);
+            $k++; 
+          }
+        }
+        $hora_cargada1 = 0;
+        $hora_cargada2 = 0;
+        $horas_cargadas = 0;
+        $nueva_desde = 0;
+        $dia = 0;
+      }
+
+      for ($i=0; $i < count($usuarios) ; $i++) { 
+        for ($j=0; $j < count($horas_arregladas) ; $j++) { 
+          if ($usuarios[$i]->id === $horas_arregladas[$j]["id_usuario"]) {
+            if ($comienzo === 1) {
+              $hora_guardada = $horas_arregladas[$j]["horas_cargadas"];
+              $fecha_guardada = $horas_arregladas[$j]["fecha"];
+              $comienzo = 0;
+            }elseif ($fecha_guardada === $horas_arregladas[$j]["fecha"]) {
+              $hora_guardada = $hora_guardada + $horas_arregladas[$j]["horas_cargadas"];
+            }else{
+              if ($hora_guardada > 8.0) {
+                $exceso_no_cargable = $hora_guardada - 8.0;
+                $hora_guardada = 8.0;
               }
-              $nueva_desde = date("Y-m-d", strtotime($horas[$i]->fecha_desde."+ 1 days"));
-              $dia = date("w", strtotime($nueva_desde));     
-              while ($nueva_desde != $horas[$i]->fecha_hasta) {
-                if ($dia === "1" || $dia === "2" || $dia === "3" || $dia === "4" || $dia === "5") {
-                  $horas_cargadas = $horas_cargadas + 8.0;
-                }
-                for ($c=0; $c < count($horas_cargables) ; $c++) { 
-                  if ($horas_cargables[$c]->id_analista === $horas[$i]->id_usuario) {
-                    if ($horas_cargables[$c]->fecha === $nueva_desde) { 
-                      $horas_cargadas = $horas_cargadas - 8.0;
-                      while (8.0 > $horas_cargables[$c]->horas_cargadas) {
-                        $horas_cargadas = $horas_cargadas + 0.5;
-                        $horas_cargables[$c]->horas_cargadas = $horas_cargables[$c]->horas_cargadas + 0.5;
-                      }                      
-                    }
-                  }
-                }
-                $nueva_desde = date("Y-m-d",strtotime($nueva_desde."+ 1 days"));
-                $dia = date("w", strtotime($nueva_desde));
-              }
-              if ($dia === "1" || $dia === "2" || $dia === "3" || $dia === "4" || $dia === "5") {
-                if ($horas[$i]->hora_hasta < 13.0) {
-                  $horas_cargadas = $horas_cargadas + $horas[$i]->hora_hasta - 8;
-                  $acumulado = 0;
-                  for ($c=0; $c < count($horas_cargables) ; $c++) { 
-                    if ($horas_cargables[$c]->id_analista === $horas[$i]->id_usuario) {
-                      if ($horas_cargables[$c]->fecha === $nueva_desde) {
-                        if ($horas[$i]->hora_hasta - 8 + $horas_cargables[$c]->horas_cargadas >= 8) {
-                          $horas_cargadas = $horas_cargadas - $horas[$i]->hora_hasta + 8;
-                          $horas_carga = $horas_cargables[$c]->horas_cargadas;
-                          while (8.0 > $horas_cargables[$c]->horas_cargadas) {
-                            $horas_cargadas = $horas_cargadas + 0.5;
-                            $acumulado = $acumulado + 0.5;
-                            $horas_cargables[$c]->horas_cargadas = $horas_cargables[$c]->horas_cargadas + 0.5;
-                          } 
-                          while ($acumulado + $horas_carga > 8.0) {
-                            $horas_cargadas = $horas_cargadas - 0.5;
-                            $horas_carga = $horas_carga - 0.5;
-                          } 
-                        }                         
-                      }                   
-                    }
-                  }
-                }else{
-                  $hora_cargada2 = $horas[$i]->hora_hasta - 13.0;
-                  $horas_cargadas = $horas_cargadas + 4.0 + $hora_cargada2;
-                  for ($c=0; $c < count($horas_cargables) ; $c++) { 
-                    if ($horas_cargables[$c]->id_analista === $horas[$i]->id_usuario) {
-                      if ($horas_cargables[$c]->fecha === $nueva_desde) {
-                        if ($horas[$i]->hora_hasta - 13.0 + 4.0 + $horas_cargables[$c]->horas_cargadas >= 8) {
-                          $horas_cargadas = $horas_cargadas - 4.0 - $hora_cargada2;
-                          $horas_carga = $horas_cargables[$c]->horas_cargadas;
-                          $acumulado = 0;
-                          while (8.0 > $horas_cargables[$c]->horas_cargadas) {
-                            $horas_cargadas = $horas_cargadas + 0.5;
-                            $acumulado = $acumulado + 0.5;
-                            $horas_cargables[$c]->horas_cargadas = $horas_cargables[$c]->horas_cargadas + 0.5;
-                          } 
-                          while ($acumulado + $horas_carga > 8.0) {
-                             $horas_cargadas = $horas_cargadas - 0.5;
-                             $horas_carga = $horas_carga - 0.5;
-                           } 
-                        }                         
-                      }                   
-                    }
-                  }
-                }
-              }     
+              $horas_no_cargables[$l] = array('id_usuario' => $usuarios[$i]->id, 'fecha' => $fecha_guardada, 'horas_cargadas' => $hora_guardada, 'exceso_no_cargable' => $exceso_no_cargable);
+              $$exceso_no_cargable = 0;
+              $hora_guardada = $horas_arregladas[$j]["horas_cargadas"];
+              $fecha_guardada = $horas_arregladas[$j]["fecha"];
+              $l++;
             }
           }
-         $total_horas_no_cargables = $total_horas_no_cargables + $horas_cargadas;
-         $horas_cargadas = 0;
-         $hora_cargada1 = 0;
-         $hora_cargada2 = 0;
-         $horas_cargadas_anterior = null;
         }
-        if ($total_horas_no_cargables < 0) {
-          $total_horas_no_cargables = 0;
+        if ($hora_guardada > 8.0) {
+          $exceso_no_cargable = $hora_guardada - 8.0;
+          $hora_guardada = 8.0;
         }
-        $total_horas = $total_horas_no_cargables + $usuarios[$u]->horas_cargables;
-        if ($total_horas > $maximo_horas) {
-          $exceso = $total_horas - $maximo_horas;
+        $horas_no_cargables[$l] = array('id_usuario' => $usuarios[$i]->id, 'fecha' => $fecha_guardada, 'horas_cargadas' => $hora_guardada, 'exceso_no_cargable' => $exceso_no_cargable);
+        $l++;
+        $hora_guardada = 0;
+        $fecha_guardada = 0;
+        $exceso_no_cargable = 0;
+        $exceso_cargable = 0;
+        $comienzo = 1;
+
+        for ($j=0; $j < count($horas_cargables) ; $j++) { 
+          if ($usuarios[$i]->id === $horas_cargables[$j]->id_analista) {
+            if ($comienzo === 1) {
+              $hora_guardada = $horas_cargables[$j]->horas_cargadas;
+              $fecha_guardada = $horas_cargables[$j]->fecha;
+              $comienzo = 0;
+            }elseif ($fecha_guardada === $horas_cargables[$j]->fecha) {
+              $hora_guardada = $hora_guardada + $horas_cargables[$j]->horas_cargadas;
+            }else{
+              if ($hora_guardada > 8.0) {
+                $exceso_cargable = $hora_guardada - 8.0;
+                $hora_guardada = 8.0;
+              }
+              $total_horas_cargables[$h] = array('id_usuario' => $usuarios[$i]->id, 'fecha' => $fecha_guardada, 'horas_cargadas' => $hora_guardada, 'exceso_cargable' => $exceso_cargable);
+              $exceso_cargable = 0;
+              $hora_guardada = $horas_cargables[$j]->horas_cargadas;
+              $fecha_guardada = $horas_cargables[$j]->fecha;
+              $h++;
+            }
+          }
+        }
+        if ($hora_guardada > 8.0) {
+          $exceso_cargable = $hora_guardada - 8.0;
+          $hora_guardada = 8.0;
+        }
+        $total_horas_cargables[$h] = array('id_usuario' => $usuarios[$i]->id, 'fecha' => $fecha_guardada, 'horas_cargadas' => $hora_guardada, 'exceso_cargable' => $exceso_cargable);
+        $h++;
+        $hora_guardada = 0;
+        $fecha_guardada = 0;
+        $exceso_cargable = 0;
+        $comienzo = 1;
+      }
+
+      for ($j=0; $j < count($total_horas_cargables) ; $j++) { 
+        if ($comienzo === 1) {
+          $hora_guardada = $total_horas_cargables[$j]["horas_cargadas"];
+          $id_usuario_guardado = $total_horas_cargables[$j]["id_usuario"];
+          $exceso_cargable_guardado = $total_horas_cargables[$j]["exceso_cargable"];
+          $comienzo = 0;
+        }elseif ($id_usuario_guardado === $total_horas_cargables[$j]["id_usuario"]) {
+          $hora_guardada = $hora_guardada + $total_horas_cargables[$j]["horas_cargadas"];
+          $exceso_cargable_guardado = $exceso_cargable_guardado + $total_horas_cargables[$j]["exceso_cargable"];
         }else{
-          $exceso = 0;
+          $suma_horas_cargables[$f] = array('id_usuario' => $id_usuario_guardado, 'fecha' => $fecha_guardada, 'horas_cargadas' => $hora_guardada, 'exceso_cargable' => $exceso_cargable_guardado);
+          $hora_guardada = $total_horas_cargables[$j]["horas_cargadas"];
+          $id_usuario_guardado = $total_horas_cargables[$j]["id_usuario"];
+          $exceso_cargable_guardado = $total_horas_cargables[$j]["exceso_cargable"];
+          $f++;
         }
-        $total_horas = $total_horas - $exceso;
-        $porcen_carga_total = round($total_horas/$maximo_horas*100,2);
+      }
+      $suma_horas_cargables[$f] = array('id_usuario' => $id_usuario_guardado, 'fecha' => $fecha_guardada, 'horas_cargadas' => $hora_guardada, 'exceso_cargable' => $exceso_cargable_guardado);
+
+      $hora_guardada = 0;
+      $comienzo = 1;
+
+      for ($j=0; $j < count($horas_no_cargables) ; $j++) { 
+        if ($comienzo === 1) {
+          $hora_guardada = $horas_no_cargables[$j]["horas_cargadas"];
+          $id_usuario_guardado = $horas_no_cargables[$j]["id_usuario"];
+          $exceso_no_cargable_guardado = $horas_no_cargables[$j]["exceso_no_cargable"];
+          $comienzo = 0;
+        }elseif ($id_usuario_guardado === $horas_no_cargables[$j]["id_usuario"]) {
+          $hora_guardada = $hora_guardada + $horas_no_cargables[$j]["horas_cargadas"];
+          $exceso_no_cargable_guardado = $exceso_no_cargable_guardado + $horas_no_cargables[$j]["exceso_no_cargable"];
+        }else{
+          $suma_horas_no_cargables[$g] = array('id_usuario' => $id_usuario_guardado, 'fecha' => $fecha_guardada, 'horas_cargadas' => $hora_guardada, 'exceso_no_cargable' => $exceso_no_cargable_guardado);
+          $hora_guardada = $horas_no_cargables[$j]["horas_cargadas"];
+          $id_usuario_guardado = $horas_no_cargables[$j]["id_usuario"];
+          $exceso_no_cargable_guardado = $horas_no_cargables[$j]["exceso_no_cargable"];
+          $g++;
+        }
+      }
+      $suma_horas_no_cargables[$g] = array('id_usuario' => $id_usuario_guardado, 'fecha' => $fecha_guardada, 'horas_cargadas' => $hora_guardada, 'exceso_no_cargable' => $exceso_no_cargable_guardado);
+
+
+      for ($i=0; $i < count($usuarios) ; $i++) { 
+        for ($j=0; $j < count($suma_horas_cargables); $j++) { 
+          if ($suma_horas_cargables[$j]['id_usuario'] === $usuarios[$i]->id) {
+            $t_horas_cargables = $t_horas_cargables + $suma_horas_cargables[$j]['horas_cargadas'];
+            $t_exceso_cargables = $t_exceso_cargables + $suma_horas_cargables[$j]['exceso_cargable'];
+          }
+        }
+        for ($j=0; $j < count($suma_horas_no_cargables); $j++) { 
+          if ($suma_horas_no_cargables[$j]['id_usuario'] === $usuarios[$i]->id) {
+            $t_horas_no_cargables = $t_horas_no_cargables + $suma_horas_no_cargables[$j]['horas_cargadas'];
+            $t_exceso_no_cargables = $t_exceso_no_cargables + $suma_horas_no_cargables[$j]['exceso_no_cargable'];
+          }
+        }
+
+        $t_horas_cargadas = $t_horas_cargables + $t_horas_no_cargables;
+
+        if ($maximo_horas >= ($t_horas_cargadas + $t_exceso_cargables + $t_exceso_no_cargables)) {
+
+          $t_horas_cargables = $t_horas_cargables + $t_exceso_cargables;
+          $t_horas_no_cargables = $t_horas_no_cargables + $t_exceso_no_cargables;
+        }elseif ($t_exceso_cargables === 0) {
+          $exceso = $t_horas_cargadas + $t_exceso_no_cargables - $maximo_horas;
+          $t_horas_no_cargables = $t_horas_no_cargables + $t_exceso_no_cargables - $exceso;
+        }elseif ($t_exceso_no_cargables === 0) {
+          $exceso = $t_horas_cargadas + $t_exceso_cargables - $maximo_horas;
+          $t_horas_cargables = $t_horas_cargables + $t_exceso_cargables - $exceso;
+        }else{
+          $exceso = $t_horas_cargadas + $t_exceso_cargables + $t_exceso_no_cargables - $maximo_horas;
+        }
+
+        $total_horas_cargadas = $t_horas_cargables + $t_horas_no_cargables;
+
+        $porcen_carga_total = round($total_horas_cargadas/$maximo_horas*100,2);
         $porcen_carga_total = "$porcen_carga_total %"; 
-        if ($total_horas_no_cargables > 0) {
-          $porcen_horas_no_cargables = round($total_horas_no_cargables/$total_horas*100,2);
+        if ($t_horas_no_cargables > 0) {
+          $porcen_horas_no_cargables = round($t_horas_no_cargables/$total_horas_cargadas*100,2);
           $porcen_horas_no_cargables = "$porcen_horas_no_cargables %";
-          $porcen_carga_no_cliente = round($total_horas_no_cargables/$maximo_horas*100,2);
+          $porcen_carga_no_cliente = round($t_horas_no_cargables/$maximo_horas*100,2);
           $porcen_carga_no_cliente = "$porcen_carga_no_cliente %";
         }
-        if ($usuarios[$u]->horas_cargables > 0) {
-          $porcen_horas_cargables = round($usuarios[$u]->horas_cargables/$total_horas*100,2);
+        if ($t_horas_cargables > 0) {
+          $porcen_horas_cargables = round($t_horas_cargables/$total_horas_cargadas*100,2);
           $porcen_horas_cargables = "$porcen_horas_cargables %";
-          $porcen_carga_cliente = round($usuarios[$u]->horas_cargables/$maximo_horas*100,2);
+          $porcen_carga_cliente = round($t_horas_cargables/$maximo_horas*100,2);
           $porcen_carga_cliente = "$porcen_carga_cliente %";
         }
-        if ($total_horas_no_cargables > 0) {
-          $porcen_carga_no_cliente = round($total_horas_no_cargables/$maximo_horas*100,2);
+        if ($t_horas_no_cargables > 0) {
+          $porcen_carga_no_cliente = round($t_horas_no_cargables/$maximo_horas*100,2);
           $porcen_carga_no_cliente = "$porcen_carga_no_cliente %";
         }
-        if ($usuarios[$u]->horas_cargables > 0) {
-          $porcen_carga_cliente = round($usuarios[$u]->horas_cargables/$maximo_horas*100,2);
+        if ($t_horas_cargables > 0) {
+          $porcen_carga_cliente = round($t_horas_cargables/$maximo_horas*100,2);
           $porcen_carga_cliente = "$porcen_carga_cliente %";
         }
-              
-        $total[$u] = array('id' => $usuarios[$u]->id, 'codigo' => $usuarios[$u]->codigo, 'nombre' => $usuarios[$u]->nombre, 'total_horas_cargables' => $usuarios[$u]->horas_cargables, 'total_horas_no_cargables' => $total_horas_no_cargables, 'total_horas' => $total_horas, 'porcen_carga_cliente' => $porcen_carga_cliente, 'porcen_carga_no_cliente' => $porcen_carga_no_cliente, 'porcen_horas_cargables' => $porcen_horas_cargables, 'porcen_horas_no_cargables' => $porcen_horas_no_cargables, 'porcen_carga_total' => $porcen_carga_total, 'exceso' => $exceso, 'maximo_horas' => $maximo_horas);        
-        $total_horas_no_cargables = 0;  
-        $total_horas = 0;
+
+
+        $total[$i] = array('id' => $usuarios[$i]->id, 'codigo' => $usuarios[$i]->codigo, 'nombre' => $usuarios[$i]->nombre, 'total_horas_cargables' => $t_horas_cargables, 'total_horas_no_cargables' => $t_horas_no_cargables, 'total_horas' => $total_horas_cargadas, 'porcen_carga_cliente' => $porcen_carga_cliente, 'porcen_carga_no_cliente' => $porcen_carga_no_cliente, 'porcen_horas_cargables' => $porcen_horas_cargables, 'porcen_horas_no_cargables' => $porcen_horas_no_cargables, 'porcen_carga_total' => $porcen_carga_total, 'exceso' => $exceso, 'maximo_horas' => $maximo_horas);
+        $t_horas_cargables = 0;
+        $t_exceso_cargables = 0;
+        $t_horas_no_cargables = 0;
+        $t_exceso_no_cargables = 0;
+        $t_horas_cargadas = 0;
         $exceso = 0;
         $porcen_horas_cargables = "0 %";
         $porcen_carga_cliente = "0 %";
@@ -386,8 +438,7 @@ class TotalHorasCargModel extends Model
         $porcen_carga_total = "0 %";
         $porcen_carga_no_cliente = "0 %";
       }
-      
-      return $total;
+      return $total;      
 
     }// Fin
 

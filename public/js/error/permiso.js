@@ -33,6 +33,7 @@ module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
     var requestData = config.data;
     var requestHeaders = config.headers;
+    var responseType = config.responseType;
 
     if (utils.isFormData(requestData)) {
       delete requestHeaders['Content-Type']; // Let the browser set it
@@ -53,23 +54,14 @@ module.exports = function xhrAdapter(config) {
     // Set the request timeout in MS
     request.timeout = config.timeout;
 
-    // Listen for ready state
-    request.onreadystatechange = function handleLoad() {
-      if (!request || request.readyState !== 4) {
+    function onloadend() {
+      if (!request) {
         return;
       }
-
-      // The request errored out and we didn't get a response, this will be
-      // handled by onerror instead
-      // With one exception: request that using file: protocol, most browsers
-      // will return status as 0 even though it's a successful request
-      if (request.status === 0 && !(request.responseURL && request.responseURL.indexOf('file:') === 0)) {
-        return;
-      }
-
       // Prepare the response
       var responseHeaders = 'getAllResponseHeaders' in request ? parseHeaders(request.getAllResponseHeaders()) : null;
-      var responseData = !config.responseType || config.responseType === 'text' ? request.responseText : request.response;
+      var responseData = !responseType || responseType === 'text' ||  responseType === 'json' ?
+        request.responseText : request.response;
       var response = {
         data: responseData,
         status: request.status,
@@ -83,7 +75,30 @@ module.exports = function xhrAdapter(config) {
 
       // Clean up request
       request = null;
-    };
+    }
+
+    if ('onloadend' in request) {
+      // Use onloadend if available
+      request.onloadend = onloadend;
+    } else {
+      // Listen for ready state to emulate onloadend
+      request.onreadystatechange = function handleLoad() {
+        if (!request || request.readyState !== 4) {
+          return;
+        }
+
+        // The request errored out and we didn't get a response, this will be
+        // handled by onerror instead
+        // With one exception: request that using file: protocol, most browsers
+        // will return status as 0 even though it's a successful request
+        if (request.status === 0 && !(request.responseURL && request.responseURL.indexOf('file:') === 0)) {
+          return;
+        }
+        // readystate handler is calling before onerror or ontimeout handlers,
+        // so we should call onloadend on the next 'tick'
+        setTimeout(onloadend);
+      };
+    }
 
     // Handle browser request cancellation (as opposed to a manual cancellation)
     request.onabort = function handleAbort() {
@@ -113,7 +128,10 @@ module.exports = function xhrAdapter(config) {
       if (config.timeoutErrorMessage) {
         timeoutErrorMessage = config.timeoutErrorMessage;
       }
-      reject(createError(timeoutErrorMessage, config, 'ECONNABORTED',
+      reject(createError(
+        timeoutErrorMessage,
+        config,
+        config.transitional && config.transitional.clarifyTimeoutError ? 'ETIMEDOUT' : 'ECONNABORTED',
         request));
 
       // Clean up request
@@ -153,16 +171,8 @@ module.exports = function xhrAdapter(config) {
     }
 
     // Add responseType to request if needed
-    if (config.responseType) {
-      try {
-        request.responseType = config.responseType;
-      } catch (e) {
-        // Expected DOMException thrown by browsers not compatible XMLHttpRequest Level 2.
-        // But, this can be suppressed for 'json' type as it can be parsed by default 'transformResponse' function.
-        if (config.responseType !== 'json') {
-          throw e;
-        }
-      }
+    if (responseType && responseType !== 'json') {
+      request.responseType = config.responseType;
     }
 
     // Handle progress if needed
@@ -263,7 +273,7 @@ axios.isAxiosError = __webpack_require__(/*! ./helpers/isAxiosError */ "./node_m
 module.exports = axios;
 
 // Allow use of default import syntax in TypeScript
-module.exports.default = axios;
+module.exports["default"] = axios;
 
 
 /***/ }),
@@ -396,7 +406,9 @@ var buildURL = __webpack_require__(/*! ../helpers/buildURL */ "./node_modules/ax
 var InterceptorManager = __webpack_require__(/*! ./InterceptorManager */ "./node_modules/axios/lib/core/InterceptorManager.js");
 var dispatchRequest = __webpack_require__(/*! ./dispatchRequest */ "./node_modules/axios/lib/core/dispatchRequest.js");
 var mergeConfig = __webpack_require__(/*! ./mergeConfig */ "./node_modules/axios/lib/core/mergeConfig.js");
+var validator = __webpack_require__(/*! ../helpers/validator */ "./node_modules/axios/lib/helpers/validator.js");
 
+var validators = validator.validators;
 /**
  * Create a new instance of Axios
  *
@@ -436,20 +448,71 @@ Axios.prototype.request = function request(config) {
     config.method = 'get';
   }
 
-  // Hook up interceptors middleware
-  var chain = [dispatchRequest, undefined];
-  var promise = Promise.resolve(config);
+  var transitional = config.transitional;
 
+  if (transitional !== undefined) {
+    validator.assertOptions(transitional, {
+      silentJSONParsing: validators.transitional(validators.boolean, '1.0.0'),
+      forcedJSONParsing: validators.transitional(validators.boolean, '1.0.0'),
+      clarifyTimeoutError: validators.transitional(validators.boolean, '1.0.0')
+    }, false);
+  }
+
+  // filter out skipped interceptors
+  var requestInterceptorChain = [];
+  var synchronousRequestInterceptors = true;
   this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
-    chain.unshift(interceptor.fulfilled, interceptor.rejected);
+    if (typeof interceptor.runWhen === 'function' && interceptor.runWhen(config) === false) {
+      return;
+    }
+
+    synchronousRequestInterceptors = synchronousRequestInterceptors && interceptor.synchronous;
+
+    requestInterceptorChain.unshift(interceptor.fulfilled, interceptor.rejected);
   });
 
+  var responseInterceptorChain = [];
   this.interceptors.response.forEach(function pushResponseInterceptors(interceptor) {
-    chain.push(interceptor.fulfilled, interceptor.rejected);
+    responseInterceptorChain.push(interceptor.fulfilled, interceptor.rejected);
   });
 
-  while (chain.length) {
-    promise = promise.then(chain.shift(), chain.shift());
+  var promise;
+
+  if (!synchronousRequestInterceptors) {
+    var chain = [dispatchRequest, undefined];
+
+    Array.prototype.unshift.apply(chain, requestInterceptorChain);
+    chain.concat(responseInterceptorChain);
+
+    promise = Promise.resolve(config);
+    while (chain.length) {
+      promise = promise.then(chain.shift(), chain.shift());
+    }
+
+    return promise;
+  }
+
+
+  var newConfig = config;
+  while (requestInterceptorChain.length) {
+    var onFulfilled = requestInterceptorChain.shift();
+    var onRejected = requestInterceptorChain.shift();
+    try {
+      newConfig = onFulfilled(newConfig);
+    } catch (error) {
+      onRejected(error);
+      break;
+    }
+  }
+
+  try {
+    promise = dispatchRequest(newConfig);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+
+  while (responseInterceptorChain.length) {
+    promise = promise.then(responseInterceptorChain.shift(), responseInterceptorChain.shift());
   }
 
   return promise;
@@ -511,10 +574,12 @@ function InterceptorManager() {
  *
  * @return {Number} An ID used to remove interceptor later
  */
-InterceptorManager.prototype.use = function use(fulfilled, rejected) {
+InterceptorManager.prototype.use = function use(fulfilled, rejected, options) {
   this.handlers.push({
     fulfilled: fulfilled,
-    rejected: rejected
+    rejected: rejected,
+    synchronous: options ? options.synchronous : false,
+    runWhen: options ? options.runWhen : null
   });
   return this.handlers.length - 1;
 };
@@ -647,7 +712,8 @@ module.exports = function dispatchRequest(config) {
   config.headers = config.headers || {};
 
   // Transform request data
-  config.data = transformData(
+  config.data = transformData.call(
+    config,
     config.data,
     config.headers,
     config.transformRequest
@@ -673,7 +739,8 @@ module.exports = function dispatchRequest(config) {
     throwIfCancellationRequested(config);
 
     // Transform response data
-    response.data = transformData(
+    response.data = transformData.call(
+      config,
       response.data,
       response.headers,
       config.transformResponse
@@ -686,7 +753,8 @@ module.exports = function dispatchRequest(config) {
 
       // Transform response data
       if (reason && reason.response) {
-        reason.response.data = transformData(
+        reason.response.data = transformData.call(
+          config,
           reason.response.data,
           reason.response.headers,
           config.transformResponse
@@ -898,6 +966,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
+var defaults = __webpack_require__(/*! ./../defaults */ "./node_modules/axios/lib/defaults.js");
 
 /**
  * Transform the data for a request or a response
@@ -908,9 +977,10 @@ var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/util
  * @returns {*} The resulting transformed data
  */
 module.exports = function transformData(data, headers, fns) {
+  var context = this || defaults;
   /*eslint no-param-reassign:0*/
   utils.forEach(fns, function transform(fn) {
-    data = fn(data, headers);
+    data = fn.call(context, data, headers);
   });
 
   return data;
@@ -931,6 +1001,7 @@ module.exports = function transformData(data, headers, fns) {
 
 var utils = __webpack_require__(/*! ./utils */ "./node_modules/axios/lib/utils.js");
 var normalizeHeaderName = __webpack_require__(/*! ./helpers/normalizeHeaderName */ "./node_modules/axios/lib/helpers/normalizeHeaderName.js");
+var enhanceError = __webpack_require__(/*! ./core/enhanceError */ "./node_modules/axios/lib/core/enhanceError.js");
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -955,11 +1026,19 @@ function getDefaultAdapter() {
 }
 
 var defaults = {
+
+  transitional: {
+    silentJSONParsing: true,
+    forcedJSONParsing: true,
+    clarifyTimeoutError: false
+  },
+
   adapter: getDefaultAdapter(),
 
   transformRequest: [function transformRequest(data, headers) {
     normalizeHeaderName(headers, 'Accept');
     normalizeHeaderName(headers, 'Content-Type');
+
     if (utils.isFormData(data) ||
       utils.isArrayBuffer(data) ||
       utils.isBuffer(data) ||
@@ -976,20 +1055,32 @@ var defaults = {
       setContentTypeIfUnset(headers, 'application/x-www-form-urlencoded;charset=utf-8');
       return data.toString();
     }
-    if (utils.isObject(data)) {
-      setContentTypeIfUnset(headers, 'application/json;charset=utf-8');
+    if (utils.isObject(data) || (headers && headers['Content-Type'] === 'application/json')) {
+      setContentTypeIfUnset(headers, 'application/json');
       return JSON.stringify(data);
     }
     return data;
   }],
 
   transformResponse: [function transformResponse(data) {
-    /*eslint no-param-reassign:0*/
-    if (typeof data === 'string') {
+    var transitional = this.transitional;
+    var silentJSONParsing = transitional && transitional.silentJSONParsing;
+    var forcedJSONParsing = transitional && transitional.forcedJSONParsing;
+    var strictJSONParsing = !silentJSONParsing && this.responseType === 'json';
+
+    if (strictJSONParsing || (forcedJSONParsing && utils.isString(data) && data.length)) {
       try {
-        data = JSON.parse(data);
-      } catch (e) { /* Ignore */ }
+        return JSON.parse(data);
+      } catch (e) {
+        if (strictJSONParsing) {
+          if (e.name === 'SyntaxError') {
+            throw enhanceError(e, this, 'E_JSON_PARSE');
+          }
+          throw e;
+        }
+      }
     }
+
     return data;
   }],
 
@@ -1472,6 +1563,122 @@ module.exports = function spread(callback) {
 
 /***/ }),
 
+/***/ "./node_modules/axios/lib/helpers/validator.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/axios/lib/helpers/validator.js ***!
+  \*****************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+
+var pkg = __webpack_require__(/*! ./../../package.json */ "./node_modules/axios/package.json");
+
+var validators = {};
+
+// eslint-disable-next-line func-names
+['object', 'boolean', 'number', 'function', 'string', 'symbol'].forEach(function(type, i) {
+  validators[type] = function validator(thing) {
+    return typeof thing === type || 'a' + (i < 1 ? 'n ' : ' ') + type;
+  };
+});
+
+var deprecatedWarnings = {};
+var currentVerArr = pkg.version.split('.');
+
+/**
+ * Compare package versions
+ * @param {string} version
+ * @param {string?} thanVersion
+ * @returns {boolean}
+ */
+function isOlderVersion(version, thanVersion) {
+  var pkgVersionArr = thanVersion ? thanVersion.split('.') : currentVerArr;
+  var destVer = version.split('.');
+  for (var i = 0; i < 3; i++) {
+    if (pkgVersionArr[i] > destVer[i]) {
+      return true;
+    } else if (pkgVersionArr[i] < destVer[i]) {
+      return false;
+    }
+  }
+  return false;
+}
+
+/**
+ * Transitional option validator
+ * @param {function|boolean?} validator
+ * @param {string?} version
+ * @param {string} message
+ * @returns {function}
+ */
+validators.transitional = function transitional(validator, version, message) {
+  var isDeprecated = version && isOlderVersion(version);
+
+  function formatMessage(opt, desc) {
+    return '[Axios v' + pkg.version + '] Transitional option \'' + opt + '\'' + desc + (message ? '. ' + message : '');
+  }
+
+  // eslint-disable-next-line func-names
+  return function(value, opt, opts) {
+    if (validator === false) {
+      throw new Error(formatMessage(opt, ' has been removed in ' + version));
+    }
+
+    if (isDeprecated && !deprecatedWarnings[opt]) {
+      deprecatedWarnings[opt] = true;
+      // eslint-disable-next-line no-console
+      console.warn(
+        formatMessage(
+          opt,
+          ' has been deprecated since v' + version + ' and will be removed in the near future'
+        )
+      );
+    }
+
+    return validator ? validator(value, opt, opts) : true;
+  };
+};
+
+/**
+ * Assert object's properties type
+ * @param {object} options
+ * @param {object} schema
+ * @param {boolean?} allowUnknown
+ */
+
+function assertOptions(options, schema, allowUnknown) {
+  if (typeof options !== 'object') {
+    throw new TypeError('options must be an object');
+  }
+  var keys = Object.keys(options);
+  var i = keys.length;
+  while (i-- > 0) {
+    var opt = keys[i];
+    var validator = schema[opt];
+    if (validator) {
+      var value = options[opt];
+      var result = value === undefined || validator(value, opt, options);
+      if (result !== true) {
+        throw new TypeError('option ' + opt + ' must be ' + result);
+      }
+      continue;
+    }
+    if (allowUnknown !== true) {
+      throw Error('Unknown option ' + opt);
+    }
+  }
+}
+
+module.exports = {
+  isOlderVersion: isOlderVersion,
+  assertOptions: assertOptions,
+  validators: validators
+};
+
+
+/***/ }),
+
 /***/ "./node_modules/axios/lib/utils.js":
 /*!*****************************************!*\
   !*** ./node_modules/axios/lib/utils.js ***!
@@ -1482,8 +1689,6 @@ module.exports = function spread(callback) {
 
 
 var bind = __webpack_require__(/*! ./helpers/bind */ "./node_modules/axios/lib/helpers/bind.js");
-
-/*global toString:true*/
 
 // utils is a library of generic helper functions non-specific to axios
 
@@ -1668,7 +1873,7 @@ function isURLSearchParams(val) {
  * @returns {String} The String freed of excess whitespace
  */
 function trim(str) {
-  return str.replace(/^\s*/, '').replace(/\s*$/, '');
+  return str.trim ? str.trim() : str.replace(/^\s+|\s+$/g, '');
 }
 
 /**
@@ -2050,7 +2255,7 @@ var self;
     };
   },
   components: {
-    menuItem: _itemMenuPrincipal__WEBPACK_IMPORTED_MODULE_1__.default
+    menuItem: _itemMenuPrincipal__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   beforeCreate: function beforeCreate() {
     self = this;
@@ -2158,9 +2363,9 @@ var parseShow = function parseShow(show) {
 }; // @vue/component
 
 
-var BAlert = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
+var BAlert = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_3__.NAME_ALERT,
-  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_4__.default],
+  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_4__["default"]],
   model: {
     prop: 'show',
     event: 'input'
@@ -2302,7 +2507,7 @@ var BAlert = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
       $alert = [$alert];
     }
 
-    return h(_utils_bv_transition__WEBPACK_IMPORTED_MODULE_8__.default, {
+    return h(_utils_bv_transition__WEBPACK_IMPORTED_MODULE_8__["default"], {
       props: {
         noFade: !this.fade
       }
@@ -2375,9 +2580,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var CLASS_NAME = 'b-aspect'; // --- Main Component ---
 
-var BAspect = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BAspect = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_ASPECT,
-  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_2__.default],
+  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_2__["default"]],
   props: {
     aspect: {
       // Accepts a number (i.e. `16 / 9`, `1`, `4 / 3`)
@@ -2485,9 +2690,9 @@ __webpack_require__.r(__webpack_exports__);
  // --- Main component ---
 // @vue/component
 
-var BAvatarGroup = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BAvatarGroup = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_AVATAR_GROUP,
-  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_2__.default],
+  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_2__["default"]],
   provide: function provide() {
     return {
       bvAvatarGroup: this
@@ -2690,9 +2895,9 @@ var computeSize = function computeSize(value) {
 }; // --- Main component ---
 // @vue/component
 
-var BAvatar = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_7__.default.extend({
+var BAvatar = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_7__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_3__.NAME_AVATAR,
-  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_8__.default],
+  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_8__["default"]],
   inject: {
     bvAvatarGroup: {
       default: null
@@ -2959,7 +3164,7 @@ var props = _objectSpread({
 }, linkProps); // --- Main component ---
 // @vue/component
 
-var BBadge = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_4__.default.extend({
+var BBadge = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_4__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_3__.NAME_BADGE,
   functional: true,
   props: props,
@@ -3028,7 +3233,7 @@ __webpack_require__.r(__webpack_exports__);
 
  // @vue/component
 
-var BBreadcrumbItem = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BBreadcrumbItem = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_BREADCRUMB_ITEM,
   functional: true,
   props: _breadcrumb_link__WEBPACK_IMPORTED_MODULE_2__.props,
@@ -3097,7 +3302,7 @@ var props = _objectSpread({
 }, (0,_utils_object__WEBPACK_IMPORTED_MODULE_0__.omit)(_link_link__WEBPACK_IMPORTED_MODULE_1__.props, ['event', 'routerTag'])); // --- Main component ---
 // @vue/component
 
-var BBreadcrumbLink = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
+var BBreadcrumbLink = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_3__.NAME_BREADCRUMB_LINK,
   functional: true,
   props: props,
@@ -3160,7 +3365,7 @@ var props = {
   }
 }; // @vue/component
 
-var BBreadcrumb = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BBreadcrumb = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_BREADCRUMB,
   functional: true,
   props: props,
@@ -3282,7 +3487,7 @@ var props = {
   }
 }; // @vue/component
 
-var BButtonGroup = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
+var BButtonGroup = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_BUTTON_GROUP,
   functional: true,
   props: props,
@@ -3357,9 +3562,9 @@ __webpack_require__.r(__webpack_exports__);
 var ITEM_SELECTOR = ['.btn:not(.disabled):not([disabled]):not(.dropdown-item)', '.form-control:not(.disabled):not([disabled])', 'select:not(.disabled):not([disabled])', 'input[type="checkbox"]:not(.disabled)', 'input[type="radio"]:not(.disabled)'].join(','); // --- Main component ---
 // @vue/component
 
-var BButtonToolbar = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BButtonToolbar = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_BUTTON_TOOLBAR,
-  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_2__.default],
+  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_2__["default"]],
   props: {
     justify: {
       type: Boolean,
@@ -3534,7 +3739,7 @@ var props = {
   }
 }; // @vue/component
 
-var BButtonClose = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
+var BButtonClose = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_BUTTON_CLOSE,
   functional: true,
   props: props,
@@ -3753,7 +3958,7 @@ var computeAttrs = function computeAttrs(props, data) {
 // @vue/component
 
 
-var BButton = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_8__.default.extend({
+var BButton = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_8__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_3__.NAME_BUTTON,
   functional: true,
   props: props,
@@ -3911,10 +4116,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
  // --- BCalendar component ---
 // @vue/component
 
-var BCalendar = _vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BCalendar = _vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_CALENDAR,
   // Mixin order is important!
-  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_2__.default, _mixins_id__WEBPACK_IMPORTED_MODULE_3__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_4__.default],
+  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_2__["default"], _mixins_id__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_4__["default"]],
   model: {
     // Even though this is the default that Vue assumes, we need
     // to add it for the docs to reflect that this is the model
@@ -4208,7 +4413,7 @@ var BCalendar = _vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
     },
     computedLocale: function computedLocale() {
       // Returns the resolved locale used by the calendar
-      return (0,_utils_date__WEBPACK_IMPORTED_MODULE_8__.resolveLocale)((0,_utils_array__WEBPACK_IMPORTED_MODULE_7__.concat)(this.locale).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_11__.default), _constants_date__WEBPACK_IMPORTED_MODULE_6__.CALENDAR_GREGORY);
+      return (0,_utils_date__WEBPACK_IMPORTED_MODULE_8__.resolveLocale)((0,_utils_array__WEBPACK_IMPORTED_MODULE_7__.concat)(this.locale).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_11__["default"]), _constants_date__WEBPACK_IMPORTED_MODULE_6__.CALENDAR_GREGORY);
     },
     calendarLocale: function calendarLocale() {
       // This locale enforces the gregorian calendar (for use in formatter functions)
@@ -4501,7 +4706,7 @@ var BCalendar = _vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
       }
     },
     context: function context(newVal, oldVal) {
-      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_15__.default)(newVal, oldVal)) {
+      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_15__["default"])(newVal, oldVal)) {
         this.$emit('context', newVal);
       }
     },
@@ -4940,7 +5145,7 @@ var BCalendar = _vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
             // Only days in the month are presented as buttons to screen readers
             'aria-hidden': day.isThisMonth ? null : 'true',
             'aria-disabled': day.isDisabled || disabled ? 'true' : null,
-            'aria-label': [day.label, isSelected ? "(".concat(_this5.labelSelected, ")") : null, isToday ? "(".concat(_this5.labelToday, ")") : null].filter(_utils_identity__WEBPACK_IMPORTED_MODULE_11__.default).join(' '),
+            'aria-label': [day.label, isSelected ? "(".concat(_this5.labelSelected, ")") : null, isToday ? "(".concat(_this5.labelToday, ")") : null].filter(_utils_identity__WEBPACK_IMPORTED_MODULE_11__["default"]).join(' '),
             // NVDA doesn't convey `aria-selected`, but does `aria-current`,
             // ChromeVox doesn't convey `aria-current`, but does `aria-selected`,
             // so we set both attributes for robustness
@@ -5019,7 +5224,7 @@ var BCalendar = _vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
         'aria-roledescription': this.roleDescription || null,
         'aria-describedby': [// Should the attr (if present) go last?
         // Or should this attr be a prop?
-        this.bvAttrs['aria-describedby'], valueId, gridHelpId].filter(_utils_identity__WEBPACK_IMPORTED_MODULE_11__.default).join(' ')
+        this.bvAttrs['aria-describedby'], valueId, gridHelpId].filter(_utils_identity__WEBPACK_IMPORTED_MODULE_11__["default"]).join(' ')
       },
       on: {
         keydown: this.onKeydownWrapper
@@ -5105,7 +5310,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
-var props = _objectSpread(_objectSpread(_objectSpread(_objectSpread({}, (0,_utils_props__WEBPACK_IMPORTED_MODULE_0__.copyProps)(_mixins_card__WEBPACK_IMPORTED_MODULE_1__.default.props, _utils_props__WEBPACK_IMPORTED_MODULE_0__.prefixPropName.bind(null, 'body'))), {}, {
+var props = _objectSpread(_objectSpread(_objectSpread(_objectSpread({}, (0,_utils_props__WEBPACK_IMPORTED_MODULE_0__.copyProps)(_mixins_card__WEBPACK_IMPORTED_MODULE_1__["default"].props, _utils_props__WEBPACK_IMPORTED_MODULE_0__.prefixPropName.bind(null, 'body'))), {}, {
   bodyClass: {
     type: [String, Object, Array] // default: null
 
@@ -5117,7 +5322,7 @@ var props = _objectSpread(_objectSpread(_objectSpread(_objectSpread({}, (0,_util
   }
 }); // @vue/component
 
-var BCardBody = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_4__.default.extend({
+var BCardBody = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_4__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_5__.NAME_CARD_BODY,
   functional: true,
   props: props,
@@ -5185,7 +5390,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
  // --- Props ---
 
-var props = _objectSpread(_objectSpread({}, (0,_utils_props__WEBPACK_IMPORTED_MODULE_0__.copyProps)(_mixins_card__WEBPACK_IMPORTED_MODULE_1__.default.props, _utils_props__WEBPACK_IMPORTED_MODULE_0__.prefixPropName.bind(null, 'footer'))), {}, {
+var props = _objectSpread(_objectSpread({}, (0,_utils_props__WEBPACK_IMPORTED_MODULE_0__.copyProps)(_mixins_card__WEBPACK_IMPORTED_MODULE_1__["default"].props, _utils_props__WEBPACK_IMPORTED_MODULE_0__.prefixPropName.bind(null, 'footer'))), {}, {
   footer: {
     type: String // default: null
 
@@ -5201,7 +5406,7 @@ var props = _objectSpread(_objectSpread({}, (0,_utils_props__WEBPACK_IMPORTED_MO
 }); // --- Main component ---
 // @vue/component
 
-var BCardFooter = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
+var BCardFooter = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_3__.NAME_CARD_FOOTER,
   functional: true,
   props: props,
@@ -5256,7 +5461,7 @@ var props = {
   }
 }; // @vue/component
 
-var BCardGroup = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BCardGroup = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_CARD_GROUP,
   functional: true,
   props: props,
@@ -5302,7 +5507,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
  // --- Props ---
 
-var props = _objectSpread(_objectSpread({}, (0,_utils_props__WEBPACK_IMPORTED_MODULE_0__.copyProps)(_mixins_card__WEBPACK_IMPORTED_MODULE_1__.default.props, _utils_props__WEBPACK_IMPORTED_MODULE_0__.prefixPropName.bind(null, 'header'))), {}, {
+var props = _objectSpread(_objectSpread({}, (0,_utils_props__WEBPACK_IMPORTED_MODULE_0__.copyProps)(_mixins_card__WEBPACK_IMPORTED_MODULE_1__["default"].props, _utils_props__WEBPACK_IMPORTED_MODULE_0__.prefixPropName.bind(null, 'header'))), {}, {
   header: {
     type: String // default: null
 
@@ -5318,7 +5523,7 @@ var props = _objectSpread(_objectSpread({}, (0,_utils_props__WEBPACK_IMPORTED_MO
 }); // --- Main component ---
 // @vue/component
 
-var BCardHeader = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
+var BCardHeader = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_3__.NAME_CARD_HEADER,
   functional: true,
   props: props,
@@ -5400,7 +5605,7 @@ var props = _objectSpread(_objectSpread({}, lazyProps), {}, {
   }
 }); // @vue/component
 
-var BCardImgLazy = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
+var BCardImgLazy = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_3__.NAME_CARD_IMG_LAZY,
   functional: true,
   props: props,
@@ -5497,7 +5702,7 @@ var props = {
   }
 }; // @vue/component
 
-var BCardImg = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BCardImg = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_CARD_IMG,
   functional: true,
   props: props,
@@ -5568,7 +5773,7 @@ var props = {
   }
 }; // @vue/component
 
-var BCardSubTitle = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
+var BCardSubTitle = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_CARD_SUB_TITLE,
   functional: true,
   props: props,
@@ -5609,7 +5814,7 @@ var props = {
   }
 }; // @vue/component
 
-var BCardText = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BCardText = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_CARD_TEXT,
   functional: true,
   props: props,
@@ -5655,7 +5860,7 @@ var props = {
   }
 }; // @vue/component
 
-var BCardTitle = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BCardTitle = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_CARD_TITLE,
   functional: true,
   props: props,
@@ -5714,7 +5919,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var cardImgProps = (0,_utils_props__WEBPACK_IMPORTED_MODULE_0__.copyProps)(_card_img__WEBPACK_IMPORTED_MODULE_1__.props, _utils_props__WEBPACK_IMPORTED_MODULE_0__.prefixPropName.bind(null, 'img'));
 cardImgProps.imgSrc.required = false;
-var props = _objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread({}, _card_body__WEBPACK_IMPORTED_MODULE_2__.props), _card_header__WEBPACK_IMPORTED_MODULE_3__.props), _card_footer__WEBPACK_IMPORTED_MODULE_4__.props), cardImgProps), (0,_utils_props__WEBPACK_IMPORTED_MODULE_0__.copyProps)(_mixins_card__WEBPACK_IMPORTED_MODULE_5__.default.props)), {}, {
+var props = _objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread({}, _card_body__WEBPACK_IMPORTED_MODULE_2__.props), _card_header__WEBPACK_IMPORTED_MODULE_3__.props), _card_footer__WEBPACK_IMPORTED_MODULE_4__.props), cardImgProps), (0,_utils_props__WEBPACK_IMPORTED_MODULE_0__.copyProps)(_mixins_card__WEBPACK_IMPORTED_MODULE_5__["default"].props)), {}, {
   align: {
     type: String // default: null
 
@@ -5725,7 +5930,7 @@ var props = _objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSprea
   }
 }); // @vue/component
 
-var BCard = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_6__.default.extend({
+var BCard = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_6__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_7__.NAME_CARD,
   functional: true,
   props: props,
@@ -5976,9 +6181,9 @@ var props = _objectSpread(_objectSpread({}, imgProps), {}, {
 }); // --- Main component ---
 // @vue/component
 
-var BCarouselSlide = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BCarouselSlide = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_CAROUSEL_SLIDE,
-  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_2__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_3__.default],
+  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_2__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_3__["default"]],
   inject: {
     bvCarousel: {
       default: function _default() {
@@ -6149,9 +6354,9 @@ var getTransitionEndEvent = function getTransitionEndEvent(el) {
 }; // @vue/component
 
 
-var BCarousel = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_1__.default.extend({
+var BCarousel = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_1__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_2__.NAME_CAROUSEL,
-  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_3__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_4__.default],
+  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_4__["default"]],
   provide: function provide() {
     return {
       bvCarousel: this
@@ -6347,7 +6552,7 @@ var BCarousel = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_1__.default.extend({
       this.$_observer = null;
 
       if (on) {
-        this.$_observer = (0,_utils_observe_dom__WEBPACK_IMPORTED_MODULE_7__.default)(this.$refs.inner, this.updateSlides.bind(this), {
+        this.$_observer = (0,_utils_observe_dom__WEBPACK_IMPORTED_MODULE_7__["default"])(this.$refs.inner, this.updateSlides.bind(this), {
           subtree: false,
           childList: true,
           attributes: true,
@@ -6777,8 +6982,8 @@ var BCarousel = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_1__.default.extend({
       });
     }));
     var on = {
-      mouseenter: this.noHoverPause ? _utils_noop__WEBPACK_IMPORTED_MODULE_14__.default : this.pause,
-      mouseleave: this.noHoverPause ? _utils_noop__WEBPACK_IMPORTED_MODULE_14__.default : this.restart,
+      mouseenter: this.noHoverPause ? _utils_noop__WEBPACK_IMPORTED_MODULE_14__["default"] : this.pause,
+      mouseleave: this.noHoverPause ? _utils_noop__WEBPACK_IMPORTED_MODULE_14__["default"] : this.restart,
       focusin: this.pause,
       focusout: this.restart,
       keydown: function keydown(evt) {
@@ -6905,9 +7110,9 @@ __webpack_require__.r(__webpack_exports__);
 var EVENT_ACCORDION = 'bv::collapse::accordion'; // --- Main component ---
 // @vue/component
 
-var BCollapse = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BCollapse = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_COLLAPSE,
-  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_2__.default, _mixins_listen_on_root__WEBPACK_IMPORTED_MODULE_3__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_4__.default],
+  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_2__["default"], _mixins_listen_on_root__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_4__["default"]],
   model: {
     prop: 'visible',
     event: 'input'
@@ -7223,7 +7428,7 @@ var props = {
   }
 }; // @vue/component
 
-var BDropdownDivider = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BDropdownDivider = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_DROPDOWN_DIVIDER,
   functional: true,
   props: props,
@@ -7274,7 +7479,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
  // @vue/component
 
-var BDropdownForm = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BDropdownForm = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_DROPDOWN_FORM,
   functional: true,
   props: _objectSpread(_objectSpread({}, _form_form__WEBPACK_IMPORTED_MODULE_2__.props), {}, {
@@ -7374,7 +7579,7 @@ var props = {
   }
 }; // @vue/component
 
-var BDropdownGroup = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BDropdownGroup = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_DROPDOWN_GROUP,
   functional: true,
   props: props,
@@ -7402,7 +7607,7 @@ var BDropdownGroup = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.exte
       }, (0,_utils_normalize_slot__WEBPACK_IMPORTED_MODULE_2__.normalizeSlot)(_constants_slot_names__WEBPACK_IMPORTED_MODULE_3__.SLOT_NAME_HEADER, {}, $scopedSlots, $slots) || props.header);
     }
 
-    var adb = [headerId, props.ariaDescribedBy].filter(_utils_identity__WEBPACK_IMPORTED_MODULE_4__.default).join(' ').trim();
+    var adb = [headerId, props.ariaDescribedBy].filter(_utils_identity__WEBPACK_IMPORTED_MODULE_4__["default"]).join(' ').trim();
     return h('li', (0,_vue__WEBPACK_IMPORTED_MODULE_5__.mergeData)(data, {
       attrs: {
         role: 'presentation'
@@ -7458,7 +7663,7 @@ var props = {
   }
 }; // @vue/component
 
-var BDropdownHeader = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BDropdownHeader = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_DROPDOWN_HEADER,
   functional: true,
   props: props,
@@ -7535,9 +7740,9 @@ var props = {
   }
 }; // @vue/component
 
-var BDropdownItemButton = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BDropdownItemButton = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_DROPDOWN_ITEM_BUTTON,
-  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_2__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_3__.default],
+  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_2__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_3__["default"]],
   inject: {
     bvDropdown: {
       default: null
@@ -7620,9 +7825,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var props = (0,_utils_object__WEBPACK_IMPORTED_MODULE_0__.omit)(_link_link__WEBPACK_IMPORTED_MODULE_1__.props, ['event', 'routerTag']); // @vue/component
 
-var BDropdownItem = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
+var BDropdownItem = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_3__.NAME_DROPDOWN_ITEM,
-  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_4__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_5__.default],
+  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_4__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_5__["default"]],
   inject: {
     bvDropdown: {
       default: null
@@ -7706,7 +7911,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
  // @vue/component
 
-var BDropdownText = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BDropdownText = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_DROPDOWN_TEXT,
   functional: true,
   props: {
@@ -7878,9 +8083,9 @@ var props = {
 }; // --- Main component ---
 // @vue/component
 
-var BDropdown = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_3__.default.extend({
+var BDropdown = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_3__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_DROPDOWN,
-  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_4__.default, _mixins_dropdown__WEBPACK_IMPORTED_MODULE_5__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_6__.default],
+  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_4__["default"], _mixins_dropdown__WEBPACK_IMPORTED_MODULE_5__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_6__["default"]],
   props: props,
   computed: {
     dropdownClasses: function dropdownClasses() {
@@ -8121,7 +8326,7 @@ var props = {
   }
 }; // @vue/component
 
-var BEmbed = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_1__.default.extend({
+var BEmbed = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_1__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_2__.NAME_EMBED,
   functional: true,
   props: props,
@@ -8207,10 +8412,10 @@ var props = {
   }
 }; // @vue/component
 
-var BFormCheckboxGroup = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BFormCheckboxGroup = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_FORM_CHECKBOX_GROUP,
-  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_2__.default, _mixins_form__WEBPACK_IMPORTED_MODULE_3__.default, _mixins_form_radio_check_group__WEBPACK_IMPORTED_MODULE_4__.default, // Includes render function
-  _mixins_form_options__WEBPACK_IMPORTED_MODULE_5__.default, _mixins_form_size__WEBPACK_IMPORTED_MODULE_6__.default, _mixins_form_state__WEBPACK_IMPORTED_MODULE_7__.default],
+  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_2__["default"], _mixins_form__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_form_radio_check_group__WEBPACK_IMPORTED_MODULE_4__["default"], // Includes render function
+  _mixins_form_options__WEBPACK_IMPORTED_MODULE_5__["default"], _mixins_form_size__WEBPACK_IMPORTED_MODULE_6__["default"], _mixins_form_state__WEBPACK_IMPORTED_MODULE_7__["default"]],
   provide: function provide() {
     return {
       bvCheckGroup: this
@@ -8263,10 +8468,10 @@ __webpack_require__.r(__webpack_exports__);
 
  // @vue/component
 
-var BFormCheckbox = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BFormCheckbox = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_FORM_CHECKBOX,
-  mixins: [_mixins_form_radio_check__WEBPACK_IMPORTED_MODULE_2__.default, // Includes shared render function
-  _mixins_id__WEBPACK_IMPORTED_MODULE_3__.default, _mixins_form__WEBPACK_IMPORTED_MODULE_4__.default, _mixins_form_size__WEBPACK_IMPORTED_MODULE_5__.default, _mixins_form_state__WEBPACK_IMPORTED_MODULE_6__.default],
+  mixins: [_mixins_form_radio_check__WEBPACK_IMPORTED_MODULE_2__["default"], // Includes shared render function
+  _mixins_id__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_form__WEBPACK_IMPORTED_MODULE_4__["default"], _mixins_form_size__WEBPACK_IMPORTED_MODULE_5__["default"], _mixins_form_state__WEBPACK_IMPORTED_MODULE_6__["default"]],
   inject: {
     bvGroup: {
       from: 'bvCheckGroup',
@@ -8303,7 +8508,7 @@ var BFormCheckbox = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.exten
     isChecked: function isChecked() {
       var value = this.value,
           checked = this.computedLocalChecked;
-      return (0,_utils_inspect__WEBPACK_IMPORTED_MODULE_7__.isArray)(checked) ? (0,_utils_loose_index_of__WEBPACK_IMPORTED_MODULE_8__.default)(checked, value) > -1 : (0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_9__.default)(checked, value);
+      return (0,_utils_inspect__WEBPACK_IMPORTED_MODULE_7__.isArray)(checked) ? (0,_utils_loose_index_of__WEBPACK_IMPORTED_MODULE_8__["default"])(checked, value) > -1 : (0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_9__["default"])(checked, value);
     },
     isRadio: function isRadio() {
       return false;
@@ -8314,7 +8519,7 @@ var BFormCheckbox = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.exten
   },
   watch: {
     computedLocalChecked: function computedLocalChecked(newValue, oldValue) {
-      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_9__.default)(newValue, oldValue)) {
+      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_9__["default"])(newValue, oldValue)) {
         this.$emit('input', newValue);
         var $input = this.$refs.input;
 
@@ -8342,7 +8547,7 @@ var BFormCheckbox = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.exten
       var localChecked = this.computedLocalChecked;
 
       if ((0,_utils_inspect__WEBPACK_IMPORTED_MODULE_7__.isArray)(localChecked)) {
-        var index = (0,_utils_loose_index_of__WEBPACK_IMPORTED_MODULE_8__.default)(localChecked, value);
+        var index = (0,_utils_loose_index_of__WEBPACK_IMPORTED_MODULE_8__["default"])(localChecked, value);
 
         if (checked && index < 0) {
           // Add value to array
@@ -8773,10 +8978,10 @@ var propsMixin = {
 }; // --- BFormDate component ---
 // @vue/component
 
-var BFormDatepicker = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_5__.default.extend({
+var BFormDatepicker = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_5__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_FORM_DATEPICKER,
   // The mixins order determines the order of appearance in the props reference section
-  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_6__.default, propsMixin],
+  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_6__["default"], propsMixin],
   model: {
     prop: 'value',
     event: 'input'
@@ -9198,7 +9403,7 @@ var getAllFileEntries = function getAllFileEntries(dataTransferItemList) {
     }
 
     return null;
-  }).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_2__.default));
+  }).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_2__["default"]));
 }; // Get all the file entries (recursive) in a directory
 
 /* istanbul ignore next: not supported in JSDOM */
@@ -9231,7 +9436,7 @@ var getAllFileEntriesInDirectory = function getAllFileEntriesInDirectory(directo
             }
 
             return null;
-          }).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_2__.default)));
+          }).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_2__["default"])));
           readDirectoryEntries();
         }
       });
@@ -9242,9 +9447,9 @@ var getAllFileEntriesInDirectory = function getAllFileEntriesInDirectory(directo
 }; // @vue/component
 
 
-var BFormFile = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_3__.default.extend({
+var BFormFile = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_3__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_4__.NAME_FORM_FILE,
-  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_5__.default, _mixins_id__WEBPACK_IMPORTED_MODULE_6__.default, _mixins_form__WEBPACK_IMPORTED_MODULE_7__.default, _mixins_form_state__WEBPACK_IMPORTED_MODULE_8__.default, _mixins_form_custom__WEBPACK_IMPORTED_MODULE_9__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_10__.default],
+  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_5__["default"], _mixins_id__WEBPACK_IMPORTED_MODULE_6__["default"], _mixins_form__WEBPACK_IMPORTED_MODULE_7__["default"], _mixins_form_state__WEBPACK_IMPORTED_MODULE_8__["default"], _mixins_form_custom__WEBPACK_IMPORTED_MODULE_9__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_10__["default"]],
   inheritAttrs: false,
   model: {
     prop: 'value',
@@ -9410,7 +9615,7 @@ var BFormFile = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_3__.default.extend({
       });
     },
     clonedFiles: function clonedFiles() {
-      return (0,_utils_clone_deep__WEBPACK_IMPORTED_MODULE_16__.default)(this.files);
+      return (0,_utils_clone_deep__WEBPACK_IMPORTED_MODULE_16__["default"])(this.files);
     },
     flattenedFiles: function flattenedFiles() {
       return (0,_utils_array__WEBPACK_IMPORTED_MODULE_1__.flattenDeep)(this.files);
@@ -9460,7 +9665,7 @@ var BFormFile = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_3__.default.extend({
       }
     },
     files: function files(newValue, oldValue) {
-      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_17__.default)(newValue, oldValue)) {
+      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_17__["default"])(newValue, oldValue)) {
         var multiple = this.multiple,
             noTraverse = this.noTraverse;
         var files = !multiple || noTraverse ? (0,_utils_array__WEBPACK_IMPORTED_MODULE_1__.flattenDeep)(newValue) : newValue;
@@ -9516,7 +9721,7 @@ var BFormFile = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_3__.default.extend({
         // Firefox < 62 workaround exploiting https://bugzilla.mozilla.org/show_bug.cgi?id=1422655
         var dataTransfer = new ClipboardEvent('').clipboardData || new DataTransfer(); // Add flattened files to temp `dataTransfer` object to get a true `FileList` array
 
-        (0,_utils_array__WEBPACK_IMPORTED_MODULE_1__.flattenDeep)((0,_utils_clone_deep__WEBPACK_IMPORTED_MODULE_16__.default)(files)).forEach(function (file) {
+        (0,_utils_array__WEBPACK_IMPORTED_MODULE_1__.flattenDeep)((0,_utils_clone_deep__WEBPACK_IMPORTED_MODULE_16__["default"])(files)).forEach(function (file) {
           // Make sure to remove the custom `$path` attribute
           delete file.$path;
           dataTransfer.items.add(file);
@@ -9944,7 +10149,7 @@ var renderLabel = function renderLabel(h, ctx) {
 // save time in computed functions
 
 
-var makePropName = (0,_utils_memoize__WEBPACK_IMPORTED_MODULE_5__.default)(function () {
+var makePropName = (0,_utils_memoize__WEBPACK_IMPORTED_MODULE_5__["default"])(function () {
   var breakpoint = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
   var prefix = arguments.length > 1 ? arguments[1] : undefined;
   return "".concat(prefix).concat((0,_utils_string__WEBPACK_IMPORTED_MODULE_6__.upperFirst)(breakpoint));
@@ -10030,7 +10235,7 @@ var generateProps = function generateProps() {
 
 var BFormGroup = {
   name: _constants_components__WEBPACK_IMPORTED_MODULE_9__.NAME_FORM_GROUP,
-  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_10__.default, _mixins_form_state__WEBPACK_IMPORTED_MODULE_11__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_12__.default],
+  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_10__["default"], _mixins_form_state__WEBPACK_IMPORTED_MODULE_11__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_12__["default"]],
 
   get props() {
     // Allow props to be lazy evaled on first access and
@@ -10166,7 +10371,7 @@ var BFormGroup = {
       // Preserves any aria-describedby value(s) user may have on input.
       if (this.labelFor && _utils_env__WEBPACK_IMPORTED_MODULE_16__.isBrowser) {
         // We need to escape `labelFor` since it can be user-provided
-        var input = (0,_utils_dom__WEBPACK_IMPORTED_MODULE_15__.select)("#".concat((0,_utils_css_escape__WEBPACK_IMPORTED_MODULE_17__.default)(this.labelFor)), this.$refs.content);
+        var input = (0,_utils_dom__WEBPACK_IMPORTED_MODULE_15__.select)("#".concat((0,_utils_css_escape__WEBPACK_IMPORTED_MODULE_17__["default"])(this.labelFor)), this.$refs.content);
 
         if (input) {
           var adb = 'aria-describedby';
@@ -10306,10 +10511,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var TYPES = ['text', 'password', 'email', 'number', 'url', 'tel', 'search', 'range', 'color', 'date', 'time', 'datetime', 'datetime-local', 'month', 'week']; // @vue/component
 
-var BFormInput = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BFormInput = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_FORM_INPUT,
   // Mixin order is important!
-  mixins: [_mixins_listeners__WEBPACK_IMPORTED_MODULE_2__.default, _mixins_id__WEBPACK_IMPORTED_MODULE_3__.default, _mixins_form__WEBPACK_IMPORTED_MODULE_4__.default, _mixins_form_size__WEBPACK_IMPORTED_MODULE_5__.default, _mixins_form_state__WEBPACK_IMPORTED_MODULE_6__.default, _mixins_form_text__WEBPACK_IMPORTED_MODULE_7__.default, _mixins_form_selection__WEBPACK_IMPORTED_MODULE_8__.default, _mixins_form_validity__WEBPACK_IMPORTED_MODULE_9__.default],
+  mixins: [_mixins_listeners__WEBPACK_IMPORTED_MODULE_2__["default"], _mixins_id__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_form__WEBPACK_IMPORTED_MODULE_4__["default"], _mixins_form_size__WEBPACK_IMPORTED_MODULE_5__["default"], _mixins_form_state__WEBPACK_IMPORTED_MODULE_6__["default"], _mixins_form_text__WEBPACK_IMPORTED_MODULE_7__["default"], _mixins_form_selection__WEBPACK_IMPORTED_MODULE_8__["default"], _mixins_form_validity__WEBPACK_IMPORTED_MODULE_9__["default"]],
   props: {
     // `value` prop is defined in form-text mixin
     type: {
@@ -10509,10 +10714,10 @@ var props = {
   }
 }; // @vue/component
 
-var BFormRadioGroup = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BFormRadioGroup = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_FORM_RADIO_GROUP,
-  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_2__.default, _mixins_form__WEBPACK_IMPORTED_MODULE_3__.default, _mixins_form_radio_check_group__WEBPACK_IMPORTED_MODULE_4__.default, // Includes render function
-  _mixins_form_options__WEBPACK_IMPORTED_MODULE_5__.default, _mixins_form_size__WEBPACK_IMPORTED_MODULE_6__.default, _mixins_form_state__WEBPACK_IMPORTED_MODULE_7__.default],
+  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_2__["default"], _mixins_form__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_form_radio_check_group__WEBPACK_IMPORTED_MODULE_4__["default"], // Includes render function
+  _mixins_form_options__WEBPACK_IMPORTED_MODULE_5__["default"], _mixins_form_size__WEBPACK_IMPORTED_MODULE_6__["default"], _mixins_form_state__WEBPACK_IMPORTED_MODULE_7__["default"]],
   provide: function provide() {
     return {
       bvRadioGroup: this
@@ -10561,10 +10766,10 @@ __webpack_require__.r(__webpack_exports__);
 
  // @vue/component
 
-var BFormRadio = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BFormRadio = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_FORM_RADIO,
-  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_2__.default, _mixins_form_radio_check__WEBPACK_IMPORTED_MODULE_3__.default, // Includes shared render function
-  _mixins_form__WEBPACK_IMPORTED_MODULE_4__.default, _mixins_form_size__WEBPACK_IMPORTED_MODULE_5__.default, _mixins_form_state__WEBPACK_IMPORTED_MODULE_6__.default],
+  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_2__["default"], _mixins_form_radio_check__WEBPACK_IMPORTED_MODULE_3__["default"], // Includes shared render function
+  _mixins_form__WEBPACK_IMPORTED_MODULE_4__["default"], _mixins_form_size__WEBPACK_IMPORTED_MODULE_5__["default"], _mixins_form_state__WEBPACK_IMPORTED_MODULE_6__["default"]],
   inject: {
     bvGroup: {
       from: 'bvRadioGroup',
@@ -10581,7 +10786,7 @@ var BFormRadio = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
   computed: {
     // Radio Groups can only have a single value, so determining if checked is simple
     isChecked: function isChecked() {
-      return (0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_7__.default)(this.value, this.computedLocalChecked);
+      return (0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_7__["default"])(this.value, this.computedLocalChecked);
     },
     // Flags for form-radio-check mixin
     isRadio: function isRadio() {
@@ -10697,9 +10902,9 @@ var MIN_STARS = 3;
 var DEFAULT_STARS = 5; // --- Private helper component ---
 // @vue/component
 
-var BVFormRatingStar = _vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BVFormRatingStar = _vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_FORM_RATING_STAR,
-  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_2__.default],
+  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_2__["default"]],
   props: {
     rating: {
       type: Number,
@@ -10788,7 +10993,7 @@ var clampValue = function clampValue(value, min, max) {
 // @vue/component
 
 
-var BFormRating = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BFormRating = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_FORM_RATING,
   components: {
     BIconStar: _icons_icons__WEBPACK_IMPORTED_MODULE_6__.BIconStar,
@@ -10796,7 +11001,7 @@ var BFormRating = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend(
     BIconStarFill: _icons_icons__WEBPACK_IMPORTED_MODULE_6__.BIconStarFill,
     BIconX: _icons_icons__WEBPACK_IMPORTED_MODULE_6__.BIconX
   },
-  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_7__.default],
+  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_7__["default"]],
   model: {
     prop: 'value',
     event: 'change'
@@ -10912,7 +11117,7 @@ var BFormRating = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend(
       return clampValue((0,_utils_number__WEBPACK_IMPORTED_MODULE_4__.toFloat)(value.toFixed(precision)), 0, this.computedStars);
     },
     computedLocale: function computedLocale() {
-      var locales = (0,_utils_array__WEBPACK_IMPORTED_MODULE_10__.concat)(this.locale).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_11__.default);
+      var locales = (0,_utils_array__WEBPACK_IMPORTED_MODULE_10__.concat)(this.locale).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_11__["default"]);
       var nf = new Intl.NumberFormat(locales);
       return nf.resolvedOptions().locale;
     },
@@ -11200,9 +11405,9 @@ __webpack_require__.r(__webpack_exports__);
 
  // @vue/component
 
-var BFormSelectOptionGroup = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BFormSelectOptionGroup = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_FORM_SELECT_OPTION_GROUP,
-  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_2__.default, _mixins_form_options__WEBPACK_IMPORTED_MODULE_3__.default],
+  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_2__["default"], _mixins_form_options__WEBPACK_IMPORTED_MODULE_3__["default"]],
   props: {
     label: {
       type: String,
@@ -11263,7 +11468,7 @@ var props = {
   }
 }; // @vue/component
 
-var BFormSelectOption = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BFormSelectOption = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_FORM_SELECT_OPTION,
   functional: true,
   props: props,
@@ -11330,9 +11535,9 @@ __webpack_require__.r(__webpack_exports__);
 
  // @vue/component
 
-var BFormSelect = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BFormSelect = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_FORM_SELECT,
-  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_2__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_3__.default, _mixins_form__WEBPACK_IMPORTED_MODULE_4__.default, _mixins_form_size__WEBPACK_IMPORTED_MODULE_5__.default, _mixins_form_state__WEBPACK_IMPORTED_MODULE_6__.default, _mixins_form_custom__WEBPACK_IMPORTED_MODULE_7__.default, _helpers_mixin_options__WEBPACK_IMPORTED_MODULE_8__.default],
+  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_2__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_form__WEBPACK_IMPORTED_MODULE_4__["default"], _mixins_form_size__WEBPACK_IMPORTED_MODULE_5__["default"], _mixins_form_state__WEBPACK_IMPORTED_MODULE_6__["default"], _mixins_form_custom__WEBPACK_IMPORTED_MODULE_7__["default"], _helpers_mixin_options__WEBPACK_IMPORTED_MODULE_8__["default"]],
   model: {
     prop: 'value',
     event: 'input'
@@ -11481,7 +11686,7 @@ __webpack_require__.r(__webpack_exports__);
  // @vue/component
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  mixins: [_mixins_form_options__WEBPACK_IMPORTED_MODULE_0__.default],
+  mixins: [_mixins_form_options__WEBPACK_IMPORTED_MODULE_0__["default"]],
   props: {
     labelField: {
       type: String,
@@ -11498,13 +11703,13 @@ __webpack_require__.r(__webpack_exports__);
 
       // When the option is an object, normalize it
       if ((0,_utils_inspect__WEBPACK_IMPORTED_MODULE_1__.isPlainObject)(option)) {
-        var value = (0,_utils_get__WEBPACK_IMPORTED_MODULE_2__.default)(option, this.valueField);
-        var text = (0,_utils_get__WEBPACK_IMPORTED_MODULE_2__.default)(option, this.textField);
-        var options = (0,_utils_get__WEBPACK_IMPORTED_MODULE_2__.default)(option, this.optionsField, null); // When it has options, create an `<optgroup>` object
+        var value = (0,_utils_get__WEBPACK_IMPORTED_MODULE_2__["default"])(option, this.valueField);
+        var text = (0,_utils_get__WEBPACK_IMPORTED_MODULE_2__["default"])(option, this.textField);
+        var options = (0,_utils_get__WEBPACK_IMPORTED_MODULE_2__["default"])(option, this.optionsField, null); // When it has options, create an `<optgroup>` object
 
         if (!(0,_utils_inspect__WEBPACK_IMPORTED_MODULE_1__.isNull)(options)) {
           return {
-            label: String((0,_utils_get__WEBPACK_IMPORTED_MODULE_2__.default)(option, this.labelField) || text),
+            label: String((0,_utils_get__WEBPACK_IMPORTED_MODULE_2__["default"])(option, this.labelField) || text),
             options: this.normalizeOptions(options)
           };
         } // Otherwise create an `<option>` object
@@ -11513,8 +11718,8 @@ __webpack_require__.r(__webpack_exports__);
         return {
           value: (0,_utils_inspect__WEBPACK_IMPORTED_MODULE_1__.isUndefined)(value) ? key || text : value,
           text: String((0,_utils_inspect__WEBPACK_IMPORTED_MODULE_1__.isUndefined)(text) ? key : text),
-          html: (0,_utils_get__WEBPACK_IMPORTED_MODULE_2__.default)(option, this.htmlField),
-          disabled: Boolean((0,_utils_get__WEBPACK_IMPORTED_MODULE_2__.default)(option, this.disabledField))
+          html: (0,_utils_get__WEBPACK_IMPORTED_MODULE_2__["default"])(option, this.htmlField),
+          disabled: Boolean((0,_utils_get__WEBPACK_IMPORTED_MODULE_2__["default"])(option, this.disabledField))
         };
       } // Otherwise create an `<option>` object from the given value
 
@@ -11633,10 +11838,10 @@ var DEFAULT_REPEAT_MULTIPLIER = 4;
 var KEY_CODES = [_constants_key_codes__WEBPACK_IMPORTED_MODULE_0__.CODE_UP, _constants_key_codes__WEBPACK_IMPORTED_MODULE_0__.CODE_DOWN, _constants_key_codes__WEBPACK_IMPORTED_MODULE_0__.CODE_HOME, _constants_key_codes__WEBPACK_IMPORTED_MODULE_0__.CODE_END, _constants_key_codes__WEBPACK_IMPORTED_MODULE_0__.CODE_PAGEUP, _constants_key_codes__WEBPACK_IMPORTED_MODULE_0__.CODE_PAGEDOWN]; // --- BFormSpinbutton ---
 // @vue/component
 
-var BFormSpinbutton = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_1__.default.extend({
+var BFormSpinbutton = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_1__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_2__.NAME_FORM_SPINBUTTON,
   // Mixin order is important!
-  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_3__.default, _mixins_id__WEBPACK_IMPORTED_MODULE_4__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_5__.default],
+  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_id__WEBPACK_IMPORTED_MODULE_4__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_5__["default"]],
   inheritAttrs: false,
   props: {
     value: {
@@ -11806,7 +12011,7 @@ var BFormSpinbutton = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_1__.default.ext
       return (0,_utils_inspect__WEBPACK_IMPORTED_MODULE_9__.isNull)(value) ? '' : value.toFixed(this.computedPrecision);
     },
     computedLocale: function computedLocale() {
-      var locales = (0,_utils_array__WEBPACK_IMPORTED_MODULE_10__.concat)(this.locale).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_11__.default);
+      var locales = (0,_utils_array__WEBPACK_IMPORTED_MODULE_10__.concat)(this.locale).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_11__["default"]);
       var nf = new Intl.NumberFormat(locales);
       return nf.resolvedOptions().locale;
     },
@@ -12283,9 +12488,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var BFormTag = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BFormTag = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_FORM_TAG,
-  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_2__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_3__.default],
+  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_2__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_3__["default"]],
   props: {
     variant: {
       type: String,
@@ -12482,9 +12687,9 @@ var cleanTagsState = function cleanTagsState() {
 }; // @vue/component
 
 
-var BFormTags = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_4__.default.extend({
+var BFormTags = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_4__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_5__.NAME_FORM_TAGS,
-  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_6__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_7__.default],
+  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_6__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_7__["default"]],
   model: {
     // Even though this is the default that Vue assumes, we need
     // to add it for the docs to reflect that this is the model
@@ -12689,7 +12894,7 @@ var BFormTags = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_4__.default.extend({
     },
     computedSeparator: function computedSeparator() {
       // Merge the array into a string
-      return (0,_utils_array__WEBPACK_IMPORTED_MODULE_2__.concat)(this.separator).filter(_utils_inspect__WEBPACK_IMPORTED_MODULE_3__.isString).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_9__.default).join('');
+      return (0,_utils_array__WEBPACK_IMPORTED_MODULE_2__.concat)(this.separator).filter(_utils_inspect__WEBPACK_IMPORTED_MODULE_3__.isString).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_9__["default"]).join('');
     },
     computedSeparatorRegExp: function computedSeparatorRegExp() {
       // We use a computed prop here to precompile the RegExp
@@ -12710,7 +12915,7 @@ var BFormTags = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_4__.default.extend({
     },
     computeIgnoreInputFocusSelector: function computeIgnoreInputFocusSelector() {
       // Normalize to an single selector with selectors separated by `,`
-      return (0,_utils_array__WEBPACK_IMPORTED_MODULE_2__.concat)(this.ignoreInputFocusSelector).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_9__.default).join(',').trim();
+      return (0,_utils_array__WEBPACK_IMPORTED_MODULE_2__.concat)(this.ignoreInputFocusSelector).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_9__["default"]).join(',').trim();
     },
     disableAddButton: function disableAddButton() {
       var _this = this;
@@ -12746,13 +12951,13 @@ var BFormTags = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_4__.default.extend({
     },
     tags: function tags(newVal, oldVal) {
       // Update the `v-model` (if it differs from the value prop)
-      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_10__.default)(newVal, this.value)) {
+      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_10__["default"])(newVal, this.value)) {
         this.$emit('input', newVal);
       }
 
-      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_10__.default)(newVal, oldVal)) {
-        newVal = (0,_utils_array__WEBPACK_IMPORTED_MODULE_2__.concat)(newVal).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_9__.default);
-        oldVal = (0,_utils_array__WEBPACK_IMPORTED_MODULE_2__.concat)(oldVal).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_9__.default);
+      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_10__["default"])(newVal, oldVal)) {
+        newVal = (0,_utils_array__WEBPACK_IMPORTED_MODULE_2__.concat)(newVal).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_9__["default"]);
+        oldVal = (0,_utils_array__WEBPACK_IMPORTED_MODULE_2__.concat)(oldVal).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_9__["default"]);
         this.removedTags = oldVal.filter(function (old) {
           return !(0,_utils_array__WEBPACK_IMPORTED_MODULE_2__.arrayIncludes)(newVal, old);
         });
@@ -12760,7 +12965,7 @@ var BFormTags = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_4__.default.extend({
     },
     tagsState: function tagsState(newVal, oldVal) {
       // Emit a tag-state event when the `tagsState` object changes
-      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_10__.default)(newVal, oldVal)) {
+      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_10__["default"])(newVal, oldVal)) {
         this.$emit('tag-state', newVal.valid, newVal.invalid, newVal.duplicate);
       }
     }
@@ -12959,7 +13164,7 @@ var BFormTags = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_4__.default.extend({
       // Normally only a single tag is provided, but copy/paste
       // can enter multiple tags in a single operation
 
-      return (separatorRe ? newTag.split(separatorRe) : [newTag]).map(_utils_string__WEBPACK_IMPORTED_MODULE_0__.trim).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_9__.default);
+      return (separatorRe ? newTag.split(separatorRe) : [newTag]).map(_utils_string__WEBPACK_IMPORTED_MODULE_0__.trim).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_9__["default"]);
     },
     parseTags: function parseTags(newTag) {
       var _this5 = this;
@@ -13002,7 +13207,7 @@ var BFormTags = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_4__.default.extend({
     getInput: function getInput() {
       // Returns the input element reference (or null if not found)
       // We need to escape `computedInputId` since it can be user-provided
-      return (0,_utils_dom__WEBPACK_IMPORTED_MODULE_11__.select)("#".concat((0,_utils_css_escape__WEBPACK_IMPORTED_MODULE_14__.default)(this.computedInputId)), this.$el);
+      return (0,_utils_dom__WEBPACK_IMPORTED_MODULE_11__.select)("#".concat((0,_utils_css_escape__WEBPACK_IMPORTED_MODULE_14__["default"])(this.computedInputId)), this.$el);
     },
     // Default User Interface render
     defaultRender: function defaultRender(_ref) {
@@ -13057,7 +13262,7 @@ var BFormTags = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_4__.default.extend({
       var duplicateFeedbackId = duplicateTagText && isDuplicate ? this.safeId('__duplicate_feedback__') : null;
       var limitFeedbackId = limitTagsText && isLimitReached ? this.safeId('__limit_feedback__') : null; // Compute the `aria-describedby` attribute value
 
-      var ariaDescribedby = [inputAttrs['aria-describedby'], invalidFeedbackId, duplicateFeedbackId, limitFeedbackId].filter(_utils_identity__WEBPACK_IMPORTED_MODULE_9__.default).join(' '); // Input
+      var ariaDescribedby = [inputAttrs['aria-describedby'], invalidFeedbackId, duplicateFeedbackId, limitFeedbackId].filter(_utils_identity__WEBPACK_IMPORTED_MODULE_9__["default"]).join(' '); // Input
 
       var $input = h('input', {
         ref: 'input',
@@ -13385,13 +13590,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
  // @vue/component
 
-var BFormTextarea = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BFormTextarea = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_FORM_TEXTAREA,
   directives: {
     'b-visible': _directives_visible_visible__WEBPACK_IMPORTED_MODULE_2__.VBVisible
   },
   // Mixin order is important!
-  mixins: [_mixins_listeners__WEBPACK_IMPORTED_MODULE_3__.default, _mixins_id__WEBPACK_IMPORTED_MODULE_4__.default, _mixins_listen_on_root__WEBPACK_IMPORTED_MODULE_5__.default, _mixins_form__WEBPACK_IMPORTED_MODULE_6__.default, _mixins_form_size__WEBPACK_IMPORTED_MODULE_7__.default, _mixins_form_state__WEBPACK_IMPORTED_MODULE_8__.default, _mixins_form_text__WEBPACK_IMPORTED_MODULE_9__.default, _mixins_form_selection__WEBPACK_IMPORTED_MODULE_10__.default, _mixins_form_validity__WEBPACK_IMPORTED_MODULE_11__.default],
+  mixins: [_mixins_listeners__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_id__WEBPACK_IMPORTED_MODULE_4__["default"], _mixins_listen_on_root__WEBPACK_IMPORTED_MODULE_5__["default"], _mixins_form__WEBPACK_IMPORTED_MODULE_6__["default"], _mixins_form_size__WEBPACK_IMPORTED_MODULE_7__["default"], _mixins_form_state__WEBPACK_IMPORTED_MODULE_8__["default"], _mixins_form_text__WEBPACK_IMPORTED_MODULE_9__["default"], _mixins_form_selection__WEBPACK_IMPORTED_MODULE_10__["default"], _mixins_form_validity__WEBPACK_IMPORTED_MODULE_11__["default"]],
   props: {
     rows: {
       type: [Number, String],
@@ -13845,10 +14050,10 @@ var propsMixin = {
 }; // --- BFormDate component ---
 // @vue/component
 
-var BFormTimepicker = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_3__.default.extend({
+var BFormTimepicker = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_3__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_FORM_TIMEPICKER,
   // The mixins order determines the order of appearance in the props reference section
-  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_4__.default, propsMixin],
+  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_4__["default"], propsMixin],
   model: {
     prop: 'value',
     event: 'input'
@@ -14158,9 +14363,9 @@ __webpack_require__.r(__webpack_exports__);
 
  // @vue/component
 
-var BFormDatalist = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BFormDatalist = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_FORM_DATALIST,
-  mixins: [_mixins_form_options__WEBPACK_IMPORTED_MODULE_2__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_3__.default],
+  mixins: [_mixins_form_options__WEBPACK_IMPORTED_MODULE_2__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_3__["default"]],
   props: {
     id: {
       type: String,
@@ -14241,7 +14446,7 @@ var props = {
   }
 }; // @vue/component
 
-var BFormInvalidFeedback = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BFormInvalidFeedback = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_FORM_INVALID_FEEDBACK,
   functional: true,
   props: props,
@@ -14310,7 +14515,7 @@ var props = {
   }
 }; // @vue/component
 
-var BFormText = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
+var BFormText = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_FORM_TEXT,
   functional: true,
   props: props,
@@ -14380,7 +14585,7 @@ var props = {
   }
 }; // @vue/component
 
-var BFormValidFeedback = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BFormValidFeedback = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_FORM_VALID_FEEDBACK,
   functional: true,
   props: props,
@@ -14443,7 +14648,7 @@ var props = {
   }
 }; // @vue/component
 
-var BForm = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BForm = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_FORM,
   functional: true,
   props: props,
@@ -14634,7 +14839,7 @@ var props = {
   }
 }; // @vue/component
 
-var BImgLazy = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
+var BImgLazy = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_IMG_LAZY,
   directives: {
     bVisible: _directives_visible_visible__WEBPACK_IMPORTED_MODULE_3__.VBVisible
@@ -14659,11 +14864,11 @@ var BImgLazy = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
       return this.isShown ? this.height : this.blankHeight || this.height;
     },
     computedSrcset: function computedSrcset() {
-      var srcset = (0,_utils_array__WEBPACK_IMPORTED_MODULE_4__.concat)(this.srcset).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_5__.default).join(',');
+      var srcset = (0,_utils_array__WEBPACK_IMPORTED_MODULE_4__.concat)(this.srcset).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_5__["default"]).join(',');
       return !this.blankSrc || this.isShown ? srcset : null;
     },
     computedSizes: function computedSizes() {
-      var sizes = (0,_utils_array__WEBPACK_IMPORTED_MODULE_4__.concat)(this.sizes).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_5__.default).join(',');
+      var sizes = (0,_utils_array__WEBPACK_IMPORTED_MODULE_4__.concat)(this.sizes).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_5__["default"]).join(',');
       return !this.blankSrc || this.isShown ? sizes : null;
     }
   },
@@ -14867,7 +15072,7 @@ var makeBlankImgSrc = function makeBlankImgSrc(width, height, color) {
 }; // @vue/component
 
 
-var BImg = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_3__.default.extend({
+var BImg = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_3__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_IMG,
   functional: true,
   props: props,
@@ -14881,8 +15086,8 @@ var BImg = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_3__.default.extend({
     var height = (0,_utils_number__WEBPACK_IMPORTED_MODULE_4__.toInteger)(props.height) || null;
     var align = null;
     var block = props.block;
-    var srcset = (0,_utils_array__WEBPACK_IMPORTED_MODULE_5__.concat)(props.srcset).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_6__.default).join(',');
-    var sizes = (0,_utils_array__WEBPACK_IMPORTED_MODULE_5__.concat)(props.sizes).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_6__.default).join(',');
+    var srcset = (0,_utils_array__WEBPACK_IMPORTED_MODULE_5__.concat)(props.srcset).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_6__["default"]).join(',');
+    var sizes = (0,_utils_array__WEBPACK_IMPORTED_MODULE_5__.concat)(props.sizes).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_6__["default"]).join(',');
 
     if (props.blank) {
       if (!height && width) {
@@ -15216,7 +15421,7 @@ var commonProps = {
   }
 }; // @vue/component
 
-var BInputGroupAddon = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BInputGroupAddon = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_INPUT_GROUP_ADDON,
   functional: true,
   props: _objectSpread(_objectSpread({}, commonProps), {}, {
@@ -15268,7 +15473,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
  // @vue/component
 
-var BInputGroupAppend = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BInputGroupAppend = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_INPUT_GROUP_APPEND,
   functional: true,
   props: _input_group_addon__WEBPACK_IMPORTED_MODULE_2__.commonProps,
@@ -15312,7 +15517,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
  // @vue/component
 
-var BInputGroupPrepend = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BInputGroupPrepend = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_INPUT_GROUP_PREPEND,
   functional: true,
   props: _input_group_addon__WEBPACK_IMPORTED_MODULE_2__.commonProps,
@@ -15355,7 +15560,7 @@ var props = {
   }
 }; // @vue/component
 
-var BInputGroupText = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BInputGroupText = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_INPUT_GROUP_TEXT,
   functional: true,
   props: props,
@@ -15434,7 +15639,7 @@ var props = {
 }; // --- Main component ---
 // @vue/component
 
-var BInputGroup = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
+var BInputGroup = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_INPUT_GROUP,
   functional: true,
   props: props,
@@ -15599,7 +15804,7 @@ var props = {
 }; // --- Main component ---
 // @vue/component
 
-var BJumbotron = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
+var BJumbotron = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_JUMBOTRON,
   functional: true,
   props: props,
@@ -15743,13 +15948,13 @@ var computeBreakpoint = function computeBreakpoint(type, breakpoint, val) {
 }; // Memoized function for better performance on generating class names
 
 
-var computeBreakpointClass = (0,_utils_memoize__WEBPACK_IMPORTED_MODULE_2__.default)(computeBreakpoint); // Cached copy of the breakpoint prop names
+var computeBreakpointClass = (0,_utils_memoize__WEBPACK_IMPORTED_MODULE_2__["default"])(computeBreakpoint); // Cached copy of the breakpoint prop names
 
 var breakpointPropMap = (0,_utils_object__WEBPACK_IMPORTED_MODULE_3__.create)(null); // Lazy evaled props factory for BCol
 
 var generateProps = function generateProps() {
   // Grab the breakpoints from the cached config (exclude the '' (xs) breakpoint)
-  var breakpoints = (0,_utils_config__WEBPACK_IMPORTED_MODULE_4__.getBreakpointsUpCached)().filter(_utils_identity__WEBPACK_IMPORTED_MODULE_5__.default); // Supports classes like: .col-sm, .col-md-6, .col-lg-auto
+  var breakpoints = (0,_utils_config__WEBPACK_IMPORTED_MODULE_4__.getBreakpointsUpCached)().filter(_utils_identity__WEBPACK_IMPORTED_MODULE_5__["default"]); // Supports classes like: .col-sm, .col-md-6, .col-lg-auto
 
   var breakpointCol = breakpoints.reduce(function (propMap, breakpoint) {
     if (breakpoint) {
@@ -15890,7 +16095,7 @@ var props = {
   }
 }; // @vue/component
 
-var BContainer = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BContainer = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_CONTAINER,
   functional: true,
   props: props,
@@ -15933,7 +16138,7 @@ var props = {
   }
 }; // @vue/component
 
-var BFormRow = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BFormRow = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_FORM_ROW,
   functional: true,
   props: props,
@@ -16032,13 +16237,13 @@ var strNum = function strNum() {
 // Memoized function for better performance on generating class names
 
 
-var computeRowColsClass = (0,_utils_memoize__WEBPACK_IMPORTED_MODULE_0__.default)(function (breakpoint, cols) {
+var computeRowColsClass = (0,_utils_memoize__WEBPACK_IMPORTED_MODULE_0__["default"])(function (breakpoint, cols) {
   cols = (0,_utils_string__WEBPACK_IMPORTED_MODULE_1__.trim)((0,_utils_string__WEBPACK_IMPORTED_MODULE_1__.toString)(cols));
-  return cols ? (0,_utils_string__WEBPACK_IMPORTED_MODULE_1__.lowerCase)(['row-cols', breakpoint, cols].filter(_utils_identity__WEBPACK_IMPORTED_MODULE_2__.default).join('-')) : null;
+  return cols ? (0,_utils_string__WEBPACK_IMPORTED_MODULE_1__.lowerCase)(['row-cols', breakpoint, cols].filter(_utils_identity__WEBPACK_IMPORTED_MODULE_2__["default"]).join('-')) : null;
 }); // Get the breakpoint name from the `rowCols` prop name
 // Memoized function for better performance on extracting breakpoint names
 
-var computeRowColsBreakpoint = (0,_utils_memoize__WEBPACK_IMPORTED_MODULE_0__.default)(function (prop) {
+var computeRowColsBreakpoint = (0,_utils_memoize__WEBPACK_IMPORTED_MODULE_0__["default"])(function (prop) {
   return (0,_utils_string__WEBPACK_IMPORTED_MODULE_1__.lowerCase)(prop.replace('cols', ''));
 }); // Cached copy of the `row-cols` breakpoint prop names
 // Will be populated when the props are generated
@@ -16303,10 +16508,10 @@ var props = _objectSpread(_objectSpread(_objectSpread({
 }); // --- Main component ---
 // @vue/component
 
-var BLink = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
+var BLink = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_LINK,
   // Mixin order is important!
-  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_3__.default, _mixins_listeners__WEBPACK_IMPORTED_MODULE_4__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_5__.default],
+  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_listeners__WEBPACK_IMPORTED_MODULE_4__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_5__["default"]],
   inheritAttrs: false,
   props: props,
   computed: {
@@ -16534,7 +16739,7 @@ var props = _objectSpread(_objectSpread({}, linkProps), {}, {
 }); // --- Main component ---
 // @vue/component
 
-var BListGroupItem = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_4__.default.extend({
+var BListGroupItem = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_4__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_3__.NAME_LIST_GROUP_ITEM,
   functional: true,
   props: props,
@@ -16615,7 +16820,7 @@ var props = {
   }
 }; // @vue/component
 
-var BListGroup = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BListGroup = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_LIST_GROUP,
   functional: true,
   props: props,
@@ -16701,7 +16906,7 @@ var props = {
   }
 }; // @vue/component
 
-var BMediaAside = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BMediaAside = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_MEDIA_ASIDE,
   functional: true,
   props: props,
@@ -16745,7 +16950,7 @@ var props = {
   }
 }; // @vue/component
 
-var BMediaBody = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BMediaBody = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_MEDIA_BODY,
   functional: true,
   props: props,
@@ -16805,7 +17010,7 @@ var props = {
   }
 }; // @vue/component
 
-var BMedia = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BMedia = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_MEDIA,
   functional: true,
   props: props,
@@ -17308,7 +17513,7 @@ var Selector = {
   NAVBAR_TOGGLER: '.navbar-toggler'
 }; // @vue/component
 
-var ModalManager = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var ModalManager = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   data: function data() {
     return {
       modals: [],
@@ -17898,9 +18103,9 @@ var props = {
   }
 }; // @vue/component
 
-var BModal = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_5__.default.extend({
+var BModal = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_5__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_MODAL,
-  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_6__.default, _mixins_id__WEBPACK_IMPORTED_MODULE_7__.default, _mixins_listen_on_document__WEBPACK_IMPORTED_MODULE_8__.default, _mixins_listen_on_root__WEBPACK_IMPORTED_MODULE_9__.default, _mixins_listen_on_window__WEBPACK_IMPORTED_MODULE_10__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_11__.default, _mixins_scoped_style_attrs__WEBPACK_IMPORTED_MODULE_12__.default],
+  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_6__["default"], _mixins_id__WEBPACK_IMPORTED_MODULE_7__["default"], _mixins_listen_on_document__WEBPACK_IMPORTED_MODULE_8__["default"], _mixins_listen_on_root__WEBPACK_IMPORTED_MODULE_9__["default"], _mixins_listen_on_window__WEBPACK_IMPORTED_MODULE_10__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_11__["default"], _mixins_scoped_style_attrs__WEBPACK_IMPORTED_MODULE_12__["default"]],
   inheritAttrs: false,
   model: {
     prop: 'visible',
@@ -18018,7 +18223,7 @@ var BModal = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_5__.default.extend({
     },
     computeIgnoreEnforceFocusSelector: function computeIgnoreEnforceFocusSelector() {
       // Normalize to an single selector with selectors separated by `,`
-      return (0,_utils_array__WEBPACK_IMPORTED_MODULE_4__.concat)(this.ignoreEnforceFocusSelector).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_14__.default).join(',').trim();
+      return (0,_utils_array__WEBPACK_IMPORTED_MODULE_4__.concat)(this.ignoreEnforceFocusSelector).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_14__["default"]).join(',').trim();
     },
     computedAttrs: function computedAttrs() {
       // If the parent has a scoped style attribute, and the modal
@@ -18087,7 +18292,7 @@ var BModal = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_5__.default.extend({
       this.$_observer = null;
 
       if (on) {
-        this.$_observer = (0,_utils_observe_dom__WEBPACK_IMPORTED_MODULE_15__.default)(this.$refs.content, this.checkModalOverflow.bind(this), OBSERVER_CONFIG);
+        this.$_observer = (0,_utils_observe_dom__WEBPACK_IMPORTED_MODULE_15__["default"])(this.$refs.content, this.checkModalOverflow.bind(this), OBSERVER_CONFIG);
       }
     },
     // Private method to update the v-model
@@ -18698,7 +18903,7 @@ var BModal = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_5__.default.extend({
         this.normalizeSlot('modal-backdrop'));
       }
 
-      $backdrop = h(_utils_bv_transition__WEBPACK_IMPORTED_MODULE_26__.default, {
+      $backdrop = h(_utils_bv_transition__WEBPACK_IMPORTED_MODULE_26__["default"], {
         props: {
           noFade: this.noFade
         }
@@ -18805,7 +19010,7 @@ var props = _objectSpread(_objectSpread({}, (0,_utils_object__WEBPACK_IMPORTED_M
   }
 }); // @vue/component
 
-var BNavForm = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
+var BNavForm = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_3__.NAME_NAV_FORM,
   functional: true,
   props: props,
@@ -18872,9 +19077,9 @@ __webpack_require__.r(__webpack_exports__);
 var props = (0,_utils_props__WEBPACK_IMPORTED_MODULE_0__.pluckProps)(['text', 'html', 'menuClass', 'toggleClass', 'noCaret', 'role', 'lazy'], _dropdown_dropdown__WEBPACK_IMPORTED_MODULE_1__.props); // --- Main component ---
 // @vue/component
 
-var BNavItemDropdown = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
+var BNavItemDropdown = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_3__.NAME_NAV_ITEM_DROPDOWN,
-  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_4__.default, _mixins_dropdown__WEBPACK_IMPORTED_MODULE_5__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_6__.default],
+  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_4__["default"], _mixins_dropdown__WEBPACK_IMPORTED_MODULE_5__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_6__["default"]],
   props: props,
   computed: {
     toggleId: function toggleId() {
@@ -18982,7 +19187,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var props = (0,_utils_object__WEBPACK_IMPORTED_MODULE_0__.omit)(_link_link__WEBPACK_IMPORTED_MODULE_1__.props, ['event', 'routerTag']); // --- Main component ---
 // @vue/component
 
-var BNavItem = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
+var BNavItem = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_3__.NAME_NAV_ITEM,
   functional: true,
   props: _objectSpread(_objectSpread({}, props), {}, {
@@ -19035,7 +19240,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var props = {}; // @vue/component
 
-var BNavText = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BNavText = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_NAV_TEXT,
   functional: true,
   props: props,
@@ -19117,7 +19322,7 @@ var computeJustifyContent = function computeJustifyContent(value) {
 }; // @vue/component
 
 
-var BNav = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BNav = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_NAV,
   functional: true,
   props: props,
@@ -19234,7 +19439,7 @@ var props = _objectSpread({
 }, linkProps); // --- Main component ---
 // @vue/component
 
-var BNavbarBrand = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
+var BNavbarBrand = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_3__.NAME_NAVBAR_BRAND,
   functional: true,
   props: props,
@@ -19286,7 +19491,7 @@ var computeJustifyContent = function computeJustifyContent(value) {
 }; // @vue/component
 
 
-var BNavbarNav = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
+var BNavbarNav = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_3__.NAME_NAVBAR_NAV,
   functional: true,
   props: props,
@@ -19337,12 +19542,12 @@ __webpack_require__.r(__webpack_exports__);
 var CLASS_NAME = 'navbar-toggler'; // --- Main component ---
 // @vue/component
 
-var BNavbarToggle = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BNavbarToggle = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_NAVBAR_TOGGLE,
   directives: {
     VBToggle: _directives_toggle_toggle__WEBPACK_IMPORTED_MODULE_2__.VBToggle
   },
-  mixins: [_mixins_listen_on_root__WEBPACK_IMPORTED_MODULE_3__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_4__.default],
+  mixins: [_mixins_listen_on_root__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_4__["default"]],
   props: {
     label: {
       type: String,
@@ -19472,9 +19677,9 @@ var props = {
 }; // --- Main component ---
 // @vue/component
 
-var BNavbar = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
+var BNavbar = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_NAVBAR,
-  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_3__.default],
+  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_3__["default"]],
   provide: function provide() {
     return {
       bvNavbar: this
@@ -19574,9 +19779,9 @@ var positionCover = {
   bottom: 0,
   right: 0
 };
-var BOverlay = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BOverlay = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_OVERLAY,
-  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_2__.default],
+  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_2__["default"]],
   props: {
     show: {
       type: Boolean,
@@ -19898,9 +20103,9 @@ var sanitizeNumberOfPages = function sanitizeNumberOfPages(value) {
 // The render function is brought in via the pagination mixin
 // @vue/component
 
-var BPaginationNav = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_7__.default.extend({
+var BPaginationNav = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_7__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_3__.NAME_PAGINATION_NAV,
-  mixins: [_mixins_pagination__WEBPACK_IMPORTED_MODULE_8__.default],
+  mixins: [_mixins_pagination__WEBPACK_IMPORTED_MODULE_8__["default"]],
   props: props,
   computed: {
     // Used by render function to trigger wrapping in '<nav>' element
@@ -20141,11 +20346,11 @@ var BPaginationNav = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_7__.default.exte
 
           if ($router && ((0,_utils_inspect__WEBPACK_IMPORTED_MODULE_10__.isObject)(to) || this.useRouter)) {
             // Resolve the page via the $router
-            guess = (0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_16__.default)(this.resolveRoute(to), currRoute) ? page : null;
+            guess = (0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_16__["default"])(this.resolveRoute(to), currRoute) ? page : null;
           } else if (_utils_env__WEBPACK_IMPORTED_MODULE_15__.isBrowser) {
             // If no $router available (or !this.useRouter when `to` is a string)
             // we compare using parsed URIs
-            guess = (0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_16__.default)(this.resolveLink(to), currLink) ? page : null;
+            guess = (0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_16__["default"])(this.resolveLink(to), currLink) ? page : null;
           } else {
             // probably SSR, but no $router so we can't guess, so lets break out of
             // the loop early
@@ -20256,9 +20461,9 @@ var sanitizeTotalRows = function sanitizeTotalRows(val) {
 // @vue/component
 
 
-var BPagination = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_4__.default.extend({
+var BPagination = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_4__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_PAGINATION,
-  mixins: [_mixins_pagination__WEBPACK_IMPORTED_MODULE_5__.default],
+  mixins: [_mixins_pagination__WEBPACK_IMPORTED_MODULE_5__["default"]],
   props: props,
   computed: {
     numberOfPages: function numberOfPages() {
@@ -20384,7 +20589,7 @@ __webpack_require__.r(__webpack_exports__);
 
  // @vue/component
 
-var BVPopoverTemplate = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BVPopoverTemplate = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_POPOVER_TEMPLATE,
   extends: _tooltip_helpers_bv_tooltip_template__WEBPACK_IMPORTED_MODULE_2__.BVTooltipTemplate,
   computed: {
@@ -20454,7 +20659,7 @@ __webpack_require__.r(__webpack_exports__);
 
  // @vue/component
 
-var BVPopover = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BVPopover = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_POPOVER_HELPER,
   extends: _tooltip_helpers_bv_tooltip__WEBPACK_IMPORTED_MODULE_2__.BVTooltip,
   computed: {
@@ -20526,7 +20731,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var BPopover = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BPopover = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_POPOVER,
   extends: _tooltip_tooltip__WEBPACK_IMPORTED_MODULE_2__.BTooltip,
   inheritAttrs: false,
@@ -20659,9 +20864,9 @@ __webpack_require__.r(__webpack_exports__);
 
  // @vue/component
 
-var BProgressBar = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BProgressBar = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_PROGRESS_BAR,
-  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_2__.default],
+  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_2__["default"]],
   inject: {
     bvProgress: {
       default: function _default()
@@ -20822,9 +21027,9 @@ __webpack_require__.r(__webpack_exports__);
 
  // @vue/component
 
-var BProgress = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BProgress = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_PROGRESS,
-  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_2__.default],
+  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_2__["default"]],
   provide: function provide() {
     return {
       bvProgress: this
@@ -21092,10 +21297,10 @@ var renderBackdrop = function renderBackdrop(h, ctx) {
 // @vue/component
 
 
-var BSidebar = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_3__.default.extend({
+var BSidebar = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_3__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_4__.NAME_SIDEBAR,
   // Mixin order is important!
-  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_5__.default, _mixins_id__WEBPACK_IMPORTED_MODULE_6__.default, _mixins_listen_on_root__WEBPACK_IMPORTED_MODULE_7__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_8__.default],
+  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_5__["default"], _mixins_id__WEBPACK_IMPORTED_MODULE_6__["default"], _mixins_listen_on_root__WEBPACK_IMPORTED_MODULE_7__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_8__["default"]],
   inheritAttrs: false,
   model: {
     prop: 'visible',
@@ -21433,7 +21638,7 @@ var BSidebar = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_3__.default.extend({
         afterLeave: this.onAfterLeave
       }
     }, [$sidebar]);
-    var $backdrop = h(_utils_bv_transition__WEBPACK_IMPORTED_MODULE_15__.default, {
+    var $backdrop = h(_utils_bv_transition__WEBPACK_IMPORTED_MODULE_15__["default"], {
       props: {
         noFade: this.noSlide
       }
@@ -21544,7 +21749,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
  // @vue/component
 
-var BSkeletonIcon = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BSkeletonIcon = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_SKELETON_ICON,
   functional: true,
   props: {
@@ -21603,7 +21808,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
  // @vue/component
 
-var BSkeletonImg = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BSkeletonImg = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_SKELETON_IMG,
   functional: true,
   props: {
@@ -21687,7 +21892,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
  // @vue/component
 
-var BSkeletonTable = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BSkeletonTable = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_SKELETON_TABLE,
   functional: true,
   props: {
@@ -21770,7 +21975,7 @@ __webpack_require__.r(__webpack_exports__);
 
  // @vue/component
 
-var BSkeletonWrapper = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BSkeletonWrapper = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_SKELETON_WRAPPER,
   functional: true,
   props: {
@@ -21827,7 +22032,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
  // @vue/component
 
-var BSkeleton = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BSkeleton = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_SKELETON,
   functional: true,
   props: {
@@ -21925,7 +22130,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
  // @vue/component
 
-var BSpinner = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BSpinner = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_SPINNER,
   functional: true,
   props: {
@@ -22040,8 +22245,8 @@ __webpack_require__.r(__webpack_exports__);
 //       calling this method for each sortBy
 
 var defaultSortCompare = function defaultSortCompare(a, b, sortBy, sortDesc, formatter, localeOpts, locale, nullLast) {
-  var aa = (0,_utils_get__WEBPACK_IMPORTED_MODULE_0__.default)(a, sortBy, null);
-  var bb = (0,_utils_get__WEBPACK_IMPORTED_MODULE_0__.default)(b, sortBy, null);
+  var aa = (0,_utils_get__WEBPACK_IMPORTED_MODULE_0__["default"])(a, sortBy, null);
+  var bb = (0,_utils_get__WEBPACK_IMPORTED_MODULE_0__["default"])(b, sortBy, null);
 
   if ((0,_utils_inspect__WEBPACK_IMPORTED_MODULE_1__.isFunction)(formatter)) {
     aa = formatter(aa, sortBy, a);
@@ -22064,7 +22269,7 @@ var defaultSortCompare = function defaultSortCompare(a, b, sortBy, sortDesc, for
   } // Do localized string comparison
 
 
-  return (0,_stringify_object_values__WEBPACK_IMPORTED_MODULE_2__.default)(aa).localeCompare((0,_stringify_object_values__WEBPACK_IMPORTED_MODULE_2__.default)(bb), locale, localeOpts);
+  return (0,_stringify_object_values__WEBPACK_IMPORTED_MODULE_2__["default"])(aa).localeCompare((0,_stringify_object_values__WEBPACK_IMPORTED_MODULE_2__["default"])(bb), locale, localeOpts);
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (defaultSortCompare);
@@ -22529,10 +22734,10 @@ var DEBOUNCE_DEPRECATED_MSG = 'Prop "filter-debounce" is deprecated. Use the deb
   },
   computed: {
     computedFilterIgnored: function computedFilterIgnored() {
-      return (0,_utils_array__WEBPACK_IMPORTED_MODULE_0__.concat)(this.filterIgnoredFields || []).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_1__.default);
+      return (0,_utils_array__WEBPACK_IMPORTED_MODULE_0__.concat)(this.filterIgnoredFields || []).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_1__["default"]);
     },
     computedFilterIncluded: function computedFilterIncluded() {
-      return (0,_utils_array__WEBPACK_IMPORTED_MODULE_0__.concat)(this.filterIncludedFields || []).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_1__.default);
+      return (0,_utils_array__WEBPACK_IMPORTED_MODULE_0__.concat)(this.filterIncludedFields || []).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_1__["default"]);
     },
     computedFilterDebounce: function computedFilterDebounce() {
       var ms = (0,_utils_number__WEBPACK_IMPORTED_MODULE_2__.toInteger)(this.filterDebounce, 0);
@@ -22615,7 +22820,7 @@ var DEBOUNCE_DEPRECATED_MSG = 'Prop "filter-debounce" is deprecated. Use the deb
       if (!localFilter) {
         // If filter criteria is falsey
         isFiltered = false;
-      } else if ((0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_6__.default)(localFilter, []) || (0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_6__.default)(localFilter, {})) {
+      } else if ((0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_6__["default"])(localFilter, []) || (0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_6__["default"])(localFilter, {})) {
         // If filter criteria is an empty array or object
         isFiltered = false;
       } else if (localFilter) {
@@ -22672,7 +22877,7 @@ var DEBOUNCE_DEPRECATED_MSG = 'Prop "filter-debounce" is deprecated. Use the deb
       // without Vue's reactive observers
 
 
-      return (0,_utils_clone_deep__WEBPACK_IMPORTED_MODULE_7__.default)(criteria);
+      return (0,_utils_clone_deep__WEBPACK_IMPORTED_MODULE_7__["default"])(criteria);
     },
     // Filter Function factories
     filterFnFactory: function filterFnFactory(filterFn, criteria) {
@@ -22682,7 +22887,7 @@ var DEBOUNCE_DEPRECATED_MSG = 'Prop "filter-debounce" is deprecated. Use the deb
       // Rather than directly grabbing `this.computedLocalFilterFn` or `this.filterFunction`
       // we have it passed, so that the caller computed prop will be reactive to changes
       // in the original filter-function (as this routine is a method)
-      if (!filterFn || !(0,_utils_inspect__WEBPACK_IMPORTED_MODULE_5__.isFunction)(filterFn) || !criteria || (0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_6__.default)(criteria, []) || (0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_6__.default)(criteria, {})) {
+      if (!filterFn || !(0,_utils_inspect__WEBPACK_IMPORTED_MODULE_5__.isFunction)(filterFn) || !criteria || (0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_6__["default"])(criteria, []) || (0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_6__["default"])(criteria, {})) {
         return null;
       } // Build the wrapped filter test function, passing the criteria to the provided function
 
@@ -22734,7 +22939,7 @@ var DEBOUNCE_DEPRECATED_MSG = 'Prop "filter-debounce" is deprecated. Use the deb
         //
         // We set `lastIndex = 0` on the `RegExp` in case someone specifies the `/g` global flag
         regExp.lastIndex = 0;
-        return regExp.test((0,_stringify_record_values__WEBPACK_IMPORTED_MODULE_10__.default)(item, _this3.computedFilterIgnored, _this3.computedFilterIncluded, _this3.computedFieldsObj));
+        return regExp.test((0,_stringify_record_values__WEBPACK_IMPORTED_MODULE_10__["default"])(item, _this3.computedFilterIgnored, _this3.computedFilterIncluded, _this3.computedFieldsObj));
       }; // Return the generated function
 
 
@@ -22810,7 +23015,7 @@ __webpack_require__.r(__webpack_exports__);
     computedFields: function computedFields() {
       // We normalize fields into an array of objects
       // `[ { key:..., label:..., ...}, {...}, ..., {..}]`
-      return (0,_normalize_fields__WEBPACK_IMPORTED_MODULE_1__.default)(this.fields, this.localItems);
+      return (0,_normalize_fields__WEBPACK_IMPORTED_MODULE_1__["default"])(this.fields, this.localItems);
     },
     computedFieldsObj: function computedFieldsObj() {
       // Fields as a simple lookup hash object
@@ -22871,14 +23076,14 @@ __webpack_require__.r(__webpack_exports__);
     },
     // Watch for changes on `computedItems` and update the `v-model`
     computedItems: function computedItems(newVal, oldVal) {
-      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_5__.default)(newVal, oldVal)) {
+      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_5__["default"])(newVal, oldVal)) {
         this.$emit('input', newVal);
       }
     },
     // Watch for context changes
     context: function context(newVal, oldVal) {
       // Emit context information for external paging/filtering/sorting handling
-      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_5__.default)(newVal, oldVal)) {
+      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_5__["default"])(newVal, oldVal)) {
         this.$emit('context-changed', newVal);
       }
     }
@@ -22972,7 +23177,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  mixins: [_mixins_listen_on_root__WEBPACK_IMPORTED_MODULE_0__.default],
+  mixins: [_mixins_listen_on_root__WEBPACK_IMPORTED_MODULE_0__["default"]],
   props: {
     // Prop override(s)
     items: {
@@ -23051,7 +23256,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     providerTriggerContext: function providerTriggerContext(newVal, oldVal) {
       // Trigger the provider to update as the relevant context values have changed.
-      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_3__.default)(newVal, oldVal)) {
+      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_3__["default"])(newVal, oldVal)) {
         this.$nextTick(this._providerUpdate);
       }
     }
@@ -23239,7 +23444,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return true;
     },
     selectableHasSelection: function selectableHasSelection() {
-      return this.isSelectable && this.selectedRows && this.selectedRows.length > 0 && this.selectedRows.some(_utils_identity__WEBPACK_IMPORTED_MODULE_3__.default);
+      return this.isSelectable && this.selectedRows && this.selectedRows.length > 0 && this.selectedRows.some(_utils_identity__WEBPACK_IMPORTED_MODULE_3__["default"]);
     },
     selectableIsMultiSelect: function selectableIsMultiSelect() {
       return this.isSelectable && (0,_utils_array__WEBPACK_IMPORTED_MODULE_0__.arrayIncludes)(['range', 'multi'], this.selectMode);
@@ -23271,7 +23476,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
         for (var i = 0; equal && i < newVal.length; i++) {
           // Look for the first non-loosely equal row, after ignoring reserved fields
-          equal = (0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_5__.default)((0,_sanitize_row__WEBPACK_IMPORTED_MODULE_6__.default)(newVal[i]), (0,_sanitize_row__WEBPACK_IMPORTED_MODULE_6__.default)(oldVal[i]));
+          equal = (0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_5__["default"])((0,_sanitize_row__WEBPACK_IMPORTED_MODULE_6__["default"])(newVal[i]), (0,_sanitize_row__WEBPACK_IMPORTED_MODULE_6__["default"])(oldVal[i]));
         }
       }
 
@@ -23293,7 +23498,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     selectedRows: function selectedRows(_selectedRows, oldVal) {
       var _this = this;
 
-      if (this.isSelectable && !(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_5__.default)(_selectedRows, oldVal)) {
+      if (this.isSelectable && !(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_5__["default"])(_selectedRows, oldVal)) {
         var items = []; // `.forEach()` skips over non-existent indices (on sparse arrays)
 
         _selectedRows.forEach(function (v, idx) {
@@ -23337,7 +23542,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (this.isSelectable && length > 0) {
         this.selectedLastClicked = -1;
-        this.selectedRows = this.selectableIsMultiSelect ? (0,_utils_range__WEBPACK_IMPORTED_MODULE_7__.default)(length).map(function () {
+        this.selectedRows = this.selectableIsMultiSelect ? (0,_utils_range__WEBPACK_IMPORTED_MODULE_7__["default"])(length).map(function () {
           return true;
         }) : [true];
       }
@@ -23561,7 +23766,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         /* istanbul ignore next */
         sortByFormatted : sortByFormatted ? this.getFieldFormatter(sortBy) : undefined; // `stableSort` returns a new array, and leaves the original array intact
 
-        return (0,_utils_stable_sort__WEBPACK_IMPORTED_MODULE_2__.default)(items, function (a, b) {
+        return (0,_utils_stable_sort__WEBPACK_IMPORTED_MODULE_2__["default"])(items, function (a, b) {
           var result = null;
 
           if ((0,_utils_inspect__WEBPACK_IMPORTED_MODULE_1__.isFunction)(sortCompare)) {
@@ -23572,7 +23777,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           if ((0,_utils_inspect__WEBPACK_IMPORTED_MODULE_1__.isUndefinedOrNull)(result) || result === false) {
             // Fallback to built-in defaultSortCompare if sortCompare
             // is not defined or returns null/false
-            result = (0,_default_sort_compare__WEBPACK_IMPORTED_MODULE_3__.default)(a, b, sortBy, sortDesc, formatter, sortOptions, sortLocale, nullLast);
+            result = (0,_default_sort_compare__WEBPACK_IMPORTED_MODULE_3__["default"])(a, b, sortBy, sortDesc, formatter, sortOptions, sortLocale, nullLast);
           } // Negate result if sorting in descending order
 
 
@@ -23820,7 +24025,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   // as table could be wrapped in responsive `<div>`
   inheritAttrs: false,
   // Mixin order is important!
-  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_0__.default],
+  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_0__["default"]],
   provide: function provide() {
     return {
       bvTable: this
@@ -23896,7 +24101,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return this.isStacked ? false : stickyHeader;
     },
     wrapperClasses: function wrapperClasses() {
-      return [this.isStickyHeader ? 'b-table-sticky-header' : '', this.isResponsive === true ? 'table-responsive' : this.isResponsive ? "table-responsive-".concat(this.responsive) : ''].filter(_utils_identity__WEBPACK_IMPORTED_MODULE_1__.default);
+      return [this.isStickyHeader ? 'b-table-sticky-header' : '', this.isResponsive === true ? 'table-responsive' : this.isResponsive ? "table-responsive-".concat(this.responsive) : ''].filter(_utils_identity__WEBPACK_IMPORTED_MODULE_1__["default"]);
     },
     wrapperStyles: function wrapperStyles() {
       return this.isStickyHeader && !(0,_utils_inspect__WEBPACK_IMPORTED_MODULE_2__.isBoolean)(this.isStickyHeader) ? {
@@ -23925,7 +24130,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     tableAttrs: function tableAttrs() {
       // Preserve user supplied aria-describedby, if provided in `$attrs`
-      var adb = [(this.bvAttrs || {})['aria-describedby'], this.captionId].filter(_utils_identity__WEBPACK_IMPORTED_MODULE_1__.default).join(' ') || null;
+      var adb = [(this.bvAttrs || {})['aria-describedby'], this.captionId].filter(_utils_identity__WEBPACK_IMPORTED_MODULE_1__["default"]).join(' ') || null;
       var items = this.computedItems;
       var filteredItems = this.filteredItems;
       var fields = this.computedFields;
@@ -23971,7 +24176,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       staticClass: 'table b-table',
       class: this.tableClasses,
       attrs: this.tableAttrs
-    }, $content.filter(_utils_identity__WEBPACK_IMPORTED_MODULE_1__.default)); // Add responsive/sticky wrapper if needed and return table
+    }, $content.filter(_utils_identity__WEBPACK_IMPORTED_MODULE_1__["default"])); // Add responsive/sticky wrapper if needed and return table
 
     return this.wrapperClasses.length > 0 ? h('div', {
       key: 'wrap',
@@ -24034,7 +24239,7 @@ var detailsSlotName = 'row-details';
       var parent = this.$parent;
 
       if (tdValue) {
-        var value = (0,_utils_get__WEBPACK_IMPORTED_MODULE_0__.default)(item, key, '');
+        var value = (0,_utils_get__WEBPACK_IMPORTED_MODULE_0__["default"])(item, key, '');
 
         if ((0,_utils_inspect__WEBPACK_IMPORTED_MODULE_1__.isFunction)(tdValue)) {
           return tdValue(value, key, item);
@@ -24051,7 +24256,7 @@ var detailsSlotName = 'row-details';
       var parent = this.$parent;
 
       if (thValue) {
-        var value = (0,_utils_get__WEBPACK_IMPORTED_MODULE_0__.default)(item, key, '');
+        var value = (0,_utils_get__WEBPACK_IMPORTED_MODULE_0__["default"])(item, key, '');
 
         if ((0,_utils_inspect__WEBPACK_IMPORTED_MODULE_1__.isFunction)(thValue)) {
           return thValue(value, key, item, type);
@@ -24068,7 +24273,7 @@ var detailsSlotName = 'row-details';
     getFormattedValue: function getFormattedValue(item, field) {
       var key = field.key;
       var formatter = this.getFieldFormatter(key);
-      var value = (0,_utils_get__WEBPACK_IMPORTED_MODULE_0__.default)(item, key, null);
+      var value = (0,_utils_get__WEBPACK_IMPORTED_MODULE_0__["default"])(item, key, null);
 
       if ((0,_utils_inspect__WEBPACK_IMPORTED_MODULE_1__.isFunction)(formatter)) {
         value = formatter(value, key, item);
@@ -24155,7 +24360,7 @@ var detailsSlotName = 'row-details';
         item: item,
         index: rowIndex,
         field: field,
-        unformatted: (0,_utils_get__WEBPACK_IMPORTED_MODULE_0__.default)(item, key, ''),
+        unformatted: (0,_utils_get__WEBPACK_IMPORTED_MODULE_0__["default"])(item, key, ''),
         value: formatted,
         toggleDetails: this.toggleDetailsFactory(hasDetailsSlot, item),
         detailsShowing: Boolean(item._showDetails)
@@ -24225,7 +24430,7 @@ var detailsSlotName = 'row-details';
 
 
       var primaryKey = this.primaryKey;
-      var primaryKeyValue = (0,_utils_string__WEBPACK_IMPORTED_MODULE_4__.toString)((0,_utils_get__WEBPACK_IMPORTED_MODULE_0__.default)(item, primaryKey)) || null;
+      var primaryKeyValue = (0,_utils_string__WEBPACK_IMPORTED_MODULE_4__.toString)((0,_utils_get__WEBPACK_IMPORTED_MODULE_0__["default"])(item, primaryKey)) || null;
       var rowKey = primaryKeyValue || (0,_utils_string__WEBPACK_IMPORTED_MODULE_4__.toString)(rowIndex); // If primary key is provided, use it to generate a unique ID on each tbody > tr
       // In the format of '{tableId}__row_{primaryKeyValue}'
 
@@ -24386,7 +24591,7 @@ var props = _objectSpread(_objectSpread({}, _tbody__WEBPACK_IMPORTED_MODULE_0__.
 });
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  mixins: [_mixin_tbody_row__WEBPACK_IMPORTED_MODULE_1__.default],
+  mixins: [_mixin_tbody_row__WEBPACK_IMPORTED_MODULE_1__["default"]],
   props: props,
   beforeDestroy: function beforeDestroy() {
     this.$_bodyFieldSlotNameCache = null;
@@ -24481,7 +24686,7 @@ var props = _objectSpread(_objectSpread({}, _tbody__WEBPACK_IMPORTED_MODULE_0__.
       if (this.tbodyRowEvtStopped(evt)) {
         // If table is busy, then don't propagate
         return;
-      } else if ((0,_filter_event__WEBPACK_IMPORTED_MODULE_6__.default)(evt) || (0,_text_selection_active__WEBPACK_IMPORTED_MODULE_7__.default)(this.$el)) {
+      } else if ((0,_filter_event__WEBPACK_IMPORTED_MODULE_6__["default"])(evt) || (0,_text_selection_active__WEBPACK_IMPORTED_MODULE_7__["default"])(this.$el)) {
         // Clicked on a non-disabled control so ignore
         // Or user is selecting text, so ignore
         return;
@@ -24500,7 +24705,7 @@ var props = _objectSpread(_objectSpread({}, _tbody__WEBPACK_IMPORTED_MODULE_0__.
       }
     },
     onTbodyRowDblClicked: function onTbodyRowDblClicked(evt) {
-      if (!this.tbodyRowEvtStopped(evt) && !(0,_filter_event__WEBPACK_IMPORTED_MODULE_6__.default)(evt)) {
+      if (!this.tbodyRowEvtStopped(evt) && !(0,_filter_event__WEBPACK_IMPORTED_MODULE_6__["default"])(evt)) {
         this.emitTbodyRowEvent('row-dblclicked', evt);
       }
     },
@@ -24760,10 +24965,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       if (this.stopIfBusy && this.stopIfBusy(evt)) {
         // If table is busy (via provider) then don't propagate
         return;
-      } else if ((0,_filter_event__WEBPACK_IMPORTED_MODULE_2__.default)(evt)) {
+      } else if ((0,_filter_event__WEBPACK_IMPORTED_MODULE_2__["default"])(evt)) {
         // Clicked on a non-disabled control so ignore
         return;
-      } else if ((0,_text_selection_active__WEBPACK_IMPORTED_MODULE_3__.default)(this.$el)) {
+      } else if ((0,_text_selection_active__WEBPACK_IMPORTED_MODULE_3__["default"])(this.$el)) {
         // User is selecting text, so ignore
 
         /* istanbul ignore next: JSDOM doesn't support getSelection() */
@@ -24793,8 +24998,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           footRowVariant = this.footRowVariant;
       var hasHeadClickListener = isSortable || this.hasListener('head-clicked'); // Reference to `selectAllRows` and `clearSelected()`, if table is selectable
 
-      var selectAllRows = isSelectable ? this.selectAllRows : _utils_noop__WEBPACK_IMPORTED_MODULE_5__.default;
-      var clearSelected = isSelectable ? this.clearSelected : _utils_noop__WEBPACK_IMPORTED_MODULE_5__.default; // Helper function to generate a field <th> cell
+      var selectAllRows = isSelectable ? this.selectAllRows : _utils_noop__WEBPACK_IMPORTED_MODULE_5__["default"];
+      var clearSelected = isSelectable ? this.clearSelected : _utils_noop__WEBPACK_IMPORTED_MODULE_5__["default"]; // Helper function to generate a field <th> cell
 
       var makeCell = function makeCell(field, colIndex) {
         var label = field.label,
@@ -24876,11 +25081,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           staticClass: 'sr-only'
         }, " (".concat(sortLabel, ")")) : null; // Return the header cell
 
-        return h(_th__WEBPACK_IMPORTED_MODULE_9__.BTh, data, [$content, $srLabel].filter(_utils_identity__WEBPACK_IMPORTED_MODULE_10__.default));
+        return h(_th__WEBPACK_IMPORTED_MODULE_9__.BTh, data, [$content, $srLabel].filter(_utils_identity__WEBPACK_IMPORTED_MODULE_10__["default"]));
       }; // Generate the array of <th> cells
 
 
-      var $cells = fields.map(makeCell).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_10__.default); // Generate the row(s)
+      var $cells = fields.map(makeCell).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_10__["default"]); // Generate the row(s)
 
       var $trs = [];
 
@@ -25026,7 +25231,7 @@ var normalizeFields = function normalizeFields(origFields, items) {
 
   if ((0,_utils_inspect__WEBPACK_IMPORTED_MODULE_0__.isArray)(origFields)) {
     // Normalize array Form
-    origFields.filter(_utils_identity__WEBPACK_IMPORTED_MODULE_2__.default).forEach(function (f) {
+    origFields.filter(_utils_identity__WEBPACK_IMPORTED_MODULE_2__["default"]).forEach(function (f) {
       if ((0,_utils_inspect__WEBPACK_IMPORTED_MODULE_0__.isString)(f)) {
         fields.push({
           key: f,
@@ -25204,7 +25409,7 @@ __webpack_require__.r(__webpack_exports__);
 // TODO: Add option to stringify `scopedSlot` items
 
 var stringifyRecordValues = function stringifyRecordValues(row, ignoreFields, includeFields, fieldsObj) {
-  return (0,_utils_inspect__WEBPACK_IMPORTED_MODULE_0__.isObject)(row) ? (0,_stringify_object_values__WEBPACK_IMPORTED_MODULE_1__.default)((0,_sanitize_row__WEBPACK_IMPORTED_MODULE_2__.default)(row, ignoreFields, includeFields, fieldsObj)) :
+  return (0,_utils_inspect__WEBPACK_IMPORTED_MODULE_0__.isObject)(row) ? (0,_stringify_object_values__WEBPACK_IMPORTED_MODULE_1__["default"])((0,_sanitize_row__WEBPACK_IMPORTED_MODULE_2__["default"])(row, ignoreFields, includeFields, fieldsObj)) :
   /* istanbul ignore next */
   '';
 };
@@ -25354,14 +25559,14 @@ __webpack_require__.r(__webpack_exports__);
  // b-table-lite component definition
 // @vue/component
 
-var BTableLite = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BTableLite = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_TABLE_LITE,
   // Order of mixins is important!
   // They are merged from first to last, followed by this component.
   mixins: [// Required mixins
-  _mixins_has_listener__WEBPACK_IMPORTED_MODULE_2__.default, _mixins_id__WEBPACK_IMPORTED_MODULE_3__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_4__.default, _helpers_mixin_items__WEBPACK_IMPORTED_MODULE_5__.default, _helpers_mixin_table_renderer__WEBPACK_IMPORTED_MODULE_6__.default, _helpers_mixin_stacked__WEBPACK_IMPORTED_MODULE_7__.default, _helpers_mixin_thead__WEBPACK_IMPORTED_MODULE_8__.default, _helpers_mixin_tfoot__WEBPACK_IMPORTED_MODULE_9__.default, _helpers_mixin_tbody__WEBPACK_IMPORTED_MODULE_10__.default, // Features Mixins
+  _mixins_has_listener__WEBPACK_IMPORTED_MODULE_2__["default"], _mixins_id__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_4__["default"], _helpers_mixin_items__WEBPACK_IMPORTED_MODULE_5__["default"], _helpers_mixin_table_renderer__WEBPACK_IMPORTED_MODULE_6__["default"], _helpers_mixin_stacked__WEBPACK_IMPORTED_MODULE_7__["default"], _helpers_mixin_thead__WEBPACK_IMPORTED_MODULE_8__["default"], _helpers_mixin_tfoot__WEBPACK_IMPORTED_MODULE_9__["default"], _helpers_mixin_tbody__WEBPACK_IMPORTED_MODULE_10__["default"], // Features Mixins
   // These are pretty lightweight, and are useful for lightweight tables
-  _helpers_mixin_caption__WEBPACK_IMPORTED_MODULE_11__.default, _helpers_mixin_colgroup__WEBPACK_IMPORTED_MODULE_12__.default] // render function provided by table-renderer mixin
+  _helpers_mixin_caption__WEBPACK_IMPORTED_MODULE_11__["default"], _helpers_mixin_colgroup__WEBPACK_IMPORTED_MODULE_12__["default"]] // render function provided by table-renderer mixin
 
 });
 
@@ -25393,15 +25598,15 @@ __webpack_require__.r(__webpack_exports__);
  // b-table-simple component definition
 // @vue/component
 
-var BTableSimple = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BTableSimple = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_TABLE_SIMPLE,
   // Order of mixins is important!
   // They are merged from first to last, followed by this component.
   mixins: [// Required mixins
-  _mixins_id__WEBPACK_IMPORTED_MODULE_2__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_3__.default, _helpers_mixin_table_renderer__WEBPACK_IMPORTED_MODULE_4__.default, // feature mixin
+  _mixins_id__WEBPACK_IMPORTED_MODULE_2__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_3__["default"], _helpers_mixin_table_renderer__WEBPACK_IMPORTED_MODULE_4__["default"], // feature mixin
   // Stacked requires extra handling by users via
   // the table cell `stacked-heading` prop
-  _helpers_mixin_stacked__WEBPACK_IMPORTED_MODULE_5__.default],
+  _helpers_mixin_stacked__WEBPACK_IMPORTED_MODULE_5__["default"]],
   computed: {
     isTableSimple: function isTableSimple() {
       return true;
@@ -25472,14 +25677,14 @@ __webpack_require__.r(__webpack_exports__);
  // b-table component definition
 // @vue/component
 
-var BTable = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BTable = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_TABLE,
   // Order of mixins is important!
   // They are merged from first to last, followed by this component
   mixins: [// General mixins
-  _mixins_attrs__WEBPACK_IMPORTED_MODULE_2__.default, _mixins_has_listener__WEBPACK_IMPORTED_MODULE_3__.default, _mixins_id__WEBPACK_IMPORTED_MODULE_4__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_5__.default, // Required table mixins
-  _helpers_mixin_items__WEBPACK_IMPORTED_MODULE_6__.default, _helpers_mixin_table_renderer__WEBPACK_IMPORTED_MODULE_7__.default, _helpers_mixin_stacked__WEBPACK_IMPORTED_MODULE_8__.default, _helpers_mixin_thead__WEBPACK_IMPORTED_MODULE_9__.default, _helpers_mixin_tfoot__WEBPACK_IMPORTED_MODULE_10__.default, _helpers_mixin_tbody__WEBPACK_IMPORTED_MODULE_11__.default, // Table features mixins
-  _helpers_mixin_stacked__WEBPACK_IMPORTED_MODULE_8__.default, _helpers_mixin_filtering__WEBPACK_IMPORTED_MODULE_12__.default, _helpers_mixin_sorting__WEBPACK_IMPORTED_MODULE_13__.default, _helpers_mixin_pagination__WEBPACK_IMPORTED_MODULE_14__.default, _helpers_mixin_caption__WEBPACK_IMPORTED_MODULE_15__.default, _helpers_mixin_colgroup__WEBPACK_IMPORTED_MODULE_16__.default, _helpers_mixin_selectable__WEBPACK_IMPORTED_MODULE_17__.default, _helpers_mixin_empty__WEBPACK_IMPORTED_MODULE_18__.default, _helpers_mixin_top_row__WEBPACK_IMPORTED_MODULE_19__.default, _helpers_mixin_bottom_row__WEBPACK_IMPORTED_MODULE_20__.default, _helpers_mixin_busy__WEBPACK_IMPORTED_MODULE_21__.default, _helpers_mixin_provider__WEBPACK_IMPORTED_MODULE_22__.default] // Render function is provided by table-renderer mixin
+  _mixins_attrs__WEBPACK_IMPORTED_MODULE_2__["default"], _mixins_has_listener__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_id__WEBPACK_IMPORTED_MODULE_4__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_5__["default"], // Required table mixins
+  _helpers_mixin_items__WEBPACK_IMPORTED_MODULE_6__["default"], _helpers_mixin_table_renderer__WEBPACK_IMPORTED_MODULE_7__["default"], _helpers_mixin_stacked__WEBPACK_IMPORTED_MODULE_8__["default"], _helpers_mixin_thead__WEBPACK_IMPORTED_MODULE_9__["default"], _helpers_mixin_tfoot__WEBPACK_IMPORTED_MODULE_10__["default"], _helpers_mixin_tbody__WEBPACK_IMPORTED_MODULE_11__["default"], // Table features mixins
+  _helpers_mixin_stacked__WEBPACK_IMPORTED_MODULE_8__["default"], _helpers_mixin_filtering__WEBPACK_IMPORTED_MODULE_12__["default"], _helpers_mixin_sorting__WEBPACK_IMPORTED_MODULE_13__["default"], _helpers_mixin_pagination__WEBPACK_IMPORTED_MODULE_14__["default"], _helpers_mixin_caption__WEBPACK_IMPORTED_MODULE_15__["default"], _helpers_mixin_colgroup__WEBPACK_IMPORTED_MODULE_16__["default"], _helpers_mixin_selectable__WEBPACK_IMPORTED_MODULE_17__["default"], _helpers_mixin_empty__WEBPACK_IMPORTED_MODULE_18__["default"], _helpers_mixin_top_row__WEBPACK_IMPORTED_MODULE_19__["default"], _helpers_mixin_bottom_row__WEBPACK_IMPORTED_MODULE_20__["default"], _helpers_mixin_busy__WEBPACK_IMPORTED_MODULE_21__["default"], _helpers_mixin_provider__WEBPACK_IMPORTED_MODULE_22__["default"]] // Render function is provided by table-renderer mixin
 
 });
 
@@ -25527,10 +25732,10 @@ var props = {
 //   to the child elements, so this can be converted to a functional component
 // @vue/component
 
-var BTbody = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BTbody = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_TBODY,
   // Mixin order is important!
-  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_2__.default, _mixins_listeners__WEBPACK_IMPORTED_MODULE_3__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_4__.default],
+  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_2__["default"], _mixins_listeners__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_4__["default"]],
   provide: function provide() {
     return {
       bvTableRowGroup: this
@@ -25696,10 +25901,10 @@ var props = {
 //   to the child elements, so this can be converted to a functional component
 // @vue/component
 
-var BTd = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
+var BTd = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_3__.NAME_TABLE_CELL,
   // Mixin order is important!
-  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_4__.default, _mixins_listeners__WEBPACK_IMPORTED_MODULE_5__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_6__.default],
+  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_4__["default"], _mixins_listeners__WEBPACK_IMPORTED_MODULE_5__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_6__["default"]],
   inject: {
     bvTableTr: {
       /* istanbul ignore next */
@@ -25877,10 +26082,10 @@ var props = {
 //   to the child elements, so this can be converted to a functional component
 // @vue/component
 
-var BTfoot = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BTfoot = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_TFOOT,
   // Mixin order is important!
-  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_2__.default, _mixins_listeners__WEBPACK_IMPORTED_MODULE_3__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_4__.default],
+  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_2__["default"], _mixins_listeners__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_4__["default"]],
   provide: function provide() {
     return {
       bvTableRowGroup: this
@@ -25974,7 +26179,7 @@ __webpack_require__.r(__webpack_exports__);
 //   to the child elements, so this can be converted to a functional component
 // @vue/component
 
-var BTh = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BTh = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_TH,
   extends: _td__WEBPACK_IMPORTED_MODULE_2__.BTd,
   computed: {
@@ -26026,10 +26231,10 @@ var props = {
 //   to the child elements, so this can be converted to a functional component
 // @vue/component
 
-var BThead = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BThead = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_THEAD,
   // Mixin order is important!
-  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_2__.default, _mixins_listeners__WEBPACK_IMPORTED_MODULE_3__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_4__.default],
+  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_2__["default"], _mixins_listeners__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_4__["default"]],
   provide: function provide() {
     return {
       bvTableRowGroup: this
@@ -26144,10 +26349,10 @@ var DARK = 'dark'; // TODO:
 //   to the child elements, so this can be converted to a functional component
 // @vue/component
 
-var BTr = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BTr = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_TR,
   // Mixin order is important!
-  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_2__.default, _mixins_listeners__WEBPACK_IMPORTED_MODULE_3__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_4__.default],
+  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_2__["default"], _mixins_listeners__WEBPACK_IMPORTED_MODULE_3__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_4__["default"]],
   provide: function provide() {
     return {
       bvTableTr: this
@@ -26294,9 +26499,9 @@ __webpack_require__.r(__webpack_exports__);
 
  // @vue/component
 
-var BTab = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BTab = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_TAB,
-  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_2__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_3__.default],
+  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_2__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_3__["default"]],
   inject: {
     bvTabs: {
       default: function _default() {
@@ -26477,7 +26682,7 @@ var BTab = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
       }
     }, // Render content lazily if requested
     [localActive || !this.computedLazy ? this.normalizeSlot() : h()]);
-    return h(_utils_bv_transition__WEBPACK_IMPORTED_MODULE_5__.default, {
+    return h(_utils_bv_transition__WEBPACK_IMPORTED_MODULE_5__["default"], {
       props: {
         mode: 'out-in',
         noFade: this.computedNoFade
@@ -26555,7 +26760,7 @@ var notDisabled = function notDisabled(tab) {
 // @vue/component
 
 
-var BVTabButton = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
+var BVTabButton = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_3__.NAME_TAB_BUTTON_HELPER,
   inject: {
     bvTabs: {
@@ -26702,9 +26907,9 @@ var BVTabButton = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend(
   }
 }); // @vue/component
 
-var BTabs = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
+var BTabs = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_3__.NAME_TABS,
-  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_9__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_10__.default],
+  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_9__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_10__["default"]],
   provide: function provide() {
     return {
       bvTabs: this
@@ -26852,7 +27057,7 @@ var BTabs = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
       // If tabs added, removed, or re-ordered, we emit a `changed` event.
       // We use `tab._uid` instead of `tab.safeId()`, as the later is changed
       // in a nextTick if no explicit ID is provided, causing duplicate emits.
-      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_12__.default)(newVal.map(function (t) {
+      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_12__["default"])(newVal.map(function (t) {
         return t._uid;
       }), oldVal.map(function (t) {
         return t._uid;
@@ -26968,7 +27173,7 @@ var BTabs = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
         }; // Watch for changes to <b-tab> sub components
 
 
-        this.$_observer = (0,_utils_observe_dom__WEBPACK_IMPORTED_MODULE_14__.default)(this.$refs.tabsContainer, handler, {
+        this.$_observer = (0,_utils_observe_dom__WEBPACK_IMPORTED_MODULE_14__["default"])(this.$refs.tabsContainer, handler, {
           childList: true,
           subtree: false,
           attributes: true,
@@ -26998,12 +27203,12 @@ var BTabs = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_2__.default.extend({
         }).join(', ');
         order = (0,_utils_dom__WEBPACK_IMPORTED_MODULE_4__.selectAll)(selector, this.$el).map(function (el) {
           return el.id;
-        }).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_15__.default);
+        }).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_15__["default"]);
       } // Stable sort keeps the original order if not found in the `order` array,
       // which will be an empty array before mount
 
 
-      return (0,_utils_stable_sort__WEBPACK_IMPORTED_MODULE_16__.default)(tabs, function (a, b) {
+      return (0,_utils_stable_sort__WEBPACK_IMPORTED_MODULE_16__["default"])(tabs, function (a, b) {
         return order.indexOf(a.safeId()) - order.indexOf(b.safeId());
       });
     },
@@ -27442,9 +27647,9 @@ var formatHMS = function formatHMS(_ref) {
 }; // @vue/component
 
 
-var BTime = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_6__.default.extend({
+var BTime = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_6__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_TIME,
-  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_7__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_8__.default],
+  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_7__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_8__["default"]],
   model: {
     prop: 'value',
     event: 'input'
@@ -27588,7 +27793,7 @@ var BTime = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_6__.default.extend({
     },
     resolvedOptions: function resolvedOptions() {
       // Resolved locale options
-      var locale = (0,_utils_array__WEBPACK_IMPORTED_MODULE_9__.concat)(this.locale).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_10__.default);
+      var locale = (0,_utils_array__WEBPACK_IMPORTED_MODULE_9__.concat)(this.locale).filter(_utils_identity__WEBPACK_IMPORTED_MODULE_10__["default"]);
       var options = {
         hour: NUMERIC,
         minute: NUMERIC,
@@ -27651,7 +27856,7 @@ var BTime = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_6__.default.extend({
       return this.safeId() || null;
     },
     computedAriaLabelledby: function computedAriaLabelledby() {
-      return [this.ariaLabelledby, this.valueId].filter(_utils_identity__WEBPACK_IMPORTED_MODULE_10__.default).join(' ') || null;
+      return [this.ariaLabelledby, this.valueId].filter(_utils_identity__WEBPACK_IMPORTED_MODULE_10__["default"]).join(' ') || null;
     },
     timeFormatter: function timeFormatter() {
       // Returns a formatter function reference
@@ -27725,7 +27930,7 @@ var BTime = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_6__.default.extend({
   },
   watch: {
     value: function value(newVal, oldVal) {
-      if (newVal !== oldVal && !(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_14__.default)(parseHMS(newVal), parseHMS(this.computedHMS))) {
+      if (newVal !== oldVal && !(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_14__["default"])(parseHMS(newVal), parseHMS(this.computedHMS))) {
         var _parseHMS = parseHMS(newVal),
             hours = _parseHMS.hours,
             minutes = _parseHMS.minutes,
@@ -27744,7 +27949,7 @@ var BTime = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_6__.default.extend({
       }
     },
     context: function context(newVal, oldVal) {
-      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_14__.default)(newVal, oldVal)) {
+      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_14__["default"])(newVal, oldVal)) {
         this.$emit('context', newVal);
       }
     },
@@ -28030,7 +28235,7 @@ var BTime = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_6__.default.extend({
       attrs: {
         id: valueId,
         role: 'status',
-        for: spinIds.filter(_utils_identity__WEBPACK_IMPORTED_MODULE_10__.default).join(' ') || null,
+        for: spinIds.filter(_utils_identity__WEBPACK_IMPORTED_MODULE_10__["default"]).join(' ') || null,
         tabindex: this.disabled ? null : '-1',
         'aria-live': this.isLive ? 'polite' : 'off',
         'aria-atomic': 'true'
@@ -28513,9 +28718,9 @@ var props = _objectSpread({
   }
 }, linkProps); // @vue/component
 
-var BToast = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_5__.default.extend({
+var BToast = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_5__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_4__.NAME_TOAST,
-  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_6__.default, _mixins_id__WEBPACK_IMPORTED_MODULE_7__.default, _mixins_listen_on_root__WEBPACK_IMPORTED_MODULE_8__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_9__.default, _mixins_scoped_style_attrs__WEBPACK_IMPORTED_MODULE_10__.default],
+  mixins: [_mixins_attrs__WEBPACK_IMPORTED_MODULE_6__["default"], _mixins_id__WEBPACK_IMPORTED_MODULE_7__["default"], _mixins_listen_on_root__WEBPACK_IMPORTED_MODULE_8__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_9__["default"], _mixins_scoped_style_attrs__WEBPACK_IMPORTED_MODULE_10__["default"]],
   inheritAttrs: false,
   model: {
     prop: 'visible',
@@ -28863,7 +29068,7 @@ var BToast = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_5__.default.extend({
         'aria-live': this.isHiding ? null : this.isStatus ? 'polite' : 'assertive',
         'aria-atomic': this.isHiding ? null : 'true'
       })
-    }, [h(_utils_bv_transition__WEBPACK_IMPORTED_MODULE_22__.default, {
+    }, [h(_utils_bv_transition__WEBPACK_IMPORTED_MODULE_22__["default"], {
       props: {
         noFade: this.noFade
       },
@@ -28934,7 +29139,7 @@ var props = {
 
 }; // @vue/component
 
-var DefaultTransition = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_3__.default.extend({
+var DefaultTransition = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_3__["default"].extend({
   data: function data() {
     return {
       // Transition classes base name
@@ -28968,7 +29173,7 @@ var DefaultTransition = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_3__.default.e
   }
 }); // @vue/component
 
-var BToaster = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_3__.default.extend({
+var BToaster = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_3__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_2__.NAME_TOASTER,
   props: props,
   data: function data() {
@@ -29106,7 +29311,7 @@ var OffsetMap = {
   LEFTBOTTOM: +1
 }; // @vue/component
 
-var BVPopper = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BVPopper = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_POPPER,
   props: {
     target: {
@@ -29281,7 +29486,7 @@ var BVPopper = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
       this.destroyPopper(); // We use `el` rather than `this.$el` just in case the original
       // mountpoint root element type was changed by the template
 
-      this.$_popper = new popper_js__WEBPACK_IMPORTED_MODULE_5__.default(this.target, el, this.popperConfig);
+      this.$_popper = new popper_js__WEBPACK_IMPORTED_MODULE_5__["default"](this.target, el, this.popperConfig);
     },
     destroyPopper: function destroyPopper() {
       this.$_popper && this.$_popper.destroy();
@@ -29362,10 +29567,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
  // @vue/component
 
-var BVTooltipTemplate = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BVTooltipTemplate = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_TOOLTIP_TEMPLATE,
   extends: _bv_popper__WEBPACK_IMPORTED_MODULE_2__.BVPopper,
-  mixins: [_mixins_scoped_style_attrs__WEBPACK_IMPORTED_MODULE_3__.default],
+  mixins: [_mixins_scoped_style_attrs__WEBPACK_IMPORTED_MODULE_3__["default"]],
   props: {
     // Other non-reactive (while open) props are pulled in from BVPopper
     id: {
@@ -29583,7 +29788,7 @@ var templateData = {
   html: false
 }; // @vue/component
 
-var BVTooltip = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BVTooltip = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_TOOLTIP_HELPER,
   data: function data() {
     return _objectSpread(_objectSpread({}, templateData), {}, {
@@ -29653,7 +29858,7 @@ var BVTooltip = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
       // Triggers have changed, so re-register them
 
       /* istanbul ignore next */
-      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_6__.default)(newTriggers, oldTriggers)) {
+      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_6__["default"])(newTriggers, oldTriggers)) {
         this.$nextTick(function () {
           // Disable trigger listeners
           _this.unListen(); // Clear any active triggers that are no longer in the list of triggers
@@ -29699,7 +29904,7 @@ var BVTooltip = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
     this.$_hoverState = '';
     this.$_visibleInterval = null;
     this.$_enabled = !this.disabled;
-    this.$_noop = _utils_noop__WEBPACK_IMPORTED_MODULE_7__.default.bind(this); // Destroy ourselves when the parent is destroyed
+    this.$_noop = _utils_noop__WEBPACK_IMPORTED_MODULE_7__["default"].bind(this); // Destroy ourselves when the parent is destroyed
 
     if (this.$parent) {
       this.$parent.$once('hook:beforeDestroy', function () {
@@ -29717,7 +29922,7 @@ var BVTooltip = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
 
       if (target && (0,_utils_dom__WEBPACK_IMPORTED_MODULE_8__.contains)(document.body, target)) {
         // Copy the parent's scoped style attribute
-        _this2.scopeId = (0,_utils_get_scope_id__WEBPACK_IMPORTED_MODULE_9__.default)(_this2.$parent); // Set up all trigger handlers and listeners
+        _this2.scopeId = (0,_utils_get_scope_id__WEBPACK_IMPORTED_MODULE_9__["default"])(_this2.$parent); // Set up all trigger handlers and listeners
 
         _this2.listen();
       } else {
@@ -30558,7 +30763,7 @@ __webpack_require__.r(__webpack_exports__);
 
  // @vue/component
 
-var BTooltip = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BTooltip = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_TOOLTIP,
   inheritAttrs: false,
   props: {
@@ -30772,7 +30977,7 @@ var BTooltip = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
       _this2.updateContent(); // Pass down the scoped style attribute if available
 
 
-      var scopeId = (0,_utils_get_scope_id__WEBPACK_IMPORTED_MODULE_6__.default)(_this2) || (0,_utils_get_scope_id__WEBPACK_IMPORTED_MODULE_6__.default)(_this2.$parent); // Create the instance
+      var scopeId = (0,_utils_get_scope_id__WEBPACK_IMPORTED_MODULE_6__["default"])(_this2) || (0,_utils_get_scope_id__WEBPACK_IMPORTED_MODULE_6__["default"])(_this2.$parent); // Create the instance
 
       var $toolpop = _this2.$_toolpop = new Component({
         parent: _this2,
@@ -31909,7 +32114,7 @@ var parseBindings = function parseBindings(bindings, vnode)
 
   var selectedTriggers = {}; // Parse current config object trigger
 
-  (0,_utils_array__WEBPACK_IMPORTED_MODULE_5__.concat)(config.trigger || '').filter(_utils_identity__WEBPACK_IMPORTED_MODULE_6__.default).join(' ').trim().toLowerCase().split(spacesRE).forEach(function (trigger) {
+  (0,_utils_array__WEBPACK_IMPORTED_MODULE_5__.concat)(config.trigger || '').filter(_utils_identity__WEBPACK_IMPORTED_MODULE_6__["default"]).join(' ').trim().toLowerCase().split(spacesRE).forEach(function (trigger) {
     if (validTriggers[trigger]) {
       selectedTriggers[trigger] = true;
     }
@@ -31953,7 +32158,7 @@ var applyPopover = function applyPopover(el, bindings, vnode) {
     el[BV_POPOVER] = new _components_popover_helpers_bv_popover__WEBPACK_IMPORTED_MODULE_8__.BVPopover({
       parent: $parent,
       // Add the parent's scoped style attribute data
-      _scopeId: (0,_utils_get_scope_id__WEBPACK_IMPORTED_MODULE_9__.default)($parent, undefined)
+      _scopeId: (0,_utils_get_scope_id__WEBPACK_IMPORTED_MODULE_9__["default"])($parent, undefined)
     });
     el[BV_POPOVER].__bv_prev_data__ = {};
     el[BV_POPOVER].$on('show', function ()
@@ -31997,7 +32202,7 @@ var applyPopover = function applyPopover(el, bindings, vnode) {
   var oldData = el[BV_POPOVER].__bv_prev_data__;
   el[BV_POPOVER].__bv_prev_data__ = data;
 
-  if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_10__.default)(data, oldData)) {
+  if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_10__["default"])(data, oldData)) {
     // We only update the instance if data has changed
     var newData = {
       target: el
@@ -32304,7 +32509,7 @@ var ScrollSpy
       this.$targetsObserver = null;
 
       if (on) {
-        this.$targetsObserver = (0,_utils_observe_dom__WEBPACK_IMPORTED_MODULE_5__.default)(this.$el, function () {
+        this.$targetsObserver = (0,_utils_observe_dom__WEBPACK_IMPORTED_MODULE_5__["default"])(this.$el, function () {
           _this3.handleEvent('mutation');
         }, {
           subtree: true,
@@ -32312,7 +32517,7 @@ var ScrollSpy
           attributes: true,
           attributeFilter: ['href']
         });
-        this.$scrollerObserver = (0,_utils_observe_dom__WEBPACK_IMPORTED_MODULE_5__.default)(this.getScroller(), function () {
+        this.$scrollerObserver = (0,_utils_observe_dom__WEBPACK_IMPORTED_MODULE_5__["default"])(this.getScroller(), function () {
           _this3.handleEvent('mutation');
         }, {
           subtree: true,
@@ -32667,7 +32872,7 @@ var parseBindings = function parseBindings(bindings)
     // Value is config object
     // Filter the object based on our supported config options
     (0,_utils_object__WEBPACK_IMPORTED_MODULE_0__.keys)(bindings.value).filter(function (k) {
-      return !!_scrollspy_class__WEBPACK_IMPORTED_MODULE_4__.default.DefaultType[k];
+      return !!_scrollspy_class__WEBPACK_IMPORTED_MODULE_4__["default"].DefaultType[k];
     }).forEach(function (k) {
       config[k] = bindings.value[k];
     });
@@ -32690,7 +32895,7 @@ var applyScrollspy = function applyScrollspy(el, bindings, vnode)
   if (el[BV_SCROLLSPY]) {
     el[BV_SCROLLSPY].updateConfig(config, vnode.context.$root);
   } else {
-    el[BV_SCROLLSPY] = new _scrollspy_class__WEBPACK_IMPORTED_MODULE_4__.default(el, config, vnode.context.$root);
+    el[BV_SCROLLSPY] = new _scrollspy_class__WEBPACK_IMPORTED_MODULE_4__["default"](el, config, vnode.context.$root);
   }
 }; // Remove ScrollSpy on our element
 
@@ -33009,7 +33214,7 @@ var handleUpdate = function handleUpdate(el, binding, vnode) {
     addClickListener(el, vnode);
   }); // If targets array has changed, update
 
-  if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_9__.default)(targets, el[BV_TOGGLE_TARGETS])) {
+  if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_9__["default"])(targets, el[BV_TOGGLE_TARGETS])) {
     // Update targets array to element storage
     el[BV_TOGGLE_TARGETS] = targets; // Ensure `aria-controls` is up to date
     // Request a state update from targets so that we can
@@ -33248,7 +33453,7 @@ var parseBindings = function parseBindings(bindings, vnode)
 
   var selectedTriggers = {}; // Parse current config object trigger
 
-  (0,_utils_array__WEBPACK_IMPORTED_MODULE_5__.concat)(config.trigger || '').filter(_utils_identity__WEBPACK_IMPORTED_MODULE_6__.default).join(' ').trim().toLowerCase().split(spacesRE).forEach(function (trigger) {
+  (0,_utils_array__WEBPACK_IMPORTED_MODULE_5__.concat)(config.trigger || '').filter(_utils_identity__WEBPACK_IMPORTED_MODULE_6__["default"]).join(' ').trim().toLowerCase().split(spacesRE).forEach(function (trigger) {
     if (validTriggers[trigger]) {
       selectedTriggers[trigger] = true;
     }
@@ -33293,7 +33498,7 @@ var applyTooltip = function applyTooltip(el, bindings, vnode) {
     el[BV_TOOLTIP] = new _components_tooltip_helpers_bv_tooltip__WEBPACK_IMPORTED_MODULE_8__.BVTooltip({
       parent: $parent,
       // Add the parent's scoped style attribute data
-      _scopeId: (0,_utils_get_scope_id__WEBPACK_IMPORTED_MODULE_9__.default)($parent, undefined)
+      _scopeId: (0,_utils_get_scope_id__WEBPACK_IMPORTED_MODULE_9__["default"])($parent, undefined)
     });
     el[BV_TOOLTIP].__bv_prev_data__ = {};
     el[BV_TOOLTIP].$on('show', function ()
@@ -33328,7 +33533,7 @@ var applyTooltip = function applyTooltip(el, bindings, vnode) {
   var oldData = el[BV_TOOLTIP].__bv_prev_data__;
   el[BV_TOOLTIP].__bv_prev_data__ = data;
 
-  if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_10__.default)(data, oldData)) {
+  if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_10__["default"])(data, oldData)) {
     // We only update the instance if data has changed
     var newData = {
       target: el
@@ -33605,7 +33810,7 @@ var componentUpdated = function componentUpdated(el, _ref2, vnode) {
   modifiers = (0,_utils_object__WEBPACK_IMPORTED_MODULE_2__.clone)(modifiers);
   /* istanbul ignore next */
 
-  if (el && (value !== oldValue || !el[OBSERVER_PROP_NAME] || !(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_4__.default)(modifiers, el[OBSERVER_PROP_NAME]._prevModifiers))) {
+  if (el && (value !== oldValue || !el[OBSERVER_PROP_NAME] || !(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_4__["default"])(modifiers, el[OBSERVER_PROP_NAME]._prevModifiers))) {
     // Re-bind on element
     bind(el, {
       value: value,
@@ -33722,7 +33927,7 @@ var stackedAttrs = {
 }; // Shared private base component to reduce bundle/runtime size
 // @vue/component
 
-var BVIconBase = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BVIconBase = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_ICON_BASE,
   functional: true,
   props: _objectSpread({
@@ -33756,7 +33961,7 @@ var BVIconBase = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
     var hasScale = flipH || flipV || scale !== 1;
     var hasTransforms = hasScale || rotate;
     var hasShift = shiftH || shiftV;
-    var transforms = [hasTransforms ? 'translate(8 8)' : null, hasScale ? "scale(".concat((flipH ? -1 : 1) * scale, " ").concat((flipV ? -1 : 1) * scale, ")") : null, rotate ? "rotate(".concat(rotate, ")") : null, hasTransforms ? 'translate(-8 -8)' : null].filter(_utils_identity__WEBPACK_IMPORTED_MODULE_4__.default); // Handling stacked icons
+    var transforms = [hasTransforms ? 'translate(8 8)' : null, hasScale ? "scale(".concat((flipH ? -1 : 1) * scale, " ").concat((flipV ? -1 : 1) * scale, ")") : null, rotate ? "rotate(".concat(rotate, ")") : null, hasTransforms ? 'translate(-8 -8)' : null].filter(_utils_identity__WEBPACK_IMPORTED_MODULE_4__["default"]); // Handling stacked icons
 
     var isStacked = props.stacked;
     var hasContent = !(0,_utils_inspect__WEBPACK_IMPORTED_MODULE_5__.isUndefinedOrNull)(props.content); // We wrap the content in a `<g>` for handling the transforms (except shift)
@@ -33849,7 +34054,7 @@ var makeIcon = function makeIcon(name, content) {
   var iconTitle = kebabName.replace(/-/g, ' ');
   var svgContent = (0,_utils_string__WEBPACK_IMPORTED_MODULE_0__.trim)(content || ''); // Return the icon component definition
 
-  return /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_1__.default.extend({
+  return /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_1__["default"].extend({
     name: iconName,
     functional: true,
     props: _objectSpread(_objectSpread({}, _icon_base__WEBPACK_IMPORTED_MODULE_2__.commonIconProps), {}, {
@@ -33915,7 +34120,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
  // Helper BIcon component
 // Requires the requested icon component to be installed
 
-var BIcon = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BIcon = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_ICON,
   functional: true,
   props: _objectSpread(_objectSpread({
@@ -36245,7 +36450,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
  // @vue/component
 
-var BIconstack = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BIconstack = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_ICONSTACK,
   functional: true,
   props: _objectSpread({}, _helpers_icon_base__WEBPACK_IMPORTED_MODULE_2__.commonIconProps),
@@ -39473,7 +39678,7 @@ var commonProps = {
 }; // @vue/component
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  mixins: [_id__WEBPACK_IMPORTED_MODULE_2__.default, _click_out__WEBPACK_IMPORTED_MODULE_3__.default, _focus_in__WEBPACK_IMPORTED_MODULE_4__.default],
+  mixins: [_id__WEBPACK_IMPORTED_MODULE_2__["default"], _click_out__WEBPACK_IMPORTED_MODULE_3__["default"], _focus_in__WEBPACK_IMPORTED_MODULE_4__["default"]],
   provide: function provide() {
     return {
       bvDropdown: this
@@ -39599,7 +39804,7 @@ var commonProps = {
 
 
       if (!this.inNavbar) {
-        if (typeof popper_js__WEBPACK_IMPORTED_MODULE_7__.default === 'undefined') {
+        if (typeof popper_js__WEBPACK_IMPORTED_MODULE_7__["default"] === 'undefined') {
           /* istanbul ignore next */
           (0,_utils_warn__WEBPACK_IMPORTED_MODULE_8__.warn)('Popper.js not found. Falling back to CSS positioning', _constants_components__WEBPACK_IMPORTED_MODULE_9__.NAME_DROPDOWN);
         } else {
@@ -39633,7 +39838,7 @@ var commonProps = {
     },
     createPopper: function createPopper(element) {
       this.destroyPopper();
-      this.$_popper = new popper_js__WEBPACK_IMPORTED_MODULE_7__.default(element, this.$refs.menu, this.getPopperConfig());
+      this.$_popper = new popper_js__WEBPACK_IMPORTED_MODULE_7__["default"](element, this.$refs.menu, this.getPopperConfig());
     },
     // Ensure popper event listeners are removed cleanly
     destroyPopper: function destroyPopper() {
@@ -40036,13 +40241,13 @@ var OPTIONS_OBJECT_DEPRECATED_MSG = 'Setting prop "options" to an object is depr
 
       // When the option is an object, normalize it
       if ((0,_utils_inspect__WEBPACK_IMPORTED_MODULE_0__.isPlainObject)(option)) {
-        var value = (0,_utils_get__WEBPACK_IMPORTED_MODULE_1__.default)(option, this.valueField);
-        var text = (0,_utils_get__WEBPACK_IMPORTED_MODULE_1__.default)(option, this.textField);
+        var value = (0,_utils_get__WEBPACK_IMPORTED_MODULE_1__["default"])(option, this.valueField);
+        var text = (0,_utils_get__WEBPACK_IMPORTED_MODULE_1__["default"])(option, this.textField);
         return {
           value: (0,_utils_inspect__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(value) ? key || text : value,
           text: (0,_utils_html__WEBPACK_IMPORTED_MODULE_2__.stripTags)(String((0,_utils_inspect__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(text) ? key : text)),
-          html: (0,_utils_get__WEBPACK_IMPORTED_MODULE_1__.default)(option, this.htmlField),
-          disabled: Boolean((0,_utils_get__WEBPACK_IMPORTED_MODULE_1__.default)(option, this.disabledField))
+          html: (0,_utils_get__WEBPACK_IMPORTED_MODULE_1__["default"])(option, this.htmlField),
+          disabled: Boolean((0,_utils_get__WEBPACK_IMPORTED_MODULE_1__["default"])(option, this.disabledField))
         };
       } // Otherwise create an `<option>` object from the given value
 
@@ -40105,7 +40310,7 @@ __webpack_require__.r(__webpack_exports__);
  // @vue/component
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  mixins: [_normalize_slot__WEBPACK_IMPORTED_MODULE_0__.default],
+  mixins: [_normalize_slot__WEBPACK_IMPORTED_MODULE_0__["default"]],
   model: {
     prop: 'checked',
     event: 'input'
@@ -40166,12 +40371,12 @@ __webpack_require__.r(__webpack_exports__);
   },
   watch: {
     checked: function checked(newVal) {
-      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_1__.default)(newVal, this.localChecked)) {
+      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_1__["default"])(newVal, this.localChecked)) {
         this.localChecked = newVal;
       }
     },
     localChecked: function localChecked(newValue, oldValue) {
-      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_1__.default)(newValue, oldValue)) {
+      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_1__["default"])(newValue, oldValue)) {
         this.$emit('input', newValue);
       }
     }
@@ -40240,7 +40445,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
  // @vue/component
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  mixins: [_attrs__WEBPACK_IMPORTED_MODULE_0__.default, _normalize_slot__WEBPACK_IMPORTED_MODULE_1__.default],
+  mixins: [_attrs__WEBPACK_IMPORTED_MODULE_0__["default"], _normalize_slot__WEBPACK_IMPORTED_MODULE_1__["default"]],
   inheritAttrs: false,
   model: {
     prop: 'checked',
@@ -40380,7 +40585,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   watch: {
     checked: function checked(newValue) {
-      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_2__.default)(newValue, this.computedLocalChecked)) {
+      if (!(0,_utils_loose_equal__WEBPACK_IMPORTED_MODULE_2__["default"])(newValue, this.computedLocalChecked)) {
         this.computedLocalChecked = newValue;
       }
     }
@@ -41554,7 +41759,7 @@ var DEFAULT_LIMIT = 5; // --- Helper methods ---
 // Make an array of N to N+X
 
 var makePageArray = function makePageArray(startNumber, numberOfPages) {
-  return (0,_utils_range__WEBPACK_IMPORTED_MODULE_0__.default)(numberOfPages).map(function (val, i) {
+  return (0,_utils_range__WEBPACK_IMPORTED_MODULE_0__["default"])(numberOfPages).map(function (val, i) {
     return {
       number: startNumber + i,
       classes: null
@@ -41722,7 +41927,7 @@ var props = {
 }; // @vue/component
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_7__.default],
+  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_7__["default"]],
   model: {
     prop: 'value',
     event: 'input'
@@ -42243,7 +42448,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   computed: {
     scopedStyleAttrs: function scopedStyleAttrs() {
-      var scopeId = (0,_utils_get_scope_id__WEBPACK_IMPORTED_MODULE_0__.default)(this.$parent);
+      var scopeId = (0,_utils_get_scope_id__WEBPACK_IMPORTED_MODULE_0__["default"])(this.$parent);
       return scopeId ? _defineProperty({}, scopeId, '') : {};
     }
   }
@@ -42370,7 +42575,7 @@ var TRANSITION_HANDLERS = {
   afterLeave: onAfterLeave
 }; // @vue/component
 
-var BVCollapse = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_1__.default.extend({
+var BVCollapse = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_1__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_2__.NAME_COLLAPSE_HELPER,
   functional: true,
   props: {
@@ -42528,12 +42733,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var dropdownProps = _mixins_dropdown__WEBPACK_IMPORTED_MODULE_0__.commonProps; // @vue/component
 
-var BVFormBtnLabelControl = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_1__.default.extend({
+var BVFormBtnLabelControl = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_1__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_2__.NAME_FORM_BUTTON_LABEL_CONTROL,
   directives: {
     BHover: _directives_hover_hover__WEBPACK_IMPORTED_MODULE_3__.VBHover
   },
-  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_4__.default, _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_5__.default, _mixins_dropdown__WEBPACK_IMPORTED_MODULE_0__.default],
+  mixins: [_mixins_id__WEBPACK_IMPORTED_MODULE_4__["default"], _mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_5__["default"], _mixins_dropdown__WEBPACK_IMPORTED_MODULE_0__["default"]],
   props: {
     value: {
       // This is the value placed on the hidden input
@@ -42852,7 +43057,7 @@ var FADE_PROPS = _objectSpread(_objectSpread({}, NO_FADE_PROPS), {}, {
 }); // @vue/component
 
 
-var BVTransition = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BVTransition = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_TRANSITION,
   functional: true,
   props: {
@@ -42942,12 +43147,12 @@ var isEmpty = function isEmpty(value) {
 var makePropWatcher = function makePropWatcher(propName) {
   return {
     handler: function handler(newValue, oldValue) {
-      if ((0,_loose_equal__WEBPACK_IMPORTED_MODULE_1__.default)(newValue, oldValue)) {
+      if ((0,_loose_equal__WEBPACK_IMPORTED_MODULE_1__["default"])(newValue, oldValue)) {
         return;
       }
 
       if (isEmpty(newValue) || isEmpty(oldValue)) {
-        this[propName] = (0,_clone_deep__WEBPACK_IMPORTED_MODULE_2__.default)(newValue);
+        this[propName] = (0,_clone_deep__WEBPACK_IMPORTED_MODULE_2__["default"])(newValue);
         return;
       }
 
@@ -42966,7 +43171,7 @@ var makePropWatcher = function makePropWatcher(propName) {
 var makePropCacheMixin = function makePropCacheMixin(propName, proxyPropName) {
   return {
     data: function data() {
-      return _defineProperty({}, proxyPropName, (0,_clone_deep__WEBPACK_IMPORTED_MODULE_2__.default)(this[propName]));
+      return _defineProperty({}, proxyPropName, (0,_clone_deep__WEBPACK_IMPORTED_MODULE_2__["default"])(this[propName]));
     },
     watch: _defineProperty({}, propName, makePropWatcher(proxyPropName))
   };
@@ -43376,7 +43581,7 @@ var BvConfig = /*#__PURE__*/function () {
       var configKeys = (0,_object__WEBPACK_IMPORTED_MODULE_1__.getOwnPropertyNames)(config);
       configKeys.forEach(function (cmpName) {
         /* istanbul ignore next */
-        if (!(0,_object__WEBPACK_IMPORTED_MODULE_1__.hasOwnProperty)(_config_defaults__WEBPACK_IMPORTED_MODULE_2__.default, cmpName)) {
+        if (!(0,_object__WEBPACK_IMPORTED_MODULE_1__.hasOwnProperty)(_config_defaults__WEBPACK_IMPORTED_MODULE_2__["default"], cmpName)) {
           (0,_warn__WEBPACK_IMPORTED_MODULE_3__.warn)("Unknown config property \"".concat(cmpName, "\""), NAME);
           return;
         }
@@ -43393,21 +43598,21 @@ var BvConfig = /*#__PURE__*/function () {
           })) {
             (0,_warn__WEBPACK_IMPORTED_MODULE_3__.warn)('"breakpoints" must be an array of at least 2 breakpoint names', NAME);
           } else {
-            _this.$_config.breakpoints = (0,_clone_deep__WEBPACK_IMPORTED_MODULE_4__.default)(breakpoints);
+            _this.$_config.breakpoints = (0,_clone_deep__WEBPACK_IMPORTED_MODULE_4__["default"])(breakpoints);
           }
         } else if ((0,_inspect__WEBPACK_IMPORTED_MODULE_0__.isPlainObject)(cmpConfig)) {
           // Component prop defaults
           var props = (0,_object__WEBPACK_IMPORTED_MODULE_1__.getOwnPropertyNames)(cmpConfig);
           props.forEach(function (prop) {
             /* istanbul ignore if */
-            if (!(0,_object__WEBPACK_IMPORTED_MODULE_1__.hasOwnProperty)(_config_defaults__WEBPACK_IMPORTED_MODULE_2__.default[cmpName], prop)) {
+            if (!(0,_object__WEBPACK_IMPORTED_MODULE_1__.hasOwnProperty)(_config_defaults__WEBPACK_IMPORTED_MODULE_2__["default"][cmpName], prop)) {
               (0,_warn__WEBPACK_IMPORTED_MODULE_3__.warn)("Unknown config property \"".concat(cmpName, ".").concat(prop, "\""), NAME);
             } else {
               // TODO: If we pre-populate the config with defaults, we can skip this line
               _this.$_config[cmpName] = _this.$_config[cmpName] || {};
 
               if (!(0,_inspect__WEBPACK_IMPORTED_MODULE_0__.isUndefined)(cmpConfig[prop])) {
-                _this.$_config[cmpName][prop] = (0,_clone_deep__WEBPACK_IMPORTED_MODULE_4__.default)(cmpConfig[prop]);
+                _this.$_config[cmpName][prop] = (0,_clone_deep__WEBPACK_IMPORTED_MODULE_4__["default"])(cmpConfig[prop]);
               }
             }
           });
@@ -43424,14 +43629,14 @@ var BvConfig = /*#__PURE__*/function () {
   }, {
     key: "getConfig",
     value: function getConfig() {
-      return (0,_clone_deep__WEBPACK_IMPORTED_MODULE_4__.default)(this.$_config);
+      return (0,_clone_deep__WEBPACK_IMPORTED_MODULE_4__["default"])(this.$_config);
     }
   }, {
     key: "getConfigValue",
     value: function getConfigValue(key) {
       // First we try the user config, and if key not found we fall back to default value
       // NOTE: If we deep clone DEFAULTS into config, then we can skip the fallback for get
-      return (0,_clone_deep__WEBPACK_IMPORTED_MODULE_4__.default)((0,_get__WEBPACK_IMPORTED_MODULE_5__.getRaw)(this.$_config, key, (0,_get__WEBPACK_IMPORTED_MODULE_5__.getRaw)(_config_defaults__WEBPACK_IMPORTED_MODULE_2__.default, key)));
+      return (0,_clone_deep__WEBPACK_IMPORTED_MODULE_4__["default"])((0,_get__WEBPACK_IMPORTED_MODULE_5__.getRaw)(this.$_config, key, (0,_get__WEBPACK_IMPORTED_MODULE_5__.getRaw)(_config_defaults__WEBPACK_IMPORTED_MODULE_2__["default"], key)));
     }
   }, {
     key: "defaults",
@@ -43440,14 +43645,14 @@ var BvConfig = /*#__PURE__*/function () {
     get: function get()
     /* istanbul ignore next */
     {
-      return _config_defaults__WEBPACK_IMPORTED_MODULE_2__.default;
+      return _config_defaults__WEBPACK_IMPORTED_MODULE_2__["default"];
     }
   }], [{
     key: "Defaults",
     get: function get()
     /* istanbul ignore next */
     {
-      return _config_defaults__WEBPACK_IMPORTED_MODULE_2__.default;
+      return _config_defaults__WEBPACK_IMPORTED_MODULE_2__["default"];
     }
   }]);
 
@@ -43457,17 +43662,17 @@ var BvConfig = /*#__PURE__*/function () {
 
 var setConfig = function setConfig() {
   var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var Vue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _vue__WEBPACK_IMPORTED_MODULE_6__.default;
+  var Vue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _vue__WEBPACK_IMPORTED_MODULE_6__["default"];
   // Ensure we have a $bvConfig Object on the Vue prototype.
   // We set on Vue and OurVue just in case consumer has not set an alias of `vue`.
-  Vue.prototype[PROP_NAME] = _vue__WEBPACK_IMPORTED_MODULE_6__.default.prototype[PROP_NAME] = Vue.prototype[PROP_NAME] || _vue__WEBPACK_IMPORTED_MODULE_6__.default.prototype[PROP_NAME] || new BvConfig(); // Apply the config values
+  Vue.prototype[PROP_NAME] = _vue__WEBPACK_IMPORTED_MODULE_6__["default"].prototype[PROP_NAME] = Vue.prototype[PROP_NAME] || _vue__WEBPACK_IMPORTED_MODULE_6__["default"].prototype[PROP_NAME] || new BvConfig(); // Apply the config values
 
   Vue.prototype[PROP_NAME].setConfig(config);
 }; // Method for resetting the user config. Exported for testing purposes only.
 
 var resetConfig = function resetConfig() {
-  if (_vue__WEBPACK_IMPORTED_MODULE_6__.default.prototype[PROP_NAME] && _vue__WEBPACK_IMPORTED_MODULE_6__.default.prototype[PROP_NAME].resetConfig) {
-    _vue__WEBPACK_IMPORTED_MODULE_6__.default.prototype[PROP_NAME].resetConfig();
+  if (_vue__WEBPACK_IMPORTED_MODULE_6__["default"].prototype[PROP_NAME] && _vue__WEBPACK_IMPORTED_MODULE_6__["default"].prototype[PROP_NAME].resetConfig) {
+    _vue__WEBPACK_IMPORTED_MODULE_6__["default"].prototype[PROP_NAME].resetConfig();
   }
 };
 
@@ -43504,7 +43709,7 @@ __webpack_require__.r(__webpack_exports__);
  // --- Constants ---
 
 var PROP_NAME = '$bvConfig';
-var VueProto = _vue__WEBPACK_IMPORTED_MODULE_0__.default.prototype; // --- Getter methods ---
+var VueProto = _vue__WEBPACK_IMPORTED_MODULE_0__["default"].prototype; // --- Getter methods ---
 // All methods return a deep clone (immutable) copy of the config
 // value, to prevent mutation of the user config object.
 // Get the current user config. For testing purposes only
@@ -43514,7 +43719,7 @@ var getConfig = function getConfig() {
 }; // Method to grab a config value based on a dotted/array notation key
 
 var getConfigValue = function getConfigValue(key) {
-  return VueProto[PROP_NAME] ? VueProto[PROP_NAME].getConfigValue(key) : (0,_clone_deep__WEBPACK_IMPORTED_MODULE_1__.default)((0,_get__WEBPACK_IMPORTED_MODULE_2__.getRaw)(_config_defaults__WEBPACK_IMPORTED_MODULE_3__.default, key));
+  return VueProto[PROP_NAME] ? VueProto[PROP_NAME].getConfigValue(key) : (0,_clone_deep__WEBPACK_IMPORTED_MODULE_1__["default"])((0,_get__WEBPACK_IMPORTED_MODULE_2__.getRaw)(_config_defaults__WEBPACK_IMPORTED_MODULE_3__["default"], key));
 }; // Method to grab a config value for a particular component
 
 var getComponentConfig = function getComponentConfig(cmpName) {
@@ -43528,14 +43733,14 @@ var getBreakpoints = function getBreakpoints() {
   return getConfigValue('breakpoints');
 }; // Private function for caching / locking-in breakpoint names
 
-var _getBreakpointsCached = (0,_memoize__WEBPACK_IMPORTED_MODULE_4__.default)(function () {
+var _getBreakpointsCached = (0,_memoize__WEBPACK_IMPORTED_MODULE_4__["default"])(function () {
   return getBreakpoints();
 }); // Convenience method for getting all breakpoint names.
 // Caches the results after first access.
 
 
 var getBreakpointsCached = function getBreakpointsCached() {
-  return (0,_clone_deep__WEBPACK_IMPORTED_MODULE_1__.default)(_getBreakpointsCached());
+  return (0,_clone_deep__WEBPACK_IMPORTED_MODULE_1__["default"])(_getBreakpointsCached());
 }; // Convenience method for getting breakpoints with
 // the smallest breakpoint set as ''.
 // Useful for components that create breakpoint specific props.
@@ -43549,7 +43754,7 @@ var getBreakpointsUp = function getBreakpointsUp() {
 // Useful for components that create breakpoint specific props.
 // Caches the results after first access.
 
-var getBreakpointsUpCached = (0,_memoize__WEBPACK_IMPORTED_MODULE_4__.default)(function () {
+var getBreakpointsUpCached = (0,_memoize__WEBPACK_IMPORTED_MODULE_4__["default"])(function () {
   var breakpoints = getBreakpointsCached();
   breakpoints[0] = '';
   return breakpoints;
@@ -43753,7 +43958,7 @@ var resolveLocale = function resolveLocale(locales)
 /* istanbul ignore next */
 {
   var calendar = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _constants_date__WEBPACK_IMPORTED_MODULE_3__.CALENDAR_GREGORY;
-  locales = (0,_array__WEBPACK_IMPORTED_MODULE_4__.concat)(locales).filter(_identity__WEBPACK_IMPORTED_MODULE_5__.default);
+  locales = (0,_array__WEBPACK_IMPORTED_MODULE_4__.concat)(locales).filter(_identity__WEBPACK_IMPORTED_MODULE_5__["default"]);
   var fmt = new Intl.DateTimeFormat(locales, {
     calendar: calendar
   });
@@ -44464,7 +44669,7 @@ var getRaw = function getRaw(obj, path) {
 
 
   path = String(path).replace(_constants_regex__WEBPACK_IMPORTED_MODULE_1__.RX_ARRAY_NOTATION, '.$1');
-  var steps = path.split('.').filter(_identity__WEBPACK_IMPORTED_MODULE_2__.default); // Handle case where someone passes a string of only dots
+  var steps = path.split('.').filter(_identity__WEBPACK_IMPORTED_MODULE_2__["default"]); // Handle case where someone passes a string of only dots
 
   if (steps.length === 0) {
     return defaultValue;
@@ -44798,7 +45003,7 @@ __webpack_require__.r(__webpack_exports__);
 var looseIndexOf = function looseIndexOf(arr, val) {
   // Assumes that the first argument is an array
   for (var i = 0; i < arr.length; i++) {
-    if ((0,_loose_equal__WEBPACK_IMPORTED_MODULE_0__.default)(arr[i], val)) {
+    if ((0,_loose_equal__WEBPACK_IMPORTED_MODULE_0__["default"])(arr[i], val)) {
       return i;
     }
   }
@@ -44921,7 +45126,7 @@ var hasNormalizedSlot = function hasNormalizedSlot(names) {
   var $scopedSlots = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   var $slots = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   // Ensure names is an array
-  names = (0,_array__WEBPACK_IMPORTED_MODULE_0__.concat)(names).filter(_identity__WEBPACK_IMPORTED_MODULE_1__.default); // Returns true if the either a $scopedSlot or $slot exists with the specified name
+  names = (0,_array__WEBPACK_IMPORTED_MODULE_0__.concat)(names).filter(_identity__WEBPACK_IMPORTED_MODULE_1__["default"]); // Returns true if the either a $scopedSlot or $slot exists with the specified name
 
   return names.some(function (name) {
     return $scopedSlots[name] || $slots[name];
@@ -44943,7 +45148,7 @@ var normalizeSlot = function normalizeSlot(names) {
   var $scopedSlots = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
   var $slots = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
   // Ensure names is an array
-  names = (0,_array__WEBPACK_IMPORTED_MODULE_0__.concat)(names).filter(_identity__WEBPACK_IMPORTED_MODULE_1__.default);
+  names = (0,_array__WEBPACK_IMPORTED_MODULE_0__.concat)(names).filter(_identity__WEBPACK_IMPORTED_MODULE_1__["default"]);
   var slot;
 
   for (var i = 0; i < names.length && !slot; i++) {
@@ -45309,7 +45514,7 @@ var checkMultipleVue = function () {
   var MULTIPLE_VUE_WARNING = ['Multiple instances of Vue detected!', 'You may need to set up an alias for Vue in your bundler config.', 'See: https://bootstrap-vue.org/docs#using-module-bundlers'].join('\n');
   return function (Vue) {
     /* istanbul ignore next */
-    if (!checkMultipleVueWarned && _vue__WEBPACK_IMPORTED_MODULE_0__.default !== Vue && !_env__WEBPACK_IMPORTED_MODULE_1__.isJSDOM) {
+    if (!checkMultipleVueWarned && _vue__WEBPACK_IMPORTED_MODULE_0__["default"] !== Vue && !_env__WEBPACK_IMPORTED_MODULE_1__.isJSDOM) {
       (0,_warn__WEBPACK_IMPORTED_MODULE_2__.warn)(MULTIPLE_VUE_WARNING);
     }
 
@@ -45530,7 +45735,7 @@ var suffixPropName = function suffixPropName(suffix, str) {
 // Optionally accepts a function to transform the prop name
 
 var copyProps = function copyProps(props) {
-  var transformFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _identity__WEBPACK_IMPORTED_MODULE_1__.default;
+  var transformFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _identity__WEBPACK_IMPORTED_MODULE_1__["default"];
 
   if ((0,_inspect__WEBPACK_IMPORTED_MODULE_2__.isArray)(props)) {
     return props.map(transformFn);
@@ -45553,7 +45758,7 @@ var copyProps = function copyProps(props) {
 // that has props that reference the original prop values
 
 var pluckProps = function pluckProps(keysToPluck, objToPluck) {
-  var transformFn = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : _identity__WEBPACK_IMPORTED_MODULE_1__.default;
+  var transformFn = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : _identity__WEBPACK_IMPORTED_MODULE_1__["default"];
   return ((0,_inspect__WEBPACK_IMPORTED_MODULE_2__.isArray)(keysToPluck) ? keysToPluck.slice() : (0,_object__WEBPACK_IMPORTED_MODULE_3__.keys)(keysToPluck)).reduce(function (memo, prop) {
     memo[transformFn(prop)] = objToPluck[prop];
     return memo;
@@ -46035,7 +46240,7 @@ __webpack_require__.r(__webpack_exports__);
 // Supports only a single root element
 // @vue/component
 
-var BTransporterTargetSingle = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BTransporterTargetSingle = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   // As an abstract component, it doesn't appear in the $parent chain of
   // components, which means the next parent of any component rendered inside
   // of this one will be the parent from which is was portal'd
@@ -46072,9 +46277,9 @@ var BTransporterTargetSingle = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.de
 }); // This component has no root element, so only a single VNode is allowed
 // @vue/component
 
-var BTransporterSingle = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.extend({
+var BTransporterSingle = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__["default"].extend({
   name: _constants_components__WEBPACK_IMPORTED_MODULE_1__.NAME_TRANSPORTER_SINGLE,
-  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_5__.default],
+  mixins: [_mixins_normalize_slot__WEBPACK_IMPORTED_MODULE_5__["default"]],
   props: {
     disabled: {
       type: Boolean,
@@ -46182,7 +46387,7 @@ var BTransporterSingle = /*#__PURE__*/_vue__WEBPACK_IMPORTED_MODULE_0__.default.
   },
   render: function render(h) {
     if (this.disabled) {
-      var nodes = (0,_array__WEBPACK_IMPORTED_MODULE_4__.concat)(this.normalizeSlot()).filter(_identity__WEBPACK_IMPORTED_MODULE_8__.default);
+      var nodes = (0,_array__WEBPACK_IMPORTED_MODULE_4__.concat)(this.normalizeSlot()).filter(_identity__WEBPACK_IMPORTED_MODULE_8__["default"]);
 
       if (nodes.length > 0 && !nodes[0].text) {
         return nodes[0];
@@ -46292,7 +46497,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (vue__WEBPACK_IMPORTED_MODULE_1__.default);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (vue__WEBPACK_IMPORTED_MODULE_1__["default"]);
 
 
 /***/ }),
@@ -65003,7 +65208,7 @@ var index = {
   install: install
 };
 
-exports.default = index;
+exports["default"] = index;
 exports.Portal = Portal;
 exports.PortalTarget = PortalTarget;
 exports.MountingPortal = MountingPortal;
@@ -65207,6 +65412,375 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
+/***/ "./node_modules/bootstrap-vue/dist/bootstrap-vue.css":
+/*!***********************************************************!*\
+  !*** ./node_modules/bootstrap-vue/dist/bootstrap-vue.css ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _css_loader_dist_cjs_js_clonedRuleSet_31_0_rules_0_use_1_postcss_loader_dist_cjs_js_clonedRuleSet_31_0_rules_0_use_2_bootstrap_vue_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../css-loader/dist/cjs.js??clonedRuleSet-31[0].rules[0].use[1]!../../postcss-loader/dist/cjs.js??clonedRuleSet-31[0].rules[0].use[2]!./bootstrap-vue.css */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-31[0].rules[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-31[0].rules[0].use[2]!./node_modules/bootstrap-vue/dist/bootstrap-vue.css");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_css_loader_dist_cjs_js_clonedRuleSet_31_0_rules_0_use_1_postcss_loader_dist_cjs_js_clonedRuleSet_31_0_rules_0_use_2_bootstrap_vue_css__WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_css_loader_dist_cjs_js_clonedRuleSet_31_0_rules_0_use_1_postcss_loader_dist_cjs_js_clonedRuleSet_31_0_rules_0_use_2_bootstrap_vue_css__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
+/***/ "./node_modules/bootstrap/dist/css/bootstrap.css":
+/*!*******************************************************!*\
+  !*** ./node_modules/bootstrap/dist/css/bootstrap.css ***!
+  \*******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _css_loader_dist_cjs_js_clonedRuleSet_31_0_rules_0_use_1_postcss_loader_dist_cjs_js_clonedRuleSet_31_0_rules_0_use_2_bootstrap_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../css-loader/dist/cjs.js??clonedRuleSet-31[0].rules[0].use[1]!../../../postcss-loader/dist/cjs.js??clonedRuleSet-31[0].rules[0].use[2]!./bootstrap.css */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-31[0].rules[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-31[0].rules[0].use[2]!./node_modules/bootstrap/dist/css/bootstrap.css");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_css_loader_dist_cjs_js_clonedRuleSet_31_0_rules_0_use_1_postcss_loader_dist_cjs_js_clonedRuleSet_31_0_rules_0_use_2_bootstrap_css__WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_css_loader_dist_cjs_js_clonedRuleSet_31_0_rules_0_use_1_postcss_loader_dist_cjs_js_clonedRuleSet_31_0_rules_0_use_2_bootstrap_css__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[2]!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=less&":
+/*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[2]!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=less& ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_40_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_40_0_rules_0_use_2_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_less___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[2]!../../../node_modules/less-loader/dist/cjs.js!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./menuPrincipal.vue?vue&type=style&index=0&lang=less& */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[2]!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=less&");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_40_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_40_0_rules_0_use_2_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_less___WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_40_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_40_0_rules_0_use_2_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_less___WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js":
+/*!****************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js ***!
+  \****************************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+
+var isOldIE = function isOldIE() {
+  var memo;
+  return function memorize() {
+    if (typeof memo === 'undefined') {
+      // Test for IE <= 9 as proposed by Browserhacks
+      // @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805
+      // Tests for existence of standard globals is to allow style-loader
+      // to operate correctly into non-standard environments
+      // @see https://github.com/webpack-contrib/style-loader/issues/177
+      memo = Boolean(window && document && document.all && !window.atob);
+    }
+
+    return memo;
+  };
+}();
+
+var getTarget = function getTarget() {
+  var memo = {};
+  return function memorize(target) {
+    if (typeof memo[target] === 'undefined') {
+      var styleTarget = document.querySelector(target); // Special case to return head of iframe instead of iframe itself
+
+      if (window.HTMLIFrameElement && styleTarget instanceof window.HTMLIFrameElement) {
+        try {
+          // This will throw an exception if access to iframe is blocked
+          // due to cross-origin restrictions
+          styleTarget = styleTarget.contentDocument.head;
+        } catch (e) {
+          // istanbul ignore next
+          styleTarget = null;
+        }
+      }
+
+      memo[target] = styleTarget;
+    }
+
+    return memo[target];
+  };
+}();
+
+var stylesInDom = [];
+
+function getIndexByIdentifier(identifier) {
+  var result = -1;
+
+  for (var i = 0; i < stylesInDom.length; i++) {
+    if (stylesInDom[i].identifier === identifier) {
+      result = i;
+      break;
+    }
+  }
+
+  return result;
+}
+
+function modulesToDom(list, options) {
+  var idCountMap = {};
+  var identifiers = [];
+
+  for (var i = 0; i < list.length; i++) {
+    var item = list[i];
+    var id = options.base ? item[0] + options.base : item[0];
+    var count = idCountMap[id] || 0;
+    var identifier = "".concat(id, " ").concat(count);
+    idCountMap[id] = count + 1;
+    var index = getIndexByIdentifier(identifier);
+    var obj = {
+      css: item[1],
+      media: item[2],
+      sourceMap: item[3]
+    };
+
+    if (index !== -1) {
+      stylesInDom[index].references++;
+      stylesInDom[index].updater(obj);
+    } else {
+      stylesInDom.push({
+        identifier: identifier,
+        updater: addStyle(obj, options),
+        references: 1
+      });
+    }
+
+    identifiers.push(identifier);
+  }
+
+  return identifiers;
+}
+
+function insertStyleElement(options) {
+  var style = document.createElement('style');
+  var attributes = options.attributes || {};
+
+  if (typeof attributes.nonce === 'undefined') {
+    var nonce =  true ? __webpack_require__.nc : 0;
+
+    if (nonce) {
+      attributes.nonce = nonce;
+    }
+  }
+
+  Object.keys(attributes).forEach(function (key) {
+    style.setAttribute(key, attributes[key]);
+  });
+
+  if (typeof options.insert === 'function') {
+    options.insert(style);
+  } else {
+    var target = getTarget(options.insert || 'head');
+
+    if (!target) {
+      throw new Error("Couldn't find a style target. This probably means that the value for the 'insert' parameter is invalid.");
+    }
+
+    target.appendChild(style);
+  }
+
+  return style;
+}
+
+function removeStyleElement(style) {
+  // istanbul ignore if
+  if (style.parentNode === null) {
+    return false;
+  }
+
+  style.parentNode.removeChild(style);
+}
+/* istanbul ignore next  */
+
+
+var replaceText = function replaceText() {
+  var textStore = [];
+  return function replace(index, replacement) {
+    textStore[index] = replacement;
+    return textStore.filter(Boolean).join('\n');
+  };
+}();
+
+function applyToSingletonTag(style, index, remove, obj) {
+  var css = remove ? '' : obj.media ? "@media ".concat(obj.media, " {").concat(obj.css, "}") : obj.css; // For old IE
+
+  /* istanbul ignore if  */
+
+  if (style.styleSheet) {
+    style.styleSheet.cssText = replaceText(index, css);
+  } else {
+    var cssNode = document.createTextNode(css);
+    var childNodes = style.childNodes;
+
+    if (childNodes[index]) {
+      style.removeChild(childNodes[index]);
+    }
+
+    if (childNodes.length) {
+      style.insertBefore(cssNode, childNodes[index]);
+    } else {
+      style.appendChild(cssNode);
+    }
+  }
+}
+
+function applyToTag(style, options, obj) {
+  var css = obj.css;
+  var media = obj.media;
+  var sourceMap = obj.sourceMap;
+
+  if (media) {
+    style.setAttribute('media', media);
+  } else {
+    style.removeAttribute('media');
+  }
+
+  if (sourceMap && typeof btoa !== 'undefined') {
+    css += "\n/*# sourceMappingURL=data:application/json;base64,".concat(btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))), " */");
+  } // For old IE
+
+  /* istanbul ignore if  */
+
+
+  if (style.styleSheet) {
+    style.styleSheet.cssText = css;
+  } else {
+    while (style.firstChild) {
+      style.removeChild(style.firstChild);
+    }
+
+    style.appendChild(document.createTextNode(css));
+  }
+}
+
+var singleton = null;
+var singletonCounter = 0;
+
+function addStyle(obj, options) {
+  var style;
+  var update;
+  var remove;
+
+  if (options.singleton) {
+    var styleIndex = singletonCounter++;
+    style = singleton || (singleton = insertStyleElement(options));
+    update = applyToSingletonTag.bind(null, style, styleIndex, false);
+    remove = applyToSingletonTag.bind(null, style, styleIndex, true);
+  } else {
+    style = insertStyleElement(options);
+    update = applyToTag.bind(null, style, options);
+
+    remove = function remove() {
+      removeStyleElement(style);
+    };
+  }
+
+  update(obj);
+  return function updateStyle(newObj) {
+    if (newObj) {
+      if (newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap) {
+        return;
+      }
+
+      update(obj = newObj);
+    } else {
+      remove();
+    }
+  };
+}
+
+module.exports = function (list, options) {
+  options = options || {}; // Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+  // tags it will allow on a page
+
+  if (!options.singleton && typeof options.singleton !== 'boolean') {
+    options.singleton = isOldIE();
+  }
+
+  list = list || [];
+  var lastIdentifiers = modulesToDom(list, options);
+  return function update(newList) {
+    newList = newList || [];
+
+    if (Object.prototype.toString.call(newList) !== '[object Array]') {
+      return;
+    }
+
+    for (var i = 0; i < lastIdentifiers.length; i++) {
+      var identifier = lastIdentifiers[i];
+      var index = getIndexByIdentifier(identifier);
+      stylesInDom[index].references--;
+    }
+
+    var newLastIdentifiers = modulesToDom(newList, options);
+
+    for (var _i = 0; _i < lastIdentifiers.length; _i++) {
+      var _identifier = lastIdentifiers[_i];
+
+      var _index = getIndexByIdentifier(_identifier);
+
+      if (stylesInDom[_index].references === 0) {
+        stylesInDom[_index].updater();
+
+        stylesInDom.splice(_index, 1);
+      }
+    }
+
+    lastIdentifiers = newLastIdentifiers;
+  };
+};
+
+/***/ }),
+
 /***/ "./node_modules/vue-functional-data-merge/dist/lib.esm.js":
 /*!****************************************************************!*\
   !*** ./node_modules/vue-functional-data-merge/dist/lib.esm.js ***!
@@ -65245,8 +65819,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 ;
-var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__.default)(
-  _itemMenuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__.default,
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _itemMenuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _itemMenuPrincipal_vue_vue_type_template_id_46ea2081___WEBPACK_IMPORTED_MODULE_0__.render,
   _itemMenuPrincipal_vue_vue_type_template_id_46ea2081___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
   false,
@@ -65286,8 +65860,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__.default)(
-  _menuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__.default,
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _menuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__.render,
   _menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
   false,
@@ -65316,7 +65890,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_itemMenuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./itemMenuPrincipal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/itemMenuPrincipal.vue?vue&type=script&lang=js&");
- /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_itemMenuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__.default); 
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_itemMenuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
@@ -65332,7 +65906,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./menuPrincipal.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/menuPrincipal.vue?vue&type=script&lang=js&");
- /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__.default); 
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=less&":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=less& ***!
+  \*************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_40_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_40_0_rules_0_use_2_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_less___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[2]!../../../node_modules/less-loader/dist/cjs.js!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./menuPrincipal.vue?vue&type=style&index=0&lang=less& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[2]!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=less&");
+
 
 /***/ }),
 
@@ -65366,23 +65953,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_template_id_15fedc58___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./menuPrincipal.vue?vue&type=template&id=15fedc58& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/menuPrincipal.vue?vue&type=template&id=15fedc58&");
-
-
-/***/ }),
-
-/***/ "./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=less&":
-/*!*************************************************************************************!*\
-  !*** ./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=less& ***!
-  \*************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_style_loader_index_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_40_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_40_0_rules_0_use_2_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_less___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-style-loader/index.js!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[2]!../../../node_modules/less-loader/dist/cjs.js!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./menuPrincipal.vue?vue&type=style&index=0&lang=less& */ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[2]!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=less&");
-/* harmony import */ var _node_modules_vue_style_loader_index_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_40_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_40_0_rules_0_use_2_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_less___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_vue_style_loader_index_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_40_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_40_0_rules_0_use_2_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_less___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ var __WEBPACK_REEXPORT_OBJECT__ = {};
-/* harmony reexport (unknown) */ for(const __WEBPACK_IMPORT_KEY__ in _node_modules_vue_style_loader_index_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_40_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_40_0_rules_0_use_2_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_less___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== "default") __WEBPACK_REEXPORT_OBJECT__[__WEBPACK_IMPORT_KEY__] = () => _node_modules_vue_style_loader_index_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_40_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_40_0_rules_0_use_2_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_menuPrincipal_vue_vue_type_style_index_0_lang_less___WEBPACK_IMPORTED_MODULE_0__[__WEBPACK_IMPORT_KEY__]
-/* harmony reexport (unknown) */ __webpack_require__.d(__webpack_exports__, __WEBPACK_REEXPORT_OBJECT__);
 
 
 /***/ }),
@@ -65675,349 +66245,6 @@ function normalizeComponent (
     exports: scriptExports,
     options: options
   }
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/bootstrap-vue/dist/bootstrap-vue.css":
-/*!***********************************************************!*\
-  !*** ./node_modules/bootstrap-vue/dist/bootstrap-vue.css ***!
-  \***********************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(/*! !!../../css-loader/dist/cjs.js??clonedRuleSet-31[0].rules[0].use[1]!../../postcss-loader/dist/cjs.js??clonedRuleSet-31[0].rules[0].use[2]!./bootstrap-vue.css */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-31[0].rules[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-31[0].rules[0].use[2]!./node_modules/bootstrap-vue/dist/bootstrap-vue.css");
-if(content.__esModule) content = content.default;
-if(typeof content === 'string') content = [[module.id, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var add = __webpack_require__(/*! !../../vue-style-loader/lib/addStylesClient.js */ "./node_modules/vue-style-loader/lib/addStylesClient.js").default
-var update = add("cf4559b4", content, false, {});
-// Hot Module Replacement
-if(false) {}
-
-/***/ }),
-
-/***/ "./node_modules/bootstrap/dist/css/bootstrap.css":
-/*!*******************************************************!*\
-  !*** ./node_modules/bootstrap/dist/css/bootstrap.css ***!
-  \*******************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(/*! !!../../../css-loader/dist/cjs.js??clonedRuleSet-31[0].rules[0].use[1]!../../../postcss-loader/dist/cjs.js??clonedRuleSet-31[0].rules[0].use[2]!./bootstrap.css */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-31[0].rules[0].use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-31[0].rules[0].use[2]!./node_modules/bootstrap/dist/css/bootstrap.css");
-if(content.__esModule) content = content.default;
-if(typeof content === 'string') content = [[module.id, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var add = __webpack_require__(/*! !../../../vue-style-loader/lib/addStylesClient.js */ "./node_modules/vue-style-loader/lib/addStylesClient.js").default
-var update = add("05ffa391", content, false, {});
-// Hot Module Replacement
-if(false) {}
-
-/***/ }),
-
-/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[2]!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=less&":
-/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-style-loader/index.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[2]!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=less& ***!
-  \***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[2]!../../../node_modules/less-loader/dist/cjs.js!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./menuPrincipal.vue?vue&type=style&index=0&lang=less& */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-40[0].rules[0].use[2]!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/menuPrincipal.vue?vue&type=style&index=0&lang=less&");
-if(content.__esModule) content = content.default;
-if(typeof content === 'string') content = [[module.id, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var add = __webpack_require__(/*! !../../../node_modules/vue-style-loader/lib/addStylesClient.js */ "./node_modules/vue-style-loader/lib/addStylesClient.js").default
-var update = add("159bb058", content, false, {});
-// Hot Module Replacement
-if(false) {}
-
-/***/ }),
-
-/***/ "./node_modules/vue-style-loader/lib/addStylesClient.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/vue-style-loader/lib/addStylesClient.js ***!
-  \**************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ addStylesClient)
-/* harmony export */ });
-/* harmony import */ var _listToStyles__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./listToStyles */ "./node_modules/vue-style-loader/lib/listToStyles.js");
-/*
-  MIT License http://www.opensource.org/licenses/mit-license.php
-  Author Tobias Koppers @sokra
-  Modified by Evan You @yyx990803
-*/
-
-
-
-var hasDocument = typeof document !== 'undefined'
-
-if (typeof DEBUG !== 'undefined' && DEBUG) {
-  if (!hasDocument) {
-    throw new Error(
-    'vue-style-loader cannot be used in a non-browser environment. ' +
-    "Use { target: 'node' } in your Webpack config to indicate a server-rendering environment."
-  ) }
-}
-
-/*
-type StyleObject = {
-  id: number;
-  parts: Array<StyleObjectPart>
-}
-
-type StyleObjectPart = {
-  css: string;
-  media: string;
-  sourceMap: ?string
-}
-*/
-
-var stylesInDom = {/*
-  [id: number]: {
-    id: number,
-    refs: number,
-    parts: Array<(obj?: StyleObjectPart) => void>
-  }
-*/}
-
-var head = hasDocument && (document.head || document.getElementsByTagName('head')[0])
-var singletonElement = null
-var singletonCounter = 0
-var isProduction = false
-var noop = function () {}
-var options = null
-var ssrIdKey = 'data-vue-ssr-id'
-
-// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-// tags it will allow on a page
-var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\b/.test(navigator.userAgent.toLowerCase())
-
-function addStylesClient (parentId, list, _isProduction, _options) {
-  isProduction = _isProduction
-
-  options = _options || {}
-
-  var styles = (0,_listToStyles__WEBPACK_IMPORTED_MODULE_0__.default)(parentId, list)
-  addStylesToDom(styles)
-
-  return function update (newList) {
-    var mayRemove = []
-    for (var i = 0; i < styles.length; i++) {
-      var item = styles[i]
-      var domStyle = stylesInDom[item.id]
-      domStyle.refs--
-      mayRemove.push(domStyle)
-    }
-    if (newList) {
-      styles = (0,_listToStyles__WEBPACK_IMPORTED_MODULE_0__.default)(parentId, newList)
-      addStylesToDom(styles)
-    } else {
-      styles = []
-    }
-    for (var i = 0; i < mayRemove.length; i++) {
-      var domStyle = mayRemove[i]
-      if (domStyle.refs === 0) {
-        for (var j = 0; j < domStyle.parts.length; j++) {
-          domStyle.parts[j]()
-        }
-        delete stylesInDom[domStyle.id]
-      }
-    }
-  }
-}
-
-function addStylesToDom (styles /* Array<StyleObject> */) {
-  for (var i = 0; i < styles.length; i++) {
-    var item = styles[i]
-    var domStyle = stylesInDom[item.id]
-    if (domStyle) {
-      domStyle.refs++
-      for (var j = 0; j < domStyle.parts.length; j++) {
-        domStyle.parts[j](item.parts[j])
-      }
-      for (; j < item.parts.length; j++) {
-        domStyle.parts.push(addStyle(item.parts[j]))
-      }
-      if (domStyle.parts.length > item.parts.length) {
-        domStyle.parts.length = item.parts.length
-      }
-    } else {
-      var parts = []
-      for (var j = 0; j < item.parts.length; j++) {
-        parts.push(addStyle(item.parts[j]))
-      }
-      stylesInDom[item.id] = { id: item.id, refs: 1, parts: parts }
-    }
-  }
-}
-
-function createStyleElement () {
-  var styleElement = document.createElement('style')
-  styleElement.type = 'text/css'
-  head.appendChild(styleElement)
-  return styleElement
-}
-
-function addStyle (obj /* StyleObjectPart */) {
-  var update, remove
-  var styleElement = document.querySelector('style[' + ssrIdKey + '~="' + obj.id + '"]')
-
-  if (styleElement) {
-    if (isProduction) {
-      // has SSR styles and in production mode.
-      // simply do nothing.
-      return noop
-    } else {
-      // has SSR styles but in dev mode.
-      // for some reason Chrome can't handle source map in server-rendered
-      // style tags - source maps in <style> only works if the style tag is
-      // created and inserted dynamically. So we remove the server rendered
-      // styles and inject new ones.
-      styleElement.parentNode.removeChild(styleElement)
-    }
-  }
-
-  if (isOldIE) {
-    // use singleton mode for IE9.
-    var styleIndex = singletonCounter++
-    styleElement = singletonElement || (singletonElement = createStyleElement())
-    update = applyToSingletonTag.bind(null, styleElement, styleIndex, false)
-    remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true)
-  } else {
-    // use multi-style-tag mode in all other cases
-    styleElement = createStyleElement()
-    update = applyToTag.bind(null, styleElement)
-    remove = function () {
-      styleElement.parentNode.removeChild(styleElement)
-    }
-  }
-
-  update(obj)
-
-  return function updateStyle (newObj /* StyleObjectPart */) {
-    if (newObj) {
-      if (newObj.css === obj.css &&
-          newObj.media === obj.media &&
-          newObj.sourceMap === obj.sourceMap) {
-        return
-      }
-      update(obj = newObj)
-    } else {
-      remove()
-    }
-  }
-}
-
-var replaceText = (function () {
-  var textStore = []
-
-  return function (index, replacement) {
-    textStore[index] = replacement
-    return textStore.filter(Boolean).join('\n')
-  }
-})()
-
-function applyToSingletonTag (styleElement, index, remove, obj) {
-  var css = remove ? '' : obj.css
-
-  if (styleElement.styleSheet) {
-    styleElement.styleSheet.cssText = replaceText(index, css)
-  } else {
-    var cssNode = document.createTextNode(css)
-    var childNodes = styleElement.childNodes
-    if (childNodes[index]) styleElement.removeChild(childNodes[index])
-    if (childNodes.length) {
-      styleElement.insertBefore(cssNode, childNodes[index])
-    } else {
-      styleElement.appendChild(cssNode)
-    }
-  }
-}
-
-function applyToTag (styleElement, obj) {
-  var css = obj.css
-  var media = obj.media
-  var sourceMap = obj.sourceMap
-
-  if (media) {
-    styleElement.setAttribute('media', media)
-  }
-  if (options.ssrId) {
-    styleElement.setAttribute(ssrIdKey, obj.id)
-  }
-
-  if (sourceMap) {
-    // https://developer.chrome.com/devtools/docs/javascript-debugging
-    // this makes source maps inside style tags work properly in Chrome
-    css += '\n/*# sourceURL=' + sourceMap.sources[0] + ' */'
-    // http://stackoverflow.com/a/26603875
-    css += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + ' */'
-  }
-
-  if (styleElement.styleSheet) {
-    styleElement.styleSheet.cssText = css
-  } else {
-    while (styleElement.firstChild) {
-      styleElement.removeChild(styleElement.firstChild)
-    }
-    styleElement.appendChild(document.createTextNode(css))
-  }
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/vue-style-loader/lib/listToStyles.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/vue-style-loader/lib/listToStyles.js ***!
-  \***********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ listToStyles)
-/* harmony export */ });
-/**
- * Translates the list format produced by css-loader into something
- * easier to manipulate.
- */
-function listToStyles (parentId, list) {
-  var styles = []
-  var newStyles = {}
-  for (var i = 0; i < list.length; i++) {
-    var item = list[i]
-    var id = item[0]
-    var css = item[1]
-    var media = item[2]
-    var sourceMap = item[3]
-    var part = {
-      id: parentId + ':' + i,
-      css: css,
-      media: media,
-      sourceMap: sourceMap
-    }
-    if (!newStyles[id]) {
-      styles.push(newStyles[id] = { id: id, parts: [part] })
-    } else {
-      newStyles[id].parts.push(part)
-    }
-  }
-  return styles
 }
 
 
@@ -78016,6 +78243,17 @@ Vue.compile = compileToFunctions;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Vue);
 
 
+/***/ }),
+
+/***/ "./node_modules/axios/package.json":
+/*!*****************************************!*\
+  !*** ./node_modules/axios/package.json ***!
+  \*****************************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = JSON.parse('{"name":"axios","version":"0.21.2","description":"Promise based HTTP client for the browser and node.js","main":"index.js","scripts":{"test":"grunt test","start":"node ./sandbox/server.js","build":"NODE_ENV=production grunt build","preversion":"npm test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json","postversion":"git push && git push --tags","examples":"node ./examples/server.js","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","fix":"eslint --fix lib/**/*.js"},"repository":{"type":"git","url":"https://github.com/axios/axios.git"},"keywords":["xhr","http","ajax","promise","node"],"author":"Matt Zabriskie","license":"MIT","bugs":{"url":"https://github.com/axios/axios/issues"},"homepage":"https://axios-http.com","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"jsdelivr":"dist/axios.min.js","unpkg":"dist/axios.min.js","typings":"./index.d.ts","dependencies":{"follow-redirects":"^1.14.0"},"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}]}');
+
 /***/ })
 
 /******/ 	});
@@ -78110,9 +78348,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/index.js");
 /* harmony import */ var bootstrap_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! bootstrap-vue */ "./node_modules/bootstrap-vue/esm/icons/plugin.js");
 /* harmony import */ var bootstrap_dist_css_bootstrap_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bootstrap/dist/css/bootstrap.css */ "./node_modules/bootstrap/dist/css/bootstrap.css");
-/* harmony import */ var bootstrap_dist_css_bootstrap_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(bootstrap_dist_css_bootstrap_css__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var bootstrap_vue_dist_bootstrap_vue_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! bootstrap-vue/dist/bootstrap-vue.css */ "./node_modules/bootstrap-vue/dist/bootstrap-vue.css");
-/* harmony import */ var bootstrap_vue_dist_bootstrap_vue_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(bootstrap_vue_dist_bootstrap_vue_css__WEBPACK_IMPORTED_MODULE_1__);
 __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.js");
 
 
@@ -78120,10 +78356,10 @@ __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap
 
 
 var self;
-vue__WEBPACK_IMPORTED_MODULE_2__.default.component('menu-principal', __webpack_require__(/*! ../components/menuPrincipal.vue */ "./resources/js/components/menuPrincipal.vue").default);
-vue__WEBPACK_IMPORTED_MODULE_2__.default.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_3__.BootstrapVue);
-vue__WEBPACK_IMPORTED_MODULE_2__.default.use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_4__.BootstrapVueIcons);
-var app = new vue__WEBPACK_IMPORTED_MODULE_2__.default({
+vue__WEBPACK_IMPORTED_MODULE_2__["default"].component('menu-principal', __webpack_require__(/*! ../components/menuPrincipal.vue */ "./resources/js/components/menuPrincipal.vue")["default"]);
+vue__WEBPACK_IMPORTED_MODULE_2__["default"].use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_3__.BootstrapVue);
+vue__WEBPACK_IMPORTED_MODULE_2__["default"].use(bootstrap_vue__WEBPACK_IMPORTED_MODULE_4__.BootstrapVueIcons);
+var app = new vue__WEBPACK_IMPORTED_MODULE_2__["default"]({
   el: '#error',
   beforeCreate: function beforeCreate() {
     self = this;

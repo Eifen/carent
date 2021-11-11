@@ -16,7 +16,7 @@ class TotalHorasCargController extends Controller
       $paginar = 200;
       $cargos = $modelo->cargos();
       $divisiones = $modelo->divisiones();
-      $fecha_desde = date("Y-01-01");
+      $fecha_desde = date("Y-m-01");
       $fecha_hasta = date("Y-m-d");      
       $totales = $modelo ->horasCargadas($fecha_desde, $fecha_hasta, $divisiones, $cargos);      
       $paginas = 1;      
