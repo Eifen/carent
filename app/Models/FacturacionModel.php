@@ -176,6 +176,42 @@ class FacturacionModel extends Model
 
     }
 
+    function iva(){
+
+      $sql = DB::select('SELECT id,
+                                descripcion,
+                                valor
+                         FROM tbl_iva
+                         WHERE id_estatus = 1');
+
+      return $sql;
+
+    }
+
+    function porcentaje_retencion_iva(){
+
+      $sql = DB::select('SELECT id,
+                                descripcion,
+                                valor
+                         FROM tbl_porcentaje_retencion_iva
+                         WHERE id_estatus = 1');
+
+      return $sql;
+
+    }
+
+    function porcentaje_islr(){
+
+      $sql = DB::select('SELECT id,
+                                descripcion,
+                                valor
+                         FROM tbl_deduccion_islr
+                         WHERE id_estatus = 1');
+
+      return $sql;
+
+    }
+
     function facturadoProyecto($id_proyecto){
 
       $sql = DB::select('SELECT (
@@ -258,8 +294,8 @@ class FacturacionModel extends Model
       if($numero_factura != null){
 
         $condicion = " AND UPPER(fp.numero_factura) LIKE UPPER('".$numero_factura."%')
-                      AND fp.id_concepto_factura = ".$tipo_factura."
-                      AND fp.id NOT IN( SELECT id_factura_anular FROM tbl_factura_proyecto WHERE id_estatus = 1 AND id_factura_anular IS NOT NULL )";
+                       AND fp.id_concepto_factura = ".$tipo_factura."
+                       AND fp.id NOT IN( SELECT id_factura_anular FROM tbl_factura_proyecto WHERE id_estatus = 1 AND id_factura_anular IS NOT NULL )";
 
         $limit = " LIMIT ".$hasta;
 
@@ -287,7 +323,9 @@ class FacturacionModel extends Model
                                 (SELECT descripcion FROM tbl_tipo_concepto_factura WHERE id = cf.id_tipo_concepto_factura) AS movimiento,
                                 fp.concepto,
                                 (SELECT UPPER(numero_factura) FROM tbl_factura_proyecto WHERE id = fp.id_factura_anular) numero_factura_anular,
-                                (SELECT UPPER(numero_control) FROM tbl_factura_proyecto WHERE id = fp.id_factura_anular) numero_control_anular
+                                (SELECT UPPER(numero_control) FROM tbl_factura_proyecto WHERE id = fp.id_factura_anular) numero_control_anular,
+                                fp.IVA,
+                                fp.ISLR
                          FROM tbl_factura_proyecto fp,
                               tbl_concepto_factura cf,
                               tbl_usuario fu
@@ -306,14 +344,14 @@ class FacturacionModel extends Model
     function cantidadPaginasFacturasCargadas($paginar, $id_proyecto){
 
       $numFacturas = DB::select('SELECT CEILING( COUNT(1) / '.$paginar.') paginas
-                                  FROM tbl_factura_proyecto fp,
-                                       tbl_concepto_factura cf,
-                                       tbl_usuario fu
-                                  WHERE fp.id_concepto_factura = cf.id
-                                  AND fp.id_facturador = fu.id
-                                  AND fp.id_proyecto = ?
-                                  AND fp.id_estatus = 1
-                                  ORDER BY fp.id DESC', [$id_proyecto]);
+                                 FROM tbl_factura_proyecto fp,
+                                      tbl_concepto_factura cf,
+                                      tbl_usuario fu
+                                 WHERE fp.id_concepto_factura = cf.id
+                                 AND fp.id_facturador = fu.id
+                                 AND fp.id_proyecto = ?
+                                 AND fp.id_estatus = 1
+                                 ORDER BY fp.id DESC', [$id_proyecto]);
 
       return $numFacturas[0]->paginas;
 

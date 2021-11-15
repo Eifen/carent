@@ -81,16 +81,22 @@ class FacturacionController extends Controller
       $proyecto = $modelo->proyecto($id_proyecto);
       $facturadoProyecto = $modelo->facturadoProyecto($id_proyecto);
       $cantidadPaginas = $modelo->cantidadPaginasFacturasCargadas($paginar, $id_proyecto);
+      $retencionIva = $modelo->porcentaje_retencion_iva();
+      $islr = $modelo->porcentaje_islr();
+      $iva = $modelo->iva();
 
       return [
         "numero_paginas" => $cantidadPaginas,
         "conceptos_factura" => $conceptosFactura,
         "facturas_cargadas" => $facturasCargadas,
         "facturado_proyecto" => $facturadoProyecto,
+        "islr" => $islr,
+        "iva" => $iva,
         "paginar" => $paginar,
         "permisos" => $permisos,
         "proyecto" => $proyecto,
-        "response" => true
+        "response" => true,
+        "retencionIva" => $retencionIva
       ];
 
     }

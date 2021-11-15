@@ -486,24 +486,6 @@
                 v-model="$v.form.campos.numeroFactura.$model"></b-form-input>
             </b-form-group>
             <b-form-group
-              :invalid-feedback="form.camposAtributos.montoFactura.invalidFeedback"
-              class="col-12 col-sm-6 col-md-3"
-              label="Monto Factura"
-              label-for="montoFactura"
-              id="group-montoFactura">
-              <b-input-group :prepend="simboloMoneda" size="sm">
-                <b-form-input
-                  @input="limpiarMensajeError(form.camposAtributos.montoFactura)"
-                  :disabled="form.camposAtributos.montoFactura.disabled"
-                  :state="form.camposAtributos.montoFactura.state"
-                  autocomplete="off"
-                  id="montoFactura"
-                  ref="montoFactura"
-                  type="text"
-                  v-model.trim="$v.form.campos.montoFactura.$model"></b-form-input>
-              </b-input-group>
-            </b-form-group>
-            <b-form-group
               :invalid-feedback="form.camposAtributos.fechaFactura.invalidFeedback"
               class="col-12 col-sm-6 col-md-3"
               description="Fecha en que se emite la factura"
@@ -524,6 +506,120 @@
                 ref="fechaFactura"
                 size="sm"
                 v-model="$v.form.campos.fechaFactura.$model"></b-form-datepicker>
+            </b-form-group>
+            <b-form-group
+              :invalid-feedback="form.camposAtributos.montoFactura.invalidFeedback"
+              class="col-12 col-sm-6 col-md-3"
+              label="Monto Factura"
+              label-for="montoFactura"
+              id="group-montoFactura">
+              <b-input-group :prepend="simboloMoneda" size="sm">
+                <b-form-input
+                  @input="totalFactura"
+                  :disabled="form.camposAtributos.montoFactura.disabled"
+                  :state="form.camposAtributos.montoFactura.state"
+                  autocomplete="off"
+                  id="montoFactura"
+                  ref="montoFactura"
+                  type="text"
+                  v-model.trim="$v.form.campos.montoFactura.$model"></b-form-input>
+              </b-input-group>
+            </b-form-group>
+            <b-form-group
+              :invalid-feedback="form.camposAtributos.ivaFactura.invalidFeedback"
+              class="col-12 col-sm-6 col-md-2"
+              description="Retención del IVA"
+              label="IVA"
+              label-for="ivaFactura"
+              id="group-ivaFactura">
+              <b-form-select
+                @change="totalFactura"
+                :disabled="form.camposAtributos.ivaFactura.disabled"
+                :options="comboIva"
+                :state="form.camposAtributos.ivaFactura.state"
+                :value="null"
+                id="ivaFactura"
+                ref="ivaFactura"
+                size="sm"
+                v-model="form.campos.ivaFactura">
+                <template v-slot:first>
+                  <option :value="null" disabled="true">Seleccione una opción</option>
+                </template>
+              </b-form-select>
+            </b-form-group>
+            <b-form-group
+              :invalid-feedback="form.camposAtributos.retencionIvaFactura.invalidFeedback"
+              class="col-12 col-sm-6 col-md-2"
+              description="Retención del IVA"
+              label="Retención IVA"
+              label-for="retencionIvaFactura"
+              id="group-retencionIvaFactura">
+              <b-form-select
+                @change="totalFactura"
+                :disabled="form.camposAtributos.retencionIvaFactura.disabled"
+                :options="comboRetencionIva"
+                :state="form.camposAtributos.retencionIvaFactura.state"
+                :value="null"
+                id="retencionIvaFactura"
+                ref="retencionIvaFactura"
+                size="sm"
+                v-model="form.campos.retencionIvaFactura">
+                <template v-slot:first>
+                  <option :value="null" disabled="true">Seleccione una opción</option>
+                </template>
+              </b-form-select>
+            </b-form-group>
+            <b-form-group
+              class="col-12 col-sm-6 col-md-3"
+              label="Subtotal Factura"
+              label-for="subtotalFactura"
+              id="group-subtotalFactura">
+              <b-input-group :prepend="simboloMoneda" size="sm">
+                <b-form-input
+                  disabled
+                  id="subtotalFactura"
+                  ref="subtotalFactura"
+                  size="sm"
+                  type="text"
+                  v-model="form.campos.subtotalFactura"></b-form-input>
+                </b-input-group>
+            </b-form-group>
+            <b-form-group
+              :invalid-feedback="form.camposAtributos.islrFactura.invalidFeedback"
+              class="col-12 col-sm-6 col-md-2"
+              description="Deducción ISLR"
+              label="ISLR"
+              label-for="islrFactura"
+              id="group-islrFactura">
+              <b-form-select
+                @change="totalFactura"
+                :disabled="form.camposAtributos.islrFactura.disabled"
+                :options="comboIslr"
+                :state="form.camposAtributos.islrFactura.state"
+                :value="null"
+                id="islrFactura"
+                ref="islrFactura"
+                size="sm"
+                v-model="$v.form.campos.islrFactura.$model">
+                <template v-slot:first>
+                  <option :value="null" disabled="true">Seleccione una opción</option>
+                </template>
+              </b-form-select>
+            </b-form-group>
+            <b-form-group
+              class="col-12 col-sm-6 col-md-3"
+              label="Neto a Pagar"
+              label-for="totalFactura"
+              id="group-totalFactura">
+              <b-input-group :prepend="simboloMoneda" size="sm">
+                <b-form-input
+                  disabled
+                  id="totalFactura"
+                  ref="totalFactura"
+                  size="sm"
+                  type="text"
+                  v-model="form.campos.totalFactura"></b-form-input>
+              </b-input-group>
             </b-form-group>
             <b-form-group
               :invalid-feedback="form.camposAtributos.concepto.invalidFeedback"

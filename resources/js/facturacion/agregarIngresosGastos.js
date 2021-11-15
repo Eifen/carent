@@ -44,6 +44,9 @@ new Vue({
       }
     },
     comboTipoConceptos: [],
+    comboIva: [],
+    comboIslr: [],
+    comboRetencionIva: [],
     form: {
       alert: {
         contador: false,
@@ -75,6 +78,11 @@ new Vue({
         tipoConcepto: null,
         numeroFactura: null,
         montoFactura: null,
+        ivaFactura: null,
+        retencionIvaFactura: null,
+        subtotalFactura: null,
+        islrFactura: null,
+        totalFactura: null,
         fechaFactura: null,
         concepto: null,
         numeroControl: null,
@@ -113,14 +121,35 @@ new Vue({
           valorFocus: null,
           state: null
         },
-        montoFactura: {
-          autonumeric: null,
-          decPlace: 2,
-          decString: ",",
+        ivaFactura: {
           disabled: true,
           invalidFeedback: "",
-          state: null,
-          thouSep: "."
+          state: null
+        },
+        retencionIvaFactura: {
+          disabled: true,
+          invalidFeedback: "",
+          state: null
+        },
+        subtotalFactura: {
+          autonumeric: null
+        },
+        islrFactura: {
+          disabled: true,
+          invalidFeedback: "",
+          state: null
+        },
+        totalFactura: {
+          autonumeric: null
+        },
+        montoFactura: {
+          autonumeric: null,
+          //decPlace: 2,
+          //decString: ",",
+          disabled: true,
+          invalidFeedback: "",
+          state: null/*,
+          thouSep: "."*/
         },
         fechaFactura: {
           disabled: true,
@@ -324,6 +353,21 @@ new Vue({
             return (!this.form.camposAtributos.montoFactura.disabled);
           })
         },
+        ivaFactura: {
+          required: requiredIf(function() {
+            return (!this.form.camposAtributos.ivaFactura.disabled);
+          })
+        },
+        retencionIvaFactura: {
+          required: requiredIf(function() {
+            return (!this.form.camposAtributos.retencionIvaFactura.disabled);
+          })
+        },
+        islrFactura: {
+          required: requiredIf(function() {
+            return (!this.form.camposAtributos.islrFactura.disabled);
+          })
+        },
         fechaFactura: {
           required: requiredIf(function() {
             return (!this.form.camposAtributos.fechaFactura.disabled);
@@ -418,6 +462,18 @@ new Vue({
           self.comboTipoConceptos.push({text:item.descripcion, value: {id: item.id, type: item.id_tipo_concepto_factura} });
         });
 
+        response.data.retencionIva.forEach((item, i) => {
+          self.comboRetencionIva.push({text:item.descripcion, value: {id: item.id, valor: item.valor} });
+        });
+
+        response.data.iva.forEach((item, i) => {
+          self.comboIva.push({text:item.descripcion, value: {id: item.id, valor: item.valor} });
+        });
+
+        response.data.islr.forEach((item, i) => {
+          self.comboIslr.push({text:item.descripcion, value: {id: item.id, valor: item.valor} });
+        });
+
         self.form.camposAtributos.tipoConcepto.disabled = false;
         self.form.camposAtributos.observaciones.disabled = false;
 
@@ -433,6 +489,8 @@ new Vue({
           { key: 'tipo_concepto', label: 'Tipo Concepto' },
           { key: 'movimiento', label: 'Movimiento' },
           { key: 'monto_factura_formatted', label: 'Monto' },
+          { key: 'IVA_formatted', label: 'IVA' },
+          { key: 'ISLR_formatted', label: 'ISLR' },
           { key: 'fecha_factura_formatted', label: 'Fecha Fact.' },
           { key: 'opciones', label: ' ' }
         ];
@@ -485,9 +543,33 @@ new Vue({
 
         self.$refs["agregar-factura"].$on('shown', () => {
 
-          let monto = self.$refs["montoFactura"].$el
+          let monto = self.$refs["montoFactura"].$el;
 
           self.form.camposAtributos.montoFactura.autonumeric = new AutoNumeric(monto, {
+            decimalPlaces: 2,
+            decimalCharacter: ',',
+            digitGroupSeparator: '.',
+            emptyInputBehavior: 0,
+            maximumValue: '99999999999999999999.99',
+            minimumValue: 0,
+            modifyValueOnWheel: false
+          });
+
+          let subTotal = self.$refs["subtotalFactura"].$el;
+
+          self.form.camposAtributos.subtotalFactura.autonumeric = new AutoNumeric(subTotal, {
+            decimalPlaces: 2,
+            decimalCharacter: ',',
+            digitGroupSeparator: '.',
+            emptyInputBehavior: 0,
+            maximumValue: '99999999999999999999.99',
+            minimumValue: 0,
+            modifyValueOnWheel: false
+          });
+
+          let total = self.$refs["totalFactura"].$el;
+
+          self.form.camposAtributos.totalFactura.autonumeric = new AutoNumeric(total, {
             decimalPlaces: 2,
             decimalCharacter: ',',
             digitGroupSeparator: '.',
@@ -510,7 +592,14 @@ new Vue({
           self.form.camposAtributos.observaciones.value = "";
           self.form.campos.montoFactura = null;
           self.form.camposAtributos.montoFactura.autonumeric.set(0);
+          self.form.campos.subtotalFactura = null;
+          self.form.camposAtributos.subtotalFactura.autonumeric.set(0);
+          self.form.campos.totalFactura = null;
+          self.form.camposAtributos.totalFactura.autonumeric.set(0);
           self.form.campos.numeroFacturaAnular = null;
+          self.form.campos.ivaFactura = null;
+          self.form.campos.retencionIvaFactura = null;
+          self.form.campos.islrFactura  = null;
 
           Object.keys(self.form.camposAtributos).forEach((indice, i) => {
 
@@ -637,7 +726,11 @@ new Vue({
           observaciones: item.observaciones,
           id_concepto_factura: item.id_concepto_factura,
           numero_factura_anular: item.numero_factura_anular,
-          numero_control_anular: item.numero_control_anular
+          numero_control_anular: item.numero_control_anular,
+          IVA: item.IVA,
+          IVA_formatted: item.IVA+'%',
+          ISLR: item.ISLR,
+          ISLR_formatted: item.ISLR+'%'
         };
 
         registros.push(factura);
@@ -725,7 +818,12 @@ new Vue({
         self.form.campos.numeroControl = null;
         self.form.camposAtributos.observaciones.value = "";
         self.form.campos.montoFactura = null;
+        self.form.campos.ivaFactura = null;
+        self.form.campos.retencionIvaFactura = null;
+        self.form.campos.islrFactura = null;
         self.form.camposAtributos.montoFactura.autonumeric.set(0);
+        self.form.camposAtributos.subtotalFactura.autonumeric.set(0);
+        self.form.camposAtributos.totalFactura.autonumeric.set(0);
         self.form.campos.numeroFacturaAnular = null;
 
       }
@@ -748,15 +846,44 @@ new Vue({
         self.form.camposAtributos.fechaFactura.disabled = false;
         self.form.camposAtributos.concepto.disabled = false;
 
+      }else if(id === 2 && type === 1){
+
+        self.form.camposAtributos.concepto.disabled = false;
+        self.form.camposAtributos.numeroFactura.disabled = false;
+        self.form.camposAtributos.montoFactura.disabled = false;
+        self.form.camposAtributos.fechaFactura.disabled = false;
+        self.form.camposAtributos.fechaCobroFactura.disabled = false;
+        self.form.camposAtributos.numeroControl.disabled = false;
+        self.form.camposAtributos.observaciones.disabled = false;
+
+      }else if(type === 2 && id === 3){
+
+        self.form.camposAtributos.concepto.disabled = false;
+        self.form.camposAtributos.numeroFactura.disabled = false;
+        self.form.camposAtributos.montoFactura.disabled = false;
+        self.form.camposAtributos.ivaFactura.disabled = false;
+        self.form.camposAtributos.retencionIvaFactura.disabled = false;
+        self.form.camposAtributos.islrFactura.disabled = false;
+        self.form.camposAtributos.fechaFactura.disabled = false;
+        self.form.camposAtributos.fechaCobroFactura.disabled = false;
+        self.form.camposAtributos.numeroControl.disabled = false;
+        self.form.camposAtributos.observaciones.disabled = false;
+
       }else if(type === 2 && id === 5){
 
         self.form.camposAtributos.montoFactura.disabled = false;
+        self.form.camposAtributos.ivaFactura.disabled = false;
+        self.form.camposAtributos.retencionIvaFactura.disabled = false;
+        self.form.camposAtributos.islrFactura.disabled = false;
 
       }else{
 
         self.form.camposAtributos.concepto.disabled = false;
         self.form.camposAtributos.numeroFactura.disabled = false;
         self.form.camposAtributos.montoFactura.disabled = false;
+        self.form.camposAtributos.ivaFactura.disabled = false;
+        self.form.camposAtributos.retencionIvaFactura.disabled = false;
+        self.form.camposAtributos.islrFactura.disabled = false;
         self.form.camposAtributos.fechaFactura.disabled = false;
         self.form.camposAtributos.fechaCobroFactura.disabled = false;
         self.form.camposAtributos.numeroControl.disabled = false;
@@ -1413,6 +1540,36 @@ new Vue({
         self.mostrarAlert(self.modalMasInfo.alert, true, variante, mensaje, true, true, 10);
 
       });
+
+    },
+    totalFactura: function(){
+
+      let monto = parseFloat(self.form.camposAtributos.montoFactura.autonumeric.get());
+      let retIva = (self.form.campos.ivaFactura === null) ? 0 : parseFloat(self.form.campos.ivaFactura.valor);
+      let iva = (self.form.campos.retencionIvaFactura === null) ? 0 : parseFloat(self.form.campos.retencionIvaFactura.valor);
+      let islr = (self.form.campos.islrFactura === null) ? 0 : parseFloat(self.form.campos.islrFactura.valor);
+
+      let porcRetencionIVA = (iva * retIva) / 100;
+      let retencionIVA = (monto * porcRetencionIVA) / 100;
+      let deduccionIslr = ((monto * islr) / 100);
+
+      let subtotal = monto + retencionIVA;
+      let total = subtotal - retencionIVA - deduccionIslr;
+
+      if(self.form.campos.ivaFactura !== null && self.form.campos.retencionIvaFactura !== null){
+
+        self.form.camposAtributos.subtotalFactura.autonumeric.set(subtotal);
+
+      }
+
+      if(self.form.campos.islrFactura !== null && subtotal !== 0){
+
+        self.form.camposAtributos.totalFactura.autonumeric.set(total);
+
+      }
+
+
+      self.limpiarMensajeError(self.form.camposAtributos.montoFactura);
 
     }
   }
