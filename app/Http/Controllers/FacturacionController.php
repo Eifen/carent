@@ -138,7 +138,11 @@ class FacturacionController extends Controller
           "fecha_registro" => date("Y-m-d"),
           "id_facturador" => session("usuario_id"),
           "id_estatus" => 1,
-          "id_factura_anular" => $request["id_factura_anular"]
+          "id_factura_anular" => $request["id_factura_anular"],
+          "id_factura_anular" => $request["id_factura_anular"],
+          "id_iva" => $request["id_iva"],
+          "id_porcentaje_retencion_iva" => $request["retencion_iva"],
+          "id_deduccion_islr" => $request["islr"]
         ];
 
         $paginar = $request["paginar"];

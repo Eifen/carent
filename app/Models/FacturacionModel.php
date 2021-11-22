@@ -308,7 +308,6 @@ class FacturacionModel extends Model
 
       $sql = DB::select('SELECT fp.id,
                                 UPPER(fp.numero_factura) AS numero_factura,
-                                FORMAT(fp.monto_factura,2,"de_DE") AS monto_factura_formatted,
                                 fp.monto_factura AS monto_factura,
                                 DATE_FORMAT(fp.fecha_factura, "%d/%m/%Y") AS fecha_factura_formatted,
                                 fp.fecha_factura,
@@ -324,8 +323,34 @@ class FacturacionModel extends Model
                                 fp.concepto,
                                 (SELECT UPPER(numero_factura) FROM tbl_factura_proyecto WHERE id = fp.id_factura_anular) numero_factura_anular,
                                 (SELECT UPPER(numero_control) FROM tbl_factura_proyecto WHERE id = fp.id_factura_anular) numero_control_anular,
-                                fp.IVA,
-                                fp.ISLR
+                                (SELECT descripcion FROM tbl_iva i WHERE i.id = fp.id_iva) AS porc_iva,
+                                (SELECT descripcion FROM tbl_porcentaje_retencion_iva t WHERE t.id = fp.id_porcentaje_retencion_iva) AS porc_retencion_iva,
+                                (SELECT descripcion FROM tbl_deduccion_islr t WHERE t.id = fp.id_deduccion_islr) porc_islr,
+                                TRUNCATE((
+                                   fp.monto_factura
+                                   *
+                                   ((SELECT valor FROM tbl_iva i WHERE i.id = fp.id_iva) * (SELECT valor FROM tbl_porcentaje_retencion_iva t WHERE t.id = fp.id_porcentaje_retencion_iva) / 100)
+                                   /
+                                   100
+                                ),2) AS retencion_iva,
+                                (
+                                   fp.monto_factura
+                                   *
+                                   (SELECT descripcion FROM tbl_deduccion_islr t WHERE t.id = fp.id_deduccion_islr)
+                                    /
+                                    100
+                                ) AS deduccion_islr,
+                                TRUNCATE((
+                                  fp.monto_factura
+                                  +
+                                  (
+                                   fp.monto_factura
+                                   *
+                                   ((SELECT valor FROM tbl_iva i WHERE i.id = fp.id_iva) * (SELECT valor FROM tbl_porcentaje_retencion_iva t WHERE t.id = fp.id_porcentaje_retencion_iva) / 100)
+                                   /
+                                   100
+                                  )
+                                ),2) AS subtotal
                          FROM tbl_factura_proyecto fp,
                               tbl_concepto_factura cf,
                               tbl_usuario fu

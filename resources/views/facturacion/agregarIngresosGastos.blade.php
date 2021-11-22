@@ -515,7 +515,7 @@
               id="group-montoFactura">
               <b-input-group :prepend="simboloMoneda" size="sm">
                 <b-form-input
-                  @input="totalFactura"
+                  @input="totalFactura(form.camposAtributos.montoFactura)"
                   :disabled="form.camposAtributos.montoFactura.disabled"
                   :state="form.camposAtributos.montoFactura.state"
                   autocomplete="off"
@@ -533,7 +533,7 @@
               label-for="ivaFactura"
               id="group-ivaFactura">
               <b-form-select
-                @change="totalFactura"
+                @change="totalFactura(form.camposAtributos.ivaFactura)"
                 :disabled="form.camposAtributos.ivaFactura.disabled"
                 :options="comboIva"
                 :state="form.camposAtributos.ivaFactura.state"
@@ -541,7 +541,7 @@
                 id="ivaFactura"
                 ref="ivaFactura"
                 size="sm"
-                v-model="form.campos.ivaFactura">
+                v-model="$v.form.campos.ivaFactura.$model">
                 <template v-slot:first>
                   <option :value="null" disabled="true">Seleccione una opción</option>
                 </template>
@@ -555,7 +555,7 @@
               label-for="retencionIvaFactura"
               id="group-retencionIvaFactura">
               <b-form-select
-                @change="totalFactura"
+                @change="totalFactura(form.camposAtributos.retencionIvaFactura)"
                 :disabled="form.camposAtributos.retencionIvaFactura.disabled"
                 :options="comboRetencionIva"
                 :state="form.camposAtributos.retencionIvaFactura.state"
@@ -563,7 +563,7 @@
                 id="retencionIvaFactura"
                 ref="retencionIvaFactura"
                 size="sm"
-                v-model="form.campos.retencionIvaFactura">
+                v-model="$v.form.campos.retencionIvaFactura.$model">
                 <template v-slot:first>
                   <option :value="null" disabled="true">Seleccione una opción</option>
                 </template>
@@ -581,7 +581,7 @@
                   ref="subtotalFactura"
                   size="sm"
                   type="text"
-                  v-model="form.campos.subtotalFactura"></b-form-input>
+                  v-model="form.camposAtributos.subtotalFactura.value"></b-form-input>
                 </b-input-group>
             </b-form-group>
             <b-form-group
@@ -592,7 +592,7 @@
               label-for="islrFactura"
               id="group-islrFactura">
               <b-form-select
-                @change="totalFactura"
+                @change="totalFactura(form.camposAtributos.islrFactura)"
                 :disabled="form.camposAtributos.islrFactura.disabled"
                 :options="comboIslr"
                 :state="form.camposAtributos.islrFactura.state"
@@ -618,7 +618,7 @@
                   ref="totalFactura"
                   size="sm"
                   type="text"
-                  v-model="form.campos.totalFactura"></b-form-input>
+                  v-model="form.camposAtributos.totalFactura.value"></b-form-input>
               </b-input-group>
             </b-form-group>
             <b-form-group

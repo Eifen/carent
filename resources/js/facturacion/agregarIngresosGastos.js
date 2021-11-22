@@ -77,13 +77,11 @@ new Vue({
       campos: {
         tipoConcepto: null,
         numeroFactura: null,
+        fechaFactura: null,
         montoFactura: null,
         ivaFactura: null,
         retencionIvaFactura: null,
-        subtotalFactura: null,
         islrFactura: null,
-        totalFactura: null,
-        fechaFactura: null,
         concepto: null,
         numeroControl: null,
         numeroFacturaAnular: null
@@ -132,7 +130,8 @@ new Vue({
           state: null
         },
         subtotalFactura: {
-          autonumeric: null
+          autonumeric: null,
+          value: null
         },
         islrFactura: {
           disabled: true,
@@ -140,7 +139,8 @@ new Vue({
           state: null
         },
         totalFactura: {
-          autonumeric: null
+          autonumeric: null,
+          value: null
         },
         montoFactura: {
           autonumeric: null,
@@ -489,8 +489,11 @@ new Vue({
           { key: 'tipo_concepto', label: 'Tipo Concepto' },
           { key: 'movimiento', label: 'Movimiento' },
           { key: 'monto_factura_formatted', label: 'Monto' },
-          { key: 'IVA_formatted', label: 'IVA' },
-          { key: 'ISLR_formatted', label: 'ISLR' },
+          { key: 'porc_iva', label: 'IVA' },
+          { key: 'porc_ret_iva', label: 'Retención IVA' },
+          { key: 'monto_subtotal', label: 'Subtotal' },
+          { key: 'porc_isrl', label: 'ISLR' },
+          { key: 'neto_cobrar', label: 'Neto a Cobrar' },
           { key: 'fecha_factura_formatted', label: 'Fecha Fact.' },
           { key: 'opciones', label: ' ' }
         ];
@@ -592,9 +595,9 @@ new Vue({
           self.form.camposAtributos.observaciones.value = "";
           self.form.campos.montoFactura = null;
           self.form.camposAtributos.montoFactura.autonumeric.set(0);
-          self.form.campos.subtotalFactura = null;
+          self.form.camposAtributos.subtotalFactura.value = null;
           self.form.camposAtributos.subtotalFactura.autonumeric.set(0);
-          self.form.campos.totalFactura = null;
+          self.form.camposAtributos.totalFactura.value = null;
           self.form.camposAtributos.totalFactura.autonumeric.set(0);
           self.form.campos.numeroFacturaAnular = null;
           self.form.campos.ivaFactura = null;
@@ -708,13 +711,15 @@ new Vue({
           default: variante = "light";
         }
 
+        const neto_cobrar = item.subtotal - item.retencion_iva - item.deduccion_islr;
+
         const factura = {
           numero: (i + 1),
           tipo_concepto: item.tipo_concepto,
           concepto: item.concepto,
           numero_factura: item.numero_factura,
           monto_factura: item.monto_factura,
-          monto_factura_formatted: self.simboloMoneda+item.monto_factura_formatted,
+          monto_factura_formatted: self.simboloMoneda + (self.formatoMonto(item.monto_factura)),
           fecha_factura: item.fecha_factura,
           fecha_factura_formatted: item.fecha_factura_formatted,
           fecha_cobro_factura: item.fecha_cobro_factura,
@@ -727,10 +732,12 @@ new Vue({
           id_concepto_factura: item.id_concepto_factura,
           numero_factura_anular: item.numero_factura_anular,
           numero_control_anular: item.numero_control_anular,
-          IVA: item.IVA,
-          IVA_formatted: item.IVA+'%',
-          ISLR: item.ISLR,
-          ISLR_formatted: item.ISLR+'%'
+          porc_iva: item.porc_iva,
+          porc_isrl: item.porc_islr,
+          neto_cobrar: item.neto_cobrar,
+          porc_ret_iva: item.porc_retencion_iva,
+          monto_subtotal: self.simboloMoneda + (self.formatoMonto(item.subtotal)),
+          neto_cobrar: self.simboloMoneda + (self.formatoMonto(neto_cobrar))
         };
 
         registros.push(factura);
@@ -738,6 +745,11 @@ new Vue({
       });
 
       return registros;
+
+    },
+    formatoMonto: function(numero){
+
+      return Number(numero).toLocaleString("de", {minimumFractionDigits: 2});
 
     },
     paginaAnterior: function(){
@@ -980,7 +992,10 @@ new Vue({
         observaciones: self.form.camposAtributos.observaciones.value,
         id_proyecto: proyecto_id,
         id_factura_anular: self.form.campos.numeroFacturaAnular,
-        paginar: self.paginador.paginar
+        paginar: self.paginador.paginar,
+        id_iva: (self.form.campos.ivaFactura === null) ? null : self.form.campos.ivaFactura.id,
+        retencion_iva: (self.form.campos.retencionIvaFactura === null) ? null : self.form.campos.retencionIvaFactura.id,
+        islr: (self.form.campos.islrFactura === null) ? null : self.form.campos.islrFactura.id
       }
 
       self.form.botones.cancelar.disabled = true;
@@ -1012,7 +1027,14 @@ new Vue({
           self.form.camposAtributos.observaciones.value = "";
           self.form.campos.montoFactura = null;
           self.form.camposAtributos.montoFactura.autonumeric.set(0);
+          self.form.camposAtributos.subtotalFactura.value = null;
+          self.form.camposAtributos.subtotalFactura.autonumeric.set(0);
+          self.form.camposAtributos.totalFactura.value = null;
+          self.form.camposAtributos.totalFactura.autonumeric.set(0);
           self.form.campos.numeroFacturaAnular = null;
+          self.form.campos.ivaFactura = null;
+          self.form.campos.retencionIvaFactura = null;
+          self.form.campos.islrFactura  = null;
 
           self.form.info.monto_facturado = self.simboloMoneda+response.data.facturado_proyecto.monto_facturado;
           self.form.info.monto_gastos = self.simboloMoneda+response.data.facturado_proyecto.monto_gasto;
@@ -1542,7 +1564,7 @@ new Vue({
       });
 
     },
-    totalFactura: function(){
+    totalFactura: function(campo){
 
       let monto = parseFloat(self.form.camposAtributos.montoFactura.autonumeric.get());
       let retIva = (self.form.campos.ivaFactura === null) ? 0 : parseFloat(self.form.campos.ivaFactura.valor);
@@ -1569,7 +1591,7 @@ new Vue({
       }
 
 
-      self.limpiarMensajeError(self.form.camposAtributos.montoFactura);
+      self.limpiarMensajeError(campo);
 
     }
   }
