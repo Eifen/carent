@@ -355,15 +355,17 @@
             self.tabla.encabezado = [
               { key: 'numero', label: '#' },
               { key: 'nombre', label: 'Empleado' },
-              { key: 'total_horas_cargables', label: 'Horas Clientes' },
-              { key: 'porcen_horas_cargables', label: '% Horas Clientes' },
-              { key: 'porcen_carga_cliente', label: '% Cargabilidad A Clientes' },
-              { key: 'total_horas_no_cargables', label: 'Horas No Cargables' },
-              { key: 'porcen_horas_no_cargables', label: '% Horas No Cargables' },
-              { key: 'porcen_carga_no_cliente', label: '% Cargabilidad No Clientes' },
-              { key: 'total_horas', label: 'Total Horas Cargadas' },
+              { key: 'total_horas_cargables', label: 'Total horas cargables' },
+              //{ key: 'porcen_horas_cargables', label: '% Horas Clientes' },
+              { key: 'porcen_carga_cliente', label: '% Carga cliente' },
+              { key: 'total_horas_no_cargables', label: 'Horas no cargables' },
+              //{ key: 'porcen_horas_no_cargables', label: '% Horas No Cargables' },
+              { key: 'porcen_carga_no_cliente', label: '% Carga no cliente' },
+              { key: 'total_horas', label: 'Total horas' },
               { key: 'porcen_carga_total', label: '% Carga total (Ref: '+parseInt(response.data.totales[0].maximo_horas)+' Horas)' },
-              { key: 'exceso', label: 'Exceso Horas Cargadas' },
+              //{ key: 'exceso', label: 'Exceso' },
+              { key: 'exceso_cargables', label: 'Exceso carga cliente' },
+              { key: 'exceso_no_cargables', label: 'Exceso carga no cliente' },
 
             ];
 
@@ -458,14 +460,16 @@
               numero: (i + 1),
               nombre: item.nombre,
               total_horas_cargables: item.total_horas_cargables,
-              porcen_horas_cargables: item.porcen_horas_cargables,
+              //porcen_horas_cargables: item.porcen_horas_cargables,
               porcen_carga_cliente: item.porcen_carga_cliente,
               total_horas_no_cargables: item.total_horas_no_cargables,
-              porcen_horas_no_cargables: item.porcen_horas_no_cargables,
+              //porcen_horas_no_cargables: item.porcen_horas_no_cargables,
               porcen_carga_no_cliente: item.porcen_carga_no_cliente,
               total_horas: item.total_horas,
               porcen_carga_total: item.porcen_carga_total,
-              exceso: item.exceso,
+              //exceso: item.exceso,
+              exceso_cargables: item.exceso_cargables,
+              exceso_no_cargables: item.exceso_no_cargables
             };
 
             registros.push(data);
@@ -568,14 +572,16 @@
               { key: 'numero', label: '#' },
               { key: 'nombre', label: 'Empleado' },
               { key: 'total_horas_cargables', label: 'Horas Clientes' },
-              { key: 'porcen_horas_cargables', label: '% Horas Clientes' },
+              //{ key: 'porcen_horas_cargables', label: '% Horas Clientes' },
               { key: 'porcen_carga_cliente', label: '% Cargabilidad A Clientes' },
               { key: 'total_horas_no_cargables', label: 'Horas No Cargables' },
-              { key: 'porcen_horas_no_cargables', label: '% Horas No Cargables' },
+              //{ key: 'porcen_horas_no_cargables', label: '% Horas No Cargables' },
               { key: 'porcen_carga_no_cliente', label: '% Cargabilidad No Clientes' },
               { key: 'total_horas', label: 'Total Horas Cargadas' },
               { key: 'porcen_carga_total', label: '% Carga total (Ref: '+parseInt(response.data.totales[0].maximo_horas)+' Horas)' },
-              { key: 'exceso', label: 'Exceso Horas Cargadas' },
+              //{ key: 'exceso', label: 'Exceso' },
+              { key: 'exceso_cargables', label: 'Exceso carga cliente' },
+              { key: 'exceso_no_cargables', label: 'Exceso carga no cliente' },
 
             ];
 
