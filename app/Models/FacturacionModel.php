@@ -354,7 +354,9 @@ class FacturacionModel extends Model
                                 fp.id_iva,
                                 fp.id_deduccion_islr,
                                 fp.id_porcentaje_retencion_iva,
-                                (SELECT valor FROM tbl_iva i WHERE i.id = fp.id_iva) AS valor_iva
+                                (SELECT valor FROM tbl_iva t WHERE t.id = fp.id_iva) AS valor_iva,
+                                (SELECT valor FROM tbl_porcentaje_retencion_iva t WHERE t.id = fp.id_porcentaje_retencion_iva) AS valor_ret_iva,
+                                (SELECT valor FROM tbl_deduccion_islr t WHERE t.id = fp.id_deduccion_islr) AS valor_islr
                          FROM tbl_factura_proyecto fp,
                               tbl_concepto_factura cf,
                               tbl_usuario fu

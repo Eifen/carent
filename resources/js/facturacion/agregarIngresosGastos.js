@@ -806,7 +806,9 @@ new Vue({
           monto_subtotal: item.subtotal,
           neto_cobrar_formatted: self.simboloMoneda + (self.formatoMonto(neto_cobrar)),
           neto_cobrar: neto_cobrar,
-          valor_iva: item.valor_iva
+          valor_iva: item.valor_iva,
+          valor_ret_iva: item.valor_ret_iva,
+          valor_islr: item.valor_islr
         };
 
         registros.push(factura);
@@ -1402,8 +1404,8 @@ console.log(data)
       self.modalMasInfo.form.camposAtributos.numeroFacturaAnular.factura = data.numero_factura_anular;
       self.modalMasInfo.form.camposAtributos.numeroFacturaAnular.numeroControl = data.numero_control_anular;
       self.modalMasInfo.form.campos.ivaFacturaMod = {id: data.id_iva, valor: data.valor_iva};
-      self.modalMasInfo.form.campos.retencionIvaFacturaMod = {id: data.id_porcentaje_retencion_iva, descripcion: data.porc_ret_iva, valor: data.porc_ret_iva};
-      self.modalMasInfo.form.campos.islrFacturaMod = {id: data.id_deduccion_islr, descripcion: data.porc_isrl, valor: data.porc_isrl};
+      self.modalMasInfo.form.campos.retencionIvaFacturaMod = {id: data.id_porcentaje_retencion_iva, valor: data.valor_ret_iva};
+      self.modalMasInfo.form.campos.islrFacturaMod = {id: data.id_deduccion_islr, valor: data.valor_islr};
       self.modalMasInfo.form.camposAtributos.subtotalFacturaMod.value = data.monto_subtotal;
       self.modalMasInfo.form.camposAtributos.totalFacturaMod.value = data.neto_cobrar;
 
