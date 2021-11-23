@@ -222,7 +222,7 @@
               </template>
               <template v-slot:custom-foot v-if="tabla.registros.length > 0">
                 <b-tr>
-                  <b-td colspan="9">
+                  <b-td colspan="13">
                     <div>
                       <div><b>Página</b></div>
                       <div class="wrapper-input" v-on:keyup="numeroPagina">
@@ -268,136 +268,242 @@
         <b-modal
           centered
           ref="modal-mas-info"
-          size="lg">
+          size="xl">
           <template v-slot:modal-title>
             Más información @{{ modalMasInfo.titulo }}
           </template>
-          <b-form-group
-            :invalid-feedback="modalMasInfo.form.camposAtributos.montoFacturaMod.invalidFeedback"
-            label="Monto Factura"
-            label-for="montoFacturaMod">
-            <b-input-group :prepend="simboloMoneda" size="sm">
-              <b-form-input
-                @input="limpiarMensajeError(modalMasInfo.form.camposAtributos.montoFacturaMod)"
-                :disabled="modalMasInfo.form.camposAtributos.montoFacturaMod.disabled"
-                :state="modalMasInfo.form.camposAtributos.montoFacturaMod.state"
+          <b-form class="row">
+            <b-form-group
+              :invalid-feedback="modalMasInfo.form.camposAtributos.montoFacturaMod.invalidFeedback"
+              class="col-12 col-sm-6 col-md-3"
+              label="Monto Factura"
+              label-for="montoFacturaMod">
+              <b-input-group :prepend="simboloMoneda" size="sm">
+                <b-form-input
+                  @input="totalFacturaMod(modalMasInfo.form.camposAtributos.montoFacturaMod)"
+                  :disabled="modalMasInfo.form.camposAtributos.montoFacturaMod.disabled"
+                  :state="modalMasInfo.form.camposAtributos.montoFacturaMod.state"
+                  autocomplete="off"
+                  id="montoFacturaMod"
+                  ref="montoFacturaMod"
+                  type="text"
+                  v-model.trim="$v.modalMasInfo.form.campos.montoFacturaMod.$model"></b-form-input>
+              </b-input-group>
+            </b-form-group>
+            <b-form-group
+              :invalid-feedback="modalMasInfo.form.camposAtributos.ivaFacturaMod.invalidFeedback"
+              class="col-12 col-sm-6 col-md-3"
+              label="IVA"
+              label-for="ivaFacturaMod"
+              id="group-ivaFacturaMod">
+              <b-form-select
+                @change="totalFacturaMod(modalMasInfo.form.camposAtributos.ivaFacturaMod)"
+                :disabled="modalMasInfo.form.camposAtributos.ivaFacturaMod.disabled"
+                :options="comboIva"
+                :state="modalMasInfo.form.camposAtributos.ivaFacturaMod.state"
+                :value="null"
+                id="ivaFacturaMod"
+                ref="ivaFacturaMod"
+                size="sm"
+                v-model="$v.modalMasInfo.form.campos.ivaFacturaMod.$model">
+                <template v-slot:first>
+                  <option :value="null" disabled="true">Seleccione una opción</option>
+                </template>
+              </b-form-select>
+            </b-form-group>
+            <b-form-group
+              :invalid-feedback="modalMasInfo.form.camposAtributos.retencionIvaFacturaMod.invalidFeedback"
+              class="col-12 col-sm-6 col-md-3"
+              description="Retención del IVA"
+              label="Retención IVA"
+              label-for="retencionIvaFacturaMod"
+              id="group-retencionIvaFacturaMod">
+              <b-form-select
+                @change="totalFacturaMod(modalMasInfo.form.camposAtributos.retencionIvaFacturaMod)"
+                :disabled="modalMasInfo.form.camposAtributos.retencionIvaFacturaMod.disabled"
+                :options="comboRetencionIva"
+                :state="modalMasInfo.form.camposAtributos.retencionIvaFacturaMod.state"
+                :value="null"
+                id="retencionIvaFacturaMod"
+                ref="retencionIvaFacturaMod"
+                size="sm"
+                v-model="$v.modalMasInfo.form.campos.retencionIvaFacturaMod.$model">
+                <template v-slot:first>
+                  <option :value="null" disabled="true">Seleccione una opción</option>
+                </template>
+              </b-form-select>
+            </b-form-group>
+            <b-form-group
+              class="col-12 col-sm-6 col-md-3"
+              label="Subtotal Factura"
+              label-for="subtotalFacturaMod"
+              id="group-subtotalFacturaMod">
+              <b-input-group :prepend="simboloMoneda" size="sm">
+                <b-form-input
+                  disabled
+                  id="subtotalFacturaMod"
+                  ref="subtotalFacturaMod"
+                  size="sm"
+                  type="text"
+                  v-model="modalMasInfo.form.camposAtributos.subtotalFacturaMod.value"></b-form-input>
+                </b-input-group>
+            </b-form-group>
+            <b-form-group
+              :invalid-feedback="modalMasInfo.form.camposAtributos.islrFacturaMod.invalidFeedback"
+              class="col-12 col-sm-6 col-md-3"
+              description="Deducción ISLR"
+              label="ISLR"
+              label-for="islrFacturaMod"
+              id="group-islrFacturaMod">
+              <b-form-select
+                @change="totalFacturaMod(modalMasInfo.form.camposAtributos.islrFacturaMod)"
+                :disabled="modalMasInfo.form.camposAtributos.islrFacturaMod.disabled"
+                :options="comboIslr"
+                :state="modalMasInfo.form.camposAtributos.islrFacturaMod.state"
+                :value="null"
+                id="islrFacturaMod"
+                ref="islrFacturaMod"
+                size="sm"
+                v-model="$v.modalMasInfo.form.campos.islrFacturaMod.$model">
+                <template v-slot:first>
+                  <option :value="null" disabled="true">Seleccione una opción</option>
+                </template>
+              </b-form-select>
+            </b-form-group>
+            <b-form-group
+              class="col-12 col-sm-6 col-md-3"
+              label="Neto a Pagar"
+              label-for="totalFactura"
+              id="group-totalFactura">
+              <b-input-group :prepend="simboloMoneda" size="sm">
+                <b-form-input
+                  disabled
+                  id="totalFacturaMod"
+                  ref="totalFacturaMod"
+                  size="sm"
+                  type="text"
+                  v-model="modalMasInfo.form.camposAtributos.totalFacturaMod.value"></b-form-input>
+              </b-input-group>
+            </b-form-group>
+            <b-form-group
+              :invalid-feedback="modalMasInfo.form.camposAtributos.fechaFacturaMod.invalidFeedback"
+              class="col-12 col-sm-6 col-md-3"
+              description="Fecha en que se emite la factura"
+              label="Fecha de Emisión:"
+              label-for="fechaFacturaMod">
+              <b-form-datepicker
+                @input="limpiarMensajeError(modalMasInfo.form.camposAtributos.fechaFacturaMod)"
+                :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+                :disabled="modalMasInfo.form.camposAtributos.fechaFacturaMod.disabled"
+                :max="modalMasInfo.form.camposAtributos.fechaFacturaMod.max"
+                :state="modalMasInfo.form.camposAtributos.fechaFacturaMod.state"
+                id="fechaFacturaMod"
+                label-help="Use las teclas del cursor para navegar por las fechas del calendario"
+                label-no-date-selected="Ninguna fecha seleccionada"
+                locale="es-ES"
+                placeholder="Seleccione una fecha"
+                ref="fechaFacturaMod"
+                size="sm"
+                v-model="$v.modalMasInfo.form.campos.fechaFacturaMod.$model"></b-form-datepicker>
+            </b-form-group>
+            <b-form-group
+              :invalid-feedback="modalMasInfo.form.camposAtributos.conceptoMod.invalidFeedback"
+              class="col-12"
+              description="Descripción por el cual se esta facturando"
+              label="Concepto"
+              label-for="conceptoMod">
+              <b-form-textarea
+                @input="limpiarMensajeError(modalMasInfo.form.camposAtributos.conceptoMod)"
+                :disabled="modalMasInfo.form.camposAtributos.conceptoMod.disabled"
+                :state="modalMasInfo.form.camposAtributos.conceptoMod.state"
                 autocomplete="off"
-                id="montoFacturaMod"
-                ref="montoFacturaMod"
+                id="conceptoMod"
+                ref="conceptoMod"
+                rows="3"
+                size="sm"
                 type="text"
-                v-model.trim="$v.modalMasInfo.form.campos.montoFacturaMod.$model"></b-form-input>
-            </b-input-group>
-          </b-form-group>
-          <b-form-group
-            :invalid-feedback="modalMasInfo.form.camposAtributos.fechaFacturaMod.invalidFeedback"
-            description="Fecha en que se emite la factura"
-            label="Fecha de Emisión:"
-            label-for="fechaFacturaMod">
-            <b-form-datepicker
-              @input="limpiarMensajeError(modalMasInfo.form.camposAtributos.fechaFacturaMod)"
-              :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
-              :disabled="modalMasInfo.form.camposAtributos.fechaFacturaMod.disabled"
-              :max="modalMasInfo.form.camposAtributos.fechaFacturaMod.max"
-              :state="modalMasInfo.form.camposAtributos.fechaFacturaMod.state"
-              id="fechaFacturaMod"
-              label-help="Use las teclas del cursor para navegar por las fechas del calendario"
-              label-no-date-selected="Ninguna fecha seleccionada"
-              locale="es-ES"
-              placeholder="Seleccione una fecha"
-              ref="fechaFacturaMod"
-              size="sm"
-              v-model="$v.modalMasInfo.form.campos.fechaFacturaMod.$model"></b-form-datepicker>
-          </b-form-group>
-          <b-form-group
-            :invalid-feedback="modalMasInfo.form.camposAtributos.conceptoMod.invalidFeedback"
-            description="Descripción por el cual se esta facturando"
-            label="Concepto"
-            label-for="conceptoMod">
-            <b-form-textarea
-              @input="limpiarMensajeError(modalMasInfo.form.camposAtributos.conceptoMod)"
-              :disabled="modalMasInfo.form.camposAtributos.conceptoMod.disabled"
-              :state="modalMasInfo.form.camposAtributos.conceptoMod.state"
-              autocomplete="off"
-              id="conceptoMod"
-              ref="conceptoMod"
-              rows="3"
-              size="sm"
-              type="text"
-              v-model="$v.modalMasInfo.form.campos.conceptoMod.$model"></b-form-textarea>
-          </b-form-group>
-          <b-form-group
-            :invalid-feedback="modalMasInfo.form.camposAtributos.numeroControlMod.invalidFeedback"
-            description="Ejemplo: CONTROL-1"
-            label="N° de Control"
-            label-for="numeroControlMod">
-            <b-form-input
-              @input="limpiarMensajeError(modalMasInfo.form.camposAtributos.numeroControlMod)"
-              :disabled="modalMasInfo.form.camposAtributos.numeroControlMod.disabled"
-              :state="modalMasInfo.form.camposAtributos.numeroControlMod.state"
-              autocomplete="off"
-              class="text-uppercase"
-              id="numeroControlMod"
-              ref="numeroControlMod"
-              size="sm"
-              type="text"
-              v-model="$v.modalMasInfo.form.campos.numeroControlMod.$model"></b-form-input>
-          </b-form-group>
-          <b-form-group
-            :invalid-feedback="modalMasInfo.form.camposAtributos.observacionesMod.invalidFeedback"
-            description="Algún comentario relacionado a la acción de facturar"
-            label-for="observacionesMod">
-            <b-form-textarea
-              @input="limpiarMensajeError(modalMasInfo.form.camposAtributos.observacionesMod)"
-              :disabled="modalMasInfo.form.camposAtributos.observacionesMod.disabled"
-              :state="modalMasInfo.form.camposAtributos.observacionesMod.state"
-              autocomplete="off"
-              id="observacionesMod"
-              ref="observacionesMod"
-              rows="3"
-              size="sm"
-              type="text"
-              v-model="modalMasInfo.form.camposAtributos.observacionesMod.value"></b-form-textarea>
-          </b-form-group>
-          <b-form-group
-            :invalid-feedback="modalMasInfo.form.camposAtributos.fechaCobroFacturaMod.invalidFeedback"
-            description="Fecha de cobro de la factura"
-            label="Fecha de Cobro:"
-            label-for="fechaCobroFacturaMod">
-            <b-form-datepicker
-              @input="limpiarMensajeError(modalMasInfo.form.camposAtributos.fechaCobroFacturaMod)"
-              :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
-              :disabled="modalMasInfo.form.camposAtributos.fechaCobroFacturaMod.disabled"
-              :max="modalMasInfo.form.camposAtributos.fechaCobroFacturaMod.max"
-              :state="modalMasInfo.form.camposAtributos.fechaCobroFacturaMod.state"
-              id="fechaCobroFacturaMod"
-              label-help="Use las teclas del cursor para navegar por las fechas del calendario"
-              label-no-date-selected="Ninguna fecha seleccionada"
-              locale="es-ES"
-              placeholder="Seleccione una fecha"
-              ref="fechaCobroFacturaMod"
-              size="sm"
-              v-model="modalMasInfo.form.camposAtributos.fechaCobroFacturaMod.value"></b-form-datepicker>
-          </b-form-group>
-          <b-form-group
-            label="N° de la factura que se le asoció la nota de crédito"
-            v-if="modalMasInfo.form.camposAtributos.numeroFacturaAnular.factura !== null">
-            <b-form-input
-              :disabled="true"
-              class="text-uppercase"
-              size="sm"
-              type="text"
-              v-model="modalMasInfo.form.camposAtributos.numeroFacturaAnular.factura"></b-form-input>
-          </b-form-group>
-          <b-form-group
-            label="N° de Control de la factura que se le asoció la nota de crédito"
-            v-if="modalMasInfo.form.camposAtributos.numeroFacturaAnular.numeroControl !== null">
-            <b-form-input
-              :disabled="true"
-              class="text-uppercase"
-              size="sm"
-              type="text"
-              v-model="modalMasInfo.form.camposAtributos.numeroFacturaAnular.numeroControl "></b-form-input>
-          </b-form-group>
+                v-model="$v.modalMasInfo.form.campos.conceptoMod.$model"></b-form-textarea>
+            </b-form-group>
+            <b-form-group
+              :invalid-feedback="modalMasInfo.form.camposAtributos.numeroControlMod.invalidFeedback"
+              class="col-12"
+              description="Ejemplo: CONTROL-1"
+              label="N° de Control"
+              label-for="numeroControlMod">
+              <b-form-input
+                @input="limpiarMensajeError(modalMasInfo.form.camposAtributos.numeroControlMod)"
+                :disabled="modalMasInfo.form.camposAtributos.numeroControlMod.disabled"
+                :state="modalMasInfo.form.camposAtributos.numeroControlMod.state"
+                autocomplete="off"
+                class="text-uppercase"
+                id="numeroControlMod"
+                ref="numeroControlMod"
+                size="sm"
+                type="text"
+                v-model="$v.modalMasInfo.form.campos.numeroControlMod.$model"></b-form-input>
+            </b-form-group>
+            <b-form-group
+              :invalid-feedback="modalMasInfo.form.camposAtributos.observacionesMod.invalidFeedback"
+              class="col-12"
+              description="Algún comentario relacionado a la acción de facturar"
+              label="Observaciones"
+              label-for="observacionesMod">
+              <b-form-textarea
+                @input="limpiarMensajeError(modalMasInfo.form.camposAtributos.observacionesMod)"
+                :disabled="modalMasInfo.form.camposAtributos.observacionesMod.disabled"
+                :state="modalMasInfo.form.camposAtributos.observacionesMod.state"
+                autocomplete="off"
+                id="observacionesMod"
+                ref="observacionesMod"
+                rows="3"
+                size="sm"
+                type="text"
+                v-model="modalMasInfo.form.camposAtributos.observacionesMod.value"></b-form-textarea>
+            </b-form-group>
+            <b-form-group
+              :invalid-feedback="modalMasInfo.form.camposAtributos.fechaCobroFacturaMod.invalidFeedback"
+              class="col-12 col-sm-6 col-md-3"
+              description="Fecha de cobro de la factura"
+              label="Fecha de Cobro:"
+              label-for="fechaCobroFacturaMod">
+              <b-form-datepicker
+                @input="limpiarMensajeError(modalMasInfo.form.camposAtributos.fechaCobroFacturaMod)"
+                :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+                :disabled="modalMasInfo.form.camposAtributos.fechaCobroFacturaMod.disabled"
+                :max="modalMasInfo.form.camposAtributos.fechaCobroFacturaMod.max"
+                :state="modalMasInfo.form.camposAtributos.fechaCobroFacturaMod.state"
+                id="fechaCobroFacturaMod"
+                label-help="Use las teclas del cursor para navegar por las fechas del calendario"
+                label-no-date-selected="Ninguna fecha seleccionada"
+                locale="es-ES"
+                placeholder="Seleccione una fecha"
+                ref="fechaCobroFacturaMod"
+                size="sm"
+                v-model="modalMasInfo.form.camposAtributos.fechaCobroFacturaMod.value"></b-form-datepicker>
+            </b-form-group>
+            <b-form-group
+              class="col-12 col-sm-6 col-md-3"
+              label="N° de la factura que se le asoció la nota de crédito"
+              v-if="modalMasInfo.form.camposAtributos.numeroFacturaAnular.factura !== null">
+              <b-form-input
+                :disabled="true"
+                class="text-uppercase"
+                size="sm"
+                type="text"
+                v-model="modalMasInfo.form.camposAtributos.numeroFacturaAnular.factura"></b-form-input>
+            </b-form-group>
+            <b-form-group
+              class="col-12 col-sm-6 col-md-3"
+              label="N° de Control de la factura que se le asoció la nota de crédito"
+              v-if="modalMasInfo.form.camposAtributos.numeroFacturaAnular.numeroControl !== null">
+              <b-form-input
+                :disabled="true"
+                class="text-uppercase"
+                size="sm"
+                type="text"
+                v-model="modalMasInfo.form.camposAtributos.numeroFacturaAnular.numeroControl "></b-form-input>
+            </b-form-group>
+          </b-form>
           <template v-slot:modal-footer>
             <alert :contador="modalMasInfo.alert.contador"
                    :icono-cerrar="modalMasInfo.alert.iconCerrar"
@@ -528,7 +634,6 @@
             <b-form-group
               :invalid-feedback="form.camposAtributos.ivaFactura.invalidFeedback"
               class="col-12 col-sm-6 col-md-2"
-              description="Retención del IVA"
               label="IVA"
               label-for="ivaFactura"
               id="group-ivaFactura">

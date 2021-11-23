@@ -350,7 +350,11 @@ class FacturacionModel extends Model
                                    /
                                    100
                                   )
-                                ),2) AS subtotal
+                                ),2) AS subtotal,
+                                fp.id_iva,
+                                fp.id_deduccion_islr,
+                                fp.id_porcentaje_retencion_iva,
+                                (SELECT valor FROM tbl_iva i WHERE i.id = fp.id_iva) AS valor_iva
                          FROM tbl_factura_proyecto fp,
                               tbl_concepto_factura cf,
                               tbl_usuario fu
