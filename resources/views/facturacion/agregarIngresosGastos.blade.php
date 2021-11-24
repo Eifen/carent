@@ -372,7 +372,7 @@
             </b-form-group>
             <b-form-group
               class="col-12 col-sm-6 col-md-3"
-              label="Neto a Pagar"
+              label="Neto a Cobrar"
               label-for="totalFactura"
               id="group-totalFactura">
               <b-input-group :prepend="simboloMoneda" size="sm">
@@ -713,7 +713,7 @@
             </b-form-group>
             <b-form-group
               class="col-12 col-sm-6 col-md-3"
-              label="Neto a Pagar"
+              label="Neto a Cobrar"
               label-for="totalFactura"
               id="group-totalFactura">
               <b-input-group :prepend="simboloMoneda" size="sm">
