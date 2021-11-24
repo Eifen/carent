@@ -1272,12 +1272,20 @@ new Vue({
 
     },
     elegirFactura: function(factura){
-console.log(factura)
+
       self.form.camposAtributos.numeroFacturaAnular.valor = factura.numero_factura;
       self.form.camposAtributos.numeroFacturaAnular.valorFocus = factura.numero_factura;
       self.form.camposAtributos.numeroFacturaAnular.valorBlur = factura.numero_factura;
       self.form.camposAtributos.numeroFacturaAnular.state = true;
       self.form.campos.numeroFacturaAnular = factura.id;
+
+      const neto_cobrar = factura.subtotal - factura.retencion_iva - factura.deduccion_islr;
+
+      self.form.campos.ivaFactura = (factura.id_iva === 0) ? null : {id: factura.id_iva, valor: factura.valor_iva};
+      self.form.campos.retencionIvaFactura = (factura.id_porcentaje_retencion_iva === 0) ? null : {id: factura.id_porcentaje_retencion_iva, valor: factura.valor_ret_iva};
+      self.form.campos.islrFactura = (factura.id_deduccion_islr === 0) ? null : {id: factura.id_deduccion_islr, valor: factura.valor_islr};
+      self.form.camposAtributos.subtotalFactura.autonumeric.set(factura.subtotal);
+      self.form.camposAtributos.totalFactura.autonumeric.set(neto_cobrar);
 
       self.form.camposAtributos.numeroFacturaAnular.numeroControl = factura.numero_control;
       self.form.campos.montoFactura = factura.monto_factura;
