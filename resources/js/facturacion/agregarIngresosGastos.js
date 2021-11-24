@@ -1561,9 +1561,13 @@ new Vue({
 
           var indicesDisabled = [];
 
-          if([1,2,3].includes(self.modalMasInfo.idConceptoFactura)){
+          if([1,3].includes(self.modalMasInfo.idConceptoFactura)){
 
-            indicesDisabled = ["montoFacturaMod","conceptoMod","montoFacturaMod","fechaFacturaMod","fechaCobroFacturaMod","numeroControlMod","observacionesMod"];
+            indicesDisabled = ["montoFacturaMod","ivaFacturaMod","retencionIvaFacturaMod","islrFacturaMod","conceptoMod","fechaFacturaMod","fechaCobroFacturaMod","numeroControlMod","observacionesMod"];
+
+          }else if(self.modalMasInfo.idConceptoFactura === 2){
+
+            indicesDisabled = ["montoFacturaMod","conceptoMod","fechaFacturaMod","fechaCobroFacturaMod","numeroControlMod","observacionesMod"];
 
           }else if(self.modalMasInfo.idConceptoFactura === 4){
 
@@ -1571,7 +1575,7 @@ new Vue({
 
           }else if(self.modalMasInfo.idConceptoFactura === 5){
 
-            indicesDisabled = ["montoFacturaMod","observacionesMod"];
+            indicesDisabled = ["montoFacturaMod","ivaFacturaMod","retencionIvaFacturaMod","islrFacturaMod","observacionesMod"];
 
           }
 
@@ -1604,9 +1608,13 @@ new Vue({
 
         var indicesDisabled = [];
 
-        if([1,2,3].includes(self.modalMasInfo.idConceptoFactura)){
+        if([1,3].includes(self.modalMasInfo.idConceptoFactura)){
 
-          indicesDisabled = ["montoFacturaMod","conceptoMod","montoFacturaMod","fechaFacturaMod","fechaCobroFacturaMod","numeroControlMod","observacionesMod"];
+          indicesDisabled = ["montoFacturaMod","ivaFacturaMod","retencionIvaFacturaMod","islrFacturaMod","conceptoMod","fechaFacturaMod","fechaCobroFacturaMod","numeroControlMod","observacionesMod"];
+
+        }else if(self.modalMasInfo.idConceptoFactura === 2){
+
+          indicesDisabled = ["montoFacturaMod","conceptoMod","fechaFacturaMod","fechaCobroFacturaMod","numeroControlMod","observacionesMod"];
 
         }else if(self.modalMasInfo.idConceptoFactura === 4){
 
@@ -1614,7 +1622,7 @@ new Vue({
 
         }else if(self.modalMasInfo.idConceptoFactura === 5){
 
-          indicesDisabled = ["montoFacturaMod","observacionesMod"];
+          indicesDisabled = ["montoFacturaMod","ivaFacturaMod","retencionIvaFacturaMod","islrFacturaMod","observacionesMod"];
 
         }
 
