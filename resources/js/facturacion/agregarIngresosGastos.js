@@ -1272,7 +1272,7 @@ new Vue({
 
     },
     elegirFactura: function(factura){
-
+console.log(factura)
       self.form.camposAtributos.numeroFacturaAnular.valor = factura.numero_factura;
       self.form.camposAtributos.numeroFacturaAnular.valorFocus = factura.numero_factura;
       self.form.camposAtributos.numeroFacturaAnular.valorBlur = factura.numero_factura;
