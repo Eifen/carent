@@ -81,16 +81,22 @@ class FacturacionController extends Controller
       $proyecto = $modelo->proyecto($id_proyecto);
       $facturadoProyecto = $modelo->facturadoProyecto($id_proyecto);
       $cantidadPaginas = $modelo->cantidadPaginasFacturasCargadas($paginar, $id_proyecto);
+      $retencionIva = $modelo->porcentaje_retencion_iva();
+      $islr = $modelo->porcentaje_islr();
+      $iva = $modelo->iva();
 
       return [
         "numero_paginas" => $cantidadPaginas,
         "conceptos_factura" => $conceptosFactura,
         "facturas_cargadas" => $facturasCargadas,
         "facturado_proyecto" => $facturadoProyecto,
+        "islr" => $islr,
+        "iva" => $iva,
         "paginar" => $paginar,
         "permisos" => $permisos,
         "proyecto" => $proyecto,
-        "response" => true
+        "response" => true,
+        "retencionIva" => $retencionIva
       ];
 
     }
@@ -132,7 +138,11 @@ class FacturacionController extends Controller
           "fecha_registro" => date("Y-m-d"),
           "id_facturador" => session("usuario_id"),
           "id_estatus" => 1,
-          "id_factura_anular" => $request["id_factura_anular"]
+          "id_factura_anular" => $request["id_factura_anular"],
+          "id_factura_anular" => $request["id_factura_anular"],
+          "id_iva" => $request["id_iva"],
+          "id_porcentaje_retencion_iva" => $request["retencion_iva"],
+          "id_deduccion_islr" => $request["islr"]
         ];
 
         $paginar = $request["paginar"];
@@ -248,7 +258,10 @@ class FacturacionController extends Controller
           "numero_control" => strtoupper($request["numero_control"]),
           "observaciones" => $request["observaciones"],
           "fecha_factura" => $request["fecha_factura"],
-          "fecha_cobro_factura" => $request["fecha_cobro_factura"]
+          "fecha_cobro_factura" => $request["fecha_cobro_factura"],
+          "id_iva" => $request["id_iva"],
+          "id_porcentaje_retencion_iva" => $request["retencion_iva"],
+          "id_deduccion_islr" => $request["islr"]
         ];
 
         $actualizarFactura = $modelo->actualizarFactura($request["id_factura"], $parametros);
