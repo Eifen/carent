@@ -423,17 +423,17 @@ new Vue({
           },
           ivaFacturaMod: {
             required: requiredIf(function() {
-              return (!this.form.camposAtributos.ivaFactura.disabled);
+              return (!this.modalMasInfo.form.camposAtributos.ivaFacturaMod.disabled);
             })
           },
           retencionIvaFacturaMod: {
             required: requiredIf(function() {
-              return (!this.form.camposAtributos.retencionIvaFactura.disabled);
+              return (!this.modalMasInfo.form.camposAtributos.retencionIvaFacturaMod.disabled);
             })
           },
           islrFacturaMod: {
             required: requiredIf(function() {
-              return (!this.form.camposAtributos.islrFactura.disabled);
+              return (!this.modalMasInfo.form.camposAtributos.islrFacturaMod.disabled);
             })
           },
           fechaFacturaMod: {
@@ -1392,7 +1392,7 @@ new Vue({
 
     },
     verMasInfo: function(data){
-console.log(data)
+
       self.modalMasInfo.form.campos.montoFacturaMod = data.monto_factura;
       self.modalMasInfo.form.campos.fechaFacturaMod = data.fecha_factura;
       self.modalMasInfo.form.campos.conceptoMod = data.concepto;
@@ -1403,9 +1403,9 @@ console.log(data)
       self.modalMasInfo.idFactura = data.id;
       self.modalMasInfo.form.camposAtributos.numeroFacturaAnular.factura = data.numero_factura_anular;
       self.modalMasInfo.form.camposAtributos.numeroFacturaAnular.numeroControl = data.numero_control_anular;
-      self.modalMasInfo.form.campos.ivaFacturaMod = {id: data.id_iva, valor: data.valor_iva};
-      self.modalMasInfo.form.campos.retencionIvaFacturaMod = {id: data.id_porcentaje_retencion_iva, valor: data.valor_ret_iva};
-      self.modalMasInfo.form.campos.islrFacturaMod = {id: data.id_deduccion_islr, valor: data.valor_islr};
+      self.modalMasInfo.form.campos.ivaFacturaMod = (data.id_iva === 0) ? null : {id: data.id_iva, valor: data.valor_iva};
+      self.modalMasInfo.form.campos.retencionIvaFacturaMod = (data.id_porcentaje_retencion_iva === 0) ? null : {id: data.id_porcentaje_retencion_iva, valor: data.valor_ret_iva};
+      self.modalMasInfo.form.campos.islrFacturaMod = (data.id_deduccion_islr === 0) ? null : {id: data.id_deduccion_islr, valor: data.valor_islr};
       self.modalMasInfo.form.camposAtributos.subtotalFacturaMod.value = data.monto_subtotal;
       self.modalMasInfo.form.camposAtributos.totalFacturaMod.value = data.neto_cobrar;
 
@@ -1528,7 +1528,10 @@ console.log(data)
         observaciones: self.modalMasInfo.form.camposAtributos.observacionesMod.value,
         id_proyecto: proyecto_id,
         id_factura: self.modalMasInfo.idFactura,
-        paginar: self.paginador.paginar
+        paginar: self.paginador.paginar,
+        id_iva: (self.modalMasInfo.form.campos.ivaFacturaMod === null) ? null : self.modalMasInfo.form.campos.ivaFacturaMod.id,
+        retencion_iva: (self.modalMasInfo.form.campos.retencionIvaFacturaMod === null) ? null : self.modalMasInfo.form.campos.retencionIvaFacturaMod.id,
+        islr: (self.modalMasInfo.form.campos.islrFacturaMod === null) ? null : self.modalMasInfo.form.campos.islrFacturaMod.id
       }
 
       self.modalMasInfo.botones.cancelar.disabled = true;

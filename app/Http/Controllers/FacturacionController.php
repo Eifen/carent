@@ -258,7 +258,10 @@ class FacturacionController extends Controller
           "numero_control" => strtoupper($request["numero_control"]),
           "observaciones" => $request["observaciones"],
           "fecha_factura" => $request["fecha_factura"],
-          "fecha_cobro_factura" => $request["fecha_cobro_factura"]
+          "fecha_cobro_factura" => $request["fecha_cobro_factura"],
+          "id_iva" => $request["id_iva"],
+          "id_porcentaje_retencion_iva" => $request["retencion_iva"],
+          "id_deduccion_islr" => $request["islr"]
         ];
 
         $actualizarFactura = $modelo->actualizarFactura($request["id_factura"], $parametros);
