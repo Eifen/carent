@@ -406,15 +406,9 @@ class HorasNoCargablesModel extends Model
         // Chequeamos que la fecha hasta no este usada
         $sql_fecha_hasta = DB::select('SELECT COUNT(1) existe
                                        FROM tbl_horas_no_cargables
-                                       WHERE ("'.$parametros["fecha_hasta"].'" - INTERVAL 1 SECOND)
-                                         BETWEEN fecha_desde AND fecha_hasta
-                                         AND id_estatus != 3
-                                         AND id_usuario = '.$parametros["id_usuario"].'
-                                       OR fecha_hasta
-                                         BETWEEN ("'.$parametros["fecha_desde"].'" + INTERVAL 1 SECOND)
-                                         AND ("'.$parametros["fecha_hasta"].'" - INTERVAL 1 SECOND)
-                                         AND id_usuario = '.$parametros["id_usuario"].'
-                                         AND id_estatus != 3');
+                                       WHERE id_estatus != 3
+                                       AND id_usuario = '.$parametros["id_usuario"].'
+                                       AND (fecha_desde BETWEEN ("'.$parametros["fecha_desde"].'" + INTERVAL 1 SECOND) AND ("'.$parametros["fecha_hasta"].'" - INTERVAL 1 SECOND) OR fecha_hasta BETWEEN ("'.$parametros["fecha_desde"].'" + INTERVAL 1 SECOND) AND ("'.$parametros["fecha_hasta"].'" - INTERVAL 1 SECOND))');
 
         if((int) $sql_fecha_hasta[0]->existe == 0){
 
