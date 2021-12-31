@@ -1666,16 +1666,16 @@ new Vue({
     totalFactura: function(campo){
 
       let monto = parseFloat(self.form.camposAtributos.montoFactura.autonumeric.get());
-      let retIva = (self.form.campos.ivaFactura === null) ? 0 : parseFloat(self.form.campos.ivaFactura.valor);
-      let iva = (self.form.campos.retencionIvaFactura === null) ? 0 : parseFloat(self.form.campos.retencionIvaFactura.valor);
+      let iva = (self.form.campos.ivaFactura === null) ? 0 : parseFloat(self.form.campos.ivaFactura.valor);
+      let retIva = (self.form.campos.retencionIvaFactura === null) ? 0 : parseFloat(self.form.campos.retencionIvaFactura.valor);
       let islr = (self.form.campos.islrFactura === null) ? 0 : parseFloat(self.form.campos.islrFactura.valor);
 
-      let porcRetencionIVA = (iva * retIva) / 100;
-      let retencionIVA = (monto * porcRetencionIVA) / 100;
-      let deduccionIslr = ((monto * islr) / 100);
+      let montoIVA = (monto * iva) / 100;
+      let montoRetencionIVA = (montoIVA * retIva) / 100;
+      let montoISLR = (monto * islr) / 100;
 
-      let subtotal = monto + retencionIVA;
-      let total = subtotal - retencionIVA - deduccionIslr;
+      let subtotal = (monto + montoIVA) - montoRetencionIVA;
+      let total = subtotal - montoISLR;
 
       if(self.form.campos.ivaFactura !== null && self.form.campos.retencionIvaFactura !== null){
 
@@ -1700,12 +1700,12 @@ new Vue({
       let iva = (self.modalMasInfo.form.campos.retencionIvaFacturaMod === null) ? 0 : parseFloat(self.modalMasInfo.form.campos.retencionIvaFacturaMod.valor);
       let islr = (self.modalMasInfo.form.campos.islrFacturaMod === null) ? 0 : parseFloat(self.modalMasInfo.form.campos.islrFacturaMod.valor);
 
-      let porcRetencionIVA = (iva * retIva) / 100;
-      let retencionIVA = (monto * porcRetencionIVA) / 100;
-      let deduccionIslr = ((monto * islr) / 100);
+      let montoIVA = (monto * iva) / 100;
+      let montoRetencionIVA = (montoIVA * retIva) / 100;
+      let montoISLR = (monto * islr) / 100;
 
-      let subtotal = monto + retencionIVA;
-      let total = subtotal - retencionIVA - deduccionIslr;
+      let subtotal = (monto + montoIVA) - montoRetencionIVA;
+      let total = subtotal - montoISLR;
 
       if(self.modalMasInfo.form.campos.ivaFacturaMod !== null && self.modalMasInfo.form.campos.retencionIvaFacturaMod !== null){
 
