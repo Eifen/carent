@@ -1696,8 +1696,8 @@ new Vue({
     totalFacturaMod: function(campo){
 
       let monto = parseFloat(self.modalMasInfo.form.camposAtributos.montoFacturaMod.autonumeric.get());
-      let retIva = (self.modalMasInfo.form.campos.ivaFacturaMod === null) ? 0 : parseFloat(self.modalMasInfo.form.campos.ivaFacturaMod.valor);
-      let iva = (self.modalMasInfo.form.campos.retencionIvaFacturaMod === null) ? 0 : parseFloat(self.modalMasInfo.form.campos.retencionIvaFacturaMod.valor);
+      let retIva = (self.modalMasInfo.form.campos.retencionIvaFacturaMod === null) ? 0 : parseFloat(self.modalMasInfo.form.campos.retencionIvaFacturaMod.valor);
+      let iva = (self.modalMasInfo.form.campos.ivaFacturaMod === null) ? 0 : parseFloat(self.modalMasInfo.form.campos.ivaFacturaMod.valor);
       let islr = (self.modalMasInfo.form.campos.islrFacturaMod === null) ? 0 : parseFloat(self.modalMasInfo.form.campos.islrFacturaMod.valor);
 
       let montoIVA = (monto * iva) / 100;
