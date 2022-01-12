@@ -147,6 +147,7 @@ class HorasNoCargablesModel extends Model
       $conceptos = DB::select('SELECT c.id,
                                       c.descripcion
                                FROM tbl_concepto_horas_no_cargables c
+                               WHERE c.id_estatus = 1
                                ORDER BY c.descripcion ASC');
 
       $empleados = DB::select('SELECT * FROM (
