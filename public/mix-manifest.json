@@ -44,7 +44,5 @@
     "/css/nuevoCliente.css": "/css/nuevoCliente.css",
     "/css/modificarUsuario.css": "/css/modificarUsuario.css",
     "/css/buscarUsuario.css": "/css/buscarUsuario.css",
-    "/css/nuevoUsuario.css": "/css/nuevoUsuario.css",
-    "/css/bootstrap.min.css": "/css/bootstrap.min.css",
-    "/css/fontawesome-free-5.12.0.css": "/css/fontawesome-free-5.12.0.css"
+    "/css/nuevoUsuario.css": "/css/nuevoUsuario.css"
 }
