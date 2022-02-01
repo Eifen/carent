@@ -180,6 +180,13 @@ class TotalHorasCargModel extends Model
       $porcen_horas_no_cargables = "0 %";
       $porcen_carga_total = "0 %";
       $porcen_carga_no_cliente = "0 %";
+      $exceso_cargable = 0;
+      $cuenta_cargable = 0;
+      $cuenta_no_cargable = 0;
+      $total_horas_cargadas= 0;
+      $copia = 0;
+      $n_exceso_cargables = 0;
+      $n_exceso_no_cargables = 0;
 
       while ( $fecha_hasta_mod >= $fecha_desde_mod) {
         $diaM = date('w',strtotime($fecha_desde_mod));
@@ -382,24 +389,32 @@ class TotalHorasCargModel extends Model
             $t_exceso_no_cargables = $t_exceso_no_cargables + $suma_horas_no_cargables[$j]['exceso_no_cargable'];
           }
         }
-
-        $t_horas_cargadas = $t_horas_cargables + $t_horas_no_cargables;
-
-        if ($maximo_horas >= ($t_horas_cargadas + $t_exceso_cargables + $t_exceso_no_cargables)) {
-
-          $t_horas_cargables = $t_horas_cargables + $t_exceso_cargables;
-          $t_horas_no_cargables = $t_horas_no_cargables + $t_exceso_no_cargables;
-        }elseif ($t_exceso_cargables === 0) {
-          $exceso = $t_horas_cargadas + $t_exceso_no_cargables - $maximo_horas;
-          $t_horas_no_cargables = $t_horas_no_cargables + $t_exceso_no_cargables - $exceso;
-        }elseif ($t_exceso_no_cargables === 0) {
-          $exceso = $t_horas_cargadas + $t_exceso_cargables - $maximo_horas;
-          $t_horas_cargables = $t_horas_cargables + $t_exceso_cargables - $exceso;
+        
+        //$t_horas_cargadas = $t_horas_cargables + $t_horas_no_cargables;
+        $cuenta_cargable = $t_horas_cargables + $t_exceso_cargables;
+        $cuenta_no_cargable = $t_horas_no_cargables + $t_exceso_no_cargables;
+        $copia = $t_horas_cargables;
+        if (($cuenta_cargable + $cuenta_no_cargable - $maximo_horas) >= 0) {
+          $exceso = $cuenta_cargable + $cuenta_no_cargable - $maximo_horas;
         }else{
           $exceso = $t_horas_cargadas + $t_exceso_cargables + $t_exceso_no_cargables - $maximo_horas;
         }
 
-        $total_horas_cargadas = $t_horas_cargables + $t_horas_no_cargables;
+        if ($exceso > 0 && ($cuenta_no_cargable - $exceso) >= 0) {
+          $cuenta_no_cargable = $cuenta_no_cargable - $exceso;
+          $n_exceso_no_cargables = $exceso;
+        }elseif ($exceso > 0 && ($cuenta_no_cargable - $exceso) < 0) {
+          $exceso = $exceso - $cuenta_no_cargable;
+          $cuenta_no_cargable = 0;
+          $cuenta_cargable = $cuenta_cargable - $exceso;
+          $n_exceso_cargables = $exceso;
+        }elseif ($exceso > 0 && ($cuenta_cargable - $exceso) >= 0) {
+          $cuenta_cargable = $cuenta_cargable - $exceso;
+          $n_exceso_cargables = $exceso;
+        }
+        $total_horas_cargadas = $cuenta_cargable + $cuenta_no_cargable + $exceso; 
+        $t_horas_cargables = $cuenta_cargable;
+        $t_horas_no_cargables = $cuenta_no_cargable;
 
         $porcen_carga_total = round($total_horas_cargadas/$maximo_horas*100,2);
         $porcen_carga_total = "$porcen_carga_total %"; 
@@ -425,7 +440,8 @@ class TotalHorasCargModel extends Model
         }
 
 
-        $total[$i] = array('id' => $usuarios[$i]->id, 'codigo' => $usuarios[$i]->codigo, 'nombre' => $usuarios[$i]->nombre, 'total_horas_cargables' => $t_horas_cargables, 'total_horas_no_cargables' => $t_horas_no_cargables, 'total_horas' => $total_horas_cargadas, 'porcen_carga_cliente' => $porcen_carga_cliente, 'porcen_carga_no_cliente' => $porcen_carga_no_cliente, 'porcen_horas_cargables' => $porcen_horas_cargables, 'porcen_horas_no_cargables' => $porcen_horas_no_cargables, 'porcen_carga_total' => $porcen_carga_total, 'exceso' => $exceso, 'maximo_horas' => $maximo_horas);
+        $total[$i] = array('id' => $usuarios[$i]->id, 'codigo' => $usuarios[$i]->codigo, 'nombre' => $usuarios[$i]->nombre, 'total_horas_cargables' => $t_horas_cargables, 'total_horas_no_cargables' => $t_horas_no_cargables, 'total_horas' => $total_horas_cargadas, 'porcen_carga_cliente' => $porcen_carga_cliente, 'porcen_carga_no_cliente' => $porcen_carga_no_cliente, 'porcen_horas_cargables' => $porcen_horas_cargables, 'porcen_horas_no_cargables' => $porcen_horas_no_cargables, 'porcen_carga_total' => $porcen_carga_total, 'exceso' => $exceso, 'maximo_horas' => $maximo_horas, 'exceso_cargables' => $n_exceso_cargables, 'exceso_no_cargables' => $n_exceso_no_cargables);
+
         $t_horas_cargables = 0;
         $t_exceso_cargables = 0;
         $t_horas_no_cargables = 0;
@@ -437,6 +453,13 @@ class TotalHorasCargModel extends Model
         $porcen_horas_no_cargables = "0 %";
         $porcen_carga_total = "0 %";
         $porcen_carga_no_cliente = "0 %";
+        $exceso_cargable = 0;
+        $cuenta_cargable = 0;
+        $cuenta_no_cargable = 0;
+        $total_horas_cargadas= 0;
+        $copia = 0;
+        $n_exceso_cargables = 0;
+        $n_exceso_no_cargables = 0;
       }
       return $total;      
 
