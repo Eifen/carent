@@ -397,8 +397,9 @@ class TotalHorasCargModel extends Model
         if (($cuenta_cargable + $cuenta_no_cargable - $maximo_horas) >= 0) {
           $exceso = $cuenta_cargable + $cuenta_no_cargable - $maximo_horas;
         }else{
-          $exceso = 0;
+          $exceso = $t_horas_cargadas + $t_exceso_cargables + $t_exceso_no_cargables - $maximo_horas;
         }
+
         if ($exceso > 0 && ($cuenta_no_cargable - $exceso) >= 0) {
           $cuenta_no_cargable = $cuenta_no_cargable - $exceso;
           $n_exceso_no_cargables = $exceso;
@@ -440,6 +441,7 @@ class TotalHorasCargModel extends Model
 
 
         $total[$i] = array('id' => $usuarios[$i]->id, 'codigo' => $usuarios[$i]->codigo, 'nombre' => $usuarios[$i]->nombre, 'total_horas_cargables' => $t_horas_cargables, 'total_horas_no_cargables' => $t_horas_no_cargables, 'total_horas' => $total_horas_cargadas, 'porcen_carga_cliente' => $porcen_carga_cliente, 'porcen_carga_no_cliente' => $porcen_carga_no_cliente, 'porcen_horas_cargables' => $porcen_horas_cargables, 'porcen_horas_no_cargables' => $porcen_horas_no_cargables, 'porcen_carga_total' => $porcen_carga_total, 'exceso' => $exceso, 'maximo_horas' => $maximo_horas, 'exceso_cargables' => $n_exceso_cargables, 'exceso_no_cargables' => $n_exceso_no_cargables);
+
         $t_horas_cargables = 0;
         $t_exceso_cargables = 0;
         $t_horas_no_cargables = 0;
