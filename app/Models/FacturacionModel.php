@@ -176,6 +176,42 @@ class FacturacionModel extends Model
 
     }
 
+    function iva(){
+
+      $sql = DB::select('SELECT id,
+                                descripcion,
+                                valor
+                         FROM tbl_iva
+                         WHERE id_estatus = 1');
+
+      return $sql;
+
+    }
+
+    function porcentaje_retencion_iva(){
+
+      $sql = DB::select('SELECT id,
+                                descripcion,
+                                valor
+                         FROM tbl_porcentaje_retencion_iva
+                         WHERE id_estatus = 1');
+
+      return $sql;
+
+    }
+
+    function porcentaje_islr(){
+
+      $sql = DB::select('SELECT id,
+                                descripcion,
+                                valor
+                         FROM tbl_deduccion_islr
+                         WHERE id_estatus = 1');
+
+      return $sql;
+
+    }
+
     function facturadoProyecto($id_proyecto){
 
       $sql = DB::select('SELECT (
@@ -258,8 +294,8 @@ class FacturacionModel extends Model
       if($numero_factura != null){
 
         $condicion = " AND UPPER(fp.numero_factura) LIKE UPPER('".$numero_factura."%')
-                      AND fp.id_concepto_factura = ".$tipo_factura."
-                      AND fp.id NOT IN( SELECT id_factura_anular FROM tbl_factura_proyecto WHERE id_estatus = 1 AND id_factura_anular IS NOT NULL )";
+                       AND fp.id_concepto_factura = ".$tipo_factura."
+                       AND fp.id NOT IN( SELECT id_factura_anular FROM tbl_factura_proyecto WHERE id_estatus = 1 AND id_factura_anular IS NOT NULL )";
 
         $limit = " LIMIT ".$hasta;
 
@@ -272,7 +308,6 @@ class FacturacionModel extends Model
 
       $sql = DB::select('SELECT fp.id,
                                 UPPER(fp.numero_factura) AS numero_factura,
-                                FORMAT(fp.monto_factura,2,"de_DE") AS monto_factura_formatted,
                                 fp.monto_factura AS monto_factura,
                                 DATE_FORMAT(fp.fecha_factura, "%d/%m/%Y") AS fecha_factura_formatted,
                                 fp.fecha_factura,
@@ -287,7 +322,41 @@ class FacturacionModel extends Model
                                 (SELECT descripcion FROM tbl_tipo_concepto_factura WHERE id = cf.id_tipo_concepto_factura) AS movimiento,
                                 fp.concepto,
                                 (SELECT UPPER(numero_factura) FROM tbl_factura_proyecto WHERE id = fp.id_factura_anular) numero_factura_anular,
-                                (SELECT UPPER(numero_control) FROM tbl_factura_proyecto WHERE id = fp.id_factura_anular) numero_control_anular
+                                (SELECT UPPER(numero_control) FROM tbl_factura_proyecto WHERE id = fp.id_factura_anular) numero_control_anular,
+                                (SELECT descripcion FROM tbl_iva i WHERE i.id = fp.id_iva) AS porc_iva,
+                                (SELECT descripcion FROM tbl_porcentaje_retencion_iva t WHERE t.id = fp.id_porcentaje_retencion_iva) AS porc_retencion_iva,
+                                (SELECT descripcion FROM tbl_deduccion_islr t WHERE t.id = fp.id_deduccion_islr) porc_islr,
+                                TRUNCATE((
+                                   fp.monto_factura
+                                   *
+                                   ((SELECT valor FROM tbl_iva i WHERE i.id = fp.id_iva) * (SELECT valor FROM tbl_porcentaje_retencion_iva t WHERE t.id = fp.id_porcentaje_retencion_iva) / 100)
+                                   /
+                                   100
+                                ),2) AS retencion_iva,
+                                (
+                                   fp.monto_factura
+                                   *
+                                   (SELECT descripcion FROM tbl_deduccion_islr t WHERE t.id = fp.id_deduccion_islr)
+                                    /
+                                    100
+                                ) AS deduccion_islr,
+                                TRUNCATE((
+                                  fp.monto_factura
+                                  +
+                                  (
+                                   fp.monto_factura
+                                   *
+                                   ((SELECT valor FROM tbl_iva i WHERE i.id = fp.id_iva) * (SELECT valor FROM tbl_porcentaje_retencion_iva t WHERE t.id = fp.id_porcentaje_retencion_iva) / 100)
+                                   /
+                                   100
+                                  )
+                                ),2) AS subtotal,
+                                fp.id_iva,
+                                fp.id_deduccion_islr,
+                                fp.id_porcentaje_retencion_iva,
+                                (SELECT valor FROM tbl_iva t WHERE t.id = fp.id_iva) AS valor_iva,
+                                (SELECT valor FROM tbl_porcentaje_retencion_iva t WHERE t.id = fp.id_porcentaje_retencion_iva) AS valor_ret_iva,
+                                (SELECT valor FROM tbl_deduccion_islr t WHERE t.id = fp.id_deduccion_islr) AS valor_islr
                          FROM tbl_factura_proyecto fp,
                               tbl_concepto_factura cf,
                               tbl_usuario fu
@@ -306,14 +375,14 @@ class FacturacionModel extends Model
     function cantidadPaginasFacturasCargadas($paginar, $id_proyecto){
 
       $numFacturas = DB::select('SELECT CEILING( COUNT(1) / '.$paginar.') paginas
-                                  FROM tbl_factura_proyecto fp,
-                                       tbl_concepto_factura cf,
-                                       tbl_usuario fu
-                                  WHERE fp.id_concepto_factura = cf.id
-                                  AND fp.id_facturador = fu.id
-                                  AND fp.id_proyecto = ?
-                                  AND fp.id_estatus = 1
-                                  ORDER BY fp.id DESC', [$id_proyecto]);
+                                 FROM tbl_factura_proyecto fp,
+                                      tbl_concepto_factura cf,
+                                      tbl_usuario fu
+                                 WHERE fp.id_concepto_factura = cf.id
+                                 AND fp.id_facturador = fu.id
+                                 AND fp.id_proyecto = ?
+                                 AND fp.id_estatus = 1
+                                 ORDER BY fp.id DESC', [$id_proyecto]);
 
       return $numFacturas[0]->paginas;
 
