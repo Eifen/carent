@@ -719,6 +719,7 @@ class ProyectoModel extends Model
       for ($i=0; $i < count($proyecto_division); $i++) { 
         $proyectosAsignados[$i] = array('id_proyecto' => $proyecto_division[$i]->id_proyecto,
                                         'cliente' => $proyecto_division[$i]->cliente,
+                                        'proyecto' => $proyecto_division[$i]->proyecto,
                                         'horas_asignadas' => $proyecto_division[$i]->horas_asignadas,
                                         'id_estatus' => $proyecto_division[$i]->id_estatus,
                                         'division' => $proyecto_division[$i]->division,
@@ -732,8 +733,8 @@ class ProyectoModel extends Model
       }
       for ($i=0; $i < count($proyecto_analistas); $i++) { 
         for ($j=0; $j < count($proyectosAsignados); $j++) { 
-          if ($proyectosAsignados[$j]->id_proyecto_division === $proyecto_analistas[$i]->id_proyecto_division) {
-            $proyectosAsignados[$j]->permisoCrear = 1;
+          if ($proyectosAsignados[$j]["id_proyecto_division"] === $proyecto_analistas[$i]->id_proyecto_division) {
+            $proyectosAsignados[$j]["permisoCrear"] = 1;
             $guardado = 1;
           }
         }
@@ -776,12 +777,12 @@ class ProyectoModel extends Model
     if (count($proyecto) > 0) {
       for ($i=0; $i < count($proyecto); $i++) { 
         for ($j=0; $j < count($proyectosAsignados); $j++) { 
-          if ($proyecto[$i]->id === $proyectosAsignados[$j]->id_proyecto) {
+          if ($proyecto[$i]->id === $proyectosAsignados[$j]["id_proyecto"]) {
             $guardado1 = 1;
             if ($proyecto[$i]->id_socio === $id_usuario) {
-              $proyectosAsignados[$j]->permisoVer = 1;
+              $proyectosAsignados[$j]["permisoVer"] = 1;
             }elseif ($proyecto[$i]->id_gerente === $id_usuario) {
-              $proyectosAsignados[$j]->permisoVer = 2;
+              $proyectosAsignados[$j]["permisoVer"] = 2;
             }
           }
         }
