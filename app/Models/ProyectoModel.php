@@ -719,6 +719,7 @@ class ProyectoModel extends Model
       for ($i=0; $i < count($proyecto_division); $i++) { 
         $proyectosAsignados[$i] = array('id_proyecto' => $proyecto_division[$i]->id_proyecto,
                                         'cliente' => $proyecto_division[$i]->cliente,
+                                        'proyecto' => $proyecto_division[$i]->proyecto,
                                         'horas_asignadas' => $proyecto_division[$i]->horas_asignadas,
                                         'id_estatus' => $proyecto_division[$i]->id_estatus,
                                         'division' => $proyecto_division[$i]->division,
@@ -732,8 +733,8 @@ class ProyectoModel extends Model
       }
       for ($i=0; $i < count($proyecto_analistas); $i++) { 
         for ($j=0; $j < count($proyectosAsignados); $j++) { 
-          if ($proyectosAsignados[$j]->id_proyecto_division === $proyecto_analistas[$i]->id_proyecto_division) {
-            $proyectosAsignados[$j]->permisoCrear = 1;
+          if ($proyectosAsignados[$j]["id_proyecto_division"] === $proyecto_analistas[$i]->id_proyecto_division) {
+            $proyectosAsignados[$j]["permisoCrear"] = 1;
             $guardado = 1;
           }
         }
@@ -776,12 +777,12 @@ class ProyectoModel extends Model
     if (count($proyecto) > 0) {
       for ($i=0; $i < count($proyecto); $i++) { 
         for ($j=0; $j < count($proyectosAsignados); $j++) { 
-          if ($proyecto[$i]->id === $proyectosAsignados[$j]->id_proyecto) {
+          if ($proyecto[$i]->id === $proyectosAsignados[$j]["id_proyecto"]) {
             $guardado1 = 1;
             if ($proyecto[$i]->id_socio === $id_usuario) {
-              $proyectosAsignados[$j]->permisoVer = 1;
+              $proyectosAsignados[$j]["permisoVer"] = 1;
             }elseif ($proyecto[$i]->id_gerente === $id_usuario) {
-              $proyectosAsignados[$j]->permisoVer = 2;
+              $proyectosAsignados[$j]["permisoVer"] = 2;
             }
           }
         }
@@ -952,7 +953,7 @@ class ProyectoModel extends Model
 
     }
 
-    function empleadosProyecto($id_proyecto,$id_division){
+    function empleadosProyecto($id_proyecto,$id_division,$id_proyecto_division){
 
       $info = DB::select('SELECT u.id,
                                  u.id_estatus,
@@ -966,13 +967,17 @@ class ProyectoModel extends Model
                                        tbl_proyecto_analista pa 
                                   WHERE hc.id_proy_analista = pa.id
                                   AND pa.id_proyecto = '.$id_proyecto.'
+                                  AND pa.id_proyecto_division = '.$id_proyecto_division.'
                                   AND pa.id_analista = u.id) horas_cargadas,
+                                  
+
                                   (SELECT CASE 
                                   WHEN pa.id  > 0 THEN "true"
                                   ELSE "false"
                                   END AS permisoCarga
                                   FROM tbl_proyecto_analista pa 
                                   WHERE pa.id_proyecto = '.$id_proyecto.'
+                                  AND pa.id_proyecto_division = '.$id_proyecto_division.'
                                   AND pa.id_analista = u.id) permisoCarga,
 
                                   (SELECT CASE 
@@ -981,15 +986,16 @@ class ProyectoModel extends Model
                                   END AS idAnaProy
                                   FROM tbl_proyecto_analista pa 
                                   WHERE pa.id_proyecto = '.$id_proyecto.'
+                                  AND pa.id_proyecto_division = '.$id_proyecto_division.'
                                   AND pa.id_analista = u.id) idAnaProy,
 
-                                  (SELECT a.horas_asignadas FROM tbl_proyecto_analista a WHERE a.id_proyecto = '.$id_proyecto.' AND a.id_analista = u.id) horas_asignadas,
-                                  (SELECT a.id_estatus FROM tbl_proyecto_analista a WHERE a.id_proyecto = '.$id_proyecto.' AND a.id_analista = u.id) id_estatus
+                                  (SELECT a.horas_asignadas FROM tbl_proyecto_analista a WHERE a.id_proyecto = '.$id_proyecto.' AND a.id_analista = u.id AND a.id_proyecto_division = '.$id_proyecto_division.') horas_asignadas,
+                                  (SELECT a.id_estatus FROM tbl_proyecto_analista a WHERE a.id_proyecto = '.$id_proyecto.' AND a.id_analista = u.id AND a.id_proyecto_division = '.$id_proyecto_division.') id_estatus
                           FROM tbl_usuario u,
                                tbl_cargo_empleado c
                           WHERE u.id_division = '.$id_division.'
                           AND c.id = u.id_cargo
-                          AND (u.id_estatus = 1 OR (SELECT SUM(a.horas_asignadas) FROM tbl_proyecto_analista a WHERE a.id_proyecto = '.$id_proyecto.' AND a.id_analista = u.id) > 0)
+                          AND (u.id_estatus = 1 OR (SELECT SUM(a.horas_asignadas) FROM tbl_proyecto_analista a WHERE a.id_proyecto = '.$id_proyecto.' AND a.id_analista = u.id AND a.id_proyecto_division = '.$id_proyecto_division.') > 0)
                           ORDER BY u.id_cargo DESC, nombre DESC');
 
       if(count($info) > 0){
