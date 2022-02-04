@@ -524,7 +524,7 @@ new Vue({
 
     },
 
-    asignarAnalistaProyecto: function(idDproyecto,e){
+    asignarAnalistaProyecto: function(idDproyecto,id_proyecto_division,e){
 
       self.form.camposAtributos.empleados.empleados = [];
       self.form.campos.empleados = null;
@@ -535,7 +535,8 @@ new Vue({
       $(e.target).removeClass("far fa-edit").addClass("fa-cog fa-spin");
 
       let parametros = {
-        idDproyecto: idDproyecto
+        idDproyecto: idDproyecto,
+        id_proyecto_division: id_proyecto_division
       };
 
       axios.get('/detalleAnalistaProyecto', {params: parametros})
