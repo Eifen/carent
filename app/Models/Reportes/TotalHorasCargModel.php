@@ -140,7 +140,7 @@ class TotalHorasCargModel extends Model
                                       h.fecha ASC,
                                       horas_cargadas ASC
                              ');
-
+ 
       $horas_arregladas = [];
       $dia = 0;
       $nueva_desde = 0;
@@ -394,10 +394,9 @@ class TotalHorasCargModel extends Model
         $cuenta_cargable = $t_horas_cargables + $t_exceso_cargables;
         $cuenta_no_cargable = $t_horas_no_cargables + $t_exceso_no_cargables;
         $copia = $t_horas_cargables;
+
         if (($cuenta_cargable + $cuenta_no_cargable - $maximo_horas) >= 0) {
           $exceso = $cuenta_cargable + $cuenta_no_cargable - $maximo_horas;
-        }else{
-          $exceso = $t_horas_cargadas + $t_exceso_cargables + $t_exceso_no_cargables - $maximo_horas;
         }
 
         if ($exceso > 0 && ($cuenta_no_cargable - $exceso) >= 0) {
@@ -412,7 +411,7 @@ class TotalHorasCargModel extends Model
           $cuenta_cargable = $cuenta_cargable - $exceso;
           $n_exceso_cargables = $exceso;
         }
-        $total_horas_cargadas = $cuenta_cargable + $cuenta_no_cargable + $exceso; 
+        $total_horas_cargadas = $cuenta_cargable + $cuenta_no_cargable + $exceso;
         $t_horas_cargables = $cuenta_cargable;
         $t_horas_no_cargables = $cuenta_no_cargable;
 
