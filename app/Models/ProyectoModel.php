@@ -623,7 +623,7 @@ class ProyectoModel extends Model
 
   function proyectosDivision($id_usuario, $division){
 
-    $info = DB::select('SELECT p.id AS id_proyecto,
+    /*$info = DB::select('SELECT p.id AS id_proyecto,
                                p.id_estatus,
                                (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = p.id_cliente)cliente,
                                UPPER(p.descripcion) AS proyecto,
@@ -666,10 +666,148 @@ class ProyectoModel extends Model
                         FROM tbl_proyecto p
                         LEFT JOIN tbl_proyecto_divisiones d ON d.id_gerente = '.$id_usuario.' AND p.id = d.id_proyecto AND p.id_estatus = 1
                         LEFT JOIN tbl_proyecto_analista a ON a.id_analista = '.$id_usuario.' AND p.id = a.id_proyecto
-                        ORDER BY cliente ASC');
+                        ORDER BY cliente ASC');*/
 
-    if(count($info) > 0){
-      return $info;
+    $proyecto_division = DB::select('SELECT pd.id AS id_proyecto_division,
+                                            (SELECT p.id FROM tbl_proyecto p WHERE p.id = pd.id_proyecto)id_proyecto,
+                                            (SELECT p.id_estatus FROM tbl_proyecto p WHERE p.id = pd.id_proyecto)id_estatus,
+                                            (SELECT d.descripcion FROM tbl_division d WHERE d.id = pd.id_division)division,
+                                            pd.id_division,
+                                            (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = (SELECT p.id_cliente FROM tbl_proyecto p WHERE p.id = pd.id_proyecto))cliente,
+                                            (SELECT UPPER(p.descripcion) FROM tbl_proyecto p WHERE p.id = pd.id_proyecto)proyecto,
+                                            (SELECT pa.horas_asignadas FROM tbl_proyecto_analista pa WHERE pa.id_proyecto_division = pd.id AND pa.id_analista = '.$id_usuario.') horas_asignadas,
+                                            (SELECT pa.id FROM tbl_proyecto_analista pa WHERE pa.id_proyecto_division = pd.id AND pa.id_analista = '.$id_usuario.') id_proy_analista
+                                     FROM tbl_proyecto_divisiones pd
+                                     WHERE pd.id_gerente = '.$id_usuario.'
+                                     AND pd.id_division = '.$division.'
+                                   ');
+
+    // FALTAN LOS PERMISOS
+
+    $proyecto_analistas = DB::select('SELECT pa.id AS id_proy_analista,
+                                             pa.id_proyecto_division,
+                                             pa.horas_asignadas,
+                                             (SELECT d.descripcion FROM tbl_division d WHERE d.id = (SELECT pd.id_division FROM tbl_proyecto_divisiones pd WHERE pd.id = pa.id_proyecto_division))division,
+                                             (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = (SELECT p.id_cliente FROM tbl_proyecto p WHERE p.id = pa.id_proyecto))cliente,
+                                             (SELECT UPPER(p.descripcion) FROM tbl_proyecto p WHERE p.id = pa.id_proyecto)proyecto,
+                                             (SELECT p.id FROM tbl_proyecto p WHERE p.id = pa.id_proyecto)id_proyecto,
+                                             (SELECT p.id_estatus FROM tbl_proyecto p WHERE p.id = pa.id_proyecto)id_estatus
+                                     FROM tbl_proyecto_analista pa
+                                     WHERE pa.id_analista = '.$id_usuario.'
+                                   ');
+
+    // FALTAN LOS PERMISOS
+
+    $proyecto = DB::select('SELECT p.id,
+                                   p.id_socio,
+                                   p.id_gerente,
+                                   p.descripcion,
+                                   (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = p.id_cliente)cliente,
+                                   (SELECT d.descripcion FROM tbl_division d WHERE d.id = '.$division.')division,
+                                   p.id_estatus
+                           FROM tbl_proyecto p
+                           WHERE p.id_socio = '.$id_usuario.'
+                           OR p.id_gerente = '.$id_usuario.'
+                         ');
+
+    // FALTAN LOS PERMISOS
+    $proyectosAsignados = [];
+    $guardado = 0;
+    $guardado1 = 0;
+
+    if (count($proyecto_division) > 0) {
+      for ($i=0; $i < count($proyecto_division); $i++) { 
+        $proyectosAsignados[$i] = array('id_proyecto' => $proyecto_division[$i]->id_proyecto,
+                                        'cliente' => $proyecto_division[$i]->cliente,
+                                        'proyecto' => $proyecto_division[$i]->proyecto,
+                                        'horas_asignadas' => $proyecto_division[$i]->horas_asignadas,
+                                        'id_estatus' => $proyecto_division[$i]->id_estatus,
+                                        'division' => $proyecto_division[$i]->division,
+                                        'id_proy_analista' => $proyecto_division[$i]->id_proy_analista,
+                                        'id_proyecto_division' => $proyecto_division[$i]->id_proyecto_division,
+                                        'permiso' => 3,
+                                        'permisoCrear' => 0,
+                                        'permisoActualizar' => 1,
+                                        'permisoVer' => 0
+                                       ); 
+      }
+      for ($i=0; $i < count($proyecto_analistas); $i++) { 
+        for ($j=0; $j < count($proyectosAsignados); $j++) { 
+          if ($proyectosAsignados[$j]["id_proyecto_division"] === $proyecto_analistas[$i]->id_proyecto_division) {
+            $proyectosAsignados[$j]["permisoCrear"] = 1;
+            $guardado = 1;
+          }
+        }
+        if ($guardado === 0) {
+          array_push($proyectosAsignados, array('id_proyecto' => $proyecto_analistas[$i]->id_proyecto,
+                                                'proyecto' => $proyecto_analistas[$i]->proyecto,
+                                                'cliente' => $proyecto_analistas[$i]->cliente,
+                                                'horas_asignadas' => $proyecto_analistas[$i]->horas_asignadas,
+                                                'id_estatus' => $proyecto_analistas[$i]->id_estatus,
+                                                'division' => $proyecto_analistas[$i]->division,
+                                                'id_proy_analista' => $proyecto_analistas[$i]->id_proy_analista,
+                                                'id_proyecto_division' => $proyecto_analistas[$i]->id_proyecto_division,
+                                                'permiso' => 4,
+                                                'permisoCrear' => 1,
+                                                'permisoActualizar' => 0,
+                                                'permisoVer' => 0
+                                               )
+          );
+        }
+        $guardado = 0;
+      }
+    }elseif (count($proyecto_analistas) > 0) {
+      for ($i=0; $i < count($proyecto_analistas); $i++) {
+        $proyectosAsignados[$i] = array('id_proyecto' => $proyecto_analistas[$i]->id_proyecto,
+                                        'proyecto' => $proyecto_analistas[$i]->proyecto,
+                                        'cliente' => $proyecto_analistas[$i]->cliente,
+                                        'horas_asignadas' => $proyecto_analistas[$i]->horas_asignadas,
+                                        'id_estatus' => $proyecto_analistas[$i]->id_estatus,
+                                        'division' => $proyecto_analistas[$i]->division,
+                                        'id_proy_analista' => $proyecto_analistas[$i]->id_proy_analista,
+                                        'id_proyecto_division' => $proyecto_analistas[$i]->id_proyecto_division,
+                                        'permiso' => 4,
+                                        'permisoCrear' => 1,
+                                        'permisoActualizar' => 0,
+                                        'permisoVer' => 0
+                                       ); 
+        }
+    }
+
+    if (count($proyecto) > 0) {
+      for ($i=0; $i < count($proyecto); $i++) { 
+        for ($j=0; $j < count($proyectosAsignados); $j++) { 
+          if ($proyecto[$i]->id === $proyectosAsignados[$j]["id_proyecto"]) {
+            $guardado1 = 1;
+            if ($proyecto[$i]->id_socio === $id_usuario) {
+              $proyectosAsignados[$j]["permisoVer"] = 1;
+            }elseif ($proyecto[$i]->id_gerente === $id_usuario) {
+              $proyectosAsignados[$j]["permisoVer"] = 2;
+            }
+          }
+        }
+        if ($guardado1 === 0) {
+          array_push($proyectosAsignados, array('id_proyecto' => $proyecto[$i]->id,
+                                                'proyecto' => $proyecto[$i]->descripcion,
+                                                'cliente' => $proyecto[$i]->cliente,
+                                                'horas_asignadas' => "",
+                                                'id_estatus' => $proyecto[$i]->id_estatus,
+                                                'division' => $proyecto[$i]->division,
+                                                'id_proy_analista' => "",
+                                                'id_proyecto_division' => "",
+                                                'permiso' => 0,
+                                                'permisoCrear' => 0,
+                                                'permisoActualizar' => 0,
+                                                'permisoVer' => 1
+                                               )
+          );
+        }
+      }
+    }
+
+
+    if(count($proyectosAsignados) > 0){
+      return $proyectosAsignados;
     }else{
       return array();
     }
@@ -815,7 +953,7 @@ class ProyectoModel extends Model
 
     }
 
-    function empleadosProyecto($id_proyecto,$id_division){
+    function empleadosProyecto($id_proyecto,$id_division,$id_proyecto_division){
 
       $info = DB::select('SELECT u.id,
                                  u.id_estatus,
@@ -829,13 +967,17 @@ class ProyectoModel extends Model
                                        tbl_proyecto_analista pa 
                                   WHERE hc.id_proy_analista = pa.id
                                   AND pa.id_proyecto = '.$id_proyecto.'
+                                  AND pa.id_proyecto_division = '.$id_proyecto_division.'
                                   AND pa.id_analista = u.id) horas_cargadas,
+                                  
+
                                   (SELECT CASE 
                                   WHEN pa.id  > 0 THEN "true"
                                   ELSE "false"
                                   END AS permisoCarga
                                   FROM tbl_proyecto_analista pa 
                                   WHERE pa.id_proyecto = '.$id_proyecto.'
+                                  AND pa.id_proyecto_division = '.$id_proyecto_division.'
                                   AND pa.id_analista = u.id) permisoCarga,
 
                                   (SELECT CASE 
@@ -844,15 +986,16 @@ class ProyectoModel extends Model
                                   END AS idAnaProy
                                   FROM tbl_proyecto_analista pa 
                                   WHERE pa.id_proyecto = '.$id_proyecto.'
+                                  AND pa.id_proyecto_division = '.$id_proyecto_division.'
                                   AND pa.id_analista = u.id) idAnaProy,
 
-                                  (SELECT a.horas_asignadas FROM tbl_proyecto_analista a WHERE a.id_proyecto = '.$id_proyecto.' AND a.id_analista = u.id) horas_asignadas,
-                                  (SELECT a.id_estatus FROM tbl_proyecto_analista a WHERE a.id_proyecto = '.$id_proyecto.' AND a.id_analista = u.id) id_estatus
+                                  (SELECT a.horas_asignadas FROM tbl_proyecto_analista a WHERE a.id_proyecto = '.$id_proyecto.' AND a.id_analista = u.id AND a.id_proyecto_division = '.$id_proyecto_division.') horas_asignadas,
+                                  (SELECT a.id_estatus FROM tbl_proyecto_analista a WHERE a.id_proyecto = '.$id_proyecto.' AND a.id_analista = u.id AND a.id_proyecto_division = '.$id_proyecto_division.') id_estatus
                           FROM tbl_usuario u,
                                tbl_cargo_empleado c
                           WHERE u.id_division = '.$id_division.'
                           AND c.id = u.id_cargo
-                          AND (u.id_estatus = 1 OR (SELECT SUM(a.horas_asignadas) FROM tbl_proyecto_analista a WHERE a.id_proyecto = '.$id_proyecto.' AND a.id_analista = u.id) > 0)
+                          AND (u.id_estatus = 1 OR (SELECT SUM(a.horas_asignadas) FROM tbl_proyecto_analista a WHERE a.id_proyecto = '.$id_proyecto.' AND a.id_analista = u.id AND a.id_proyecto_division = '.$id_proyecto_division.') > 0)
                           ORDER BY u.id_cargo DESC, nombre DESC');
 
       if(count($info) > 0){

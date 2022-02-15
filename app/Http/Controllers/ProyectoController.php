@@ -296,11 +296,13 @@ class ProyectoController extends Controller
 
       $modelo = new ProyectoModel();
       $id_proyecto = (int) $request->input("idDproyecto");
+      $id_proyecto_division = (int) $request->input("id_proyecto_division");
       $id_usuario = $request->session()->get('usuario_id');
       $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
       $datosProyecto = $modelo->datosProyecto($id_proyecto,$infoUsuario->id_division);
       //$analistas = $modelo->analistasProyecto($id_usuario,11,$id_proyecto,$infoUsuario->id_division);
-      $empleados = $modelo->empleadosProyecto($id_proyecto,$infoUsuario->id_division);
+      $empleados = $modelo->empleadosProyecto($id_proyecto,$infoUsuario->id_division, $id_proyecto_division);
+
       if(!empty($datosProyecto)){
       return array("response" => true, "proyecto" => $datosProyecto, "empleados" => $empleados);
       }else{
