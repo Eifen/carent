@@ -39,7 +39,7 @@ new Vue({
         pattern: /[0-9]/,
         transform: v => v.toLocaleUpperCase()
       }
-    },  
+    },
     alert:{
       message: "",
       mostrar: false
@@ -175,7 +175,7 @@ new Vue({
       },
     },
     comboPaises: [],
-    paises: [], 
+    paises: [],
     loading: true,
     modalDetalleUsuario: {
       alert: {
@@ -301,7 +301,7 @@ new Vue({
 
     });
 
-    
+
 
   },
   created: function () {},
@@ -577,7 +577,7 @@ new Vue({
       });
 
     },
-    
+
     mostrarAlertForm: function(alert, mostrar = false, variante = "", mensaje = "", iconCerrar = false, contador = false, ocultarSeg = 0){
 
       return new Promise(resolve => {
@@ -636,13 +636,13 @@ new Vue({
       self.form.campos.nombre = null;
       self.form.campos.codigoUsuario = null;
       self.formFiltro.id_usuario.value = "";
-        
+
 
       self.formFiltro.btn.filtrar.disabled = true;
       self.formFiltro.btn.limpiarFiltro.disabled = true;
       self.formFiltro.nombre.disabled = true;
 
-      
+
       self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
       self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
 
