@@ -83,6 +83,7 @@
                 <tr>
                   <th scope="col">Cliente</th>
                   <th scope="col">Proyecto</th>
+                  <th scope="col">División</th>
                   <th scope="col"v-if="permisoVer">Ver Empleados</th>
                   <th scope="col" v-if="permisoActualizar">Asignar</th>
                   <th scope="col" v-if="permisoCrear">Mis Horas Asignadas</th>
@@ -93,11 +94,12 @@
                 <tr v-for="proyecto in proyectos">
                   <th scope="row">@{{ proyecto.cliente }}</th>
                   <td>@{{ proyecto.proyecto }}</td>
+                  <td>@{{ proyecto.division }}</td>
                   <td v-if="permisoVer">
                     <i class="fas fa-search-plus" v-on:click="mostrarDetalleDivProyecto(proyecto.id_proyecto, $event)" v-if= "proyecto.permisoVer"></i>
                   </td>
                   <td v-if="permisoActualizar">
-                       <i class="far fa-edit" v-on:click="asignarAnalistaProyecto(proyecto.id_proyecto, $event)"v-if= "proyecto.permisoActualizar"></i>
+                       <i class="far fa-edit" v-on:click="asignarAnalistaProyecto(proyecto.id_proyecto, proyecto.id_proyecto_division, $event)"v-if= "proyecto.permisoActualizar"></i>
                   </td>
                   <td v-if= "permisoCrear">@{{ proyecto.horas_asignadas }}</td>
                   <td v-if= "permisoCrear">
