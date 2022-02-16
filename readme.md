@@ -16,6 +16,12 @@ composer install
 ```
 npm i
 ```
+- [x] Luego instalamos la base de datos que son 2; la primera llamada CARENT y la otra llamada LOGS; estas base de datos estan el directorio llamado **basededatos**.
+```
+carent/basededatos/carent.sql
+carent/basededatos/logs.sql
+```
+- [x] Por último debes verificar que el archivo **.env** este en tu directorio raíz del proyecto, alli debes colocar la ruta de la base de datos y otros datos necesarios para ejecutar el proyecto; debes solicitarlo al grupo de programadores para terminarlo de configurar.
 
 ## ¿Cómo Ejecutar el CARENT?
 El CARENT necesita de dos ventanas o consolas para poder "correr"; la primera donde ejecutara el servicio de php para la aplicación y la segunda para ejecutar las librerias JS del proyecto, para ellos debes ejeuctar los siguientes comandos:
