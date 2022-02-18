@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 06-09-2021 a las 18:36:22
--- Versión del servidor: 10.4.20-MariaDB
--- Versión de PHP: 8.0.9
+-- Tiempo de generación: 18-02-2022 a las 22:32:10
+-- Versión del servidor: 10.4.22-MariaDB
+-- Versión de PHP: 8.1.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -1165,7 +1165,12 @@ INSERT INTO `tbl_bitacora` (`id`, `id_accion_bitacora`, `descripcion_accion`, `i
 (910, 2, 'login', '127.0.0.1', 1, 1, 'tbl_usuario', 'UPDATE tbl_usuario u SET u.fecha_login = \"2021-06-04 13:58:31\", u.ip_login = \"127.0.0.1\" WHERE u.id = 1', '{\"fecha_login\": \"2021-06-04 13:35:25\", \"ip_login\": \"127.0.0.1\"}', '{\"fecha_login\": \"2021-06-04 13:58:31\", \"ip_login\": \"127.0.0.1\"}', '2021-06-04 13:58:31'),
 (911, 2, 'login', '127.0.0.1', 1, 1, 'tbl_usuario', 'UPDATE tbl_usuario u SET u.fecha_login = \"2021-06-04 14:20:04\", u.ip_login = \"127.0.0.1\" WHERE u.id = 1', '{\"fecha_login\": \"2021-06-04 13:58:31\", \"ip_login\": \"127.0.0.1\"}', '{\"fecha_login\": \"2021-06-04 14:20:04\", \"ip_login\": \"127.0.0.1\"}', '2021-06-04 14:20:04'),
 (912, 2, 'login', '127.0.0.1', 1, 1, 'tbl_usuario', 'UPDATE tbl_usuario u SET u.fecha_login = \"2021-06-04 14:34:27\", u.ip_login = \"127.0.0.1\" WHERE u.id = 1', '{\"fecha_login\": \"2021-06-04 14:20:04\", \"ip_login\": \"127.0.0.1\"}', '{\"fecha_login\": \"2021-06-04 14:34:27\", \"ip_login\": \"127.0.0.1\"}', '2021-06-04 14:34:27'),
-(913, 2, 'cambio_clave_usuario', '127.0.0.1', 1, 1, 'tbl_usuario', 'UPDATE tbl_usuario u SET u.clave = \"########\", u.fecha_cambio_clave = \"2021-08-03\" WHERE u.id = 1', '{\"clave\": \"########\", \"fecha_cambio_clave\": \"2021-06-04\"}', '{\"clave\": \"########\", \"fecha_cambio_clave\": \"2021-08-03\"}', '2021-06-04 14:38:59');
+(913, 2, 'cambio_clave_usuario', '127.0.0.1', 1, 1, 'tbl_usuario', 'UPDATE tbl_usuario u SET u.clave = \"########\", u.fecha_cambio_clave = \"2021-08-03\" WHERE u.id = 1', '{\"clave\": \"########\", \"fecha_cambio_clave\": \"2021-06-04\"}', '{\"clave\": \"########\", \"fecha_cambio_clave\": \"2021-08-03\"}', '2021-06-04 14:38:59'),
+(914, 4, 'recuperar_clave', '127.0.0.1', 1, 1, 'tbl_usuario', 'SELECT cu.correo_principal,\r\n                          u.id,\r\n                          CAST(AES_DECRYPT(u.clave, \"0123456789abcdef0123456789abcdef\") AS CHAR) AS clave\r\n				   FROM tbl_usuario u,\r\n						tbl_contacto_usuario cu\r\n                   WHERE u.id = cu.id_usuario\r\n                   AND u.codigo = \"0001\"', '', '', '2022-02-16 14:06:20'),
+(915, 2, 'login', '127.0.0.1', 1, 1, 'tbl_usuario', 'UPDATE tbl_usuario u SET u.fecha_login = \"2022-02-16 14:07:10\", u.ip_login = \"127.0.0.1\" WHERE u.id = 1', '{\"fecha_login\": \"2021-06-04 14:34:27\", \"ip_login\": \"127.0.0.1\"}', '{\"fecha_login\": \"2022-02-16 14:07:10\", \"ip_login\": \"127.0.0.1\"}', '2022-02-16 14:07:10'),
+(916, 2, 'cambio_clave_usuario', '127.0.0.1', 1, 1, 'tbl_usuario', 'UPDATE tbl_usuario u SET u.clave = \"########\", u.fecha_cambio_clave = \"2022-04-17\" WHERE u.id = 1', '{\"clave\": \"########\", \"fecha_cambio_clave\": \"2021-08-03\"}', '{\"clave\": \"########\", \"fecha_cambio_clave\": \"2022-04-17\"}', '2022-02-16 14:08:09'),
+(917, 2, 'cambio_clave_usuario', '127.0.0.1', 1, 1, 'tbl_usuario', 'UPDATE tbl_usuario u SET u.clave = \"########\", u.fecha_cambio_clave = \"2022-04-17\" WHERE u.id = 1', '{\"clave\": \"########\", \"fecha_cambio_clave\": \"2022-04-17\"}', '{\"clave\": \"########\", \"fecha_cambio_clave\": \"2022-04-17\"}', '2022-02-16 14:11:33'),
+(918, 2, 'login', '127.0.0.1', 1, 1, 'tbl_usuario', 'UPDATE tbl_usuario u SET u.fecha_login = \"2022-02-18 16:31:36\", u.ip_login = \"127.0.0.1\" WHERE u.id = 1', '{\"fecha_login\": \"2022-02-16 14:07:10\", \"ip_login\": \"127.0.0.1\"}', '{\"fecha_login\": \"2022-02-18 16:31:36\", \"ip_login\": \"127.0.0.1\"}', '2022-02-18 16:31:36');
 
 -- --------------------------------------------------------
 
@@ -2239,7 +2244,7 @@ DELIMITER ;
 CREATE TABLE `tbl_configuracion` (
   `id` int(11) NOT NULL,
   `nombre` varchar(50) NOT NULL,
-  `valor` varchar(255) NOT NULL,
+  `valor` text NOT NULL,
   `descripcion` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -2467,6 +2472,29 @@ INSERT INTO `tbl_contacto_usuario` (`id`, `id_usuario`, `correo_principal`, `cor
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `tbl_deduccion_islr`
+--
+
+CREATE TABLE `tbl_deduccion_islr` (
+  `id` int(11) NOT NULL,
+  `descripcion` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `valor` decimal(5,2) NOT NULL,
+  `id_estatus` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `tbl_deduccion_islr`
+--
+
+INSERT INTO `tbl_deduccion_islr` (`id`, `descripcion`, `valor`, `id_estatus`) VALUES
+(1, '2%', '2.00', 1),
+(2, '3%', '3.00', 1),
+(3, '5%', '5.00', 1),
+(4, 'No definido', '0.00', 2);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `tbl_division`
 --
 
@@ -2613,7 +2641,13 @@ INSERT INTO `tbl_estatus` (`id`, `tabla`, `valor`, `descripcion`) VALUES
 (29, 'tbl_proy_monto_adicional', 1, 'Activo'),
 (30, 'tbl_proy_monto_adicional', 2, 'Inactivo'),
 (31, 'tbl_proy_div_horas_adic', 1, 'activo'),
-(32, 'tbl_proy_div_horas_adic', 2, 'inactivo');
+(32, 'tbl_proy_div_horas_adic', 2, 'inactivo'),
+(33, 'tbl_porcentaje_retencion_iva', 1, 'activo'),
+(34, 'tbl_porcentaje_retencion_iva', 2, 'inactivo'),
+(35, 'tbl_deduccion_islr', 1, 'activo'),
+(36, 'tbl_deduccion_islr', 2, 'inactivo'),
+(37, 'tbl_iva', 1, 'activo'),
+(38, 'tbl_iva', 2, 'inactivo');
 
 -- --------------------------------------------------------
 
@@ -2647,6 +2681,9 @@ CREATE TABLE `tbl_factura_proyecto` (
   `id_concepto_factura` int(11) NOT NULL,
   `numero_factura` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `monto_factura` decimal(25,2) NOT NULL,
+  `id_iva` int(11) DEFAULT NULL,
+  `id_porcentaje_retencion_iva` int(11) DEFAULT NULL,
+  `id_deduccion_islr` int(11) DEFAULT NULL,
   `numero_control` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `observaciones` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `fecha_factura` date DEFAULT NULL,
@@ -2661,323 +2698,323 @@ CREATE TABLE `tbl_factura_proyecto` (
 -- Volcado de datos para la tabla `tbl_factura_proyecto`
 --
 
-INSERT INTO `tbl_factura_proyecto` (`id`, `id_proyecto`, `concepto`, `id_concepto_factura`, `numero_factura`, `monto_factura`, `numero_control`, `observaciones`, `fecha_factura`, `fecha_cobro_factura`, `fecha_registro`, `id_facturador`, `id_factura_anular`, `id_estatus`) VALUES
-(1, 2, 'concepto prueba', 1, 'FACTURA-01', '1000.00', 'CONTROL-01', NULL, '2020-10-03', NULL, '2020-10-03', 1, NULL, 1),
-(2, 2, 'prueba concepto 2', 3, 'FACTURA-02', '100.00', 'CONTROL-2', NULL, '2020-10-03', NULL, '2020-10-03', 1, NULL, 1),
-(3, 2, 'concepto prueba 04', 2, 'FACTURA-03', '150.25', 'CONTROL-4', 'test', '2020-10-03', NULL, '2020-10-03', 1, NULL, 1),
-(4, 2, 'concepto prueba', 4, 'FACTURA-01', '1000.00', 'CONTROL-02', NULL, '2020-10-03', NULL, '2020-10-03', 1, NULL, 1),
-(5, 30, 'facturaciÃ³n inicial', 1, 'FACTURA-01', '1000.00', 'CONTROL-01', NULL, '2020-10-04', '2020-10-04', '2020-10-04', 1, NULL, 1),
-(6, 30, 'hora adicional', 1, 'FACTURA-02', '100.00', 'CONTROL-02', NULL, '2020-10-04', NULL, '2020-10-04', 1, NULL, 1),
-(7, 30, 'para los frescos', 1, 'FACTURA-03', '125.10', 'CONTROL-03', NULL, '2020-10-04', NULL, '2020-10-04', 1, NULL, 1),
-(8, 30, 'concepto-04', 1, 'FACTURA-04', '130.00', 'CONTROL-04', 'prueba observaciÃ³n', '2020-10-04', '2020-10-04', '2020-10-04', 1, NULL, 1),
-(9, 30, 'Concepto 055', 1, 'FACTURA-05', '250.45', 'CONTROL-05', 'N/A', '2020-10-04', '2020-10-04', '2020-10-04', 1, NULL, 1),
-(10, 30, 'concepto 6', 3, 'FACTURA-06', '100.00', 'CONTROL-06', NULL, '2020-10-03', NULL, '2020-10-04', 1, NULL, 1),
-(11, 30, 'concepto 07', 3, 'FACTURA-07', '125.00', 'CONTROL-07', NULL, '2020-10-04', NULL, '2020-10-04', 1, NULL, 1),
-(12, 30, 'concepto 08', 2, 'FACTURA-08', '200.00', 'CONTROL 08', NULL, '2020-10-04', NULL, '2020-10-04', 1, NULL, 1),
-(13, 30, 'para los frescos', 4, 'FACTURA-03', '125.10', 'CONTROL-03', 'se anulo la factura factura-03', '2020-10-04', NULL, '2020-10-04', 1, 7, 1),
-(14, 30, 'concepto 999', 1, 'FACTURA-09', '100.00', 'CONTROL-09', NULL, '2020-10-03', NULL, '2020-10-04', 1, NULL, 1),
-(15, 30, 'concepto 999', 4, 'FACTURA-09', '100.00', 'CONTROL-09', 'se anula la factura factura-09', '2020-10-03', NULL, '2020-10-04', 1, 14, 1),
-(16, 30, 'concepto 10', 1, 'FACTURA-10', '250.00', 'CONTROL-10', NULL, '2020-10-04', NULL, '2020-10-04', 1, NULL, 1),
-(17, 30, NULL, 5, '', '10.00', '', 'N/A', NULL, NULL, '2020-10-04', 1, NULL, 1),
-(18, 30, NULL, 5, '', '15.00', '', NULL, NULL, NULL, '2020-10-04', 1, NULL, 1),
-(19, 30, 'concepto 15', 1, 'FACTURA-15', '200.00', 'CONTROL-15', NULL, '2020-10-04', '2020-10-01', '2020-10-04', 1, NULL, 1),
-(20, 30, 'concepto 15', 4, 'FACTURA-15', '200.00', 'CONTROL-15-1', 'se anula la factura FACTURA-15', '2020-10-04', '2020-10-01', '2020-10-04', 1, 19, 1),
-(21, 14, 'honorarios profesionales con motivo de la preparacion de la declaracion de precios de transferencia PT-99 y estudio respectivo, para ejercicio que finalizo el 31 de diciembre 2019', 1, '19975', '1400.00', '019171', NULL, '2020-05-15', NULL, '2020-11-02', 113, NULL, 1),
-(22, 14, 'nota de credito aplicada a la factura 19975 de fecha 15 de mayo del 2020 por sugerencia del cliente', 4, 'NOTA DE CREDITO 1247', '1400.00', '019230', NULL, '2020-07-21', NULL, '2020-11-02', 113, 21, 1),
-(23, 14, 'honorarios por servicios profesionales con motivo de la preparacion de la declaracion de precios de transferencia PT-99 y el estudio respectivo,para ejercicio fiscal que finalizo el 31 de diciembre de 2019.se procede a facturar el 30% restante', 1, '20002', '600.00', '019199', NULL, '2020-06-30', NULL, '2020-11-02', 113, NULL, 1),
-(24, 14, 'nota de credito aplicada a la factura 20002 de fecha 30 de junio del 2020 por sugerencia del cliente', 4, 'NOTA DE CREDITO 1248', '600.00', '019231', NULL, '2020-07-21', NULL, '2020-11-02', 113, 23, 1),
-(25, 1, 'honorarios profesionales con motivo de: Auditoria de los estados financieros de VALORALTA CASA DE BOLSA, C.A.  al 30 de junio de 2020, de acuerdo a la propuesta de servicios de fecha 01 de julio del 2020', 1, '20013', '2750.00', '019212', NULL, '2020-07-07', NULL, '2020-11-02', 113, NULL, 1),
-(26, 3, 'honorarios profesionales por servicios prestados con motivo de: Auditoria de los estados financieros al 30 de junio del 2020, de FINANCORP VALORES CASA DE BOLSA, C.A., segun propuesta de servicios profesionales', 1, '20014', '308154753.17', '019213', NULL, '2020-07-08', NULL, '2020-11-02', 113, NULL, 1),
-(27, 10, 'honorarios por servicios prestados con motivo de: servicio permanente a tiempo completo correspondiente al mes de julio 2020 periodo 09/2019-08/2020.', 1, '20015', '118620000.00', '019214', NULL, '2020-07-10', NULL, '2020-11-02', 113, NULL, 1),
-(28, 8, 'honorarios profesionales correspondientes a la Auditoría de los estados financieros al 30 de junio del 2020,del BANCO DE VENEZUELA, S.A. BANCO UNIVERSAL, de acuerdo a la orden de servicio N° 41003440 de fecha 02 de junio de 2020.', 1, '20016', '132000.00', '19215', NULL, '2020-07-14', NULL, '2020-11-02', 113, NULL, 1),
-(29, 9, 'gastos reembolsables con motivo de; Revisión de los estados financieros de BANCO ACTIVO, C.A., BANCO UNIVERSAL, al 30 de junio 2020', 2, '20022', '195.00', '019221', NULL, '2020-07-21', NULL, '2020-11-02', 113, NULL, 1),
-(30, 9, 'honorarios profesionales con motivo de: revisión de los estados financieros de BANCO ACTIVO, C.A., BANCO UNIVERSAL, al 30 de junio de 2020.', 1, '20023', '1526.32', '019222', NULL, '2020-07-21', NULL, '2020-11-02', 113, NULL, 1),
-(31, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del 26.06.2020 al 17.07.2020. Orden de compra CO 4801032512', 1, '20024', '72450000.00', '019223', NULL, '2020-07-21', NULL, '2020-11-02', 113, NULL, 1),
-(32, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de lo libros de compras para el período comprendido entre la semana del 26.06.2020 al 10.07.2020. Orden de compra CO 4801032801', 1, '20025', '28980000.00', '019224', NULL, '2020-07-21', NULL, '2020-11-02', 113, NULL, 1),
-(33, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del  26.06.2020 al 10.07.2020. Orden de compra CO 4801032832', 1, '20026', '14490000.00', '019225', NULL, '2020-07-21', NULL, '2020-11-02', 113, NULL, 1),
-(34, 16, 'honorarios por servicios profesionales por la asistencia en el diagnóstico de los efectos contingentes en materia del impuesto a las grandes transacciones financieros correspondiente al año 2019 y 2020.', 1, '20029', '600.00', '019228', NULL, '2020-07-21', NULL, '2020-11-02', 113, NULL, 1),
-(35, 16, 'honorarios por servicios profesionales por presentación en sus oficinas de los aspectos mas importantes de la reforma tributaria del mes de enero 2020', 1, '20030', '120.00', '019229', NULL, '2020-07-21', NULL, '2020-11-02', 113, NULL, 1),
-(36, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del  13.07.2020 al 24.07.2020. Orden de compra CO 4801032512.', 1, '20031', '81900000.00', '019232', NULL, '2020-07-28', NULL, '2020-11-02', 113, NULL, 1),
-(37, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del 13.07.2020 al 24.07.2020. Orden de compra CO 4801032801', 1, '20032', '32760000.00', '019233', NULL, '2020-07-28', NULL, '2020-11-02', 113, NULL, 1),
-(38, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del  13.07.2020 al 24.07.2020. Orden de compra CO 4801032832', 1, '200333', '16380000.00', '019234', NULL, '2020-07-28', NULL, '2020-11-02', 113, NULL, 1),
-(39, 42, 'honorarios profesionales por concepto de auditoria de los estados financieros del BANCO DEL TESORO, C.A. BANCO UNIVERSAL al 30 de junio de 2020', 1, '20034', '133.00', '019239', NULL, '2020-07-31', NULL, '2020-11-02', 113, NULL, 1),
-(40, 10, 'honorarios por servicios prestados con motivo de: servicio permanente a tiempo completo correspondiente al mes de Agosto 2020 periodo 09/2019- 08/2020.', 1, '20044', '175000000.00', '019245', NULL, '2020-08-11', NULL, '2020-11-02', 113, NULL, 1),
-(41, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del 27.072020 al 07.08.2020. Orden de compra CO 4801047036', 1, '20045', '91350000.00', '019246', NULL, '2020-08-11', NULL, '2020-11-02', 113, NULL, 1),
-(42, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del 27.07.2020 al 07.08.2020. Orden de compra CO 4801047037', 1, '20046', '36540000.00', '019247', NULL, '2020-08-11', NULL, '2020-11-02', 113, NULL, 1),
-(43, 13, 'Honorarios por servicios profesionales por la asistencia en la elbaoración de los libros de compras para el período comprendido entre la semana del 27.07.2020 al 07.08.2020. Orden de compra CO 4801047038', 1, '20047', '18270000.00', '019248', NULL, '2020-08-11', NULL, '2020-11-02', 113, NULL, 1),
-(44, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del 10.08.2020 al 21.08.2020. Orden de compra CO 4801047036', 1, '20050', '91350000.00', '019253', NULL, '2020-08-24', NULL, '2020-11-02', 113, NULL, 1),
-(45, 32, 'honorarios profesionales con motivo de: examen de los estados financieros individuales y consolidados de CORPORACION TELEMIC, C.A. y sus filiales al 31 de diciembre del 2019.', 1, '20051', '10552.00', '019252', NULL, '2020-08-19', NULL, '2020-11-02', 113, NULL, 1),
-(46, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del 10.08.2020 al 21.08.2020. Orden de compra CO 4801047037', 1, '20053', '36540000.00', '019254', NULL, '2020-08-24', NULL, '2020-11-02', 113, NULL, 1),
-(47, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del 10.08.2020 al 21.08.2020. Orden de compra CO 4801047038', 1, '20054', '18270000.00', '019255', NULL, '2020-08-24', NULL, '2020-11-02', 113, NULL, 1),
-(48, 22, '33% de los honorarios  profesionales de la auditoria de servianave, c.a. al 30 de junio de 2020', 1, '20057', '2784.00', '019258', NULL, '2020-08-24', NULL, '2020-11-02', 113, NULL, 1),
-(49, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del 10.08.2020 al 21.08.2020. Orden de compra CO 4801047036', 1, '20058', '100800000.00', '019259', NULL, '2020-08-26', NULL, '2020-11-02', 113, NULL, 1),
-(50, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras  para el período comprendido entre la semana del 10.08.2020 al 21.087.2020. Orden de compra CO 4801047037', 1, '20059', '40320000.00', '019260', NULL, '2020-08-26', NULL, '2020-11-02', 113, NULL, 1),
-(51, 13, 'HONORARIOS POR SERVICIOS PROFESIONALES POR LA ASISTENCIA EN LA ELABORACIÓN DE LOS LIBROS DE COMPRAS PARA EL PERÍODO  COMPRENDIDO ENTRE LA SEMANA DE 10.08.2020 AL 21.08.2020. ORDEN DE COMPRA CO 4801047038', 1, '20060', '20160000.00', '019261', NULL, '2020-08-26', NULL, '2020-11-02', 113, NULL, 1),
-(52, 7, '25% de los honorarios   profesionales de la auditoría de los estados financieros y estudio de precios de transferencia de la compañía al 31 de diciembre de 2020', 1, '20069', '2975.00', '019270', NULL, '2020-08-28', NULL, '2020-11-02', 113, NULL, 1),
-(53, 9, 'honorarios profesionales con motivo de : revisión de los estados financieros de BANCO ACTIVO, C.A., BANCO UNIVERSAL, AL 30 DE JUNIO 2020.', 1, '20072', '2453.00', '019273', NULL, '2020-08-31', NULL, '2020-11-02', 113, NULL, 1),
-(54, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del 24.08.2020 al 04.09.2020. Orden de compra  CO 4801059406', 1, '20073', '132300000.00', '019274', NULL, '2020-09-04', NULL, '2020-11-02', 113, NULL, 1),
-(55, 12, 'Honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del 24.08.2020 al 04.09.2020. Orden de compra CO 4801059450', 1, '20074', '52920000.00', '019275', NULL, '2020-09-04', NULL, '2020-11-02', 113, NULL, 1),
-(56, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del 24.08.2020 al 04.09.2020. Orden de compra CO 4801059453', 1, '20077', '26460000.00', '019278', NULL, '2020-09-04', NULL, '2020-11-02', 113, NULL, 1),
-(57, 10, 'honorarios por servicios prestados con motivo de: servicio permanente a tiempo completo correspondiente al mes de septiembre 2020 (periodo 09/2020-08/2021).', 1, '20079', '231513850.00', '019280', NULL, '2020-09-09', NULL, '2020-11-04', 113, NULL, 1),
-(58, 19, 'honorarios profesionales correspondientes al 50% con motivo de:  auditoria de los estados financieros de banco de comercio exterior, c.a., al 30 de junio 2019.', 1, '20087', '15000.00', '019296', NULL, '2020-09-21', NULL, '2020-11-04', 113, NULL, 1),
-(59, 19, 'honorarios profesionales correspondientes al 100% con motivo de:  auditoria de los estados financieros del  FONDO DE PROMOCIÓN A LAS EXPORTACIONES E INVERSIONES, al 31 de diciembre de 2019.', 1, '20089', '3750.00', '019298', NULL, '2020-09-21', NULL, '2020-11-04', 113, NULL, 1),
-(60, 19, 'honorarios profesionales correspondientes al 100% con motivo de:  auditoria de los estados financieros del FONDO DE CONTIGENCIAS POLITICAS Y EXTRAORDINARIAS DE LAS EXPORTACIONES, al 31 de diciembre 2019.', 1, '20090', '3750.00', '019299', NULL, '2020-09-21', NULL, '2020-11-04', 113, NULL, 1),
-(61, 19, 'honorarios profesionales correspondientes al 30% con motivo de:  auditoria de los estados financieros de banco de comercio exterior, c.a., al 30 de junio 2019.', 1, '20091', '9000.00', '019300', NULL, '2020-09-21', NULL, '2020-11-04', 113, NULL, 1),
-(62, 19, 'honorarios profesionales correspondientes al 50% con motivo de:  auditoria de los estados financieros de banco de comercio exterior, c.a., al 30 de junio 2019.', 1, '20093', '15000.00', '019302', NULL, '2020-09-21', NULL, '2020-11-04', 113, NULL, 1),
-(63, 19, 'honorarios profesionales correspondientes al 30% con motivo de:  auditoria de los estados financieros de banco de comercio exterior, c.a., al 30 de junio 2019.', 1, '20094', '9000.00', '019303', NULL, '2020-09-21', NULL, '2020-11-04', 113, NULL, 1),
-(64, 19, 'honorarios profesionales correspondientes al 50% con motivo de:  auditoria de los estados financieros de banco de comercio exterior, c.a., al 30 de junio 2019.', 1, '19997', '15000.00', '019194', NULL, '2020-06-17', NULL, '2020-11-04', 113, NULL, 1),
-(65, 19, 'nota de credito aplicada a la factura 19997 de fecha 17 de junio del 2020 por error en calculo del IVA.', 4, 'NOTA DE CREDITO 1253', '15000.00', '019292', NULL, '2020-09-18', NULL, '2020-11-04', 113, 64, 1),
-(66, 19, 'honorarios profesionales correspondientes al 50% con motivo de:  auditoria de los estados financieros del FONDO DE PROMOCIÓN A LAS EXPORTACIONES E INVERSIONES, al 31 de diciembre de 2019.', 1, '19995', '3750.00', '019192', NULL, '2020-06-17', NULL, '2020-11-04', 113, NULL, 1),
-(67, 19, 'NOTA DE CREDITO APLICADA A LA FACTURA 19995 DE FECHA 17 DE JUNIO DEL 2020 POR ERROR EN CALCULO DEL IVA', 4, 'NOTA DE CREDITO 1255', '3750.00', '019294', NULL, '2020-09-18', NULL, '2020-11-04', 113, 66, 1),
-(68, 19, 'honorarios profesionales correspondientes al 50% con motivo de:  auditoria de los estados financieros deL FONDO DE CONTIGENCIAS POLITICAS Y EXTRAORDINARIAS DE LAS EXPORTACIONES, al 31 de diciembre de 2019', 1, '19996', '3750.00', '019193', NULL, '2020-06-17', NULL, '2020-11-04', 113, NULL, 1),
-(69, 19, 'nota de credito aplicada a la factura 19996 de fecha 17 de junio del 2020 por error en calculo del iva', 4, 'NOTA DE CREDITO 1256', '3750.00', '019295', NULL, '2020-09-18', NULL, '2020-11-04', 113, 68, 1),
-(70, 22, '33% de los honorarios profesionales de la auditoria de SERVINAVE, C.A. al 30 de junio', 1, '20098', '2400.00', '019307', NULL, '2020-09-25', NULL, '2020-11-04', 113, NULL, 1),
-(71, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de septiembre del 2020. Orden de compra (CO) 4801059406', 1, '20102', '173250000.00', '019311', NULL, '2020-10-01', NULL, '2020-11-04', 113, NULL, 1),
-(72, 12, 'Honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de septiembre del 2020. Orden de compra (CO) 4801059450', 1, '20103', '69300000.00', '019312', NULL, '2020-10-01', NULL, '2020-11-04', 113, NULL, 1),
-(73, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de septiembre del 2020. Orden de compra (CO) 4801059453', 1, '20104', '34650000.00', '019313', NULL, '2020-10-01', NULL, '2020-11-04', 113, NULL, 1),
-(74, 10, 'honorarios por servicios prestados con motivo de: servicio permanente a tiempo completo correspondiente al mes de octubre 2020 (periodo 09/2020-08/2021).', 1, '20105', '280651264.00', '019314', NULL, '2020-10-05', NULL, '2020-11-04', 113, NULL, 1),
-(75, 9, 'honorarios profesionales con motivo de: revisión de los estados financieros de BANCO ACTIVO, C.A., BANCO UNIVERSA, AL 30 DE JUNIO DE 2020.', 1, '20115', '1698.72', '019324', NULL, '2020-10-14', NULL, '2020-11-04', 113, NULL, 1),
-(76, 9, 'gastos reembolsables con motivo de: revisión de los estados financieros de BANCO ACTIVO , C.A., BANCO UNIVERSAL, AL 30 DE JUNIO DE 2020', 2, '20116', '113.12', '019325', NULL, '2020-10-14', NULL, '2020-11-04', 113, NULL, 1),
-(77, 34, 'honorarios profesionales con motivo de: examen de los estados financieros  individuales y consolidados de INTER BUDING, C.A., al 31 de diciembre del 2019.', 1, '20052', '524.12', '019251', NULL, '2020-08-19', NULL, '2020-11-04', 113, NULL, 1),
-(78, 56, 'honorarios por servicios profesionales relacionados con la asistencia en la preparacion de la declaracion del impuestoa los grandes patrimonios al 30/09/2019', 1, '20049', '330.00', '019250', NULL, '2020-08-19', NULL, '2020-12-03', 113, NULL, 1),
-(79, 4, '50% de los honorarios profesionales por el servicio de copilacion de informacion financiera al 30 de junio de 2020 al 31 de diciembre de 2019 y 2018.', 1, '20055', '753.78', '019256', NULL, '2020-08-24', NULL, '2020-12-03', 113, NULL, 1),
-(80, 13, 'honorarios por servicios profesonales por la asistencia en la elaboracion de los libros de compras para el periodo comprendido entra la semana de 24.08.2020 al 04.09.2020. orden de compra (CO) 4801059453', 1, '20075', '20160000.00', '019276', NULL, '2020-09-04', NULL, '2020-12-03', 113, NULL, 1),
-(81, 63, 'honorarios profesionales correspondientes al 50% con motivo de:la auditoria  de los estados financieros individuales y consolidados para los ejercicios finalizados al 31 de diciembre del 2006 al 2019 de la empresa CALIFORNIA HOME FASHIONS, C.A. Y SUCURSALES.', 1, '20078', '1345.65', '019279', NULL, '2020-09-09', NULL, '2020-12-03', 113, NULL, 1),
-(82, 11, 'HONORARIOS POR SERVICIOS PROFESIONALES POR LA ASISTENCIA EN LA ELABORACION DE LOS LIBROS DE COMPRAS PARA LA PRIMERA QUICENA DEL MES DE SEPTIEMBRE DEL 2020. ORDEN DE COMPRA (CO) 4801059406.', 1, '20080', '132300000.00', '019281', NULL, '2020-09-18', NULL, '2020-12-03', 113, NULL, 1),
-(83, 12, 'honorarios por servicios profesionales por la asistencia en la elaboracion de los libros de compras para la primera quincena del mes de septiembre del 2020. orden de compra (CO)  4801059450.', 1, '20081', '52920000.00', '019282', NULL, '2020-09-18', NULL, '2020-12-03', 113, NULL, 1),
-(84, 13, 'honorarios por servicios profesionales por la asistencia en la elaboracion de los libros de compras para la primera quincena del mes de septiembre del 2020. orden de compra (CO) 4801059453', 1, '20082', '26460000.00', '019283', NULL, '2020-09-18', NULL, '2020-12-03', 113, NULL, 1),
-(85, 59, 'honorarios profesionales por servicios prestados con motivo de:30% final de la auditoria estados financieros de CENTRO MEDICO LOIRA, C.A., al 31 de diciembre de 2019, de acuerdo a nuestra propuesta de servicios profesionales.', 1, '20083', '2152.20', '019284', NULL, '2020-09-18', NULL, '2020-12-03', 113, NULL, 2),
-(86, 59, 'honorarios profesionales por calculo y emision de ajuste por inflación.', 1, '20084', '960.00', '019285', NULL, '2020-09-18', NULL, '2020-12-03', 113, NULL, 1),
-(87, 59, 'honorarios profesionales por reestructuración de los estados financieros 2017 y 2018 de CENTRO MEDICO LOIRA, C.A.', 1, '20085', '957.50', '019286', NULL, '2020-09-18', NULL, '2020-12-03', 113, NULL, 1),
-(88, 25, 'HONORARIOS PROFESIONALES CON MOTIVO DE : AUDITORIA DE LOS ESTADOS FINANCIEROS DEL BANCO DE EXPORTACION Y COMERCIO, C.A, AL 30 DE JUNIO DE 2020', 1, '20086', '210000000.00', '019291', NULL, '2020-09-18', NULL, '2020-12-03', 113, NULL, 1),
-(89, 7, '25% de los honorarios profesionales de la auditoria de los estados financieros y estudio de precios de tranferencia de la compañia al 31 de diciembre de 2020.', 1, '20096', '2975.00', '019305', NULL, '2020-09-25', NULL, '2020-12-03', 113, NULL, 1),
-(90, 10, 'honorarios por servicios prestados con motivo de: servicio permanente a tiempo completo correspondiente al mes de octubre 2020 (periodo 09/2020-08/2021).', 1, '20105', '219258800.85', '019320', NULL, '2020-10-05', NULL, '2020-12-03', 113, NULL, 2),
-(91, 49, 'complemento de honorarios profesionales correspondientes a la auditoria de los estados financieros de la compañia al 31 de diciembre de 2019.', 1, '20107', '198.04', '019316', NULL, '2020-10-05', NULL, '2020-12-03', 113, NULL, 1),
-(92, 37, 'asistencia en el calculo del posible gasto de impuesto sobre la renta y, la preparacion de la declaracion defiitiva de rentas para el ejercicio economico que finalizara el 31 de diciembre de 2020,  asistencia en la preparacion de la declaracion de impuesto a los grandes patrimonios para e periodo que finalizo el 30 de septiembre de 2020.', 1, '20119', '1170.00', '019328', NULL, '2020-10-15', NULL, '2020-12-03', 113, NULL, 1),
-(93, 15, 'honorarios profesionales por la preparacion de la declaracion de impuesto sobre la renta de LACTEOS ANANKE, C.A. para el ejercicio fiscal que finalizara el 30 de junio de 2020.', 1, '20120', '210.00', '01939', NULL, '2020-10-19', NULL, '2020-12-03', 113, NULL, 1),
-(94, 50, 'gastos reembolsables por el traslados del personal de auditoria a las instalaciones de la compañia en el  estados yaracuy, durante el mes de enero de 2020.', 2, '20125', '165.00', '019334', NULL, '2020-10-21', NULL, '2020-12-03', 113, NULL, 1),
-(95, 41, 'honorarios profesionales correspondientes al 60% por concepto de auditoria de los estados financieros del BANCO OCCIDENTAL DEL DESCUENTO, BANCO UNIVERSAL, C.A. al 31 de diciembre de 2019.', 1, '20128', '85200.00', '019337', NULL, '2020-10-23', NULL, '2020-12-03', 113, NULL, 1),
-(96, 42, 'honorarios profesionales correspondientes añ 30% por concepto de auditoria de los estados financieros del BANCO DEL TESORO, C.A. BANCO UNIVERSAL al 31 de diciembre de 2020.', 1, '20129', '39900.00', '019338', NULL, '2020-10-23', NULL, '2020-12-03', 113, NULL, 1),
-(97, 22, '33% de los honorarios profesionales de la auditoria de ser SERVINAVE, C.A. al 30 de junio de 2020.', 1, '20130', '2400.00', '019339', NULL, '2020-10-23', NULL, '2020-12-03', 113, NULL, 1),
-(98, 28, 'honorarios profesionales correspondientes al 25% inicial de la auditoria de los estados financieros al 31 de diciembre de 2020 de REPRESENTACIONES LABIN VE, S.A.', 1, '20131', '1750.00', '019340', NULL, '2020-10-23', NULL, '2020-12-03', 113, NULL, 1),
-(99, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de octubre. orden de compra (CO) 4801083958.', 1, '20138', '157500000.00', '019347', NULL, '2020-11-02', NULL, '2020-12-03', 113, NULL, 1),
-(100, 12, 'honorarios por servicios profesionales por la asistencia en la elaboracion de los libros de compras para la segunda quincena del mes de octubre. orden de compra (CO) 4801083967', 1, '20139', '67500000.00', '019348', NULL, '2020-11-02', NULL, '2020-12-03', 113, NULL, 1),
-(101, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de octubre. orden de compa (CO)4801083972.', 1, '20140', '37500000.00', '019349', NULL, '2020-11-02', NULL, '2020-12-03', 113, NULL, 1),
-(102, 29, 'honorarios profesionales con motivo de: auditoria de los estados financieros combinados del grupo OPTICA CARONI, C.A. al 31 de mayo de 2020.', 1, '20145', '3104.08', '019354', NULL, '2020-11-04', NULL, '2020-12-03', 113, NULL, 1),
-(103, 29, 'gastos reembolsables con motivo de: auditoria de los estados financieros combinados  del grupo OPTICA CARONI, C.A. al 31 de mayo de 2020.', 2, '20146', '207.98', '019355', NULL, '2020-11-04', NULL, '2020-12-03', 113, NULL, 1),
-(104, 42, 'honorarios profesionales correspondientes al 30% por concepto de auditoria de los estados financieros del BANCO DEL TESORO, C.A. BANCO UNIVERSAL al 31 de Diciembre de 2020.', 1, '20147', '39900.00', '019356', NULL, '2020-11-04', NULL, '2020-12-03', 113, NULL, 1),
-(105, 41, 'gastos reembolsables aprobados correspondientes al 50% por concepto de auditoria de los estados financieros del BANCO OCCIDENTAL DEL DESCUENTO, BANCO UNIVERSAL, C.A. al 31 de diciembre de 2019.', 2, '20148', '16472.00', '019357', NULL, '2020-11-06', NULL, '2020-12-03', 113, NULL, 1),
-(106, 8, 'honorarios profesionales correspondientes a la auditoria de los estados financieros al 31 de diciembre de 2020, del BANCO DE VENEZUELA, S.A. BANCO UNIVERSAL, de acuerdo a la orden de servicio N° 41004304  de fecha 03 de noviembre de 2020.', 1, '20151', '179.47', '019360', NULL, '2020-11-10', NULL, '2020-12-14', 113, NULL, 1),
-(107, 10, 'honorarios por servicios prestados con motivo de: servicio permanente a tiempo completo correspondiente al mes de noviembre 2020 (periodo 09/2020-08/2021).', 1, '20152', '381271980.72', '019362', NULL, '2020-11-12', NULL, '2020-12-14', 113, NULL, 1),
-(108, 42, 'honorarios profesionales correspondientes al 20% por concepto de auditoria a los estados financieros del BANCO DEL TEOSRO, C.A. BANCO UNIVERSAL al 31 de diciembre 2020.', 1, '20155', '26600.00', '019364', NULL, '2020-11-13', NULL, '2020-12-14', 113, NULL, 1),
-(109, 62, 'honorarios profesionales correspondientes al 40% por servicios prestados con motivo de: auditoria al 31 de diciembre del 2020 de INDUSTRIAS CORPAÑAL C.A., de acuerdo a nuestra propuesta de servicios profesionales .', 1, '20157', '1331.72', '019366', NULL, '2020-11-16', NULL, '2020-12-14', 113, NULL, 1),
-(110, 11, 'honorarios por servicios profesionales por la asistencia en la elaboracion de los libros de compras para la primera quincena del mes de noviembre. Orden de compra (CO) 4801096036', 1, '20158', '233100000.00', '019367', NULL, '2020-11-18', NULL, '2020-12-14', 113, NULL, 1),
-(111, 12, 'honorarios por servicios profesionales por la asistencia en la elaboracion de los libros de compras para la primera quincena del mes de noviembre. Orden de compra (co) 4801096056', 1, '20159', '99900000.00', '019368', NULL, '2020-11-18', NULL, '2020-12-14', 113, NULL, 1),
-(112, 13, 'honorarios por servicios profesionales por la asistencia en la elaboracion de los libros de compras para la primera quincena del mes de noviembre. orden de compra (CO) 4801096308', 1, '20160', '55500000.00', '019369', NULL, '2020-11-18', NULL, '2020-12-14', 113, NULL, 1),
-(113, 47, 'gastos reembolsables con motivo de:auditoria estados financieros  de GRUPO MEDICO VARGAS , C.A., al 31 de diciembre de 2020, de acuerdo a nuestra propuesta de servicios profesionales', 2, '20161', '400.00', '019371', NULL, '2020-11-19', NULL, '2020-12-14', 113, NULL, 1),
-(114, 47, 'honorarios profesionales correspondientes al 70% inicia por servicios prestados con motivo de: Auditoria estados financieros de grupo medico vargas, c.a., al 31 de Diciembre de 2020, de acuerdo a nuestra propuesta de servicios profesionales', 1, '20163', '12357.80', '019372', NULL, '2020-11-19', NULL, '2020-12-14', 113, NULL, 1),
-(115, 47, 'gastos reembolsables aprobados correspondientes al mes de octubre por concepto de auditoria de los estados financieros del BANCO OCCIDENTAL DE DESCUENTO, BANCO UNIVERSAL, C.A. al 31 de Diciembre de 2019.', 2, '20164', '2430.00', '019373', NULL, '2020-11-20', NULL, '2020-12-14', 113, NULL, 1),
-(116, 63, 'honorarios profesionales correspondientes al 15% con motivo de: auditoria de los estados financieros individuales y consolidados para los ejercicios finalizados al 31 de DIicmebre de 2006 al 2019 de la empresa CALIFORNIA HOME FASHIONS, C.A. y SUCURSALES.', 1, '20165', '1337.08', '019374', NULL, '2020-11-20', NULL, '2020-12-14', 113, NULL, 1),
-(117, 63, 'Honorarios profesionales correspondientes al 100% con motivo de: auditoria de los estados financieros de DISTEPAL INDUSTRIAL, S.A., Y SUSSIDIARIAS, para los ejercicios finalizados el 31 de diciembre de 2006 al 31 de diciembre de 2019.', 1, '20166', '2878.89', '019375', NULL, '2020-11-20', NULL, '2020-12-14', 113, NULL, 1),
-(118, 63, 'honorarios profesionales correspondientes al 15}5 con motivo de: auditoria de los estados financieros individuales y consolidados para los ejercicios finalizados al 31 de Diciembre de 2006 al 2019 de la empresa CALIFORNIA HOME FASHIONS, C.A. SUCURSALES.', 1, '20167', '1337.08', '019376', NULL, '2020-11-20', NULL, '2020-12-14', 113, NULL, 1),
-(119, 36, 'Honorarios profesionales por servicios prestados con motivo de:auditoria operativa de los registros contables y adiministrativos para los periodos 2016 al 2019 a orica venezuela, c.a.', 1, '20168', '1293.10', '019384', NULL, '2020-11-24', NULL, '2020-12-14', 113, NULL, 1),
-(120, 15, 'honorarios por servicios profesionales con ocasión de la declaración de impuesto a los grandes patrimonios al 30.06.2020 de LACTEOS ANANKE, C.A.', 1, '20169', '500.00', '019378', NULL, '2020-11-25', NULL, '2020-12-14', 113, NULL, 1),
-(121, 56, 'HONORARIOS POR SERVICIOS PROFESIONALES CON OCASIÓN DE LA DECLARACION DE IMPUESTO A LOS GRANDES PATRIMONIOS AL 30.06.2020 DE CORPORACION DELCOP, C.A.', 1, '20170', '500.00', '019379', NULL, '2020-11-20', NULL, '2020-12-14', 113, NULL, 1),
-(122, 55, 'HONORARIOS POR SERVICIOS PROFESIONLAES CON OCASIÓN DE LA DECLARACION DE IMPUESTO A LOS GRANDES PATRIMONIOS AL 30.06.2020 DE MAKLER ADMINISTRADORA DE RIESGO. S.A.', 1, '20172', '376.00', '019381', NULL, '2020-11-25', NULL, '2020-12-14', 113, NULL, 2),
-(123, 12, 'honorarios por servicios profesionales por la asistencia en la elaboracion de los libros de compras para la segunda quincena del mes de noviembre . Orden de compra (CO) 4801096056', 1, '20177', '222750000.00', '019386', NULL, '2020-11-27', NULL, '2020-12-14', 113, NULL, 1),
-(124, 13, 'honorarios por servicios profesionales por la asistencia en la elaboracion de los libros de compras para la segunda quincena del mes de noviembre. Orden de compra (CO) 4801096308', 1, '20178', '123750000.00', '019387', NULL, '2020-11-27', NULL, '2020-12-14', 113, NULL, 1),
-(125, 4, 'Honorarios profesionales 50% final por la compilación de información financiera de la compañia al 31 de diciembre de 2016,2017,2018,2019 y al 30 de junio de capital y de liquidación de la compañia', 1, '20180', '3450.00', '019389', NULL, '2020-11-30', NULL, '2020-12-14', 113, NULL, 1),
-(126, 59, 'honorarios profesionales por servicios prestados con motivo de; 70% inicial del examen de los estados financieros de CENTRO MEDICO LOIRA, C.A., al 31 de diciembre de 2020, de acuerdo a nuestra propuesta de servicios profesionales', 1, '20183', '5317.20', '019393', NULL, '2020-12-01', NULL, '2020-12-14', 113, NULL, 1),
-(127, 45, 'asistencia en la preparacion de la declaracion del impuesto a los grandes patrimonios para el periodo que finalizo el 30 de septiembre de 2020.', 1, '20186', '120.00', '019396', NULL, '2020-12-01', NULL, '2020-12-14', 113, NULL, 1),
-(128, 52, 'honorarios profesionales con motivo de: revision de los estados financieros al 31 de diciembre de 2020.', 1, '20192', '1071828219.60', '019402', NULL, '2020-12-01', NULL, '2020-12-14', 113, NULL, 1),
-(129, 44, 'asistencia en la preparacion de la declaracion del impuesto a los grandes patrimonios para el periodo que finalizo el 30 de septiembre de 2020.', 1, '20193', '120.00', '019403', NULL, '2020-12-01', NULL, '2020-12-14', 113, NULL, 1),
-(130, 61, 'asistencia en la preparacion de la declaracion definitiva de rentas , para el ejercicio economico que finalizo el 31 de diciembre de 2018,2019 y el quee finalizara el 31 de diciembre de 2020, asistencia en la preparacion de la declaracion del impuesto a los grandes patrimonios para el periodo que finalizo el 30 de septiembre de 2019 y 2020 y asistencia e la preparacion del estudio y la declaracion de precios y transferencia para los ejercicios que finalizaron e 31 de diciembre de 2019 y 2019. (70% inicial por aprobacion de la propuesta).', 1, '20194', '2800.00', '019404', NULL, '2020-12-01', NULL, '2020-12-14', 113, NULL, 1),
-(131, 61, 'asistencia en la preparación de la declaración del impuesto a los grandes patrimonios para el periodo que finalizo el 30 de septiembre de 2019 y 2020 . (30%por culminación del trabajo).', 1, '20195', '300.00', '019405', NULL, '2020-12-01', NULL, '2020-12-14', 113, NULL, 1),
-(132, 64, 'honorarios profesionales con motivo de: elsboracion de estados financieros para los años finalizados al 31 de diciembre de 2017 al 2019 y el año que finalizara el 31 de diciembre de 2020 bajo NISR 44010', 1, '20196', '966.00', '019406', NULL, '2020-12-02', NULL, '2020-12-14', 113, NULL, 1),
-(133, 53, 'honorarios por servicios profesionales relacionados  con la asistencia en la preparación de la declaración  anual del impuesto a los grandes patrimonio correspondiente al año 2020.', 1, '20201', '296.00', '019411', NULL, '2020-12-04', NULL, '2020-12-14', 113, NULL, 1),
-(134, 55, 'honorarios por servicios profesionales relacionados con la asistencia en la preparación de la declaración anual del impuesto a los grandes patrimonio correspondiente al año 2020.', 1, '20202', '376.00', '019412', NULL, '2020-12-04', NULL, '2020-12-14', 113, NULL, 1),
-(135, 10, 'honorarios por servicios prestados con motivo de: servicio permanente a tiempo completo correspondiente al mes de diciembre de 2020 (periodo 09/2020-082021).', 1, '20205', '686377630.64', '019415', NULL, '2020-12-04', NULL, '2020-12-14', 113, NULL, 1),
-(136, 57, 'honorarios por servicios profesionales relacionados con la asistencia en la preparación de la declaración anual del impuesto a los grandes patrimonio correspondiente al año 2020.', 1, '20208', '118.00', '019418', NULL, '2020-12-04', NULL, '2020-12-14', 113, NULL, 1),
-(137, 23, 'honorarios por servicios profesionales por la asesoría tributaria en materia de deberes formales e impuesto a los grandes patrimonios', 1, '20209', '1900.00', '019419', NULL, '2020-12-07', NULL, '2020-12-14', 113, NULL, 1),
-(138, 21, 'honorarios por servicios profesionales, por la asesoría tributaria en materia de deberes formales 2019 y 2020.', 1, '20210', '1800.00', '019420', NULL, '2020-12-07', NULL, '2020-12-14', 113, NULL, 1),
-(139, 21, 'honorarios profesionales con motivo de: Auditoria de los estados financieros al 31 de diciembre de 2019', 1, '20211', '858.00', '019421', NULL, '2020-12-07', NULL, '2020-12-14', 113, NULL, 1),
-(140, 23, 'honorarios profesionales con motivo de: auditoria de los estados financieros al 31 de diciembre 2019.', 1, '20212', '858.00', '019422', NULL, '2020-12-07', NULL, '2020-12-14', 113, NULL, 1),
-(141, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de diciembre. Orden de compra (CO) 4801106270', 1, '20213', '456750000.00', '019423', NULL, '2020-12-09', NULL, '2020-12-14', 113, NULL, 1),
-(142, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de diciembre. Orden de compra (CO) 4801106272', 1, '20214', '195750000.00', '019424', NULL, '2020-12-09', NULL, '2020-12-14', 113, NULL, 1),
-(143, 13, 'Honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de diciembre. Orden de compra (CO) 4801106277', 1, '20215', '108750000.00', '019425', NULL, '2020-12-09', NULL, '2020-12-14', 113, NULL, 1),
-(144, 19, 'honorarios profesionales correspondientes al 100% con motivo de: auditoria de los estados financieros del FONDO DE PROMOCION A LAS EXPORTACIONES E INVERSIONES, al 31 de diciembre de 2019', 1, '20218', '3750.00', '019428', NULL, '2020-12-09', NULL, '2020-12-14', 113, NULL, 1),
-(145, 19, 'honorarios profesionales correspondientes al 100% con motivo de: auditoria de os estados financieros del FONDO DE CONTINGENCIAS POLITICAS Y EXTRAORDINARIAS DE LAS EXPORTACIONES, al 31 de diciembre de 2019.', 1, '20219', '3750.00', '019429', NULL, '2020-12-09', NULL, '2020-12-14', 113, NULL, 1),
-(146, 19, 'nota de credito aplicada a la factura 20089 de fecha  21 de septiembre del 2020 por error en e monto.', 4, 'NOTA DE CREDITO 1257', '3750.00', '019430', NULL, '2020-12-09', NULL, '2020-12-14', 113, 59, 1),
-(147, 19, 'nota de credito aplicada a la factura 20090 de fecha 21 de spetiembre del 2020 por error en el monto', 4, 'NOTA DE CREDITO 1258', '3750.00', '019431', NULL, '2020-12-09', NULL, '2020-12-14', 113, 60, 1),
-(148, 2, '100% de los honorarios profesionales por servicios prestados con motivo de: auditoria de los estados financieros de BANCO AGRICOLA DE VENEZUELA, C.A. BANCO UNIVERSAL al 30 de junio de 2020.', 1, '20222', '2600000000.00', '019434', NULL, '2020-12-09', NULL, '2020-12-14', 113, NULL, 1),
-(149, 3, 'honorarios profesionales por servicios prestados con motivo de: auditoria de los estados financieros al 31 de diciembre del 2020, de FINANCORP VALORES CASA DE BOLSA, C.A. según propuesta de servicios profesionales.', 1, '20224', '1497123858.00', '019436', NULL, '2020-12-09', NULL, '2020-12-14', 113, NULL, 1),
-(150, 42, 'honorarios profesionales correspondientes al 20% por concepto de auditoria de los estados financieros del BANCO DEL TESORO, C.A. BANCO UNIVERSAL al 31 de Diciembre de 2020.', 1, '20225', '26600.00', '019442', NULL, '2020-12-10', NULL, '2020-12-14', 113, NULL, 1),
-(151, 42, 'honorarios profesionales correspondientes al 20% por concepto de auditoria de los estados financieros del BANCO DEL TESORO, C.A. BANCO UNIVERSAL al 31 de diciembre de 2020.', 1, '20226', '26600.00', '019443', NULL, '2020-12-10', NULL, '2020-12-14', 113, NULL, 1),
-(152, 42, 'honorarios profesionales correspondientes al 10% final por concepto de auditoria de los estados financieros del BANCO DEL TESORO, C.A. BANCO UNIVERSAL al 31 de diciembre de 2020.', 1, '20227', '13300.00', '019439', NULL, '2020-12-10', NULL, '2020-12-14', 113, NULL, 1),
-(153, 19, 'honorarios profesionales correspondientes al 20% final con motivo de: auditoria de los estados financieros de BANCO DE COMERCIO EXTERIOR, C.A., al 30 de junio de 2019', 1, '20228', '3777.78', '019440', NULL, '2020-12-10', NULL, '2020-12-14', 113, NULL, 1),
-(154, 19, 'honorarios profesionales correspondientes al 20% final con motivo de : auditoria de los estados financieros de BANCO DE COMERCIO EXTERIOR, C.A., al 31 de diciembre de 2019.', 1, '20229', '3777.78', '019441', NULL, '2020-12-10', NULL, '2020-12-14', 113, NULL, 1),
-(155, 9, 'honorarios profesionales con motivo de: revisión de los estados financieros de BANCO ACTIVO, C.A. BANCO UNIVERSAL, al 31 de diciembre de 2020.', 1, '20230', '5399.45', '019445', NULL, '2020-12-10', NULL, '2020-12-14', 113, NULL, 1),
-(156, 6, 'honorarios profesionales con motivo de: auditoria de los estados financieros de GENIA CARE, C.A. al 31 de octubre de 2020', 1, '20232', '540000000.00', '019447', NULL, '2020-12-11', NULL, '2020-12-14', 113, NULL, 1),
-(157, 69, 'honorarios profesionales por servicios prestados con motivo de: 10% auditoria de los estados financieros al 30 de septiembre de2019.', 1, '20133', '533.88', '019342', NULL, '2020-10-26', NULL, '2020-12-15', 113, NULL, 1),
-(158, 70, 'honorarios profesionales por servicios prestados con motivo de: 10% auditoria de los estados financieros al 30 de septiembre de 2019.', 1, '20134', '246.41', '019343', NULL, '2020-10-26', NULL, '2020-12-15', 113, NULL, 1),
-(159, 68, 'honorarios profesionales por servicios prestados con motivo de: 10% auditoria de los estados financieros al 30 de septiembre de 2019.', 1, '20135', '246.41', '019344', NULL, '2020-10-26', NULL, '2020-12-15', 113, NULL, 1),
-(160, 71, 'honorarios profesionales por servicios prestados con motivo de: 10% auditoria de los estados financieros al 30 de septiembre de 2019.', 1, '20136', '246.41', '019345', NULL, '2020-10-26', NULL, '2020-12-15', 113, NULL, 1),
-(161, 72, 'honorarios profesionales por servicios prestados con motivo de: 10% auditoria de los estados financieros al 30 de septiembre de 2019.', 1, '20137', '246.41', '019346', NULL, '2020-10-26', NULL, '2020-12-15', 113, NULL, 1),
-(162, 36, 'Honorarios profesionales por servicios prestados con motivo de: Auditoría Operativa de los Registros Contables y Admimistrativos para los períodos 2016 al 2019 a ORICA VENEZUELA, C.A.', 1, '20126', '4500.00', '019335', NULL, '2020-10-17', NULL, '2020-12-23', 113, NULL, 1),
-(163, 76, 'gastos reembolsables con motivo de:  Visados de informes de los estados financieros al 31 de diciembre de 2019.', 2, '20233', '7202842.24', '019448', NULL, '2020-12-16', NULL, '2021-01-11', 113, NULL, 1),
-(164, 76, 'honorarios por servicios profesionales con motivo de: auditoria de los estados financieros al 31 deiciembre de 2020', 1, '20234', '200000000.00', '019449', NULL, '2020-12-16', NULL, '2021-01-11', 113, NULL, 1),
-(165, 61, 'asistencia en la preparacion de la declaracion definitiva de rentas, para el ejercicio  economico que finalizo el 31 de diciembre de 2018,2019 y el que finalizara el 31 de diciembre de 2020, asistencia en la preparacion de la declaracio del impuesto a los grandes patrimonios para el periodo que finalizo e 30 de septiembre de 2019 y 2020 y asistencia en la preparacion del estudio y la declaracion de precios de transferencia para los ejercicios que finalizaron el 31 de diciembre de 2018 y 2019. (30% final de la propuesta).', 1, '20237', '900.00', '019452', NULL, '2020-12-16', NULL, '2021-01-11', 113, NULL, 1),
-(166, 41, 'honorarios profesionales correspondientes al 20% final por concepto de auditoria de los estados financieros del banco occidental de descuento, banco universal, c.a. al 31 de diciembre de 2019.', 1, '20238', '28400.00', '019453', NULL, '2020-12-16', NULL, '2021-01-11', 113, NULL, 1),
-(167, 62, 'honorarios profesionales correspondientes al 30% por servicios prestados con motivo de: auditoria al 31 de diciembre del 2020 de industrias corpañal c.a., de acuerdo a nuestra propuesta de servicios profesionales.', 1, '20239', '1030.26', '019454', NULL, '2020-12-16', NULL, '2021-01-11', 113, NULL, 1),
-(168, 64, 'honorarios profesionales con motivo de: elaboracion de estados financieros para los años finalizados al 31 de diciembre de 2017 al 2019 y el año que finalizara al 31 de diciembre de 2020 bajo NISR 44010', 1, '20240', '414.00', '019455', NULL, '2020-12-16', NULL, '2021-01-11', 113, NULL, 1),
-(169, 77, 'honorarios profesionales con motvio de: Auditoria de los estados financieros del banco de exportacion y comercio, c.a, al 31 de diciembre de 2020.', 1, '20241', '340000000.00', '019456', NULL, '2020-12-17', NULL, '2021-01-11', 113, NULL, 1),
-(170, 28, 'honorario profesionales correspondientes al segundo 25% de la auditoria de los estados financieros al 31 de diciembre de 2020 de REPRESENTACIOES LABIN VE, S.A.', 1, '20244', '1750.00', '019460', NULL, '2020-12-18', NULL, '2021-01-11', 113, NULL, 1),
-(171, 76, 'honorarios por servicios profesionales con motivo de: auditoria de los estados financieros al 31 de diciembre de 2019.', 1, '20246', '9500000.00', '019464', NULL, '2020-12-22', NULL, '2021-01-11', 113, NULL, 1),
-(172, 78, 'honorarios profesionales con motvio de: auditoria de los estados financieros al 31 de diciembre de 2020, de acuerdo a la propuesta de servicios de fecha 05 de enero de 2021', 1, '20260', '3021.48', '019478', NULL, '2021-01-07', NULL, '2021-02-11', 113, NULL, 1),
-(173, 90, 'gastos incurridos a los meses de noviembre y diciembre aprobados por concepto de auditoria de los estados financieros al 31 de diciembre de 2019', 2, '20261', '2900.00', '019479', NULL, '2021-01-07', NULL, '2021-02-11', 113, NULL, 1),
-(174, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de diciembre orden de compra (CO) 4801106270', 1, '20262', '346500000.00', '019480', NULL, '2021-01-07', NULL, '2021-02-11', 113, NULL, 1),
-(175, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de diciembre orden de compra (CO) 4801106272', 1, '20263', '148500000.00', '019481', NULL, '2021-01-07', NULL, '2021-02-11', 113, NULL, 1),
-(176, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de diciembre orden de compra (CO) 4801106277', 1, '20264', '82500000.00', '019482', NULL, '2021-01-08', NULL, '2021-02-11', 113, NULL, 1),
-(177, 23, 'nota de credito aplicada a la factura 20212 de fecha 7 de dicmebre del 2020 por solicitud del cliente', 4, '20212', '858.00', '019484', NULL, '2021-01-11', NULL, '2021-02-11', 113, 140, 2),
-(178, 23, 'nota de credito aplicada a la factura 20212 de fecha 7 de diciembre del 2020 por solicitud de cliente.', 4, 'NOTA DE CREDIDO 1262', '858.00', '019484', NULL, '2021-01-11', NULL, '2021-02-11', 113, 140, 1),
-(179, 21, 'nota de credito aplicada a la factura 20211 de fecha 7 de diciembre del 2020 por solicitud de cliente', 4, 'NOTA DE CREDITO 1263', '858.00', '019485', NULL, '2021-01-11', NULL, '2021-02-11', 113, 139, 1),
-(180, 21, 'honorarios profesionales con motivo de: auditoria de los estados financieros al 31 de diciembre de 2019.', 1, '20266', '858.00', '019487', NULL, '2021-01-11', NULL, '2021-02-11', 113, NULL, 1),
-(181, 23, 'honorarios profesionales con motivo de : auditoria de los estados financieros al 31 de diciembre de 2019', 1, '20267', '858.00', '019488', NULL, '2021-01-11', NULL, '2021-02-11', 113, NULL, 1),
-(182, 86, 'asistencia en la revision de la declaracion de impuesto sobre la renta correspondiente al ejercicio que finalizo el 31.12.2020. se procede a facturar el 100%', 1, '20270', '950.00', '019491', NULL, '2021-01-13', NULL, '2021-02-11', 113, NULL, 1),
-(183, 84, 'honorarios por servicios profesionales relacionados con la revision de aspectos contingentes del acta de reparo emitida por el servicio nacional integrado de administracion aduanera y tributaria (SENIAT) N° SNAT/INTI/GRTI/CE/RC/DF/2020/IVA/02101-03', 1, '202714', '250.00', '019492', NULL, '2021-01-13', NULL, '2021-02-11', 113, NULL, 1),
-(184, 84, 'honorarios por servicios profesionales, relacionados con la asistencia en la preparación del escrito de allanamiento con solicitud de no aplicacion de la sanción pecuniaria prevista en el codigo organico tributario con ocasión del acta de SNAT/INTI/GRTI/CE/RC/DF/2020/IVA/02101-03', 1, '20272', '350.00', '019493', NULL, '2021-01-13', NULL, '2021-02-11', 113, NULL, 1),
-(185, 10, 'HONORARIOS POR SERVICIOS PRESTADOS CON MOTIVO DE_SERVICIO PERMANENTE A TIEMPO COMPLETO CORRESPONDIENTE AL MES DE ENERO 2021 (periodo 09/2020-08/2021).', 1, '20274', '1003668396.74', '019495', NULL, '2021-01-13', NULL, '2021-02-11', 113, NULL, 1),
-(186, 49, 'honorarios profesionales de la auditoria de los estados financieros de la compañia al 31 de diciembre de 2020', 1, '20275', '1018.21', '019496', NULL, '2021-01-14', NULL, '2021-02-11', 113, NULL, 1),
-(187, 21, 'honorarios profesionales con motivo de:auditoria de los estados financieros al 31 de diciembre 2019.', 1, '20276', '2860.00', '019497', NULL, '2021-01-15', NULL, '2021-02-11', 113, NULL, 1),
-(188, 23, 'honorarios profesionales con motivo de : auditoria de los estados financieros al 31 de diciembre de 2019', 1, '20277', '2860.00', '019498', NULL, '2021-01-15', NULL, '2021-02-11', 113, NULL, 1),
-(189, 20, 'honorarios profesionales con motivo de : elaboracion de estados financieros y ajustados por inflacion y sus notas correspondientes al 31 de diciembre del 2018.', 1, '20278', '1500.00', '019499', NULL, '2021-01-15', NULL, '2021-02-11', 113, NULL, 1),
-(190, 49, 'nota de credito aplicada a la factura 20107 de fecha 05/10/2020, por solicitud de cliente', 4, 'NOTA DE CREDITO 1265', '198.04', '019500', NULL, '2021-01-15', NULL, '2021-02-11', 113, 91, 1),
-(191, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de enero del 2021. orden de compra (CO)  4801126518', 1, '20279', '614250000.00', '019502', NULL, '2021-01-18', NULL, '2021-02-11', 113, NULL, 1),
-(192, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera  quincena del mes de enero 2021 orden de compra (CO) 4801126521.', 1, '20280', '263250000.00', '019503', NULL, '2021-01-18', NULL, '2021-02-11', 113, NULL, 1);
-INSERT INTO `tbl_factura_proyecto` (`id`, `id_proyecto`, `concepto`, `id_concepto_factura`, `numero_factura`, `monto_factura`, `numero_control`, `observaciones`, `fecha_factura`, `fecha_cobro_factura`, `fecha_registro`, `id_facturador`, `id_factura_anular`, `id_estatus`) VALUES
-(193, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras  para la primera quincena del mes de enero del 2021. orden de compra (CO) 4801126523', 1, '20281', '146250000.00', '019504', NULL, '2021-01-18', NULL, '2021-02-11', 113, NULL, 1),
-(194, 87, 'Honorarios profesionales por la asistencia en la preparacion de la declaracion de impuesto sobre la renta para el ejercicio fiscal que finalizo el 31.12.2020. se procede a facturar el 100%.', 1, '20282', '600.00', '019506', NULL, '2021-01-18', NULL, '2021-02-11', 113, NULL, 1),
-(195, 85, 'honorarios profesionales por la asistencia en la preparacion de la declaracion de impuesto sobre la renta para el ejercicio fiscal que finalizo el 31.12.2020. se procede a facturar 100%', 1, '20283', '450.00', '019507', NULL, '2021-01-18', NULL, '2021-02-11', 113, NULL, 1),
-(196, 69, 'nota de credito aplicada a la factura 20133 de fecha 26/10/2020 por falta de pago', 4, 'NOTA DE CREIDITO1266', '533.88', '019509', NULL, '2021-01-18', NULL, '2021-02-11', 113, 157, 1),
-(197, 43, 'honorarios profesionales correspondientes al 50% (5,800.00) por servcios prestados con motivoo de : auditoria de los estados financieros al 31 de diciembre del 2020.', 1, '20284', '2900.00', '019512', NULL, '2021-01-21', NULL, '2021-02-11', 113, NULL, 1),
-(198, 43, 'honorarios profesionales correspondientes al 35% (5,800.00) por servcios prestados con motivoo de : auditoria de los estados financieros al 31 de diciembre del 2020.', 1, '20285', '2030.00', '019513', NULL, '2021-01-21', NULL, '2021-02-11', 113, NULL, 1),
-(199, 9, 'gastos incurridos, con motivo de visita el dia 22 y 23 de diciembre de 2020: inventario de equipos fisicos, visita del centro de datos principal', 2, '20286', '60.00', '019515', NULL, '2021-01-25', NULL, '2021-02-11', 113, NULL, 1),
-(200, 73, 'honorarios profesionales correspondientes a la auditoria de los estados financieros de ven-american, c.a. al 31 de diciembre de 2020', 1, '20288', '2315.00', '019518', NULL, '2021-01-27', NULL, '2021-02-11', 113, NULL, 1),
-(201, 89, 'honorarios profesionales correspondientes al 90% con motivo de: auditoria de los estados financieros al 31 de diciembre de 2020.', 1, '20289', '180000000.00', '019519', NULL, '2021-01-27', NULL, '2021-02-11', 113, NULL, 1),
-(202, 96, 'gastos incurridos por concepto de la emisión de 5 ejemplares adicionales del informe limitado sobre el sistema de control interno en uso al 30 de junio de 2019.', 2, '20294', '67115.00', '019524', NULL, '2021-01-29', NULL, '2021-02-11', 113, NULL, 1),
-(203, 59, 'honorarios profesionales correspondientes al 20% por servicos prestados con motivo de: del examen de los estados financieros de centro medico loira, c.a. al 31 de diciembre de 2020, de acuerdo a nuestra propuesta de servicios profesionales.', 1, '20295', '1519.20', '019525', NULL, '2021-02-01', NULL, '2021-03-05', 113, NULL, 1),
-(204, 60, 'honorarios profesionales correspondientes al 70% por servicios prestados con motivo de: asesoria y revisión de los estados financieros según la NIC 29 al 31 de diciembre de 2020 de acuerdo a nuestra propuesta de servicios profesionales', 1, '20296', '385.00', '019526', NULL, '2021-02-01', NULL, '2021-03-05', 113, NULL, 1),
-(205, 11, 'honorarios profesionales por la asitencia en la elaboración de libros de compras para la segunda quincena del mes de enero del 2021. Orden de Compra (CO) 4801126518.', 1, '20297', '630000000.00', '019527', NULL, '2021-02-01', NULL, '2021-03-05', 113, NULL, 1),
-(206, 12, 'honorarios profesionales por la asitencia en la elaboración de libros de compras para la segunda quincena del mes de enero del 2021. Orden de Compra (CO) 4801126521.', 1, '20298', '270000000.00', '019528', NULL, '2021-02-01', NULL, '2021-03-05', 113, NULL, 1),
-(207, 13, 'honorarios profesionales por la asitencia en la elaboración de libros de compras para la segunda quincena del mes de enero del 2021. Orden de Compra (CO) 4801126523.', 1, '20299', '150000000.00', '019529', NULL, '2021-02-01', NULL, '2021-03-05', 113, NULL, 1),
-(208, 75, 'honorarios profesionales por servicios prestados con motivo de: 60% auditoria de los estados financieros al 31 de agosto de 2020, de acuerdo a nuestra propuesta de servicios profesionales.', 1, '20302', '1080.00', '019532', NULL, '2021-02-02', NULL, '2021-03-05', 113, NULL, 1),
-(209, 75, 'honorarios profesionales por servicios prestados con motivo de: 30% auditoria de los estados financieros al 31 de agosto de 2020, de acuerdo a nuestra propuesta de servicios profesionales .', 1, '20303', '540.00', '019533', NULL, '2021-02-02', NULL, '2021-03-05', 113, NULL, 1),
-(210, 90, 'honorarios profesionales correspondientes al 60% inicial por concepto de auditoria de los estados financieros al 30 de junio de 2020', 1, '20304', '79740.00', '019537', NULL, '2021-02-03', NULL, '2021-03-05', 113, NULL, 1),
-(211, 63, 'honorarios profesionales correspondientes al 15% con motivo de: la auditoria de los estados financieros individuales y consolidados para los ejercicios finalizados al 31 de diciembre de 2020.', 1, '20305', '1276.61', '019539', NULL, '2021-02-05', NULL, '2021-03-05', 113, NULL, 1),
-(212, 63, 'honorarios profesionales al 70% inicial con motivo de: la auditoria de los estados financieros individuales y consolidados para los ejercicios finalizados al 31 de diciembre del 2020.', 1, '20306', '3174.19', '019540', NULL, '2021-02-05', NULL, '2021-03-05', 113, NULL, 1),
-(213, 106, 'honorarios profesionales y ajuste por iflación al 31 de diciembre de 2019.', 1, '20307', '1467.00', '019541', NULL, '2021-02-05', NULL, '2021-03-05', 113, NULL, 1),
-(214, 107, 'honorarios profesionales y ajuste por iflación al 31 de diciembre de 2019.', 1, '20309', '1467.00', '019543', NULL, '2021-02-05', NULL, '2021-03-05', 113, NULL, 1),
-(215, 93, 'honorarios profesionales con motivo de: auditoria de los estados financieros al 31 de diciembre del 2020.', 1, '20312', '1250.00', '019547', NULL, '2021-02-05', NULL, '2021-03-05', 113, NULL, 1),
-(216, 97, 'honorarios por servicios prestados con motivo de: servicio permanente a tiempo completo correspondiente al mes de febrero de 2021  (periodo 09/2020-082021).', 1, '20314', '667.00', '019549', NULL, '2021-02-08', NULL, '2021-03-05', 113, NULL, 1),
-(217, 92, 'honorarios profesionales correspondientes al 70% por servicios prestados con motivo de: auditoria de los estados financieros de la fundacion españa salud al 31 de diciembre de 2020.', 1, '20316', '6160.00', '019551', NULL, '2021-02-08', NULL, '2021-03-05', 113, NULL, 1),
-(218, 90, 'gastos reembolsables correspondiente al mes de enero de 2021', 1, '20317', '1240.00', '019552', NULL, '2021-02-08', NULL, '2021-03-05', 113, NULL, 1),
-(219, 74, 'honorarios profesionales con motivo de:revisión de los estados financieros al 31 de diciembre de 2020', 1, '20318', '3300.00', '019554', NULL, '2021-02-09', NULL, '2021-03-05', 113, NULL, 1),
-(220, 106, 'honorarios profesionales y ajuste por inflación al 31 de diciembre de 2019.', 1, '20319', '1467.00', '019555', NULL, '2021-02-10', NULL, '2021-03-05', 113, NULL, 1),
-(221, 107, 'honorarios profesionales y ajuste por inflación al 31 de diciembre de 2019.', 1, '20321', '1467.00', '019557', NULL, '2021-02-10', NULL, '2021-03-05', 113, NULL, 1),
-(222, 11, 'Honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de febrero. Orden  de Compra (CO) 4801138443', 1, '20323', '623070000.00', '019559', NULL, '2021-02-12', NULL, '2021-03-05', 113, NULL, 1),
-(223, 12, 'Honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de febrero. Orden  de Compra (CO) 480113849', 1, '20324', '267030000.00', '019560', NULL, '2021-02-12', NULL, '2021-03-05', 113, NULL, 1),
-(224, 13, 'Honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de febrero. Orden  de Compra (CO) 4801138497.', 1, '20325', '148350000.00', '019561', NULL, '2021-02-12', NULL, '2021-03-05', 113, NULL, 1),
-(225, 98, 'honorarios profesionales correspondientes al 40% con motivo de: la auditoría de los estados financieros al 31 de diciembre de 2019.', 1, '20326', '240.00', '019562', NULL, '2021-02-19', NULL, '2021-03-05', 113, NULL, 1),
-(226, 98, 'honorarios profesionales correspondientes al 40% con motivo de: l auditoría de los estados financieros al 31 de diciembre de 2020.', 1, '20327', '420.00', '019563', NULL, '2021-02-19', NULL, '2021-03-05', 113, NULL, 1),
-(227, 28, 'honorarios profsionales correspondientes al segundo 25% de la auditoria de los estados financieros al 31 de diciembre de 2020.', 1, '20329', '1750.00', '019565', NULL, '2021-02-26', NULL, '2021-03-05', 113, NULL, 1),
-(228, 91, 'honorarios profesionales con motivo de la copilación información de financiera de la compañia al 01 de febrero 2021.', 1, '20330', '1000.00', '019566', NULL, '2021-02-26', NULL, '2021-03-05', 113, NULL, 1),
-(229, 106, 'honorarios profeionales correspondientesal 60% con motivo de la auditoria de los estados financieros al 31 de diciembre del 2020, de acuerdo a la propuesta.', 1, '20331', '4500.00', '019567', NULL, '2021-02-26', NULL, '2021-03-05', 113, NULL, 1),
-(230, 107, 'honorarios profesionales correspondiente al 60% con motvio de la auditoria de los estados financieros al 31 de diciembre del 2020, de acuerdo a la propuesta.', 1, '20333', '4500.00', '019569', NULL, '2021-02-26', NULL, '2021-03-05', 113, NULL, 1),
-(231, 11, 'Honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de febrero. Orden  de Compra (CO) 4801138443', 1, '20335', '683550000.00', '019571', NULL, '2021-03-01', NULL, '2021-03-05', 113, NULL, 1),
-(232, 12, 'Honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de febrero. Orden  de Compra (CO) 4801138494', 1, '20336', '292950000.00', '019572', NULL, '2021-03-01', NULL, '2021-03-05', 113, NULL, 1),
-(233, 13, 'honorarios por servicios profesionales por la asistencia  en la elaboración de los libros de compras para la segunda quincena del mes de febrero.Orden de compra (CO) 4801138497.', 1, '20337', '162750000.00', '019573', NULL, '2021-03-01', NULL, '2021-03-05', 113, NULL, 1),
-(234, 97, 'honorarios por servicios prestados con motivo de: servicio permanente a tiempo completo correspondiente al mes de marzo de 2021  (periodo 09/2020-082021).', 1, '20338', '667.00', '019574', NULL, '2021-03-02', NULL, '2021-03-05', 113, NULL, 1),
-(235, 90, 'HOORARIOS PROFESIONALES CORRESPONDIENTES AL 40% FINAL POR CONCEPTO DE AUDITORIA DE LOS ESTADOS FINANCIEROS  AL 30 DE JUNIO DE 2020.', 1, '20339', '53160.00', '019575', NULL, '2021-03-02', NULL, '2021-03-05', 113, NULL, 1),
-(236, 10, 'honorarios por servicios prestados con motivo de: servicio permanente a tiempo completo (periodo 09/2020-08/2021).', 1, '20338', '1244527286.00', '019574', NULL, '2021-03-02', NULL, '2021-04-12', 113, NULL, 1),
-(237, 28, 'gastos reembolsables con motivo de visados de informes correspondientes  a los estados financieros al 31 de diciembre del 2020.', 2, '20343', '24079.04', '019579', NULL, '2021-03-09', NULL, '2021-04-12', 113, NULL, 1),
-(238, 116, 'honorarios profesionales correspondientes al 50% por servicios prestados con motivo de: auditoria al 31 de diciembre de 2020, segun propuesta de servicios.', 1, '20344', '970.00', '019580', NULL, '2021-03-12', NULL, '2021-04-12', 113, NULL, 1),
-(239, 28, 'asistencia en materia de impuesto sobre la renta para la proyección y evaluación de resultados en materia de la declaración definitiva de rentas para el ejercicio economico que finalizo el 31 de diciembre de 2020. (60% de la propuesta).', 1, '20345', '1426.80', '019581', NULL, '2021-03-12', NULL, '2021-04-12', 113, NULL, 1),
-(240, 69, 'honorarios profesionales por servicios prestados con motivo de: 10% auditoria de los estados financieros al 30 de septiembre de 2019 de avicola santa cruz, c.a.', 1, '20346', '63975.55', '019582', NULL, '2021-03-12', NULL, '2021-04-12', 113, NULL, 1),
-(241, 69, 'honorarios profesionales por servicios prestados con motivo de: 10% auditoria de los estados financieros al 30 de septiembre de 2019.', 1, '20347', '138612.86', '019583', NULL, '2021-03-12', NULL, '2021-04-12', 113, NULL, 1),
-(242, 71, 'honorarios profesionales por servicios prestados con motivo de: 10% auditoria de los estados financieros al 30 de septiembre de 2019', 1, '20348', '63975.55', '019584', NULL, '2021-03-12', NULL, '2021-04-12', 113, NULL, 1),
-(243, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de marzo. orden de compra (CO) 4801156532', 1, '20349', '628425000.00', '019585', NULL, '2021-03-17', NULL, '2021-04-12', 113, NULL, 1),
-(244, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de marzo. orden de compra (CO) 4801156534', 1, '20350', '269325000.00', '019586', NULL, '2021-03-17', NULL, '2021-04-12', 113, NULL, 1),
-(245, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de marzo. orden de compra (CO) 4801156535', 1, '20351', '149625000.00', '019589', NULL, '2021-03-17', NULL, '2021-04-12', 113, NULL, 1),
-(246, 40, 'honorarios por servicios profesionales por la asistencia en preparación de la declaración de impuesto sobre la renta del año 2020. se procede a facturtar el 100%.', 1, '20353', '630.00', '019591', NULL, '2021-03-17', NULL, '2021-04-12', 113, NULL, 1),
-(247, 39, 'honorarios por servicios profesionales por la asistencia en preparación de la declaracion de impuesto sobre la renta del año 2020. se procede a facturar el 100%', 1, '20354', '400.00', '019592', NULL, '2021-03-17', NULL, '2021-04-12', 113, NULL, 1),
-(248, 15, 'honorarios por servicios profesionales por la asistencia en preparacion de la declaracion de impuesto sobre la renta del año 2020 de personas naturales. se procede facturar el 100%', 1, '20355', '300.00', '019593', NULL, '2021-03-17', NULL, '2021-04-12', 113, NULL, 1),
-(249, 103, 'honorarios por servicios profesionales por la asistencia en preparacion de la declaracion de impuesto sobre la renta del año 2020. se procede a facturar el 100%', 1, '20356', '1501.00', '019594', NULL, '2021-03-17', NULL, '2021-04-12', 113, NULL, 1),
-(250, 102, 'honorarios por servicios profesionales relacionados con la asistencia en la preparacion de la declaracion anual del impuesto a los grandes patrimonio correspondienteal año 2020.', 1, '20357', '1198.00', '019595', NULL, '2021-03-17', NULL, '2021-04-12', 113, NULL, 1),
-(251, 101, 'honorarios por servicios profesionales por la asistencia en preparación de la declaración de impuesto sobre la renta del año 2020. se procede a facturar el 100%', 1, '20359', '467.00', '019597', NULL, '2021-03-17', NULL, '2021-04-12', 113, NULL, 1),
-(252, 74, 'honorarios profesionales con motivo de: revisión de los estados financieros al 31 de diciembre de 202', 1, '20360', '1100.00', '019598', NULL, '2021-03-18', NULL, '2021-04-12', 113, NULL, 1),
-(253, 74, 'gastos reembolsables con motivo de: revision de los estados financieros al 31 de diciembre de 2020.', 2, '20361', '200.00', '019599', NULL, '2021-03-18', NULL, '2021-04-12', 113, NULL, 1),
-(254, 119, 'gastos reembolsables correspondientes al mes de febrero de 2021.', 2, '20362', '1200.00', '019600', NULL, '2021-03-18', NULL, '2021-04-12', 113, NULL, 1),
-(255, 95, 'honorarios por servicios profesionales por la asistencia en preparacion de la declaración de impuesto sobre la renta del año 2020. se procede facturar el 100\n%', 1, '20364', '1800.00', '019603', NULL, '2021-03-18', NULL, '2021-04-12', 113, NULL, 1),
-(256, 94, 'honorarios por servicios profesionales por la asistencia en preparación de la declaración de impuesto sobre la renta del año 2020 se procede a facturar el 100%', 1, '20368', '525.00', '019607', NULL, '2021-03-18', NULL, '2021-04-12', 113, NULL, 1),
-(257, 105, 'honorarios por servicios profesionales por la asitencia en la preparacion de la declaracion definitiva de impuesto sobre la renta del año 2020.', 1, '20369', '350.00', '019608', NULL, '2021-03-24', NULL, '2021-04-12', 113, NULL, 1),
-(258, 100, 'honorarios por servicios profesionales relacionados con la asistencia en la preparación de la declaración anual del impuesto a los grandes patrimonio correspondiente al año 2020.', 1, '20370', '467.00', '019609', NULL, '2021-03-24', NULL, '2021-04-12', 113, NULL, 1),
-(259, 49, 'gastos incurridos por visados de informes de la auditoria de los estados financieros de la compañia al 31 de diciembre de 2019.', 2, '20371', '80.60', '019610', NULL, '2021-03-24', NULL, '2021-04-12', 113, NULL, 1),
-(260, 50, 'honorarios profesionales correspondientes al 20% con motivo de: auditoria estados financieros al 31 de diciembre de 2020, de acuerdo a nuestra propuesta de servicios profesionales.', 1, '20373', '1090.00', '019612', NULL, '2021-03-26', NULL, '2021-04-12', 113, NULL, 1),
-(261, 91, 'honorarios profesionales de la preparación de informe de certifiación bancaria de la compañia del 01 de febrero de 2021.', 1, '20375', '250.00', '019614', NULL, '2021-03-26', NULL, '2021-04-12', 113, NULL, 1),
-(262, 79, 'honorarios profesionales por servicios prestados con motivo de: auditoria de los estados financieros al 31 de diciembre de 2020.', 1, '20376', '3256.80', '019615', NULL, '2021-03-26', NULL, '2021-04-12', 113, NULL, 1),
-(263, 48, 'honorarios profesionales correspondientes al 50% de la auditoria de los estados financieros al 30 de abril de 2020', 1, '20377', '1020.00', '019616', NULL, '2021-03-26', NULL, '2021-04-12', 113, NULL, 1),
-(264, 120, 'honorarios por servicios profesionales relacionados con la auditoria de los estados financieros al 31 de diciembre de 2020', 1, '20378', '1260.00', '019617', NULL, '2021-03-26', NULL, '2021-04-12', 113, NULL, 1),
-(265, 103, 'honorarios por servicios profesionales relacionados con la auditoria de los estados financieros al 31 de diciembre del 2020.', 1, '20379', '1530.00', '019618', NULL, '2021-03-26', NULL, '2021-04-12', 113, NULL, 1),
-(266, 122, 'honorarios por servicios profesionales relacionados con la auditoria de los estados financieros al 31 de diciembre del 2020.', 1, '20380', '1710.00', '019619', NULL, '2021-03-26', NULL, '2021-04-12', 113, NULL, 1),
-(267, 99, 'honorarios profesionales correspondientes al 30% final por servicios prestados con motivo de: auditoria estados financieros al 31 de de diciembre de 2020, de acuerdo a nuestra propuesta de servicios profesionales', 1, '20381', '5296.20', '019621', NULL, '2021-03-26', NULL, '2021-04-12', 113, NULL, 1),
-(268, 99, 'gastos reembolsables con motivo de: auditoria estados financieros al 31 de diciembre de 2020, de acuerdo a nuestra propuesta de servicios profesionales', 2, '20382', '500.00', '019622', NULL, '2021-03-26', NULL, '2021-04-12', 113, NULL, 1),
-(269, 63, 'nota de credito aplicada a la factura 20167 de fecha 20/11/2020 por solicitud del cliente', 4, 'NOTA DE CREDITO 1271', '1337.08', '019623', NULL, '2021-03-31', NULL, '2021-04-12', 113, 118, 1),
-(270, 59, 'honorarios profesionales correspondientes al 10% final por servicios prestados con motivo de: del examen de los estados financieros al 31 de diciembre de 2020, de acuerdo a nuestra propuesta de servicios profesionales.', 1, '20384', '759.60', '019624', NULL, '2021-04-05', NULL, '2021-04-12', 113, NULL, 1),
-(271, 59, 'honorarios profesionales correspondientes al 30% final por servicios prestados con motivo  de:asesoriay revision de los estados financieros segun la  NIC  29 al 31 de diciembre de 2020 de acuerdo a nuestra propuesta de servicios profesionales.', 1, '20385', '165.00', '019625', NULL, '2021-04-05', NULL, '2021-04-12', 113, NULL, 1),
-(272, 49, 'gastos incurridos por visados de informes de la auditoria de los estados financieros de la compañia al 31 de diciembre de 2020.', 2, '20386', '70.67', '019627', NULL, '2021-04-05', NULL, '2021-04-12', 113, NULL, 1),
-(273, 97, 'honorarios por servicios prestados con motivo de:  servicio permanente a tiempo completo correspondiente al mes de abril 2021 (periodo 09/20- 08/2021).', 1, '20389', '667.00', '019630', NULL, '2021-04-07', NULL, '2021-04-12', 113, NULL, 1),
-(274, 90, 'honorarios profesionales correspondientes al 40% final por concepto de auditoria de los estados financieros al 30 de junio de 2020.', 1, '20390', '53160.00', '019632', NULL, '2021-04-07', NULL, '2021-04-12', 113, NULL, 1),
-(275, 52, 'honorarios profesionales con motivo de: auditoria de estados financieros al 31 de diciembre de 2020.', 1, '20392', '848117992.56', '019634', NULL, '2021-04-07', NULL, '2021-04-12', 113, NULL, 1),
-(276, 52, 'honorarios profesionales con motivo de: auditoria de estados financieros al 31 dfe diciembre de 2020.', 1, '20393', '848117992.56', '019635', NULL, '2021-04-07', NULL, '2021-04-12', 113, NULL, 1),
-(277, 32, 'honorarios profesionales correspondientes al 50% final con motivo de: auditoria de estados financieros al 31 de diciembre de 2019', 1, '20394', '10952.00', '019636', NULL, '2021-04-07', NULL, '2021-04-12', 113, NULL, 1),
-(278, 34, 'honorarios profesionales correspondientes al 50% final con motivo de: auditoria de los estados financieros al 31 de diciembre de 2019.', 1, '20395', '544.00', '019637', NULL, '2021-04-07', NULL, '2021-04-12', 113, NULL, 1),
-(279, 32, 'gastos reembolsables visado de informes 2018 y 2019', 1, '20396', '470.90', '019638', NULL, '2021-04-07', NULL, '2021-04-12', 113, NULL, 1),
-(280, 34, 'gastos reembolsables visado de informes 2018 y 2019', 2, '20397', '141.69', '019639', NULL, '2021-04-07', NULL, '2021-04-12', 113, NULL, 1),
-(281, 74, 'honorarios profesionales correspondiente al 10% final con motivo de: revisión de los estados financieros al 31 de diciembre de 2020.', 1, '20399', '1100.00', '019641', NULL, '2021-04-08', NULL, '2021-04-12', 113, NULL, 1),
-(282, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de marzo.Orden de compra (CO) 4801156532', 1, '20400', '756000000.00', '019642', NULL, '2021-04-08', NULL, '2021-04-12', 113, NULL, 1),
-(283, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de marzo.Orden de compra (CO) 4801156534', 1, '20401', '324000000.00', '019643', NULL, '2021-04-08', NULL, '2021-04-12', 113, NULL, 1),
-(284, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de marzo.Orden de compra (CO) 4801156535', 1, '20402', '180000000.00', '019644', NULL, '2021-04-08', NULL, '2021-04-12', 113, NULL, 1),
-(285, 116, 'honorarios profesionales correspondientes al 50% por servicos prestados con motivo de: auditoria al 31 de diciembre de 2020, segun propuesta de servicios.', 1, '20403', '970.00', '019645', NULL, '2021-04-08', NULL, '2021-04-12', 113, NULL, 1),
-(286, 90, 'nota de credito aplicada a la factura 20339 de fecha 02-03-2021 por solicitud del cliente', 2, 'NOTA DE CREDITO 1272', '53160.00', '019646', NULL, '2021-04-08', NULL, '2021-04-12', 113, NULL, 1),
-(287, 7, 'gastos reembolsables por concepto de visado de informes de auditoria al 31 de diciembre 2020 ante el colegio de contadores  publicos del Edo Miranda la emisión de (4) ejemplares fisicos adiconales', 1, '20411', '27.70', '019658', NULL, '2021-04-16', NULL, '2021-04-16', 113, NULL, 1),
-(288, 119, 'honorarios profesionales correspondientes al 60% inicial por concepto de auditoria de los estados financieros  al 31 de diembre de 2020', 1, '20410', '71865.00', '019655', NULL, '2021-04-14', NULL, '2021-04-16', 113, NULL, 1),
-(289, 16, 'nota de credito aplicada a la factura 20030 de fecha 21/07/2020 reverso de factura , trabajo no culminado', 4, 'NOTA DE CREIDOT 1273', '120.00', '019656', NULL, '2021-04-15', NULL, '2021-04-16', 113, 35, 1),
-(290, 16, 'nota de credito aplicada a la factura 20029 de fecha 21/07/2020 reverso de factura , trabajo no culminado', 4, 'NOTA DE CREDITO 1274', '600.00', '019657', NULL, '2021-04-15', NULL, '2021-04-16', 113, 34, 1),
-(291, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de abril. Orden de compra (CO) 4801175003', 1, '20412', '756000000.00', '019659', NULL, '2021-04-20', NULL, '2021-04-20', 113, NULL, 1),
-(292, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de abril. Orden de compra (CO) 4801175015', 1, '20413', '324000000.00', '019660', NULL, '2021-04-20', NULL, '2021-04-20', 113, NULL, 1),
-(293, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de abril. Orden de compra (CO) 4801175017', 1, '20414', '180000000.00', '019661', NULL, '2021-04-20', NULL, '2021-04-20', 113, NULL, 1),
-(294, 69, 'honorarios profesionales por servicios prestados con motivo de: 40% auditoria de los estados financieros al 30 de septiembre de 2020.', 1, '20415', '1553.20', '019662', NULL, '2021-04-23', NULL, '2021-04-25', 113, NULL, 1),
-(295, 124, 'RETAINER-ASESORIA CONTINUA ANUAL', 1, '20416', '9835.30', '019663', NULL, '2021-04-23', NULL, '2021-04-26', 113, NULL, 1),
-(296, 68, 'honorarios profesionales por servicios prestados con motivo de: 40% auditoria de los estados financieros al 30 de septiembre de 2020.', 1, '20417', '716.80', '019664', NULL, '2021-04-27', NULL, '2021-04-27', 113, NULL, 1),
-(297, 50, 'honorairos profesionales correspondientes al 20% final con motivo de: auditoria de estados financieros al 31 de diciembre de 2020, de acuerdo a nuestra propuesta de servicios profesionales.', 1, '20418', '1090.00', '019665', NULL, '2021-04-30', NULL, '2021-04-30', 113, NULL, 1),
-(298, 28, 'honorairos profesionales correspondientes al 25% final con motivo de: auditoria de estados financieros al 31 de diciembre de 2020, de acuerdo a nuestra propuesta de servicios profesionales.', 1, '20420', '1750.00', '019667', NULL, '2021-04-30', NULL, '2021-04-30', 113, NULL, 1),
-(299, 48, 'honorarios profesionales correspondientes al 50% final de la auditoria de los estados financieros al 30 de abril de 2020.', 1, '20421', '1020.00', '019668', NULL, '2021-04-30', NULL, '2021-04-30', 113, NULL, 1),
-(300, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de abril. Orden de compra (CO) 4801175003', 1, '20422', '892395000.00', '019669', NULL, '2021-04-30', NULL, '2021-04-30', 113, NULL, 1),
-(301, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de abril. Orden de compra (CO) 4801175015', 1, '20423', '382455000.00', '019670', NULL, '2021-04-30', NULL, '2021-04-30', 113, NULL, 1),
-(302, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los librios de compras para la segunda quincena del mes de abril.Orden de compra (CO) 4801175017', 1, '20424', '212475000.00', '019671', NULL, '2021-04-30', NULL, '2021-04-30', 113, NULL, 1),
-(303, 119, 'honorarios profesionales correspondientes al 60% inicial por concepto de auditoria de los Estados Financieros del BANCO OCCIDENTAL DEL DESCUENTO, BANCO UNIVERSAL, C.A. al 31 de Diciembre de 2020.', 1, '20430', '71865.00', '019678', NULL, '2021-05-04', NULL, '2021-05-04', 113, NULL, 1),
-(304, 119, 'nota de credito aplicada a la factura 20410 de fecha 14/04/2021 por solicitud del cliente  y cambio de tasa.', 4, 'NOTA DE CREDITO 1276', '71865.00', '019679', NULL, '2021-05-04', NULL, '2021-05-07', 113, 288, 1),
-(305, 10, 'honorarios por servicios prestados con motivo de: servicio permanente a tiempo completo correspondiente al mes de mayo 2021 (periodo 09/2020- 08/2021)', 1, '20433', '1894586226.37', '019682', NULL, '2021-05-05', NULL, '2021-05-07', 113, NULL, 1),
-(306, 119, 'honorarios profesionales al 40% final por concepto de Auditoria de los Estados Financieros al 31 de Diciembre de 2020.', 1, '20436', '47910.00', '019685', NULL, '2021-05-06', NULL, '2021-05-07', 113, NULL, 1),
-(307, 119, 'gastos reembolsables correspondientes al mes de abril de 2021.', 2, '20435', '1620.00', '019684', NULL, '2021-05-06', NULL, '2021-05-10', 113, NULL, 1),
-(308, 81, '100% de los honorarios profesionales por servicios prestados con motivo de: auditoria de los estados financieros al 30 de diciembre de 2020.', 1, '20437', '3260000000.00', '019687', NULL, '2021-05-07', NULL, '2021-05-10', 113, NULL, 2),
-(309, 79, 'gastos reembolsables por concepto de tramites de visado de los informes  de los estados financieros al 31 de diciembre de 2020 y 2019 ante el colegio de contadores del estado miranda y traslados del personal para la revisión de auditoria de los libros legales de la compañia.', 2, '20438', '41.93', '019688', NULL, '2021-05-07', NULL, '2021-05-10', 113, NULL, 1),
-(310, 108, 'honorarios profesionales correspondientes a la auditoria de los estados financieros al 30 de junio del 2021, de acuerdo a la orden de servicio N°41005412 de fecha 12 de abril del 2021.', 1, '20431', '400000000000.00', '019680', NULL, '2021-05-04', NULL, '2021-05-10', 113, NULL, 1),
-(311, 111, 'honorarios profesionales correspondientes al 30% por concepto de auditoria de los estados financieros al 31 de diciembre de 2020', 1, '20441', '22500.00', '019691', NULL, '2021-05-10', NULL, '2021-05-10', 113, NULL, 1),
-(312, 81, '100% de los Honorarios Profesionales por servicios prestados con motivo de: Auditoría de los Estados Financieros al 30 de Diciembre de 2020.', 1, '20442', '3260000000.00', '019692', NULL, '2021-05-11', NULL, '2021-05-11', 113, NULL, 1),
-(313, 107, 'honorarios profesionales correspondientes 30% con motivo de auditoria de los estados financieros al 31 de diciembre del 2020 de acuedo a nuestra propuesta de servicios', 1, '20445', '2250.00', '019695', NULL, '2021-05-14', NULL, '2021-05-14', 113, NULL, 1),
-(314, 126, 'honorarios profesionales correspondientes 30% con motivo de auditoria de los estados financieros al 31 de diciembre del 2020 de acuedo a nuestra propuesta de servicios', 1, '20446', '2250.00', '019696', NULL, '2021-05-14', NULL, '2021-05-14', 113, NULL, 1),
-(315, 106, 'honorarios profesionales correspondientes 30% con motivo de auditoria de los estados financieros al 31 de diciembre del 2020 de acuedo a nuestra propuesta.', 1, '20447', '2250.00', '019697', NULL, '2021-05-14', NULL, '2021-05-14', 113, NULL, 1);
+INSERT INTO `tbl_factura_proyecto` (`id`, `id_proyecto`, `concepto`, `id_concepto_factura`, `numero_factura`, `monto_factura`, `id_iva`, `id_porcentaje_retencion_iva`, `id_deduccion_islr`, `numero_control`, `observaciones`, `fecha_factura`, `fecha_cobro_factura`, `fecha_registro`, `id_facturador`, `id_factura_anular`, `id_estatus`) VALUES
+(1, 2, 'concepto prueba', 1, 'FACTURA-01', '1000.00', NULL, NULL, NULL, 'CONTROL-01', NULL, '2020-10-03', NULL, '2020-10-03', 1, NULL, 1),
+(2, 2, 'prueba concepto 2', 3, 'FACTURA-02', '100.00', NULL, NULL, NULL, 'CONTROL-2', NULL, '2020-10-03', NULL, '2020-10-03', 1, NULL, 1),
+(3, 2, 'concepto prueba 04', 2, 'FACTURA-03', '150.25', NULL, NULL, NULL, 'CONTROL-4', 'test', '2020-10-03', NULL, '2020-10-03', 1, NULL, 1),
+(4, 2, 'concepto prueba', 4, 'FACTURA-01', '1000.00', NULL, NULL, NULL, 'CONTROL-02', NULL, '2020-10-03', NULL, '2020-10-03', 1, NULL, 1),
+(5, 30, 'facturaciÃ³n inicial', 1, 'FACTURA-01', '1000.00', NULL, NULL, NULL, 'CONTROL-01', NULL, '2020-10-04', '2020-10-04', '2020-10-04', 1, NULL, 1),
+(6, 30, 'hora adicional', 1, 'FACTURA-02', '100.00', NULL, NULL, NULL, 'CONTROL-02', NULL, '2020-10-04', NULL, '2020-10-04', 1, NULL, 1),
+(7, 30, 'para los frescos', 1, 'FACTURA-03', '125.10', NULL, NULL, NULL, 'CONTROL-03', NULL, '2020-10-04', NULL, '2020-10-04', 1, NULL, 1),
+(8, 30, 'concepto-04', 1, 'FACTURA-04', '130.00', NULL, NULL, NULL, 'CONTROL-04', 'prueba observaciÃ³n', '2020-10-04', '2020-10-04', '2020-10-04', 1, NULL, 1),
+(9, 30, 'Concepto 055', 1, 'FACTURA-05', '250.45', NULL, NULL, NULL, 'CONTROL-05', 'N/A', '2020-10-04', '2020-10-04', '2020-10-04', 1, NULL, 1),
+(10, 30, 'concepto 6', 3, 'FACTURA-06', '100.00', NULL, NULL, NULL, 'CONTROL-06', NULL, '2020-10-03', NULL, '2020-10-04', 1, NULL, 1),
+(11, 30, 'concepto 07', 3, 'FACTURA-07', '125.00', NULL, NULL, NULL, 'CONTROL-07', NULL, '2020-10-04', NULL, '2020-10-04', 1, NULL, 1),
+(12, 30, 'concepto 08', 2, 'FACTURA-08', '200.00', NULL, NULL, NULL, 'CONTROL 08', NULL, '2020-10-04', NULL, '2020-10-04', 1, NULL, 1),
+(13, 30, 'para los frescos', 4, 'FACTURA-03', '125.10', NULL, NULL, NULL, 'CONTROL-03', 'se anulo la factura factura-03', '2020-10-04', NULL, '2020-10-04', 1, 7, 1),
+(14, 30, 'concepto 999', 1, 'FACTURA-09', '100.00', NULL, NULL, NULL, 'CONTROL-09', NULL, '2020-10-03', NULL, '2020-10-04', 1, NULL, 1),
+(15, 30, 'concepto 999', 4, 'FACTURA-09', '100.00', NULL, NULL, NULL, 'CONTROL-09', 'se anula la factura factura-09', '2020-10-03', NULL, '2020-10-04', 1, 14, 1),
+(16, 30, 'concepto 10', 1, 'FACTURA-10', '250.00', NULL, NULL, NULL, 'CONTROL-10', NULL, '2020-10-04', NULL, '2020-10-04', 1, NULL, 1),
+(17, 30, NULL, 5, '', '10.00', NULL, NULL, NULL, '', 'N/A', NULL, NULL, '2020-10-04', 1, NULL, 1),
+(18, 30, NULL, 5, '', '15.00', NULL, NULL, NULL, '', NULL, NULL, NULL, '2020-10-04', 1, NULL, 1),
+(19, 30, 'concepto 15', 1, 'FACTURA-15', '200.00', NULL, NULL, NULL, 'CONTROL-15', NULL, '2020-10-04', '2020-10-01', '2020-10-04', 1, NULL, 1),
+(20, 30, 'concepto 15', 4, 'FACTURA-15', '200.00', NULL, NULL, NULL, 'CONTROL-15-1', 'se anula la factura FACTURA-15', '2020-10-04', '2020-10-01', '2020-10-04', 1, 19, 1),
+(21, 14, 'honorarios profesionales con motivo de la preparacion de la declaracion de precios de transferencia PT-99 y estudio respectivo, para ejercicio que finalizo el 31 de diciembre 2019', 1, '19975', '1400.00', NULL, NULL, NULL, '019171', NULL, '2020-05-15', NULL, '2020-11-02', 113, NULL, 1),
+(22, 14, 'nota de credito aplicada a la factura 19975 de fecha 15 de mayo del 2020 por sugerencia del cliente', 4, 'NOTA DE CREDITO 1247', '1400.00', NULL, NULL, NULL, '019230', NULL, '2020-07-21', NULL, '2020-11-02', 113, 21, 1),
+(23, 14, 'honorarios por servicios profesionales con motivo de la preparacion de la declaracion de precios de transferencia PT-99 y el estudio respectivo,para ejercicio fiscal que finalizo el 31 de diciembre de 2019.se procede a facturar el 30% restante', 1, '20002', '600.00', NULL, NULL, NULL, '019199', NULL, '2020-06-30', NULL, '2020-11-02', 113, NULL, 1),
+(24, 14, 'nota de credito aplicada a la factura 20002 de fecha 30 de junio del 2020 por sugerencia del cliente', 4, 'NOTA DE CREDITO 1248', '600.00', NULL, NULL, NULL, '019231', NULL, '2020-07-21', NULL, '2020-11-02', 113, 23, 1),
+(25, 1, 'honorarios profesionales con motivo de: Auditoria de los estados financieros de VALORALTA CASA DE BOLSA, C.A.  al 30 de junio de 2020, de acuerdo a la propuesta de servicios de fecha 01 de julio del 2020', 1, '20013', '2750.00', NULL, NULL, NULL, '019212', NULL, '2020-07-07', NULL, '2020-11-02', 113, NULL, 1),
+(26, 3, 'honorarios profesionales por servicios prestados con motivo de: Auditoria de los estados financieros al 30 de junio del 2020, de FINANCORP VALORES CASA DE BOLSA, C.A., segun propuesta de servicios profesionales', 1, '20014', '308154753.17', NULL, NULL, NULL, '019213', NULL, '2020-07-08', NULL, '2020-11-02', 113, NULL, 1),
+(27, 10, 'honorarios por servicios prestados con motivo de: servicio permanente a tiempo completo correspondiente al mes de julio 2020 periodo 09/2019-08/2020.', 1, '20015', '118620000.00', NULL, NULL, NULL, '019214', NULL, '2020-07-10', NULL, '2020-11-02', 113, NULL, 1),
+(28, 8, 'honorarios profesionales correspondientes a la Auditoría de los estados financieros al 30 de junio del 2020,del BANCO DE VENEZUELA, S.A. BANCO UNIVERSAL, de acuerdo a la orden de servicio N° 41003440 de fecha 02 de junio de 2020.', 1, '20016', '132000.00', NULL, NULL, NULL, '19215', NULL, '2020-07-14', NULL, '2020-11-02', 113, NULL, 1),
+(29, 9, 'gastos reembolsables con motivo de; Revisión de los estados financieros de BANCO ACTIVO, C.A., BANCO UNIVERSAL, al 30 de junio 2020', 2, '20022', '195.00', NULL, NULL, NULL, '019221', NULL, '2020-07-21', NULL, '2020-11-02', 113, NULL, 1),
+(30, 9, 'honorarios profesionales con motivo de: revisión de los estados financieros de BANCO ACTIVO, C.A., BANCO UNIVERSAL, al 30 de junio de 2020.', 1, '20023', '1526.32', NULL, NULL, NULL, '019222', NULL, '2020-07-21', NULL, '2020-11-02', 113, NULL, 1),
+(31, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del 26.06.2020 al 17.07.2020. Orden de compra CO 4801032512', 1, '20024', '72450000.00', NULL, NULL, NULL, '019223', NULL, '2020-07-21', NULL, '2020-11-02', 113, NULL, 1),
+(32, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de lo libros de compras para el período comprendido entre la semana del 26.06.2020 al 10.07.2020. Orden de compra CO 4801032801', 1, '20025', '28980000.00', NULL, NULL, NULL, '019224', NULL, '2020-07-21', NULL, '2020-11-02', 113, NULL, 1),
+(33, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del  26.06.2020 al 10.07.2020. Orden de compra CO 4801032832', 1, '20026', '14490000.00', NULL, NULL, NULL, '019225', NULL, '2020-07-21', NULL, '2020-11-02', 113, NULL, 1),
+(34, 16, 'honorarios por servicios profesionales por la asistencia en el diagnóstico de los efectos contingentes en materia del impuesto a las grandes transacciones financieros correspondiente al año 2019 y 2020.', 1, '20029', '600.00', NULL, NULL, NULL, '019228', NULL, '2020-07-21', NULL, '2020-11-02', 113, NULL, 1),
+(35, 16, 'honorarios por servicios profesionales por presentación en sus oficinas de los aspectos mas importantes de la reforma tributaria del mes de enero 2020', 1, '20030', '120.00', NULL, NULL, NULL, '019229', NULL, '2020-07-21', NULL, '2020-11-02', 113, NULL, 1),
+(36, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del  13.07.2020 al 24.07.2020. Orden de compra CO 4801032512.', 1, '20031', '81900000.00', NULL, NULL, NULL, '019232', NULL, '2020-07-28', NULL, '2020-11-02', 113, NULL, 1),
+(37, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del 13.07.2020 al 24.07.2020. Orden de compra CO 4801032801', 1, '20032', '32760000.00', NULL, NULL, NULL, '019233', NULL, '2020-07-28', NULL, '2020-11-02', 113, NULL, 1),
+(38, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del  13.07.2020 al 24.07.2020. Orden de compra CO 4801032832', 1, '200333', '16380000.00', NULL, NULL, NULL, '019234', NULL, '2020-07-28', NULL, '2020-11-02', 113, NULL, 1),
+(39, 42, 'honorarios profesionales por concepto de auditoria de los estados financieros del BANCO DEL TESORO, C.A. BANCO UNIVERSAL al 30 de junio de 2020', 1, '20034', '133.00', NULL, NULL, NULL, '019239', NULL, '2020-07-31', NULL, '2020-11-02', 113, NULL, 1),
+(40, 10, 'honorarios por servicios prestados con motivo de: servicio permanente a tiempo completo correspondiente al mes de Agosto 2020 periodo 09/2019- 08/2020.', 1, '20044', '175000000.00', NULL, NULL, NULL, '019245', NULL, '2020-08-11', NULL, '2020-11-02', 113, NULL, 1),
+(41, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del 27.072020 al 07.08.2020. Orden de compra CO 4801047036', 1, '20045', '91350000.00', NULL, NULL, NULL, '019246', NULL, '2020-08-11', NULL, '2020-11-02', 113, NULL, 1),
+(42, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del 27.07.2020 al 07.08.2020. Orden de compra CO 4801047037', 1, '20046', '36540000.00', NULL, NULL, NULL, '019247', NULL, '2020-08-11', NULL, '2020-11-02', 113, NULL, 1),
+(43, 13, 'Honorarios por servicios profesionales por la asistencia en la elbaoración de los libros de compras para el período comprendido entre la semana del 27.07.2020 al 07.08.2020. Orden de compra CO 4801047038', 1, '20047', '18270000.00', NULL, NULL, NULL, '019248', NULL, '2020-08-11', NULL, '2020-11-02', 113, NULL, 1),
+(44, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del 10.08.2020 al 21.08.2020. Orden de compra CO 4801047036', 1, '20050', '91350000.00', NULL, NULL, NULL, '019253', NULL, '2020-08-24', NULL, '2020-11-02', 113, NULL, 1),
+(45, 32, 'honorarios profesionales con motivo de: examen de los estados financieros individuales y consolidados de CORPORACION TELEMIC, C.A. y sus filiales al 31 de diciembre del 2019.', 1, '20051', '10552.00', NULL, NULL, NULL, '019252', NULL, '2020-08-19', NULL, '2020-11-02', 113, NULL, 1),
+(46, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del 10.08.2020 al 21.08.2020. Orden de compra CO 4801047037', 1, '20053', '36540000.00', NULL, NULL, NULL, '019254', NULL, '2020-08-24', NULL, '2020-11-02', 113, NULL, 1),
+(47, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del 10.08.2020 al 21.08.2020. Orden de compra CO 4801047038', 1, '20054', '18270000.00', NULL, NULL, NULL, '019255', NULL, '2020-08-24', NULL, '2020-11-02', 113, NULL, 1),
+(48, 22, '33% de los honorarios  profesionales de la auditoria de servianave, c.a. al 30 de junio de 2020', 1, '20057', '2784.00', NULL, NULL, NULL, '019258', NULL, '2020-08-24', NULL, '2020-11-02', 113, NULL, 1),
+(49, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del 10.08.2020 al 21.08.2020. Orden de compra CO 4801047036', 1, '20058', '100800000.00', NULL, NULL, NULL, '019259', NULL, '2020-08-26', NULL, '2020-11-02', 113, NULL, 1),
+(50, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras  para el período comprendido entre la semana del 10.08.2020 al 21.087.2020. Orden de compra CO 4801047037', 1, '20059', '40320000.00', NULL, NULL, NULL, '019260', NULL, '2020-08-26', NULL, '2020-11-02', 113, NULL, 1),
+(51, 13, 'HONORARIOS POR SERVICIOS PROFESIONALES POR LA ASISTENCIA EN LA ELABORACIÓN DE LOS LIBROS DE COMPRAS PARA EL PERÍODO  COMPRENDIDO ENTRE LA SEMANA DE 10.08.2020 AL 21.08.2020. ORDEN DE COMPRA CO 4801047038', 1, '20060', '20160000.00', NULL, NULL, NULL, '019261', NULL, '2020-08-26', NULL, '2020-11-02', 113, NULL, 1),
+(52, 7, '25% de los honorarios   profesionales de la auditoría de los estados financieros y estudio de precios de transferencia de la compañía al 31 de diciembre de 2020', 1, '20069', '2975.00', NULL, NULL, NULL, '019270', NULL, '2020-08-28', NULL, '2020-11-02', 113, NULL, 1),
+(53, 9, 'honorarios profesionales con motivo de : revisión de los estados financieros de BANCO ACTIVO, C.A., BANCO UNIVERSAL, AL 30 DE JUNIO 2020.', 1, '20072', '2453.00', NULL, NULL, NULL, '019273', NULL, '2020-08-31', NULL, '2020-11-02', 113, NULL, 1),
+(54, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del 24.08.2020 al 04.09.2020. Orden de compra  CO 4801059406', 1, '20073', '132300000.00', NULL, NULL, NULL, '019274', NULL, '2020-09-04', NULL, '2020-11-02', 113, NULL, 1),
+(55, 12, 'Honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del 24.08.2020 al 04.09.2020. Orden de compra CO 4801059450', 1, '20074', '52920000.00', NULL, NULL, NULL, '019275', NULL, '2020-09-04', NULL, '2020-11-02', 113, NULL, 1),
+(56, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para el período comprendido entre la semana del 24.08.2020 al 04.09.2020. Orden de compra CO 4801059453', 1, '20077', '26460000.00', NULL, NULL, NULL, '019278', NULL, '2020-09-04', NULL, '2020-11-02', 113, NULL, 1),
+(57, 10, 'honorarios por servicios prestados con motivo de: servicio permanente a tiempo completo correspondiente al mes de septiembre 2020 (periodo 09/2020-08/2021).', 1, '20079', '231513850.00', NULL, NULL, NULL, '019280', NULL, '2020-09-09', NULL, '2020-11-04', 113, NULL, 1),
+(58, 19, 'honorarios profesionales correspondientes al 50% con motivo de:  auditoria de los estados financieros de banco de comercio exterior, c.a., al 30 de junio 2019.', 1, '20087', '15000.00', NULL, NULL, NULL, '019296', NULL, '2020-09-21', NULL, '2020-11-04', 113, NULL, 1),
+(59, 19, 'honorarios profesionales correspondientes al 100% con motivo de:  auditoria de los estados financieros del  FONDO DE PROMOCIÓN A LAS EXPORTACIONES E INVERSIONES, al 31 de diciembre de 2019.', 1, '20089', '3750.00', NULL, NULL, NULL, '019298', NULL, '2020-09-21', NULL, '2020-11-04', 113, NULL, 1),
+(60, 19, 'honorarios profesionales correspondientes al 100% con motivo de:  auditoria de los estados financieros del FONDO DE CONTIGENCIAS POLITICAS Y EXTRAORDINARIAS DE LAS EXPORTACIONES, al 31 de diciembre 2019.', 1, '20090', '3750.00', NULL, NULL, NULL, '019299', NULL, '2020-09-21', NULL, '2020-11-04', 113, NULL, 1),
+(61, 19, 'honorarios profesionales correspondientes al 30% con motivo de:  auditoria de los estados financieros de banco de comercio exterior, c.a., al 30 de junio 2019.', 1, '20091', '9000.00', NULL, NULL, NULL, '019300', NULL, '2020-09-21', NULL, '2020-11-04', 113, NULL, 1),
+(62, 19, 'honorarios profesionales correspondientes al 50% con motivo de:  auditoria de los estados financieros de banco de comercio exterior, c.a., al 30 de junio 2019.', 1, '20093', '15000.00', NULL, NULL, NULL, '019302', NULL, '2020-09-21', NULL, '2020-11-04', 113, NULL, 1),
+(63, 19, 'honorarios profesionales correspondientes al 30% con motivo de:  auditoria de los estados financieros de banco de comercio exterior, c.a., al 30 de junio 2019.', 1, '20094', '9000.00', NULL, NULL, NULL, '019303', NULL, '2020-09-21', NULL, '2020-11-04', 113, NULL, 1),
+(64, 19, 'honorarios profesionales correspondientes al 50% con motivo de:  auditoria de los estados financieros de banco de comercio exterior, c.a., al 30 de junio 2019.', 1, '19997', '15000.00', NULL, NULL, NULL, '019194', NULL, '2020-06-17', NULL, '2020-11-04', 113, NULL, 1),
+(65, 19, 'nota de credito aplicada a la factura 19997 de fecha 17 de junio del 2020 por error en calculo del IVA.', 4, 'NOTA DE CREDITO 1253', '15000.00', NULL, NULL, NULL, '019292', NULL, '2020-09-18', NULL, '2020-11-04', 113, 64, 1),
+(66, 19, 'honorarios profesionales correspondientes al 50% con motivo de:  auditoria de los estados financieros del FONDO DE PROMOCIÓN A LAS EXPORTACIONES E INVERSIONES, al 31 de diciembre de 2019.', 1, '19995', '3750.00', NULL, NULL, NULL, '019192', NULL, '2020-06-17', NULL, '2020-11-04', 113, NULL, 1),
+(67, 19, 'NOTA DE CREDITO APLICADA A LA FACTURA 19995 DE FECHA 17 DE JUNIO DEL 2020 POR ERROR EN CALCULO DEL IVA', 4, 'NOTA DE CREDITO 1255', '3750.00', NULL, NULL, NULL, '019294', NULL, '2020-09-18', NULL, '2020-11-04', 113, 66, 1),
+(68, 19, 'honorarios profesionales correspondientes al 50% con motivo de:  auditoria de los estados financieros deL FONDO DE CONTIGENCIAS POLITICAS Y EXTRAORDINARIAS DE LAS EXPORTACIONES, al 31 de diciembre de 2019', 1, '19996', '3750.00', NULL, NULL, NULL, '019193', NULL, '2020-06-17', NULL, '2020-11-04', 113, NULL, 1),
+(69, 19, 'nota de credito aplicada a la factura 19996 de fecha 17 de junio del 2020 por error en calculo del iva', 4, 'NOTA DE CREDITO 1256', '3750.00', NULL, NULL, NULL, '019295', NULL, '2020-09-18', NULL, '2020-11-04', 113, 68, 1),
+(70, 22, '33% de los honorarios profesionales de la auditoria de SERVINAVE, C.A. al 30 de junio', 1, '20098', '2400.00', NULL, NULL, NULL, '019307', NULL, '2020-09-25', NULL, '2020-11-04', 113, NULL, 1),
+(71, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de septiembre del 2020. Orden de compra (CO) 4801059406', 1, '20102', '173250000.00', NULL, NULL, NULL, '019311', NULL, '2020-10-01', NULL, '2020-11-04', 113, NULL, 1),
+(72, 12, 'Honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de septiembre del 2020. Orden de compra (CO) 4801059450', 1, '20103', '69300000.00', NULL, NULL, NULL, '019312', NULL, '2020-10-01', NULL, '2020-11-04', 113, NULL, 1),
+(73, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de septiembre del 2020. Orden de compra (CO) 4801059453', 1, '20104', '34650000.00', NULL, NULL, NULL, '019313', NULL, '2020-10-01', NULL, '2020-11-04', 113, NULL, 1),
+(74, 10, 'honorarios por servicios prestados con motivo de: servicio permanente a tiempo completo correspondiente al mes de octubre 2020 (periodo 09/2020-08/2021).', 1, '20105', '280651264.00', NULL, NULL, NULL, '019314', NULL, '2020-10-05', NULL, '2020-11-04', 113, NULL, 1),
+(75, 9, 'honorarios profesionales con motivo de: revisión de los estados financieros de BANCO ACTIVO, C.A., BANCO UNIVERSA, AL 30 DE JUNIO DE 2020.', 1, '20115', '1698.72', NULL, NULL, NULL, '019324', NULL, '2020-10-14', NULL, '2020-11-04', 113, NULL, 1),
+(76, 9, 'gastos reembolsables con motivo de: revisión de los estados financieros de BANCO ACTIVO , C.A., BANCO UNIVERSAL, AL 30 DE JUNIO DE 2020', 2, '20116', '113.12', NULL, NULL, NULL, '019325', NULL, '2020-10-14', NULL, '2020-11-04', 113, NULL, 1),
+(77, 34, 'honorarios profesionales con motivo de: examen de los estados financieros  individuales y consolidados de INTER BUDING, C.A., al 31 de diciembre del 2019.', 1, '20052', '524.12', NULL, NULL, NULL, '019251', NULL, '2020-08-19', NULL, '2020-11-04', 113, NULL, 1),
+(78, 56, 'honorarios por servicios profesionales relacionados con la asistencia en la preparacion de la declaracion del impuestoa los grandes patrimonios al 30/09/2019', 1, '20049', '330.00', NULL, NULL, NULL, '019250', NULL, '2020-08-19', NULL, '2020-12-03', 113, NULL, 1),
+(79, 4, '50% de los honorarios profesionales por el servicio de copilacion de informacion financiera al 30 de junio de 2020 al 31 de diciembre de 2019 y 2018.', 1, '20055', '753.78', NULL, NULL, NULL, '019256', NULL, '2020-08-24', NULL, '2020-12-03', 113, NULL, 1),
+(80, 13, 'honorarios por servicios profesonales por la asistencia en la elaboracion de los libros de compras para el periodo comprendido entra la semana de 24.08.2020 al 04.09.2020. orden de compra (CO) 4801059453', 1, '20075', '20160000.00', NULL, NULL, NULL, '019276', NULL, '2020-09-04', NULL, '2020-12-03', 113, NULL, 1),
+(81, 63, 'honorarios profesionales correspondientes al 50% con motivo de:la auditoria  de los estados financieros individuales y consolidados para los ejercicios finalizados al 31 de diciembre del 2006 al 2019 de la empresa CALIFORNIA HOME FASHIONS, C.A. Y SUCURSALES.', 1, '20078', '1345.65', NULL, NULL, NULL, '019279', NULL, '2020-09-09', NULL, '2020-12-03', 113, NULL, 1),
+(82, 11, 'HONORARIOS POR SERVICIOS PROFESIONALES POR LA ASISTENCIA EN LA ELABORACION DE LOS LIBROS DE COMPRAS PARA LA PRIMERA QUICENA DEL MES DE SEPTIEMBRE DEL 2020. ORDEN DE COMPRA (CO) 4801059406.', 1, '20080', '132300000.00', NULL, NULL, NULL, '019281', NULL, '2020-09-18', NULL, '2020-12-03', 113, NULL, 1),
+(83, 12, 'honorarios por servicios profesionales por la asistencia en la elaboracion de los libros de compras para la primera quincena del mes de septiembre del 2020. orden de compra (CO)  4801059450.', 1, '20081', '52920000.00', NULL, NULL, NULL, '019282', NULL, '2020-09-18', NULL, '2020-12-03', 113, NULL, 1),
+(84, 13, 'honorarios por servicios profesionales por la asistencia en la elaboracion de los libros de compras para la primera quincena del mes de septiembre del 2020. orden de compra (CO) 4801059453', 1, '20082', '26460000.00', NULL, NULL, NULL, '019283', NULL, '2020-09-18', NULL, '2020-12-03', 113, NULL, 1),
+(85, 59, 'honorarios profesionales por servicios prestados con motivo de:30% final de la auditoria estados financieros de CENTRO MEDICO LOIRA, C.A., al 31 de diciembre de 2019, de acuerdo a nuestra propuesta de servicios profesionales.', 1, '20083', '2152.20', NULL, NULL, NULL, '019284', NULL, '2020-09-18', NULL, '2020-12-03', 113, NULL, 2),
+(86, 59, 'honorarios profesionales por calculo y emision de ajuste por inflación.', 1, '20084', '960.00', NULL, NULL, NULL, '019285', NULL, '2020-09-18', NULL, '2020-12-03', 113, NULL, 1),
+(87, 59, 'honorarios profesionales por reestructuración de los estados financieros 2017 y 2018 de CENTRO MEDICO LOIRA, C.A.', 1, '20085', '957.50', NULL, NULL, NULL, '019286', NULL, '2020-09-18', NULL, '2020-12-03', 113, NULL, 1),
+(88, 25, 'HONORARIOS PROFESIONALES CON MOTIVO DE : AUDITORIA DE LOS ESTADOS FINANCIEROS DEL BANCO DE EXPORTACION Y COMERCIO, C.A, AL 30 DE JUNIO DE 2020', 1, '20086', '210000000.00', NULL, NULL, NULL, '019291', NULL, '2020-09-18', NULL, '2020-12-03', 113, NULL, 1),
+(89, 7, '25% de los honorarios profesionales de la auditoria de los estados financieros y estudio de precios de tranferencia de la compañia al 31 de diciembre de 2020.', 1, '20096', '2975.00', NULL, NULL, NULL, '019305', NULL, '2020-09-25', NULL, '2020-12-03', 113, NULL, 1),
+(90, 10, 'honorarios por servicios prestados con motivo de: servicio permanente a tiempo completo correspondiente al mes de octubre 2020 (periodo 09/2020-08/2021).', 1, '20105', '219258800.85', NULL, NULL, NULL, '019320', NULL, '2020-10-05', NULL, '2020-12-03', 113, NULL, 2),
+(91, 49, 'complemento de honorarios profesionales correspondientes a la auditoria de los estados financieros de la compañia al 31 de diciembre de 2019.', 1, '20107', '198.04', NULL, NULL, NULL, '019316', NULL, '2020-10-05', NULL, '2020-12-03', 113, NULL, 1),
+(92, 37, 'asistencia en el calculo del posible gasto de impuesto sobre la renta y, la preparacion de la declaracion defiitiva de rentas para el ejercicio economico que finalizara el 31 de diciembre de 2020,  asistencia en la preparacion de la declaracion de impuesto a los grandes patrimonios para e periodo que finalizo el 30 de septiembre de 2020.', 1, '20119', '1170.00', NULL, NULL, NULL, '019328', NULL, '2020-10-15', NULL, '2020-12-03', 113, NULL, 1),
+(93, 15, 'honorarios profesionales por la preparacion de la declaracion de impuesto sobre la renta de LACTEOS ANANKE, C.A. para el ejercicio fiscal que finalizara el 30 de junio de 2020.', 1, '20120', '210.00', NULL, NULL, NULL, '01939', NULL, '2020-10-19', NULL, '2020-12-03', 113, NULL, 1),
+(94, 50, 'gastos reembolsables por el traslados del personal de auditoria a las instalaciones de la compañia en el  estados yaracuy, durante el mes de enero de 2020.', 2, '20125', '165.00', NULL, NULL, NULL, '019334', NULL, '2020-10-21', NULL, '2020-12-03', 113, NULL, 1),
+(95, 41, 'honorarios profesionales correspondientes al 60% por concepto de auditoria de los estados financieros del BANCO OCCIDENTAL DEL DESCUENTO, BANCO UNIVERSAL, C.A. al 31 de diciembre de 2019.', 1, '20128', '85200.00', NULL, NULL, NULL, '019337', NULL, '2020-10-23', NULL, '2020-12-03', 113, NULL, 1),
+(96, 42, 'honorarios profesionales correspondientes añ 30% por concepto de auditoria de los estados financieros del BANCO DEL TESORO, C.A. BANCO UNIVERSAL al 31 de diciembre de 2020.', 1, '20129', '39900.00', NULL, NULL, NULL, '019338', NULL, '2020-10-23', NULL, '2020-12-03', 113, NULL, 1),
+(97, 22, '33% de los honorarios profesionales de la auditoria de ser SERVINAVE, C.A. al 30 de junio de 2020.', 1, '20130', '2400.00', NULL, NULL, NULL, '019339', NULL, '2020-10-23', NULL, '2020-12-03', 113, NULL, 1),
+(98, 28, 'honorarios profesionales correspondientes al 25% inicial de la auditoria de los estados financieros al 31 de diciembre de 2020 de REPRESENTACIONES LABIN VE, S.A.', 1, '20131', '1750.00', NULL, NULL, NULL, '019340', NULL, '2020-10-23', NULL, '2020-12-03', 113, NULL, 1),
+(99, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de octubre. orden de compra (CO) 4801083958.', 1, '20138', '157500000.00', NULL, NULL, NULL, '019347', NULL, '2020-11-02', NULL, '2020-12-03', 113, NULL, 1),
+(100, 12, 'honorarios por servicios profesionales por la asistencia en la elaboracion de los libros de compras para la segunda quincena del mes de octubre. orden de compra (CO) 4801083967', 1, '20139', '67500000.00', NULL, NULL, NULL, '019348', NULL, '2020-11-02', NULL, '2020-12-03', 113, NULL, 1),
+(101, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de octubre. orden de compa (CO)4801083972.', 1, '20140', '37500000.00', NULL, NULL, NULL, '019349', NULL, '2020-11-02', NULL, '2020-12-03', 113, NULL, 1),
+(102, 29, 'honorarios profesionales con motivo de: auditoria de los estados financieros combinados del grupo OPTICA CARONI, C.A. al 31 de mayo de 2020.', 1, '20145', '3104.08', NULL, NULL, NULL, '019354', NULL, '2020-11-04', NULL, '2020-12-03', 113, NULL, 1),
+(103, 29, 'gastos reembolsables con motivo de: auditoria de los estados financieros combinados  del grupo OPTICA CARONI, C.A. al 31 de mayo de 2020.', 2, '20146', '207.98', NULL, NULL, NULL, '019355', NULL, '2020-11-04', NULL, '2020-12-03', 113, NULL, 1),
+(104, 42, 'honorarios profesionales correspondientes al 30% por concepto de auditoria de los estados financieros del BANCO DEL TESORO, C.A. BANCO UNIVERSAL al 31 de Diciembre de 2020.', 1, '20147', '39900.00', NULL, NULL, NULL, '019356', NULL, '2020-11-04', NULL, '2020-12-03', 113, NULL, 1),
+(105, 41, 'gastos reembolsables aprobados correspondientes al 50% por concepto de auditoria de los estados financieros del BANCO OCCIDENTAL DEL DESCUENTO, BANCO UNIVERSAL, C.A. al 31 de diciembre de 2019.', 2, '20148', '16472.00', NULL, NULL, NULL, '019357', NULL, '2020-11-06', NULL, '2020-12-03', 113, NULL, 1),
+(106, 8, 'honorarios profesionales correspondientes a la auditoria de los estados financieros al 31 de diciembre de 2020, del BANCO DE VENEZUELA, S.A. BANCO UNIVERSAL, de acuerdo a la orden de servicio N° 41004304  de fecha 03 de noviembre de 2020.', 1, '20151', '179.47', NULL, NULL, NULL, '019360', NULL, '2020-11-10', NULL, '2020-12-14', 113, NULL, 1),
+(107, 10, 'honorarios por servicios prestados con motivo de: servicio permanente a tiempo completo correspondiente al mes de noviembre 2020 (periodo 09/2020-08/2021).', 1, '20152', '381271980.72', NULL, NULL, NULL, '019362', NULL, '2020-11-12', NULL, '2020-12-14', 113, NULL, 1),
+(108, 42, 'honorarios profesionales correspondientes al 20% por concepto de auditoria a los estados financieros del BANCO DEL TEOSRO, C.A. BANCO UNIVERSAL al 31 de diciembre 2020.', 1, '20155', '26600.00', NULL, NULL, NULL, '019364', NULL, '2020-11-13', NULL, '2020-12-14', 113, NULL, 1),
+(109, 62, 'honorarios profesionales correspondientes al 40% por servicios prestados con motivo de: auditoria al 31 de diciembre del 2020 de INDUSTRIAS CORPAÑAL C.A., de acuerdo a nuestra propuesta de servicios profesionales .', 1, '20157', '1331.72', NULL, NULL, NULL, '019366', NULL, '2020-11-16', NULL, '2020-12-14', 113, NULL, 1),
+(110, 11, 'honorarios por servicios profesionales por la asistencia en la elaboracion de los libros de compras para la primera quincena del mes de noviembre. Orden de compra (CO) 4801096036', 1, '20158', '233100000.00', NULL, NULL, NULL, '019367', NULL, '2020-11-18', NULL, '2020-12-14', 113, NULL, 1),
+(111, 12, 'honorarios por servicios profesionales por la asistencia en la elaboracion de los libros de compras para la primera quincena del mes de noviembre. Orden de compra (co) 4801096056', 1, '20159', '99900000.00', NULL, NULL, NULL, '019368', NULL, '2020-11-18', NULL, '2020-12-14', 113, NULL, 1),
+(112, 13, 'honorarios por servicios profesionales por la asistencia en la elaboracion de los libros de compras para la primera quincena del mes de noviembre. orden de compra (CO) 4801096308', 1, '20160', '55500000.00', NULL, NULL, NULL, '019369', NULL, '2020-11-18', NULL, '2020-12-14', 113, NULL, 1),
+(113, 47, 'gastos reembolsables con motivo de:auditoria estados financieros  de GRUPO MEDICO VARGAS , C.A., al 31 de diciembre de 2020, de acuerdo a nuestra propuesta de servicios profesionales', 2, '20161', '400.00', NULL, NULL, NULL, '019371', NULL, '2020-11-19', NULL, '2020-12-14', 113, NULL, 1),
+(114, 47, 'honorarios profesionales correspondientes al 70% inicia por servicios prestados con motivo de: Auditoria estados financieros de grupo medico vargas, c.a., al 31 de Diciembre de 2020, de acuerdo a nuestra propuesta de servicios profesionales', 1, '20163', '12357.80', NULL, NULL, NULL, '019372', NULL, '2020-11-19', NULL, '2020-12-14', 113, NULL, 1),
+(115, 47, 'gastos reembolsables aprobados correspondientes al mes de octubre por concepto de auditoria de los estados financieros del BANCO OCCIDENTAL DE DESCUENTO, BANCO UNIVERSAL, C.A. al 31 de Diciembre de 2019.', 2, '20164', '2430.00', NULL, NULL, NULL, '019373', NULL, '2020-11-20', NULL, '2020-12-14', 113, NULL, 1),
+(116, 63, 'honorarios profesionales correspondientes al 15% con motivo de: auditoria de los estados financieros individuales y consolidados para los ejercicios finalizados al 31 de DIicmebre de 2006 al 2019 de la empresa CALIFORNIA HOME FASHIONS, C.A. y SUCURSALES.', 1, '20165', '1337.08', NULL, NULL, NULL, '019374', NULL, '2020-11-20', NULL, '2020-12-14', 113, NULL, 1),
+(117, 63, 'Honorarios profesionales correspondientes al 100% con motivo de: auditoria de los estados financieros de DISTEPAL INDUSTRIAL, S.A., Y SUSSIDIARIAS, para los ejercicios finalizados el 31 de diciembre de 2006 al 31 de diciembre de 2019.', 1, '20166', '2878.89', NULL, NULL, NULL, '019375', NULL, '2020-11-20', NULL, '2020-12-14', 113, NULL, 1),
+(118, 63, 'honorarios profesionales correspondientes al 15}5 con motivo de: auditoria de los estados financieros individuales y consolidados para los ejercicios finalizados al 31 de Diciembre de 2006 al 2019 de la empresa CALIFORNIA HOME FASHIONS, C.A. SUCURSALES.', 1, '20167', '1337.08', NULL, NULL, NULL, '019376', NULL, '2020-11-20', NULL, '2020-12-14', 113, NULL, 1),
+(119, 36, 'Honorarios profesionales por servicios prestados con motivo de:auditoria operativa de los registros contables y adiministrativos para los periodos 2016 al 2019 a orica venezuela, c.a.', 1, '20168', '1293.10', NULL, NULL, NULL, '019384', NULL, '2020-11-24', NULL, '2020-12-14', 113, NULL, 1),
+(120, 15, 'honorarios por servicios profesionales con ocasión de la declaración de impuesto a los grandes patrimonios al 30.06.2020 de LACTEOS ANANKE, C.A.', 1, '20169', '500.00', NULL, NULL, NULL, '019378', NULL, '2020-11-25', NULL, '2020-12-14', 113, NULL, 1),
+(121, 56, 'HONORARIOS POR SERVICIOS PROFESIONALES CON OCASIÓN DE LA DECLARACION DE IMPUESTO A LOS GRANDES PATRIMONIOS AL 30.06.2020 DE CORPORACION DELCOP, C.A.', 1, '20170', '500.00', NULL, NULL, NULL, '019379', NULL, '2020-11-20', NULL, '2020-12-14', 113, NULL, 1),
+(122, 55, 'HONORARIOS POR SERVICIOS PROFESIONLAES CON OCASIÓN DE LA DECLARACION DE IMPUESTO A LOS GRANDES PATRIMONIOS AL 30.06.2020 DE MAKLER ADMINISTRADORA DE RIESGO. S.A.', 1, '20172', '376.00', NULL, NULL, NULL, '019381', NULL, '2020-11-25', NULL, '2020-12-14', 113, NULL, 2),
+(123, 12, 'honorarios por servicios profesionales por la asistencia en la elaboracion de los libros de compras para la segunda quincena del mes de noviembre . Orden de compra (CO) 4801096056', 1, '20177', '222750000.00', NULL, NULL, NULL, '019386', NULL, '2020-11-27', NULL, '2020-12-14', 113, NULL, 1),
+(124, 13, 'honorarios por servicios profesionales por la asistencia en la elaboracion de los libros de compras para la segunda quincena del mes de noviembre. Orden de compra (CO) 4801096308', 1, '20178', '123750000.00', NULL, NULL, NULL, '019387', NULL, '2020-11-27', NULL, '2020-12-14', 113, NULL, 1),
+(125, 4, 'Honorarios profesionales 50% final por la compilación de información financiera de la compañia al 31 de diciembre de 2016,2017,2018,2019 y al 30 de junio de capital y de liquidación de la compañia', 1, '20180', '3450.00', NULL, NULL, NULL, '019389', NULL, '2020-11-30', NULL, '2020-12-14', 113, NULL, 1),
+(126, 59, 'honorarios profesionales por servicios prestados con motivo de; 70% inicial del examen de los estados financieros de CENTRO MEDICO LOIRA, C.A., al 31 de diciembre de 2020, de acuerdo a nuestra propuesta de servicios profesionales', 1, '20183', '5317.20', NULL, NULL, NULL, '019393', NULL, '2020-12-01', NULL, '2020-12-14', 113, NULL, 1),
+(127, 45, 'asistencia en la preparacion de la declaracion del impuesto a los grandes patrimonios para el periodo que finalizo el 30 de septiembre de 2020.', 1, '20186', '120.00', NULL, NULL, NULL, '019396', NULL, '2020-12-01', NULL, '2020-12-14', 113, NULL, 1),
+(128, 52, 'honorarios profesionales con motivo de: revision de los estados financieros al 31 de diciembre de 2020.', 1, '20192', '1071828219.60', NULL, NULL, NULL, '019402', NULL, '2020-12-01', NULL, '2020-12-14', 113, NULL, 1),
+(129, 44, 'asistencia en la preparacion de la declaracion del impuesto a los grandes patrimonios para el periodo que finalizo el 30 de septiembre de 2020.', 1, '20193', '120.00', NULL, NULL, NULL, '019403', NULL, '2020-12-01', NULL, '2020-12-14', 113, NULL, 1),
+(130, 61, 'asistencia en la preparacion de la declaracion definitiva de rentas , para el ejercicio economico que finalizo el 31 de diciembre de 2018,2019 y el quee finalizara el 31 de diciembre de 2020, asistencia en la preparacion de la declaracion del impuesto a los grandes patrimonios para el periodo que finalizo el 30 de septiembre de 2019 y 2020 y asistencia e la preparacion del estudio y la declaracion de precios y transferencia para los ejercicios que finalizaron e 31 de diciembre de 2019 y 2019. (70% inicial por aprobacion de la propuesta).', 1, '20194', '2800.00', NULL, NULL, NULL, '019404', NULL, '2020-12-01', NULL, '2020-12-14', 113, NULL, 1),
+(131, 61, 'asistencia en la preparación de la declaración del impuesto a los grandes patrimonios para el periodo que finalizo el 30 de septiembre de 2019 y 2020 . (30%por culminación del trabajo).', 1, '20195', '300.00', NULL, NULL, NULL, '019405', NULL, '2020-12-01', NULL, '2020-12-14', 113, NULL, 1),
+(132, 64, 'honorarios profesionales con motivo de: elsboracion de estados financieros para los años finalizados al 31 de diciembre de 2017 al 2019 y el año que finalizara el 31 de diciembre de 2020 bajo NISR 44010', 1, '20196', '966.00', NULL, NULL, NULL, '019406', NULL, '2020-12-02', NULL, '2020-12-14', 113, NULL, 1),
+(133, 53, 'honorarios por servicios profesionales relacionados  con la asistencia en la preparación de la declaración  anual del impuesto a los grandes patrimonio correspondiente al año 2020.', 1, '20201', '296.00', NULL, NULL, NULL, '019411', NULL, '2020-12-04', NULL, '2020-12-14', 113, NULL, 1),
+(134, 55, 'honorarios por servicios profesionales relacionados con la asistencia en la preparación de la declaración anual del impuesto a los grandes patrimonio correspondiente al año 2020.', 1, '20202', '376.00', NULL, NULL, NULL, '019412', NULL, '2020-12-04', NULL, '2020-12-14', 113, NULL, 1),
+(135, 10, 'honorarios por servicios prestados con motivo de: servicio permanente a tiempo completo correspondiente al mes de diciembre de 2020 (periodo 09/2020-082021).', 1, '20205', '686377630.64', NULL, NULL, NULL, '019415', NULL, '2020-12-04', NULL, '2020-12-14', 113, NULL, 1),
+(136, 57, 'honorarios por servicios profesionales relacionados con la asistencia en la preparación de la declaración anual del impuesto a los grandes patrimonio correspondiente al año 2020.', 1, '20208', '118.00', NULL, NULL, NULL, '019418', NULL, '2020-12-04', NULL, '2020-12-14', 113, NULL, 1),
+(137, 23, 'honorarios por servicios profesionales por la asesoría tributaria en materia de deberes formales e impuesto a los grandes patrimonios', 1, '20209', '1900.00', NULL, NULL, NULL, '019419', NULL, '2020-12-07', NULL, '2020-12-14', 113, NULL, 1),
+(138, 21, 'honorarios por servicios profesionales, por la asesoría tributaria en materia de deberes formales 2019 y 2020.', 1, '20210', '1800.00', NULL, NULL, NULL, '019420', NULL, '2020-12-07', NULL, '2020-12-14', 113, NULL, 1),
+(139, 21, 'honorarios profesionales con motivo de: Auditoria de los estados financieros al 31 de diciembre de 2019', 1, '20211', '858.00', NULL, NULL, NULL, '019421', NULL, '2020-12-07', NULL, '2020-12-14', 113, NULL, 1),
+(140, 23, 'honorarios profesionales con motivo de: auditoria de los estados financieros al 31 de diciembre 2019.', 1, '20212', '858.00', NULL, NULL, NULL, '019422', NULL, '2020-12-07', NULL, '2020-12-14', 113, NULL, 1),
+(141, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de diciembre. Orden de compra (CO) 4801106270', 1, '20213', '456750000.00', NULL, NULL, NULL, '019423', NULL, '2020-12-09', NULL, '2020-12-14', 113, NULL, 1),
+(142, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de diciembre. Orden de compra (CO) 4801106272', 1, '20214', '195750000.00', NULL, NULL, NULL, '019424', NULL, '2020-12-09', NULL, '2020-12-14', 113, NULL, 1),
+(143, 13, 'Honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de diciembre. Orden de compra (CO) 4801106277', 1, '20215', '108750000.00', NULL, NULL, NULL, '019425', NULL, '2020-12-09', NULL, '2020-12-14', 113, NULL, 1),
+(144, 19, 'honorarios profesionales correspondientes al 100% con motivo de: auditoria de los estados financieros del FONDO DE PROMOCION A LAS EXPORTACIONES E INVERSIONES, al 31 de diciembre de 2019', 1, '20218', '3750.00', NULL, NULL, NULL, '019428', NULL, '2020-12-09', NULL, '2020-12-14', 113, NULL, 1),
+(145, 19, 'honorarios profesionales correspondientes al 100% con motivo de: auditoria de os estados financieros del FONDO DE CONTINGENCIAS POLITICAS Y EXTRAORDINARIAS DE LAS EXPORTACIONES, al 31 de diciembre de 2019.', 1, '20219', '3750.00', NULL, NULL, NULL, '019429', NULL, '2020-12-09', NULL, '2020-12-14', 113, NULL, 1),
+(146, 19, 'nota de credito aplicada a la factura 20089 de fecha  21 de septiembre del 2020 por error en e monto.', 4, 'NOTA DE CREDITO 1257', '3750.00', NULL, NULL, NULL, '019430', NULL, '2020-12-09', NULL, '2020-12-14', 113, 59, 1),
+(147, 19, 'nota de credito aplicada a la factura 20090 de fecha 21 de spetiembre del 2020 por error en el monto', 4, 'NOTA DE CREDITO 1258', '3750.00', NULL, NULL, NULL, '019431', NULL, '2020-12-09', NULL, '2020-12-14', 113, 60, 1),
+(148, 2, '100% de los honorarios profesionales por servicios prestados con motivo de: auditoria de los estados financieros de BANCO AGRICOLA DE VENEZUELA, C.A. BANCO UNIVERSAL al 30 de junio de 2020.', 1, '20222', '2600000000.00', NULL, NULL, NULL, '019434', NULL, '2020-12-09', NULL, '2020-12-14', 113, NULL, 1),
+(149, 3, 'honorarios profesionales por servicios prestados con motivo de: auditoria de los estados financieros al 31 de diciembre del 2020, de FINANCORP VALORES CASA DE BOLSA, C.A. según propuesta de servicios profesionales.', 1, '20224', '1497123858.00', NULL, NULL, NULL, '019436', NULL, '2020-12-09', NULL, '2020-12-14', 113, NULL, 1),
+(150, 42, 'honorarios profesionales correspondientes al 20% por concepto de auditoria de los estados financieros del BANCO DEL TESORO, C.A. BANCO UNIVERSAL al 31 de Diciembre de 2020.', 1, '20225', '26600.00', NULL, NULL, NULL, '019442', NULL, '2020-12-10', NULL, '2020-12-14', 113, NULL, 1),
+(151, 42, 'honorarios profesionales correspondientes al 20% por concepto de auditoria de los estados financieros del BANCO DEL TESORO, C.A. BANCO UNIVERSAL al 31 de diciembre de 2020.', 1, '20226', '26600.00', NULL, NULL, NULL, '019443', NULL, '2020-12-10', NULL, '2020-12-14', 113, NULL, 1),
+(152, 42, 'honorarios profesionales correspondientes al 10% final por concepto de auditoria de los estados financieros del BANCO DEL TESORO, C.A. BANCO UNIVERSAL al 31 de diciembre de 2020.', 1, '20227', '13300.00', NULL, NULL, NULL, '019439', NULL, '2020-12-10', NULL, '2020-12-14', 113, NULL, 1),
+(153, 19, 'honorarios profesionales correspondientes al 20% final con motivo de: auditoria de los estados financieros de BANCO DE COMERCIO EXTERIOR, C.A., al 30 de junio de 2019', 1, '20228', '3777.78', NULL, NULL, NULL, '019440', NULL, '2020-12-10', NULL, '2020-12-14', 113, NULL, 1),
+(154, 19, 'honorarios profesionales correspondientes al 20% final con motivo de : auditoria de los estados financieros de BANCO DE COMERCIO EXTERIOR, C.A., al 31 de diciembre de 2019.', 1, '20229', '3777.78', NULL, NULL, NULL, '019441', NULL, '2020-12-10', NULL, '2020-12-14', 113, NULL, 1),
+(155, 9, 'honorarios profesionales con motivo de: revisión de los estados financieros de BANCO ACTIVO, C.A. BANCO UNIVERSAL, al 31 de diciembre de 2020.', 1, '20230', '5399.45', NULL, NULL, NULL, '019445', NULL, '2020-12-10', NULL, '2020-12-14', 113, NULL, 1),
+(156, 6, 'honorarios profesionales con motivo de: auditoria de los estados financieros de GENIA CARE, C.A. al 31 de octubre de 2020', 1, '20232', '540000000.00', NULL, NULL, NULL, '019447', NULL, '2020-12-11', NULL, '2020-12-14', 113, NULL, 1),
+(157, 69, 'honorarios profesionales por servicios prestados con motivo de: 10% auditoria de los estados financieros al 30 de septiembre de2019.', 1, '20133', '533.88', NULL, NULL, NULL, '019342', NULL, '2020-10-26', NULL, '2020-12-15', 113, NULL, 1),
+(158, 70, 'honorarios profesionales por servicios prestados con motivo de: 10% auditoria de los estados financieros al 30 de septiembre de 2019.', 1, '20134', '246.41', NULL, NULL, NULL, '019343', NULL, '2020-10-26', NULL, '2020-12-15', 113, NULL, 1),
+(159, 68, 'honorarios profesionales por servicios prestados con motivo de: 10% auditoria de los estados financieros al 30 de septiembre de 2019.', 1, '20135', '246.41', NULL, NULL, NULL, '019344', NULL, '2020-10-26', NULL, '2020-12-15', 113, NULL, 1),
+(160, 71, 'honorarios profesionales por servicios prestados con motivo de: 10% auditoria de los estados financieros al 30 de septiembre de 2019.', 1, '20136', '246.41', NULL, NULL, NULL, '019345', NULL, '2020-10-26', NULL, '2020-12-15', 113, NULL, 1),
+(161, 72, 'honorarios profesionales por servicios prestados con motivo de: 10% auditoria de los estados financieros al 30 de septiembre de 2019.', 1, '20137', '246.41', NULL, NULL, NULL, '019346', NULL, '2020-10-26', NULL, '2020-12-15', 113, NULL, 1),
+(162, 36, 'Honorarios profesionales por servicios prestados con motivo de: Auditoría Operativa de los Registros Contables y Admimistrativos para los períodos 2016 al 2019 a ORICA VENEZUELA, C.A.', 1, '20126', '4500.00', NULL, NULL, NULL, '019335', NULL, '2020-10-17', NULL, '2020-12-23', 113, NULL, 1),
+(163, 76, 'gastos reembolsables con motivo de:  Visados de informes de los estados financieros al 31 de diciembre de 2019.', 2, '20233', '7202842.24', NULL, NULL, NULL, '019448', NULL, '2020-12-16', NULL, '2021-01-11', 113, NULL, 1),
+(164, 76, 'honorarios por servicios profesionales con motivo de: auditoria de los estados financieros al 31 deiciembre de 2020', 1, '20234', '200000000.00', NULL, NULL, NULL, '019449', NULL, '2020-12-16', NULL, '2021-01-11', 113, NULL, 1),
+(165, 61, 'asistencia en la preparacion de la declaracion definitiva de rentas, para el ejercicio  economico que finalizo el 31 de diciembre de 2018,2019 y el que finalizara el 31 de diciembre de 2020, asistencia en la preparacion de la declaracio del impuesto a los grandes patrimonios para el periodo que finalizo e 30 de septiembre de 2019 y 2020 y asistencia en la preparacion del estudio y la declaracion de precios de transferencia para los ejercicios que finalizaron el 31 de diciembre de 2018 y 2019. (30% final de la propuesta).', 1, '20237', '900.00', NULL, NULL, NULL, '019452', NULL, '2020-12-16', NULL, '2021-01-11', 113, NULL, 1),
+(166, 41, 'honorarios profesionales correspondientes al 20% final por concepto de auditoria de los estados financieros del banco occidental de descuento, banco universal, c.a. al 31 de diciembre de 2019.', 1, '20238', '28400.00', NULL, NULL, NULL, '019453', NULL, '2020-12-16', NULL, '2021-01-11', 113, NULL, 1),
+(167, 62, 'honorarios profesionales correspondientes al 30% por servicios prestados con motivo de: auditoria al 31 de diciembre del 2020 de industrias corpañal c.a., de acuerdo a nuestra propuesta de servicios profesionales.', 1, '20239', '1030.26', NULL, NULL, NULL, '019454', NULL, '2020-12-16', NULL, '2021-01-11', 113, NULL, 1),
+(168, 64, 'honorarios profesionales con motivo de: elaboracion de estados financieros para los años finalizados al 31 de diciembre de 2017 al 2019 y el año que finalizara al 31 de diciembre de 2020 bajo NISR 44010', 1, '20240', '414.00', NULL, NULL, NULL, '019455', NULL, '2020-12-16', NULL, '2021-01-11', 113, NULL, 1),
+(169, 77, 'honorarios profesionales con motvio de: Auditoria de los estados financieros del banco de exportacion y comercio, c.a, al 31 de diciembre de 2020.', 1, '20241', '340000000.00', NULL, NULL, NULL, '019456', NULL, '2020-12-17', NULL, '2021-01-11', 113, NULL, 1),
+(170, 28, 'honorario profesionales correspondientes al segundo 25% de la auditoria de los estados financieros al 31 de diciembre de 2020 de REPRESENTACIOES LABIN VE, S.A.', 1, '20244', '1750.00', NULL, NULL, NULL, '019460', NULL, '2020-12-18', NULL, '2021-01-11', 113, NULL, 1),
+(171, 76, 'honorarios por servicios profesionales con motivo de: auditoria de los estados financieros al 31 de diciembre de 2019.', 1, '20246', '9500000.00', NULL, NULL, NULL, '019464', NULL, '2020-12-22', NULL, '2021-01-11', 113, NULL, 1),
+(172, 78, 'honorarios profesionales con motvio de: auditoria de los estados financieros al 31 de diciembre de 2020, de acuerdo a la propuesta de servicios de fecha 05 de enero de 2021', 1, '20260', '3021.48', NULL, NULL, NULL, '019478', NULL, '2021-01-07', NULL, '2021-02-11', 113, NULL, 1),
+(173, 90, 'gastos incurridos a los meses de noviembre y diciembre aprobados por concepto de auditoria de los estados financieros al 31 de diciembre de 2019', 2, '20261', '2900.00', NULL, NULL, NULL, '019479', NULL, '2021-01-07', NULL, '2021-02-11', 113, NULL, 1),
+(174, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de diciembre orden de compra (CO) 4801106270', 1, '20262', '346500000.00', NULL, NULL, NULL, '019480', NULL, '2021-01-07', NULL, '2021-02-11', 113, NULL, 1),
+(175, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de diciembre orden de compra (CO) 4801106272', 1, '20263', '148500000.00', NULL, NULL, NULL, '019481', NULL, '2021-01-07', NULL, '2021-02-11', 113, NULL, 1),
+(176, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de diciembre orden de compra (CO) 4801106277', 1, '20264', '82500000.00', NULL, NULL, NULL, '019482', NULL, '2021-01-08', NULL, '2021-02-11', 113, NULL, 1),
+(177, 23, 'nota de credito aplicada a la factura 20212 de fecha 7 de dicmebre del 2020 por solicitud del cliente', 4, '20212', '858.00', NULL, NULL, NULL, '019484', NULL, '2021-01-11', NULL, '2021-02-11', 113, 140, 2),
+(178, 23, 'nota de credito aplicada a la factura 20212 de fecha 7 de diciembre del 2020 por solicitud de cliente.', 4, 'NOTA DE CREDIDO 1262', '858.00', NULL, NULL, NULL, '019484', NULL, '2021-01-11', NULL, '2021-02-11', 113, 140, 1),
+(179, 21, 'nota de credito aplicada a la factura 20211 de fecha 7 de diciembre del 2020 por solicitud de cliente', 4, 'NOTA DE CREDITO 1263', '858.00', NULL, NULL, NULL, '019485', NULL, '2021-01-11', NULL, '2021-02-11', 113, 139, 1),
+(180, 21, 'honorarios profesionales con motivo de: auditoria de los estados financieros al 31 de diciembre de 2019.', 1, '20266', '858.00', NULL, NULL, NULL, '019487', NULL, '2021-01-11', NULL, '2021-02-11', 113, NULL, 1);
+INSERT INTO `tbl_factura_proyecto` (`id`, `id_proyecto`, `concepto`, `id_concepto_factura`, `numero_factura`, `monto_factura`, `id_iva`, `id_porcentaje_retencion_iva`, `id_deduccion_islr`, `numero_control`, `observaciones`, `fecha_factura`, `fecha_cobro_factura`, `fecha_registro`, `id_facturador`, `id_factura_anular`, `id_estatus`) VALUES
+(181, 23, 'honorarios profesionales con motivo de : auditoria de los estados financieros al 31 de diciembre de 2019', 1, '20267', '858.00', NULL, NULL, NULL, '019488', NULL, '2021-01-11', NULL, '2021-02-11', 113, NULL, 1),
+(182, 86, 'asistencia en la revision de la declaracion de impuesto sobre la renta correspondiente al ejercicio que finalizo el 31.12.2020. se procede a facturar el 100%', 1, '20270', '950.00', NULL, NULL, NULL, '019491', NULL, '2021-01-13', NULL, '2021-02-11', 113, NULL, 1),
+(183, 84, 'honorarios por servicios profesionales relacionados con la revision de aspectos contingentes del acta de reparo emitida por el servicio nacional integrado de administracion aduanera y tributaria (SENIAT) N° SNAT/INTI/GRTI/CE/RC/DF/2020/IVA/02101-03', 1, '202714', '250.00', NULL, NULL, NULL, '019492', NULL, '2021-01-13', NULL, '2021-02-11', 113, NULL, 1),
+(184, 84, 'honorarios por servicios profesionales, relacionados con la asistencia en la preparación del escrito de allanamiento con solicitud de no aplicacion de la sanción pecuniaria prevista en el codigo organico tributario con ocasión del acta de SNAT/INTI/GRTI/CE/RC/DF/2020/IVA/02101-03', 1, '20272', '350.00', NULL, NULL, NULL, '019493', NULL, '2021-01-13', NULL, '2021-02-11', 113, NULL, 1),
+(185, 10, 'HONORARIOS POR SERVICIOS PRESTADOS CON MOTIVO DE_SERVICIO PERMANENTE A TIEMPO COMPLETO CORRESPONDIENTE AL MES DE ENERO 2021 (periodo 09/2020-08/2021).', 1, '20274', '1003668396.74', NULL, NULL, NULL, '019495', NULL, '2021-01-13', NULL, '2021-02-11', 113, NULL, 1),
+(186, 49, 'honorarios profesionales de la auditoria de los estados financieros de la compañia al 31 de diciembre de 2020', 1, '20275', '1018.21', NULL, NULL, NULL, '019496', NULL, '2021-01-14', NULL, '2021-02-11', 113, NULL, 1),
+(187, 21, 'honorarios profesionales con motivo de:auditoria de los estados financieros al 31 de diciembre 2019.', 1, '20276', '2860.00', NULL, NULL, NULL, '019497', NULL, '2021-01-15', NULL, '2021-02-11', 113, NULL, 1),
+(188, 23, 'honorarios profesionales con motivo de : auditoria de los estados financieros al 31 de diciembre de 2019', 1, '20277', '2860.00', NULL, NULL, NULL, '019498', NULL, '2021-01-15', NULL, '2021-02-11', 113, NULL, 1),
+(189, 20, 'honorarios profesionales con motivo de : elaboracion de estados financieros y ajustados por inflacion y sus notas correspondientes al 31 de diciembre del 2018.', 1, '20278', '1500.00', NULL, NULL, NULL, '019499', NULL, '2021-01-15', NULL, '2021-02-11', 113, NULL, 1),
+(190, 49, 'nota de credito aplicada a la factura 20107 de fecha 05/10/2020, por solicitud de cliente', 4, 'NOTA DE CREDITO 1265', '198.04', NULL, NULL, NULL, '019500', NULL, '2021-01-15', NULL, '2021-02-11', 113, 91, 1),
+(191, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de enero del 2021. orden de compra (CO)  4801126518', 1, '20279', '614250000.00', NULL, NULL, NULL, '019502', NULL, '2021-01-18', NULL, '2021-02-11', 113, NULL, 1),
+(192, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera  quincena del mes de enero 2021 orden de compra (CO) 4801126521.', 1, '20280', '263250000.00', NULL, NULL, NULL, '019503', NULL, '2021-01-18', NULL, '2021-02-11', 113, NULL, 1),
+(193, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras  para la primera quincena del mes de enero del 2021. orden de compra (CO) 4801126523', 1, '20281', '146250000.00', NULL, NULL, NULL, '019504', NULL, '2021-01-18', NULL, '2021-02-11', 113, NULL, 1),
+(194, 87, 'Honorarios profesionales por la asistencia en la preparacion de la declaracion de impuesto sobre la renta para el ejercicio fiscal que finalizo el 31.12.2020. se procede a facturar el 100%.', 1, '20282', '600.00', NULL, NULL, NULL, '019506', NULL, '2021-01-18', NULL, '2021-02-11', 113, NULL, 1),
+(195, 85, 'honorarios profesionales por la asistencia en la preparacion de la declaracion de impuesto sobre la renta para el ejercicio fiscal que finalizo el 31.12.2020. se procede a facturar 100%', 1, '20283', '450.00', NULL, NULL, NULL, '019507', NULL, '2021-01-18', NULL, '2021-02-11', 113, NULL, 1),
+(196, 69, 'nota de credito aplicada a la factura 20133 de fecha 26/10/2020 por falta de pago', 4, 'NOTA DE CREIDITO1266', '533.88', NULL, NULL, NULL, '019509', NULL, '2021-01-18', NULL, '2021-02-11', 113, 157, 1),
+(197, 43, 'honorarios profesionales correspondientes al 50% (5,800.00) por servcios prestados con motivoo de : auditoria de los estados financieros al 31 de diciembre del 2020.', 1, '20284', '2900.00', NULL, NULL, NULL, '019512', NULL, '2021-01-21', NULL, '2021-02-11', 113, NULL, 1),
+(198, 43, 'honorarios profesionales correspondientes al 35% (5,800.00) por servcios prestados con motivoo de : auditoria de los estados financieros al 31 de diciembre del 2020.', 1, '20285', '2030.00', NULL, NULL, NULL, '019513', NULL, '2021-01-21', NULL, '2021-02-11', 113, NULL, 1),
+(199, 9, 'gastos incurridos, con motivo de visita el dia 22 y 23 de diciembre de 2020: inventario de equipos fisicos, visita del centro de datos principal', 2, '20286', '60.00', NULL, NULL, NULL, '019515', NULL, '2021-01-25', NULL, '2021-02-11', 113, NULL, 1),
+(200, 73, 'honorarios profesionales correspondientes a la auditoria de los estados financieros de ven-american, c.a. al 31 de diciembre de 2020', 1, '20288', '2315.00', NULL, NULL, NULL, '019518', NULL, '2021-01-27', NULL, '2021-02-11', 113, NULL, 1),
+(201, 89, 'honorarios profesionales correspondientes al 90% con motivo de: auditoria de los estados financieros al 31 de diciembre de 2020.', 1, '20289', '180000000.00', NULL, NULL, NULL, '019519', NULL, '2021-01-27', NULL, '2021-02-11', 113, NULL, 1),
+(202, 96, 'gastos incurridos por concepto de la emisión de 5 ejemplares adicionales del informe limitado sobre el sistema de control interno en uso al 30 de junio de 2019.', 2, '20294', '67115.00', NULL, NULL, NULL, '019524', NULL, '2021-01-29', NULL, '2021-02-11', 113, NULL, 1),
+(203, 59, 'honorarios profesionales correspondientes al 20% por servicos prestados con motivo de: del examen de los estados financieros de centro medico loira, c.a. al 31 de diciembre de 2020, de acuerdo a nuestra propuesta de servicios profesionales.', 1, '20295', '1519.20', NULL, NULL, NULL, '019525', NULL, '2021-02-01', NULL, '2021-03-05', 113, NULL, 1),
+(204, 60, 'honorarios profesionales correspondientes al 70% por servicios prestados con motivo de: asesoria y revisión de los estados financieros según la NIC 29 al 31 de diciembre de 2020 de acuerdo a nuestra propuesta de servicios profesionales', 1, '20296', '385.00', NULL, NULL, NULL, '019526', NULL, '2021-02-01', NULL, '2021-03-05', 113, NULL, 1),
+(205, 11, 'honorarios profesionales por la asitencia en la elaboración de libros de compras para la segunda quincena del mes de enero del 2021. Orden de Compra (CO) 4801126518.', 1, '20297', '630000000.00', NULL, NULL, NULL, '019527', NULL, '2021-02-01', NULL, '2021-03-05', 113, NULL, 1),
+(206, 12, 'honorarios profesionales por la asitencia en la elaboración de libros de compras para la segunda quincena del mes de enero del 2021. Orden de Compra (CO) 4801126521.', 1, '20298', '270000000.00', NULL, NULL, NULL, '019528', NULL, '2021-02-01', NULL, '2021-03-05', 113, NULL, 1),
+(207, 13, 'honorarios profesionales por la asitencia en la elaboración de libros de compras para la segunda quincena del mes de enero del 2021. Orden de Compra (CO) 4801126523.', 1, '20299', '150000000.00', NULL, NULL, NULL, '019529', NULL, '2021-02-01', NULL, '2021-03-05', 113, NULL, 1),
+(208, 75, 'honorarios profesionales por servicios prestados con motivo de: 60% auditoria de los estados financieros al 31 de agosto de 2020, de acuerdo a nuestra propuesta de servicios profesionales.', 1, '20302', '1080.00', NULL, NULL, NULL, '019532', NULL, '2021-02-02', NULL, '2021-03-05', 113, NULL, 1),
+(209, 75, 'honorarios profesionales por servicios prestados con motivo de: 30% auditoria de los estados financieros al 31 de agosto de 2020, de acuerdo a nuestra propuesta de servicios profesionales .', 1, '20303', '540.00', NULL, NULL, NULL, '019533', NULL, '2021-02-02', NULL, '2021-03-05', 113, NULL, 1),
+(210, 90, 'honorarios profesionales correspondientes al 60% inicial por concepto de auditoria de los estados financieros al 30 de junio de 2020', 1, '20304', '79740.00', NULL, NULL, NULL, '019537', NULL, '2021-02-03', NULL, '2021-03-05', 113, NULL, 1),
+(211, 63, 'honorarios profesionales correspondientes al 15% con motivo de: la auditoria de los estados financieros individuales y consolidados para los ejercicios finalizados al 31 de diciembre de 2020.', 1, '20305', '1276.61', NULL, NULL, NULL, '019539', NULL, '2021-02-05', NULL, '2021-03-05', 113, NULL, 1),
+(212, 63, 'honorarios profesionales al 70% inicial con motivo de: la auditoria de los estados financieros individuales y consolidados para los ejercicios finalizados al 31 de diciembre del 2020.', 1, '20306', '3174.19', NULL, NULL, NULL, '019540', NULL, '2021-02-05', NULL, '2021-03-05', 113, NULL, 1),
+(213, 106, 'honorarios profesionales y ajuste por iflación al 31 de diciembre de 2019.', 1, '20307', '1467.00', NULL, NULL, NULL, '019541', NULL, '2021-02-05', NULL, '2021-03-05', 113, NULL, 1),
+(214, 107, 'honorarios profesionales y ajuste por iflación al 31 de diciembre de 2019.', 1, '20309', '1467.00', NULL, NULL, NULL, '019543', NULL, '2021-02-05', NULL, '2021-03-05', 113, NULL, 1),
+(215, 93, 'honorarios profesionales con motivo de: auditoria de los estados financieros al 31 de diciembre del 2020.', 1, '20312', '1250.00', NULL, NULL, NULL, '019547', NULL, '2021-02-05', NULL, '2021-03-05', 113, NULL, 1),
+(216, 97, 'honorarios por servicios prestados con motivo de: servicio permanente a tiempo completo correspondiente al mes de febrero de 2021  (periodo 09/2020-082021).', 1, '20314', '667.00', NULL, NULL, NULL, '019549', NULL, '2021-02-08', NULL, '2021-03-05', 113, NULL, 1),
+(217, 92, 'honorarios profesionales correspondientes al 70% por servicios prestados con motivo de: auditoria de los estados financieros de la fundacion españa salud al 31 de diciembre de 2020.', 1, '20316', '6160.00', NULL, NULL, NULL, '019551', NULL, '2021-02-08', NULL, '2021-03-05', 113, NULL, 1),
+(218, 90, 'gastos reembolsables correspondiente al mes de enero de 2021', 1, '20317', '1240.00', NULL, NULL, NULL, '019552', NULL, '2021-02-08', NULL, '2021-03-05', 113, NULL, 1),
+(219, 74, 'honorarios profesionales con motivo de:revisión de los estados financieros al 31 de diciembre de 2020', 1, '20318', '3300.00', NULL, NULL, NULL, '019554', NULL, '2021-02-09', NULL, '2021-03-05', 113, NULL, 1),
+(220, 106, 'honorarios profesionales y ajuste por inflación al 31 de diciembre de 2019.', 1, '20319', '1467.00', NULL, NULL, NULL, '019555', NULL, '2021-02-10', NULL, '2021-03-05', 113, NULL, 1),
+(221, 107, 'honorarios profesionales y ajuste por inflación al 31 de diciembre de 2019.', 1, '20321', '1467.00', NULL, NULL, NULL, '019557', NULL, '2021-02-10', NULL, '2021-03-05', 113, NULL, 1),
+(222, 11, 'Honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de febrero. Orden  de Compra (CO) 4801138443', 1, '20323', '623070000.00', NULL, NULL, NULL, '019559', NULL, '2021-02-12', NULL, '2021-03-05', 113, NULL, 1),
+(223, 12, 'Honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de febrero. Orden  de Compra (CO) 480113849', 1, '20324', '267030000.00', NULL, NULL, NULL, '019560', NULL, '2021-02-12', NULL, '2021-03-05', 113, NULL, 1),
+(224, 13, 'Honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de febrero. Orden  de Compra (CO) 4801138497.', 1, '20325', '148350000.00', NULL, NULL, NULL, '019561', NULL, '2021-02-12', NULL, '2021-03-05', 113, NULL, 1),
+(225, 98, 'honorarios profesionales correspondientes al 40% con motivo de: la auditoría de los estados financieros al 31 de diciembre de 2019.', 1, '20326', '240.00', NULL, NULL, NULL, '019562', NULL, '2021-02-19', NULL, '2021-03-05', 113, NULL, 1),
+(226, 98, 'honorarios profesionales correspondientes al 40% con motivo de: l auditoría de los estados financieros al 31 de diciembre de 2020.', 1, '20327', '420.00', NULL, NULL, NULL, '019563', NULL, '2021-02-19', NULL, '2021-03-05', 113, NULL, 1),
+(227, 28, 'honorarios profsionales correspondientes al segundo 25% de la auditoria de los estados financieros al 31 de diciembre de 2020.', 1, '20329', '1750.00', NULL, NULL, NULL, '019565', NULL, '2021-02-26', NULL, '2021-03-05', 113, NULL, 1),
+(228, 91, 'honorarios profesionales con motivo de la copilación información de financiera de la compañia al 01 de febrero 2021.', 1, '20330', '1000.00', NULL, NULL, NULL, '019566', NULL, '2021-02-26', NULL, '2021-03-05', 113, NULL, 1),
+(229, 106, 'honorarios profeionales correspondientesal 60% con motivo de la auditoria de los estados financieros al 31 de diciembre del 2020, de acuerdo a la propuesta.', 1, '20331', '4500.00', NULL, NULL, NULL, '019567', NULL, '2021-02-26', NULL, '2021-03-05', 113, NULL, 1),
+(230, 107, 'honorarios profesionales correspondiente al 60% con motvio de la auditoria de los estados financieros al 31 de diciembre del 2020, de acuerdo a la propuesta.', 1, '20333', '4500.00', NULL, NULL, NULL, '019569', NULL, '2021-02-26', NULL, '2021-03-05', 113, NULL, 1),
+(231, 11, 'Honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de febrero. Orden  de Compra (CO) 4801138443', 1, '20335', '683550000.00', NULL, NULL, NULL, '019571', NULL, '2021-03-01', NULL, '2021-03-05', 113, NULL, 1),
+(232, 12, 'Honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de febrero. Orden  de Compra (CO) 4801138494', 1, '20336', '292950000.00', NULL, NULL, NULL, '019572', NULL, '2021-03-01', NULL, '2021-03-05', 113, NULL, 1),
+(233, 13, 'honorarios por servicios profesionales por la asistencia  en la elaboración de los libros de compras para la segunda quincena del mes de febrero.Orden de compra (CO) 4801138497.', 1, '20337', '162750000.00', NULL, NULL, NULL, '019573', NULL, '2021-03-01', NULL, '2021-03-05', 113, NULL, 1),
+(234, 97, 'honorarios por servicios prestados con motivo de: servicio permanente a tiempo completo correspondiente al mes de marzo de 2021  (periodo 09/2020-082021).', 1, '20338', '667.00', NULL, NULL, NULL, '019574', NULL, '2021-03-02', NULL, '2021-03-05', 113, NULL, 1),
+(235, 90, 'HOORARIOS PROFESIONALES CORRESPONDIENTES AL 40% FINAL POR CONCEPTO DE AUDITORIA DE LOS ESTADOS FINANCIEROS  AL 30 DE JUNIO DE 2020.', 1, '20339', '53160.00', NULL, NULL, NULL, '019575', NULL, '2021-03-02', NULL, '2021-03-05', 113, NULL, 1),
+(236, 10, 'honorarios por servicios prestados con motivo de: servicio permanente a tiempo completo (periodo 09/2020-08/2021).', 1, '20338', '1244527286.00', NULL, NULL, NULL, '019574', NULL, '2021-03-02', NULL, '2021-04-12', 113, NULL, 1),
+(237, 28, 'gastos reembolsables con motivo de visados de informes correspondientes  a los estados financieros al 31 de diciembre del 2020.', 2, '20343', '24079.04', NULL, NULL, NULL, '019579', NULL, '2021-03-09', NULL, '2021-04-12', 113, NULL, 1),
+(238, 116, 'honorarios profesionales correspondientes al 50% por servicios prestados con motivo de: auditoria al 31 de diciembre de 2020, segun propuesta de servicios.', 1, '20344', '970.00', NULL, NULL, NULL, '019580', NULL, '2021-03-12', NULL, '2021-04-12', 113, NULL, 1),
+(239, 28, 'asistencia en materia de impuesto sobre la renta para la proyección y evaluación de resultados en materia de la declaración definitiva de rentas para el ejercicio economico que finalizo el 31 de diciembre de 2020. (60% de la propuesta).', 1, '20345', '1426.80', NULL, NULL, NULL, '019581', NULL, '2021-03-12', NULL, '2021-04-12', 113, NULL, 1),
+(240, 69, 'honorarios profesionales por servicios prestados con motivo de: 10% auditoria de los estados financieros al 30 de septiembre de 2019 de avicola santa cruz, c.a.', 1, '20346', '63975.55', NULL, NULL, NULL, '019582', NULL, '2021-03-12', NULL, '2021-04-12', 113, NULL, 1),
+(241, 69, 'honorarios profesionales por servicios prestados con motivo de: 10% auditoria de los estados financieros al 30 de septiembre de 2019.', 1, '20347', '138612.86', NULL, NULL, NULL, '019583', NULL, '2021-03-12', NULL, '2021-04-12', 113, NULL, 1),
+(242, 71, 'honorarios profesionales por servicios prestados con motivo de: 10% auditoria de los estados financieros al 30 de septiembre de 2019', 1, '20348', '63975.55', NULL, NULL, NULL, '019584', NULL, '2021-03-12', NULL, '2021-04-12', 113, NULL, 1),
+(243, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de marzo. orden de compra (CO) 4801156532', 1, '20349', '628425000.00', NULL, NULL, NULL, '019585', NULL, '2021-03-17', NULL, '2021-04-12', 113, NULL, 1),
+(244, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de marzo. orden de compra (CO) 4801156534', 1, '20350', '269325000.00', NULL, NULL, NULL, '019586', NULL, '2021-03-17', NULL, '2021-04-12', 113, NULL, 1),
+(245, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de marzo. orden de compra (CO) 4801156535', 1, '20351', '149625000.00', NULL, NULL, NULL, '019589', NULL, '2021-03-17', NULL, '2021-04-12', 113, NULL, 1),
+(246, 40, 'honorarios por servicios profesionales por la asistencia en preparación de la declaración de impuesto sobre la renta del año 2020. se procede a facturtar el 100%.', 1, '20353', '630.00', NULL, NULL, NULL, '019591', NULL, '2021-03-17', NULL, '2021-04-12', 113, NULL, 1),
+(247, 39, 'honorarios por servicios profesionales por la asistencia en preparación de la declaracion de impuesto sobre la renta del año 2020. se procede a facturar el 100%', 1, '20354', '400.00', NULL, NULL, NULL, '019592', NULL, '2021-03-17', NULL, '2021-04-12', 113, NULL, 1),
+(248, 15, 'honorarios por servicios profesionales por la asistencia en preparacion de la declaracion de impuesto sobre la renta del año 2020 de personas naturales. se procede facturar el 100%', 1, '20355', '300.00', NULL, NULL, NULL, '019593', NULL, '2021-03-17', NULL, '2021-04-12', 113, NULL, 1),
+(249, 103, 'honorarios por servicios profesionales por la asistencia en preparacion de la declaracion de impuesto sobre la renta del año 2020. se procede a facturar el 100%', 1, '20356', '1501.00', NULL, NULL, NULL, '019594', NULL, '2021-03-17', NULL, '2021-04-12', 113, NULL, 1),
+(250, 102, 'honorarios por servicios profesionales relacionados con la asistencia en la preparacion de la declaracion anual del impuesto a los grandes patrimonio correspondienteal año 2020.', 1, '20357', '1198.00', NULL, NULL, NULL, '019595', NULL, '2021-03-17', NULL, '2021-04-12', 113, NULL, 1),
+(251, 101, 'honorarios por servicios profesionales por la asistencia en preparación de la declaración de impuesto sobre la renta del año 2020. se procede a facturar el 100%', 1, '20359', '467.00', NULL, NULL, NULL, '019597', NULL, '2021-03-17', NULL, '2021-04-12', 113, NULL, 1),
+(252, 74, 'honorarios profesionales con motivo de: revisión de los estados financieros al 31 de diciembre de 202', 1, '20360', '1100.00', NULL, NULL, NULL, '019598', NULL, '2021-03-18', NULL, '2021-04-12', 113, NULL, 1),
+(253, 74, 'gastos reembolsables con motivo de: revision de los estados financieros al 31 de diciembre de 2020.', 2, '20361', '200.00', NULL, NULL, NULL, '019599', NULL, '2021-03-18', NULL, '2021-04-12', 113, NULL, 1),
+(254, 119, 'gastos reembolsables correspondientes al mes de febrero de 2021.', 2, '20362', '1200.00', NULL, NULL, NULL, '019600', NULL, '2021-03-18', NULL, '2021-04-12', 113, NULL, 1),
+(255, 95, 'honorarios por servicios profesionales por la asistencia en preparacion de la declaración de impuesto sobre la renta del año 2020. se procede facturar el 100\n%', 1, '20364', '1800.00', NULL, NULL, NULL, '019603', NULL, '2021-03-18', NULL, '2021-04-12', 113, NULL, 1),
+(256, 94, 'honorarios por servicios profesionales por la asistencia en preparación de la declaración de impuesto sobre la renta del año 2020 se procede a facturar el 100%', 1, '20368', '525.00', NULL, NULL, NULL, '019607', NULL, '2021-03-18', NULL, '2021-04-12', 113, NULL, 1),
+(257, 105, 'honorarios por servicios profesionales por la asitencia en la preparacion de la declaracion definitiva de impuesto sobre la renta del año 2020.', 1, '20369', '350.00', NULL, NULL, NULL, '019608', NULL, '2021-03-24', NULL, '2021-04-12', 113, NULL, 1),
+(258, 100, 'honorarios por servicios profesionales relacionados con la asistencia en la preparación de la declaración anual del impuesto a los grandes patrimonio correspondiente al año 2020.', 1, '20370', '467.00', NULL, NULL, NULL, '019609', NULL, '2021-03-24', NULL, '2021-04-12', 113, NULL, 1),
+(259, 49, 'gastos incurridos por visados de informes de la auditoria de los estados financieros de la compañia al 31 de diciembre de 2019.', 2, '20371', '80.60', NULL, NULL, NULL, '019610', NULL, '2021-03-24', NULL, '2021-04-12', 113, NULL, 1),
+(260, 50, 'honorarios profesionales correspondientes al 20% con motivo de: auditoria estados financieros al 31 de diciembre de 2020, de acuerdo a nuestra propuesta de servicios profesionales.', 1, '20373', '1090.00', NULL, NULL, NULL, '019612', NULL, '2021-03-26', NULL, '2021-04-12', 113, NULL, 1),
+(261, 91, 'honorarios profesionales de la preparación de informe de certifiación bancaria de la compañia del 01 de febrero de 2021.', 1, '20375', '250.00', NULL, NULL, NULL, '019614', NULL, '2021-03-26', NULL, '2021-04-12', 113, NULL, 1),
+(262, 79, 'honorarios profesionales por servicios prestados con motivo de: auditoria de los estados financieros al 31 de diciembre de 2020.', 1, '20376', '3256.80', NULL, NULL, NULL, '019615', NULL, '2021-03-26', NULL, '2021-04-12', 113, NULL, 1),
+(263, 48, 'honorarios profesionales correspondientes al 50% de la auditoria de los estados financieros al 30 de abril de 2020', 1, '20377', '1020.00', NULL, NULL, NULL, '019616', NULL, '2021-03-26', NULL, '2021-04-12', 113, NULL, 1),
+(264, 120, 'honorarios por servicios profesionales relacionados con la auditoria de los estados financieros al 31 de diciembre de 2020', 1, '20378', '1260.00', NULL, NULL, NULL, '019617', NULL, '2021-03-26', NULL, '2021-04-12', 113, NULL, 1),
+(265, 103, 'honorarios por servicios profesionales relacionados con la auditoria de los estados financieros al 31 de diciembre del 2020.', 1, '20379', '1530.00', NULL, NULL, NULL, '019618', NULL, '2021-03-26', NULL, '2021-04-12', 113, NULL, 1),
+(266, 122, 'honorarios por servicios profesionales relacionados con la auditoria de los estados financieros al 31 de diciembre del 2020.', 1, '20380', '1710.00', NULL, NULL, NULL, '019619', NULL, '2021-03-26', NULL, '2021-04-12', 113, NULL, 1),
+(267, 99, 'honorarios profesionales correspondientes al 30% final por servicios prestados con motivo de: auditoria estados financieros al 31 de de diciembre de 2020, de acuerdo a nuestra propuesta de servicios profesionales', 1, '20381', '5296.20', NULL, NULL, NULL, '019621', NULL, '2021-03-26', NULL, '2021-04-12', 113, NULL, 1),
+(268, 99, 'gastos reembolsables con motivo de: auditoria estados financieros al 31 de diciembre de 2020, de acuerdo a nuestra propuesta de servicios profesionales', 2, '20382', '500.00', NULL, NULL, NULL, '019622', NULL, '2021-03-26', NULL, '2021-04-12', 113, NULL, 1),
+(269, 63, 'nota de credito aplicada a la factura 20167 de fecha 20/11/2020 por solicitud del cliente', 4, 'NOTA DE CREDITO 1271', '1337.08', NULL, NULL, NULL, '019623', NULL, '2021-03-31', NULL, '2021-04-12', 113, 118, 1),
+(270, 59, 'honorarios profesionales correspondientes al 10% final por servicios prestados con motivo de: del examen de los estados financieros al 31 de diciembre de 2020, de acuerdo a nuestra propuesta de servicios profesionales.', 1, '20384', '759.60', NULL, NULL, NULL, '019624', NULL, '2021-04-05', NULL, '2021-04-12', 113, NULL, 1),
+(271, 59, 'honorarios profesionales correspondientes al 30% final por servicios prestados con motivo  de:asesoriay revision de los estados financieros segun la  NIC  29 al 31 de diciembre de 2020 de acuerdo a nuestra propuesta de servicios profesionales.', 1, '20385', '165.00', NULL, NULL, NULL, '019625', NULL, '2021-04-05', NULL, '2021-04-12', 113, NULL, 1),
+(272, 49, 'gastos incurridos por visados de informes de la auditoria de los estados financieros de la compañia al 31 de diciembre de 2020.', 2, '20386', '70.67', NULL, NULL, NULL, '019627', NULL, '2021-04-05', NULL, '2021-04-12', 113, NULL, 1),
+(273, 97, 'honorarios por servicios prestados con motivo de:  servicio permanente a tiempo completo correspondiente al mes de abril 2021 (periodo 09/20- 08/2021).', 1, '20389', '667.00', NULL, NULL, NULL, '019630', NULL, '2021-04-07', NULL, '2021-04-12', 113, NULL, 1),
+(274, 90, 'honorarios profesionales correspondientes al 40% final por concepto de auditoria de los estados financieros al 30 de junio de 2020.', 1, '20390', '53160.00', NULL, NULL, NULL, '019632', NULL, '2021-04-07', NULL, '2021-04-12', 113, NULL, 1),
+(275, 52, 'honorarios profesionales con motivo de: auditoria de estados financieros al 31 de diciembre de 2020.', 1, '20392', '848117992.56', NULL, NULL, NULL, '019634', NULL, '2021-04-07', NULL, '2021-04-12', 113, NULL, 1),
+(276, 52, 'honorarios profesionales con motivo de: auditoria de estados financieros al 31 dfe diciembre de 2020.', 1, '20393', '848117992.56', NULL, NULL, NULL, '019635', NULL, '2021-04-07', NULL, '2021-04-12', 113, NULL, 1),
+(277, 32, 'honorarios profesionales correspondientes al 50% final con motivo de: auditoria de estados financieros al 31 de diciembre de 2019', 1, '20394', '10952.00', NULL, NULL, NULL, '019636', NULL, '2021-04-07', NULL, '2021-04-12', 113, NULL, 1),
+(278, 34, 'honorarios profesionales correspondientes al 50% final con motivo de: auditoria de los estados financieros al 31 de diciembre de 2019.', 1, '20395', '544.00', NULL, NULL, NULL, '019637', NULL, '2021-04-07', NULL, '2021-04-12', 113, NULL, 1),
+(279, 32, 'gastos reembolsables visado de informes 2018 y 2019', 1, '20396', '470.90', NULL, NULL, NULL, '019638', NULL, '2021-04-07', NULL, '2021-04-12', 113, NULL, 1),
+(280, 34, 'gastos reembolsables visado de informes 2018 y 2019', 2, '20397', '141.69', NULL, NULL, NULL, '019639', NULL, '2021-04-07', NULL, '2021-04-12', 113, NULL, 1),
+(281, 74, 'honorarios profesionales correspondiente al 10% final con motivo de: revisión de los estados financieros al 31 de diciembre de 2020.', 1, '20399', '1100.00', NULL, NULL, NULL, '019641', NULL, '2021-04-08', NULL, '2021-04-12', 113, NULL, 1),
+(282, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de marzo.Orden de compra (CO) 4801156532', 1, '20400', '756000000.00', NULL, NULL, NULL, '019642', NULL, '2021-04-08', NULL, '2021-04-12', 113, NULL, 1),
+(283, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de marzo.Orden de compra (CO) 4801156534', 1, '20401', '324000000.00', NULL, NULL, NULL, '019643', NULL, '2021-04-08', NULL, '2021-04-12', 113, NULL, 1),
+(284, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de marzo.Orden de compra (CO) 4801156535', 1, '20402', '180000000.00', NULL, NULL, NULL, '019644', NULL, '2021-04-08', NULL, '2021-04-12', 113, NULL, 1),
+(285, 116, 'honorarios profesionales correspondientes al 50% por servicos prestados con motivo de: auditoria al 31 de diciembre de 2020, segun propuesta de servicios.', 1, '20403', '970.00', NULL, NULL, NULL, '019645', NULL, '2021-04-08', NULL, '2021-04-12', 113, NULL, 1),
+(286, 90, 'nota de credito aplicada a la factura 20339 de fecha 02-03-2021 por solicitud del cliente', 2, 'NOTA DE CREDITO 1272', '53160.00', NULL, NULL, NULL, '019646', NULL, '2021-04-08', NULL, '2021-04-12', 113, NULL, 1),
+(287, 7, 'gastos reembolsables por concepto de visado de informes de auditoria al 31 de diciembre 2020 ante el colegio de contadores  publicos del Edo Miranda la emisión de (4) ejemplares fisicos adiconales', 1, '20411', '27.70', NULL, NULL, NULL, '019658', NULL, '2021-04-16', NULL, '2021-04-16', 113, NULL, 1),
+(288, 119, 'honorarios profesionales correspondientes al 60% inicial por concepto de auditoria de los estados financieros  al 31 de diembre de 2020', 1, '20410', '71865.00', NULL, NULL, NULL, '019655', NULL, '2021-04-14', NULL, '2021-04-16', 113, NULL, 1),
+(289, 16, 'nota de credito aplicada a la factura 20030 de fecha 21/07/2020 reverso de factura , trabajo no culminado', 4, 'NOTA DE CREIDOT 1273', '120.00', NULL, NULL, NULL, '019656', NULL, '2021-04-15', NULL, '2021-04-16', 113, 35, 1),
+(290, 16, 'nota de credito aplicada a la factura 20029 de fecha 21/07/2020 reverso de factura , trabajo no culminado', 4, 'NOTA DE CREDITO 1274', '600.00', NULL, NULL, NULL, '019657', NULL, '2021-04-15', NULL, '2021-04-16', 113, 34, 1),
+(291, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de abril. Orden de compra (CO) 4801175003', 1, '20412', '756000000.00', NULL, NULL, NULL, '019659', NULL, '2021-04-20', NULL, '2021-04-20', 113, NULL, 1),
+(292, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de abril. Orden de compra (CO) 4801175015', 1, '20413', '324000000.00', NULL, NULL, NULL, '019660', NULL, '2021-04-20', NULL, '2021-04-20', 113, NULL, 1),
+(293, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la primera quincena del mes de abril. Orden de compra (CO) 4801175017', 1, '20414', '180000000.00', NULL, NULL, NULL, '019661', NULL, '2021-04-20', NULL, '2021-04-20', 113, NULL, 1),
+(294, 69, 'honorarios profesionales por servicios prestados con motivo de: 40% auditoria de los estados financieros al 30 de septiembre de 2020.', 1, '20415', '1553.20', NULL, NULL, NULL, '019662', NULL, '2021-04-23', NULL, '2021-04-25', 113, NULL, 1),
+(295, 124, 'RETAINER-ASESORIA CONTINUA ANUAL', 1, '20416', '9835.30', NULL, NULL, NULL, '019663', NULL, '2021-04-23', NULL, '2021-04-26', 113, NULL, 1),
+(296, 68, 'honorarios profesionales por servicios prestados con motivo de: 40% auditoria de los estados financieros al 30 de septiembre de 2020.', 1, '20417', '716.80', NULL, NULL, NULL, '019664', NULL, '2021-04-27', NULL, '2021-04-27', 113, NULL, 1),
+(297, 50, 'honorairos profesionales correspondientes al 20% final con motivo de: auditoria de estados financieros al 31 de diciembre de 2020, de acuerdo a nuestra propuesta de servicios profesionales.', 1, '20418', '1090.00', NULL, NULL, NULL, '019665', NULL, '2021-04-30', NULL, '2021-04-30', 113, NULL, 1),
+(298, 28, 'honorairos profesionales correspondientes al 25% final con motivo de: auditoria de estados financieros al 31 de diciembre de 2020, de acuerdo a nuestra propuesta de servicios profesionales.', 1, '20420', '1750.00', NULL, NULL, NULL, '019667', NULL, '2021-04-30', NULL, '2021-04-30', 113, NULL, 1),
+(299, 48, 'honorarios profesionales correspondientes al 50% final de la auditoria de los estados financieros al 30 de abril de 2020.', 1, '20421', '1020.00', NULL, NULL, NULL, '019668', NULL, '2021-04-30', NULL, '2021-04-30', 113, NULL, 1),
+(300, 11, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de abril. Orden de compra (CO) 4801175003', 1, '20422', '892395000.00', NULL, NULL, NULL, '019669', NULL, '2021-04-30', NULL, '2021-04-30', 113, NULL, 1),
+(301, 12, 'honorarios por servicios profesionales por la asistencia en la elaboración de los libros de compras para la segunda quincena del mes de abril. Orden de compra (CO) 4801175015', 1, '20423', '382455000.00', NULL, NULL, NULL, '019670', NULL, '2021-04-30', NULL, '2021-04-30', 113, NULL, 1),
+(302, 13, 'honorarios por servicios profesionales por la asistencia en la elaboración de los librios de compras para la segunda quincena del mes de abril.Orden de compra (CO) 4801175017', 1, '20424', '212475000.00', NULL, NULL, NULL, '019671', NULL, '2021-04-30', NULL, '2021-04-30', 113, NULL, 1),
+(303, 119, 'honorarios profesionales correspondientes al 60% inicial por concepto de auditoria de los Estados Financieros del BANCO OCCIDENTAL DEL DESCUENTO, BANCO UNIVERSAL, C.A. al 31 de Diciembre de 2020.', 1, '20430', '71865.00', NULL, NULL, NULL, '019678', NULL, '2021-05-04', NULL, '2021-05-04', 113, NULL, 1),
+(304, 119, 'nota de credito aplicada a la factura 20410 de fecha 14/04/2021 por solicitud del cliente  y cambio de tasa.', 4, 'NOTA DE CREDITO 1276', '71865.00', NULL, NULL, NULL, '019679', NULL, '2021-05-04', NULL, '2021-05-07', 113, 288, 1),
+(305, 10, 'honorarios por servicios prestados con motivo de: servicio permanente a tiempo completo correspondiente al mes de mayo 2021 (periodo 09/2020- 08/2021)', 1, '20433', '1894586226.37', NULL, NULL, NULL, '019682', NULL, '2021-05-05', NULL, '2021-05-07', 113, NULL, 1),
+(306, 119, 'honorarios profesionales al 40% final por concepto de Auditoria de los Estados Financieros al 31 de Diciembre de 2020.', 1, '20436', '47910.00', NULL, NULL, NULL, '019685', NULL, '2021-05-06', NULL, '2021-05-07', 113, NULL, 1),
+(307, 119, 'gastos reembolsables correspondientes al mes de abril de 2021.', 2, '20435', '1620.00', NULL, NULL, NULL, '019684', NULL, '2021-05-06', NULL, '2021-05-10', 113, NULL, 1),
+(308, 81, '100% de los honorarios profesionales por servicios prestados con motivo de: auditoria de los estados financieros al 30 de diciembre de 2020.', 1, '20437', '3260000000.00', NULL, NULL, NULL, '019687', NULL, '2021-05-07', NULL, '2021-05-10', 113, NULL, 2),
+(309, 79, 'gastos reembolsables por concepto de tramites de visado de los informes  de los estados financieros al 31 de diciembre de 2020 y 2019 ante el colegio de contadores del estado miranda y traslados del personal para la revisión de auditoria de los libros legales de la compañia.', 2, '20438', '41.93', NULL, NULL, NULL, '019688', NULL, '2021-05-07', NULL, '2021-05-10', 113, NULL, 1),
+(310, 108, 'honorarios profesionales correspondientes a la auditoria de los estados financieros al 30 de junio del 2021, de acuerdo a la orden de servicio N°41005412 de fecha 12 de abril del 2021.', 1, '20431', '400000000000.00', NULL, NULL, NULL, '019680', NULL, '2021-05-04', NULL, '2021-05-10', 113, NULL, 1),
+(311, 111, 'honorarios profesionales correspondientes al 30% por concepto de auditoria de los estados financieros al 31 de diciembre de 2020', 1, '20441', '22500.00', NULL, NULL, NULL, '019691', NULL, '2021-05-10', NULL, '2021-05-10', 113, NULL, 1),
+(312, 81, '100% de los Honorarios Profesionales por servicios prestados con motivo de: Auditoría de los Estados Financieros al 30 de Diciembre de 2020.', 1, '20442', '3260000000.00', NULL, NULL, NULL, '019692', NULL, '2021-05-11', NULL, '2021-05-11', 113, NULL, 1),
+(313, 107, 'honorarios profesionales correspondientes 30% con motivo de auditoria de los estados financieros al 31 de diciembre del 2020 de acuedo a nuestra propuesta de servicios', 1, '20445', '2250.00', NULL, NULL, NULL, '019695', NULL, '2021-05-14', NULL, '2021-05-14', 113, NULL, 1),
+(314, 126, 'honorarios profesionales correspondientes 30% con motivo de auditoria de los estados financieros al 31 de diciembre del 2020 de acuedo a nuestra propuesta de servicios', 1, '20446', '2250.00', NULL, NULL, NULL, '019696', NULL, '2021-05-14', NULL, '2021-05-14', 113, NULL, 1),
+(315, 106, 'honorarios profesionales correspondientes 30% con motivo de auditoria de los estados financieros al 31 de diciembre del 2020 de acuedo a nuestra propuesta.', 1, '20447', '2250.00', NULL, NULL, NULL, '019697', NULL, '2021-05-14', NULL, '2021-05-14', 113, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -20584,6 +20621,28 @@ INSERT INTO `tbl_horas_no_cargables` (`id`, `id_concepto`, `id_usuario`, `id_div
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `tbl_iva`
+--
+
+CREATE TABLE `tbl_iva` (
+  `id` int(11) NOT NULL,
+  `descripcion` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `valor` decimal(5,2) NOT NULL,
+  `id_estatus` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `tbl_iva`
+--
+
+INSERT INTO `tbl_iva` (`id`, `descripcion`, `valor`, `id_estatus`) VALUES
+(1, '16%', '16.00', 1),
+(2, '8%', '8.00', 1),
+(3, 'No definido', '0.00', 2);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `tbl_mensaje_bd`
 --
 
@@ -22905,6 +22964,28 @@ INSERT INTO `tbl_parroquias` (`id`, `id_municipio`, `parroquia`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `tbl_porcentaje_retencion_iva`
+--
+
+CREATE TABLE `tbl_porcentaje_retencion_iva` (
+  `id` int(11) NOT NULL,
+  `descripcion` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `valor` decimal(5,2) NOT NULL,
+  `id_estatus` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `tbl_porcentaje_retencion_iva`
+--
+
+INSERT INTO `tbl_porcentaje_retencion_iva` (`id`, `descripcion`, `valor`, `id_estatus`) VALUES
+(1, '100%', '100.00', 1),
+(2, '75%', '75.00', 1),
+(3, 'No definido', '0.00', 2);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `tbl_proyecto`
 --
 
@@ -22915,7 +22996,7 @@ CREATE TABLE `tbl_proyecto` (
   `id_socio` int(11) NOT NULL,
   `id_socio_calidad` int(11) NOT NULL,
   `id_gerente` int(11) NOT NULL,
-  `fecha_contratacion` date NOT NULL,
+  `fecha_contratacion` varchar(10) NOT NULL,
   `monto` decimal(25,2) NOT NULL,
   `id_moneda` int(11) NOT NULL,
   `id_empresa` int(11) NOT NULL,
@@ -24235,7 +24316,7 @@ CREATE TABLE `tbl_usuario` (
 --
 
 INSERT INTO `tbl_usuario` (`id`, `codigo`, `clave`, `fecha_cambio_clave`, `nombre_1`, `nombre_2`, `apellido_1`, `apellido_2`, `fecha_nacimiento`, `id_cargo`, `id_division`, `id_parroquia`, `avatar`, `fecha_ingreso`, `fecha_egreso`, `fecha_login`, `ip_login`, `id_estatus`) VALUES
-(1, '0001', 0x5379db9d288ccc74f3e88c051756544e, '2021-08-03', 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '1986-08-05 00:00:00', 16, 16, 1131, '', '2020-01-01 00:00:00', NULL, '2021-06-04 14:34:27', '127.0.0.1', 1),
+(1, '0001', 0x5379db9d288ccc74f3e88c051756544e, '2022-04-17', 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '1986-08-05 00:00:00', 16, 16, 1131, '', '2020-01-01 00:00:00', NULL, '2022-02-18 16:31:36', '127.0.0.1', 1),
 (2, '10', 0xcb4dc5daf4d8865eb1bd01d6c898c269, '2021-06-04', 'NATHALIE', 'YAMILET', 'LOPEZ', 'TREJO', '1972-08-20 00:00:00', 15, 1, 1131, NULL, '2000-02-21 00:00:00', NULL, '2021-05-14 12:16:48', '186.167.248.71', 1),
 (3, '10092', 0x10e54efb266e50c523273c638cb690c5, '2021-06-04', 'YESENIA', 'BEATRIZ', 'MARTINEZ', 'GALLARDO', '1979-06-01 00:00:00', 14, 1, 1131, NULL, '2004-09-01 00:00:00', NULL, '2021-05-18 22:47:27', '186.88.140.243', 1),
 (4, '10141', 0x383155d3ec475bf8ace4b67bf0aaba8d, '2021-06-04', 'JESUS', 'ERASMO', 'PEREZ', 'ERASMO', '1959-11-09 00:00:00', 17, 1, 1131, NULL, '2005-02-02 00:00:00', NULL, NULL, NULL, 1),
@@ -24634,8 +24715,8 @@ DELIMITER ;
 -- (Véase abajo para la vista actual)
 --
 CREATE TABLE `vw_config_encryption` (
-`key` varchar(255)
-,`iv` varchar(255)
+`key` mediumtext
+,`iv` mediumtext
 );
 
 -- --------------------------------------------------------
@@ -24738,6 +24819,12 @@ ALTER TABLE `tbl_contacto_usuario`
   ADD KEY `id_usuario` (`id_usuario`);
 
 --
+-- Indices de la tabla `tbl_deduccion_islr`
+--
+ALTER TABLE `tbl_deduccion_islr`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `tbl_division`
 --
 ALTER TABLE `tbl_division`
@@ -24785,6 +24872,12 @@ ALTER TABLE `tbl_horas_no_cargables`
   ADD KEY `id_usuario` (`id_usuario`),
   ADD KEY `aprobado_por` (`aprobado_por`),
   ADD KEY `id_division` (`id_division`);
+
+--
+-- Indices de la tabla `tbl_iva`
+--
+ALTER TABLE `tbl_iva`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `tbl_mensaje_bd`
@@ -24841,6 +24934,12 @@ ALTER TABLE `tbl_paises`
 ALTER TABLE `tbl_parroquias`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_municipio` (`id_municipio`);
+
+--
+-- Indices de la tabla `tbl_porcentaje_retencion_iva`
+--
+ALTER TABLE `tbl_porcentaje_retencion_iva`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indices de la tabla `tbl_proyecto`
@@ -24956,7 +25055,7 @@ ALTER TABLE `tbl_accion_bitacora`
 -- AUTO_INCREMENT de la tabla `tbl_bitacora`
 --
 ALTER TABLE `tbl_bitacora`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=914;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=919;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_cargo_empleado`
@@ -25019,6 +25118,12 @@ ALTER TABLE `tbl_contacto_usuario`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=180;
 
 --
+-- AUTO_INCREMENT de la tabla `tbl_deduccion_islr`
+--
+ALTER TABLE `tbl_deduccion_islr`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT de la tabla `tbl_division`
 --
 ALTER TABLE `tbl_division`
@@ -25040,7 +25145,7 @@ ALTER TABLE `tbl_estados`
 -- AUTO_INCREMENT de la tabla `tbl_estatus`
 --
 ALTER TABLE `tbl_estatus`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_factura_proyecto`
@@ -25059,6 +25164,12 @@ ALTER TABLE `tbl_horas_cargables`
 --
 ALTER TABLE `tbl_horas_no_cargables`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7381;
+
+--
+-- AUTO_INCREMENT de la tabla `tbl_iva`
+--
+ALTER TABLE `tbl_iva`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_mensaje_bd`
@@ -25107,6 +25218,12 @@ ALTER TABLE `tbl_paises`
 --
 ALTER TABLE `tbl_parroquias`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1139;
+
+--
+-- AUTO_INCREMENT de la tabla `tbl_porcentaje_retencion_iva`
+--
+ALTER TABLE `tbl_porcentaje_retencion_iva`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_proyecto`
