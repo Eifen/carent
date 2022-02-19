@@ -221,9 +221,9 @@ new Vue({
       form: {
         campos: {
           montoFacturaMod: null,
-          ivaFacturaMod: null,
+          /*ivaFacturaMod: null,
           retencionIvaFacturaMod: null,
-          islrFacturaMod: null,
+          islrFacturaMod: null,*/
           fechaFacturaMod: null,
           conceptoMod: null,
           numeroControlMod: null
@@ -242,12 +242,14 @@ new Vue({
           ivaFacturaMod: {
             disabled: true,
             invalidFeedback: "",
-            state: null
+            state: null,
+            value: null
           },
           retencionIvaFacturaMod: {
             disabled: true,
             invalidFeedback: "",
-            state: null
+            state: null,
+            value: null
           },
           subtotalFacturaMod: {
             autonumeric: null,
@@ -256,7 +258,8 @@ new Vue({
           islrFacturaMod: {
             disabled: true,
             invalidFeedback: "",
-            state: null
+            state: null,
+            value: null
           },
           totalFacturaMod: {
             autonumeric: null,
@@ -424,7 +427,7 @@ new Vue({
           montoFacturaMod: {
             required
           },
-          ivaFacturaMod: {
+          /*ivaFacturaMod: {
             required: requiredIf(function() {
               return (!this.modalMasInfo.form.camposAtributos.ivaFacturaMod.disabled);
             })
@@ -438,7 +441,7 @@ new Vue({
             required: requiredIf(function() {
               return (!this.modalMasInfo.form.camposAtributos.islrFacturaMod.disabled);
             })
-          },
+          },*/
           fechaFacturaMod: {
             required: requiredIf(function() {
               return (!this.modalMasInfo.form.camposAtributos.fechaFacturaMod.disabled);
@@ -1080,7 +1083,7 @@ new Vue({
         //islr: (self.form.campos.islrFactura === null) ? null : self.form.campos.islrFactura.id
         islr: (self.form.camposAtributos.islrFactura.value === null) ? null : self.form.camposAtributos.islrFactura.value.id
       }
-console.log(parametros);
+
       self.form.botones.cancelar.disabled = true;
       self.form.botones.submit.disabled = true;
       self.form.botones.submit.html = self.form.botones.submit.htmlLoading;
@@ -1429,9 +1432,12 @@ console.log(parametros);
       self.modalMasInfo.idFactura = data.id;
       self.modalMasInfo.form.camposAtributos.numeroFacturaAnular.factura = data.numero_factura_anular;
       self.modalMasInfo.form.camposAtributos.numeroFacturaAnular.numeroControl = data.numero_control_anular;
-      self.modalMasInfo.form.campos.ivaFacturaMod = (data.id_iva === 0) ? null : {id: data.id_iva, valor: data.valor_iva};
-      self.modalMasInfo.form.campos.retencionIvaFacturaMod = (data.id_porcentaje_retencion_iva === 0) ? null : {id: data.id_porcentaje_retencion_iva, valor: data.valor_ret_iva};
-      self.modalMasInfo.form.campos.islrFacturaMod = (data.id_deduccion_islr === 0) ? null : {id: data.id_deduccion_islr, valor: data.valor_islr};
+      //self.modalMasInfo.form.campos.ivaFacturaMod = (data.id_iva === 0) ? null : {id: data.id_iva, valor: data.valor_iva};
+      self.modalMasInfo.form.camposAtributos.ivaFacturaMod.value = (data.id_iva === 0) ? null : {id: data.id_iva, valor: data.valor_iva};
+      //self.modalMasInfo.form.campos.retencionIvaFacturaMod = (data.id_porcentaje_retencion_iva === 0) ? null : {id: data.id_porcentaje_retencion_iva, valor: data.valor_ret_iva};
+      self.modalMasInfo.form.camposAtributos.retencionIvaFacturaMod.value = (data.id_porcentaje_retencion_iva === 0) ? null : {id: data.id_porcentaje_retencion_iva, valor: data.valor_ret_iva};
+      //self.modalMasInfo.form.campos.islrFacturaMod = (data.id_deduccion_islr === 0) ? null : {id: data.id_deduccion_islr, valor: data.valor_islr};
+      self.modalMasInfo.form.camposAtributos.islrFacturaMod.value = (data.id_deduccion_islr === 0) ? null : {id: data.id_deduccion_islr, valor: data.valor_islr};
       self.modalMasInfo.form.camposAtributos.subtotalFacturaMod.value = data.monto_subtotal;
       self.modalMasInfo.form.camposAtributos.totalFacturaMod.value = data.neto_cobrar;
 
@@ -1555,9 +1561,12 @@ console.log(parametros);
         id_proyecto: proyecto_id,
         id_factura: self.modalMasInfo.idFactura,
         paginar: self.paginador.paginar,
-        id_iva: (self.modalMasInfo.form.campos.ivaFacturaMod === null) ? null : self.modalMasInfo.form.campos.ivaFacturaMod.id,
-        retencion_iva: (self.modalMasInfo.form.campos.retencionIvaFacturaMod === null) ? null : self.modalMasInfo.form.campos.retencionIvaFacturaMod.id,
-        islr: (self.modalMasInfo.form.campos.islrFacturaMod === null) ? null : self.modalMasInfo.form.campos.islrFacturaMod.id
+        //id_iva: (self.modalMasInfo.form.campos.ivaFacturaMod === null) ? null : self.modalMasInfo.form.campos.ivaFacturaMod.id,
+        id_iva: (self.modalMasInfo.form.camposAtributos.ivaFacturaMod.value === null) ? null : self.modalMasInfo.form.camposAtributos.ivaFacturaMod.value.id,
+        //retencion_iva: (self.modalMasInfo.form.campos.retencionIvaFacturaMod === null) ? null : self.modalMasInfo.form.campos.retencionIvaFacturaMod.id,
+        retencion_iva: (self.modalMasInfo.form.camposAtributos.retencionIvaFacturaMod.value === null) ? null : self.modalMasInfo.form.camposAtributos.retencionIvaFacturaMod.value.id,
+        //islr: (self.modalMasInfo.form.campos.islrFacturaMod === null) ? null : self.modalMasInfo.form.campos.islrFacturaMod.id
+        islr: (self.modalMasInfo.form.camposAtributos.islrFacturaMod.value === null) ? null : self.modalMasInfo.form.camposAtributos.islrFacturaMod.value.id
       }
 
       self.modalMasInfo.botones.cancelar.disabled = true;
@@ -1719,9 +1728,12 @@ console.log(parametros);
     totalFacturaMod: function(campo){
 
       let monto = parseFloat(self.modalMasInfo.form.camposAtributos.montoFacturaMod.autonumeric.get());
-      let retIva = (self.modalMasInfo.form.campos.retencionIvaFacturaMod === null) ? 0 : parseFloat(self.modalMasInfo.form.campos.retencionIvaFacturaMod.valor);
-      let iva = (self.modalMasInfo.form.campos.ivaFacturaMod === null) ? 0 : parseFloat(self.modalMasInfo.form.campos.ivaFacturaMod.valor);
-      let islr = (self.modalMasInfo.form.campos.islrFacturaMod === null) ? 0 : parseFloat(self.modalMasInfo.form.campos.islrFacturaMod.valor);
+      //let retIva = (self.modalMasInfo.form.campos.retencionIvaFacturaMod === null) ? 0 : parseFloat(self.modalMasInfo.form.campos.retencionIvaFacturaMod.valor);
+      let retIva = (self.modalMasInfo.form.camposAtributos.retencionIvaFacturaMod.value === null) ? 0 : parseFloat(self.modalMasInfo.form.camposAtributos.retencionIvaFacturaMod.value.valor);
+      //let iva = (self.modalMasInfo.form.campos.ivaFacturaMod === null) ? 0 : parseFloat(self.modalMasInfo.form.campos.ivaFacturaMod.valor);
+      let iva = (self.modalMasInfo.form.camposAtributos.ivaFacturaMod.value === null) ? 0 : parseFloat(self.modalMasInfo.form.camposAtributos.ivaFacturaMod.value.valor);
+      //let islr = (self.modalMasInfo.form.campos.islrFacturaMod === null) ? 0 : parseFloat(self.modalMasInfo.form.campos.islrFacturaMod.valor);
+      let islr = (self.modalMasInfo.form.camposAtributos.islrFacturaMod.value === null) ? 0 : parseFloat(self.modalMasInfo.form.camposAtributos.islrFacturaMod.value.valor);
 
       let montoIVA = (monto * iva) / 100;
       let montoRetencionIVA = (montoIVA * retIva) / 100;
@@ -1730,13 +1742,15 @@ console.log(parametros);
       let subtotal = (monto + montoIVA) - montoRetencionIVA;
       let total = subtotal - montoISLR;
 
-      if(self.modalMasInfo.form.campos.ivaFacturaMod !== null && self.modalMasInfo.form.campos.retencionIvaFacturaMod !== null){
+      //if(self.modalMasInfo.form.campos.ivaFacturaMod !== null && self.modalMasInfo.form.campos.retencionIvaFacturaMod !== null){
+      if(self.modalMasInfo.form.camposAtributos.ivaFacturaMod.value !== null && self.modalMasInfo.form.camposAtributos.retencionIvaFacturaMod.value !== null){
 
         self.modalMasInfo.form.camposAtributos.subtotalFacturaMod.autonumeric.set(subtotal);
 
       }
 
-      if(self.modalMasInfo.form.campos.islrFacturaMod !== null && subtotal !== 0){
+      //if(self.modalMasInfo.form.campos.islrFacturaMod !== null && subtotal !== 0){
+      if(self.modalMasInfo.form.camposAtributos.islrFacturaMod.value !== null && subtotal !== 0){
 
         self.modalMasInfo.form.camposAtributos.totalFacturaMod.autonumeric.set(total);
 

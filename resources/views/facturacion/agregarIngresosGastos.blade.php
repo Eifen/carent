@@ -305,7 +305,7 @@
                 id="ivaFacturaMod"
                 ref="ivaFacturaMod"
                 size="sm"
-                v-model="$v.modalMasInfo.form.campos.ivaFacturaMod.$model">
+                v-model="modalMasInfo.form.camposAtributos.ivaFacturaMod.value">
                 <template v-slot:first>
                   <option :value="null" disabled="true">Seleccione una opción</option>
                 </template>
@@ -327,7 +327,7 @@
                 id="retencionIvaFacturaMod"
                 ref="retencionIvaFacturaMod"
                 size="sm"
-                v-model="$v.modalMasInfo.form.campos.retencionIvaFacturaMod.$model">
+                v-model="modalMasInfo.form.camposAtributos.retencionIvaFacturaMod.value">
                 <template v-slot:first>
                   <option :value="null" disabled="true">Seleccione una opción</option>
                 </template>
@@ -364,7 +364,7 @@
                 id="islrFacturaMod"
                 ref="islrFacturaMod"
                 size="sm"
-                v-model="$v.modalMasInfo.form.campos.islrFacturaMod.$model">
+                v-model="modalMasInfo.form.camposAtributos.islrFacturaMod.value">
                 <template v-slot:first>
                   <option :value="null" disabled="true">Seleccione una opción</option>
                 </template>
