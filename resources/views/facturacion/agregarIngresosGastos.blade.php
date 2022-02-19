@@ -646,7 +646,7 @@
                 id="ivaFactura"
                 ref="ivaFactura"
                 size="sm"
-                v-model="$v.form.campos.ivaFactura.$model">
+                v-model="form.camposAtributos.ivaFactura.value">
                 <template v-slot:first>
                   <option :value="null" disabled="true">Seleccione una opción</option>
                 </template>
@@ -668,7 +668,7 @@
                 id="retencionIvaFactura"
                 ref="retencionIvaFactura"
                 size="sm"
-                v-model="$v.form.campos.retencionIvaFactura.$model">
+                v-model="form.camposAtributos.retencionIvaFactura.value">
                 <template v-slot:first>
                   <option :value="null" disabled="true">Seleccione una opción</option>
                 </template>
@@ -705,7 +705,7 @@
                 id="islrFactura"
                 ref="islrFactura"
                 size="sm"
-                v-model="$v.form.campos.islrFactura.$model">
+                v-model="form.camposAtributos.islrFactura.value">
                 <template v-slot:first>
                   <option :value="null" disabled="true">Seleccione una opción</option>
                 </template>

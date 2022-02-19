@@ -145,7 +145,7 @@ class FacturacionModel extends Model
                                   '.$sql_cliente.'
                                   '.$sql_estatus);
 
-      return $numProyectos[0]->paginas;
+      return ($numProyectos == null) ? [] : $numProyectos[0]->paginas;
 
     }
 
@@ -172,7 +172,7 @@ class FacturacionModel extends Model
                          AND p.id_estatus = e.valor
                          AND e.tabla = "tbl_proyecto"');
 
-      return $sql[0];
+      return ($sql == null) ? [] : $sql[0];
 
     }
 
@@ -272,7 +272,7 @@ class FacturacionModel extends Model
                                 AND fp.id_estatus = 1
                              ) AS monto_otros_gastos');
 
-      return $sql[0];
+      return ($sql == null) ? [] : $sql[0];
 
     }
 
@@ -374,17 +374,14 @@ class FacturacionModel extends Model
 
     function cantidadPaginasFacturasCargadas($paginar, $id_proyecto){
 
-      $numFacturas = DB::select('SELECT CEILING( COUNT(1) / '.$paginar.') paginas
-                                 FROM tbl_factura_proyecto fp,
-                                      tbl_concepto_factura cf,
-                                      tbl_usuario fu
-                                 WHERE fp.id_concepto_factura = cf.id
-                                 AND fp.id_facturador = fu.id
-                                 AND fp.id_proyecto = ?
-                                 AND fp.id_estatus = 1
-                                 ORDER BY fp.id DESC', [$id_proyecto]);
+     $numFacturas = DB::select('SELECT CEILING( COUNT(1) / '.$paginar.') paginas
+                                FROM tbl_factura_proyecto fp
+                                WHERE fp.id_proyecto = ?
+                                AND fp.id_estatus = 1
+                                GROUP BY fp.id
+                                ORDER BY fp.id DESC', [$id_proyecto]);
 
-      return $numFacturas[0]->paginas;
+      return ($numFacturas == null) ? 0 : $numFacturas[0]->paginas;
 
     }
 
