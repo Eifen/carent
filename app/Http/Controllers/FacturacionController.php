@@ -284,7 +284,8 @@ class FacturacionController extends Controller
 
           return [
             "message" => "Error al tratar de actualizar esta Factura/Gasto!",
-            "response" => false
+            "response" => false,
+            "param" => $parametros
           ];
 
         }
