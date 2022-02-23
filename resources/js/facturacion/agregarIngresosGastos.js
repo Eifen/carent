@@ -79,9 +79,9 @@ new Vue({
         numeroFactura: null,
         fechaFactura: null,
         montoFactura: null,
-        ivaFactura: null,
+        /*ivaFactura: null,
         retencionIvaFactura: null,
-        islrFactura: null,
+        islrFactura: null,*/
         concepto: null,
         numeroControl: null,
         numeroFacturaAnular: null
@@ -122,12 +122,14 @@ new Vue({
         ivaFactura: {
           disabled: true,
           invalidFeedback: "",
-          state: null
+          state: null,
+          value: null
         },
         retencionIvaFactura: {
           disabled: true,
           invalidFeedback: "",
-          state: null
+          state: null,
+          value: null
         },
         subtotalFactura: {
           autonumeric: null,
@@ -136,7 +138,8 @@ new Vue({
         islrFactura: {
           disabled: true,
           invalidFeedback: "",
-          state: null
+          state: null,
+          value: null
         },
         totalFactura: {
           autonumeric: null,
@@ -218,9 +221,9 @@ new Vue({
       form: {
         campos: {
           montoFacturaMod: null,
-          ivaFacturaMod: null,
+          /*ivaFacturaMod: null,
           retencionIvaFacturaMod: null,
-          islrFacturaMod: null,
+          islrFacturaMod: null,*/
           fechaFacturaMod: null,
           conceptoMod: null,
           numeroControlMod: null
@@ -239,12 +242,14 @@ new Vue({
           ivaFacturaMod: {
             disabled: true,
             invalidFeedback: "",
-            state: null
+            state: null,
+            value: null
           },
           retencionIvaFacturaMod: {
             disabled: true,
             invalidFeedback: "",
-            state: null
+            state: null,
+            value: null
           },
           subtotalFacturaMod: {
             autonumeric: null,
@@ -253,7 +258,8 @@ new Vue({
           islrFacturaMod: {
             disabled: true,
             invalidFeedback: "",
-            state: null
+            state: null,
+            value: null
           },
           totalFacturaMod: {
             autonumeric: null,
@@ -376,7 +382,7 @@ new Vue({
             return (!this.form.camposAtributos.montoFactura.disabled);
           })
         },
-        ivaFactura: {
+        /*ivaFactura: {
           required: requiredIf(function() {
             return (!this.form.camposAtributos.ivaFactura.disabled);
           })
@@ -390,7 +396,7 @@ new Vue({
           required: requiredIf(function() {
             return (!this.form.camposAtributos.islrFactura.disabled);
           })
-        },
+        },*/
         fechaFactura: {
           required: requiredIf(function() {
             return (!this.form.camposAtributos.fechaFactura.disabled);
@@ -421,7 +427,7 @@ new Vue({
           montoFacturaMod: {
             required
           },
-          ivaFacturaMod: {
+          /*ivaFacturaMod: {
             required: requiredIf(function() {
               return (!this.modalMasInfo.form.camposAtributos.ivaFacturaMod.disabled);
             })
@@ -435,7 +441,7 @@ new Vue({
             required: requiredIf(function() {
               return (!this.modalMasInfo.form.camposAtributos.islrFacturaMod.disabled);
             })
-          },
+          },*/
           fechaFacturaMod: {
             required: requiredIf(function() {
               return (!this.modalMasInfo.form.camposAtributos.fechaFacturaMod.disabled);
@@ -638,9 +644,12 @@ new Vue({
           self.form.camposAtributos.totalFactura.value = null;
           self.form.camposAtributos.totalFactura.autonumeric.set(0);
           self.form.campos.numeroFacturaAnular = null;
-          self.form.campos.ivaFactura = null;
-          self.form.campos.retencionIvaFactura = null;
-          self.form.campos.islrFactura  = null;
+          //self.form.campos.ivaFactura = null;
+          self.form.camposAtributos.ivaFactura.value = null;
+          //self.form.campos.retencionIvaFactura = null;
+          self.form.camposAtributos.retencionIvaFactura.value = null;
+          //self.form.campos.islrFactura  = null;
+          self.form.camposAtributos.islrFactura.value = null;
 
           Object.keys(self.form.camposAtributos).forEach((indice, i) => {
 
@@ -901,9 +910,12 @@ new Vue({
         self.form.campos.numeroControl = null;
         self.form.camposAtributos.observaciones.value = "";
         self.form.campos.montoFactura = null;
-        self.form.campos.ivaFactura = null;
-        self.form.campos.retencionIvaFactura = null;
-        self.form.campos.islrFactura = null;
+        //self.form.campos.ivaFactura = null;
+        self.form.camposAtributos.ivaFactura.value = null;
+        //self.form.campos.retencionIvaFactura = null;
+        self.form.camposAtributos.retencionIvaFactura.value = null;
+        //self.form.campos.islrFactura = null;
+        self.form.camposAtributos.islrFactura.value = null;
         self.form.camposAtributos.montoFactura.autonumeric.set(0);
         self.form.camposAtributos.subtotalFactura.autonumeric.set(0);
         self.form.camposAtributos.totalFactura.autonumeric.set(0);
@@ -1064,9 +1076,12 @@ new Vue({
         id_proyecto: proyecto_id,
         id_factura_anular: self.form.campos.numeroFacturaAnular,
         paginar: self.paginador.paginar,
-        id_iva: (self.form.campos.ivaFactura === null) ? null : self.form.campos.ivaFactura.id,
-        retencion_iva: (self.form.campos.retencionIvaFactura === null) ? null : self.form.campos.retencionIvaFactura.id,
-        islr: (self.form.campos.islrFactura === null) ? null : self.form.campos.islrFactura.id
+        //id_iva: (self.form.campos.ivaFactura === null) ? null : self.form.campos.ivaFactura.id,
+        id_iva: (self.form.camposAtributos.ivaFactura.value === null) ? null : self.form.camposAtributos.ivaFactura.value.id,
+        //retencion_iva: (self.form.campos.retencionIvaFactura === null) ? null : self.form.campos.retencionIvaFactura.id,
+        retencion_iva: (self.form.camposAtributos.retencionIvaFactura.value === null) ? null : self.form.camposAtributos.retencionIvaFactura.value.id,
+        //islr: (self.form.campos.islrFactura === null) ? null : self.form.campos.islrFactura.id
+        islr: (self.form.camposAtributos.islrFactura.value === null) ? null : self.form.camposAtributos.islrFactura.value.id
       }
 
       self.form.botones.cancelar.disabled = true;
@@ -1103,9 +1118,12 @@ new Vue({
           self.form.camposAtributos.totalFactura.value = null;
           self.form.camposAtributos.totalFactura.autonumeric.set(0);
           self.form.campos.numeroFacturaAnular = null;
-          self.form.campos.ivaFactura = null;
-          self.form.campos.retencionIvaFactura = null;
-          self.form.campos.islrFactura  = null;
+          //self.form.campos.ivaFactura = null;
+          self.form.camposAtributos.ivaFactura.value = null;
+          //self.form.campos.retencionIvaFactura = null;
+          self.form.camposAtributos.retencionIvaFactura.value = null;
+          //self.form.campos.islrFactura = null;
+          self.form.camposAtributos.islrFactura.value = null;
 
           self.form.info.monto_facturado = self.simboloMoneda+response.data.facturado_proyecto.monto_facturado;
           self.form.info.monto_gastos = self.simboloMoneda+response.data.facturado_proyecto.monto_gasto;
@@ -1281,9 +1299,12 @@ new Vue({
 
       const neto_cobrar = factura.subtotal - factura.retencion_iva - factura.deduccion_islr;
 
-      self.form.campos.ivaFactura = (factura.id_iva === 0) ? null : {id: factura.id_iva, valor: factura.valor_iva};
-      self.form.campos.retencionIvaFactura = (factura.id_porcentaje_retencion_iva === 0) ? null : {id: factura.id_porcentaje_retencion_iva, valor: factura.valor_ret_iva};
-      self.form.campos.islrFactura = (factura.id_deduccion_islr === 0) ? null : {id: factura.id_deduccion_islr, valor: factura.valor_islr};
+      //self.form.campos.ivaFactura = (factura.id_iva === 0) ? null : {id: factura.id_iva, valor: factura.valor_iva};
+      self.form.camposAtributos.ivaFactura.value = (factura.id_iva === 0) ? null : {id: factura.id_iva, valor: factura.valor_iva};
+      //self.form.campos.retencionIvaFactura = (factura.id_porcentaje_retencion_iva === 0) ? null : {id: factura.id_porcentaje_retencion_iva, valor: factura.valor_ret_iva};
+      self.form.camposAtributos.retencionIvaFactura.value = (factura.id_porcentaje_retencion_iva === 0) ? null : {id: factura.id_porcentaje_retencion_iva, valor: factura.valor_ret_iva};
+      //self.form.campos.islrFactura = (factura.id_deduccion_islr === 0) ? null : {id: factura.id_deduccion_islr, valor: factura.valor_islr};
+      self.form.camposAtributos.islrFactura.value = (factura.id_deduccion_islr === 0) ? null : {id: factura.id_deduccion_islr, valor: factura.valor_islr};
       self.form.camposAtributos.subtotalFactura.autonumeric.set(factura.subtotal);
       self.form.camposAtributos.totalFactura.autonumeric.set(neto_cobrar);
 
@@ -1411,9 +1432,12 @@ new Vue({
       self.modalMasInfo.idFactura = data.id;
       self.modalMasInfo.form.camposAtributos.numeroFacturaAnular.factura = data.numero_factura_anular;
       self.modalMasInfo.form.camposAtributos.numeroFacturaAnular.numeroControl = data.numero_control_anular;
-      self.modalMasInfo.form.campos.ivaFacturaMod = (data.id_iva === 0) ? null : {id: data.id_iva, valor: data.valor_iva};
-      self.modalMasInfo.form.campos.retencionIvaFacturaMod = (data.id_porcentaje_retencion_iva === 0) ? null : {id: data.id_porcentaje_retencion_iva, valor: data.valor_ret_iva};
-      self.modalMasInfo.form.campos.islrFacturaMod = (data.id_deduccion_islr === 0) ? null : {id: data.id_deduccion_islr, valor: data.valor_islr};
+      //self.modalMasInfo.form.campos.ivaFacturaMod = (data.id_iva === 0) ? null : {id: data.id_iva, valor: data.valor_iva};
+      self.modalMasInfo.form.camposAtributos.ivaFacturaMod.value = (data.id_iva === 0) ? null : {id: data.id_iva, valor: data.valor_iva};
+      //self.modalMasInfo.form.campos.retencionIvaFacturaMod = (data.id_porcentaje_retencion_iva === 0) ? null : {id: data.id_porcentaje_retencion_iva, valor: data.valor_ret_iva};
+      self.modalMasInfo.form.camposAtributos.retencionIvaFacturaMod.value = (data.id_porcentaje_retencion_iva === 0) ? null : {id: data.id_porcentaje_retencion_iva, valor: data.valor_ret_iva};
+      //self.modalMasInfo.form.campos.islrFacturaMod = (data.id_deduccion_islr === 0) ? null : {id: data.id_deduccion_islr, valor: data.valor_islr};
+      self.modalMasInfo.form.camposAtributos.islrFacturaMod.value = (data.id_deduccion_islr === 0) ? null : {id: data.id_deduccion_islr, valor: data.valor_islr};
       self.modalMasInfo.form.camposAtributos.subtotalFacturaMod.value = data.monto_subtotal;
       self.modalMasInfo.form.camposAtributos.totalFacturaMod.value = data.neto_cobrar;
 
@@ -1537,9 +1561,12 @@ new Vue({
         id_proyecto: proyecto_id,
         id_factura: self.modalMasInfo.idFactura,
         paginar: self.paginador.paginar,
-        id_iva: (self.modalMasInfo.form.campos.ivaFacturaMod === null) ? null : self.modalMasInfo.form.campos.ivaFacturaMod.id,
-        retencion_iva: (self.modalMasInfo.form.campos.retencionIvaFacturaMod === null) ? null : self.modalMasInfo.form.campos.retencionIvaFacturaMod.id,
-        islr: (self.modalMasInfo.form.campos.islrFacturaMod === null) ? null : self.modalMasInfo.form.campos.islrFacturaMod.id
+        //id_iva: (self.modalMasInfo.form.campos.ivaFacturaMod === null) ? null : self.modalMasInfo.form.campos.ivaFacturaMod.id,
+        id_iva: (self.modalMasInfo.form.camposAtributos.ivaFacturaMod.value === null) ? null : self.modalMasInfo.form.camposAtributos.ivaFacturaMod.value.id,
+        //retencion_iva: (self.modalMasInfo.form.campos.retencionIvaFacturaMod === null) ? null : self.modalMasInfo.form.campos.retencionIvaFacturaMod.id,
+        retencion_iva: (self.modalMasInfo.form.camposAtributos.retencionIvaFacturaMod.value === null) ? null : self.modalMasInfo.form.camposAtributos.retencionIvaFacturaMod.value.id,
+        //islr: (self.modalMasInfo.form.campos.islrFacturaMod === null) ? null : self.modalMasInfo.form.campos.islrFacturaMod.id
+        islr: (self.modalMasInfo.form.camposAtributos.islrFacturaMod.value === null) ? null : self.modalMasInfo.form.camposAtributos.islrFacturaMod.value.id
       }
 
       self.modalMasInfo.botones.cancelar.disabled = true;
@@ -1666,9 +1693,12 @@ new Vue({
     totalFactura: function(campo){
 
       let monto = parseFloat(self.form.camposAtributos.montoFactura.autonumeric.get());
-      let iva = (self.form.campos.ivaFactura === null) ? 0 : parseFloat(self.form.campos.ivaFactura.valor);
-      let retIva = (self.form.campos.retencionIvaFactura === null) ? 0 : parseFloat(self.form.campos.retencionIvaFactura.valor);
-      let islr = (self.form.campos.islrFactura === null) ? 0 : parseFloat(self.form.campos.islrFactura.valor);
+      //let iva = (self.form.campos.ivaFactura === null) ? 0 : parseFloat(self.form.campos.ivaFactura.valor);
+      let iva = (self.form.camposAtributos.ivaFactura.value === null) ? 0 : parseFloat(self.form.camposAtributos.ivaFactura.value.valor);
+      //let retIva = (self.form.campos.retencionIvaFactura === null) ? 0 : parseFloat(self.form.campos.retencionIvaFactura.valor);
+      let retIva = (self.form.camposAtributos.retencionIvaFactura.value === null) ? 0 : parseFloat(self.form.camposAtributos.retencionIvaFactura.value.valor);
+      //let islr = (self.form.campos.islrFactura === null) ? 0 : parseFloat(self.form.campos.islrFactura.valor);
+      let islr = (self.form.camposAtributos.islrFactura.value === null) ? 0 : parseFloat(self.form.camposAtributos.islrFactura.value.valor);
 
       let montoIVA = (monto * iva) / 100;
       let montoRetencionIVA = (montoIVA * retIva) / 100;
@@ -1677,13 +1707,15 @@ new Vue({
       let subtotal = (monto + montoIVA) - montoRetencionIVA;
       let total = subtotal - montoISLR;
 
-      if(self.form.campos.ivaFactura !== null && self.form.campos.retencionIvaFactura !== null){
+      //if(self.form.campos.ivaFactura !== null && self.form.campos.retencionIvaFactura !== null){
+      if(self.form.camposAtributos.ivaFactura !== null && self.form.campos.retencionIvaFactura !== null){
 
         self.form.camposAtributos.subtotalFactura.autonumeric.set(subtotal);
 
       }
 
-      if(self.form.campos.islrFactura !== null && subtotal !== 0){
+      //if(self.form.campos.islrFactura !== null && subtotal !== 0){
+      if(self.form.camposAtributos.islrFactura !== null && subtotal !== 0){
 
         self.form.camposAtributos.totalFactura.autonumeric.set(total);
 
@@ -1696,9 +1728,12 @@ new Vue({
     totalFacturaMod: function(campo){
 
       let monto = parseFloat(self.modalMasInfo.form.camposAtributos.montoFacturaMod.autonumeric.get());
-      let retIva = (self.modalMasInfo.form.campos.retencionIvaFacturaMod === null) ? 0 : parseFloat(self.modalMasInfo.form.campos.retencionIvaFacturaMod.valor);
-      let iva = (self.modalMasInfo.form.campos.ivaFacturaMod === null) ? 0 : parseFloat(self.modalMasInfo.form.campos.ivaFacturaMod.valor);
-      let islr = (self.modalMasInfo.form.campos.islrFacturaMod === null) ? 0 : parseFloat(self.modalMasInfo.form.campos.islrFacturaMod.valor);
+      //let retIva = (self.modalMasInfo.form.campos.retencionIvaFacturaMod === null) ? 0 : parseFloat(self.modalMasInfo.form.campos.retencionIvaFacturaMod.valor);
+      let retIva = (self.modalMasInfo.form.camposAtributos.retencionIvaFacturaMod.value === null) ? 0 : parseFloat(self.modalMasInfo.form.camposAtributos.retencionIvaFacturaMod.value.valor);
+      //let iva = (self.modalMasInfo.form.campos.ivaFacturaMod === null) ? 0 : parseFloat(self.modalMasInfo.form.campos.ivaFacturaMod.valor);
+      let iva = (self.modalMasInfo.form.camposAtributos.ivaFacturaMod.value === null) ? 0 : parseFloat(self.modalMasInfo.form.camposAtributos.ivaFacturaMod.value.valor);
+      //let islr = (self.modalMasInfo.form.campos.islrFacturaMod === null) ? 0 : parseFloat(self.modalMasInfo.form.campos.islrFacturaMod.valor);
+      let islr = (self.modalMasInfo.form.camposAtributos.islrFacturaMod.value === null) ? 0 : parseFloat(self.modalMasInfo.form.camposAtributos.islrFacturaMod.value.valor);
 
       let montoIVA = (monto * iva) / 100;
       let montoRetencionIVA = (montoIVA * retIva) / 100;
@@ -1707,13 +1742,15 @@ new Vue({
       let subtotal = (monto + montoIVA) - montoRetencionIVA;
       let total = subtotal - montoISLR;
 
-      if(self.modalMasInfo.form.campos.ivaFacturaMod !== null && self.modalMasInfo.form.campos.retencionIvaFacturaMod !== null){
+      //if(self.modalMasInfo.form.campos.ivaFacturaMod !== null && self.modalMasInfo.form.campos.retencionIvaFacturaMod !== null){
+      if(self.modalMasInfo.form.camposAtributos.ivaFacturaMod.value !== null && self.modalMasInfo.form.camposAtributos.retencionIvaFacturaMod.value !== null){
 
         self.modalMasInfo.form.camposAtributos.subtotalFacturaMod.autonumeric.set(subtotal);
 
       }
 
-      if(self.modalMasInfo.form.campos.islrFacturaMod !== null && subtotal !== 0){
+      //if(self.modalMasInfo.form.campos.islrFacturaMod !== null && subtotal !== 0){
+      if(self.modalMasInfo.form.camposAtributos.islrFacturaMod.value !== null && subtotal !== 0){
 
         self.modalMasInfo.form.camposAtributos.totalFacturaMod.autonumeric.set(total);
 
