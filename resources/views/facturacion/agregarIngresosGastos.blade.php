@@ -305,7 +305,7 @@
                 id="ivaFacturaMod"
                 ref="ivaFacturaMod"
                 size="sm"
-                v-model="$v.modalMasInfo.form.campos.ivaFacturaMod.$model">
+                v-model="modalMasInfo.form.camposAtributos.ivaFacturaMod.value">
                 <template v-slot:first>
                   <option :value="null" disabled="true">Seleccione una opción</option>
                 </template>
@@ -327,7 +327,7 @@
                 id="retencionIvaFacturaMod"
                 ref="retencionIvaFacturaMod"
                 size="sm"
-                v-model="$v.modalMasInfo.form.campos.retencionIvaFacturaMod.$model">
+                v-model="modalMasInfo.form.camposAtributos.retencionIvaFacturaMod.value">
                 <template v-slot:first>
                   <option :value="null" disabled="true">Seleccione una opción</option>
                 </template>
@@ -364,7 +364,7 @@
                 id="islrFacturaMod"
                 ref="islrFacturaMod"
                 size="sm"
-                v-model="$v.modalMasInfo.form.campos.islrFacturaMod.$model">
+                v-model="modalMasInfo.form.camposAtributos.islrFacturaMod.value">
                 <template v-slot:first>
                   <option :value="null" disabled="true">Seleccione una opción</option>
                 </template>
@@ -646,7 +646,7 @@
                 id="ivaFactura"
                 ref="ivaFactura"
                 size="sm"
-                v-model="$v.form.campos.ivaFactura.$model">
+                v-model="form.camposAtributos.ivaFactura.value">
                 <template v-slot:first>
                   <option :value="null" disabled="true">Seleccione una opción</option>
                 </template>
@@ -668,7 +668,7 @@
                 id="retencionIvaFactura"
                 ref="retencionIvaFactura"
                 size="sm"
-                v-model="$v.form.campos.retencionIvaFactura.$model">
+                v-model="form.camposAtributos.retencionIvaFactura.value">
                 <template v-slot:first>
                   <option :value="null" disabled="true">Seleccione una opción</option>
                 </template>
@@ -705,7 +705,7 @@
                 id="islrFactura"
                 ref="islrFactura"
                 size="sm"
-                v-model="$v.form.campos.islrFactura.$model">
+                v-model="form.camposAtributos.islrFactura.value">
                 <template v-slot:first>
                   <option :value="null" disabled="true">Seleccione una opción</option>
                 </template>
