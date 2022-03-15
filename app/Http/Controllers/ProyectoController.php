@@ -400,7 +400,7 @@ class ProyectoController extends Controller
 
       $id_usuario = $request->session()->get('usuario_id');
       $infoUsuario = $modelo->detalleInicioUsuario($id_usuario);
-      $empleados = $modelo->empleadosProyecto($id_proyecto,$infoUsuario->id_division);
+      $empleados = $modelo->empleadosProyecto($id_proyecto,$infoUsuario->id_division,$id_proyecto_division);
 
       //if($analis["response"]){
 
