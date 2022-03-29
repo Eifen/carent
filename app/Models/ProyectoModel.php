@@ -993,7 +993,7 @@ class ProyectoModel extends Model
                                   (SELECT a.id_estatus FROM tbl_proyecto_analista a WHERE a.id_proyecto = '.$id_proyecto.' AND a.id_analista = u.id AND a.id_proyecto_division = '.$id_proyecto_division.') id_estatus
                           FROM tbl_usuario u,
                                tbl_cargo_empleado c
-                          WHERE u.id_division = '.$id_division.'
+                          WHERE (u.id_division = '.$id_division.' OR u.id = (SELECT pa.id_analista FROM tbl_proyecto_analista pa WHERE pa.id_proyecto_division = '.$id_proyecto_division.' AND pa.id_analista = u.id AND pa.id_proyecto = '.$id_proyecto.'))
                           AND c.id = u.id_cargo
                           AND (u.id_estatus = 1 OR (SELECT SUM(a.horas_asignadas) FROM tbl_proyecto_analista a WHERE a.id_proyecto = '.$id_proyecto.' AND a.id_analista = u.id AND a.id_proyecto_division = '.$id_proyecto_division.') > 0)
                           ORDER BY u.id_cargo DESC, nombre DESC');
@@ -1048,7 +1048,7 @@ class ProyectoModel extends Model
                "response" => false,
                "message" => "Un analista ya posee horas cargadas, no puede ser eliminado."
               );
-              return $response;
+              return $horasAnalista;
             }            
           }
         }        
