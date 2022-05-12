@@ -173,14 +173,14 @@ new Vue({
 
         self.proyectosD = response.data.proyectos;
         for (var i = 0; i < self.proyectosD.length; i++) {
-          if(self.proyectosD[i].permiso > 0 && self.proyectosD[i].id_estatus === 1){
+          if(self.proyectosD[i].permisoCrear > 0 && self.proyectosD[i].id_estatus === 1){
             self.proyectos = self.proyectos.concat(self.proyectosD[i]);
             self.permisoCrear = true;
           }
-          if (self.proyectosD[i].permiso === 1 || self.proyectosD[i].permiso === 2 || self.proyectosD[i].permiso === 3) {
+          if (self.proyectosD[i].permisoActualizar === 1 || self.proyectosD[i].permisoActualizar === 2 || self.proyectosD[i].permisoActualizar === 3) {
             self.permisoActualizar = true;
           }
-          if (self.proyectosD[i].permiso === 1 || self.proyectosD[i].permiso === 2) {
+          if (self.proyectosD[i].permisoVer === 1 || self.proyectosD[i].permisoVer === 2) {
             self.permisoVer = true;
           }
         }
@@ -353,23 +353,23 @@ new Vue({
         for (var i = 0; i < self.proyectosD.length; i++) {
           for (var j = 0; j < self.proyectoBusqueda.length; j++) {
             if (self.proyectosD[i].id_proyecto == self.proyectoBusqueda[j].id_proyecto && self.proyectoBusqueda[j].id_estatus === 1) {
-              if(self.proyectosD[i].permiso > 0){
+              if(self.proyectosD[i].permisoCrear > 0){
                 self.proyectos = self.proyectos.concat(self.proyectosD[i]);
                 self.permisoCrear = true;
               }
-              if (self.proyectosD[i].permiso === 1 || self.proyectosD[i].permiso === 2 || self.proyectosD[i].permiso === 3) {
+              if (self.proyectosD[i].permisoActualizar === 1 || self.proyectosD[i].permisoActualizar === 2 || self.proyectosD[i].permisoActualizar === 3) {
                 self.permisoActualizar = true;
               }
-              if (self.proyectosD[i].permiso === 1 || self.proyectosD[i].permiso === 2) {
+              if (self.proyectosD[i].permisoVer === 1 || self.proyectosD[i].permisoVer === 2) {
                 self.permisoVer = true;
               }
             }
             if (self.proyectosD[i].id_proyecto == self.proyectoBusqueda[j].id_proyecto && self.proyectoBusqueda[j].id_estatus === 2) {
-              if(self.proyectosD[i].permiso > 0){
+              if(self.proyectosD[i].permisoCrear > 0){
                 self.proyectos = self.proyectos.concat(self.proyectosD[i]);
                 self.permisoCrear = true;
               }
-              if (self.proyectosD[i].permiso === 1 || self.proyectosD[i].permiso === 2) {
+              if (self.proyectosD[i].permisoVer === 1 || self.proyectosD[i].permisoVer === 2) {
                 self.permisoVer = true;
               }
             }
