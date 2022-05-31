@@ -669,31 +669,37 @@ class ProyectoModel extends Model
                         ORDER BY cliente ASC');*/
 
     $proyecto_division = DB::select('SELECT pd.id AS id_proyecto_division,
-                                            (SELECT p.id FROM tbl_proyecto p WHERE p.id = pd.id_proyecto)id_proyecto,
-                                            (SELECT p.id_estatus FROM tbl_proyecto p WHERE p.id = pd.id_proyecto)id_estatus,
+                                            p.id AS id_proyecto,
+                                            p.id_estatus AS id_estatus,
                                             (SELECT d.descripcion FROM tbl_division d WHERE d.id = pd.id_division)division,
                                             pd.id_division,
-                                            (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = (SELECT p.id_cliente FROM tbl_proyecto p WHERE p.id = pd.id_proyecto))cliente,
-                                            (SELECT UPPER(p.descripcion) FROM tbl_proyecto p WHERE p.id = pd.id_proyecto)proyecto,
+                                            (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = p.id_cliente)cliente,
+                                            UPPER(p.descripcion) AS proyecto,
                                             (SELECT pa.horas_asignadas FROM tbl_proyecto_analista pa WHERE pa.id_proyecto_division = pd.id AND pa.id_analista = '.$id_usuario.') horas_asignadas,
                                             (SELECT pa.id FROM tbl_proyecto_analista pa WHERE pa.id_proyecto_division = pd.id AND pa.id_analista = '.$id_usuario.') id_proy_analista
-                                     FROM tbl_proyecto_divisiones pd
+                                     FROM tbl_proyecto_divisiones pd,
+                                     tbl_proyecto p
                                      WHERE pd.id_gerente = '.$id_usuario.'
                                      AND pd.id_division = '.$division.'
-                                   ');
+                                     AND p.id = pd.id_proyecto
+                                     AND p.id_estatus = 1
 
+                                   ');
     // FALTAN LOS PERMISOS
 
     $proyecto_analistas = DB::select('SELECT pa.id AS id_proy_analista,
                                              pa.id_proyecto_division,
                                              pa.horas_asignadas,
                                              (SELECT d.descripcion FROM tbl_division d WHERE d.id = (SELECT pd.id_division FROM tbl_proyecto_divisiones pd WHERE pd.id = pa.id_proyecto_division))division,
-                                             (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = (SELECT p.id_cliente FROM tbl_proyecto p WHERE p.id = pa.id_proyecto))cliente,
-                                             (SELECT UPPER(p.descripcion) FROM tbl_proyecto p WHERE p.id = pa.id_proyecto)proyecto,
-                                             (SELECT p.id FROM tbl_proyecto p WHERE p.id = pa.id_proyecto)id_proyecto,
-                                             (SELECT p.id_estatus FROM tbl_proyecto p WHERE p.id = pa.id_proyecto)id_estatus
-                                     FROM tbl_proyecto_analista pa
+                                             (SELECT c.razon_social FROM tbl_cliente c WHERE c.id = p.id_cliente)cliente,
+                                             UPPER(p.descripcion) AS proyecto,
+                                             p.id AS id_proyecto,
+                                             p.id_estatus AS id_estatus
+                                     FROM tbl_proyecto_analista pa,
+                                     tbl_proyecto p
                                      WHERE pa.id_analista = '.$id_usuario.'
+                                     AND p.id = pa.id_proyecto
+                                     AND p.id_estatus = 1
                                    ');
 
     // FALTAN LOS PERMISOS
@@ -706,8 +712,8 @@ class ProyectoModel extends Model
                                    (SELECT d.descripcion FROM tbl_division d WHERE d.id = '.$division.')division,
                                    p.id_estatus
                            FROM tbl_proyecto p
-                           WHERE p.id_socio = '.$id_usuario.'
-                           OR p.id_gerente = '.$id_usuario.'
+                           WHERE p.id_estatus = 1
+                           AND (p.id_socio = '.$id_usuario.' OR p.id_gerente = '.$id_usuario.')
                          ');
 
     // FALTAN LOS PERMISOS
