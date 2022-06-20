@@ -173,7 +173,7 @@ new Vue({
 
         self.proyectosD = response.data.proyectos;
         for (var i = 0; i < self.proyectosD.length; i++) {
-          if(self.proyectosD[i].permisoCrear > 0 && self.proyectosD[i].id_estatus === 1){
+          if(self.proyectosD[i].id_estatus === 1){
             self.proyectos = self.proyectos.concat(self.proyectosD[i]);
             self.permisoCrear = true;
           }
