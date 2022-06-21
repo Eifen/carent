@@ -39,7 +39,7 @@ new Vue({
         recoveryPass: {
           disabled: true,
           html: "",
-          htmlInit: "Olvidé mi contraseñassss",
+          htmlInit: "Olvidé mi contraseña",
           htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
           show: true
         },
