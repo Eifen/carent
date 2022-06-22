@@ -717,6 +717,7 @@ class ProyectoModel extends Model
                          ');
 
     // FALTAN LOS PERMISOS
+
     $proyectosAsignados = [];
     $guardado = 0;
     $guardado1 = 0;
@@ -737,6 +738,7 @@ class ProyectoModel extends Model
                                         'permisoVer' => 0
                                        ); 
       }
+
       for ($i=0; $i < count($proyecto_analistas); $i++) { 
         for ($j=0; $j < count($proyectosAsignados); $j++) { 
           if ($proyectosAsignados[$j]["id_proyecto_division"] === $proyecto_analistas[$i]->id_proyecto_division) {
@@ -808,12 +810,39 @@ class ProyectoModel extends Model
                                                )
           );
         }
+        $guardado1 = 0;
       }
     }
 
+    $proyectosUsuario = [];
+    $entre = 0;
+    for ($i=0; $i < count($proyectosAsignados) ; $i++) { 
+      if ($proyectosAsignados[$i]["horas_asignadas"] > 0){
+        $entre = 1;
+      }elseif ($proyectosAsignados[$i]["permisoActualizar"] > 0 || $proyectosAsignados[$i]["permisoVer"] > 0) {
+        $entre = 1;
+      }
+      if($entre === 1){
+        array_push($proyectosUsuario, array('id_proyecto' => $proyectosAsignados[$i]["id_proyecto"],
+                                      'proyecto' => $proyectosAsignados[$i]["proyecto"],
+                                      'cliente' => $proyectosAsignados[$i]["cliente"],
+                                      'horas_asignadas' => $proyectosAsignados[$i]["horas_asignadas"],
+                                      'id_estatus' => $proyectosAsignados[$i]["id_estatus"],
+                                      'division' => $proyectosAsignados[$i]["division"],
+                                      'id_proy_analista' => $proyectosAsignados[$i]["id_proy_analista"],
+                                      'id_proyecto_division' => $proyectosAsignados[$i]["id_proyecto_division"],
+                                      'permiso' => $proyectosAsignados[$i]["permiso"],
+                                      'permisoCrear' => $proyectosAsignados[$i]["permisoCrear"],
+                                      'permisoActualizar' => $proyectosAsignados[$i]["permisoActualizar"],
+                                      'permisoVer' => $proyectosAsignados[$i]["permisoVer"],
+                                     )
+                                     ); 
+      }
+      $entre = 0;   
+    }
 
-    if(count($proyectosAsignados) > 0){
-      return $proyectosAsignados;
+    if(count($proyectosUsuario) > 0){
+      return $proyectosUsuario;
     }else{
       return array();
     }
