@@ -216,6 +216,7 @@
             </div>
           </div>
         </div>
+
         <div id="modal-asignar-menu" class="modal fade" tabindex="-1" role="dialog" v-cloak>
           <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
@@ -253,10 +254,10 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <input class="custom-control-input"
                                type="checkbox"
-                               :id="submenu.descripcion" 
+                               :id="submenu.descripcion"
                                v-model = "submenu.permiso"
                                v-on:change="Menu(submenu.id, submenu.C, submenu.R, submenu.U, submenu.D, $event)">
-                        <label class="custom-control-label" :for="submenu.descripcion"></label>                
+                        <label class="custom-control-label" :for="submenu.descripcion"></label>
                     </div>
                   </div>
                 </form>
