@@ -106,9 +106,6 @@ html {
 #app .wrapper-forms form .multiselect .multiselect__tags .multiselect__input::-moz-placeholder {
   color: #495057;
 }
-#app .wrapper-forms form .multiselect .multiselect__tags .multiselect__input:-ms-input-placeholder {
-  color: #495057;
-}
 #app .wrapper-forms form .multiselect .multiselect__tags .multiselect__input::placeholder {
   color: #495057;
 }
