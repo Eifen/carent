@@ -26,6 +26,10 @@ Route::get('/logout', 'LoginController@logout');
 Route::get('/cambiarClave', 'InicioController@cambiarClave')/*->middleware('usuario.session')*/;
 Route::post('/guardarNuevaClave', 'InicioController@guardarNuevaClave');
 
+/* Módulo de Usuario */
+Route::get('/usuarios', function() {return view('usuario/index');})->middleware('usuario.session');
+
+
 
 Route::get('/formNuevoUsuario', function() {return view('usuario/nuevoUsuario');})->middleware('usuario.session');
 Route::get('/dataInicialNuevoUsuario','UsuarioController@dataInicialNuevoUsuario')->middleware('usuario.session');
