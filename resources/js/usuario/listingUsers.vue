@@ -35,3 +35,5 @@
     }
 
 </script>
+
+<style lang="less" scoped src="../../less/usuario/listingUsers.less"></style>

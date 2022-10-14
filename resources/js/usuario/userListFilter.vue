@@ -68,8 +68,8 @@
 
             buscar: function(e){
 
-                self.alert.mostrar = false;
-                return
+                //self.alert.mostrar = false;
+
                 if(self.formSearch.inputSearch.value.trim() !== ""){
 
                     self.formSearch.submit.html = '<i class="fas fa-cog fa-spin"></i>';
@@ -79,7 +79,7 @@
                         buscarPor: self.formSearch.select.value,
                         dato: self.formSearch.inputSearch.value
                     };
-
+                    return
                     axios.get('/buscarUsuarios', {params: parametros})
                     .then(function (response) {
 
@@ -134,8 +134,8 @@
             },
             cleanMessageError: function(e){
 
-                //$(e.target).removeClass("error");
-                //$(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
+                $(e.target).removeClass("error");
+                $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
 
             },
             evaluateField: function(id, e){
@@ -147,8 +147,6 @@
                 if(id === "inputSearch" && this.formSearch["inputSearch"].value.trim() === ""){
                     this.$emit('clearUsersList')
                 }
-
-                this.cleanMessageError(e);
 
             },
             filterType: function(e){
@@ -172,3 +170,5 @@
     }
 
 </script>
+
+<style lang="less" scoped src="../../less/usuario/userListFilter.less"></style>

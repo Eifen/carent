@@ -2,6 +2,7 @@ import Vue from 'vue'
 import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+//window.$ = require('jquery');
 
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
 Vue.component('loading',require('../components/loading.vue').default);

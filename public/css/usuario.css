@@ -1,10 +1,11 @@
-html {
-  /*overflow-x: hidden;*/
-}
 body {
   margin: 0px !important;
 }
 [v-cloak] {
   display: none;
+}
+#app {
+  background-color: #F2F6FC;
+  min-height: 100vh;
 }
 
