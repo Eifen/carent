@@ -139,7 +139,7 @@
 
             },
             evaluateField: function(){
-
+                
                 if(this.formSearch.inputSearch.value === ""){
                     this.$emit('clearUsersList')
                 }
