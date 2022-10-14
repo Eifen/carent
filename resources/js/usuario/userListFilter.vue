@@ -16,13 +16,13 @@
                 </select>
             </div>
             <div class="form-group col-12 col-md-6">
-                <input class="form-control inputSearch"
+                <input :class="formSearch.inputSearch.class"
+                    :disabled="formSearch.inputSearch.disabled"
                     ref="inputSearch"
                     type="text"
-                    v-bind:disabled="formSearch.inputSearch.disabled"
-                    v-on:keyup="evaluateField('inputSearch', $event)"
-                    v-model="formSearch.inputSearch.value">
-                <div class="mensaje"></div>
+                    v-on:keyup="evaluateField"
+                    v-model.trim="formSearch.inputSearch.value">
+                <div :class="this.formSearch.inputSearch.message.class">{{ formSearch.inputSearch.message.text }}</div>
             </div>
             <div class="form-group col-12 col-md-2">
                 <button class="btn btn-primary"
@@ -50,7 +50,12 @@
                         html: "Consultar"
                     },
                     inputSearch: {
+                        class: "form-control inputSearch",
                         disabled: true,
+                        message: {
+                            class: "",
+                            text: ""
+                        },
                         value: ""
                     },
                     select: {
@@ -125,28 +130,23 @@
 
                 } else {
 
-                    $(".inputSearch").parent().find(".mensaje").html("Campo requerido").addClass("invalid-feedback");
-                    $(".inputSearch").addClass("error");
+                    this.formSearch.inputSearch.class = "form-control inputSearch error"
+                    this.formSearch.inputSearch.message.class = "mensaje invalid-feedback"
+                    this.formSearch.inputSearch.message.text = "Campo requerido"
                     //zenscroll.toY($(".inputSearch").offset().top - 100);
 
               }
 
             },
-            cleanMessageError: function(e){
+            evaluateField: function(){
 
-                $(e.target).removeClass("error");
-                $(e.target).parent(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
-
-            },
-            evaluateField: function(id, e){
-
-                if(e.target.type === 'text'){
-                    this.formSearch[id].value = (e.target.value.trim() === "") ? "" : e.target.value;
-                }
-
-                if(id === "inputSearch" && this.formSearch["inputSearch"].value.trim() === ""){
+                if(this.formSearch.inputSearch.value === ""){
                     this.$emit('clearUsersList')
                 }
+
+                this.formSearch.inputSearch.class = "form-control inputSearch"
+                this.formSearch.inputSearch.message.class = "mensaje"
+                this.formSearch.inputSearch.message.text = ""
 
             },
             filterType: function(e){
