@@ -29,6 +29,9 @@
             clearUsersList: function(){
                 this.usuarios.mostrar = false;
                 this.usuarios.registros = [];
+            },
+            searchUser: function(){
+                console.log("buscar")
             }
 
         }
