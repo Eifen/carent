@@ -39,7 +39,9 @@
 
 <script>
 
-var self;
+import { useUtils } from '../../js/components/Utils.js'
+const utils = useUtils()
+var self
 
 export default {
 
@@ -85,16 +87,16 @@ export default {
         },
         filterType: function(e) {
 
-            let opcion = parseInt(this.formSearch.select.value);
-            let valoresPermitidos = [1,2,3,4,5];
+            let opcion = parseInt(this.formSearch.select.value)
+            let valoresPermitidos = [1,2,3,4,5]
             this.$emit('clearUsersList')
 
             if(valoresPermitidos.includes(opcion)) {
-                this.formSearch.inputSearch.disabled = false;
-                this.formSearch.submit.disabled = false;
+                this.formSearch.inputSearch.disabled = false
+                this.formSearch.submit.disabled = false
             } else {
-                this.formSearch.inputSearch.disabled = true;
-                this.formSearch.submit.disabled = true;
+                this.formSearch.inputSearch.disabled = true
+                this.formSearch.submit.disabled = true
             }
 
         },
@@ -104,54 +106,70 @@ export default {
 
             if(this.formSearch.inputSearch.value !== "") {
 
-                this.formSearch.submit.html = '<i class="fas fa-cog fa-spin"></i>';
-                this.formSearch.submit.disabled = true;
+                this.formSearch.submit.html = '<i class="fas fa-cog fa-spin"></i>'
+                this.formSearch.submit.disabled = true
 
-                let parameters = {
-                    data: this.formSearch.inputSearch.value,
-                    searchBy: this.formSearch.select.value
-                };
+                let ajaxData = {
+                    method: "get",
+                    params: {
+                        data: this.formSearch.inputSearch.value,
+                        searchBy: this.formSearch.select.value
+                    },
+                    url: "/buscarUsuarios"
+                }
 
-                axios.get('/buscarUsuarios', {params: parameters})
+                utils.ajaxRequest(ajaxData)
                 .then(function (response) {
 
-                    self.formSearch.submit.html = 'Consultar';
-                    self.formSearch.submit.disabled = false;
+                    self.formSearch.submit.html = 'Consultar'
+                    self.formSearch.submit.disabled = false
 
-                    if(response.status === 200 && response.data.response === true){
+                    if(response.status === 200 && response.data.response === true) {
 
-                        self.usuarios.mostrar = true;
-                        self.usuarios.registros = response.data.usuarios;
-                        self.permisoActualizar = response.data.permisoActualizar;
+                        let emitData  = {
+                            canUpdate: response.data.permisoActualizar,
+                            showUsers: true,
+                            users: response.data.usuarios
+                        }
+                        self.$emit('showUsers', emitData)
 
-                    } else{
-
+                    } else {
                         throw response.data;
-
                     }
 
                 })
                 .catch(error => {
 
-                    self.formSearch.submit.html = 'Consultar';
-                    self.formSearch.submit.disabled = false;
+                    console.log(error)
+                    self.formSearch.submit.html = 'Consultar'
+                    self.formSearch.submit.disabled = false
 
-                    self.alert.mostrar = true;
+                    let emitData  = {
+                        canUpdate: false,
+                        showUsers: false,
+                        users: []
+                    }
+                    self.$emit('showUsers', emitData)
 
-                    self.usuarios.registros = [];
-                    self.usuarios.mostrar = false;
+                })
+
+                return;
+
+                axios.get('/buscarUsuarios', {params: parameters})
+                .then(function (response) {})
+                .catch(error => {
 
                     if(error.response){
 
-                        var message = "Existe un error!, consulte con el administrador del sistema.";
+                        var message = "Existe un error!, consulte con el administrador del sistema."
 
                     } else {
 
-                        var message = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema.";
+                        var message = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema."
 
                     }
 
-                    self.alert.message = message;
+                    self.alert.message = message
 
                 });
 
@@ -167,7 +185,7 @@ export default {
         }
 
     }
-    
+
 }
 
 </script>

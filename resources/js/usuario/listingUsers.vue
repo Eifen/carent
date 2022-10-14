@@ -1,6 +1,6 @@
 <template>
     <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
-        <Filters @clearUsersList="clearUsersList"/>
+        <Filters @clearUsersList="clearUsersList" @showUsers="showUsers"/>
     </div>
 </template>
 
@@ -21,17 +21,18 @@
                 }
             }
         },
-        beforeCreate: function(){},
+        beforeCreate: function() {},
         mounted: function () {
         },
         methods: {
 
-            clearUsersList: function(){
+            clearUsersList: function() {
                 this.usuarios.mostrar = false;
                 this.usuarios.registros = [];
             },
-            searchUser: function(){
+            showUsers: function(users) {
                 console.log("buscar")
+                console.log(users)
             }
 
         }
