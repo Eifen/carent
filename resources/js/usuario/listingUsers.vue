@@ -35,6 +35,30 @@
                         </td>
                     </tr>
                 </tbody>
+                <tfoot v-if="usersList.length > 0">
+                    <tr>
+                        <td  colspan="5">
+                            <div>
+                                <div><b>Página</b></div>
+                                <div class="wrapper-input" v-on:keyup="numeroPagina">
+                                    <vue-numeric :max="pager.max"
+                                        :min="1"
+                                        :precision="0"
+                                        class="form-control text-center form-control-sm"
+                                        type="text"
+                                        v-model="pager.page"></vue-numeric>
+                                </div>
+                                <div><b>de @{{ paginador.numPaginas }}</b></div>
+                                <div>
+                                    <b-icon-chevron-compact-left class="icono border rounded" v-on:click="prevPage"></b-icon-chevron-compact-left>
+                                </div>
+                                <div>
+                                    <b-icon-chevron-compact-right class="icono border rounded" v-on:click="nextPage"></b-icon-chevron-compact-right>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>
@@ -44,17 +68,25 @@
 <script>
 
 import Filters from './userListFilter.vue'
+import VueNumeric from 'vue-numeric';
 import { useUtils } from '../../js/components/Utils.js'
 const utils = useUtils()
 var self
 
 export default {
     components: {
-        Filters
+        Filters,
+        VueNumeric
     },
     data() {
         return {
             canUpdate: false,
+            pager: {
+                max: 0,
+                numPages: 0,
+                page:1,
+                paginate: 0
+            },
             usersList: []
         }
     },
@@ -71,6 +103,18 @@ export default {
             this.users.data = []
         },
         mostrarDetalleUsuario: function() {},
+        nextPage: function() {
+
+            self.pager.page = ((self.pager.page + 1) > self.pager.max) ? self.pager.page : (self.pager.page + 1);
+            self.searchUser();
+
+        },
+        prevPage: function() {
+
+            this.pager.page = ((self.pager.page - 1) === 0) ? 1 : (self.pager.page - 1);
+            this.searchUser()
+
+        },
         searchUser: function(data = null, searchBy = null) {
 
             let ajaxData = {

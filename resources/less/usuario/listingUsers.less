@@ -1,7 +1,7 @@
-.wrapper-forms{
+.wrapper-forms {
     padding-top: 5%;
 
-    .table{
+    .table {
         background-color: white;
         border:1px solid rgba(0,0,0,0.13);
         border-radius: 3px;
@@ -9,15 +9,15 @@
         padding: 15px;
         transition: all .3s;
 
-        &:hover{
+        &:hover {
             box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
         }
 
-        thead{
+        thead {
 
-            tr{
+            tr {
 
-              th{
+              th {
                 background-color: #091F40;
                 color:white;
                 text-align: center;
@@ -27,30 +27,30 @@
 
         }// Fin thead
 
-        tbody{
+        tbody {
 
-            tr{
+            tr {
                 transition: all .3s;
 
-                &:hover{
+                &:hover {
                     background-color: rgba(246,168,28,.5);
                 }
 
-                th{
+                th {
                     text-align: center;
                 }
 
-                td{
+                td {
                     text-align: center;
 
-                    a{
+                    a {
                     color: #212529 !important;
                     }
 
                     .fas,
-                    .far{
+                    .far {
 
-                        &:hover{
+                        &:hover {
                             cursor: pointer;
                         }
 
@@ -61,6 +61,48 @@
             }// Fin tr
 
         }// Fin tbody
+
+        tfoot {
+
+            tr {
+
+                td {
+
+                    > div {
+                        display: table;
+                        margin-left: auto;
+                        margin-right: auto;
+
+                        > div {
+                            display: table-cell;
+                            padding-left: 5px;
+                            padding-right: 5px;
+                            vertical-align: middle;
+
+                            .form-control {
+                                max-width: 70px;
+                            }
+
+                            .icono {
+                                color: #091F40;
+                                font-size: 1.5rem;
+
+                                &:hover {
+                                    color: #000000;
+                                    cursor: pointer;
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }// Fin tfoot
 
     }// Fin table
 
