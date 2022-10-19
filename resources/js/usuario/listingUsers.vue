@@ -48,7 +48,7 @@
                                         type="text"
                                         v-model="pager.page"></vue-numeric>
                                 </div>
-                                <div><b>de @{{ paginador.numPaginas }}</b></div>
+                                <div><b>de {{ pager.numPages }}</b></div>
                                 <div>
                                     <b-icon-chevron-compact-left class="icono border rounded" v-on:click="prevPage"></b-icon-chevron-compact-left>
                                 </div>
