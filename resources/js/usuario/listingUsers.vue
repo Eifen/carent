@@ -40,7 +40,7 @@
                         <td  colspan="5">
                             <div>
                                 <div><b>Página</b></div>
-                                <div class="wrapper-input" v-on:keyup="numeroPagina">
+                                <div class="wrapper-input" v-on:keyup="pageNumber">
                                     <vue-numeric :max="pager.max"
                                         :min="1"
                                         :precision="0"
@@ -104,16 +104,15 @@ export default {
         },
         mostrarDetalleUsuario: function() {},
         nextPage: function() {
-
             self.pager.page = ((self.pager.page + 1) > self.pager.max) ? self.pager.page : (self.pager.page + 1);
             self.searchUser();
-
+        },
+        pageNumber: function(){
+            this.searchUser()
         },
         prevPage: function() {
-
             this.pager.page = ((self.pager.page - 1) === 0) ? 1 : (self.pager.page - 1);
             this.searchUser()
-
         },
         searchUser: function(data = null, searchBy = null) {
 
