@@ -85,7 +85,7 @@ export default {
                 max: 0,
                 numPages: 0,
                 page:1,
-                paginate: 0
+                paginate: 100
             },
             usersList: []
         }
@@ -94,6 +94,8 @@ export default {
         self = this
     },
     mounted: function () {
+        //let from = (this.pager.page - 1) * self.pager.paginate;
+        //console.log(from)
         this.searchUser()
     },
     methods: {
@@ -104,23 +106,25 @@ export default {
         },
         mostrarDetalleUsuario: function() {},
         nextPage: function() {
-            self.pager.page = ((self.pager.page + 1) > self.pager.max) ? self.pager.page : (self.pager.page + 1);
-            self.searchUser();
+            this.pager.page = ((this.pager.page + 1) > this.pager.max) ? this.pager.page : (this.pager.page + 1);
+            this.searchUser();
         },
         pageNumber: function(){
             this.searchUser()
         },
         prevPage: function() {
-            this.pager.page = ((self.pager.page - 1) === 0) ? 1 : (self.pager.page - 1);
+            this.pager.page = ((this.pager.page - 1) === 0) ? 1 : (this.pager.page - 1);
             this.searchUser()
         },
-        searchUser: function(data = null, searchBy = null) {
+        searchUser: function(data = null, searchBy = null, searchFrom = 0) {
 
             let ajaxData = {
                 method: "get",
                 params: {
                     data: data,
-                    searchBy: searchBy
+                    paginate: this.pager.paginate,
+                    searchBy: searchBy,
+                    searchFrom: searchFrom
                 },
                 url: "/searchUsers"
             }
@@ -129,8 +133,9 @@ export default {
             .then(function (response) {
 
                 if(response.status === 200 && response.data.response === true) {
-                    console.log(response.data.users)
                     self.usersList = response.data.users
+                    self.pager.max = parseInt(response.data.pages)
+                    self.pager.numPages = response.data.pages
                     console.log(self.usersList)
                 } else {
                     throw response.data;

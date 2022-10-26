@@ -149,24 +149,36 @@ class UsuarioController extends Controller
 
     }
 
-    function searchUsers(Request $request){
+    function searchUsers(Request $request) {
 
-      $modelo = new UsuarioModel();
+        $model = new UsuarioModel();
 
-      $params = [
-          "data" => strtolower($request->input("data")),
-          "searchBy" => (int) $request->input("searchBy")
-      ];
-      $users = $modelo->searchUsers($params);
-      $permisoActualizar = $modelo->permisoActualizar(session("usuario_id"), 3);
+        $params = [
+            "data" => strtolower($request->input("data")),
+            "paginate" => (int) $request->input("paginate"),
+            "searchBy" => (int) $request->input("searchBy"),
+            "searchFrom" => (int) $request->input("searchFrom")
+        ];
+        $data = $model->searchUsers($params);
+        $permisoActualizar = $model->permisoActualizar(session("usuario_id"), 3);
 
-      if(!empty($users)){
-          $response = array("response" => true, "users" => $users, "permisoActualizar" => $permisoActualizar);
-      }else{
-          $response = array("response" => false, "message" => "No se encontraron resultados");
-      }
+        if(!empty($data)) {
 
-      return $response;
+            return [
+                "pages" => $data["pages"],
+                "permisoActualizar" => $permisoActualizar,
+                "response" => true,
+                "users" => $data["users"]
+            ];
+
+        } else {
+
+            return [
+                "message" => "No se encontraron resultados",
+                "response" => false
+            ];
+
+        }
 
     }
 
