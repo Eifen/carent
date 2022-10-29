@@ -105,7 +105,7 @@ export default {
         },
         mostrarDetalleUsuario: () => {},
         nextPage: () => {
-            self.pager.page = self.pager.page + 1
+            self.pager.page = ((self.pager.page + 1) > self.pager.max) ? self.pager.max : (self.pager.page + 1)
             self.resultsFrom()
         },
         pageNumber: (page) => {
@@ -117,7 +117,7 @@ export default {
 
         },
         prevPage: () =>  {
-            self.pager.page = self.pager.page - 1
+            self.pager.page = ((self.pager.page - 1) < 1) ? 1 : (self.pager.page - 1)
             self.resultsFrom()
         },
         resultsFrom: () => {
