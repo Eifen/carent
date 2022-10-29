@@ -105,11 +105,19 @@ export default {
         },
         mostrarDetalleUsuario: () => {},
         nextPage: () => {
-            self.pager.page = ((self.pager.page + 1) > self.pager.max) ? self.pager.max : (self.pager.page + 1)
-            self.resultsFrom()
+
+            let pageTo = (self.pager.page + 1)
+            if(pageTo > self.pager.max) {
+                self.pager.page = self.pager.max
+            } else {
+                self.pager.page = pageTo
+                self.resultsFrom()
+            }
+
+
         },
         pageNumber: (page) => {
-
+            
             if(page <= self.pager.max) {
                 self.pager.page = page
                 self.resultsFrom()
@@ -117,8 +125,15 @@ export default {
 
         },
         prevPage: () =>  {
-            self.pager.page = ((self.pager.page - 1) < 1) ? 1 : (self.pager.page - 1)
-            self.resultsFrom()
+
+            let pageTo = (self.pager.page - 1)
+            if(pageTo < 1) {
+                self.pager.page = 1
+            } else {
+                self.pager.page = pageTo
+                self.resultsFrom()
+            }
+
         },
         resultsFrom: () => {
             let multiple = self.pager.page - 1
