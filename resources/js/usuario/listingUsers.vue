@@ -41,12 +41,12 @@
                             <div>
                                 <div><b>Página</b></div>
                                 <div class="wrapper-input" v-on:keyup="pageNumber">
-                                    <vue-numeric :max="pager.max"
-                                        :min="1"
-                                        :precision="0"
-                                        class="form-control text-center form-control-sm"
-                                        type="text"
-                                        v-model="pager.page"></vue-numeric>
+                                    <vue-numeric class="form-control text-center form-control-sm"
+                                                 :max="pager.max"
+                                                 :min="1"
+                                                 :precision="0"
+                                                 type="text"
+                                                 v-model="pager.page"></vue-numeric>
                                 </div>
                                 <div><b>de {{ pager.numPages }}</b></div>
                                 <div>
@@ -84,8 +84,9 @@ export default {
             pager: {
                 max: 0,
                 numPages: 0,
-                page:1,
-                paginate: 100
+                page: 1,
+                paginate: 100,
+                resultsFrom: 0
             },
             usersList: []
         }
@@ -94,37 +95,40 @@ export default {
         self = this
     },
     mounted: function () {
-        //let from = (this.pager.page - 1) * self.pager.paginate;
-        //console.log(from)
-        this.searchUser()
+        self.searchUser()
     },
     methods: {
 
-        clearUsersList: function() {
-            this.users.show = false
-            this.users.data = []
+        clearUsersList: () => {
+            self.users.show = false
+            self.users.data = []
         },
-        mostrarDetalleUsuario: function() {},
-        nextPage: function() {
-            this.pager.page = ((this.pager.page + 1) > this.pager.max) ? this.pager.page : (this.pager.page + 1);
-            this.searchUser();
+        mostrarDetalleUsuario: () => {},
+        nextPage: () => {
+            self.pager.page = ((self.pager.page + 1) > self.pager.max) ? self.pager.page : (self.pager.page + 1);
+            self.resultsFrom()
         },
-        pageNumber: function(){
-            this.searchUser()
+        pageNumber: () => {
+            self.searchUser()
         },
-        prevPage: function() {
-            this.pager.page = ((this.pager.page - 1) === 0) ? 1 : (this.pager.page - 1);
-            this.searchUser()
+        prevPage: () =>  {
+            self.pager.page = ((self.pager.page - 1) === 0) ? 1 : (self.pager.page - 1);
+            self.resultsFrom()
         },
-        searchUser: function(data = null, searchBy = null, searchFrom = 0) {
+        resultsFrom: () => {
+            let multiple = self.pager.page - 1
+            self.pager.resultsFrom = (multiple === 0) ? multiple : (self.pager.paginate * multiple) + 1
+            self.searchUser()
+        },
+        searchUser: (data = null, searchBy = null, searchFrom = 0) => {
 
             let ajaxData = {
                 method: "get",
                 params: {
                     data: data,
-                    paginate: this.pager.paginate,
+                    paginate: self.pager.paginate,
                     searchBy: searchBy,
-                    searchFrom: searchFrom
+                    searchFrom: self.pager.resultsFrom
                 },
                 url: "/searchUsers"
             }
@@ -148,11 +152,11 @@ export default {
             })
 
         },
-        showUsers: function(data) {
+        showUsers: (data) => {
 
-            this.canUpdate = data.canUpdate
-            this.users.data = data.users
-            this.users.show = data.showUsers
+            self.canUpdate = data.canUpdate
+            self.users.data = data.users
+            self.users.show = data.showUsers
 
         }
 
