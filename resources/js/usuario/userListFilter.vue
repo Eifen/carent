@@ -1,6 +1,6 @@
 <template>
 
-    <div class="col-12 col-sm-11 col-md-10 col-lg-8 col-xl-7">
+    <div class="col-12">
         <form class="row">
             <div class="form-group col-12">
                 <div class="input-group">
