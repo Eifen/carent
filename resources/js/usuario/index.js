@@ -1,7 +1,7 @@
 import Vue from 'vue'
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-vue/dist/bootstrap-vue.css';
-//window.$ = require('jquery');
+import 'bootstrap-icons/font/bootstrap-icons.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap'
 
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
 Vue.component('loading',require('../components/loading.vue').default);

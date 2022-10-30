@@ -12,6 +12,8 @@
     "dependencies": {
         "autonumeric": "^4.6.0",
         "axios": "^0.26.0",
+        "bootstrap": "^5.2.2",
+        "bootstrap-icons": "^1.9.1",
         "bootstrap-vue": "^2.21.2",
         "cross-env": "^7.0.3",
         "crypto-js": "^4.1.1",

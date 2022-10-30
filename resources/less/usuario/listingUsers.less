@@ -1,95 +1,77 @@
 .wrapper-forms {
     padding-top: 5%;
 
-    .table {
-        background-color: white;
-        border:1px solid rgba(0,0,0,0.13);
-        border-radius: 3px;
+    .wrapper-users {
+        background-color: #fff;
+        border-radius: 20px;
         margin-bottom: 50px;
         padding: 15px;
-        transition: all .3s;
 
-        &:hover {
-            box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
-        }
+        .table {
+            background-color: #fff;
+            border-radius: 20px;
+            padding: 15px;
+            transition: all .3s;
 
-        thead {
+            tbody,
+            thead {
 
-            tr {
-
-              th {
-                background-color: #091F40;
-                color:white;
-                text-align: center;
-              }
+                th,
+                td {
+                    text-align: center;
+                    vertical-align: middle;
+                }
 
             }
 
-        }// Fin thead
+            tbody {
 
-        tbody {
+                tr {
+                    transition: all .3s;
 
-            tr {
-                transition: all .3s;
-
-                &:hover {
-                    background-color: rgba(246,168,28,.5);
-                }
-
-                th {
-                    text-align: center;
-                }
-
-                td {
-                    text-align: center;
-
-                    a {
-                    color: #212529 !important;
+                    &:hover {
+                        background-color: rgba(246,168,28,.5);
                     }
 
-                    .fas,
-                    .far {
+                }
 
-                        &:hover {
-                            cursor: pointer;
+            }
+
+            tfoot {
+
+                tr {
+
+                    td {
+                        border: none;
+
+                        &:nth-child(1) {
+                            padding-top: 30px;
                         }
 
-                    }
-
-                }// Fin td
-
-            }// Fin tr
-
-        }// Fin tbody
-
-        tfoot {
-
-            tr {
-
-                td {
-
-                    > div {
-                        display: table;
-                        margin-left: auto;
-                        margin-right: auto;
-
                         > div {
-                            display: table-cell;
-                            padding-left: 5px;
-                            padding-right: 5px;
-                            vertical-align: middle;
+                            display: table;
+                            margin-left: auto;
+                            margin-right: auto;
 
-                            .form-control {
-                                max-width: 70px;
-                            }
+                            > div {
+                                display: table-cell;
+                                padding-left: 5px;
+                                padding-right: 5px;
+                                vertical-align: middle;
 
-                            .icono {
-                                color: #091F40;
-                                font-size: 1.5rem;
+                                .form-control {
+                                    max-width: 70px;
+                                }
 
-                                &:hover {
-                                    color: #000000;
-                                    cursor: pointer;
+                                .icono {
+                                    color: #091F40;
+                                    font-size: 1.5rem;
+
+                                    &:hover {
+                                        color: #000000;
+                                        cursor: pointer;
+                                    }
+
                                 }
 
                             }
@@ -100,10 +82,10 @@
 
                 }
 
-            }
+            }// Fin tfoot
 
-        }// Fin tfoot
+        }// Fin table
 
-    }// Fin table
+    }
 
 }
