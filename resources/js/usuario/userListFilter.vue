@@ -85,6 +85,9 @@ export default {
 
         },
         filterType: () => {
+            let allowedValues = [1,2,3,4,5]
+            let option = parseInt(self.formSearch.select.value)
+            self.formSearch.inputSearch.disabled = (allowedValues.includes(option)) ? false : true
             self.clearErrorFilter()
         },
         searchUser: function(e) {
