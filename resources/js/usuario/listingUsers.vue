@@ -2,6 +2,9 @@
     <div class="row align-items-center justify-content-center" v-cloak>
         <div class="col-11 col-md-10 wrapper-users">
             <div class="row">
+                <div class="col-12 col-md-4">
+                    <h2 class="title">Usuarios</h2>
+                </div>
                 <Filters @clearUsersList="clearUsersList" @showUsers="showUsers"/>
                 <div class="col-12">
                     <div class="table-responsive">

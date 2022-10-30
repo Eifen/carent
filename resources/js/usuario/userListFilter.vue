@@ -2,34 +2,36 @@
 
     <div class="col-12 col-sm-11 col-md-10 col-lg-8 col-xl-7">
         <form class="row">
-            <div class="form-group col-12 col-md-4">
-                <select class="form-control"
-                    v-bind:disabled="formSearch.select.disabled"
-                    v-model="formSearch.select.value"
-                    v-on:change="filterType">
-                        <option value="" selected disabled>Consultar por</option>
-                        <option value="1">Código de usuario</option>
-                        <option value="2">Cédula</option>
-                        <option value="3">Correo electrónico</option>
-                        <option value="4">Primer o segundo nombre</option>
-                        <option value="5">Primer o segundo apellido</option>
-                </select>
-            </div>
-            <div class="form-group col-12 col-md-6">
-                <input :class="formSearch.inputSearch.class"
-                    :disabled="formSearch.inputSearch.disabled"
-                    ref="inputSearch"
-                    type="text"
-                    v-on:keyup="evaluateField"
-                    v-model.trim="formSearch.inputSearch.value">
-                <div :class="this.formSearch.inputSearch.message.class"> {{ formSearch.inputSearch.message.text }} </div>
-            </div>
-            <div class="form-group col-12 col-md-2">
-                <button class="btn btn-primary"
-                    type="button"
-                    v-bind:disabled="formSearch.submit.disabled"
-                    v-html="formSearch.submit.html"
-                    v-on:click="searchUser"></button>
+            <div class="form-group col-12">
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <select class="form-control"
+                            v-bind:disabled="formSearch.select.disabled"
+                            v-model="formSearch.select.value"
+                            v-on:change="filterType">
+                                <option value="" selected disabled>Consultar por</option>
+                                <option value="1">Código de usuario</option>
+                                <option value="2">Cédula</option>
+                                <option value="3">Correo electrónico</option>
+                                <option value="4">Primer o segundo nombre</option>
+                                <option value="5">Primer o segundo apellido</option>
+                        </select>
+                    </span>
+                    <input :class="formSearch.inputSearch.class"
+                        :disabled="formSearch.inputSearch.disabled"
+                        ref="inputSearch"
+                        type="text"
+                        v-on:keyup="evaluateField"
+                        v-model.trim="formSearch.inputSearch.value">
+                    <span class="input-group-text">
+                        <button class="btn btn-primary"
+                            type="button"
+                            v-bind:disabled="formSearch.submit.disabled"
+                            v-html="formSearch.submit.html"
+                            v-on:click="searchUser"></button>
+                    </span>
+                    <div :class="this.formSearch.inputSearch.message.class"> {{ formSearch.inputSearch.message.text }} </div>
+                </div>
             </div>
         </form>
     </div>
