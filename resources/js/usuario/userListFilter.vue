@@ -1,14 +1,13 @@
 <template>
-
     <div class="col-12">
         <form class="row">
             <div class="form-group col-12">
                 <div class="input-group">
-                    <span class="input-group-text">
-                        <select class="form-control"
-                            v-bind:disabled="formSearch.select.disabled"
-                            v-model="formSearch.select.value"
-                            v-on:change="filterType">
+                    <span :class="formSearch.select.class">
+                        <select @change="filterType"
+                                class="form-select"
+                                :disabled="formSearch.select.disabled"
+                                v-model="formSearch.select.value">
                                 <option value="" selected disabled>Consultar por</option>
                                 <option value="1">Código de usuario</option>
                                 <option value="2">Cédula</option>
@@ -17,22 +16,18 @@
                                 <option value="5">Primer o segundo apellido</option>
                         </select>
                     </span>
-                    <input :class="formSearch.inputSearch.class"
+                    <input @keyup="evaluateField"
+                           :class="formSearch.inputSearch.class"
                            :disabled="formSearch.inputSearch.disabled"
-                           ref="inputSearch"
                            type="text"
-                           v-on:keyup="evaluateField"
                            v-model.trim="formSearch.inputSearch.value">
-                    <span class="input-group-text">
-                        <i class="bi bi-search"
-                           @click="searchUser"></i>
-                    </span>
-                    <div :class="this.formSearch.inputSearch.message.class"> {{ formSearch.inputSearch.message.text }} </div>
+                    <span @click="searchUser" class="input-group-text" v-html="formSearch.submit.html"></span>
+                    <div :class="formSearch.inputSearch.message.class"
+                         v-if="formSearch.inputSearch.message.show"> {{ formSearch.inputSearch.message.text }} </div>
                 </div>
             </div>
         </form>
     </div>
-
 </template>
 
 
@@ -49,55 +44,48 @@ export default {
             formSearch: {
                 submit: {
                     disabled: true,
-                    html: "Consultar"
+                    html: "<i class='bi bi-search'></i>"
                 },
                 inputSearch: {
-                    class: "form-control inputSearch",
+                    class: "form-control",
                     disabled: true,
                     message: {
-                        class: "",
+                        class: "message",
+                        show: false,
                         text: ""
                     },
                     value: ""
                 },
                 select: {
+                    class: "input-group-text",
                     disabled: false,
                     value: ""
                 }
             }
         }
     },
-    beforeCreate: function() {},
-    mounted: function () {
+    beforeCreate: function() {
         self = this
     },
     methods: {
 
-        evaluateField: function() {
+        clearErrorFilter: () =>  {
+            self.formSearch.select.class = "input-group-text"
+            self.formSearch.inputSearch.class = "form-control"
+            self.formSearch.inputSearch.message.class = "message"
+            self.formSearch.inputSearch.message.text = ""
+            self.formSearch.inputSearch.message.show = false
+        },
+        evaluateField: () => {
 
-            if(this.formSearch.inputSearch.value === "") {
-                this.$emit('clearUsersList')
+            if(self.formSearch.inputSearch.value === "") {
+                self.$emit('clearUsersList')
             }
-
-            this.formSearch.inputSearch.class = "form-control inputSearch"
-            this.formSearch.inputSearch.message.class = "mensaje"
-            this.formSearch.inputSearch.message.text = ""
+            self.clearErrorFilter()
 
         },
-        filterType: function(e) {
-
-            let opcion = parseInt(this.formSearch.select.value)
-            let valoresPermitidos = [1,2,3,4,5]
-            this.$emit('clearUsersList')
-
-            if(valoresPermitidos.includes(opcion)) {
-                this.formSearch.inputSearch.disabled = false
-                this.formSearch.submit.disabled = false
-            } else {
-                this.formSearch.inputSearch.disabled = true
-                this.formSearch.submit.disabled = true
-            }
-
+        filterType: () => {
+            self.clearErrorFilter()
         },
         searchUser: function(e) {
 
@@ -106,7 +94,6 @@ export default {
             if(this.formSearch.inputSearch.value !== "") {
 
                 this.formSearch.submit.html = '<i class="fas fa-cog fa-spin"></i>'
-                this.formSearch.submit.disabled = true
 
                 let ajaxData = {
                     method: "get",
@@ -174,9 +161,11 @@ export default {
 
             } else {
 
-                this.formSearch.inputSearch.class = "form-control inputSearch error"
-                this.formSearch.inputSearch.message.class = "mensaje invalid-feedback"
+                this.formSearch.select.class = "input-group-text error"
+                this.formSearch.inputSearch.class = "form-control error"
+                this.formSearch.inputSearch.message.class = "message invalid-feedback"
                 this.formSearch.inputSearch.message.text = "Campo requerido"
+                this.formSearch.inputSearch.message.show = true
                 //zenscroll.toY($(".inputSearch").offset().top - 100);
 
             }

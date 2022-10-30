@@ -8,7 +8,6 @@
         <meta name="robots" content="{{ env('META_ROBOT') }}">
 
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
-        <link href="{{ mix('/css/fontawesome-free-5.12.0.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ mix('/css/usuario.css') }}" rel="stylesheet" type="text/css">
 
     </head>
