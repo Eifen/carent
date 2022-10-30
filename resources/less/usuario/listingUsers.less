@@ -1,76 +1,73 @@
+.wrapper-users {
+    background-color: #fff;
+    border-radius: 20px;
+    margin-bottom: 50px;
+    margin-top: 50px;
+    padding: 15px;
 
-
-    .wrapper-users {
+    .table {
         background-color: #fff;
         border-radius: 20px;
-        margin-bottom: 50px;
         padding: 15px;
+        transition: all .3s;
 
-        .table {
-            background-color: #fff;
-            border-radius: 20px;
-            padding: 15px;
-            transition: all .3s;
+        tbody,
+        thead {
 
-            tbody,
-            thead {
+            th,
+            td {
+                text-align: center;
+                vertical-align: middle;
+            }
 
-                th,
-                td {
-                    text-align: center;
-                    vertical-align: middle;
+        }
+
+        tbody {
+
+            tr {
+                transition: all .3s;
+
+                &:hover {
+                    background-color: rgba(246,168,28,.5);
                 }
 
             }
 
-            tbody {
+        }
 
-                tr {
-                    transition: all .3s;
+        tfoot {
 
-                    &:hover {
-                        background-color: rgba(246,168,28,.5);
+            tr {
+
+                td {
+                    border: none;
+
+                    &:nth-child(1) {
+                        padding-top: 30px;
                     }
 
-                }
-
-            }
-
-            tfoot {
-
-                tr {
-
-                    td {
-                        border: none;
-
-                        &:nth-child(1) {
-                            padding-top: 30px;
-                        }
+                    > div {
+                        display: table;
+                        margin-left: auto;
+                        margin-right: auto;
 
                         > div {
-                            display: table;
-                            margin-left: auto;
-                            margin-right: auto;
+                            display: table-cell;
+                            padding-left: 5px;
+                            padding-right: 5px;
+                            vertical-align: middle;
 
-                            > div {
-                                display: table-cell;
-                                padding-left: 5px;
-                                padding-right: 5px;
-                                vertical-align: middle;
+                            .form-control {
+                                max-width: 70px;
+                            }
 
-                                .form-control {
-                                    max-width: 70px;
-                                }
+                            .icono {
+                                color: #091F40;
+                                font-size: 1.5rem;
 
-                                .icono {
-                                    color: #091F40;
-                                    font-size: 1.5rem;
-
-                                    &:hover {
-                                        color: #000000;
-                                        cursor: pointer;
-                                    }
-
+                                &:hover {
+                                    color: #000000;
+                                    cursor: pointer;
                                 }
 
                             }
@@ -81,8 +78,10 @@
 
                 }
 
-            }// Fin tfoot
+            }
 
-        }// Fin table
+        }
 
     }
+
+}
