@@ -1,9 +1,9 @@
 <template>
-    <div class="row align-items-center justify-content-center wrapper-forms" v-cloak>
-        <!-- <Filters @clearUsersList="clearUsersList" @showUsers="showUsers"/> -->
+    <div class="row align-items-center justify-content-center wrapper-users" v-cloak>
+        <Filters @clearUsersList="clearUsersList" @showUsers="showUsers"/>
         <div class="col-12">
             <div class="row justify-content-center">
-                <div class="col-11 col-md-10 wrapper-users">
+                <div class="col-11 col-md-10 ">
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
