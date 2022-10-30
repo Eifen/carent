@@ -18,17 +18,14 @@
                         </select>
                     </span>
                     <input :class="formSearch.inputSearch.class"
-                        :disabled="formSearch.inputSearch.disabled"
-                        ref="inputSearch"
-                        type="text"
-                        v-on:keyup="evaluateField"
-                        v-model.trim="formSearch.inputSearch.value">
+                           :disabled="formSearch.inputSearch.disabled"
+                           ref="inputSearch"
+                           type="text"
+                           v-on:keyup="evaluateField"
+                           v-model.trim="formSearch.inputSearch.value">
                     <span class="input-group-text">
-                        <button class="btn btn-primary"
-                            type="button"
-                            v-bind:disabled="formSearch.submit.disabled"
-                            v-html="formSearch.submit.html"
-                            v-on:click="searchUser"></button>
+                        <i class="bi bi-search"
+                           @click="searchUser"></i>
                     </span>
                     <div :class="this.formSearch.inputSearch.message.class"> {{ formSearch.inputSearch.message.text }} </div>
                 </div>
