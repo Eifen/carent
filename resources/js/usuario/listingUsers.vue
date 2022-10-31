@@ -103,7 +103,7 @@ export default {
     beforeCreate: function() {
         self = this
     },
-    mounted: function () {
+    mounted: () => {
         self.searchUser()
     },
     methods: {
@@ -156,6 +156,7 @@ export default {
         },
         searchUser: () => {
 
+            self.usersList = []
             self.loading = true
 
             let ajaxData = {
