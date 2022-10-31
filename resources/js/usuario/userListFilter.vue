@@ -9,11 +9,11 @@
                                 :disabled="formSearch.select.disabled"
                                 v-model="formSearch.select.value">
                                 <option value="" selected disabled>Consultar por</option>
-                                <option value="1">Código de usuario</option>
+                                <option value="1">Código</option>
                                 <option value="2">Cédula</option>
-                                <option value="3">Correo electrónico</option>
-                                <option value="4">Primer o segundo nombre</option>
-                                <option value="5">Primer o segundo apellido</option>
+                                <option value="3">Correo</option>
+                                <option value="4">Nombre</option>
+                                <option value="5">Apellido</option>
                         </select>
                     </span>
                     <input @keyup="evaluateField"

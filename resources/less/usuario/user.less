@@ -1,3 +1,12 @@
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(359deg);
+    }
+}
+
 tr {
 
     td {
@@ -6,16 +15,26 @@ tr {
 
 }
 
-.bi-gear,
 .dropdown-item {
 
     &:hover {
-        color: #0d6efd;
+        background-color: #F2F6FC;
         cursor: pointer;
     }
 
 }
 
-.bi-gear, {
+.bi-gear {
     font-size: 1.2rem;
+
+    &:hover {
+        color: #0d6efd;
+        cursor: pointer;
+
+        &:before {
+            animation: spin 2s infinite linear;
+        }
+
+    }
+
 }
