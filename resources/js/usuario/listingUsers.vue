@@ -27,7 +27,7 @@
                                       :key="index"
                                       v-for="(user, index) in usersList"
                                       v-if="usersList.length > 0" />
-                                <tr if="(usersList.length = 0 && loading = false)" class="table-warning">
+                                <tr v-if="showNoData" class="table-warning">
                                     <td class="p-3" colspan="6">No se encontraron resultados</td>
                                 </tr>
                                 <tr v-if="loading">
@@ -105,6 +105,13 @@ export default {
     },
     mounted: () => {
         self.searchUser()
+    },
+    computed: {
+
+        showNoData : () => {
+            return (self.usersList.length === 0 && !self.loading)
+        }
+
     },
     methods: {
 
