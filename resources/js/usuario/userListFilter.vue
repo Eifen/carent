@@ -13,7 +13,6 @@
                                 <option value="2">Cédula</option>
                                 <option value="3">Correo</option>
                                 <option value="4">Nombre</option>
-                                <option value="5">Apellido</option>
                         </select>
                     </span>
                     <input @keyup="evaluateField"
@@ -85,82 +84,20 @@ export default {
 
         },
         filterType: () => {
-            let allowedValues = [1,2,3,4,5]
+            let allowedValues = [1,2,3,4]
             let option = parseInt(self.formSearch.select.value)
             self.formSearch.inputSearch.disabled = (allowedValues.includes(option)) ? false : true
             self.clearErrorFilter()
         },
         searchUser: function(e) {
 
-            //self.alert.mostrar = false;
-
             if(this.formSearch.inputSearch.value !== "") {
 
-                this.formSearch.submit.html = '<i class="fas fa-cog fa-spin"></i>'
-
-                let ajaxData = {
-                    method: "get",
-                    params: {
-                        data: this.formSearch.inputSearch.value,
-                        searchBy: this.formSearch.select.value
-                    },
-                    url: "/buscarUsuarios"
+                let data = {
+                    data: self.formSearch.inputSearch.value,
+                    searchBy: self.formSearch.select.value
                 }
-
-                utils.ajaxRequest(ajaxData)
-                .then(function (response) {
-
-                    self.formSearch.submit.html = 'Consultar'
-                    self.formSearch.submit.disabled = false
-
-                    if(response.status === 200 && response.data.response === true) {
-
-                        let emitData  = {
-                            canUpdate: response.data.permisoActualizar,
-                            showUsers: true,
-                            users: response.data.usuarios
-                        }
-                        self.$emit('showUsers', emitData)
-
-                    } else {
-                        throw response.data;
-                    }
-
-                })
-                .catch(error => {
-
-                    console.log(error)
-                    self.formSearch.submit.html = 'Consultar'
-                    self.formSearch.submit.disabled = false
-
-                    let emitData  = {
-                        canUpdate: false,
-                        showUsers: false,
-                        users: []
-                    }
-                    self.$emit('showUsers', emitData)
-
-                })
-
-                return;
-
-                axios.get('/buscarUsuarios', {params: parameters})
-                .then(function (response) {})
-                .catch(error => {
-
-                    if(error.response){
-
-                        var message = "Existe un error!, consulte con el administrador del sistema."
-
-                    } else {
-
-                        var message = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema."
-
-                    }
-
-                    self.alert.message = message
-
-                });
+                self.$emit('searchBy', data)
 
             } else {
 

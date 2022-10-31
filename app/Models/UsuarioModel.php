@@ -208,7 +208,12 @@ class UsuarioModel extends Model
                 $condicion = "AND cu.correo_principal LIKE '%".$params["data"]."%'";
                 break;
             case 4:
-                $condicion = "AND (u.nombre_1 LIKE '%".$params["data"]."%' OR u.nombre_2 LIKE '%".$params["data"]."%')";
+                $condicion = "AND (
+                                         u.nombre_1 LIKE '%".$params["data"]."%'
+                                      OR u.nombre_2 LIKE '%".$params["data"]."%'
+                                      OR u.apellido_1 LIKE '%".$params["data"]."%'
+                                      OR u.apellido_2 LIKE '%".$params["data"]."%'
+                              )";
                 break;
             case 5:
                 $condicion = "AND (u.apellido_1 LIKE '%".$params["data"]."%' OR u.apellido_2 LIKE '%".$params["data"]."%')";

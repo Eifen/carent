@@ -5,7 +5,7 @@
                 <div class="col-12 col-md-4">
                     <h2 class="title">Usuarios</h2>
                 </div>
-                <Filters @clearUsersList="clearUsersList" @showUsers="showUsers"/>
+                <Filters @clearUsersList="clearUsersList" @searchBy="searchBy" @showUsers="showUsers"/>
                 <div class="col-12">
                     <div class="table-responsive">
                         <table class="table">
@@ -80,11 +80,13 @@ export default {
         return {
             canUpdate: false,
             pager: {
+                data: null,
                 max: 0,
                 numPages: 0,
                 page: 1,
                 paginate: 100,
-                resultsFrom: 0
+                resultsFrom: 0,
+                searchBy: null
             },
             usersList: []
         }
@@ -137,14 +139,19 @@ export default {
             self.pager.resultsFrom = (multiple === 0) ? multiple : (self.pager.paginate * multiple) + 1
             self.searchUser()
         },
-        searchUser: (data = null, searchBy = null, searchFrom = 0) => {
+        searchBy: (data) => {
+            self.pager.data = data.data
+            self.pager.searchBy = data.searchBy
+            self.searchUser()
+        },
+        searchUser: () => {
 
             let ajaxData = {
                 method: "get",
                 params: {
-                    data: data,
+                    data: self.pager.data,
                     paginate: self.pager.paginate,
-                    searchBy: searchBy,
+                    searchBy: self.pager.searchBy,
                     searchFrom: self.pager.resultsFrom
                 },
                 url: "/searchUsers"
