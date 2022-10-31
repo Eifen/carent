@@ -2,8 +2,11 @@
     <div class="row align-items-center justify-content-center" v-cloak>
         <div class="col-11 col-md-10 wrapper-users">
             <div class="row">
-                <div class="col-12 col-md-4">
+                <div class="col-6 col-md-4">
                     <h2 class="title">Usuarios</h2>
+                </div>
+                <div class="col-6 col-md-8 text-end">
+                    <button type="button" class="btn btn-primary create-user">Crear Usuario</button>
                 </div>
                 <Filters @clearUsersList="clearUsersList" @searchBy="searchBy" @showUsers="showUsers"/>
                 <div class="col-12">
@@ -29,9 +32,7 @@
                                 </tr>
                                 <tr v-if="loading">
                                     <td colspan="6">
-                                        <div class="spinner-border m-2" role="status">
-                                            <span class="visually-hidden">Loading...</span>
-                                        </div>
+                                        <div class="spinner-border m-2 text-primary" role="status"></div>
                                     </td>
                                 </tr>
                             </tbody>
@@ -171,6 +172,7 @@ export default {
             utils.ajaxRequest(ajaxData)
             .then(function (response) {
 
+                self.loading = false
                 if(response.status === 200 && response.data.response === true) {
                     self.usersList = response.data.users
                     self.pager.max = parseInt(response.data.pages)
@@ -181,8 +183,7 @@ export default {
 
             })
             .catch(error => {
-
-
+                self.loading = false
             })
 
         },
