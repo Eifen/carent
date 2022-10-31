@@ -102,9 +102,6 @@ html {
 #app > .row form .multiselect .multiselect__tags .multiselect__input::-moz-placeholder {
   color: #495057;
 }
-#app > .row form .multiselect .multiselect__tags .multiselect__input:-ms-input-placeholder {
-  color: #495057;
-}
 #app > .row form .multiselect .multiselect__tags .multiselect__input::placeholder {
   color: #495057;
 }

@@ -138,10 +138,15 @@
 
 <script>
 
-  window.$ = require('jquery');
-  import axios from 'axios';
-  import menuItem from './itemMenuPrincipal';
-  var self;
+    import Vue from 'vue';
+    import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
+    window.$ = require('jquery');
+    import axios from 'axios';
+    import menuItem from './itemMenuPrincipal';
+    var self;
+
+    Vue.use(BootstrapVue);
+    Vue.use(BootstrapVueIcons);
 
   export default {
       data() {
@@ -154,7 +159,7 @@
         };
       },
       components: {
-        menuItem
+          menuItem
       },
       beforeCreate: function(){
 
