@@ -24,8 +24,15 @@
                                       :key="index"
                                       v-for="(user, index) in usersList"
                                       v-if="usersList.length > 0" />
-                                <tr v-else class="table-warning">
+                                <tr v-else-if="usersList.length = 0" class="table-warning">
                                     <td colspan="6">No se encontraron resultados</td>
+                                </tr>
+                                <tr v-if="loading">
+                                    <td colspan="6">
+                                        <div class="spinner-border m-2" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </td>
                                 </tr>
                             </tbody>
                             <tfoot v-if="usersList.length > 0">
@@ -88,6 +95,7 @@ export default {
                 resultsFrom: 0,
                 searchBy: null
             },
+            loading: false,
             usersList: []
         }
     },
@@ -100,8 +108,9 @@ export default {
     methods: {
 
         clearUsersList: () => {
-            self.users.show = false
-            self.users.data = []
+            self.pager.data = null
+            self.pager.searchBy = null
+            self.searchUser()
         },
         nextPage: () => {
 
@@ -145,6 +154,8 @@ export default {
             self.searchUser()
         },
         searchUser: () => {
+
+            self.loading = true
 
             let ajaxData = {
                 method: "get",

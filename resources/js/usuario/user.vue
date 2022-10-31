@@ -1,5 +1,5 @@
 <template>
-    <tr>
+    <tr v-if="user">
         <td>{{ user.codigo }}</td>
         <td>{{ user.cedula }}</td>
         <td>{{ user.nombre }}</td>
@@ -20,6 +20,9 @@
                 </ul>
             </div>
         </td>
+    </tr>
+    <tr v-else>
+        <td colspan="6">No se encontraron resultados</td>
     </tr>
 </template>
 
