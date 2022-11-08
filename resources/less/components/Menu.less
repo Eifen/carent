@@ -1,0 +1,88 @@
+#nav-menu-principal {
+    background-color: white;
+
+    .navbar-brand {
+        height: 100%;
+        margin-right:1.7rem;
+        position: relative;
+
+        img {
+            height: 35px;
+        }
+
+    }
+
+    .hamburguer-menu {
+        color: #091F40;
+        display: none;
+
+        @media (max-width: 991px) {
+            display: inherit;
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
+
+    }
+
+    .nav-link{
+        color: #000000 !important;
+        transition: all .3s;
+
+        &:hover{
+            color:#F6A81C !important;
+            cursor:pointer;
+        }
+
+    }
+
+    #wrapper-menu-items{
+
+        .dropdown-submenu {
+            position: relative;
+
+            > .dropdown-menu {
+            left: 7px;
+            margin-top: 0px;
+            margin-left: 0px;
+            top: 10;
+
+                a{
+
+                    @media (max-width: 991px) {
+                        padding: 0.25rem 1.5rem;
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+    #ul-opciones-cuenta{
+
+        .dropdown-menu{
+
+            .dropdown-item{
+                transition: all .3s;
+
+                &:hover{
+                    background-color:transparent;
+                    color:#F6A81C !important;
+                    cursor:pointer;
+                }
+
+                &:focus{
+                    background-color:transparent;
+                }
+
+            }
+
+        }
+
+    }
+
+}

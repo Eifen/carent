@@ -23,6 +23,7 @@
         "vue-json-excel": "^0.3.0",
         "vue-multiselect": "^2.1.6",
         "vue-numeric": "^2.4.3",
+        "vue-router": "3.6.5",
         "vue-select": "^3.16.0",
         "vue-the-mask": "^0.11.1",
         "vue2-timepicker": "^1.1.6",

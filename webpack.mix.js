@@ -11,7 +11,8 @@ const mix = require('laravel-mix');
  |
  */
 
- mix.js('resources/js/login.js', 'public/js/login.js')
+ mix.js('resources/js/main.js', 'public/js/main.js')
+    .js('resources/js/login.js', 'public/js/login.js')
     .js('resources/js/inicio.js', 'public/js/inicio.js')
     .js('resources/js/error/permiso.js', 'public/js/error/permiso.js')
     .js('resources/js/cambiarClave.js', 'public/js/cambiarClave.js')

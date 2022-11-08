@@ -27,7 +27,7 @@ Route::get('/cambiarClave', 'InicioController@cambiarClave')/*->middleware('usua
 Route::post('/guardarNuevaClave', 'InicioController@guardarNuevaClave');
 
 /* Módulo de Usuario */
-Route::get('/usuarios', function() {return view('usuario/index');})->middleware('usuario.session');
+// Route::get('/usuarios', function() {return view('usuario/index');})->middleware('usuario.session');
 Route::get('/searchUsers', 'UsuarioController@searchUsers');
 
 
@@ -173,3 +173,7 @@ Route::get('/buscarUltimaCargaHorasNo', 'Reportes\UltimaCargaHorasNoCargablesCon
   Rutas para tareas programadas
 */
 Route::get('/repEmpSinCargarHoras', 'Reportes\TotalHorasEmpController@repEmpSinCargarHoras')->name('test1');
+
+Route::get('/{any}', function () {
+    return view('main');
+})->where('any', '.*');
