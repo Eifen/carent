@@ -1,71 +1,97 @@
 <template>
-    <div class="row align-items-center justify-content-center" v-cloak>
-        <div class="col-11 col-md-10 wrapper-users">
-            <div class="row">
-                <div class="col-6 col-md-4">
-                    <h2 class="title">Usuarios</h2>
-                </div>
-                <div class="col-6 col-md-8 text-end">
-                    <button type="button" class="btn btn-primary create-user">Crear Usuario</button>
-                </div>
-                <Filters @clearUsersList="clearUsersList" @searchBy="searchBy" @showUsers="showUsers"/>
-                <div class="col-12">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead v-if="usersList.length > 0">
-                                <tr>
-                                    <th scope="col">Código</th>
-                                    <th scope="col">Cédula</th>
-                                    <th scope="col">Nombre</th>
-                                    <th scope="col">Correo</th>
-                                    <th scope="col">Estatus</th>
-                                    <th scope="col"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <User :user="user"
-                                      :key="index"
-                                      v-for="(user, index) in usersList"
-                                      v-if="usersList.length > 0" />
-                                <tr v-if="showNoData" class="table-warning">
-                                    <td class="p-3" colspan="6">No se encontraron resultados</td>
-                                </tr>
-                                <tr v-if="loading">
-                                    <td colspan="6">
-                                        <div class="spinner-border m-2 text-primary" role="status"></div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                            <tfoot v-if="usersList.length > 0">
-                                <tr>
-                                    <td colspan="6">
-                                        <div>
-                                            <div><b>Página</b></div>
-                                            <div class="wrapper-input" v-on:keyup="pageNumber(pager.page)">
-                                                <vue-numeric class="form-control text-center form-control-sm"
-                                                             :max="pager.max"
-                                                             :min="1"
-                                                             :precision="0"
-                                                             type="text"
-                                                             v-model="pager.page"></vue-numeric>
-                                            </div>
-                                            <div><b>de {{ pager.numPages }}</b></div>
+    <div class="container-fluid">
+
+        <div class="row align-items-center justify-content-center" v-cloak>
+            <div class="col-11 col-md-10 wrapper-users">
+                <div class="row">
+                    <div class="col-6 col-md-4">
+                        <h2 class="title">Usuarios</h2>
+                    </div>
+                    <div class="col-6 col-md-8 text-end">
+                        <button class="btn btn-primary create-user"
+                                data-bs-target="#createUser"
+                                data-bs-toggle="modal"
+                                type="button">Crear Usuario</button>
+                    </div>
+                    <Filters @clearUsersList="clearUsersList" @searchBy="searchBy" @showUsers="showUsers"/>
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead v-if="usersList.length > 0">
+                                    <tr>
+                                        <th scope="col">Código</th>
+                                        <th scope="col">Cédula</th>
+                                        <th scope="col">Nombre</th>
+                                        <th scope="col">Correo</th>
+                                        <th scope="col">Estatus</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <User :user="user"
+                                          :key="index"
+                                          v-for="(user, index) in usersList"
+                                          v-if="usersList.length > 0" />
+                                    <tr v-if="showNoData" class="table-warning">
+                                        <td class="p-3" colspan="6">No se encontraron resultados</td>
+                                    </tr>
+                                    <tr v-if="loading">
+                                        <td colspan="6">
+                                            <div class="spinner-border m-2 text-primary" role="status"></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot v-if="usersList.length > 0">
+                                    <tr>
+                                        <td colspan="6">
                                             <div>
-                                                <b-icon-chevron-compact-left class="icono border rounded" v-on:click="prevPage"></b-icon-chevron-compact-left>
+                                                <div><b>Página</b></div>
+                                                <div class="wrapper-input" v-on:keyup="pageNumber(pager.page)">
+                                                    <vue-numeric class="form-control text-center form-control-sm"
+                                                                 :max="pager.max"
+                                                                 :min="1"
+                                                                 :precision="0"
+                                                                 type="text"
+                                                                 v-model="pager.page"></vue-numeric>
+                                                </div>
+                                                <div><b>de {{ pager.numPages }}</b></div>
+                                                <div>
+                                                    <b-icon-chevron-compact-left class="icono border rounded" v-on:click="prevPage"></b-icon-chevron-compact-left>
+                                                </div>
+                                                <div>
+                                                    <b-icon-chevron-compact-right class="icono border rounded" v-on:click="nextPage"></b-icon-chevron-compact-right>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <b-icon-chevron-compact-right class="icono border rounded" v-on:click="nextPage"></b-icon-chevron-compact-right>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tfoot>
-                        </table>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="createUser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-fullscreen">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Crear nuevo usuario del sistema</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <NewUser></NewUser>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
+
 </template>
 
 
@@ -73,6 +99,7 @@
 
 import Filters from './userListFilter.vue'
 import User from './User.vue'
+import NewUser from './NewUser.vue'
 import VueNumeric from 'vue-numeric';
 import { useUtils } from '../../js/components/Utils.js'
 const utils = useUtils()
@@ -81,6 +108,7 @@ var self
 export default {
     components: {
         Filters,
+        NewUser,
         User,
         VueNumeric
     },

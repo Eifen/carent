@@ -4,7 +4,7 @@ import App from './App.vue'
 import router from './routes'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap'
+import * as bootstrap from 'bootstrap'
 
 Vue.use(VueRouter)
 

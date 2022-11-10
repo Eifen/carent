@@ -36,4 +36,4 @@ export default {
 
 </script>
 
-<style lang="less" scoped src="../../less/usuario/newUser.less"></style>
+<style lang="less" scoped src="../../less/usuario/NewUser.less"></style>
