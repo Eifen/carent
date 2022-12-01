@@ -70,21 +70,56 @@
             <option value="" disabled selected>Seleccione...</option>
             <option v-bind:value="documenType.id" v-for="documenType in comboDocumenType">@{{ documenType.descripcion }}</option>
             </select>
-            <div class="mensaje"></div>
+            <div class="message"></div>
         </div>
-        <div class="form-group col-12 col-sm-6">
-            <label for="cedula">Cédula de Identidad <span class="campo-obligatorio">*</span></label>
+        <div class="form-group col-12 col-sm-6 col-md-3">
+            <label for="id">Cédula de Identidad <span class="campo-obligatorio">*</span></label>
             <input class="form-control"
                    data-formated-number="true"
                    data-only-number="true"
                    data-validar="true"
-                   id="cedula"
+                   id="id"
                    type="text"
-                   v-bind:disabled="form.cedula.disabled"
-                   v-model="form.cedula.value"
+                   v-bind:disabled="form.id.disabled"
+                   v-model="form.id.value"
                    v-on:keyup="valuesForm">
-            <small id="cedulaHelp" class="form-text text-muted">Ejemplo: 17.471.899</small>
-            <div class="mensaje"></div>
+            <small id="idHelp" class="form-text text-muted">Ejemplo: 17.471.899</small>
+            <div class="message"></div>
+        </div>
+        <div class="form-group col-12 col-sm-6 col-md-3">
+            <label for="userCode">Código de usuario <span class="campo-obligatorio">*</span></label>
+            <input aria-describedby="userCodeHelp"
+                   class="form-control"
+                   data-validar="true"
+                   data-only-number="true"
+                   id="userCode"
+                   type="text"
+                   v-bind:disabled="form.userCode.disabled"
+                   v-model="form.userCode.value"
+                   v-on:keyup="valuesForm">
+            <small id="userCodeHelp" class="form-text text-muted">Ejemplo: 2209</small>
+            <div class="message"></div>
+        </div>
+        <div class="form-group col-12 col-sm-6 col-md-3">
+            <label for="birthday">Fecha de Nacimiento</label>
+            <div class="input-group">
+                <datetime :disabled="form.birthday.disabled"
+                          format="dd/LL/yyyy"
+                          input-class="form-control birthday"
+                          ref="birthday"
+                          v-model="form.birthday.value"
+                          value-zone='local'
+                          type="date"
+                          zone='local'>
+                          <template slot="button-cancel">Cerrar</template>
+                </datetime>
+                <div class="input-group-append" data-toggle="tooltip" title="Borrar">
+                    <span class="input-group-text" @click="clearDate('birthday')">
+                        <i class="fas fa-times-circle remove"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="message"></div>
         </div>
     </form>
 </template>
@@ -96,15 +131,18 @@ var self
 
 import VueNumeric from 'vue-numeric';
 import { useUtils } from '../../js/components/Utils.js'
+import { Datetime } from 'vue-datetime';
 const utils = useUtils()
 var self
 
 export default {
     components: {
+        Datetime,
         VueNumeric
     },
     data() {
         return {
+            comboDocumenType: [],
             form: {
                 first_name: {
                     disabled: false,
@@ -126,18 +164,20 @@ export default {
                     disabled: false,
                     value: ""
                 },
-                fechaNacimiento: {
+                id: {
                     disabled: false,
                     value: ""
                 },
-                codigoUsuario: {
+                userCode: {
                     disabled: false,
                     value: ""
                 },
-                cedula: {
+                birthday: {
                     disabled: false,
                     value: ""
                 },
+
+
                 estado: {
                     disabled: true,
                     validar: false,
@@ -202,6 +242,9 @@ export default {
     },
     methods: {
 
+        clearDate: function(nameRef){
+            self.form[nameRef].value = "";
+        },
         clearErrorMessage: function(e){
           $(e.target).removeClass("error");
           $(e.target).parents(".form-group").find(".mensaje").html("").removeClass("invalid-feedback");
