@@ -1,0 +1,80 @@
+[v-cloak] {
+  display: none;
+}
+
+form {
+
+    > div {
+        margin-bottom: 20px;
+
+        &.wrapper-required-legend {
+            margin-bottom: 20px;
+
+            span {
+                color:#cc0000;
+            }
+
+        }
+
+        &.form-group {
+
+            label {
+                color:#091F40;
+                font-size: .8rem;
+                padding-left: 15px;
+
+                &.label-warning {
+                    color:#cc0000;
+                }
+
+                span {
+                    color:#cc0000;
+                }
+
+            }
+
+            .invalid-feedback {
+                display: block !important;
+            }
+
+            .form-control,
+            .form-select {
+                border-radius: 20px;
+
+                &.error {
+                    border-color: #dc3545;
+                }
+
+                &:disabled {
+                    cursor: not-allowed;
+                }
+
+            }
+
+            .input-group-append {
+
+                &:hover {
+                    cursor: pointer;
+
+                    .remove {
+                        color:#cc0000;
+                    }
+
+                }
+
+                .remove {
+                    color:#E25353;
+                }
+
+            }
+
+            small {
+                font-size: .8rem;
+                padding-left: 15px;
+            }
+
+        }
+
+    }
+
+}

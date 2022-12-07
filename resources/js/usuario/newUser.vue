@@ -1,7 +1,10 @@
 <template>
     <form class="row">
+        <div class="col-12 wrapper-required-legend">
+            <b>Campos obligatorios (<span>*</span>)</b>
+        </div>
         <div class="form-group col-12 col-sm-6 col-md-3">
-            <label for="firstName">Primer Nombre <span class="campo-obligatorio">*</span></label>
+            <label for="firstName">Primer Nombre <span>*</span></label>
             <input aria-describedby="firstNameHelp"
                    class="form-control text-lowercase"
                    data-min="3"
