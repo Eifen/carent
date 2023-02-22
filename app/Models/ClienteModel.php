@@ -413,7 +413,7 @@ class ClienteModel extends Model
                     "telefono_fiscal" => $parametros["telefono_fiscal"],
                     "pagina_web" => $parametros["pagina_web"],
                     "email_fiscal" => $parametros["email_fiscal"],
-                    "id_estatus" => $parametros["estatus"],);
+                    "id_estatus" => $parametros["estatus"]);
         $contacto = DB::table('tbl_cliente')->where("id",$parametros["idCliente"])->update($data);
         DB::commit();
 
