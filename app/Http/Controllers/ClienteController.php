@@ -186,20 +186,18 @@ class ClienteController extends Controller
     $modelo = new ClienteModel();
 
     $parametros = array(
-      "idCliente" => $request->input("idCliente"),
-      "idUsuario" => (int) $request->input("idUsuario"),
-      "codigoCliente" => (int) $request->input("codigoCliente"),
-      "rif" => $request->input("rif"),
-      "razon_social" => mb_strtoupper ($request->input("razon_social")),
-      "id_pais" => $request->input("pais"),
-      "direccion" => $request->input("direccion"),
-      "telefono_fiscal" => $request->input("telefono_fiscal"),
-      "pagina_web" => $request->input("pagina_web"),
-      "email_fiscal" => strtolower($request->input("email_fiscal")),
-      "estatus" => $request->input("estatus"),
-      "usuario_id" => $request->session()->get('usuario_id'),
-      "fecha" => date("Y-m-d H:i:s"),
-      "direccion_ip" => $request->session()->get('usuario_ip'),
+      $request->input("idCliente"),
+      (int) $request->input("idUsuario"),
+      (int) $request->input("codigoCliente"),
+      $request->input("rif"),
+      (int) $request->input("nit"),
+      mb_strtoupper ($request->input("razon_social")),
+      $request->input("pais"),
+      $request->input("direccion"),
+      $request->input("telefono_fiscal"),
+      (string) $request->input("pagina_web"),
+      strtolower($request->input("email_fiscal")),
+      $request->input("estatus")
     );
 
     $response = $modelo->modificarCliente($parametros);
