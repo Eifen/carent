@@ -38,9 +38,15 @@ class ClienteController extends Controller
     $modelo = new ClienteModel();
     $codigoCliente = $modelo->codigoCliente();
     $paises = $modelo->paises();
+    $servicios = $modelo->servicios();
+    $sectores = $modelo->sectores();
     if (!empty($codigoCliente)) {
       $codigo = $codigoCliente->codigo + 1;
-      $response = array("response" => true, "codigo" => $codigo, "paises" => $paises);
+      $response = array("response" => true, 
+                        "codigo" => $codigo, 
+                        "paises" => $paises, 
+                        "servicios" => $servicios,
+                        "sectores" => $sectores);
     }else{
       $response = array("response" => false, "message" => "No se encontraron resultados");
     }
@@ -98,12 +104,15 @@ class ClienteController extends Controller
         $request->input("idUsuario"),
         $codigoCliente,
         $request->input("rif"),
+        $request->input("nit"),
         $request->input("razon_social"),
         $request->input("pais"),
         $request->input("direccion"),
         $request->input("telefono_fiscal"),
         $request->input("pagina_web"),
         $request->input("email_fiscal"),
+        $request->input("servicios"),
+        $request->input("sector"),
         session("usuario_ip")
     );
 

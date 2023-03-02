@@ -185,6 +185,16 @@ class ClienteModel extends Model
       return $paises;
   }
 
+  function servicios(){
+    $paises = DB::select('SELECT ser.ServicioId, ser.NombreServicio FROM tbl_servicio ser WHERE ser.EstadoServicio = 1');
+    return $paises;
+  }
+
+  function sectores(){
+    $sector = DB::select('SELECT sec.SectorId, sec.SectorNombre FROM tbl_sector sec WHERE sec.SectorEstado = 1');
+    return $sector;
+  }
+
   function buscarCliente($codigo){
 
     $cliente = DB::select('SELECT id,
@@ -219,7 +229,7 @@ class ClienteModel extends Model
 
   function crearCliente($parametros){
 
-    $funcionario = DB::select('call sp_nuevo_cliente(?,?,?,?,?,?,?,?,?,?,?,@respuesta)',$parametros);
+    $funcionario = DB::select('call sp_nuevo_cliente(?,?,?,?,?,?,?,?,?,?,?,?,?,?,@respuesta)',$parametros);
     $respuestaSp = DB::select('SELECT @respuesta AS respuesta_json');
     $respuestaJson = json_decode($respuestaSp[0]->respuesta_json, true);
 
