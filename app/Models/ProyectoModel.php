@@ -505,13 +505,12 @@ class ProyectoModel extends Model
 
       try{
 
-        $sql_factura = DB::select('SELECT *
-                                   FROM tbl_factura_proyecto fp
-                                   WHERE fp.id_proyecto = '.$idProyecto.'
-                                   AND fp.id_estatus = 1');
-
-        if(count($sql_factura) == 0){
-
+        // $sql_factura = DB::select('SELECT *
+        //                            FROM tbl_factura_proyecto fp
+        //                            WHERE fp.id_proyecto = '.$idProyecto.'
+        //                            AND fp.id_estatus = 1');
+        //Se ha eliminado la condición que diferencia entre un proyecto con proceso de facturación activo.
+        
           $update = DB::table('tbl_proyecto')->where("id", $idProyecto)->update($parametros_proyecto);
 
           $divisionCreada = true;
@@ -587,15 +586,6 @@ class ProyectoModel extends Model
             "response" => true,
             "message" => "Proyecto actualizado con éxito."
           );
-
-        }else{
-
-          return array(
-            "response" => false,
-            "message" => "El proyecto ya posee un proceso de facturación activo, es decir tiene al menos una factura en estatus activa!."
-          );
-
-        }
 
       } catch(\Illuminate\Database\QueryException $ex){
 
