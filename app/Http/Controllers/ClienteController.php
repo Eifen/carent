@@ -104,15 +104,15 @@ class ClienteController extends Controller
         $request->input("idUsuario"),
         $codigoCliente,
         $request->input("rif"),
-        $request->input("nit"),
+        (int) $request->input("nit"),
         $request->input("razon_social"),
         $request->input("pais"),
         $request->input("direccion"),
         $request->input("telefono_fiscal"),
-        $request->input("pagina_web"),
+        (string) $request->input("pagina_web"),
         $request->input("email_fiscal"),
-        $request->input("servicios"),
         $request->input("sector"),
+        $request->input("servicios"),
         session("usuario_ip")
     );
 
@@ -178,11 +178,16 @@ class ClienteController extends Controller
     $infoCliente = $modelo->detalleClienteModificar($id_cliente);
     $estatus = $modelo->estatusCliente();
     $paises = $modelo->paises();
+    $servicios = $modelo->servicios();
+    $sectores = $modelo->sectores();
+    
 
     if(!empty($infoCliente)){
       $response = array("response" => true,
                         "info" => $infoCliente,
                         "paises" => $paises,
+                        "servicios" => $servicios,
+                        "sectores" => $sectores,
                         "estatus" => $estatus);
     }else{
       $response = array("response" => false, "message" => "No se encontraron resultados");
@@ -206,7 +211,10 @@ class ClienteController extends Controller
       $request->input("telefono_fiscal"),
       (string) $request->input("pagina_web"),
       strtolower($request->input("email_fiscal")),
-      $request->input("estatus")
+      session("usuario_ip"),
+      $request->input("estatus"),
+      $request->input("sector"),
+      $request->input("servicio")
     );
 
     $response = $modelo->modificarCliente($parametros);

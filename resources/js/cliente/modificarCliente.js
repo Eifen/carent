@@ -52,6 +52,8 @@ const datosIniciales = () => {
                  detalleUsuario: response.data.info,
                  estatus: response.data.estatus,
                  paises: response.data.paises,
+                 servicios: response.data.servicios,
+                 sectores: response.data.sectores,
                  response: true
                });
 
@@ -93,6 +95,8 @@ new Vue({
     },
     comboEstatus: [],
     comboPaises: [],
+    comboServicios:[],
+    comboSector: [],
     refreshForm: false,
     form: {
       codigoCliente:{
@@ -135,6 +139,17 @@ new Vue({
       },
       estatus:{
         disabled: false,
+        validar: true,
+        value: ""
+      },
+      sector:{
+        disabled: false,
+        validar: true,
+        value: ""
+      },
+      servicio:{
+        disabled: false,
+        validar: true,
         value: ""
       }
     },
@@ -171,7 +186,9 @@ new Vue({
     },
     loading: true,
     dataInicial: false,
-    id_pais: ""
+    id_pais: "",
+    id_sector: 0,
+    id_servicio: 0,
   },
 
   beforeCreate: async function(){
@@ -194,6 +211,10 @@ new Vue({
         self.form.pais.value = dataInit.infoClie.pais;
         self.id_pais = dataInit.infoClie.id_pais;
         self.form.direccion.value = dataInit.infoClie.direccion;
+        self.form.sector.value = dataInit.infoClie.sector;
+        self.id_sector = dataInit.infoClie.SectorAsociado;
+        self.id_servicio = dataInit.infoClie.ServicioAsociado;
+        self.form.servicio.value = dataInit.infoClie.servicio;
 
         self.form.telefono_fiscal.value = dataInit.infoClie.telefono_fiscal;
         self.form.pagina_web.value = dataInit.infoClie.pagina_web;
@@ -201,6 +222,9 @@ new Vue({
         self.form.estatus.value = dataInit.infoClie.id_estatus;
         self.comboEstatus = dataInit.estatus;
         self.comboPaises = dataInit.paises;
+        self.comboSector = dataInit.sectores;
+        self.comboServicios = dataInit.servicios;
+
         self.loading = false;
 
       }else{
@@ -234,7 +258,7 @@ new Vue({
         AutoNumeric.getAutoNumericElement("#nit").set(self.form.nit.value);
 
 
-        var indices = ["rif","nit","razon_social","pais","direccion","telefono_fiscal","pagina_web","email_fiscal","estatus"];
+        var indices = ["rif","nit","razon_social","pais","direccion","telefono_fiscal","pagina_web","email_fiscal","estatus","sector","servicio"];
 
         indices.forEach(function(indiceObjecto, indice) {
           self.form[indiceObjecto].disabled = false;
@@ -394,6 +418,14 @@ new Vue({
       self.form.telefono_fiscal.value = self.form.pais.value.codigo_telf;
     },
 
+    sector: function(){
+      self.id_sector = self.form.sector.value.SectorId
+    },
+
+    servicio: function(){
+      self.id_servicio = self.form.servicio.value.ServicioId
+    },
+
     valuesForm: function(e){
 
       if(e.target.type === 'text' || e.target.type === 'textarea' || e.target.type === 'email'){
@@ -459,7 +491,10 @@ new Vue({
           telefono_fiscal: self.form.telefono_fiscal.value,
           pagina_web: self.form.pagina_web.value,
           email_fiscal: self.form.email_fiscal.value,
-          estatus: self.form.estatus.value
+          estatus: self.form.estatus.value,
+          servicio: self.form.servicio.value,
+          sector: self.id_sector,
+          servicio: self.id_servicio
         }
 
         self.submitActualizar.content = '<i class="fas fa-cog fa-spin"></i>';
@@ -474,7 +509,7 @@ new Vue({
 
           if(response.status === 200 && response.data.response === true){
 
-            var indices = ["rif","nit","razon_social","pais","direccion","telefono_fiscal","pagina_web","email_fiscal","estatus"];
+            var indices = ["rif","nit","razon_social","pais","direccion","telefono_fiscal","pagina_web","email_fiscal","estatus","sector","servicio"];
 
             indices.forEach(function(indiceObjecto, indice) {
               self.form[indiceObjecto].disabled = false;
@@ -499,7 +534,7 @@ new Vue({
         })
         .catch(error => {
 
-          var indices = ["rif","nit","razon_social","pais","direccion","telefono_fiscal","pagina_web","email_fiscal","estatus"];
+          var indices = ["rif","nit","razon_social","pais","direccion","telefono_fiscal","pagina_web","email_fiscal","estatus","sector","servicio"];
 
           indices.forEach(function(indiceObjecto, indice) {
             self.form[indiceObjecto].disabled = false;

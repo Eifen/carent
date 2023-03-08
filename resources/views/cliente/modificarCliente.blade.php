@@ -133,7 +133,7 @@
                 <div class="mensaje"></div>
               </div>
               <div class="form-group col-12 col-sm-6">
-                <label for="nit">Nit</label>
+                <label for="nit">Nit <span class="campo-obligatorio">*</span></label>
                 <input class="form-control"
                        data-formated-number="true"
                        data-only-number="true"
@@ -174,6 +174,32 @@
                 <small id="estadoHelp" class="form-text text-muted">Estatus del usuario</small>
                 <div class="mensaje"></div>
               </div>
+              <div class="form-group col-12 col-sm-6">
+                <label for="sector">Sector<span class="campo-obligatorio">*</span></label>
+                <v-select @input="sector"
+                :options="comboSector"
+                          label="SectorNombre"                          
+                          id="sector"
+                          v-model="form.sector.value"
+                          v-bind:data-validar="form.sector.validar"
+                          v-bind:disable="form.sector.disable"
+                          placeholder="Seleccione..."
+                          :clearable="false"
+                          type="text"></v-select>
+              </div>
+              <div class="form-group col-12 col-sm-6">
+                <label for="servicio">Servicio<span class="campo-obligatorio">*</span></label>
+                <v-select @input="servicio"
+                :options="comboServicios"
+                          label="NombreServicio"                          
+                          id="servicio"
+                          v-model="form.servicio.value"
+                          v-bind:data-validar="form.servicio.validar"
+                          v-bind:disable="form.servicio.disable"
+                          placeholder="Seleccione..."
+                          :clearable="false"
+                          type="text"></v-select>
+              </div>
             </form>
             <h5>Dirección Fiscal</h5>
             <form class="row">
@@ -187,6 +213,7 @@
                           v-bind:data-validar="form.pais.validar"
                           v-bind:disable="form.pais.disable"
                           placeholder="Seleccione..."
+                          :clearable="false"
                           type="text"></v-select>
               </div>
               <div class="form-group col-12 col-sm-6"></div>
