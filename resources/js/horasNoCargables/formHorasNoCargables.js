@@ -731,7 +731,7 @@ new Vue({
 
             if(fecha_desde >= fecha_hasta){
 
-              $('#'+formulario+" #fechaHasta").find(".mensaje").html("La Decha Hasta no puede ser menor o igual a la Fecha Desde!").addClass("invalid-feedback");
+              $('#'+formulario+" #fechaHasta").find(".mensaje").html("La Fecha Hasta no puede ser menor o igual a la Fecha Desde!").addClass("invalid-feedback");
               $('#'+formulario+" #fechaHasta").find(".form-control").addClass("error");
 
             }else{
