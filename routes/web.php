@@ -19,3 +19,7 @@ Route::prefix('/')->group(function(){
     Route::get('/', [LoginController::class,'index']);
 });
 
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
