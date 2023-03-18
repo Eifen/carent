@@ -29,6 +29,7 @@ Route::post('/guardarNuevaClave', 'InicioController@guardarNuevaClave');
 /* Módulo de Usuario */
 Route::get('/usuarios', function() {return view('usuario/index');})->middleware('usuario.session');
 Route::get('/searchUsers', 'UsuarioController@searchUsers');
+Route::get('/buscarUsuarios', 'UsuarioController@buscarUsuarios');
 
 
 

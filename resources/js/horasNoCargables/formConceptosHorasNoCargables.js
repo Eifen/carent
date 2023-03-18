@@ -1,4 +1,5 @@
-require('bootstrap');
+require('../bootstrap');
+import $ from "jquery";
 import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap-vue/node_modules/bootstrap/dist/css/bootstrap.css';
@@ -544,3 +545,8 @@ new Vue({
   }// Fin methods
 
 });
+
+$('.CerrarModal_ConceptoHoras').on("click",function(){
+    $('#modal-crear-concepto').modal("hide")
+    $('#modal-modificar-concepto').modal("hide")
+})
