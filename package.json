@@ -1,7 +1,7 @@
 {
     "private": true,
     "scripts": {
-        "initServidor": "php artisan serve --port=90 --host=Carent2.com",
+        "initServidor": "php artisan serve --port=90",
         "desarrollo": "vite",
         "build": "vite build"
     },
@@ -26,6 +26,7 @@
         "crypto-js": "^4.1.1",
         "lodash": "^4.17.21",
         "vue": "^3.2.36",
-        "vue-loader": "^17.0.1"
+        "vue-loader": "^17.0.1",
+        "vuelidate": "^0.7.7"
     }
 }

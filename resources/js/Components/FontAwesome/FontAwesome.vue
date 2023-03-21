@@ -10,8 +10,9 @@ import { faUser } from '@fortawesome/free-solid-svg-icons'
 import { faLock } from '@fortawesome/free-solid-svg-icons'
 import { faEye } from '@fortawesome/free-solid-svg-icons';
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 /* Agregamos los iconos a la libreria*/
-library.add(faUser,faLock, faEye,faEyeSlash)
+library.add(faUser,faLock, faEye,faEyeSlash,faCircleExclamation)
 
 export default {
     props: {

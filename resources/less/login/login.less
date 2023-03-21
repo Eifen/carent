@@ -8,7 +8,7 @@
     //Contenedor del Inicio de sesión
     &-content{
         width: min(100%,28rem);
-        height: 60vh;
+        height: min(100vh,28rem);
         //Elementos que componen el Contenedor
         &-credentials{
             background: @Container-Color;
@@ -32,6 +32,7 @@
             }
             & #credentials-form{
                 grid-area: 3 / 1 / 4 / 4;
+                position: relative;
                 //Eye-Control (Control del icono del ojo)
                 & .form-eye{
                     cursor: pointer;
@@ -53,6 +54,12 @@
                         border-color: @Shadow-Hover-Color;
                     }
                 }
+                //Mensajes de Error
+                & .form-ErrorInput{
+                    font-size: .6em;
+                    color: @Failure-Submit-Color
+                }
+
             }
             //Olvidé mi contraseña
             & #credentials-forgot-password{
