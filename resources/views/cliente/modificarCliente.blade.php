@@ -33,63 +33,7 @@
 
           <div class="col-12 col-sm-11 col-md-9 col-lg-8">
             <h3>Estas Modificando al Cliente</h3>
-            <form class="row">
-              <div class="form-group col-12 col-md-4">
-                <select class="form-control"
-                        v-bind:disabled="formSearch.select.disabled"
-                        v-model="formSearch.select.value"
-                        v-on:change="tipoFiltro">
-                  <option value="" selected disabled>Agregar Socio Encargado Por</option>
-                  <option value="1">Código de Usuario</option>
-                  <option value="2">Cédula</option>
-                  <option value="4">Primer o Segundo Nombre</option>
-                  <option value="5">Primer o Segundo Apellido</option>
-                </select>
-              </div>
-              <div class="form-group col-12 col-md-6">
-                <input class="form-control inputSearch"
-                       ref="inputSearch"
-                       type="text"
-                       v-bind:disabled="formSearch.inputSearch.disabled"
-                       v-on:keyup="evaluarCampo('inputSearch', $event)"
-                       v-model="formSearch.inputSearch.value">
-                <div class="mensaje"></div>
-              </div>
-              <div class="form-group col-12 col-md-2">
-                <!--Al hacer clic se invoca el metodo buscar de modificarCliente.js y abre la modal-->
-                <button class="btn btn-primary"
-                        type="button"
-                        v-bind:disabled="formSearch.submit.disabled"
-                        v-html="formSearch.submit.html"
-                        v-on:click="buscar"></button>
-              </div>
-              <div id="modal-detalle-usuario" class="modal fade" tabindex="-1" role="dialog" v-cloak>
-                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                  <div class="modal-content">
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <th scope="col">Código</th>
-                          <th scope="col">Cédula</th>
-                          <th scope="col">Nombre</th>
-                          <th scope="col"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <!-- Se llena la tabla con los valores que tiene usuarios.registros obtenidos de modificarCliente.js -->
-                        <tr v-for="usuario in usuarios.registros">
-                          <th scope="row">@{{ usuario.codigo }}</th>
-                          <td>@{{ usuario.cedula }}</td>
-                          <td>@{{ usuario.nombre }}</td>
-                          <td>
-                            <i class="fas fa-check-square" data-dismiss="modal" v-on:click="SelecionarUsuario(usuario.id, $event)"></i>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
+
             <form class="row" v-if="!detalleUsuario.error">
                   <div class="form-group col-12 col-sm-6">
                     <label>Codigo</label>
@@ -178,7 +122,7 @@
                 <label for="sector">Sector<span class="campo-obligatorio">*</span></label>
                 <v-select @input="sector"
                 :options="comboSector"
-                          label="SectorNombre"                          
+                          label="SectorNombre"
                           id="sector"
                           v-model="form.sector.value"
                           v-bind:data-validar="form.sector.validar"
@@ -191,7 +135,7 @@
                 <label for="servicio">Servicio<span class="campo-obligatorio">*</span></label>
                 <v-select @input="servicio"
                 :options="comboServicios"
-                          label="NombreServicio"                          
+                          label="NombreServicio"
                           id="servicio"
                           v-model="form.servicio.value"
                           v-bind:data-validar="form.servicio.validar"
@@ -207,7 +151,7 @@
                 <label for="pais">Pais<span class="campo-obligatorio">*</span></label>
                 <v-select @input="pais"
                 :options="comboPaises"
-                          label="nombre"                          
+                          label="nombre"
                           id="pais"
                           v-model="form.pais.value"
                           v-bind:data-validar="form.pais.validar"
@@ -226,7 +170,7 @@
                           rows="3"
                           v-model="form.direccion.value"
                           data-min="10"></textarea>
-              </div>         
+              </div>
 
               <div class="form-group col-12 col-sm-6">
                 <label for="telefono_fiscal">Nº de Teléfono Principal<span class="campo-obligatorio">*</span></label>

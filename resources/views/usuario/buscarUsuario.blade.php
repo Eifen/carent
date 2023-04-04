@@ -32,8 +32,7 @@
                   <option value="1">Código de usuario</option>
                   <option value="2">Cédula</option>
                   <option value="3">Correo electrónico</option>
-                  <option value="4">Primer o segundo nombre</option>
-                  <option value="5">Primer o segundo apellido</option>
+                  <option value="4">Nombre</option>
                 </select>
               </div>
               <div class="form-group col-12 col-md-6">
@@ -62,7 +61,7 @@
                   <th scope="col">Código</th>
                   <th scope="col">Cédula</th>
                   <th scope="col">Nombre</th>
-                  <th scope="col">Correo</th>
+                  <th scope="col">Correo Principal</th>
                   <th scope="col">Estatus</th>
                   <th scope="col"></th>
                   <th scope="col" v-if="permisoActualizar"></th>
@@ -71,11 +70,11 @@
               </thead>
               <tbody>
                 <tr v-for="usuario in usuarios.registros">
-                  <th scope="row">@{{ usuario.codigo }}</th>
-                  <td>@{{ usuario.cedula }}</td>
-                  <td>@{{ usuario.nombre }}</td>
-                  <td>@{{ usuario.correo_principal }}</td>
-                  <td>@{{ usuario.estatus }}</td>
+                  <th scope="row">@{{ usuario.Codigo }}</th>
+                  <td>@{{ usuario.Cedula }}</td>
+                  <td>@{{ usuario.Nombre }}</td>
+                  <td>@{{ usuario.Correo }}</td>
+                  <td>@{{ usuario.Estatus }}</td>
                   <td>
                     <i class="fas fa-search-plus" v-on:click="mostrarDetalleUsuario(usuario.id, $event)"></i>
                   </td>
@@ -104,7 +103,7 @@
               <div class="modal-header">
                 <h4>Detalle del Usuario</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
+                  <span aria-hidden="true" class="CerrarModal_BuscarUsuario">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
@@ -209,7 +208,7 @@
                 </form>
               </div>
               <div class="modal-footer">
-                <button class="btn"
+                <button class="btn btn-primary CerrarModal_BuscarUsuario"
                         data-dismiss="modal"
                         type="button">Ok</button>
               </div>
@@ -223,7 +222,7 @@
               <div class="modal-header">
                 <h4>Asignar los Menus</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
+                  <span aria-hidden="true" class="CerrarModal_BuscarUsuario">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
@@ -263,7 +262,7 @@
                 </form>
               </div>
               <div class="modal-footer">
-                <button class="btn"
+                <button class="btn btn-primary CerrarModal_BuscarUsuario"
                         data-dismiss="modal"
                         type="button">Ok</button>
               </div>
