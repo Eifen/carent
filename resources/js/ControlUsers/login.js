@@ -15,7 +15,10 @@ const loginApp = createApp ({
             ErrorStyle: {
                 base: true, //Definimos la propiedad que colocara input-group
                 HasError: { codigo: false, password: false } //Objeto que controla en que formulario colocara el mb-3
-            }
+            },
+            isDisable: false,
+            isClick: false,
+            isSuccess:false
         }
     },
     methods:{
@@ -35,7 +38,6 @@ const loginApp = createApp ({
          * @param {*} $EncryptIv Vector inicializador del encrypt. String
          */
         iniciarSesion($EncryptKey, $EncryptIv){
-            console.log($EncryptKey,$EncryptIv)
             const InitControlLogin = new UsersControl(); //Iniciamos la clase
 
             //Validamos que los campos no estén vacios
@@ -57,9 +59,10 @@ const loginApp = createApp ({
                     default:
                         this.codigoUsuario.IsEmpty = false;
                         this.passwordUsuario.IsEmpty = false;
-
+                        this.isDisable = true //Apagamos el boton
+                        this.isClick = true //Cambiamos la información
                         //Despues de reiniciar el estado del Empty, llamamos al metodo Login
-                        InitControlLogin.login(this.passwordUsuario.value,this.codigoUsuario.value);
+                        InitControlLogin.login(this.passwordUsuario.value,this.codigoUsuario.value,$EncryptKey,$EncryptIv)
                         break;
                 }
             } catch (error) {

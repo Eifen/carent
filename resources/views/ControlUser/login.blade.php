@@ -9,7 +9,7 @@
                         <font-awesome string-icon="fa-solid fa-user"></font-awesome>
                     </span>
                     <input type="text" class="form-control" placeholder="Código de Usuario"
-                    aria-label="Codigo" aria-describedby="basic-addon1" id="Codigo" v-model="codigoUsuario.value"/>
+                    aria-label="Codigo" aria-describedby="basic-addon1" id="codigoUsuario" v-model="codigoUsuario.value"/>
                 </div>
                 {{--Control de errores de Codigo de Usuario--}}
                 <span class="form-ErrorInput" v-if="codigoUsuario.IsEmpty">
@@ -22,7 +22,7 @@
                         <font-awesome string-icon="fa-solid fa-lock"></font-awesome>
                     </span>
                     <input :type="TypeInputPassword" class="form-control" placeholder="Contraseña"
-                    aria-label="Clave" aria-describedby="basic-addon2" id="Clave" v-model="passwordUsuario.value"/>
+                    aria-label="Clave" aria-describedby="basic-addon2" id="passwordUsuario" v-model="passwordUsuario.value"/>
                     <span class="input-group-text form-eye" id="basic-addon2" @click="changeInput(!state)">
                         {{--Control del ojo--}}
                         <font-awesome :string-icon="controlEye"></font-awesome>
@@ -34,9 +34,12 @@
                     @{{ErrorMessage.passwordError}}
                 </span>
                 {{--Envio de datos del Formulario--}}
-                <button type="button" class="form-button"
+                <button type="button" class="form-button" :class="{disable: isDisable}"
                 {{--Enviamos la data del session por parametro al componente de VUE--}} 
-                @click="iniciarSesion('{{ Session::get('encrypt-key') }}' , '{{ Session::get('encrypt-iv') }}')">Ingresar</button>
+                @click="iniciarSesion('{{ Session::get('encrypt-key') }}' , '{{ Session::get('encrypt-iv') }}')">
+                    <span v-if="!isClick">Ingresar</span>
+                    <span v-if="isClick"><font-awesome string-icon="fa-solid fa-spinner" is-spin></font-awesome></span>
+                </button>
             </form>
             {{--Modal para recuperar la contraseña--}}
             <a href="#" id="credentials-forgot-password">Olvidé mi contraseña</a>

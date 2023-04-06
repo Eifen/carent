@@ -17,9 +17,7 @@ use App\Http\Controllers\LoginController;
 //Ruta principal de inicio de sesion
 Route::prefix('/')->group(function(){
     Route::get('/', [LoginController::class,'index']);
+    Route::post('/login',[LoginController::class,'Login']);
 });
-
-
-Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

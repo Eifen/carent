@@ -1,5 +1,5 @@
 <template>
-        <FontAwesomeIcon :icon="stringIcon"></FontAwesomeIcon>
+        <FontAwesomeIcon :icon="stringIcon" :spin="isSpin"></FontAwesomeIcon>
 </template>
 
 <script>
@@ -11,12 +11,15 @@ import { faLock } from '@fortawesome/free-solid-svg-icons'
 import { faEye } from '@fortawesome/free-solid-svg-icons';
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+
 /* Agregamos los iconos a la libreria*/
-library.add(faUser,faLock, faEye,faEyeSlash,faCircleExclamation)
+library.add(faUser,faLock, faEye,faEyeSlash,faCircleExclamation,faSpinner)
 
 export default {
     props: {
-        stringIcon: String
+        stringIcon: String,
+        isSpin: Boolean
     },
     components: { FontAwesomeIcon }
 }
