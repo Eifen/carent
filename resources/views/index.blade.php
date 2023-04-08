@@ -10,10 +10,10 @@
     @vite(['resources/less/index.less','resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body>
-    @if (!$Session)
+    @if ($Session)
         @include('ControlUser.login')
     @else
-        @include('ControlUser.InitSession')
+        @include('ControlUser.menuIndex')
     @endif
 </body>
 </html>

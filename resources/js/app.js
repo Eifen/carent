@@ -1,5 +1,5 @@
 //Bootstrap
 import './bootstrap';
 //Espacio reservado para imports de Javascript
-import './ControlUsers/login';
-
+import './UI/login';
+import './UI/header'

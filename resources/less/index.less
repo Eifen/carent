@@ -1,7 +1,9 @@
 /* Root de colores y Fonts*/
-@Background-Color: #E9ECEF;
+@Background-Color: #e9ecef;
 @Container-Color: #fff;
-@Shadow-Hover-Color: #343a40;
+@Shadow-Hover-Color: #6c757d;
+@Text-Color: #000;
+@Button-Select-Color: #3490dc;
 @Sucess-Submit-Color: #38c172;
 @Failure-Submit-Color: #e3342f;
 /*Background General*/
@@ -10,10 +12,40 @@ body{
     object-fit: contain;
     margin: 0;
     padding: 0;
+    text-decoration: none;
+    list-style: none;
+    color: @Text-Color
 }
 /*Elementos para ocultar*/
 [v-cloak] { display: none }
 //Deshabilitar botones
 .disable{pointer-events: none; opacity: 0.6;}
+.aLink{
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s linear;
+    cursor: pointer;
+    &:hover{color: @Button-Select-Color} //Desactivamos el estilo de los <a>
+}
+.barsBottomTarget
+{
+    &::before
+    {
+        content: '';
+        position: absolute;
+        bottom: 1vh;
+        left: 0;
+        background: linear-gradient(to right, @Button-Select-Color,@Shadow-Hover-Color);
+        width: 100%;
+        height: 1px;
+        z-index: 1;
+        transform-origin: left;
+        transform: scale(0);
+        transition: transform 0.5s ease-out //Barra inferior hover
+    }
+
+    &:target::before{ transform: scale(1)}
+}
 /*Imports a los estilos*/
-@import 'login/login.less';
+@import 'layouts/login.less';
+@import 'layouts/dashboard.less';

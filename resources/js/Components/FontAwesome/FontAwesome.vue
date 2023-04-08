@@ -12,9 +12,17 @@ import { faEye } from '@fortawesome/free-solid-svg-icons';
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faInstagram } from '@fortawesome/free-brands-svg-icons';
+import { faFacebook } from '@fortawesome/free-brands-svg-icons';
+import { faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faYoutube } from '@fortawesome/free-brands-svg-icons';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
 
 /* Agregamos los iconos a la libreria*/
-library.add(faUser,faLock, faEye,faEyeSlash,faCircleExclamation,faSpinner)
+library.add(faUser,faLock, faEye,faEyeSlash,faCircleExclamation,faSpinner,faInstagram,
+faFacebook,faTwitter,faYoutube,faBars,faXmark,faCaretDown)
 
 export default {
     props: {

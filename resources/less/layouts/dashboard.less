@@ -1,0 +1,149 @@
+.dashboard{
+    background: url('../../../public/images/fondo-inicio.png') @Background-Color no-repeat center;
+    background-size: 25%;
+    height: 100vh;
+    padding: 12vh 10px 0;
+}
+
+//Seccion para el Header
+.header{
+    background: @Container-Color;
+    height: 10vh;
+    width: 100%;
+    box-shadow: 0em 0.3em 0.3em @Shadow-Hover-Color;
+    position: fixed;
+
+    //Nav container
+    &-nav{
+        display: flex;
+        justify-content: space-between;
+        max-width: 90rem; //Se expandirá hasta 1440px
+
+        //Logo
+        &-logo{
+            height: 5vh;
+            line-height: 10vh;
+            padding: 0 40px;
+
+            & img{width: 100%;height: 100%; object-fit: contain;}
+        }
+
+        &-links{
+            list-style: none;
+            display: flex;
+            margin-right: 40px;
+
+            &-item
+            {
+                font-size:0.9em;
+                padding: 0 10px;
+                line-height: 10vh;
+                width: max-content;
+                position: relative;
+                .barsBottomTarget();
+                //Enlaces a las diferentes secciones de la pagina
+                &-link{
+                    position: relative;
+                    transition: color 0.5s ease-in-out;
+                    font-weight: bolder;
+                    .aLink();
+                }
+
+                &-dropdown{
+                    background: none;
+                    max-width: 12rem;
+                    width: 20vw;
+                    position: absolute;
+                    top: 7vh;
+                    right: 0;
+                    font-size: 0em;
+                    padding: 5px 20px;
+                    box-shadow: 0.2em 0.2em 0.3em @Shadow-Hover-Color;
+                    border-radius: 5px;
+                    transition: transform 0.5s ease-in;
+                    transform: scale(0);
+                    z-index: 1;
+
+                    //Contenido del dropdown
+                    &-content{
+                        font-size: 0.9em;
+                        line-height: 20px;
+                        margin: 10px 0;
+                        font-weight:600;
+                        cursor:pointer;
+                        transition: color 0.5s ease-in;
+                        & a{ .aLink(); }//Agregamos los estilos del link
+                    }
+                }
+            }
+        }
+
+        //Button
+        &-toggle{
+            border: none;
+            background: transparent;
+            min-height: 100%;
+            height: 10vh;
+            font-size:min(5vh,1.5em);
+            line-height: 10vh;
+            padding: 0 20px;
+            cursor: pointer;
+            .aLink(); //Activamos el estilo del link
+            display: none; //Solo se verá en dispositivos mobiles
+        }
+    }
+}
+
+//Mobile CSS
+@media (max-width: 48rem) { //Menos  de 900px
+    .header-nav
+    {
+        &-links
+        {
+
+            background: @Container-Color;
+            width: 100%;
+            height: calc(100% - 11vh);
+            align-items: center;
+            flex-direction: column;
+            margin: 0;
+            padding: 20px 0 96px;
+            position:fixed;
+            top: 11vh;
+            left: 100%;
+            overflow-y: auto;
+            transition: left .8s ease-in;
+
+            &-item
+            {
+                width: min(60%,18rem);
+                padding-left: 10px;
+                position: relative;
+
+                &::before{
+                    background: @Shadow-Hover-Color;
+                    opacity: 0.4;
+                    height: 1px;
+                    width: 100%;
+                    transform: scale(1);
+                    position: absolute;
+                    top: 100%;
+                    transition: top 0.5s ease-out;
+                }
+
+                //Css Mobile dropdown
+                &-dropdown{
+                    max-width: 100%;
+                    width: 100%;
+                    border-radius: 0;
+                    box-shadow: none;
+                }
+            }
+
+            [id="cambiarPassword"]:hover::before{top: calc(100% + 7vh + 10px);}
+        }
+
+        //Activamos el toggle
+        &-toggle{display: block;}
+    }
+}

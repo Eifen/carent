@@ -54,19 +54,45 @@
                         border-color: @Shadow-Hover-Color;
                     }
                 }
-                //Desactivar boton
-                // & .disable{ pointer-events: none; }
                 //Mensajes de Error
                 & .form-ErrorInput{
                     font-size: .6em;
                     color: @Failure-Submit-Color
                 }
 
+                //Login correcto
+                & .form-SuccessInput{
+                    font-size: .6em;
+                    color: @Sucess-Submit-Color
+                }
             }
             //Olvidé mi contraseña
             & #credentials-forgot-password{
                 grid-area: 4 / 1 / 5 / 4;
                 text-align: center;
+            }
+        }
+
+        //Contenedor para redes sociales
+        &-social{
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            grid-template-rows: auto;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+
+            &-icon
+            {
+                text-align: center;
+                font-size: min(20vh,2em);
+                color: @Text-Color;
+
+                & a{
+                    color: inherit;
+                    transition: opacity 0.5s ease-in-out;
+                    &:hover{opacity: 0.6;color:inherit}
+                }
             }
         }
     }
