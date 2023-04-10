@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
-    protected $KeyEncrypt = '0123456789abcdef0123456789abcdef'; //Contexto del Encrypt
-    protected $IvEncrypt = 'abcdef9876543210abcdef9876543210'; //Vector de inicialización
     protected $tupleValidacion = false;
     //Inicializar aplicación
     public function index(Request $request){

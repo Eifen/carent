@@ -1,7 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\UsersController;
+use Illuminate\Support\Facades\URL;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,8 +20,13 @@ use App\Http\Controllers\LoginController;
 
 //Ruta principal de inicio de sesion
 Route::prefix('/')->group(function(){
+    //Login
     Route::get('/', [LoginController::class,'index']);
     Route::post('/login',[LoginController::class,'Login']);
+    //Usuarios
+    Route::prefix('/usuarios')->group(function(){
+        Route::get('/',[LoginController::class,'index'])->name('users');
+        Route::post('/limitPag',[ConfigController::class,'LimitPag']);
+        Route::get('/allUsers',[UsersController::class,'index']);
+    });
 });
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

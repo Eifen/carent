@@ -28,6 +28,8 @@
 {{-- Body Dashboard --}}
 @section('dashboard')
     <section class="dashboard">
-pene
+        @if (Request::url() === URL::route('users'))
+          @include('UI.Users.userIndex')
+        @endif
     </section>
 @endsection

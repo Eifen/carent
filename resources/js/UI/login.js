@@ -2,6 +2,7 @@ import { createApp } from 'vue/dist/vue.esm-bundler';
 import FontAwesome from '../Components/FontAwesome/FontAwesome.vue';
 import { Exceptions } from '../Excepciones/Excepciones';
 import { UsersControl } from '../Models/UserModel';
+import { AXIOSINTERVAL } from '../app';
 
 const loginApp = createApp ({
     data(){
@@ -11,7 +12,6 @@ const loginApp = createApp ({
             showPassword: false, //Controla el view del password,
             isDisable: false, //Controla el estado del boton
             isClick: false, //Detecta si se hizo click
-            TIMEINTERVAL: 300, //Intervalo de asincronia con axios (ms)
             codigoUsuario: { value: "", IsEmpty: false }, //Codigo del usuario
             passwordUsuario: { value: "", IsEmpty: false }, //Contraseña del usuario
             ErrorMessage: { codigoError: "", passwordError: "" }, //Manejo de errores
@@ -106,7 +106,7 @@ const loginApp = createApp ({
                 //Redireccionamos
                 setTimeout(() => {
                     window.location.href = '/'
-                }, this.TIMEINTERVAL);
+                }, AXIOSINTERVAL);
             })
             .catch(error => {
                 this.controlLogin =
