@@ -27,6 +27,6 @@ Route::prefix('/')->group(function(){
     Route::prefix('/usuarios')->group(function(){
         Route::get('/',[LoginController::class,'index'])->name('users');
         Route::post('/limitPag',[ConfigController::class,'LimitPag']);
-        Route::get('/allUsers',[UsersController::class,'index']);
+        Route::post('/allUsers',[UsersController::class,'index']);
     });
 });

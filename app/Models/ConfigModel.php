@@ -31,4 +31,17 @@ class ConfigModel extends Model
             "data" => 'No se ha podido capturar el contador'
         );
     }
+
+    /**
+     * Metodo que retorna las columnas necesarias de toda una tabla
+     * @param mixed $tableTarget Almacena la tabla objetivo
+     * @return array Devuelve un array en formato JSON
+     */
+    public function GetAll($tableTarget)
+    {
+        DB::select('CALL sp_QueryPagination(?,@jsonResponse)', [$tableTarget]);
+        $GetReponse = DB::select('SELECT @jsonResponse as JsonDataTable');
+        $Response = json_decode($GetReponse[0]-> JsonDataTable,true);
+        return $Response;
+    }
 }

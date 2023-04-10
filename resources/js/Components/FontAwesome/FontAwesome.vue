@@ -19,10 +19,12 @@ import { faYoutube } from '@fortawesome/free-brands-svg-icons';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
+import { faGear } from '@fortawesome/free-solid-svg-icons';
+
 
 /* Agregamos los iconos a la libreria*/
 library.add(faUser,faLock, faEye,faEyeSlash,faCircleExclamation,faSpinner,faInstagram,
-faFacebook,faTwitter,faYoutube,faBars,faXmark,faCaretDown)
+faFacebook,faTwitter,faYoutube,faBars,faXmark,faCaretDown,faGear)
 
 export default {
     props: {

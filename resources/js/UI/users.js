@@ -19,9 +19,16 @@ const usersApp = createApp ({
                 "column5": "Estatus",
                 "settings": { "columnS1": "Editar", "columnS2": "Permisos del Sistema" }
             },
+            selectSearch: {
+                "select1": "Código",
+                "select2": "Nombre",
+                "select3": "Cedula",
+                "select4": "Correo"
+            },
             lengthColumns: 50,
             maxLengthPagination: 0, //Controlan la páginación
-            tableTarget: "tbl_usuarios"
+            tableTarget: "tbl_usuarios",
+            usersData: [] //Proxy que almacena los datos del select
         }
     },
     //Ante de montar, consultamos el tamaño máximo de la páginación
@@ -46,14 +53,36 @@ const usersApp = createApp ({
     },
     mounted()
     {
+        //Cargamos toda la data
+        axios.post('/usuarios/allUsers')
+        .then(request => {
 
+            if(request.status === 200 && !request.data.response) throw request.data.message;
+            //Si no se activa la exceptión, asignamos el objeto
+            setTimeout(() => {
+                this.usersData = request.data.message;
+            }, AXIOSINTERVAL);
+        })
+        .catch(error => {
+            console.error(error);
+        })
     },
-    methods:{},
+    methods:{
+        //Metodos encargados de convertir el proxy a formato JSON
+        dataParse(){ if(this.isMounted) return JSON.parse(JSON.stringify(this.usersData)); },
+        titleParse(){ if(this.isMounted) return JSON.parse(JSON.stringify(this.usersColumn)); },
+        searchParse(){ if(this.isMounted) return JSON.parse(JSON.stringify(this.selectSearch)); }
+    },
     computed:{},
     watch:{
-        maxLengthPagination(){ this.isMounted = true; } //Desactivamos el loading
+        //Si carga los usuarios desactivamos el login
+        usersData(){ this.isMounted = true; } //Desactivamos el loading
     },
     components: { FontAwesome, Loading, ListingCrud }
 });
 
-if(document.getElementById('section-users') !== null) usersApp.mount('#section-users');
+if(document.getElementById('section-users') !== null)
+{
+    usersApp.mount('#section-users');
+    window.location.href = "/usuarios/#01";
+};

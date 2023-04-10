@@ -1,7 +1,7 @@
 {
     "private": true,
     "scripts": {
-        "initServidor": "php artisan serve --port=90 --host=Carent2.com",
+        "initServidor": "php artisan serve --port=90",
         "desarrollo": "vite",
         "build": "vite build"
     },
