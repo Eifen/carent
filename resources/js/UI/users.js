@@ -20,7 +20,7 @@ const usersApp = createApp ({
                 "settings": { "columnS1": "Editar", "columnS2": "Permisos del Sistema" }
             },
             selectSearch: {
-                "select1": "Código",
+                "select1": "Codigo",
                 "select2": "Nombre",
                 "select3": "Cedula",
                 "select4": "Correo"

@@ -1,9 +1,12 @@
 .list-container{
-    width: min(100%,56rem);
+    width: min(100%,64rem);
     background: @Container-Color;
     margin: 0 auto;
     display: grid;
     gap: 30px;
+    margin-top: 50px;
+    border-radius: 5px;
+    padding: 20px;
     align-items: center;
     justify-content: center;
     grid-template-columns: repeat(6,1fr);
@@ -12,8 +15,7 @@
     &-title{
         grid-area: 1 / 1 / 2 / 3;
         text-transform: uppercase;
-        font: bolder 1.2em sans-serif;
-        text-align: center;
+        font: bolder 2em sans-serif;
         padding: 20px;
     }
 
@@ -22,7 +24,7 @@
         grid-area: 1 / 4 / 2 / 7;
         background: @Button-Color;
         width: min(90%,12rem);
-        margin: 10px auto;
+        justify-self: end;
         text-align: center;
         font-weight: bolder;
         border: 2px solid @Button-Color;
@@ -65,5 +67,32 @@
     //Tabla
     &-table{
         grid-area: 3 / 1 / 4 / 7;
+
+        &-thead{
+            background: @Thead-Color;
+            color: @Text-Thead-Color;
+            text-align: center;
+        }
+
+        & td, & tr { height: 20px;}
+        //Td para los setting
+        & tbody .list-container-table-setting-container{
+            position: relative;
+
+            &-modal{
+                background: none;
+                width: 12rem;
+                position: absolute;
+                top: -20px; right: 30px;
+                z-index: 1;
+                padding: 8px;
+                border-radius: 5px;
+                border: solid 1px @Shadow-Hover-Color;
+                font-size: 0.9em;
+                font-weight: bolder;
+                transform: scale(0);
+                transition: transform 0.5s ease-in-out;
+            }
+        }
     }
 }
