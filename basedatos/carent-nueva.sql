@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-04-2023 a las 16:55:44
+-- Tiempo de generación: 12-04-2023 a las 19:47:32
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.0
 
@@ -157,6 +157,43 @@ SET p_jsonResponse = CONCAT('{"passwordChange": ',@ChangePass,',"idCargo": ',@Ca
                             "response": true}');
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_QueryPagination` (IN `tableTarget` TEXT, OUT `p_jsonResponse` TEXT)   query_select: BEGIN
+DECLARE v_CustomMessage TEXT;
+DECLARE v_CustomError CONDITION FOR SQLSTATE '45000';
+DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
+	BEGIN
+    	GET DIAGNOSTICS CONDITION 1 @code = RETURNED_SQLSTATE, @error_msj = MESSAGE_TEXT;
+        ROLLBACK;
+        SET v_CustomMessage = CONCAT("Se ha producido un error en la consulta: (",@code,") ",@error_msj);
+        #Guardamos el error
+        CALL sp_SQLException(1,1,"sp_QueryPagination",v_CustomMessage,1,@responseError);
+        SET p_jsonResponse = (SELECT @responseError);
+    END;
+DECLARE EXIT HANDLER FOR v_CustomError
+	BEGIN
+    	#Guardamos el error
+        CALL sp_SQLException(1,1,"sp_QueryPagination",v_CustomMessage,1,@responseError);
+        SET p_jsonResponse = (SELECT @responseError);
+    END;
+#Validaciones Custom
+IF tableTarget = "" OR tableTarget is NULL THEN
+	SET v_CustomMessage = CONCAT('{"response":false,"message":"Error 0016: La selección de tabla está vacia (',tableTarget,')"}');
+    SIGNAL SQLSTATE '45000'; #Activamos el error
+END IF;
+
+#Validaciones para los Select
+IF tableTarget = 'users' THEN
+	#Creamos un JSON CON la informacion de la consulta
+	SET @JsonSelect = (SELECT CONCAT("[",GROUP_CONCAT('{"codigo":"',Us.Codigo,'","cedula":"',Ud.Descripcion,'","nombre":"',CONCAT(Us.Primer_nombre," ",Us.Segundo_nombre," ",Us.Primer_apellido," ",Us.Segundo_apellido),'","correo":"',Uc.Correo_principal,'","estatus":',Us.Id_estatus,'}'),"]") FROM tbl_usuarios Us INNER JOIN tbl_usuarios_documentoidentidad Ud ON Ud.Id_usuario = Us.Id INNER JOIN tbl_usuarios_contacto Uc ON Uc.Id_usuario = Us.Id);
+    SET p_jsonResponse = CONCAT('{"response":true,"message":',@JsonSelect,'}');
+    LEAVE query_select;
+END IF;
+
+#Si no entra en ninguna condición
+SET v_CustomMessage = CONCAT('{"response":false,"message":"Error 0017: La selección de tabla no coincide con ninguna tabla (',tableTarget,')"}');
+SIGNAL SQLSTATE '45000'; #Activamos el error
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SQLException` (IN `p_Id_objeto_afectado` INT, IN `p_Id_tipo_mensaje` INT, IN `p_objeto_afectado` VARCHAR(255), IN `p_mensaje_error` TEXT, IN `p_estatus_error` INT, OUT `p_error_response` TEXT)   BEGIN
 DECLARE v_CustomErrorMessage TEXT;
 DECLARE v_CustomError CONDITION FOR SQLSTATE '45000';
@@ -230,7 +267,7 @@ INSERT INTO `tbl_control_error`(`Id_error_tipomensaje`, `Id_error_tipoobjeto`, `
 VALUES (p_Id_tipo_mensaje,p_Id_objeto_afectado,p_objeto_afectado,p_mensaje_error,@FechaActual,p_estatus_error);
 
 #Si pasa todos los controles devuelve otro json
-SET p_error_response = CONCAT('{"response":true,"message": "Se ha producido un error en SQL, porfavor pongase en contacto con el administrador del sistema"}');
+SET p_error_response = CONCAT('{"response":false,"message": "Se ha producido un error en SQL, porfavor pongase en contacto con el administrador del sistema"}');
 
 END$$
 
@@ -283,7 +320,15 @@ INSERT INTO `tbl_control_error` (`Id`, `Id_error_tipomensaje`, `Id_error_tipoobj
 (4, 1, 1, 'sp_Login', 'Se ha producido un error en el inicio de sesión: (HY000) Syntax error in JSON text in argument 1 to function \'json_extract\' at position 13', '2023-04-05 09:56:21', 1),
 (5, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-05 10:04:19', 1),
 (6, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-05 10:09:50', 1),
-(7, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-05 13:56:49', 1);
+(7, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-05 13:56:49', 1),
+(8, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0016: La selección de tabla está vacia ()\"}', '2023-04-10 11:00:10', 1),
+(9, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-10 11:03:11', 1),
+(10, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0016: La selección de tabla está vacia ()\"}', '2023-04-10 11:03:45', 1),
+(11, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0017: La selección de tabla no coincide con ninguna tabla (users2)\"}', '2023-04-10 11:30:14', 1),
+(12, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0016: La selección de tabla está vacia ()\"}', '2023-04-10 11:30:21', 1),
+(13, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0017: La selección de tabla no coincide con ninguna tabla (users2)\"}', '2023-04-10 11:35:01', 1),
+(14, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0017: La selección de tabla no coincide con ninguna tabla (users2)\"}', '2023-04-10 11:35:08', 1),
+(15, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0016: La selección de tabla está vacia ()\"}', '2023-04-10 11:35:33', 1);
 
 -- --------------------------------------------------------
 
@@ -382,7 +427,8 @@ INSERT INTO `tbl_control_logs_bitacora` (`Id`, `Id_bitacora_accion`, `Descripcio
 (15, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-05 13:52:27 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-05 10:40:08\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-05 13:52:27\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-05 13:52:27'),
 (16, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-05 13:53:11 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-05 13:52:27\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-05 13:53:11\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-05 13:53:11'),
 (17, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-05 13:56:03 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-05 13:53:11\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-05 13:56:03\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-05 13:56:03'),
-(18, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-05 14:00:02 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-05 13:56:03\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-05 14:00:02\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-05 14:00:02');
+(18, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-05 14:00:02 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-05 13:56:03\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-05 14:00:02\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-05 14:00:02'),
+(19, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-10 11:02:34 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-05 14:00:02\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-10 11:02:34\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-10 11:02:34');
 
 -- --------------------------------------------------------
 
@@ -455,7 +501,7 @@ CREATE TABLE `tbl_usuarios` (
 --
 
 INSERT INTO `tbl_usuarios` (`Id`, `Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`) VALUES
-(1, '0001', 0x9f824ad4b17be95f20aa30c5eef9d8f6, '2023-05-08', 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '1986-08-05', 16, 16, 1131, '2020-01-01 00:00:00', NULL, '2023-04-05 14:00:02', 1),
+(1, '0001', 0x9f824ad4b17be95f20aa30c5eef9d8f6, '2023-05-08', 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '1986-08-05', 16, 16, 1131, '2020-01-01 00:00:00', NULL, '2023-04-10 11:02:34', 1),
 (2, '10', 0xcb4dc5daf4d8865eb1bd01d6c898c269, '2023-03-09', 'NATHALIE', 'YAMILET', 'LOPEZ', 'TREJO', '1972-08-20', 17, 1, 1131, '2000-02-21 00:00:00', NULL, '2023-03-08 23:41:42', 1),
 (3, '10092', 0x10e54efb266e50c523273c638cb690c5, '2023-03-09', 'YESENIA', 'BEATRIZ', 'MARTINEZ', 'GALLARDO', '1979-06-01', 15, 1, 1131, '2004-09-01 00:00:00', NULL, '2023-03-07 08:27:55', 1),
 (4, '10141', 0x383155d3ec475bf8ace4b67bf0aaba8d, '2023-03-09', 'JESUS', 'ERASMO', 'PEREZ', 'ERASMO', '1959-11-09', 17, 1, 1131, '2005-02-02 00:00:00', NULL, '2023-02-06 09:52:51', 1),
@@ -2512,6 +2558,286 @@ INSERT INTO `tbl_usuarios_direccion_parroquia` (`Id`, `Id_direccion_municipio`, 
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `tbl_usuarios_documentoidentidad`
+--
+
+CREATE TABLE `tbl_usuarios_documentoidentidad` (
+  `Id` int(11) NOT NULL,
+  `Id_usuario` int(11) NOT NULL,
+  `Id_tipo_documento` int(11) NOT NULL,
+  `Descripcion` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Volcado de datos para la tabla `tbl_usuarios_documentoidentidad`
+--
+
+INSERT INTO `tbl_usuarios_documentoidentidad` (`Id`, `Id_usuario`, `Id_tipo_documento`, `Descripcion`) VALUES
+(1, 1, 1, '17671373'),
+(2, 2, 1, '10380904'),
+(3, 3, 1, '14451068'),
+(4, 4, 1, '5597044'),
+(5, 5, 1, '6550673'),
+(6, 6, 1, '16430295'),
+(7, 7, 1, '4166638'),
+(8, 8, 1, '13161322'),
+(9, 9, 1, '15394238'),
+(10, 10, 1, '18934893'),
+(11, 11, 1, '19227558'),
+(12, 12, 1, '22025009'),
+(13, 13, 1, '18760647'),
+(14, 14, 1, '21281041'),
+(15, 15, 1, '19156081'),
+(16, 16, 1, '22904461'),
+(17, 17, 1, '20756114'),
+(18, 18, 1, '21582423'),
+(19, 19, 1, '25304811'),
+(20, 20, 1, '19852149'),
+(21, 21, 1, '17693239'),
+(22, 22, 1, '25518550'),
+(23, 23, 1, '24314826'),
+(24, 24, 1, '22964636'),
+(25, 25, 1, '26774496'),
+(26, 26, 1, '21131036'),
+(27, 27, 1, '13950180'),
+(28, 28, 1, '9968146'),
+(29, 29, 1, '15074166'),
+(30, 30, 1, '25839093'),
+(31, 31, 1, '24205870'),
+(32, 32, 1, '15040556'),
+(33, 33, 1, '7884245'),
+(34, 34, 1, '12749844'),
+(35, 35, 1, '25231809'),
+(36, 36, 1, '15235084'),
+(37, 37, 1, '20114596'),
+(38, 38, 1, '16661412'),
+(39, 39, 2, '83024489'),
+(40, 40, 1, '16316832'),
+(41, 41, 1, '25504426'),
+(42, 42, 1, '26252073'),
+(43, 43, 1, '25327986'),
+(44, 44, 1, '21115694'),
+(45, 45, 1, '25533060'),
+(46, 46, 1, '25037878'),
+(47, 47, 1, '23817163'),
+(48, 48, 1, '18329799'),
+(49, 49, 1, '12067262'),
+(50, 50, 1, '20229883'),
+(51, 51, 1, '18366468'),
+(52, 52, 1, '25019411'),
+(53, 53, 1, '10801033'),
+(54, 54, 1, '18898447'),
+(55, 55, 1, '30776341'),
+(56, 56, 1, '11072019'),
+(57, 57, 1, '15759106'),
+(58, 58, 1, '12377736'),
+(59, 59, 1, '23607795'),
+(60, 60, 1, '20780395'),
+(61, 61, 1, '6730914'),
+(62, 62, 1, '24367675'),
+(63, 63, 1, '21090653'),
+(64, 64, 1, '24981788'),
+(65, 65, 1, '25203717'),
+(66, 66, 1, '25367199'),
+(67, 67, 1, '9961190'),
+(68, 68, 1, '17498402'),
+(69, 69, 1, '13586696'),
+(70, 70, 1, '24999590'),
+(71, 71, 1, '20629350'),
+(72, 72, 1, '22350446'),
+(73, 73, 1, '17482637'),
+(74, 74, 1, '26217602'),
+(75, 75, 1, '20026779'),
+(76, 76, 1, '6310314'),
+(77, 77, 1, '19185045'),
+(78, 78, 1, '11899658'),
+(79, 79, 1, '26396073'),
+(80, 80, 1, '6868874'),
+(81, 81, 1, '20638141'),
+(82, 82, 1, '16472039'),
+(83, 83, 1, '19966508'),
+(84, 84, 1, '6168455'),
+(85, 85, 1, '12831730'),
+(86, 86, 1, '7219655'),
+(87, 87, 1, '21283384'),
+(88, 88, 1, '14048174'),
+(89, 89, 1, '26902642'),
+(90, 90, 1, '24723575'),
+(91, 91, 1, '18485819'),
+(92, 92, 1, '2898759'),
+(93, 93, 1, '12161715'),
+(94, 94, 1, '6793120'),
+(95, 95, 1, '15574739'),
+(96, 96, 1, '6243475'),
+(97, 97, 1, '6270987'),
+(98, 98, 1, '16512408'),
+(99, 99, 1, '18460301'),
+(100, 100, 1, '6294031'),
+(101, 101, 1, '11487234'),
+(102, 102, 1, '17139681'),
+(103, 103, 1, '19581420'),
+(104, 104, 1, '26911669'),
+(105, 105, 1, '10812350'),
+(106, 106, 1, '6182144'),
+(107, 107, 1, '16461316'),
+(108, 108, 1, '18406483'),
+(109, 109, 1, '20493477'),
+(110, 110, 1, '22041443'),
+(111, 111, 1, '14742504'),
+(112, 112, 1, '16413136'),
+(113, 113, 1, '28484899'),
+(114, 114, 1, '25209317'),
+(115, 115, 1, '13884698'),
+(116, 116, 1, '5597900'),
+(117, 117, 1, '27120587'),
+(118, 118, 1, '18190765'),
+(119, 119, 1, '22776760'),
+(120, 120, 1, '6009195'),
+(121, 121, 1, '19371690'),
+(122, 122, 1, '10178751'),
+(123, 123, 1, '5894672'),
+(124, 124, 1, '4085309'),
+(125, 125, 1, '3979230'),
+(126, 126, 1, '6826643'),
+(127, 127, 1, '6823443'),
+(128, 128, 1, '24069076'),
+(129, 129, 1, '14471989'),
+(130, 130, 1, '3157447'),
+(131, 131, 1, '26282952'),
+(132, 132, 1, '27344553'),
+(133, 133, 1, '25915845'),
+(134, 134, 1, '13823055'),
+(135, 135, 1, '15150576'),
+(136, 136, 1, '25225060'),
+(137, 137, 1, '19753133'),
+(138, 138, 1, '10351263'),
+(139, 139, 1, '16474809'),
+(140, 140, 1, '3180748'),
+(141, 141, 1, '8957263'),
+(142, 142, 1, '26332830'),
+(143, 143, 1, '18514042'),
+(144, 144, 1, '10785418'),
+(145, 145, 1, '10199496'),
+(146, 146, 1, '6223515'),
+(147, 147, 1, '6848046'),
+(148, 148, 1, '12563973'),
+(149, 149, 1, '6469179'),
+(150, 150, 1, '3627793'),
+(151, 151, 1, '10793321'),
+(152, 152, 1, '7927670'),
+(153, 153, 1, '633451'),
+(154, 154, 1, '10785418'),
+(155, 155, 1, '15199375'),
+(156, 156, 1, '11070302'),
+(157, 157, 1, '26478278'),
+(158, 158, 1, '25235222'),
+(159, 159, 1, '14196784'),
+(160, 160, 1, '25565600'),
+(161, 161, 1, '24220165'),
+(162, 162, 1, '6854119'),
+(163, 163, 1, '19814106'),
+(164, 164, 1, '13847048'),
+(173, 173, 1, '21072946'),
+(174, 174, 1, '17441357'),
+(175, 175, 1, '21115694'),
+(176, 176, 1, '26868454'),
+(177, 177, 1, '26281391'),
+(178, 178, 1, '25489425'),
+(179, 179, 1, '24803900'),
+(180, 180, 1, '27439433'),
+(181, 181, 1, '22026352'),
+(182, 182, 1, '15801257'),
+(183, 183, 1, '16971805'),
+(184, 184, 1, '27686406'),
+(185, 185, 1, '15049858'),
+(186, 186, 1, '27776757'),
+(187, 187, 1, '25871022'),
+(188, 188, 1, '25207065'),
+(189, 189, 2, '82216573'),
+(190, 190, 1, '14142307'),
+(191, 191, 1, '13309819'),
+(192, 192, 1, '19395321'),
+(193, 193, 1, '26818220'),
+(194, 194, 1, '12056264'),
+(195, 195, 1, '6854119'),
+(196, 196, 1, '18760146'),
+(197, 197, 1, '26283747'),
+(198, 198, 1, '26435330'),
+(199, 199, 1, '23634205'),
+(200, 200, 1, '24210460'),
+(201, 201, 1, '18002943'),
+(202, 202, 1, '27807228'),
+(203, 203, 1, '22671474'),
+(204, 204, 1, '26435330'),
+(205, 205, 1, '4220335'),
+(206, 206, 1, '24934009'),
+(207, 207, 1, '19065366'),
+(208, 208, 1, '24211107'),
+(209, 209, 1, '25626353'),
+(210, 210, 1, '13712129'),
+(211, 211, 1, '28448828'),
+(212, 212, 1, '25846761'),
+(213, 213, 1, '22671805'),
+(214, 214, 1, '28155996'),
+(215, 215, 1, '24211107'),
+(216, 216, 1, '30328073'),
+(217, 217, 1, '25751852'),
+(218, 218, 1, '21623432'),
+(219, 219, 1, '13735588'),
+(220, 220, 1, '20225308'),
+(221, 221, 1, '25217291'),
+(222, 222, 1, '28481236'),
+(223, 223, 1, '17850961'),
+(224, 224, 2, '83032310'),
+(225, 225, 1, '22670339'),
+(226, 226, 1, '26104063'),
+(227, 227, 1, '27678318'),
+(228, 228, 1, '21418901'),
+(229, 229, 1, '26740424'),
+(230, 230, 1, '23817163'),
+(231, 231, 1, '24440938'),
+(232, 232, 1, '28101506'),
+(233, 233, 1, '28345876'),
+(234, 234, 1, '6266290'),
+(235, 235, 1, '19205729'),
+(236, 236, 1, '29529359'),
+(237, 237, 1, '26180223'),
+(238, 238, 1, '27773891'),
+(239, 239, 1, '27318975'),
+(240, 240, 1, '24806247'),
+(241, 241, 1, '29593134'),
+(242, 242, 1, '12834734'),
+(243, 243, 1, '15931607'),
+(244, 244, 1, '20304026'),
+(245, 245, 1, '7927516'),
+(246, 246, 1, '11784700'),
+(247, 247, 1, '22667607'),
+(248, 248, 1, '15759452');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_usuarios_documentoidentidad_tipo`
+--
+
+CREATE TABLE `tbl_usuarios_documentoidentidad_tipo` (
+  `Id` int(11) NOT NULL,
+  `Abreviatura` varchar(5) NOT NULL,
+  `Descripcion` varchar(20) NOT NULL,
+  `Id_estatus` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Volcado de datos para la tabla `tbl_usuarios_documentoidentidad_tipo`
+--
+
+INSERT INTO `tbl_usuarios_documentoidentidad_tipo` (`Id`, `Abreviatura`, `Descripcion`, `Id_estatus`) VALUES
+(1, 'V', 'Cédula Venezolana', 1),
+(2, 'E', 'Cédula Extranjera', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `tbl_usuarios_jerarquia_cargo`
 --
 
@@ -2703,6 +3029,21 @@ ALTER TABLE `tbl_usuarios_direccion_parroquia`
   ADD KEY `FK_parroquia_municipio` (`Id_direccion_municipio`);
 
 --
+-- Indices de la tabla `tbl_usuarios_documentoidentidad`
+--
+ALTER TABLE `tbl_usuarios_documentoidentidad`
+  ADD PRIMARY KEY (`Id`),
+  ADD KEY `FK_usuario_documento` (`Id_usuario`),
+  ADD KEY `FK_tipo_documento` (`Id_tipo_documento`);
+
+--
+-- Indices de la tabla `tbl_usuarios_documentoidentidad_tipo`
+--
+ALTER TABLE `tbl_usuarios_documentoidentidad_tipo`
+  ADD PRIMARY KEY (`Id`),
+  ADD KEY `FK_tipo_estatus` (`Id_estatus`);
+
+--
 -- Indices de la tabla `tbl_usuarios_jerarquia_cargo`
 --
 ALTER TABLE `tbl_usuarios_jerarquia_cargo`
@@ -2731,7 +3072,7 @@ ALTER TABLE `tbl_control_encryptkey`
 -- AUTO_INCREMENT de la tabla `tbl_control_error`
 --
 ALTER TABLE `tbl_control_error`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_control_error_tipomensaje`
@@ -2755,7 +3096,7 @@ ALTER TABLE `tbl_control_estatus`
 -- AUTO_INCREMENT de la tabla `tbl_control_logs_bitacora`
 --
 ALTER TABLE `tbl_control_logs_bitacora`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_control_logs_bitacora_accion`
@@ -2798,6 +3139,18 @@ ALTER TABLE `tbl_usuarios_direccion_municipio`
 --
 ALTER TABLE `tbl_usuarios_direccion_parroquia`
   MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1139;
+
+--
+-- AUTO_INCREMENT de la tabla `tbl_usuarios_documentoidentidad`
+--
+ALTER TABLE `tbl_usuarios_documentoidentidad`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=249;
+
+--
+-- AUTO_INCREMENT de la tabla `tbl_usuarios_documentoidentidad_tipo`
+--
+ALTER TABLE `tbl_usuarios_documentoidentidad_tipo`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_usuarios_jerarquia_cargo`
@@ -2855,6 +3208,19 @@ ALTER TABLE `tbl_usuarios_direccion_municipio`
 --
 ALTER TABLE `tbl_usuarios_direccion_parroquia`
   ADD CONSTRAINT `FK_parroquia_municipio` FOREIGN KEY (`Id_direccion_municipio`) REFERENCES `tbl_usuarios_direccion_municipio` (`Id`);
+
+--
+-- Filtros para la tabla `tbl_usuarios_documentoidentidad`
+--
+ALTER TABLE `tbl_usuarios_documentoidentidad`
+  ADD CONSTRAINT `FK_tipo_documento` FOREIGN KEY (`Id_tipo_documento`) REFERENCES `tbl_usuarios_documentoidentidad_tipo` (`Id`),
+  ADD CONSTRAINT `FK_usuario_documento` FOREIGN KEY (`Id_usuario`) REFERENCES `tbl_usuarios` (`Id`);
+
+--
+-- Filtros para la tabla `tbl_usuarios_documentoidentidad_tipo`
+--
+ALTER TABLE `tbl_usuarios_documentoidentidad_tipo`
+  ADD CONSTRAINT `FK_tipo_estatus` FOREIGN KEY (`Id_estatus`) REFERENCES `tbl_control_estatus` (`Id`);
 
 --
 -- Filtros para la tabla `tbl_usuarios_jerarquia_cargo`
