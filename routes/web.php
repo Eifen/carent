@@ -23,9 +23,14 @@ Route::prefix('/')->group(function(){
     //Login
     Route::get('/', [LoginController::class,'index']);
     Route::post('/login',[LoginController::class,'Login']);
+    Route::get('/logout',[LoginController::class,'Logout']);
     //Usuarios
     Route::prefix('/usuarios')->group(function(){
         Route::get('/',[LoginController::class,'index'])->name('users');
+        Route::prefix('/create')->group(function(){
+            Route::get('/',[LoginController::class,'index'])->name('createUser');
+            Route::post('/newUser',[UsersController::class,'NewUser']);
+        });
         Route::post('/limitPag',[ConfigController::class,'LimitPag']);
         Route::post('/allUsers',[UsersController::class,'index']);
     });

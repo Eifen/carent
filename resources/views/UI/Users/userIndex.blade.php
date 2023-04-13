@@ -1,4 +1,4 @@
-<div class="dashboard-users" id="section-users">
+<div id="section-users">
     <loading :active="!isMounted"></loading>
     <listing-crud :table-info="dataParse()"
     :pagination-lenght="maxLengthPagination"
@@ -7,5 +7,8 @@
     :select-search="searchParse()"
     title-table="usuarios"
     button-title="usuario"
-    v-if="isMounted"></listing-crud>
+    v-if="isMounted"
+    @columnS1Target="editUsuarios"
+    @columnS2Target="permisosUsuarios"
+    @createButton="crearUsuario()"></listing-crud>
 </div>

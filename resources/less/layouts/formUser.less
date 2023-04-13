@@ -1,0 +1,23 @@
+.dashboard-form-container{
+    .styleContainer();
+
+    &-form{
+        margin-bottom: 20px;
+
+        //Legend
+        &-legends{
+            font-size: min(5vw,1.6em);
+            font-weight: bolder;
+        }
+
+        //Fieldset
+        &-fieldset{
+            display: grid;
+            grid-template-columns: repeat(auto-fill,minmax(15rem,1fr));
+            grid-auto-rows: 13rem;
+            grid-auto-flow: dense;
+            margin-bottom: 10px;
+            background: dodgerblue;
+        }
+    }
+}

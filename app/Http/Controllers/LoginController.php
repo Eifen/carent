@@ -55,6 +55,17 @@ class LoginController extends Controller
     }
 
     /**
+     * Metodo que cierra la sesión, eliminando la data en el Session
+     * @param $SessionLogout Almacena los datos de la sesion en el Request
+     * @return void Redirecciona a la pagina principal
+     */
+    public function Logout(Request $SessionLogout)
+    {
+        $SessionLogout->session()->flush();
+        return redirect('/');
+    }
+
+    /**
      * Metodo que optiene la IP del usuario que se conecta o está conectado
      */
     protected static function GetIpUser()

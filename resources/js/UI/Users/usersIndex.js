@@ -1,11 +1,9 @@
 import { createApp } from 'vue/dist/vue.esm-bundler';
-import FontAwesome from '../Components/FontAwesome/FontAwesome.vue';
-import Loading from '../Components/Loading.vue';
-import ListingCrud from '../Components/ListingCrud.vue';
-import { Exceptions } from '../Excepciones/Excepciones';
-import { UsersControl } from '../Models/UserModel';
+import FontAwesome from '../../Components/FontAwesome/FontAwesome.vue';
+import Loading from '../../Components/Loading.vue';
+import ListingCrud from '../../Components/ListingCrud.vue';
 import axios from 'axios';
-import { AXIOSINTERVAL } from '../app';
+import { AXIOSINTERVAL } from '../../app';
 
 const usersApp = createApp ({
     data(){
@@ -72,6 +70,11 @@ const usersApp = createApp ({
         dataParse(){ if(this.isMounted) return JSON.parse(JSON.stringify(this.usersData)); },
         titleParse(){ if(this.isMounted) return JSON.parse(JSON.stringify(this.usersColumn)); },
         searchParse(){ if(this.isMounted) return JSON.parse(JSON.stringify(this.selectSearch)); },
+        //Metodo dedicados a las configuraciones de la tabla
+        editUsuarios(idUsuario){ console.log(this.usersData[idUsuario]) },
+        permisosUsuarios(idUsuario){ console.log(this.usersData[idUsuario]) },
+        crearUsuario(){ window.location.href = "/usuarios/create" }
+
     },
     computed:{},
     watch:{
@@ -84,5 +87,5 @@ const usersApp = createApp ({
 if(document.getElementById('section-users') !== null)
 {
     usersApp.mount('#section-users');
-    window.location.href = "/usuarios/#01";
+    window.location.hash = "#01";
 };

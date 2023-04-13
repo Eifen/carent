@@ -1,7 +1,7 @@
 <header class="header" id="header-nav" v-cloak>
     <nav class="header-nav">
         <div class="header-nav-logo"><img @click="goHome" src="/images/logo-carent-menu-expandido.png"/></div>
-        <ul class="header-nav-links" :style="hamburgerMenu">
+        <ul class="header-nav-links" id="selectNav" :style="hamburgerMenu">
             <li class="header-nav-links-item" id="01">@yield('usuarios')</li>
             <li class="header-nav-links-item" id="02">@yield('clientes')</li>
             <li class="header-nav-links-item" id="03">@yield('proyectos')</li>

@@ -1,7 +1,7 @@
 <template>
   <div :class="listClass">
     <div :class="tableClass.title">{{ titleTable }}</div>
-    <div :class="tableClass.create">Crear {{ buttonTitle }}</div>
+    <div :class="tableClass.create" @click="$emit('createbutton')">Crear {{ buttonTitle }}</div>
     <!-- Búsqueda de datos en tiempo real -->
     <div class="input-group mb-3" :class="tableClass.search">
       <span class="input-group-text" id="basic-addon1">
@@ -84,8 +84,10 @@
                 <div v-for="(setting, cursor) in titleObject.settings"
                   :key="cursor">
                   <!-- Separamos los select en base al objeto suministrado (Deben tener el mismo formato) -->
-                  <span class="aLink" v-if="cursor == 'columnS1'">{{setting}}</span>
-                  <span class="aLink" v-if="cursor == 'columnS2'">{{setting}}</span>
+                  <span class="aLink" @click="$emit('columns1target',(actualIndex + controlTable.minLength))" 
+                  v-if="cursor == 'columnS1'">{{setting}}</span>
+                  <span class="aLink" @click="$emit('columns2target',(actualIndex + controlTable.minLength))" 
+                  v-if="cursor == 'columnS2'">{{setting}}</span>
                 </div>
               </div>
             </td>
@@ -254,6 +256,9 @@ export default {
         //Validaciones en función al estado actual del cursor. Sea valor máximo o valor minimo
         if(controlChange.cursor == this.maxCursor)
         this.controlTable.maxLength = this.controlTable.dataLength - this.controlTable.minLength;
+
+        if(controlChange.cursor != this.maxCursor)
+        this.controlTable.maxLength = this.paginationLimit;
       },
     },
   },
