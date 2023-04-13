@@ -1,6 +1,6 @@
 <div class="dashboard-users" id="section-users">
     <loading :active="!isMounted"></loading>
-    <listing-crud :table-info="dataParse()" 
+    <listing-crud :table-info="dataParse()"
     :pagination-lenght="maxLengthPagination"
     :pagination-limit="lengthColumns"
     :title-object="titleParse()"

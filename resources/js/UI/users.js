@@ -44,7 +44,7 @@ const usersApp = createApp ({
             {
                 if(request.status !== 200) throw request.data;
                 //Si no  inicializa el error, procedemos a asignar las variables
-                setTimeout(() => {this.maxLengthPagination = Math.round(request.data);}, AXIOSINTERVAL);
+                setTimeout(() => {this.maxLengthPagination = Math.ceil(request.data);}, AXIOSINTERVAL);
             })
         .catch(error =>
             {
@@ -71,7 +71,7 @@ const usersApp = createApp ({
         //Metodos encargados de convertir el proxy a formato JSON
         dataParse(){ if(this.isMounted) return JSON.parse(JSON.stringify(this.usersData)); },
         titleParse(){ if(this.isMounted) return JSON.parse(JSON.stringify(this.usersColumn)); },
-        searchParse(){ if(this.isMounted) return JSON.parse(JSON.stringify(this.selectSearch)); }
+        searchParse(){ if(this.isMounted) return JSON.parse(JSON.stringify(this.selectSearch)); },
     },
     computed:{},
     watch:{
