@@ -17,22 +17,8 @@
     //Create button
     &-create{
         grid-area: 1 / 4 / 2 / 7;
-        background: @Button-Color;
-        width: min(90%,12rem);
         justify-self: end;
-        text-align: center;
-        font-weight: bolder;
-        border: 2px solid @Button-Color;
-        border-radius: 5px;
-        box-shadow: 0em 0.3em 0.3em @Shadow-Hover-Color;
-        transition: background 0.5s ease-in, border 0.5s ease-in;
-        padding: 5px;
-        cursor: pointer;
-
-        &:hover{
-            background: @Button-Select-Color;
-            border-color: @Button-Select-Color;
-        }
+        .buttonCRUD();
     }
 
     //Buscar
@@ -46,11 +32,7 @@
             border: 1px solid @Text-Color;
 
             & .form-select{
-                border-radius: 0;
-                border: none;
-                background-color: inherit;
-
-                &:focus{ box-shadow: none;}
+                .selectIntoAddon();
             }
         }
 

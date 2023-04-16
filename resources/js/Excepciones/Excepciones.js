@@ -6,6 +6,7 @@ export class Exceptions
     static CatchWarning($StringException)
     {
         switch ($StringException) {
+            //Login Exception
             case 'NoCodigo':
                 return {codigoError: "Falta colocar el código de usuario", passwordError:""};
 
@@ -14,6 +15,31 @@ export class Exceptions
 
             case 'EmptyData':
                 return {codigoError: "Falta colocar el código de usuario", passwordError:"Falta colocar la contraseña"};
+
+            //Date Exception
+            case 'NoDateFormat':
+                return "El formato de fecha no es el correcto";
+
+            case 'InvalidDate':
+                return "La fecha es incorrecta";
+
+            //String Exception
+            case 'OutRange':
+                return "Se ha excedido el rango de caracteres. Máximo de caracteres: ";
+
+            case 'EmptyString':
+                return "Este valor no puede estar vacio";
+
+            //Number Exception
+            case 'IsNotNumber':
+                return "Ingrese un número válido";
+
+            //Format Exception
+            case 'NoDocumentFormat':
+                return "El documento de identidad no posee el formato correcto";
+
+            case 'NoEmailFormat':
+                return "El correo no posee el formato correo. Ejemplo: usuarios@empresa.dominio";
         }
     }
 }

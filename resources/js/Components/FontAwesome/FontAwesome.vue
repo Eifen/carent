@@ -21,7 +21,10 @@ import {
   faAngleLeft,
   faAngleRight,
   faAnglesLeft,
-  faAnglesRight
+  faAnglesRight,
+  faCalendar,
+  faHashtag,
+  faAt
 } from "@fortawesome/free-solid-svg-icons";
 //Brands Icons
 import {
@@ -50,7 +53,10 @@ library.add(
   faAngleLeft,
   faAngleRight,
   faAnglesLeft,
-  faAnglesRight
+  faAnglesRight,
+  faCalendar,
+  faHashtag,
+  faAt
 );
 
 export default {

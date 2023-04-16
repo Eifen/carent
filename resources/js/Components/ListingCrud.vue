@@ -63,6 +63,8 @@
               :key="cursorTable">
               <span v-if="cursorTable == 'estatus' && columnData == 1" class="badge text-bg-success">activo</span>
               <span v-else-if="cursorTable == 'estatus' && columnData == 2" class="badge text-bg-danger">inactivo</span>
+              <span v-else-if="cursorTable == 'estatus' && columnData == 3" class="badge text-bg-warning">De reposo</span>
+              <span v-else-if="cursorTable == 'estatus' && columnData == 4" class="badge text-bg-warning">De vacaciones</span>
               <span v-else>{{ columnData }}</span>
             </td>
             <td :class="tableClass.setting"
@@ -84,9 +86,9 @@
                 <div v-for="(setting, cursor) in titleObject.settings"
                   :key="cursor">
                   <!-- Separamos los select en base al objeto suministrado (Deben tener el mismo formato) -->
-                  <span class="aLink" @click="$emit('columns1target',(actualIndex + controlTable.minLength))" 
+                  <span class="aLink" @click="$emit('columns1target',(actualIndex + controlTable.minLength))"
                   v-if="cursor == 'columnS1'">{{setting}}</span>
-                  <span class="aLink" @click="$emit('columns2target',(actualIndex + controlTable.minLength))" 
+                  <span class="aLink" @click="$emit('columns2target',(actualIndex + controlTable.minLength))"
                   v-if="cursor == 'columnS2'">{{setting}}</span>
                 </div>
               </div>

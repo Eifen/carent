@@ -21,17 +21,18 @@ body{
 }
 /*Elementos para ocultar*/
 [v-cloak] { display: none }
+
 //Deshabilitar botones
 .disable{pointer-events: none; opacity: 0.6;}
 
 //Estilo predeterminado para todos los contenedores
-.styleContainer{ 
+.styleContainer{
     background: @Container-Color;
-    width: min(100%,64rem); 
+    width: min(100%,64rem);
     margin: 0 auto;
     margin-top: 50px;
     border-radius: 5px;
-    padding: 20px 20px 0px 20px;
+    padding: 20px;
 }
 
 //Estilo para los enlaces
@@ -42,6 +43,26 @@ body{
     cursor: pointer;
     &:hover{color: @Button-Select-Color} //Desactivamos el estilo de los <a>
 }
+
+//Estilo para todos los botones del UI
+.buttonCRUD{
+    background: @Button-Color;
+    width: min(90%,12rem);
+    text-align: center;
+    font-weight: bolder;
+    border: 2px solid @Button-Color;
+    border-radius: 5px;
+    box-shadow: 0em 0.3em 0.3em @Shadow-Hover-Color;
+    transition: background 0.5s ease-in, border 0.5s ease-in;
+    padding: 5px;
+    cursor: pointer;
+    &:hover{
+        background: @Button-Select-Color;
+        border-color: @Button-Select-Color;
+    }
+}
+
+//Target Nav Style
 .barsBottomTarget
 {
     &::before
@@ -61,7 +82,30 @@ body{
 
     &:target::before{ transform: scale(1)}
 }
+
+//Mensajes de Error
+.form-ErrorInput{
+    font-size: .6em;
+    color: @Failure-Submit-Color
+}
+
+//Login correcto
+.form-SuccessInput{
+    font-size: .6em;
+    color: @Sucess-Submit-Color
+}
+
+//Select interno
+.selectIntoAddon{
+    border-radius: 0;
+    border: none;
+    background-color: inherit;
+
+    &:focus{ box-shadow: none;}
+}
+
 /*Imports a los estilos*/
+@import 'vue3-toastify/dist/index.css';
 //Layouts
 @import 'layouts/login.less';
 @import 'layouts/dashboard.less';

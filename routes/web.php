@@ -27,11 +27,18 @@ Route::prefix('/')->group(function(){
     //Usuarios
     Route::prefix('/usuarios')->group(function(){
         Route::get('/',[LoginController::class,'index'])->name('users');
+        Route::post('/limitPag',[ConfigController::class,'LimitPag']);
+        Route::post('/allUsers',[UsersController::class,'index']);
+        Route::post('/getTypeDocument',[UsersController::class,'GetTypeDocument']);
+        Route::post('/getState',[UsersController::class,'GetEstado']);
+        Route::post('/getMunicipality',[UsersController::class,'GetMunicipality']);
+        Route::post('/getParish',[UsersController::class,'GetParish']);
+        Route::post('/getDivision',[UsersController::class,'GetDivision']);
+        Route::post('/getCargo',[UsersController::class,'GetCargo']);
+        //Create
         Route::prefix('/create')->group(function(){
             Route::get('/',[LoginController::class,'index'])->name('createUser');
             Route::post('/newUser',[UsersController::class,'NewUser']);
         });
-        Route::post('/limitPag',[ConfigController::class,'LimitPag']);
-        Route::post('/allUsers',[UsersController::class,'index']);
     });
 });

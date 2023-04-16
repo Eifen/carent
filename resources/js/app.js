@@ -1,5 +1,6 @@
 //Constantes o variables globales
 export const AXIOSINTERVAL = 300 //Tiempo máximo de las promise
+export const NOTIFYINTERVAL = 2000 //Tiempo máximo de las notificaciones
 //Bootstrap
 import './bootstrap';
 //Espacio reservado para imports de Javascript

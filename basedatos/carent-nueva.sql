@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-04-2023 a las 19:47:32
--- Versión del servidor: 10.4.27-MariaDB
--- Versión de PHP: 8.2.0
+-- Tiempo de generación: 16-04-2023 a las 22:28:57
+-- Versión del servidor: 10.4.25-MariaDB
+-- Versión de PHP: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -157,6 +157,105 @@ SET p_jsonResponse = CONCAT('{"passwordChange": ',@ChangePass,',"idCargo": ',@Ca
                             "response": true}');
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_NewContactUser` (IN `p_Codigo` VARCHAR(6), IN `p_Correo1` VARCHAR(255), IN `p_Correo2` VARCHAR(255), IN `p_Telefono1` VARCHAR(30), IN `p_Telefono2` VARCHAR(30), IN `p_TipoDocumento` VARCHAR(5), IN `p_Cedula` VARCHAR(255), OUT `p_JsonResponse` TEXT)   BEGIN
+DECLARE v_CustomMessage TEXT;
+DECLARE v_CustomError CONDITION FOR SQLSTATE '45000';
+DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
+	BEGIN
+    	GET DIAGNOSTICS CONDITION 1 @code = RETURNED_SQLSTATE, @error_msj = MESSAGE_TEXT;
+        ROLLBACK;
+        SET v_CustomMessage = CONCAT("Se ha producido un error en la consulta: (",@code,") ",@error_msj);
+        #Guardamos el error
+        CALL sp_SQLException(1,1,"sp_NewContactUser",v_CustomMessage,1,@responseError);
+        SET p_JsonResponse = (SELECT @responseError);
+    END;
+DECLARE EXIT HANDLER FOR v_CustomError
+	BEGIN
+    	#Guardamos el error
+        CALL sp_SQLException(1,1,"sp_NewContactUser",v_CustomMessage,1,@responseError);
+        SET p_JsonResponse = (SELECT @responseError);
+    END;
+#Validacion del Usuario
+SET @isExist = (SELECT COUNT(US.Id) FROM tbl_usuarios US WHERE US.Codigo = p_Codigo LIMIT 1);
+IF @isExist = 0 THEN
+	SET v_CustomMessage = CONCAT('{"response":false,"message":"Error 0019: Este usuario no existe (',p_Codigo,')"}');
+    #Activamos el error
+    SIGNAL SQLSTATE '45000';
+END IF;
+
+#Si existe procedemos a crearle contacto
+SET @IdUser = (SELECT US.Id FROM tbl_usuarios US WHERE US.Codigo = p_Codigo LIMIT 1);
+SET @TipoDocumento = (SELECT UT.Id FROM tbl_usuarios_documentoidentidad_tipo UT WHERE UT.Abreviatura = p_TipoDocumento LIMIT 1);
+#Contacto
+INSERT INTO `tbl_usuarios_contacto`(`Id_usuario`, `Correo_principal`, `Correo_secundario`, `Telefono_principal`, `Telefono_secundario`) VALUES (@IdUser,p_Correo1,p_Correo2,p_Telefono1,p_Telefono2);
+#Documento
+INSERT INTO `tbl_usuarios_documentoidentidad`(`Id_usuario`, `Id_tipo_documento`, `Descripcion`) VALUES (@IdUser,@TipoDocumento,p_Cedula);
+
+#Devolvemos el response si no hay ningun SQL Error
+SET p_JsonResponse = CONCAT('{"response":true,"message":"Contacto registrado con exito para el usuario ',p_Codigo,'"}');
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_NewUser` (IN `p_Nombre1` VARCHAR(20), IN `p_Nombre2` VARCHAR(20), IN `p_Apellido1` VARCHAR(20), IN `p_Apellido2` VARCHAR(20), IN `p_Codigo` VARCHAR(6), IN `p_FechaNacimiento` DATE, IN `p_FechaIngreso` DATE, IN `p_Cedula` VARCHAR(255), IN `p_IdParroquia` INT, IN `p_IdCargo` INT, IN `p_IdDivision` INT, IN `p_IdUser` INT, IN `p_IpUser` VARCHAR(39), OUT `p_JsonResponse` TEXT)   BEGIN
+DECLARE v_CustomMessage TEXT;
+DECLARE v_CustomError CONDITION FOR SQLSTATE '45000';
+DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
+	BEGIN
+    	GET DIAGNOSTICS CONDITION 1 @code = RETURNED_SQLSTATE, @error_msj = MESSAGE_TEXT;
+        ROLLBACK;
+        SET v_CustomMessage = CONCAT("Se ha producido un error en la consulta: (",@code,") ",@error_msj);
+        #Guardamos el error
+        CALL sp_SQLException(1,1,"sp_NewUser",v_CustomMessage,1,@responseError);
+        SET p_JsonResponse = (SELECT @responseError);
+    END;
+DECLARE EXIT HANDLER FOR v_CustomError
+	BEGIN
+    	#Guardamos el error
+        CALL sp_SQLException(1,1,"sp_NewUser",v_CustomMessage,1,@responseError);
+        SET p_JsonResponse = (SELECT @responseError);
+    END;
+#Validacion del Usuario
+SET @isExist = (SELECT COUNT(US.Id) FROM tbl_usuarios US WHERE US.Codigo = p_Codigo LIMIT 1);
+IF @isExist = 1 THEN
+	SET v_CustomMessage = CONCAT('{"response":false,"message":"Error 0018: Este usuario ya existe (',p_Codigo,')"}');
+    #Activamos el error
+    SIGNAL SQLSTATE '45000';
+END IF;
+
+#Capturamos el ultimo login del usuario quien esta registrando el nuevo miembro
+SET @LastInsert = (SELECT MAX(BL2.Id) FROM tbl_control_logs_bitacora BL2 WHERE BL2.Id_usuario_responsable = p_IdUser 
+                   AND BL2.Descripcion_accion LIKE "createUser%" LIMIT 1); #Almacena el ultimo insert de creacion de Usuario
+SET @LastLogin = (SELECT Us.Fecha_login FROM tbl_usuarios Us WHERE Us.Id = p_IdUser LIMIT 1); #Almacena la ultima fecha de login
+SET @LastIp = (SELECT IFNULL(BL.Ip_responsable,"0.0.0.0") FROM tbl_control_logs_bitacora BL WHERE BL.Id = @LastInsert); #Almacena la ultima IP
+
+#Si no existe procedemos a registrar al usuario
+SET @Key = (SELECT EK.EncryptKey FROM tbl_control_encryptkey EK WHERE EK.Id_estatus = 1 LIMIT 1);
+SET @FechaActual = (SELECT SYSDATE());
+SET @FechaCambio = (SELECT DATE(SYSDATE()+90));
+
+INSERT INTO `tbl_usuarios`(`Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`)
+VALUES(p_Codigo,AES_ENCRYPT(p_Cedula,@Key),@FechaCambio,p_Nombre1,p_Nombre2,p_Apellido1,p_Apellido2,p_FechaNacimiento,p_IdCargo,p_IdDivision,p_IdParroquia,p_FechaIngreso,NULL,NULL,1);
+
+#Guardamos el SQL
+SET @SQLRealizado = CONCAT('INSERT INTO `tbl_usuarios`(`Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`) VALUES(',p_Codigo,',AES_ENCRYPT(p_Cedula,@Key),@FechaCambio,p_Nombre1,p_Nombre2,p_Apellido1,p_Apellido2,p_FechaNacimiento,p_IdCargo,p_IdDivision,p_IdParroquia,p_FechaIngreso,NULL,NULL,1)');
+
+#Acomodamos el ultimo valor y el nuevo
+SET @LastValue = CONCAT('{"ultima_ip":"',@LastIp,'"}');
+SET @NewValue = CONCAT('{"ultima_ip":"',p_IpUser,'"}');
+
+CALL sp_InsertLog(1,"createUser",p_IpUser,p_IdUser,"tbl_usuarios",@SQLRealizado,@LastValue,@NewValue,@FechaActual,@jsonResponse);
+#Extraemos el JSON a una variable
+SET @ResponseJson = JSON_UNQUOTE(JSON_EXTRACT(@jsonResponse,'$.response'));
+
+#Verificamos si registró efectivamente en la bitacora
+IF @ResponseJson != "true" THEN
+	SET v_CustomMessage = CONCAT('{"response":false,"message":"Error 0015: ha ocurrido un error en la bitacora"}');
+    SIGNAL SQLSTATE '45000'; #Si no ha podido registrar nada, dispara el error
+END IF;
+
+#Si paso toda las validaciones
+SET p_JsonResponse = CONCAT('{"response":true,"message":"Usuario ',p_Codigo,' creado exitosamente"}');
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_QueryPagination` (IN `tableTarget` TEXT, OUT `p_jsonResponse` TEXT)   query_select: BEGIN
 DECLARE v_CustomMessage TEXT;
 DECLARE v_CustomError CONDITION FOR SQLSTATE '45000';
@@ -266,8 +365,9 @@ SET @FechaActual = (SELECT SYSDATE());
 INSERT INTO `tbl_control_error`(`Id_error_tipomensaje`, `Id_error_tipoobjeto`, `Objeto_afectado`, `Error_mensaje`, `Fecha`, `Id_estatus`) 
 VALUES (p_Id_tipo_mensaje,p_Id_objeto_afectado,p_objeto_afectado,p_mensaje_error,@FechaActual,p_estatus_error);
 
+SET @MensajeError = JSON_UNQUOTE(JSON_EXTRACT(p_mensaje_error,'$.message'));
 #Si pasa todos los controles devuelve otro json
-SET p_error_response = CONCAT('{"response":false,"message": "Se ha producido un error en SQL, porfavor pongase en contacto con el administrador del sistema"}');
+SET p_error_response = CONCAT('{"response":false,"message": "',@MensajeError,'"}');
 
 END$$
 
@@ -284,7 +384,7 @@ CREATE TABLE `tbl_control_encryptkey` (
   `EncryptKey` mediumtext NOT NULL,
   `EncryptIv` mediumtext NOT NULL,
   `Id_estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_control_encryptkey`
@@ -307,7 +407,7 @@ CREATE TABLE `tbl_control_error` (
   `Error_mensaje` text NOT NULL,
   `Fecha` datetime NOT NULL,
   `Id_estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_control_error`
@@ -328,7 +428,37 @@ INSERT INTO `tbl_control_error` (`Id`, `Id_error_tipomensaje`, `Id_error_tipoobj
 (12, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0016: La selección de tabla está vacia ()\"}', '2023-04-10 11:30:21', 1),
 (13, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0017: La selección de tabla no coincide con ninguna tabla (users2)\"}', '2023-04-10 11:35:01', 1),
 (14, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0017: La selección de tabla no coincide con ninguna tabla (users2)\"}', '2023-04-10 11:35:08', 1),
-(15, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0016: La selección de tabla está vacia ()\"}', '2023-04-10 11:35:33', 1);
+(15, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0016: La selección de tabla está vacia ()\"}', '2023-04-10 11:35:33', 1),
+(16, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-14 11:04:39', 1),
+(17, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-14 13:34:24', 1),
+(18, 1, 1, 'sp_NewUser', 'Se ha producido un error en la consulta: (21S01) El número de columnas no corresponde al número en la línea 1', '2023-04-16 00:01:33', 1),
+(19, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-16 00:12:34', 1),
+(20, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0011: El ID_CODE(999999) no existe o tiene el acceso denegado\"}', '2023-04-16 00:21:34', 1),
+(21, 1, 1, 'sp_NewContactUser', '{\"response\":false,\"message\":\"Error 0019: Este usuario no existe (999999)\"}', '2023-04-16 13:07:25', 1),
+(22, 1, 1, 'sp_NewUser', 'Se ha producido un error en la consulta: (22007) Truncated incorrect datetime value: \'20230416132394\'', '2023-04-16 13:23:04', 1),
+(23, 1, 1, 'sp_NewUser', 'Se ha producido un error en la consulta: (23000) Column \'Id_usuario\' cannot be null', '2023-04-16 13:29:50', 1),
+(24, 1, 1, 'sp_NewContactUser', 'Se ha producido un error en la consulta: (23000) Column \'Id_usuario\' cannot be null', '2023-04-16 13:42:16', 1),
+(25, 1, 1, 'sp_NewUser', 'Se ha producido un error en la consulta: (23000) Cannot add or update a child row: a foreign key constraint fails (`carent-nueva`.`tbl_usuarios`, CONSTRAINT `FK_division_usuario` FOREIGN KEY (`Id_jerarquia_division`) REFERENCES `tbl_usuarios_jerarquia_division` (`Id`))', '2023-04-16 14:42:33', 1),
+(26, 1, 1, 'sp_NewUser', 'Se ha producido un error en la consulta: (23000) Cannot add or update a child row: a foreign key constraint fails (`carent-nueva`.`tbl_usuarios`, CONSTRAINT `FK_division_usuario` FOREIGN KEY (`Id_jerarquia_division`) REFERENCES `tbl_usuarios_jerarquia_division` (`Id`))', '2023-04-16 14:46:53', 1),
+(27, 1, 1, 'sp_NewUser', 'Se ha producido un error en la consulta: (22007) Truncated incorrect datetime value: \'20230416144892\'', '2023-04-16 14:48:02', 1),
+(28, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 15:23:42', 1),
+(29, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 15:25:33', 1),
+(30, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 15:26:54', 1),
+(31, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 15:28:50', 1),
+(32, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 15:58:02', 1),
+(33, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:00:01', 1),
+(34, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:00:16', 1),
+(35, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:00:30', 1),
+(36, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:00:55', 1),
+(37, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:03:02', 1),
+(38, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:06:55', 1),
+(39, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:06:57', 1),
+(40, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:07:29', 1),
+(41, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:09:55', 1),
+(42, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:10:37', 1),
+(43, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:16:48', 1),
+(44, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:19:17', 1),
+(45, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:19:22', 1);
 
 -- --------------------------------------------------------
 
@@ -339,7 +469,7 @@ INSERT INTO `tbl_control_error` (`Id`, `Id_error_tipomensaje`, `Id_error_tipoobj
 CREATE TABLE `tbl_control_error_tipomensaje` (
   `Id` int(11) NOT NULL,
   `Descripcion` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_control_error_tipomensaje`
@@ -358,7 +488,7 @@ INSERT INTO `tbl_control_error_tipomensaje` (`Id`, `Descripcion`) VALUES
 CREATE TABLE `tbl_control_error_tipoobjeto` (
   `Id` int(11) NOT NULL,
   `NombreObjeto` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_control_error_tipoobjeto`
@@ -376,7 +506,7 @@ INSERT INTO `tbl_control_error_tipoobjeto` (`Id`, `NombreObjeto`) VALUES
 CREATE TABLE `tbl_control_estatus` (
   `Id` int(11) NOT NULL,
   `Descripcion` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_control_estatus`
@@ -384,7 +514,9 @@ CREATE TABLE `tbl_control_estatus` (
 
 INSERT INTO `tbl_control_estatus` (`Id`, `Descripcion`) VALUES
 (1, 'Activo'),
-(2, 'Inactivo');
+(2, 'Inactivo'),
+(3, 'De reposo'),
+(4, 'De Vacaciones');
 
 -- --------------------------------------------------------
 
@@ -403,7 +535,7 @@ CREATE TABLE `tbl_control_logs_bitacora` (
   `Valor_anterior` text DEFAULT NULL,
   `Nuevo_valor` text DEFAULT NULL,
   `Fecha_Registro` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_control_logs_bitacora`
@@ -428,7 +560,42 @@ INSERT INTO `tbl_control_logs_bitacora` (`Id`, `Id_bitacora_accion`, `Descripcio
 (16, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-05 13:53:11 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-05 13:52:27\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-05 13:53:11\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-05 13:53:11'),
 (17, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-05 13:56:03 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-05 13:53:11\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-05 13:56:03\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-05 13:56:03'),
 (18, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-05 14:00:02 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-05 13:56:03\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-05 14:00:02\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-05 14:00:02'),
-(19, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-10 11:02:34 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-05 14:00:02\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-10 11:02:34\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-10 11:02:34');
+(19, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-10 11:02:34 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-05 14:00:02\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-10 11:02:34\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-10 11:02:34'),
+(20, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-14 09:44:49 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-10 11:02:34\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-14 09:44:49\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-14 09:44:49'),
+(21, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-14 11:04:45 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-14 09:44:49\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-14 11:04:45\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-14 11:04:45'),
+(22, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-14 13:34:29 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-14 11:04:45\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-14 13:34:29\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-14 13:34:29'),
+(23, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-14 13:53:14 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-14 13:34:29\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-14 13:53:14\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-14 13:53:14'),
+(24, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-14 13:55:41 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-14 13:53:14\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-14 13:55:41\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-14 13:55:41'),
+(25, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-14 19:09:17 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-14 13:55:41\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-14 19:09:17\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-14 19:09:17'),
+(26, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-14 23:25:59 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-14 19:09:17\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-14 23:25:59\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-14 23:25:59'),
+(27, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-15 08:44:55 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-14 23:25:59\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-15 08:44:55\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-15 08:44:55'),
+(28, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-15 09:03:20 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-15 08:44:55\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-15 09:03:20\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-15 09:03:20'),
+(29, 1, 'createUser', '127.0.0.1', 1, 'tbl_usuarios', 'INSERT INTO `tbl_usuarios`(`Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`)\r\nVALUES(999999,AES_ENCRYPT(12345678,0123456789abcdef0123456789abcdef),2023-04-16,Pepe,ElGrillo,Pillo,Vanillo,1999-11-11,6,2,50,2023-04-16 00:07:29,NULL,NULL,1)', NULL, '{\"ultima_ip\":\"127.0.0.1\"}', '2023-04-16 00:07:29'),
+(30, 2, 'login', '127.0.0.1', 249, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-16 00:08:31 WHERE u.Codigo = 999999;', NULL, '{\"fecha_ultimo_login\": \"2023-04-16 00:08:31\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-16 00:08:31'),
+(31, 2, 'login', '127.0.0.1', 249, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-16 00:08:54 WHERE u.Codigo = 999999;', '{\"fecha_ultimo_login\": \"2023-04-16 00:08:31\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-16 00:08:54\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-16 00:08:54'),
+(32, 2, 'login', '127.0.0.1', 249, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-16 00:09:39 WHERE u.Codigo = 999999;', '{\"fecha_ultimo_login\": \"2023-04-16 00:08:54\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-16 00:09:39\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-16 00:09:39'),
+(33, 2, 'login', '127.0.0.1', 249, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-16 00:11:48 WHERE u.Codigo = 999999;', '{\"fecha_ultimo_login\": \"2023-04-16 00:09:39\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-16 00:11:48\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-16 00:11:48'),
+(34, 2, 'login', '127.0.0.1', 249, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-16 00:14:49 WHERE u.Codigo = 999999;', '{\"fecha_ultimo_login\": \"2023-04-16 00:11:48\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-16 00:14:49\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-16 00:14:49'),
+(35, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-16 00:14:59 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-15 09:03:20\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-16 00:14:59\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-16 00:14:59'),
+(36, 2, 'login', '127.0.0.1', 247, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-16 00:16:02 WHERE u.Codigo = 11622;', NULL, '{\"fecha_ultimo_login\": \"2023-04-16 00:16:02\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-16 00:16:02'),
+(37, 2, 'login', '127.0.0.1', 249, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-16 00:19:08 WHERE u.Codigo = 999999;', '{\"fecha_ultimo_login\": \"2023-04-16 00:14:49\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-16 00:19:08\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-16 00:19:08'),
+(38, 2, 'login', '127.0.0.1', 249, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-16 00:19:52 WHERE u.Codigo = 11624;', '{\"fecha_ultimo_login\": \"2023-04-16 00:19:08\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-16 00:19:52\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-16 00:19:52'),
+(39, 2, 'login', '127.0.0.1', 249, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-16 00:22:00 WHERE u.Codigo = 11624;', '{\"fecha_ultimo_login\": \"2023-04-16 00:19:52\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-16 00:22:00\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-16 00:22:00'),
+(40, 2, 'login', '127.0.0.1', 249, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-16 00:22:07 WHERE u.Codigo = 11624;', '{\"fecha_ultimo_login\": \"2023-04-16 00:22:00\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-16 00:22:07\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-16 00:22:07'),
+(41, 2, 'login', '127.0.0.1', 249, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-16 00:22:55 WHERE u.Codigo = 11624;', '{\"fecha_ultimo_login\": \"2023-04-16 00:22:07\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-16 00:22:55\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-16 00:22:55'),
+(42, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-16 09:15:34 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-16 00:14:59\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-16 09:15:34\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-16 09:15:34'),
+(43, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-16 11:46:30 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-16 09:15:34\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-16 11:46:30\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-16 11:46:30'),
+(44, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-16 12:23:46 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-16 11:46:30\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-16 12:23:46\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-16 12:23:46'),
+(45, 1, 'createUser', '127.0.0.1', 1, 'tbl_usuarios', NULL, '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-04-16 13:29:49'),
+(46, 1, 'createUser', '127.0.0.1', 1, 'tbl_usuarios', NULL, '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-04-16 13:42:16'),
+(47, 1, 'createUser', '127.0.0.1', 1, 'tbl_usuarios', 'INSERT INTO `tbl_usuarios`(`Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`) VALUES(120154,AES_ENCRYPT(p_Cedula,,@Key,),@FechaCambio,p_Nombre1,p_Nombre2,p_Apellido1,p_Apellido2,p_FechaNacimiento,p_IdCargo,p_IdDivision,p_IdParroquia,p_FechaIngreso,NULL,NULL,1)', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-04-16 13:46:52'),
+(48, 2, 'login', '127.0.0.1', 252, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-16 13:49:13 WHERE u.Codigo = 120154;', NULL, '{\"fecha_ultimo_login\": \"2023-04-16 13:49:13\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-16 13:49:13'),
+(49, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-16 13:49:28 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-16 12:23:46\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-16 13:49:28\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-16 13:49:28'),
+(50, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-16 14:16:43 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-16 13:49:28\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-16 14:16:43\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-16 14:16:43'),
+(51, 1, 'createUser', '127.0.0.1', 1, 'tbl_usuarios', 'INSERT INTO `tbl_usuarios`(`Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`) VALUES(70663,AES_ENCRYPT(p_Cedula,@Key),@FechaCambio,p_Nombre1,p_Nombre2,p_Apellido1,p_Apellido2,p_FechaNacimiento,p_IdCargo,p_IdDivision,p_IdParroquia,p_FechaIngreso,NULL,NULL,1)', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-04-16 14:51:13'),
+(52, 2, 'login', '127.0.0.1', 255, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-16 14:51:36 WHERE u.Codigo = 70663;', NULL, '{\"fecha_ultimo_login\": \"2023-04-16 14:51:36\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-16 14:51:36'),
+(53, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-16 14:51:52 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-16 14:16:43\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-16 14:51:52\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-16 14:51:52'),
+(54, 1, 'createUser', '127.0.0.1', 1, 'tbl_usuarios', 'INSERT INTO `tbl_usuarios`(`Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`) VALUES(999998,AES_ENCRYPT(p_Cedula,@Key),@FechaCambio,p_Nombre1,p_Nombre2,p_Apellido1,p_Apellido2,p_FechaNacimiento,p_IdCargo,p_IdDivision,p_IdParroquia,p_FechaIngreso,NULL,NULL,1)', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-04-16 16:21:27');
 
 -- --------------------------------------------------------
 
@@ -439,7 +606,7 @@ INSERT INTO `tbl_control_logs_bitacora` (`Id`, `Id_bitacora_accion`, `Descripcio
 CREATE TABLE `tbl_control_logs_bitacora_accion` (
   `Id` int(11) NOT NULL,
   `Accion` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_control_logs_bitacora_accion`
@@ -460,7 +627,7 @@ INSERT INTO `tbl_control_logs_bitacora_accion` (`Id`, `Accion`) VALUES
 CREATE TABLE `tbl_control_tipocargo` (
   `Id` int(11) NOT NULL,
   `TipoCargo` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_control_tipocargo`
@@ -490,257 +657,260 @@ CREATE TABLE `tbl_usuarios` (
   `Id_jerarquia_cargo` int(11) DEFAULT NULL,
   `Id_jerarquia_division` int(11) DEFAULT NULL,
   `Id_direccion_parroquia` int(11) DEFAULT NULL,
-  `Fecha_ingreso` datetime DEFAULT NULL,
-  `Fecha_egreso` datetime DEFAULT NULL,
+  `Fecha_ingreso` date DEFAULT NULL,
+  `Fecha_egreso` date DEFAULT NULL,
   `Fecha_login` datetime DEFAULT NULL,
   `Id_estatus` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios`
 --
 
 INSERT INTO `tbl_usuarios` (`Id`, `Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`) VALUES
-(1, '0001', 0x9f824ad4b17be95f20aa30c5eef9d8f6, '2023-05-08', 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '1986-08-05', 16, 16, 1131, '2020-01-01 00:00:00', NULL, '2023-04-10 11:02:34', 1),
-(2, '10', 0xcb4dc5daf4d8865eb1bd01d6c898c269, '2023-03-09', 'NATHALIE', 'YAMILET', 'LOPEZ', 'TREJO', '1972-08-20', 17, 1, 1131, '2000-02-21 00:00:00', NULL, '2023-03-08 23:41:42', 1),
-(3, '10092', 0x10e54efb266e50c523273c638cb690c5, '2023-03-09', 'YESENIA', 'BEATRIZ', 'MARTINEZ', 'GALLARDO', '1979-06-01', 15, 1, 1131, '2004-09-01 00:00:00', NULL, '2023-03-07 08:27:55', 1),
-(4, '10141', 0x383155d3ec475bf8ace4b67bf0aaba8d, '2023-03-09', 'JESUS', 'ERASMO', 'PEREZ', 'ERASMO', '1959-11-09', 17, 1, 1131, '2005-02-02 00:00:00', NULL, '2023-02-06 09:52:51', 1),
-(5, '10168', 0xde6d03f3e06cba9372848683f12ff10a, '2023-03-09', 'CAROL', 'JOSEFINA', 'LOPEZ', 'CAMPOS', '1962-11-07', 15, 5, 1131, '2005-06-06 00:00:00', NULL, '2023-03-02 10:25:00', 1),
-(6, '10367', 0x647c2b55cae32aa42154baeeb313ad40, '2023-03-09', 'LUZ', 'AMANDA', 'FONSECA', 'GARCIA', '1985-01-13', 15, 1, 1131, '2007-10-29 00:00:00', NULL, '2023-03-07 09:22:39', 1),
-(7, '10473', 0x97a25906ea5c15bc553e06ec4eaed009, '2023-03-09', 'ARTURO', 'LORENZO', 'MADRIZ', 'VARGAS', '1954-12-16', 17, 1, 1131, '2008-10-14 00:00:00', NULL, '2023-02-17 14:47:21', 1),
-(8, '10509', 0xb3cd6c38fa4b39dde440eff4b3bc5a22, '2023-03-09', 'ROMAN', 'ALBERTO', 'SCOTT', '', '1975-07-16', 12, 1, 1131, '2009-05-06 00:00:00', NULL, '2023-03-08 23:39:34', 1),
-(9, '10572', 0x9b830d819df904d95147340117e70d44, '2023-03-09', 'OLIVER', 'JOSE', 'PAEZ', 'RANGEL', '1982-10-16', 14, 1, 1131, '2010-01-18 00:00:00', NULL, '2023-03-06 17:46:40', 1),
-(10, '10721', 0x2e29e47b1ce3ad1182512298dd26328d, '2023-03-09', 'JORGE', 'ALEJANDRO', 'GONZALEZ', 'MORALES', '1990-05-19', 13, 1, 1131, '2011-11-15 00:00:00', NULL, '2023-03-08 16:07:41', 1),
-(11, '10786', 0xdb3fe107f261880fdeced74b00281558, '2023-03-09', 'MARIA', 'ANDREINA', 'SEQUEDA', 'BANDES', '1990-05-30', 13, 1, 1131, '2012-07-20 00:00:00', NULL, '2023-03-08 09:13:49', 1),
-(12, '10968', 0xf945dd6534898bbb32c583a4f9a58a0e, '2023-03-09', 'YODELINA', '', 'TORRES', 'MORALES', '1994-09-15', 12, 1, 1131, '2014-02-24 00:00:00', NULL, '2023-03-06 12:00:02', 1),
-(13, '11030', 0x41273542b44edd82eec1262012051a0e, '2023-03-09', 'KATHERINE', 'BETHZABEL', 'ZURITA', 'CHACON', '1989-06-08', 13, 1, 1131, '2015-01-13 00:00:00', NULL, '2023-03-08 15:16:07', 1),
-(14, '11044', 0x4844e22ab49ce7972d99f6ac664e58d9, '2023-03-09', 'MILEIDIS', 'ALEXANDRA', 'MORENO', 'MATUZALEM', '1992-05-30', 11, 1, 1131, '2015-01-21 00:00:00', NULL, '2023-03-07 09:12:06', 1),
-(15, '11116', 0x9b5e21866d59e8c4a93c5770dbaef19b, '2023-03-09', 'FRANCIA', 'CAROLINA', 'MEDINA', 'TINEDO', '1987-03-15', 11, 1, 1131, '2015-11-04 00:00:00', NULL, '2023-03-09 08:03:58', 1),
-(16, '11220', 0x9f824ad4b17be95f20aa30c5eef9d8f6, '2023-05-13', 'ASTRID', 'CAROLINA', 'MENDOZA', 'GIL', '1992-07-31', 11, 1, 1131, '2016-04-25 00:00:00', NULL, '2023-03-14 14:50:55', 1),
-(17, '11314', 0x7d88c658f3db0526ec6540dbaab56a39, '2023-03-09', 'MARIA', 'GABRIELA', 'TOVAR', 'CARDENAS', '1991-11-28', 8, 1, 1131, '2017-03-27 00:00:00', NULL, '2023-03-08 09:33:10', 1),
-(18, '11352', 0x0e6d3b64fffda77f987a1ca0b33692e0, '2023-03-09', 'MARIANA', 'ALEXANDRA', 'BRITO', 'SIFONTES', '1995-02-19', 11, 1, 1131, '2017-11-13 00:00:00', NULL, '2023-03-03 11:46:32', 1),
-(19, '11354', 0x093bfe3fa4bf619574f56a3f4a26a7e7, '2023-03-09', 'BELKIS', 'KATERIN', 'CORTINA', 'RUIZ', '1996-12-08', 8, 1, 1131, '2017-11-13 00:00:00', NULL, '2023-03-03 18:35:27', 1),
-(20, '11364', 0x3a5f20da401e227e6710acbb25ff97fc, '2023-03-09', 'LUCRECIA', 'DISNORA', 'SILVA', 'APONTE', '1989-03-15', 8, 1, 1131, '2017-12-04 00:00:00', '2021-03-02 00:00:00', NULL, 2),
-(21, '11369', 0xc425904da30c5cb2dcd022ed07388c16, '2023-03-09', 'NORMEDY', 'ZORIBETH', 'PARRA', 'TOVAR', '1986-08-22', 8, 1, 1131, '2017-12-04 00:00:00', NULL, '2023-02-28 10:47:05', 1),
-(22, '11371', 0xae865fdcd1ec90e2fda0a87137b009f2, '2023-03-09', 'JOSVELIS', 'YETSIMAR', 'CASTILLO', 'GIL', '1997-07-14', 9, 1, 1131, '2017-12-04 00:00:00', NULL, '2023-03-07 12:17:25', 1),
-(23, '11391', 0xdfb8f58ab34354191004d62ab7308044, '2023-03-09', 'LUIS', 'ANTONIO', 'RUSSIAN', 'REQUENA', '1996-01-10', 11, 1, 1131, '2018-02-15 00:00:00', '2022-06-03 00:00:00', '2022-06-03 14:29:26', 2),
-(24, '11401', 0x7e23d16c8f37bba5fbe9d04480852181, '2023-03-09', 'JONATHAN', 'JOSE', 'AZOCAR', 'RODRIGUEZ', '1994-08-24', 8, 1, 1131, '2018-02-26 00:00:00', NULL, '2023-03-03 19:06:17', 1),
-(25, '11403', 0x10dae5b466840d2e283185227765dda2, '2023-03-09', 'YERLENIS', 'DELYET', 'VALDERRAMA', 'ROSALES', '1998-09-14', 11, 1, 1131, '2018-03-06 00:00:00', NULL, '2023-03-03 11:48:31', 1),
-(26, '11410', 0xd2b99b2de2f70be230bc9594c37a0c61, '2023-03-09', 'KLEIVER', 'JOHANA', 'CORRO', 'GUDIÑO', '1991-02-13', 8, 1, 1131, '2018-03-06 00:00:00', NULL, '2023-02-14 14:39:57', 1),
-(27, '11421', 0xe17d18eb6f7ca9b5fdd6795efe996446, '2023-03-09', 'MARYURI', 'NAILET', 'BARAZARTE', 'VALERA', '1979-09-13', 7, 1, 1131, '2018-03-26 00:00:00', '2021-04-15 00:00:00', NULL, 2),
-(28, '11437', 0x7fe50132c05f1bdd77e6a4dd6d11dd7d, '2023-03-09', 'PEDRO', 'ALEXANDER', 'BENITEZ', 'MELENDEZ', '1968-06-05', 15, 1, 1131, '2018-07-01 00:00:00', NULL, '2023-02-24 17:23:36', 1),
-(29, '11440', 0xc12cd8cd82284a11fb0613e0d69b9bbc, '2023-03-09', 'DENNYS', 'RAMON', 'FLORES', 'MORALES', '1981-04-20', 7, 1, 1131, '2018-07-17 00:00:00', NULL, '2023-02-28 14:51:45', 1),
-(30, '11446', 0x6fe7030bcbddb93c36dbbb7ec2f31f85, '2023-03-09', 'GENESIS', 'VANESSA', 'MARCANO', 'RANGEL', '1997-10-05', 9, 1, 1131, '2018-07-25 00:00:00', '2022-07-29 00:00:00', '2022-07-23 21:55:02', 2),
-(31, '11448', 0x1354569ce26ccfd4e3bebd109b44cd11, '2023-03-09', 'KEILIMAR', 'YULISET', 'SUAREZ', 'LARES', '1996-05-12', 6, 1, 1131, '2018-07-31 00:00:00', NULL, '2023-03-07 10:50:50', 1),
-(32, '11452', 0x2c6f8320e663f56932482e2c34bfba3f, '2023-03-09', 'JOHANNE', 'FRANCIS', 'MUÑOZ', 'MARTINEZ', '1981-07-22', 13, 1, 1131, '2018-08-15 00:00:00', NULL, '2023-03-06 20:50:16', 1),
-(33, '11453', 0x88437b100005a2c216a35b10ac06ac89, '2023-03-09', 'ALFREDO', 'JOSE', 'HERNANDEZ', 'TORO', '1969-03-14', 9, 1, 1131, '2018-08-14 00:00:00', NULL, '2023-03-08 16:17:07', 1),
-(34, '11457', 0x73dd6433a0272bf8446bc3267e7d3f12, '2023-03-09', 'RAUL', 'IGNACIO', 'VARGAS', 'FREITES', '1976-01-29', 17, 1, 1131, '2018-10-18 00:00:00', NULL, '2023-02-23 14:51:55', 1),
-(35, '11466', 0xb0bd668ff196e3be8ba74828d811dc57, '2023-03-09', 'SHELCIE', 'ESTHER', 'PAZ', '', '1997-03-22', 7, 1, 1131, '2018-11-08 00:00:00', NULL, '2023-02-24 14:04:45', 1),
-(36, '11467', 0xe2639ee3113fd0cc23992b5b24daf64b, '2023-03-09', 'LADYMAR', '', 'MORETT', 'RONDON', '1983-03-18', 12, 1, 1131, '2018-11-20 00:00:00', '2022-12-29 00:00:00', '2022-12-29 13:40:52', 2),
-(37, '11469', 0xc36653810196652a8c5255973c9784a4, '2023-03-09', 'ANTHONY', 'ROBERT', 'GARCIA', 'CHAPARRO', '1991-06-26', 7, 1, 1131, '2018-11-12 00:00:00', NULL, NULL, 2),
-(38, '11480', 0xa577eb8769d5d83cddcd25fae3cab295, '2023-03-09', 'SOLMARY', 'DEL VALLE', 'MARTINEZ', 'MARCHAN', '1983-08-03', 12, 1, 1131, '2018-12-17 00:00:00', NULL, '2023-03-03 11:59:13', 1),
-(39, '11481', 0x39c32f5b07662274e35c4246a978d69f, '2023-03-09', 'JACKELINE', 'ZULEYMA MILAGROS', 'RAMOS', 'PEÑA', '1989-06-02', 6, 1, 1131, '2018-12-18 00:00:00', NULL, '2023-03-02 12:34:38', 1),
-(40, '11484', 0x67328548d73e014e6b5c5ab14ed5b9c1, '2023-03-09', 'BELKIS', 'EDICTA', 'VAZQUEZ', 'MORALES', '1984-07-17', 6, 1, 1131, '2019-01-07 00:00:00', '2020-09-30 00:00:00', NULL, 2),
-(41, '11487', 0x75939b253f15aad914fdf356bed1d590, '2023-03-09', 'YUZLEIBBY', 'ANGELICA', 'MALDONADO', 'ROSALES', '1996-10-08', 7, 1, 1131, '2019-01-21 00:00:00', NULL, '2023-03-01 09:58:01', 1),
-(42, '11490', 0x95a11af2e293e1ebe91c1cb2342f1af5, '2023-03-09', 'GIOVANNI', 'JESUS', 'CORREDOR', 'SANOJA', '1996-07-07', 10, 1, 1131, '2019-01-24 00:00:00', NULL, '2023-03-02 13:26:42', 1),
-(43, '11493', 0xf4be463bfe681a054e9c37164a42879b, '2023-03-09', 'KLEIVER', 'JOSE', 'CADENAS', 'QUIÑONEZ', '1995-05-02', 9, 1, 1131, '2019-02-04 00:00:00', NULL, '2023-03-08 10:57:21', 1),
-(44, '11494', 0x372914d41de86dd92703cd0dee53bc62, '2023-03-09', 'IVETTE', 'ALEJANDRA', 'OROZCO', 'FLORES', '1994-02-23', 12, 1, 1131, '2019-02-04 00:00:00', '2021-03-16 00:00:00', NULL, 2),
-(45, '11497', 0xbc51997c6750d92815ec3bd08f4c241c, '2023-03-09', 'ZUNAYA', 'ESTHER', 'WILCHES', 'OLAVE', '1996-12-05', 4, 1, 1131, '2019-02-07 00:00:00', '2021-04-16 00:00:00', NULL, 2),
-(46, '11499', 0x1b42160c619d522204261b5be95cb8c6, '2023-03-09', 'JESUS', 'ALBERTO', 'ABRAHAM', 'CORONADO', '1994-06-21', 10, 1, 1131, '2019-02-21 00:00:00', '2022-05-05 00:00:00', '2022-05-05 15:33:10', 2),
-(47, '11503', 0x06e477466a371d1eacd75ae15905d43d, '2023-03-09', 'JOSE', 'MIGUEL', 'PEROZO', 'HERRERA', '1994-10-04', 9, 1, 1131, '2019-03-07 00:00:00', '2022-01-19 00:00:00', '2022-01-18 11:19:04', 2),
-(48, '11504', 0x6aa697bff06db4b84bdbc82311fffc2e, '2023-03-09', 'ROBERTO', 'RAFAEL', 'VILLEGAS', 'GONZALEZ', '1988-09-26', 8, 1, 1131, '2019-03-20 00:00:00', '2021-12-03 00:00:00', '2021-12-03 11:16:58', 2),
-(49, '11507', 0x3a2c0ef6056afb94c39299ab96d4cd94, '2023-03-09', 'SANDRO', 'YOEL', 'MAYORA', '', '1973-09-17', 11, 6, 1131, '2019-04-01 00:00:00', NULL, '2023-03-02 10:07:29', 1),
-(50, '11519', 0xd18f8bd03a2fe1a887614b386c66c450, '2023-03-09', 'EDUARDO', '', 'BASTOS', 'RICCIO', '1989-06-27', 6, 1, 1131, '2019-07-10 00:00:00', '2021-12-01 00:00:00', '2021-11-30 23:49:08', 2),
-(51, '11520', 0x913bfe28eb609fcaa63aecb1e18f4c67, '2023-03-09', 'VANESSA', 'VALENTINA', 'ROJAS', 'MORALES', '1987-12-23', 7, 1, 1131, '2019-07-16 00:00:00', NULL, '2023-03-03 10:08:01', 1),
-(52, '11527', 0x9831d9046b6a2d18bd625df5a5d3ed45, '2023-03-09', 'CARLOS', 'ALBERTO', 'REVETE', 'CARVALLO', '1994-09-18', 7, 1, 1131, '2019-12-09 00:00:00', NULL, '2023-02-13 09:06:55', 1),
-(53, '11528', 0x7c589ad8221957631d159f5b6350a950, '2023-03-09', 'VIANNEY', 'DEL VALLE', 'RUGELES', 'MANTILLA', '1972-01-08', 8, 1, 1131, '2019-12-09 00:00:00', '2022-10-28 00:00:00', '2022-10-25 17:08:43', 2),
-(54, '11529', 0x8b7592142278c43d1c235569d6a0bea2, '2023-03-09', 'EDWIN', 'JESUS', 'BURGOS', 'GOMEZ', '1987-12-06', 4, 1, 1131, '2019-12-09 00:00:00', '2021-01-11 00:00:00', NULL, 2),
-(55, '11535', 0x9592acdded4437d994ee5f1a14a7d4b1, '2023-03-09', 'ENIL', 'ALEJANDRO', 'MOLINA', 'YDROGO', '2002-02-16', 7, 1, 1131, '2020-03-09 00:00:00', NULL, '2023-03-07 13:47:54', 1),
-(56, '22', 0x09ccd8b97d37abf3003cb7bdb7fee97c, '2023-03-09', 'FREDDY', 'RODOLFO', 'VARGAS', 'HERNANDEZ', '1969-10-22', 15, 1, 1131, '2000-08-01 00:00:00', NULL, '2023-03-07 20:26:21', 1),
-(57, '6060', 0xe628f6988aba3b5c31751f4d5d521522, '2023-03-09', 'YORMAN', 'ISMAEL', 'RANGEL', 'GONZALEZ', '1983-08-15', 14, 1, 1131, '2014-07-01 00:00:00', '2023-01-31 00:00:00', '2023-01-31 15:10:28', 2),
-(58, '10783', 0x75fd9de136418348f0c0a53a98a51181, '2023-03-09', 'JOSE', 'MIGUEL', 'UTRERA', 'ROJAS', '1975-04-02', 16, 2, 1131, '2012-07-16 00:00:00', NULL, '2023-03-09 08:06:36', 1),
-(59, '11485', 0xa9ce0f2bf56800d4cb028ddbc2b6b829, '2023-03-09', 'ALEJANDRO', 'ENRIQUE', 'LIRA', 'TOVAR', '1995-06-27', 7, 2, 1131, '2019-01-09 00:00:00', '2021-05-21 00:00:00', '2021-04-29 20:13:20', 2),
-(60, '11505', 0xa33fb3c2617b1e2cc5d944c0b4c0859d, '2023-03-09', 'YORDALIS', 'GABRIELA', 'ECHARRYS', 'CABRILES', '1993-08-02', 5, 2, 1131, '2019-04-01 00:00:00', '2021-01-15 00:00:00', NULL, 2),
-(61, '11506', 0x2684acb76beb6afaa2e468c39fd814bb, '2023-03-09', 'ELIANA', 'MARIA', 'PONCE', 'VARGAS', '1971-03-14', 14, 2, 1131, '2019-04-08 00:00:00', '2022-02-15 00:00:00', '2022-02-16 11:08:46', 2),
-(62, '11514', 0x103eef319babf7b08f06a819046edfec, '2023-03-09', 'STEFANY', 'YANETH', 'GONZALEZ', 'MIJARES', '1995-02-22', 6, 2, 1131, '2019-06-03 00:00:00', NULL, '2021-12-09 07:56:47', 2),
-(63, '11521', 0x3bd7662f26d22e0c32de54ef0569807a, '2023-03-09', 'NAIVELYS', 'GABRIELA', 'ALTUVE', 'TORRES', '1991-06-20', 13, 2, 1131, '2019-09-02 00:00:00', NULL, '2023-02-23 21:40:01', 1),
-(64, '11522', 0xf663e5da56b6035105e428560a01ff4d, '2023-03-09', 'GABRIELA', 'DEL VALLE', 'GIL', 'LA PIETRA', '1996-05-09', 6, 2, 1131, '2019-09-02 00:00:00', '2022-06-08 00:00:00', '2022-06-07 16:12:15', 2),
-(65, '11526', 0x442ce2f8fe72b1614fb2bcfe9cd6919b, '2023-03-09', 'ORIANNA', 'DESSIREE', 'ALEJOS', 'FIGUEREDO', '1996-05-23', 4, 2, 1131, '2019-11-18 00:00:00', '2022-01-14 00:00:00', '2022-01-18 16:00:14', 2),
-(66, '11533', 0x5bd05cb4c18042365c51faf72a87af3e, '2023-03-09', 'MARYNES', 'DEL VALLE', 'GONZALEZ', 'MENDOZA', '1997-03-06', 3, 2, 1131, '2020-03-09 00:00:00', NULL, NULL, 2),
-(67, '10794', 0x29f82578b0c53e954eed0b971a75b555, '2023-03-09', 'ELIGIO', 'HORACIO', 'MENDOZA', 'ODREMAN', '1970-10-23', 15, 4, 1131, '2012-08-01 00:00:00', NULL, NULL, 2),
-(68, '10838', 0xf3ba845c6f332ecf550b6ffd0b524ba2, '2023-03-09', 'MARIELVI', '', 'OLLER', 'MENDOZA', '1986-07-11', 12, 4, 1131, '2013-01-23 00:00:00', NULL, NULL, 2),
-(69, '111426', 0xaa924ae19b4789f2d1989149f718cbfb, '2023-03-09', 'ALBA', 'JEANNETH', 'NAVIA', 'BERMUDEZ', '1976-07-22', 12, 4, 1131, '2018-05-01 00:00:00', '2023-01-10 00:00:00', NULL, 2),
-(70, '11344', 0x16fdfb50b2e08cd162dcb4b2b59904b4, '2023-03-09', 'NATHASHA', 'ESTEFANIA', 'FRANCO', 'BERMUDEZ', '1996-02-03', 9, 4, 1131, '2017-10-13 00:00:00', '2020-11-06 00:00:00', NULL, 2),
-(71, '11353', 0x5621af456fefd10655d92835e1bb1fc9, '2023-03-09', 'YESSICA', 'LAURA', 'RIVAS', 'TURMERO', '1990-11-26', 11, 4, 1131, '2017-11-13 00:00:00', NULL, NULL, 2),
-(72, '11366', 0xa8b0fb715bbcda315cc265b24eb0f913, '2023-03-09', 'FRAYNER', 'ALEXANDER', 'RANGEL', 'VALERO', '1993-04-17', 8, 4, 1131, '2017-12-04 00:00:00', '2021-01-11 00:00:00', NULL, 2),
-(73, '11374', 0x3f5dc1ab52521d40452ee0d1e487124f, '2023-03-09', 'YDA', 'MERCEDES', 'CHIRINOS', 'VILORIA', '1983-09-28', 8, 1, 1131, '2017-12-04 00:00:00', '2022-03-15 00:00:00', '2022-03-16 12:29:26', 2),
-(74, '11411', 0xecb2621b72dfb2d72b3f056cf39bcd92, '2023-03-09', 'GENESIS', 'GABRIELA', 'BARRIOS', 'VILORIA', '1998-07-25', 11, 4, 1131, '2018-03-06 00:00:00', NULL, NULL, 2),
-(75, '11458', 0xdc40f17aaba2b35d115af903eafe41d5, '2023-03-09', 'RUDDY', 'ISAMAR', 'PINTO', 'COLMENARES', '1990-05-06', 10, 4, 1131, '2018-10-16 00:00:00', NULL, NULL, 2),
-(76, '11459', 0x02372563f1ba55068035f4ae232d7865, '2023-03-09', 'CARLOS', 'EDUARDO', 'RODRIGUEZ', '', '1966-03-15', 9, 4, 1131, '2018-10-16 00:00:00', '2021-09-03 00:00:00', NULL, 2),
-(77, '11471', 0xbf9a856ccb6329e806ad2a89a212c663, '2023-03-09', 'CARMEN', 'ELENA', 'BERRIOS', 'BASTIDAS', '1989-07-16', 9, 4, 1131, '2018-11-15 00:00:00', '2022-10-14 00:00:00', NULL, 2),
-(78, '11472', 0x54d8b1a8bf708d1d3ff92d0b1da54fc9, '2023-03-09', 'GERALDINE', 'DESIREE', 'RUIZ', 'HENRIQUEZ', '1975-10-09', 11, 4, 1131, '2018-11-26 00:00:00', '2021-03-01 00:00:00', NULL, 2),
-(79, '11482', 0xd3caab46800986a021e4a8894ec560a9, '2023-03-09', 'NAHOMY', 'NAZARETH', 'QUINTERO', 'MARTINEZ', '1998-08-13', 7, 4, 1131, '2018-12-17 00:00:00', '2022-09-16 00:00:00', NULL, 2),
-(80, '11510', 0x0559d0ac9c93cd019ab82ff19bd88135, '2023-03-09', 'MARIA', 'ISABEL', 'ESPINA', 'URBINA', '1966-12-09', 11, 4, 1131, '2019-04-29 00:00:00', NULL, NULL, 2),
-(81, '11513', 0xa01a6a426395dee14f270d10c8e4bbde, '2023-03-09', 'ANGELO', 'ALFONSO', 'MARTINEZ', 'BERROTERAN', '1990-02-05', 21, 19, 1131, '2019-06-03 00:00:00', '2021-08-16 00:00:00', '2021-06-30 10:40:47', 2),
-(82, '11523', 0x87afef94bfbedb9c0b9384d051b57ae4, '2023-03-09', 'MANUEL', 'ALEJANDRO', 'DA SILVA', 'VILLAMISIL', '1984-12-04', 9, 4, 1131, '2019-10-01 00:00:00', '2021-09-02 00:00:00', NULL, 2),
-(83, '111431', 0x387232dbac8c4712b93902412b45116b, '2023-03-09', 'GLENDER', 'JESUS', 'CORTEZ', '', '1990-11-05', 12, 6, 1131, '2018-06-25 00:00:00', '2021-08-18 00:00:00', '2021-08-18 11:14:42', 2),
-(84, '11267', 0xb42d3da5f0495e13078d701bdb3139c5, '2023-03-09', 'ALBERTO', 'JOSE', 'EVIES', 'GONZALEZ', '1965-11-04', 13, 5, 1131, '2016-10-03 00:00:00', NULL, '2021-12-27 13:15:54', 1),
-(85, '11291', 0x9f824ad4b17be95f20aa30c5eef9d8f6, '2023-05-13', 'ANGELA', 'LEONOR', 'ARANEA', 'CHICA', '1976-01-30', 14, 6, 1131, '2016-12-12 00:00:00', NULL, '2023-03-20 10:52:06', 1),
-(86, '11346', 0x3741710cf81161c3f808ab6763e6dd46, '2023-03-09', 'ARTURO', 'ARMANDO', 'SOSA', 'HERRERA', '1962-08-27', 12, 1, 1131, '2017-11-01 00:00:00', NULL, '2023-03-08 13:23:34', 1),
-(87, '11414', 0xfc273bdbdb272d4d8242dc839fe574c0, '2023-03-09', 'ADRIAN', 'ALEXANDER', 'PEREZ', 'RODRIGUEZ', '1994-04-19', 11, 5, 1131, '2018-03-16 00:00:00', NULL, '2023-03-01 08:31:34', 1),
-(88, '11443', 0x10345a029cfad2c3590a1b9a451d1f1d, '2023-03-09', 'ELISA', 'MARIBEL', 'PASERO', 'MARIÑO', '1979-08-25', 8, 1, 1131, '2018-07-19 00:00:00', NULL, '2023-03-07 12:16:33', 1),
-(89, '11463', 0x35940ed319e855068bde5ef0cfce1223, '2023-03-09', 'OMAR', 'ALFONSO', 'MARQUEZ', 'RODRIGUEZ', '2000-03-04', 9, 6, 1131, '2018-11-05 00:00:00', NULL, '2023-03-03 14:05:02', 1),
-(90, '11474', 0x8ddc468ceb92806447b051cf861ebc35, '2023-03-09', 'ANGELICA', 'ESTEFANIA', 'FUNES', 'OLOYOLA', '1995-06-27', 9, 6, 1131, '2018-11-26 00:00:00', '2022-12-02 00:00:00', '2022-12-02 10:12:19', 2),
-(91, '11492', 0xdb97f3afbcc4d25a1430ceba77fa6a62, '2023-03-09', 'ESLYN', 'MILEYDIS', 'ROJAS', 'ROMERO', '1989-03-25', 8, 5, 1131, '2019-02-11 00:00:00', '2019-02-11 00:00:00', '2022-02-10 11:34:30', 2),
-(92, '10135', 0x02c9275997d54158c4167be77a6630ce, '2023-03-09', 'CARMEN', 'VESTALIA', 'OCHOA', '', '1941-01-09', 19, 7, 1131, '2005-01-24 00:00:00', NULL, '2023-03-07 12:27:30', 1),
-(93, '10446', 0x4d1824cf8b7a77fed908c76ab6489714, '2023-03-09', 'LAURA', 'YAMILET', 'ROJAS', 'LIZARRAGA', '1974-09-28', 12, 10, 1131, '2008-07-23 00:00:00', NULL, '2023-03-08 10:38:18', 1),
-(94, '10466', 0xa1198b470a81e90dac0bed1b309401a8, '2023-03-09', 'ANTONIO', 'JOSE', 'RUBIO', 'HERNANDEZ', '1967-12-11', 22, 7, 1131, '2008-10-03 00:00:00', NULL, '2023-03-07 12:30:43', 1),
-(95, '10559', 0x0085f93347f0189fcb05c3a2c63cfb37, '2023-03-09', 'RUBEN', 'DARIO', 'VERA', 'PATIÑO', '1983-01-19', 37, 11, 1131, '2010-01-18 00:00:00', NULL, '2023-03-07 13:11:36', 1),
-(96, '10568', 0xdc1728d6fab31e62277d87cb0baef850, '2023-03-09', 'LUISA', 'ESTHER', 'TOVAR', '', '1964-04-09', 24, 7, 1131, '2010-01-18 00:00:00', NULL, '2023-03-07 12:32:46', 1),
-(97, '10589', 0x0e68f89affeeb43d6c64e3c45142cdf4, '2023-03-09', 'JOSE', 'ANTONIO', 'MACHADO', 'PEREZ', '1967-08-19', 14, 9, 1131, '2010-02-22 00:00:00', NULL, '2023-03-02 14:51:16', 1),
-(98, '10775', 0x21099c58c60dbd911af236bab605382f, '2023-03-09', 'DULY', 'YOSMILA', 'RINCONES', '', '1980-09-12', 25, 7, 1131, '2012-04-30 00:00:00', NULL, '2023-03-07 12:34:59', 1),
-(99, '10776', 0x007d9490d21daffd11ed0ee4545799d7, '2023-03-09', 'YENNIFER', 'MARIANA', 'VILLA', 'ANGEL', '1988-11-24', 19, 7, 1131, '2012-05-08 00:00:00', NULL, '2023-03-07 13:04:44', 1),
-(100, '10777', 0x72885907032c6a6a16024d7b6d6bda9a, '2023-03-09', 'ANA', 'CECILIA', 'CASTAÑO', 'ESCOBAR', '1946-10-10', 19, 2, 1131, '2012-05-16 00:00:00', NULL, '2023-03-01 08:30:46', 1),
-(101, '10896', 0xf0c9f1a5e0ceba8ff174aee2e655b8d6, '2023-03-09', 'AMAYOISBI', 'LIDSAY', 'GARCIA', 'CHACIN', '1972-07-12', 12, 12, 1131, '2013-08-08 00:00:00', NULL, '2023-03-08 10:58:13', 1),
-(102, '10897', 0x622f783e5cb68f8539a07d2e72fc5181, '2023-03-09', 'JENNIFER', 'LETICIA', 'CHACON', 'ZAMBRANO', '1985-02-21', 26, 12, 1131, '2013-08-19 00:00:00', NULL, '2023-03-08 10:44:05', 1),
-(103, '10977', 0x1917192b32463935bdb37b5424da609a, '2023-03-09', 'IGNAYARI', 'KATHERINE', 'MENDOZA', 'LUZARDO', '1991-06-11', 29, 7, 1131, '2014-06-05 00:00:00', NULL, '2023-03-07 15:48:08', 1),
-(104, '11145', 0x251a3d0f0933d817a00a114a54306788, '2023-03-09', 'REINA', 'MARIA', 'FAJARDO', 'GUERRERO', '1998-03-10', 31, 7, 1131, '2015-11-25 00:00:00', '2021-07-23 00:00:00', '2021-06-23 12:27:39', 2),
-(105, '11159', 0x39f7a594369157e26555f4e0d7a1a659, '2023-03-09', 'YOLYMER', 'ALICIA', 'MENDOZA', 'GARCIA', '1973-10-29', 14, 7, 1131, '2015-12-18 00:00:00', NULL, '2023-03-09 08:37:39', 1),
-(106, '11208', 0x7758b701cf34e5dd05b290c5902eb3dc, '2023-03-09', 'ROSA', 'ESMERALDA', 'LUZARDO', 'CARDENAS', '1965-08-28', 24, 7, 1131, '2016-03-14 00:00:00', NULL, '2023-03-07 13:05:55', 1),
-(107, '11292', 0x9834a2cdd6f9db0a0d250bffac8c7ade, '2023-03-09', 'ADRIANA', '', 'GUZMAN', 'LA CRUZ', '1982-06-18', 26, 12, 1131, '2016-12-12 00:00:00', '2020-08-24 00:00:00', NULL, 2),
-(108, '11423', 0x82ecb7a4d460cbd9b5fccb7bba696837, '2023-03-09', 'JOSE', 'LUZARDO', 'ESTABA', 'MOTA', '1988-04-08', 12, 13, 1131, '2018-04-09 00:00:00', NULL, '2023-03-09 09:05:27', 1),
-(109, '11438', 0xe1f58ad538cd74ec3753e32286efb835, '2023-03-09', 'KARINA', '', 'PEREZ', 'MARQUES', '1993-08-09', 27, 19, 1131, '2018-07-09 00:00:00', NULL, '2023-02-24 09:39:49', 1),
-(110, '11455', 0x54dc3edc08196bdd90fedc8827492cfa, '2023-03-09', 'ZONNY', 'EDUARDO', 'GARCIA', 'OJEDA', '1993-08-30', 35, 13, 1131, '2018-08-21 00:00:00', '2021-03-03 00:00:00', NULL, 2),
-(111, '11473', 0x52e0d97d3cc24e1500df52296fdc3338, '2023-03-09', 'YAINE', 'ALEXANDER', 'MACHADO', 'PEREZ', '1981-06-12', 31, 11, 1131, '2018-11-26 00:00:00', '2022-01-24 00:00:00', '2022-01-21 12:51:42', 2),
-(112, '11498', 0x48a6a5ef107959d068a87c41dd289746, '2023-03-09', 'ANTONIO', 'ALEXANDER', 'FARIA', 'EXPOSITO', '1983-08-28', 31, 11, 1131, '2019-02-18 00:00:00', '2021-08-02 00:00:00', '2021-07-06 11:41:46', 2),
-(113, '11524', 0xb88c861c64fbca0f3ed2921c92dc2d58, '2023-03-09', 'LEONARDO', 'ANTONIO', 'LOPEZ', 'AGURTO', '2001-10-29', 32, 9, 1131, '2019-10-01 00:00:00', NULL, '2023-03-09 08:59:15', 1),
-(114, '11525', 0xeb3607196b0db72c9d8b9c7cdefe7175, '2023-03-09', 'JOSE', 'ARTURO', 'MADRIZ', 'MALAVE', '1996-06-07', 2, 19, 1131, '2019-11-04 00:00:00', NULL, '2021-04-25 20:53:48', 2),
-(115, '11530', 0x3fd6b034156ce56e3063c7aceda2129b, '2023-03-09', 'LILIANA', 'IBETH', 'PARRA', 'PEREZ', '1980-05-21', 25, 7, 1131, '2020-01-29 00:00:00', '2021-11-30 00:00:00', '2021-11-16 14:18:04', 2),
-(116, '11531', 0x11d4863f0228a0f15971811d319899c8, '2023-03-09', 'ANTONIO', 'JOSE', 'REYES', 'SEQUERA', '1959-12-31', 15, 19, 1131, '2020-02-03 00:00:00', NULL, '2023-03-08 10:49:51', 1),
-(117, '11532', 0xd04d0184b0216d42ec38d51300a5fb0e, '2023-03-09', 'DUVAN', 'RAFAEL', 'PINTO', 'JAIMES', '2000-02-07', 3, 1, 1131, '2020-02-26 00:00:00', NULL, '2023-03-07 14:38:19', 1),
-(118, '11534', 0xf3143b800ced9f5b915d90b9cc7ae737, '2023-03-09', 'FREDDY', 'FRANCISCO', 'PERDOMO', 'MOLINA', '1986-03-03', 22, 7, 1131, '2020-03-01 00:00:00', NULL, NULL, 2),
-(119, '11536', 0xd995664289ab091b92900d8c3d725211, '2023-03-09', 'FERNANDO', 'JOSE', 'RANGEL', 'KUIPPERS', '1992-12-12', 12, 19, 1131, '2020-03-16 00:00:00', NULL, '2023-03-08 10:48:33', 1),
-(120, '11537', 0xdac7c278f04cd6bcfc2e8cd1327ba186, '2023-03-09', 'GELEN', 'DEL ROSARIO', 'CARDENAS', 'MARQUEZ', '1958-03-08', 23, 7, 1131, '2020-06-01 00:00:00', NULL, '2023-03-09 09:29:51', 1),
-(121, '11538', 0x5f6cefe297d88422fd26fc327927c50c, '2023-03-09', 'FREDDY', 'ANTONIO', 'BORRERO', 'CONTRERAS', '1989-08-09', 24, 11, 1131, '2020-06-01 00:00:00', NULL, NULL, 2),
-(122, '11539', 0xf3a4e6e99f2351d7d8d7dbe13a8613c6, '2023-03-09', 'AURA', 'MARIA', 'CONTRERAS', 'PASTRAN', '1968-07-01', 24, 7, 1131, '2020-06-01 00:00:00', NULL, '2023-03-07 13:07:06', 1),
-(123, '36', 0xaff067db4d01053de5e9b63e3acad0f3, '2023-03-09', 'JESUS', 'SALVADOR', 'MORILLO', 'QUINTANA', '1960-03-02', 12, 11, 1131, '2000-01-17 00:00:00', NULL, '2023-03-07 13:12:35', 1),
-(124, '49', 0x691bc08a9481d285f219ba498b40c2d8, '2023-03-09', 'AMELIA', 'JOSEFINA', 'DIAZ', 'MENDOZA', '1956-03-19', 20, 7, 1131, '2004-11-01 00:00:00', NULL, '2023-03-09 09:29:05', 1),
-(125, '10195', 0xb9ce83958d6a23a8336406193a64ff01, '2023-03-09', 'EMILIO', 'JOSE', 'LEON', 'FARIAS', '1965-06-28', 15, 3, 1131, '2005-11-01 00:00:00', NULL, '2023-03-08 10:55:19', 1),
-(126, '11265', 0xa0bd6599e6e683811b6372401e231dd8, '2023-03-09', 'GUSTAVO', 'ADOLFO', 'PUCHI', 'MEDINA', '1963-09-12', 14, 3, 1131, '2016-10-03 00:00:00', NULL, '2023-02-07 22:21:36', 1),
-(127, '11376', 0xdf4810c7bef897842d6da0a50067246d, '2023-03-09', 'ALFIO', 'FILIPPO', 'SAGLIMBENI', 'MUSCOLINO', '1967-08-03', 13, 3, 1131, '2017-12-20 00:00:00', NULL, '2023-03-07 14:54:06', 1),
-(128, '11397', 0xe5ca561acfe5b7e6d08fe901bc7949f5, '2023-03-09', 'ARIANNA', 'ELENA', 'MATOS', 'IACOBELLIS', '1995-08-21', 12, 3, 619, '2018-02-20 00:00:00', NULL, '2023-03-09 09:05:36', 1),
-(129, '11450', 0xbae93c1b60db15e5865266fd0d24633a, '2023-03-09', 'ANA', 'VIRGINIA', 'BLANDIN', 'ARZOLA', '1981-04-08', 12, 3, 1131, '2018-08-07 00:00:00', NULL, '2023-03-03 14:51:42', 1),
-(130, '10262', 0xb30631929b9c596b6b7c93bc0107a2f9, '2023-03-09', 'OSCAR', 'AUGUSTO', 'PIÑA', 'ALBUJAR', '1946-01-06', 15, 14, 1131, '2006-01-02 00:00:00', NULL, '2021-05-18 10:10:44', 1),
-(131, '11278', 0x610144861cabaf4a843655e1382b4ba1, '2023-03-09', 'YOSBER', 'ALEJANDRO', 'GOMEZ', 'LANDAETA', '1997-12-02', 41, 15, 1131, '2016-11-01 00:00:00', NULL, NULL, 2),
-(132, '11280', 0x2cad3164e6c307fdcb776bd810cb7581, '2023-03-09', 'DUGLIMAR', 'YOLEIDA', 'MENDEZ', 'RIVAS', '1999-07-02', 7, 1, 1131, '2016-11-16 00:00:00', '2022-06-30 00:00:00', '2022-07-11 12:14:10', 2),
-(133, '11312', 0xa7c857f013892adc7f221598f2e89d13, '2023-03-09', 'SOL', 'PATRICIA', 'VIANA', 'CONSUEGRA', '1997-09-23', 5, 17, 1131, '2017-03-20 00:00:00', NULL, '2023-03-09 10:17:23', 1),
-(134, '11063', 0x3b313b352d415598974619e53a931dab, '2023-03-09', 'DOUGLAS', 'EDUARDO', 'TORREALBA', 'SANCHEZ', '1975-10-28', 42, 10, 1131, '2015-06-02 00:00:00', NULL, '2023-02-02 10:13:31', 1),
-(135, '11064', 0xf8d7bcf36c42372b56e93e294887f37f, '2023-03-09', 'DARWING', 'JOSE', 'CORDOVA', '', '1980-08-04', 40, 16, 1131, '2015-06-02 00:00:00', NULL, NULL, 1),
-(136, '11066', 0x41399ac78c24e3559f7726613d12ebd7, '2023-03-09', 'JEFERSON', 'JESUS', 'YANEZ', 'VILLEGAS', '1995-10-12', 40, 16, 1131, '2015-06-02 00:00:00', NULL, NULL, 1),
-(137, '11068', 0x5a0c077e3b5d51173617b9505e5096a0, '2023-03-09', 'JOSE', 'ANTONIO', 'ARAUJO', 'RODRIGUEZ', '1989-05-30', 40, 16, 1131, '2015-06-02 00:00:00', NULL, NULL, 1),
-(138, '11236', 0x9539088bb755d49549bae8545139afef, '2023-03-09', 'ANGEL', 'EDUARDO', 'APARICIO', 'ROMERO', '1970-08-02', 40, 16, 1131, '2016-05-20 00:00:00', NULL, NULL, 1),
-(139, '11237', 0xe9ab85bfeff30e5d550382afc6080220, '2023-03-09', 'JESUS', 'ANTONIO', 'ROJAS', 'CRUZ', '1984-07-18', 40, 16, 1131, '2016-05-20 00:00:00', NULL, NULL, 1),
-(140, '10508', 0x2d56c9afa7ed653edb2aaa6ae8f27296, '2023-03-09', 'FREDY', 'SAMUEL', 'BAUTISTA', 'VILLEGAS', '1950-05-14', 15, 17, 1131, '2005-08-01 00:00:00', NULL, '2023-03-09 10:23:26', 1),
-(141, '10689', 0x405c1a039a181f42019aa2982793c531, '2023-03-09', 'ELLEN', 'KATIUSKA', 'FUENTES', 'RIOS', '1966-03-16', 33, 18, 1131, '2007-02-26 00:00:00', NULL, NULL, 2),
-(142, '11451', 0x5721015667f69f6abe55a7234ee28807, '2023-03-09', 'BARBARA', 'CAROLINA', 'ZAMBRANO', 'AGUINALDE', '1996-11-19', 6, 18, 1131, '2018-08-01 00:00:00', '2021-07-01 00:00:00', NULL, 2),
-(143, '11476', 0xbe3ff23ed8054d2728572e354edf7671, '2023-03-09', 'MARY', '', 'CRUZ', 'SALAZAR', '1989-09-20', 12, 18, 1131, '2018-12-03 00:00:00', '2021-07-01 00:00:00', NULL, 2),
-(144, '10863', 0x63ed7aeb031c9314dd620e19e77c79e2, '2023-03-09', 'SERGIO', 'FREDDYS', 'MÁRQUEZ', 'TOVAR', '1971-12-31', 16, 1, 1131, '2013-05-02 00:00:00', NULL, '2023-03-08 12:28:02', 1),
-(145, '29', 0x479f7317068099dcf2a111b30db251df, '2023-03-09', 'NELSON', 'JOSE', 'MARCANO', '', '1969-09-20', 16, 1, 1131, '2000-10-26 00:00:00', NULL, '2023-03-08 12:26:18', 1),
-(146, '5002', 0xaef4634cdd03090997802d1839eb6c5a, '2023-03-09', 'SAMUEL', 'ALEJANDRO', 'MARQUEZ', 'TOVAR', '1966-06-28', 16, 1, 1131, '1999-07-01 00:00:00', NULL, '2023-03-07 12:23:29', 1),
-(147, '5014', 0x75a1d6a76e48987599d8e331c08d260b, '2023-05-19', 'ANTONIO', 'JOSE', 'DUGARTE', 'LOBO', '1964-07-23', 16, 2, 1131, '2011-03-16 00:00:00', NULL, '2023-03-20 10:58:28', 1),
-(148, '107', 0x4487799a782e07416359afcb8a42fb84, '2023-03-09', 'MIRNANGELA', 'LARISKA', 'SALAYA', 'GARCIA', '1977-11-08', 16, 1, 1131, '2000-08-08 00:00:00', NULL, '2023-03-08 11:15:29', 1),
-(149, '5003', 0x9d880ffd30f5f080be310c589ad7d227, '2023-03-09', 'JOSE', 'NICOLAS', 'MARQUEZ', 'CEJAS', '1962-02-11', 16, 1, 1131, '2007-08-01 00:00:00', NULL, '2023-03-01 14:33:55', 1),
-(150, '5007', 0xc371ab40bb31c34e95ae4516d646a82f, '2023-03-09', 'FREDDY', 'FRANCISCO', 'PERDOMO', '', '1949-05-17', 16, 1, 1131, '2008-08-01 00:00:00', NULL, '2023-03-08 15:20:24', 1),
-(151, '6146', 0x9dae052e8459779324727042c745d5c0, '2023-03-09', 'ROBINSON', 'JOSE', 'ARANGUREN', 'MAESTRE', '1970-11-15', 1, 1, 1131, '2019-09-02 00:00:00', NULL, '2022-05-29 16:47:14', 1),
-(152, '6128', 0x03cb2670612f39a496a117e7b4132624, '2023-03-09', 'JOSE', 'ANTONIO', 'ECKER', 'RANGEL', '1968-10-19', 37, 11, 1131, '2018-07-02 00:00:00', '2019-11-02 00:00:00', NULL, 1),
-(153, '6145', 0xb8fc0ae4e80a2cbdf90ba796266bc350, '2023-03-09', 'JHON', 'EDUARDO', 'RONDON', 'BARRERA', '1969-08-19', 1, 1, 648, '2019-08-14 00:00:00', NULL, NULL, 2),
-(154, '11540', 0x63ed7aeb031c9314dd620e19e77c79e2, '2023-03-09', 'SERGIO', 'FREDDYS', 'MÁRQUEZ', 'TOVAR', '1971-12-31', 16, 10, 612, '2013-05-01 00:00:00', NULL, NULL, 1),
-(155, '6149', 0x56ebeace0d852918899efd37d698c006, '2023-03-09', 'ANA', 'KAYRET', 'PETIT', 'URBINA', '1982-11-04', 1, 1, 647, '2020-10-20 00:00:00', NULL, NULL, 2),
-(156, '6150', 0x20aa455bdb16ddb4b36faf828c69bc8f, '2023-03-09', 'ENRIQUE', 'RAFAEL', 'CHIQUITO', 'SOSA', '1971-04-23', 1, 1, 647, '2020-10-01 00:00:00', '2021-01-28 00:00:00', NULL, 2),
-(157, '11541', 0x7308e004e6ddbca18c8ef22b13a43adc, '2023-03-09', 'LEIDY', 'KASANDRA', 'SUESCUM', 'TAVIO', '1997-10-10', 3, 2, 647, '2020-11-09 00:00:00', '2021-01-22 00:00:00', NULL, 2),
-(158, '6151', 0xf2a22cb545a9ea9ead1ad548eaeff6b7, '2023-03-09', 'MARYARIT', 'MARIANA', 'MEO', 'YANEZ', '1996-08-05', 1, 2, 644, '2020-12-01 00:00:00', NULL, NULL, 2),
-(159, '11542', 0x89d39180296383654a46b43d86ad6d5c, '2023-03-09', 'FRANKLIN', 'ALBERTO', 'PACHECO', 'ACOSTA', '1980-10-18', 13, 3, 647, '2020-12-08 00:00:00', NULL, '2023-03-07 09:08:23', 1),
-(160, '11543', 0x7bd1029606af4239490e64bb994df604, '2023-03-09', 'ORIANA', 'ELIZABETH', 'GRATEROL', 'GONZALEZ', '1997-09-17', 3, 2, 647, '2020-12-21 00:00:00', '2021-10-18 00:00:00', '2021-10-18 13:54:32', 2),
-(161, '11544', 0xa3ec41d3844cef761c9d545f3a69c891, '2023-03-09', 'ALFREDO', 'DAVID', 'CONQUISTA', 'RODRIGUEZ', '1995-06-05', 7, 2, 1128, '2021-02-01 00:00:00', NULL, '2023-02-08 08:30:12', 1),
-(162, '6152', 0xefa3a73f7ca913640d7834fc5a77ded9, '2023-03-09', 'EDGAR', 'WILMER', 'ANTON', 'MOLINA', '1965-11-15', 1, 1, 1121, '2021-02-22 00:00:00', NULL, '2021-07-26 17:23:41', 2),
-(163, '11545', 0xef68ab6f518658282d5d8a4cfc741956, '2023-03-09', 'FREDY', 'DARIO', 'BAUTISTA', 'QUIJADA', '1990-10-30', 8, 1, 647, '2021-02-11 00:00:00', '2021-10-15 00:00:00', NULL, 2),
-(164, '11546', 0x55299672e753dee7d23e6553d867ab30, '2023-03-09', 'IRIS', 'LUCYMAR', 'ESCORCHA', 'RONDON', '1978-05-05', 26, 12, 644, '2021-02-22 00:00:00', NULL, '2023-03-06 08:48:41', 1),
-(173, '11547', 0xd5afc9de8704bf23bfc792f632ffc33c, '2023-03-09', 'CARLOS', 'EDUARDO', 'BASTIDAS', 'HERNANDEZ', '1991-11-24', 9, 6, 1119, '2021-03-22 00:00:00', '2022-01-21 00:00:00', '2022-01-21 14:12:14', 2),
-(174, '11548', 0xa1e1400e80130b354a92794f2a2c4d8b, '2023-03-09', 'MARYSABEL', '', 'DOS SANTOS', 'CONTRERAS', '1986-06-20', 9, 5, 1133, '2021-04-07 00:00:00', NULL, '2023-02-28 16:16:21', 1),
-(175, '6153', 0x372914d41de86dd92703cd0dee53bc62, '2023-03-09', 'IVETTE', 'ALEJANDRA', 'OROZCO', 'FLORES', '1994-02-23', 1, 1, 647, '2021-04-16 00:00:00', NULL, '2021-05-16 20:42:46', 2),
-(176, '11549', 0x88f71d576b9b9a7eb02e7cdd3a50f189, '2023-03-09', 'WINNEY', 'JOHANA', 'BARRIENTOS', 'MC PHAIL', '1999-08-10', 5, 2, 647, '2021-05-03 00:00:00', '2022-12-05 00:00:00', '2022-11-21 13:19:12', 2),
-(177, '11550', 0x00540a991feca08385be8c6e8cce1487, '2023-03-09', 'LEONELA', 'MICHELE', 'ZAMBELLA', 'OMAÑA', '1998-09-06', 2, 1, 647, '2021-05-10 00:00:00', '2021-11-01 00:00:00', '2021-11-02 18:50:00', 2),
-(178, '11551', 0x523a178facc19f171d266721bfbd81ae, '2023-03-09', 'JUNEISY', 'ANIUSKA', 'BENITEZ', 'MACHADO', '1997-01-30', 2, 1, 647, '2021-05-10 00:00:00', '2021-09-03 00:00:00', '2021-07-02 14:37:35', 2),
-(179, '11552', 0x885c2c2836ecc293b882ce6c349b479c, '2023-03-09', 'YESENIA', 'YULIMAR DEL VALLE', 'CASARES', 'PEROZO', '1996-04-09', 3, 2, 647, '2021-05-10 00:00:00', '2022-02-25 00:00:00', '2022-02-22 10:29:37', 2),
-(180, '11553', 0xcd2cd819b3320262d69c7e6fddacf24d, '2023-03-09', 'OLIVER', 'IGNACIO', 'TOVAR', 'BENITEZ', '1999-08-20', 39, 1, 647, '2021-06-30 00:00:00', '2022-05-05 00:00:00', '2022-05-05 12:20:25', 2),
-(181, '11554', 0x5f2991af2868d42d179591bec69d6776, '2023-03-09', 'RITCELIS', 'DEL VALLE', 'RUIZ', 'DIAZ', '1993-12-04', 21, 9, 647, '2021-07-01 00:00:00', '2021-07-30 00:00:00', NULL, 2),
-(182, '1555', 0xc2d5d29ebe10d25ac764e28d1c9e0450, '2023-03-09', 'JENNY', 'LIS', 'SEGOVIA', 'ZAMBRANO', '1983-08-02', 12, 9, 647, '2021-07-01 00:00:00', NULL, '2023-03-08 15:48:18', 1),
-(183, '11556', 0xc97e95a81b5bdf8ad3920e6feffcae91, '2023-03-09', 'CESAR', 'AUGUSTO', 'DIAZ', 'JARAMILLO', '1985-03-28', 12, 3, 647, '2021-07-01 00:00:00', NULL, '2023-03-09 09:06:41', 1),
-(184, '11557', 0x4bf6b7f14a4f739f30e7fbbb58c7c5aa, '2023-03-09', 'DANALETH', 'DEL CARMEN', 'HERNANDEZ', 'MONASTERIO', '1999-08-11', 3, 2, 647, '2021-07-19 00:00:00', '2021-10-14 00:00:00', '2021-10-07 10:21:05', 2),
-(185, '11558', 0x4243db303abf01eb84843b823bf020e5, '2023-03-09', 'JOHANNA', 'DE LA CRUZ', 'TRUJILLO', 'REVETE', '1981-07-01', 5, 6, 647, '2021-07-26 00:00:00', NULL, '2023-03-08 09:26:43', 1),
-(186, '11559', 0x9b6418bd0e01cf1b747c12363ebbe592, '2023-03-09', 'MELANIE', 'ALEXANDRA', 'MARQUEZ', 'BAPTISTA', '2000-09-29', 2, 13, 647, '2021-07-19 00:00:00', NULL, '2023-03-07 15:53:14', 1),
-(187, '11560', 0x167b7aadb75cbcc8034da842e0360171, '2023-03-09', 'ESCARLET', 'MAYERLINE', 'GUILLEN', 'GUILLEN', '1997-07-10', 6, 2, 647, '2021-09-01 00:00:00', NULL, '2023-02-02 10:27:46', 1),
-(188, '11561', 0xa4dc3ebef91c2b91dde9e818e5514d38, '2023-03-09', 'NORBELIS', 'ALEJANDRA', 'MORRINSON', 'CORTEZ', '1997-06-04', 4, 2, 647, '2021-10-04 00:00:00', NULL, '2023-03-08 15:57:47', 1),
-(189, '11562', 0xb57c626ac91c0c8cca36243dfc5c5070, '2023-03-09', 'ELEANA', 'GABRIELA', 'ROJAS', 'CUNYA', '1985-10-17', 11, 2, 647, '2021-10-04 00:00:00', '2022-01-19 00:00:00', '2022-01-19 10:23:42', 2),
-(190, '11563', 0x6bf72610d23d278861e40c7cad6b76db, '2023-03-09', 'ANTHONI', 'CARLOS', 'FREITES', 'QUIROZ', '1977-06-30', 31, 11, 647, '2021-10-04 00:00:00', NULL, '2023-03-09 09:45:26', 1),
-(191, '6154', 0x24021e390ff9b2f57b798c4b8abf26d0, '2023-03-09', 'JESUS', 'ALBERTO', 'LAYA', 'JIMENEZ', '1978-12-16', 1, 2, 647, '2021-09-15 00:00:00', NULL, '2023-03-08 16:57:44', 1),
-(192, '11564', 0x4e7c83cf9599a3969f6c9ba397455a69, '2023-03-09', 'ANDREA', 'GABRIELA', 'GARCIA', 'GRANADOS', '1989-07-08', 12, 17, 647, '2021-11-01 00:00:00', NULL, '2023-03-06 10:02:02', 1),
-(193, '11565', 0x1e28845a33ec486b78b33124ff3c51d9, '2023-03-09', 'OSCAR AUGUSTO', 'AUGUSTO', 'ROJO', 'SUAREZ', '1999-09-03', 33, 19, 647, '2021-11-01 00:00:00', NULL, '2023-03-09 08:59:40', 1),
-(194, '11566', 0xd842c98458ea9c6ade77d1dbc41eada8, '2023-03-09', 'JOSE', 'JOEL', 'BOLIVAR', 'SIERRA', '1974-05-28', 27, 19, 647, '2021-11-01 00:00:00', NULL, '2023-03-09 09:06:12', 1),
-(195, '11567', 0xefa3a73f7ca913640d7834fc5a77ded9, '2023-03-09', 'EDGAR', 'WILMER', 'ANTON', 'MOLINA', '1965-11-15', 12, 1, 647, '2021-11-22 00:00:00', NULL, '2023-03-06 09:13:25', 1),
-(196, '11568', 0x970fcb0fbe4183e5401fd12b13f83342, '2023-03-09', 'BEYKER', 'ANDRES', 'LOYO', 'GONZALEZ', '1990-03-01', 31, 4, 647, '2021-11-29 00:00:00', '2022-08-30 00:00:00', '2022-08-23 13:14:21', 2),
-(197, '11569', 0x19d67bb546785ba4cf0a4846589d6d11, '2023-03-09', 'PABLO', 'SAMUEL', 'MATA', 'HERNANDEZ', '1997-09-17', 6, 1, 647, '2021-12-06 00:00:00', '2021-12-07 00:00:00', NULL, 2),
-(198, '11570', 0x36b9f98f9530546685fd0d79b1334907, '2023-03-09', 'BRANDON', 'ENMANUEL', 'RIVERA', 'HERNANDEZ', '1997-06-01', 5, 2, 647, '2021-12-06 00:00:00', NULL, '2022-02-10 13:59:07', 2),
-(199, '11571', 0xfa3d9af2b86645168a4b41f7535bcde2, '2023-03-09', 'YANIX', 'XINAY', 'MONSALVE', 'MACHADO', '1995-10-03', 25, 7, 647, '2021-12-06 00:00:00', NULL, '2023-03-07 15:44:01', 1),
-(200, '11572', 0x04c9bbac36c3b5f4c43b0fe680373e27, '2023-03-09', 'JUAN', 'PABLO', 'PEÑALOZA', 'DIAZ', '1994-01-19', 5, 1, 647, '2021-12-07 00:00:00', NULL, '2023-03-07 13:48:47', 1),
-(201, '11573', 0x85909ab093c06e673fff7e5fdafb123c, '2023-03-09', 'GABRIEL', 'ALEJANDRO', 'ROJAS', 'RICO', '1987-01-25', 4, 2, 647, '2022-01-10 00:00:00', '2022-07-29 00:00:00', '2022-08-02 11:56:17', 2),
-(202, '11574', 0xa1c4215f75bad02b8df90a6147ec01c7, '2023-03-09', 'JOSNELY', 'JHOVANNA', 'CASTILLO', 'GIL', '1999-12-22', 4, 6, 647, '2022-01-17 00:00:00', NULL, '2023-03-03 14:47:25', 1),
-(203, '11575', 0x83188453dc3444ee4825d9ff7b2ab7a6, '2023-03-09', 'CHRISTHOPHER', 'EDUARDO', 'CABRERA', 'BAPTISTA', '1993-06-27', 12, 2, 647, '2022-02-01 00:00:00', NULL, '2023-03-08 16:46:15', 1),
-(204, '11576', 0x36b9f98f9530546685fd0d79b1334907, '2023-03-09', 'BRANDON', 'ENMANUEL', 'RIVERA', 'HERNANDEZ', '1997-06-01', 5, 2, 647, '2021-12-06 00:00:00', NULL, '2023-03-08 16:54:55', 1),
-(205, '6155', 0xad7b0fe3134e037387a7fc2742792df7, '2023-03-09', 'TOMAS', 'ANTONIO', 'MERIDA', 'GALINDO', '1956-02-19', 1, 10, 647, '2022-02-16 00:00:00', NULL, '2022-08-18 09:49:37', 2),
-(206, '11578', 0x270f8aacfe8b59d553285073de46e171, '2023-03-09', 'GABRIEL', 'ALEJANDRO', 'MORA', 'CARVAJAL', '1996-09-29', 3, 1, 647, '2022-02-21 00:00:00', NULL, '2022-09-21 10:26:14', 2),
-(207, '11577', 0x1e3d59a448dd78b09bf962402842d96b, '2023-03-09', 'JHON', 'JOSE', 'MARTINEZ', 'LONDIZA', '1990-01-28', 7, 4, 647, '2022-02-08 00:00:00', NULL, NULL, 1),
-(208, '11579', 0xa1d5e8d025bd62b31b55b1761b283b5d, '2023-03-09', 'KEIBI', 'RAFAEL', 'MORENO', 'CAÑIZALES', '1995-05-09', 9, 6, 647, '2022-03-02 00:00:00', NULL, '2022-04-21 09:27:53', 2),
-(209, '11580', 0xb25f3df715172d3c050d19cdc436f6b6, '2023-03-09', 'DEIRIANA', 'ANDREINA', 'PORTA', 'MENESES', '1997-05-15', 5, 2, 647, '2022-03-02 00:00:00', NULL, '2023-03-08 14:47:21', 1),
-(210, '6156', 0x919482975a53e20fffe20a6efb3de610, '2023-03-09', 'LUIS', 'GIOVANNY', 'CARDENAS', 'RODRIGUEZ', '1972-02-24', 1, 1, 647, '2022-03-11 00:00:00', NULL, '2022-06-15 14:46:01', 2),
-(211, '11581', 0x2ab195024686baaf25768e2065bc9ae4, '2023-03-09', 'GUILLERMO', 'ENRIQUE', 'LOAIZA', 'DIAZ', '2001-05-17', 31, 17, 647, '2022-03-21 00:00:00', '2022-05-25 00:00:00', '2022-05-16 08:27:05', 2),
-(212, '11582', 0x2cfa81903478c0c02ffa1d25a47a5e9c, '2023-03-09', 'CESAR', 'TADEO', 'UBAN', 'BALZA', '1996-12-04', 8, 1, 647, '2022-04-04 00:00:00', '2022-08-30 00:00:00', '2022-08-26 11:50:10', 2),
-(213, '11583', 0x0c1e4fd7c8ac773b9a9151cb111761a6, '2023-03-09', 'DINEXY', 'ANDREINA', 'PORTA', 'MENESES', '1993-12-02', 8, 2, 647, '2022-04-04 00:00:00', NULL, '2023-03-08 16:55:28', 1),
-(214, '11584', 0x28de8fbe3a4fdbb7f6d7a6dac2b64216, '2023-03-09', 'RICARDO', 'ERNESTO', 'LEON', 'PIRELA', '2001-04-02', 33, 9, 647, '2022-04-20 00:00:00', NULL, '2023-03-02 15:01:36', 1),
-(215, '11585', 0xa1d5e8d025bd62b31b55b1761b283b5d, '2023-03-09', 'KEIBI', 'RAFAEL', 'MORENO', 'CAÑIZALES', '1995-05-09', 9, 6, 647, '2022-03-02 00:00:00', NULL, '2023-03-03 14:45:10', 1),
-(216, '11586', 0x33d71d2ac998727b52a71646e6b0b7fc, '2023-03-09', 'BARBARA', 'PAOLA', 'BETANCOURT', 'VAZQUEZ', '2002-09-27', 3, 1, 647, '2022-05-16 00:00:00', '2022-09-19 00:00:00', '2022-09-12 10:07:04', 2),
-(217, '11587', 0x61c13eba8b8132974bc5608b31156ae9, '2023-03-09', 'KEIVER', 'DUVAN', 'AVILA', 'PEREZ', '1997-09-28', 7, 4, 647, '2022-05-23 00:00:00', '2023-01-31 00:00:00', NULL, 2),
-(218, '11588', 0x3a0f2884ff1f4c417a37d5b7cb1c7491, '2023-03-09', 'KATHERINE', 'ESTHEFANIA', 'HERNANDEZ', 'GOMEZ', '1992-07-28', 10, 4, 647, '2022-05-23 00:00:00', '2023-02-28 00:00:00', NULL, 2),
-(219, '11589', 0x358a7cc7d966e52a33f6f01e357d5ca2, '2023-03-09', 'YULIMAR', '', 'DIAZ', 'QUINTERO', '1978-07-21', 9, 4, 647, '2022-06-01 00:00:00', NULL, NULL, 1),
-(220, '11590', 0x3ae6ae9251707b633e41f330f6b5351b, '2023-03-09', 'YURI', 'ANDREA', 'CHACON', 'MILLAN', '1990-06-11', 5, 1, 647, '2022-06-01 00:00:00', NULL, '2023-02-24 14:22:44', 1),
-(221, '11591', 0x3ad57219988deea7bc7f6c706cca7e16, '2023-03-09', 'JOSMARLY', 'YOHANA', 'MALDONADO', 'MEDINA', '1994-11-26', 4, 1, 647, '2022-06-01 00:00:00', '2022-06-02 00:00:00', NULL, 2),
-(222, '11592', 0xc13e19eb0be1fcd876dc98bb869f2628, '2023-03-09', 'WILBER', 'MOISES', 'ALGUETA', 'TORRES', '2000-10-27', 3, 1, 647, '2022-06-01 00:00:00', NULL, NULL, 2),
-(223, '11593', 0x578a31baf9dc7435fdc4073125db7548, '2023-03-09', 'JOSE', 'GREGORIO', 'CASTELLANOS', 'QUINTO', '1987-07-25', 6, 3, 647, '2022-06-02 00:00:00', NULL, '2023-03-03 13:21:41', 1),
-(224, '11594', 0x1f4f0e36be6624b89905a17e1bf64fdd, '2023-03-09', 'BELKIS', 'MARIA', 'FLOREAN', 'LAGUNA', '1981-12-11', 24, 7, 647, '2022-06-01 00:00:00', NULL, '2023-03-07 13:10:21', 1),
-(225, '11595', 0x7f7f9c080befe0f50280fd2f13caff30, '2023-03-09', 'KEYBERT', 'EDUARDO', 'APARICIO', 'GONZALEZ', '1994-06-13', 3, 2, 647, '2022-06-16 00:00:00', NULL, '2023-03-08 21:19:04', 1),
-(226, '11596', 0x062fdba11fcb6ba786cbb20ddee683ef, '2023-03-09', 'DOUGLENIS', 'DE LOS ANGELES', 'TABASQUEZ', 'MORALES', '1997-06-13', 9, 4, 647, '2022-07-18 00:00:00', '2022-09-02 00:00:00', NULL, 2),
-(227, '11597', 0xd400af68e6a66f2485d927ed68c1c401, '2023-03-09', 'IVANA', 'CARIDAD', 'GUILARTE', 'PINTO', '1999-10-31', 39, 6, 647, '2022-07-19 00:00:00', '2022-12-02 00:00:00', '2022-12-06 09:57:18', 2),
-(228, '11598', 0xd4e8ba398f297fed9566fa97f8425f24, '2023-03-09', 'ALEJANDRA', 'MARINA', 'SANCHEZ', 'CANCHICA', '1991-07-01', 3, 1, 647, '2022-08-01 00:00:00', NULL, '2023-03-07 10:16:00', 1),
-(229, '11599', 0x5c4b6c5d07f43a01506dc573e0a15b1e, '2023-03-09', 'JOSE', 'ANDRES', 'HERNANDEZ', 'RUIZ', '1999-03-16', 3, 2, 647, '2022-08-10 00:00:00', NULL, '2023-03-09 09:03:43', 1),
-(230, '11600', 0x06e477466a371d1eacd75ae15905d43d, '2023-03-09', 'JOSE', 'MIGUEL', 'PEROZO', 'HERRERA', '1994-10-04', 9, 1, 647, '2022-08-15 00:00:00', NULL, '2023-03-09 09:26:22', 1),
-(231, '11601', 0x18a089795f781c551411046258024a92, '2023-03-09', 'RAINIER', 'HELY', 'ROJAS', 'HADDAD', '1996-10-03', 8, 19, 647, '2022-08-15 00:00:00', NULL, '2023-03-06 09:01:11', 1),
-(232, '11602', 0x6d563507ea9b4aaeb43a6c5b03debed4, '2023-03-09', 'ANGELICA', 'MARIA', 'LUGO', 'RAMIREZ', '2000-07-11', 39, 6, 647, '2022-10-10 00:00:00', '2023-01-03 00:00:00', '2023-01-03 01:26:19', 2),
-(233, '11610', 0x2fe75e25db5950d7f3192bd9a567c437, '2023-03-09', 'MARIA', 'LAURA', 'GARCIA', 'JUAREZ', '1999-12-15', 4, 4, 647, '2022-10-17 00:00:00', '2022-10-28 00:00:00', NULL, 2),
-(234, '11611', 0x59edc43aa33ee663acbfa31a3c083b0f, '2023-03-09', 'JENNY', 'LUCIA', 'LIMA', 'HAMILTON', '1967-08-05', 10, 4, 647, '2022-11-07 00:00:00', '2022-12-02 00:00:00', NULL, 2),
-(235, '11612', 0xba881c64c8046bcca8225185fff51e8d, '2023-03-09', 'CRISBET', 'YOHANNI', 'BARCELO', 'CASTRO', '1993-12-19', 9, 4, 647, '2022-11-07 00:00:00', '2023-03-03 00:00:00', NULL, 2),
-(236, '11613', 0x208e6671311570c0cbcbf76b6f772a97, '2023-03-09', 'ARLEANNY', 'ALEXARI', 'MARRERO', 'QUINTERO', '2002-07-16', 3, 2, 647, '2022-11-07 00:00:00', NULL, '2023-03-08 16:14:21', 1),
-(237, '11614', 0x4fd02b9a12f2b1a08392566ab29ba9ad, '2023-03-09', 'JOSE', 'LUIS', 'DIAZ', 'HERRERA', '1997-02-26', 39, 6, 647, '2022-11-08 00:00:00', NULL, '2023-02-09 09:37:02', 1),
-(238, '11615', 0x6896b72aa59eeaaa40242214739a1bce, '2023-03-09', 'ORLAIMY', 'SAIR', 'MUÑOZ', 'JAIMES', '2001-06-28', 39, 6, 647, '2022-12-12 00:00:00', NULL, '2023-03-09 09:30:48', 1),
-(239, '11616', 0x9362ccc5dcb88e9f44ca6ef99a9b3cc3, '2023-03-09', 'JOSMAN', 'JOSUE', 'FUENTES', 'GRIMAN', '2000-07-17', 3, 2, 647, '2023-01-09 00:00:00', NULL, '2023-03-08 17:00:33', 1),
-(240, '11617', 0x988bf2793315f1ba3fbdee9d3e89b5cd, '2023-03-09', 'JORGENIS', 'JOSE', 'GUERRA', 'LEZAMA', '1996-11-28', 39, 6, 647, '2023-01-23 00:00:00', NULL, '2023-03-09 09:23:18', 1),
-(241, '11618', 0x7d038db3c2a8022d9d8c23c9b36a2077, '2023-03-09', 'CESAR', 'LEANDRO', 'GARCIA', 'AULAR', '2001-08-14', 39, 6, 647, '2023-01-23 00:00:00', NULL, '2023-03-09 09:36:13', 1),
-(242, '6157', 0x59a218968d4072da6231f2280bddaf7a, '2023-03-09', 'MAYERLING', 'KARINA', 'VALERA', 'RIVAS', '1975-10-19', 1, 2, 647, '2022-10-17 00:00:00', NULL, NULL, 1),
-(243, '6159', 0x8dc9c35a2bba3db28169f52d28b5f527, '2023-03-09', 'YULITZA', 'DEL VALLE', 'ESPARRAGOZA', 'CASTILLEJO', '2023-02-06', 1, 1, 647, '2023-02-06 00:00:00', NULL, NULL, 1),
-(244, '11619', 0xcbcdd03242d775e13741b2308aca4db6, '2023-03-09', 'RAUL', 'HUMBERTO', 'BRICEÑO', 'CORREA', '1991-02-23', 10, 4, 647, '2023-02-13 00:00:00', NULL, NULL, 1),
-(245, '11620', 0xbfc5e4293bf330bde6ace6bfd37f234e, '2023-03-09', 'MARY', 'ISABEL', 'ROJAS', '', '1967-08-16', 6, 1, 647, '2023-02-13 00:00:00', NULL, NULL, 1),
-(246, '11621', 0xa679acfe3d0deef0b6ff5b7e553b2b47, '2023-03-09', 'RUBI', 'YABISAY', 'RAMIREZ', 'LOPEZ', '1974-01-06', 6, 1, 647, '2023-02-14 00:00:00', NULL, '2023-03-07 16:06:08', 1),
-(247, '11622', 0x038e973a488134d8436c8bae5b50d66c, '2023-03-09', 'CARLOS', 'EDUARDO', 'NAVAS', 'EDUARDO', '2023-02-13', 39, 13, 647, '2023-02-13 00:00:00', NULL, NULL, 1),
-(248, '11623', 0x900ddc90e683652dd185b78eb9554e81, '2023-03-09', 'MIRIAM', 'DESIREE', 'HIDALGO', 'BRICEÑO', '1983-07-11', 10, 4, 647, '2023-03-07 00:00:00', '2023-03-07 00:00:00', NULL, 2);
+(1, '0001', 0x9f824ad4b17be95f20aa30c5eef9d8f6, '2023-05-08', 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '1986-08-05', 16, 16, 1131, '2020-01-01', NULL, '2023-04-16 14:51:52', 1),
+(2, '10', 0xcb4dc5daf4d8865eb1bd01d6c898c269, '2023-03-09', 'NATHALIE', 'YAMILET', 'LOPEZ', 'TREJO', '1972-08-20', 17, 1, 1131, '2000-02-21', NULL, '2023-03-08 23:41:42', 1),
+(3, '10092', 0x10e54efb266e50c523273c638cb690c5, '2023-03-09', 'YESENIA', 'BEATRIZ', 'MARTINEZ', 'GALLARDO', '1979-06-01', 15, 1, 1131, '2004-09-01', NULL, '2023-03-07 08:27:55', 1),
+(4, '10141', 0x383155d3ec475bf8ace4b67bf0aaba8d, '2023-03-09', 'JESUS', 'ERASMO', 'PEREZ', 'ERASMO', '1959-11-09', 17, 1, 1131, '2005-02-02', NULL, '2023-02-06 09:52:51', 1),
+(5, '10168', 0xde6d03f3e06cba9372848683f12ff10a, '2023-03-09', 'CAROL', 'JOSEFINA', 'LOPEZ', 'CAMPOS', '1962-11-07', 15, 5, 1131, '2005-06-06', NULL, '2023-03-02 10:25:00', 1),
+(6, '10367', 0x647c2b55cae32aa42154baeeb313ad40, '2023-03-09', 'LUZ', 'AMANDA', 'FONSECA', 'GARCIA', '1985-01-13', 15, 1, 1131, '2007-10-29', NULL, '2023-03-07 09:22:39', 1),
+(7, '10473', 0x97a25906ea5c15bc553e06ec4eaed009, '2023-03-09', 'ARTURO', 'LORENZO', 'MADRIZ', 'VARGAS', '1954-12-16', 17, 1, 1131, '2008-10-14', NULL, '2023-02-17 14:47:21', 1),
+(8, '10509', 0xb3cd6c38fa4b39dde440eff4b3bc5a22, '2023-03-09', 'ROMAN', 'ALBERTO', 'SCOTT', '', '1975-07-16', 12, 1, 1131, '2009-05-06', NULL, '2023-03-08 23:39:34', 1),
+(9, '10572', 0x9b830d819df904d95147340117e70d44, '2023-03-09', 'OLIVER', 'JOSE', 'PAEZ', 'RANGEL', '1982-10-16', 14, 1, 1131, '2010-01-18', NULL, '2023-03-06 17:46:40', 1),
+(10, '10721', 0x2e29e47b1ce3ad1182512298dd26328d, '2023-03-09', 'JORGE', 'ALEJANDRO', 'GONZALEZ', 'MORALES', '1990-05-19', 13, 1, 1131, '2011-11-15', NULL, '2023-03-08 16:07:41', 1),
+(11, '10786', 0xdb3fe107f261880fdeced74b00281558, '2023-03-09', 'MARIA', 'ANDREINA', 'SEQUEDA', 'BANDES', '1990-05-30', 13, 1, 1131, '2012-07-20', NULL, '2023-03-08 09:13:49', 1),
+(12, '10968', 0xf945dd6534898bbb32c583a4f9a58a0e, '2023-03-09', 'YODELINA', '', 'TORRES', 'MORALES', '1994-09-15', 12, 1, 1131, '2014-02-24', NULL, '2023-03-06 12:00:02', 1),
+(13, '11030', 0x41273542b44edd82eec1262012051a0e, '2023-03-09', 'KATHERINE', 'BETHZABEL', 'ZURITA', 'CHACON', '1989-06-08', 13, 1, 1131, '2015-01-13', NULL, '2023-03-08 15:16:07', 1),
+(14, '11044', 0x4844e22ab49ce7972d99f6ac664e58d9, '2023-03-09', 'MILEIDIS', 'ALEXANDRA', 'MORENO', 'MATUZALEM', '1992-05-30', 11, 1, 1131, '2015-01-21', NULL, '2023-03-07 09:12:06', 1),
+(15, '11116', 0x9b5e21866d59e8c4a93c5770dbaef19b, '2023-03-09', 'FRANCIA', 'CAROLINA', 'MEDINA', 'TINEDO', '1987-03-15', 11, 1, 1131, '2015-11-04', NULL, '2023-03-09 08:03:58', 1),
+(16, '11220', 0x9f824ad4b17be95f20aa30c5eef9d8f6, '2023-05-13', 'ASTRID', 'CAROLINA', 'MENDOZA', 'GIL', '1992-07-31', 11, 1, 1131, '2016-04-25', NULL, '2023-03-14 14:50:55', 1),
+(17, '11314', 0x7d88c658f3db0526ec6540dbaab56a39, '2023-03-09', 'MARIA', 'GABRIELA', 'TOVAR', 'CARDENAS', '1991-11-28', 8, 1, 1131, '2017-03-27', NULL, '2023-03-08 09:33:10', 1),
+(18, '11352', 0x0e6d3b64fffda77f987a1ca0b33692e0, '2023-03-09', 'MARIANA', 'ALEXANDRA', 'BRITO', 'SIFONTES', '1995-02-19', 11, 1, 1131, '2017-11-13', NULL, '2023-03-03 11:46:32', 1),
+(19, '11354', 0x093bfe3fa4bf619574f56a3f4a26a7e7, '2023-03-09', 'BELKIS', 'KATERIN', 'CORTINA', 'RUIZ', '1996-12-08', 8, 1, 1131, '2017-11-13', NULL, '2023-03-03 18:35:27', 1),
+(20, '11364', 0x3a5f20da401e227e6710acbb25ff97fc, '2023-03-09', 'LUCRECIA', 'DISNORA', 'SILVA', 'APONTE', '1989-03-15', 8, 1, 1131, '2017-12-04', '2021-03-02', NULL, 2),
+(21, '11369', 0xc425904da30c5cb2dcd022ed07388c16, '2023-03-09', 'NORMEDY', 'ZORIBETH', 'PARRA', 'TOVAR', '1986-08-22', 8, 1, 1131, '2017-12-04', NULL, '2023-02-28 10:47:05', 1),
+(22, '11371', 0xae865fdcd1ec90e2fda0a87137b009f2, '2023-03-09', 'JOSVELIS', 'YETSIMAR', 'CASTILLO', 'GIL', '1997-07-14', 9, 1, 1131, '2017-12-04', NULL, '2023-03-07 12:17:25', 1),
+(23, '11391', 0xdfb8f58ab34354191004d62ab7308044, '2023-03-09', 'LUIS', 'ANTONIO', 'RUSSIAN', 'REQUENA', '1996-01-10', 11, 1, 1131, '2018-02-15', '2022-06-03', '2022-06-03 14:29:26', 2),
+(24, '11401', 0x7e23d16c8f37bba5fbe9d04480852181, '2023-03-09', 'JONATHAN', 'JOSE', 'AZOCAR', 'RODRIGUEZ', '1994-08-24', 8, 1, 1131, '2018-02-26', NULL, '2023-03-03 19:06:17', 1),
+(25, '11403', 0x10dae5b466840d2e283185227765dda2, '2023-03-09', 'YERLENIS', 'DELYET', 'VALDERRAMA', 'ROSALES', '1998-09-14', 11, 1, 1131, '2018-03-06', NULL, '2023-03-03 11:48:31', 1),
+(26, '11410', 0xd2b99b2de2f70be230bc9594c37a0c61, '2023-03-09', 'KLEIVER', 'JOHANA', 'CORRO', 'GUDIÑO', '1991-02-13', 8, 1, 1131, '2018-03-06', NULL, '2023-02-14 14:39:57', 1),
+(27, '11421', 0xe17d18eb6f7ca9b5fdd6795efe996446, '2023-03-09', 'MARYURI', 'NAILET', 'BARAZARTE', 'VALERA', '1979-09-13', 7, 1, 1131, '2018-03-26', '2021-04-15', NULL, 2),
+(28, '11437', 0x7fe50132c05f1bdd77e6a4dd6d11dd7d, '2023-03-09', 'PEDRO', 'ALEXANDER', 'BENITEZ', 'MELENDEZ', '1968-06-05', 15, 1, 1131, '2018-07-01', NULL, '2023-02-24 17:23:36', 1),
+(29, '11440', 0xc12cd8cd82284a11fb0613e0d69b9bbc, '2023-03-09', 'DENNYS', 'RAMON', 'FLORES', 'MORALES', '1981-04-20', 7, 1, 1131, '2018-07-17', NULL, '2023-02-28 14:51:45', 1),
+(30, '11446', 0x6fe7030bcbddb93c36dbbb7ec2f31f85, '2023-03-09', 'GENESIS', 'VANESSA', 'MARCANO', 'RANGEL', '1997-10-05', 9, 1, 1131, '2018-07-25', '2022-07-29', '2022-07-23 21:55:02', 2),
+(31, '11448', 0x1354569ce26ccfd4e3bebd109b44cd11, '2023-03-09', 'KEILIMAR', 'YULISET', 'SUAREZ', 'LARES', '1996-05-12', 6, 1, 1131, '2018-07-31', NULL, '2023-03-07 10:50:50', 1),
+(32, '11452', 0x2c6f8320e663f56932482e2c34bfba3f, '2023-03-09', 'JOHANNE', 'FRANCIS', 'MUÑOZ', 'MARTINEZ', '1981-07-22', 13, 1, 1131, '2018-08-15', NULL, '2023-03-06 20:50:16', 1),
+(33, '11453', 0x88437b100005a2c216a35b10ac06ac89, '2023-03-09', 'ALFREDO', 'JOSE', 'HERNANDEZ', 'TORO', '1969-03-14', 9, 1, 1131, '2018-08-14', NULL, '2023-03-08 16:17:07', 1),
+(34, '11457', 0x73dd6433a0272bf8446bc3267e7d3f12, '2023-03-09', 'RAUL', 'IGNACIO', 'VARGAS', 'FREITES', '1976-01-29', 17, 1, 1131, '2018-10-18', NULL, '2023-02-23 14:51:55', 1),
+(35, '11466', 0xb0bd668ff196e3be8ba74828d811dc57, '2023-03-09', 'SHELCIE', 'ESTHER', 'PAZ', '', '1997-03-22', 7, 1, 1131, '2018-11-08', NULL, '2023-02-24 14:04:45', 1),
+(36, '11467', 0xe2639ee3113fd0cc23992b5b24daf64b, '2023-03-09', 'LADYMAR', '', 'MORETT', 'RONDON', '1983-03-18', 12, 1, 1131, '2018-11-20', '2022-12-29', '2022-12-29 13:40:52', 2),
+(37, '11469', 0xc36653810196652a8c5255973c9784a4, '2023-03-09', 'ANTHONY', 'ROBERT', 'GARCIA', 'CHAPARRO', '1991-06-26', 7, 1, 1131, '2018-11-12', NULL, NULL, 2),
+(38, '11480', 0xa577eb8769d5d83cddcd25fae3cab295, '2023-03-09', 'SOLMARY', 'DEL VALLE', 'MARTINEZ', 'MARCHAN', '1983-08-03', 12, 1, 1131, '2018-12-17', NULL, '2023-03-03 11:59:13', 1),
+(39, '11481', 0x39c32f5b07662274e35c4246a978d69f, '2023-03-09', 'JACKELINE', 'ZULEYMA MILAGROS', 'RAMOS', 'PEÑA', '1989-06-02', 6, 1, 1131, '2018-12-18', NULL, '2023-03-02 12:34:38', 1),
+(40, '11484', 0x67328548d73e014e6b5c5ab14ed5b9c1, '2023-03-09', 'BELKIS', 'EDICTA', 'VAZQUEZ', 'MORALES', '1984-07-17', 6, 1, 1131, '2019-01-07', '2020-09-30', NULL, 2),
+(41, '11487', 0x75939b253f15aad914fdf356bed1d590, '2023-03-09', 'YUZLEIBBY', 'ANGELICA', 'MALDONADO', 'ROSALES', '1996-10-08', 7, 1, 1131, '2019-01-21', NULL, '2023-03-01 09:58:01', 1),
+(42, '11490', 0x95a11af2e293e1ebe91c1cb2342f1af5, '2023-03-09', 'GIOVANNI', 'JESUS', 'CORREDOR', 'SANOJA', '1996-07-07', 10, 1, 1131, '2019-01-24', NULL, '2023-03-02 13:26:42', 1),
+(43, '11493', 0xf4be463bfe681a054e9c37164a42879b, '2023-03-09', 'KLEIVER', 'JOSE', 'CADENAS', 'QUIÑONEZ', '1995-05-02', 9, 1, 1131, '2019-02-04', NULL, '2023-03-08 10:57:21', 1),
+(44, '11494', 0x372914d41de86dd92703cd0dee53bc62, '2023-03-09', 'IVETTE', 'ALEJANDRA', 'OROZCO', 'FLORES', '1994-02-23', 12, 1, 1131, '2019-02-04', '2021-03-16', NULL, 2),
+(45, '11497', 0xbc51997c6750d92815ec3bd08f4c241c, '2023-03-09', 'ZUNAYA', 'ESTHER', 'WILCHES', 'OLAVE', '1996-12-05', 4, 1, 1131, '2019-02-07', '2021-04-16', NULL, 2),
+(46, '11499', 0x1b42160c619d522204261b5be95cb8c6, '2023-03-09', 'JESUS', 'ALBERTO', 'ABRAHAM', 'CORONADO', '1994-06-21', 10, 1, 1131, '2019-02-21', '2022-05-05', '2022-05-05 15:33:10', 2),
+(47, '11503', 0x06e477466a371d1eacd75ae15905d43d, '2023-03-09', 'JOSE', 'MIGUEL', 'PEROZO', 'HERRERA', '1994-10-04', 9, 1, 1131, '2019-03-07', '2022-01-19', '2022-01-18 11:19:04', 2),
+(48, '11504', 0x6aa697bff06db4b84bdbc82311fffc2e, '2023-03-09', 'ROBERTO', 'RAFAEL', 'VILLEGAS', 'GONZALEZ', '1988-09-26', 8, 1, 1131, '2019-03-20', '2021-12-03', '2021-12-03 11:16:58', 2),
+(49, '11507', 0x3a2c0ef6056afb94c39299ab96d4cd94, '2023-03-09', 'SANDRO', 'YOEL', 'MAYORA', '', '1973-09-17', 11, 6, 1131, '2019-04-01', NULL, '2023-03-02 10:07:29', 1),
+(50, '11519', 0xd18f8bd03a2fe1a887614b386c66c450, '2023-03-09', 'EDUARDO', '', 'BASTOS', 'RICCIO', '1989-06-27', 6, 1, 1131, '2019-07-10', '2021-12-01', '2021-11-30 23:49:08', 2),
+(51, '11520', 0x913bfe28eb609fcaa63aecb1e18f4c67, '2023-03-09', 'VANESSA', 'VALENTINA', 'ROJAS', 'MORALES', '1987-12-23', 7, 1, 1131, '2019-07-16', NULL, '2023-03-03 10:08:01', 1),
+(52, '11527', 0x9831d9046b6a2d18bd625df5a5d3ed45, '2023-03-09', 'CARLOS', 'ALBERTO', 'REVETE', 'CARVALLO', '1994-09-18', 7, 1, 1131, '2019-12-09', NULL, '2023-02-13 09:06:55', 1),
+(53, '11528', 0x7c589ad8221957631d159f5b6350a950, '2023-03-09', 'VIANNEY', 'DEL VALLE', 'RUGELES', 'MANTILLA', '1972-01-08', 8, 1, 1131, '2019-12-09', '2022-10-28', '2022-10-25 17:08:43', 2),
+(54, '11529', 0x8b7592142278c43d1c235569d6a0bea2, '2023-03-09', 'EDWIN', 'JESUS', 'BURGOS', 'GOMEZ', '1987-12-06', 4, 1, 1131, '2019-12-09', '2021-01-11', NULL, 2),
+(55, '11535', 0x9592acdded4437d994ee5f1a14a7d4b1, '2023-03-09', 'ENIL', 'ALEJANDRO', 'MOLINA', 'YDROGO', '2002-02-16', 7, 1, 1131, '2020-03-09', NULL, '2023-03-07 13:47:54', 1),
+(56, '22', 0x09ccd8b97d37abf3003cb7bdb7fee97c, '2023-03-09', 'FREDDY', 'RODOLFO', 'VARGAS', 'HERNANDEZ', '1969-10-22', 15, 1, 1131, '2000-08-01', NULL, '2023-03-07 20:26:21', 1),
+(57, '6060', 0xe628f6988aba3b5c31751f4d5d521522, '2023-03-09', 'YORMAN', 'ISMAEL', 'RANGEL', 'GONZALEZ', '1983-08-15', 14, 1, 1131, '2014-07-01', '2023-01-31', '2023-01-31 15:10:28', 2),
+(58, '10783', 0x75fd9de136418348f0c0a53a98a51181, '2023-03-09', 'JOSE', 'MIGUEL', 'UTRERA', 'ROJAS', '1975-04-02', 16, 2, 1131, '2012-07-16', NULL, '2023-03-09 08:06:36', 1),
+(59, '11485', 0xa9ce0f2bf56800d4cb028ddbc2b6b829, '2023-03-09', 'ALEJANDRO', 'ENRIQUE', 'LIRA', 'TOVAR', '1995-06-27', 7, 2, 1131, '2019-01-09', '2021-05-21', '2021-04-29 20:13:20', 2),
+(60, '11505', 0xa33fb3c2617b1e2cc5d944c0b4c0859d, '2023-03-09', 'YORDALIS', 'GABRIELA', 'ECHARRYS', 'CABRILES', '1993-08-02', 5, 2, 1131, '2019-04-01', '2021-01-15', NULL, 2),
+(61, '11506', 0x2684acb76beb6afaa2e468c39fd814bb, '2023-03-09', 'ELIANA', 'MARIA', 'PONCE', 'VARGAS', '1971-03-14', 14, 2, 1131, '2019-04-08', '2022-02-15', '2022-02-16 11:08:46', 2),
+(62, '11514', 0x103eef319babf7b08f06a819046edfec, '2023-03-09', 'STEFANY', 'YANETH', 'GONZALEZ', 'MIJARES', '1995-02-22', 6, 2, 1131, '2019-06-03', NULL, '2021-12-09 07:56:47', 2),
+(63, '11521', 0x3bd7662f26d22e0c32de54ef0569807a, '2023-03-09', 'NAIVELYS', 'GABRIELA', 'ALTUVE', 'TORRES', '1991-06-20', 13, 2, 1131, '2019-09-02', NULL, '2023-02-23 21:40:01', 1),
+(64, '11522', 0xf663e5da56b6035105e428560a01ff4d, '2023-03-09', 'GABRIELA', 'DEL VALLE', 'GIL', 'LA PIETRA', '1996-05-09', 6, 2, 1131, '2019-09-02', '2022-06-08', '2022-06-07 16:12:15', 2),
+(65, '11526', 0x442ce2f8fe72b1614fb2bcfe9cd6919b, '2023-03-09', 'ORIANNA', 'DESSIREE', 'ALEJOS', 'FIGUEREDO', '1996-05-23', 4, 2, 1131, '2019-11-18', '2022-01-14', '2022-01-18 16:00:14', 2),
+(66, '11533', 0x5bd05cb4c18042365c51faf72a87af3e, '2023-03-09', 'MARYNES', 'DEL VALLE', 'GONZALEZ', 'MENDOZA', '1997-03-06', 3, 2, 1131, '2020-03-09', NULL, NULL, 2),
+(67, '10794', 0x29f82578b0c53e954eed0b971a75b555, '2023-03-09', 'ELIGIO', 'HORACIO', 'MENDOZA', 'ODREMAN', '1970-10-23', 15, 4, 1131, '2012-08-01', NULL, NULL, 2),
+(68, '10838', 0xf3ba845c6f332ecf550b6ffd0b524ba2, '2023-03-09', 'MARIELVI', '', 'OLLER', 'MENDOZA', '1986-07-11', 12, 4, 1131, '2013-01-23', NULL, NULL, 2),
+(69, '111426', 0xaa924ae19b4789f2d1989149f718cbfb, '2023-03-09', 'ALBA', 'JEANNETH', 'NAVIA', 'BERMUDEZ', '1976-07-22', 12, 4, 1131, '2018-05-01', '2023-01-10', NULL, 2),
+(70, '11344', 0x16fdfb50b2e08cd162dcb4b2b59904b4, '2023-03-09', 'NATHASHA', 'ESTEFANIA', 'FRANCO', 'BERMUDEZ', '1996-02-03', 9, 4, 1131, '2017-10-13', '2020-11-06', NULL, 2),
+(71, '11353', 0x5621af456fefd10655d92835e1bb1fc9, '2023-03-09', 'YESSICA', 'LAURA', 'RIVAS', 'TURMERO', '1990-11-26', 11, 4, 1131, '2017-11-13', NULL, NULL, 2),
+(72, '11366', 0xa8b0fb715bbcda315cc265b24eb0f913, '2023-03-09', 'FRAYNER', 'ALEXANDER', 'RANGEL', 'VALERO', '1993-04-17', 8, 4, 1131, '2017-12-04', '2021-01-11', NULL, 2),
+(73, '11374', 0x3f5dc1ab52521d40452ee0d1e487124f, '2023-03-09', 'YDA', 'MERCEDES', 'CHIRINOS', 'VILORIA', '1983-09-28', 8, 1, 1131, '2017-12-04', '2022-03-15', '2022-03-16 12:29:26', 2),
+(74, '11411', 0xecb2621b72dfb2d72b3f056cf39bcd92, '2023-03-09', 'GENESIS', 'GABRIELA', 'BARRIOS', 'VILORIA', '1998-07-25', 11, 4, 1131, '2018-03-06', NULL, NULL, 2),
+(75, '11458', 0xdc40f17aaba2b35d115af903eafe41d5, '2023-03-09', 'RUDDY', 'ISAMAR', 'PINTO', 'COLMENARES', '1990-05-06', 10, 4, 1131, '2018-10-16', NULL, NULL, 2),
+(76, '11459', 0x02372563f1ba55068035f4ae232d7865, '2023-03-09', 'CARLOS', 'EDUARDO', 'RODRIGUEZ', '', '1966-03-15', 9, 4, 1131, '2018-10-16', '2021-09-03', NULL, 2),
+(77, '11471', 0xbf9a856ccb6329e806ad2a89a212c663, '2023-03-09', 'CARMEN', 'ELENA', 'BERRIOS', 'BASTIDAS', '1989-07-16', 9, 4, 1131, '2018-11-15', '2022-10-14', NULL, 2),
+(78, '11472', 0x54d8b1a8bf708d1d3ff92d0b1da54fc9, '2023-03-09', 'GERALDINE', 'DESIREE', 'RUIZ', 'HENRIQUEZ', '1975-10-09', 11, 4, 1131, '2018-11-26', '2021-03-01', NULL, 2),
+(79, '11482', 0xd3caab46800986a021e4a8894ec560a9, '2023-03-09', 'NAHOMY', 'NAZARETH', 'QUINTERO', 'MARTINEZ', '1998-08-13', 7, 4, 1131, '2018-12-17', '2022-09-16', NULL, 2),
+(80, '11510', 0x0559d0ac9c93cd019ab82ff19bd88135, '2023-03-09', 'MARIA', 'ISABEL', 'ESPINA', 'URBINA', '1966-12-09', 11, 4, 1131, '2019-04-29', NULL, NULL, 2),
+(81, '11513', 0xa01a6a426395dee14f270d10c8e4bbde, '2023-03-09', 'ANGELO', 'ALFONSO', 'MARTINEZ', 'BERROTERAN', '1990-02-05', 21, 19, 1131, '2019-06-03', '2021-08-16', '2021-06-30 10:40:47', 2),
+(82, '11523', 0x87afef94bfbedb9c0b9384d051b57ae4, '2023-03-09', 'MANUEL', 'ALEJANDRO', 'DA SILVA', 'VILLAMISIL', '1984-12-04', 9, 4, 1131, '2019-10-01', '2021-09-02', NULL, 2),
+(83, '111431', 0x387232dbac8c4712b93902412b45116b, '2023-03-09', 'GLENDER', 'JESUS', 'CORTEZ', '', '1990-11-05', 12, 6, 1131, '2018-06-25', '2021-08-18', '2021-08-18 11:14:42', 2),
+(84, '11267', 0xb42d3da5f0495e13078d701bdb3139c5, '2023-03-09', 'ALBERTO', 'JOSE', 'EVIES', 'GONZALEZ', '1965-11-04', 13, 5, 1131, '2016-10-03', NULL, '2021-12-27 13:15:54', 1),
+(85, '11291', 0x9f824ad4b17be95f20aa30c5eef9d8f6, '2023-05-13', 'ANGELA', 'LEONOR', 'ARANEA', 'CHICA', '1976-01-30', 14, 6, 1131, '2016-12-12', NULL, '2023-03-20 10:52:06', 1),
+(86, '11346', 0x3741710cf81161c3f808ab6763e6dd46, '2023-03-09', 'ARTURO', 'ARMANDO', 'SOSA', 'HERRERA', '1962-08-27', 12, 1, 1131, '2017-11-01', NULL, '2023-03-08 13:23:34', 1),
+(87, '11414', 0xfc273bdbdb272d4d8242dc839fe574c0, '2023-03-09', 'ADRIAN', 'ALEXANDER', 'PEREZ', 'RODRIGUEZ', '1994-04-19', 11, 5, 1131, '2018-03-16', NULL, '2023-03-01 08:31:34', 1),
+(88, '11443', 0x10345a029cfad2c3590a1b9a451d1f1d, '2023-03-09', 'ELISA', 'MARIBEL', 'PASERO', 'MARIÑO', '1979-08-25', 8, 1, 1131, '2018-07-19', NULL, '2023-03-07 12:16:33', 1),
+(89, '11463', 0x35940ed319e855068bde5ef0cfce1223, '2023-03-09', 'OMAR', 'ALFONSO', 'MARQUEZ', 'RODRIGUEZ', '2000-03-04', 9, 6, 1131, '2018-11-05', NULL, '2023-03-03 14:05:02', 1),
+(90, '11474', 0x8ddc468ceb92806447b051cf861ebc35, '2023-03-09', 'ANGELICA', 'ESTEFANIA', 'FUNES', 'OLOYOLA', '1995-06-27', 9, 6, 1131, '2018-11-26', '2022-12-02', '2022-12-02 10:12:19', 2),
+(91, '11492', 0xdb97f3afbcc4d25a1430ceba77fa6a62, '2023-03-09', 'ESLYN', 'MILEYDIS', 'ROJAS', 'ROMERO', '1989-03-25', 8, 5, 1131, '2019-02-11', '2019-02-11', '2022-02-10 11:34:30', 2),
+(92, '10135', 0x02c9275997d54158c4167be77a6630ce, '2023-03-09', 'CARMEN', 'VESTALIA', 'OCHOA', '', '1941-01-09', 19, 7, 1131, '2005-01-24', NULL, '2023-03-07 12:27:30', 1),
+(93, '10446', 0x4d1824cf8b7a77fed908c76ab6489714, '2023-03-09', 'LAURA', 'YAMILET', 'ROJAS', 'LIZARRAGA', '1974-09-28', 12, 10, 1131, '2008-07-23', NULL, '2023-03-08 10:38:18', 1),
+(94, '10466', 0xa1198b470a81e90dac0bed1b309401a8, '2023-03-09', 'ANTONIO', 'JOSE', 'RUBIO', 'HERNANDEZ', '1967-12-11', 22, 7, 1131, '2008-10-03', NULL, '2023-03-07 12:30:43', 1),
+(95, '10559', 0x0085f93347f0189fcb05c3a2c63cfb37, '2023-03-09', 'RUBEN', 'DARIO', 'VERA', 'PATIÑO', '1983-01-19', 37, 11, 1131, '2010-01-18', NULL, '2023-03-07 13:11:36', 1),
+(96, '10568', 0xdc1728d6fab31e62277d87cb0baef850, '2023-03-09', 'LUISA', 'ESTHER', 'TOVAR', '', '1964-04-09', 24, 7, 1131, '2010-01-18', NULL, '2023-03-07 12:32:46', 1),
+(97, '10589', 0x0e68f89affeeb43d6c64e3c45142cdf4, '2023-03-09', 'JOSE', 'ANTONIO', 'MACHADO', 'PEREZ', '1967-08-19', 14, 9, 1131, '2010-02-22', NULL, '2023-03-02 14:51:16', 1),
+(98, '10775', 0x21099c58c60dbd911af236bab605382f, '2023-03-09', 'DULY', 'YOSMILA', 'RINCONES', '', '1980-09-12', 25, 7, 1131, '2012-04-30', NULL, '2023-03-07 12:34:59', 1),
+(99, '10776', 0x007d9490d21daffd11ed0ee4545799d7, '2023-03-09', 'YENNIFER', 'MARIANA', 'VILLA', 'ANGEL', '1988-11-24', 19, 7, 1131, '2012-05-08', NULL, '2023-03-07 13:04:44', 1),
+(100, '10777', 0x72885907032c6a6a16024d7b6d6bda9a, '2023-03-09', 'ANA', 'CECILIA', 'CASTAÑO', 'ESCOBAR', '1946-10-10', 19, 2, 1131, '2012-05-16', NULL, '2023-03-01 08:30:46', 1),
+(101, '10896', 0xf0c9f1a5e0ceba8ff174aee2e655b8d6, '2023-03-09', 'AMAYOISBI', 'LIDSAY', 'GARCIA', 'CHACIN', '1972-07-12', 12, 12, 1131, '2013-08-08', NULL, '2023-03-08 10:58:13', 1),
+(102, '10897', 0x622f783e5cb68f8539a07d2e72fc5181, '2023-03-09', 'JENNIFER', 'LETICIA', 'CHACON', 'ZAMBRANO', '1985-02-21', 26, 12, 1131, '2013-08-19', NULL, '2023-03-08 10:44:05', 1),
+(103, '10977', 0x1917192b32463935bdb37b5424da609a, '2023-03-09', 'IGNAYARI', 'KATHERINE', 'MENDOZA', 'LUZARDO', '1991-06-11', 29, 7, 1131, '2014-06-05', NULL, '2023-03-07 15:48:08', 1),
+(104, '11145', 0x251a3d0f0933d817a00a114a54306788, '2023-03-09', 'REINA', 'MARIA', 'FAJARDO', 'GUERRERO', '1998-03-10', 31, 7, 1131, '2015-11-25', '2021-07-23', '2021-06-23 12:27:39', 2),
+(105, '11159', 0x39f7a594369157e26555f4e0d7a1a659, '2023-03-09', 'YOLYMER', 'ALICIA', 'MENDOZA', 'GARCIA', '1973-10-29', 14, 7, 1131, '2015-12-18', NULL, '2023-03-09 08:37:39', 1),
+(106, '11208', 0x7758b701cf34e5dd05b290c5902eb3dc, '2023-03-09', 'ROSA', 'ESMERALDA', 'LUZARDO', 'CARDENAS', '1965-08-28', 24, 7, 1131, '2016-03-14', NULL, '2023-03-07 13:05:55', 1),
+(107, '11292', 0x9834a2cdd6f9db0a0d250bffac8c7ade, '2023-03-09', 'ADRIANA', '', 'GUZMAN', 'LA CRUZ', '1982-06-18', 26, 12, 1131, '2016-12-12', '2020-08-24', NULL, 2),
+(108, '11423', 0x82ecb7a4d460cbd9b5fccb7bba696837, '2023-03-09', 'JOSE', 'LUZARDO', 'ESTABA', 'MOTA', '1988-04-08', 12, 13, 1131, '2018-04-09', NULL, '2023-03-09 09:05:27', 1),
+(109, '11438', 0xe1f58ad538cd74ec3753e32286efb835, '2023-03-09', 'KARINA', '', 'PEREZ', 'MARQUES', '1993-08-09', 27, 19, 1131, '2018-07-09', NULL, '2023-02-24 09:39:49', 1),
+(110, '11455', 0x54dc3edc08196bdd90fedc8827492cfa, '2023-03-09', 'ZONNY', 'EDUARDO', 'GARCIA', 'OJEDA', '1993-08-30', 35, 13, 1131, '2018-08-21', '2021-03-03', NULL, 2),
+(111, '11473', 0x52e0d97d3cc24e1500df52296fdc3338, '2023-03-09', 'YAINE', 'ALEXANDER', 'MACHADO', 'PEREZ', '1981-06-12', 31, 11, 1131, '2018-11-26', '2022-01-24', '2022-01-21 12:51:42', 2),
+(112, '11498', 0x48a6a5ef107959d068a87c41dd289746, '2023-03-09', 'ANTONIO', 'ALEXANDER', 'FARIA', 'EXPOSITO', '1983-08-28', 31, 11, 1131, '2019-02-18', '2021-08-02', '2021-07-06 11:41:46', 2),
+(113, '11524', 0xb88c861c64fbca0f3ed2921c92dc2d58, '2023-03-09', 'LEONARDO', 'ANTONIO', 'LOPEZ', 'AGURTO', '2001-10-29', 32, 9, 1131, '2019-10-01', NULL, '2023-03-09 08:59:15', 1),
+(114, '11525', 0xeb3607196b0db72c9d8b9c7cdefe7175, '2023-03-09', 'JOSE', 'ARTURO', 'MADRIZ', 'MALAVE', '1996-06-07', 2, 19, 1131, '2019-11-04', NULL, '2021-04-25 20:53:48', 2),
+(115, '11530', 0x3fd6b034156ce56e3063c7aceda2129b, '2023-03-09', 'LILIANA', 'IBETH', 'PARRA', 'PEREZ', '1980-05-21', 25, 7, 1131, '2020-01-29', '2021-11-30', '2021-11-16 14:18:04', 2),
+(116, '11531', 0x11d4863f0228a0f15971811d319899c8, '2023-03-09', 'ANTONIO', 'JOSE', 'REYES', 'SEQUERA', '1959-12-31', 15, 19, 1131, '2020-02-03', NULL, '2023-03-08 10:49:51', 1),
+(117, '11532', 0xd04d0184b0216d42ec38d51300a5fb0e, '2023-03-09', 'DUVAN', 'RAFAEL', 'PINTO', 'JAIMES', '2000-02-07', 3, 1, 1131, '2020-02-26', NULL, '2023-03-07 14:38:19', 1),
+(118, '11534', 0xf3143b800ced9f5b915d90b9cc7ae737, '2023-03-09', 'FREDDY', 'FRANCISCO', 'PERDOMO', 'MOLINA', '1986-03-03', 22, 7, 1131, '2020-03-01', NULL, NULL, 2),
+(119, '11536', 0xd995664289ab091b92900d8c3d725211, '2023-03-09', 'FERNANDO', 'JOSE', 'RANGEL', 'KUIPPERS', '1992-12-12', 12, 19, 1131, '2020-03-16', NULL, '2023-03-08 10:48:33', 1),
+(120, '11537', 0xdac7c278f04cd6bcfc2e8cd1327ba186, '2023-03-09', 'GELEN', 'DEL ROSARIO', 'CARDENAS', 'MARQUEZ', '1958-03-08', 23, 7, 1131, '2020-06-01', NULL, '2023-03-09 09:29:51', 1),
+(121, '11538', 0x5f6cefe297d88422fd26fc327927c50c, '2023-03-09', 'FREDDY', 'ANTONIO', 'BORRERO', 'CONTRERAS', '1989-08-09', 24, 11, 1131, '2020-06-01', NULL, NULL, 2),
+(122, '11539', 0xf3a4e6e99f2351d7d8d7dbe13a8613c6, '2023-03-09', 'AURA', 'MARIA', 'CONTRERAS', 'PASTRAN', '1968-07-01', 24, 7, 1131, '2020-06-01', NULL, '2023-03-07 13:07:06', 1),
+(123, '36', 0xaff067db4d01053de5e9b63e3acad0f3, '2023-03-09', 'JESUS', 'SALVADOR', 'MORILLO', 'QUINTANA', '1960-03-02', 12, 11, 1131, '2000-01-17', NULL, '2023-03-07 13:12:35', 1),
+(124, '49', 0x691bc08a9481d285f219ba498b40c2d8, '2023-03-09', 'AMELIA', 'JOSEFINA', 'DIAZ', 'MENDOZA', '1956-03-19', 20, 7, 1131, '2004-11-01', NULL, '2023-03-09 09:29:05', 1),
+(125, '10195', 0xb9ce83958d6a23a8336406193a64ff01, '2023-03-09', 'EMILIO', 'JOSE', 'LEON', 'FARIAS', '1965-06-28', 15, 3, 1131, '2005-11-01', NULL, '2023-03-08 10:55:19', 1),
+(126, '11265', 0xa0bd6599e6e683811b6372401e231dd8, '2023-03-09', 'GUSTAVO', 'ADOLFO', 'PUCHI', 'MEDINA', '1963-09-12', 14, 3, 1131, '2016-10-03', NULL, '2023-02-07 22:21:36', 1),
+(127, '11376', 0xdf4810c7bef897842d6da0a50067246d, '2023-03-09', 'ALFIO', 'FILIPPO', 'SAGLIMBENI', 'MUSCOLINO', '1967-08-03', 13, 3, 1131, '2017-12-20', NULL, '2023-03-07 14:54:06', 1),
+(128, '11397', 0xe5ca561acfe5b7e6d08fe901bc7949f5, '2023-03-09', 'ARIANNA', 'ELENA', 'MATOS', 'IACOBELLIS', '1995-08-21', 12, 3, 619, '2018-02-20', NULL, '2023-03-09 09:05:36', 1),
+(129, '11450', 0xbae93c1b60db15e5865266fd0d24633a, '2023-03-09', 'ANA', 'VIRGINIA', 'BLANDIN', 'ARZOLA', '1981-04-08', 12, 3, 1131, '2018-08-07', NULL, '2023-03-03 14:51:42', 1),
+(130, '10262', 0xb30631929b9c596b6b7c93bc0107a2f9, '2023-03-09', 'OSCAR', 'AUGUSTO', 'PIÑA', 'ALBUJAR', '1946-01-06', 15, 14, 1131, '2006-01-02', NULL, '2021-05-18 10:10:44', 1),
+(131, '11278', 0x610144861cabaf4a843655e1382b4ba1, '2023-03-09', 'YOSBER', 'ALEJANDRO', 'GOMEZ', 'LANDAETA', '1997-12-02', 41, 15, 1131, '2016-11-01', NULL, NULL, 2),
+(132, '11280', 0x2cad3164e6c307fdcb776bd810cb7581, '2023-03-09', 'DUGLIMAR', 'YOLEIDA', 'MENDEZ', 'RIVAS', '1999-07-02', 7, 1, 1131, '2016-11-16', '2022-06-30', '2022-07-11 12:14:10', 2),
+(133, '11312', 0xa7c857f013892adc7f221598f2e89d13, '2023-03-09', 'SOL', 'PATRICIA', 'VIANA', 'CONSUEGRA', '1997-09-23', 5, 17, 1131, '2017-03-20', NULL, '2023-03-09 10:17:23', 1),
+(134, '11063', 0x3b313b352d415598974619e53a931dab, '2023-03-09', 'DOUGLAS', 'EDUARDO', 'TORREALBA', 'SANCHEZ', '1975-10-28', 42, 10, 1131, '2015-06-02', NULL, '2023-02-02 10:13:31', 1),
+(135, '11064', 0xf8d7bcf36c42372b56e93e294887f37f, '2023-03-09', 'DARWING', 'JOSE', 'CORDOVA', '', '1980-08-04', 40, 16, 1131, '2015-06-02', NULL, NULL, 1),
+(136, '11066', 0x41399ac78c24e3559f7726613d12ebd7, '2023-03-09', 'JEFERSON', 'JESUS', 'YANEZ', 'VILLEGAS', '1995-10-12', 40, 16, 1131, '2015-06-02', NULL, NULL, 1),
+(137, '11068', 0x5a0c077e3b5d51173617b9505e5096a0, '2023-03-09', 'JOSE', 'ANTONIO', 'ARAUJO', 'RODRIGUEZ', '1989-05-30', 40, 16, 1131, '2015-06-02', NULL, NULL, 1),
+(138, '11236', 0x9539088bb755d49549bae8545139afef, '2023-03-09', 'ANGEL', 'EDUARDO', 'APARICIO', 'ROMERO', '1970-08-02', 40, 16, 1131, '2016-05-20', NULL, NULL, 1),
+(139, '11237', 0xe9ab85bfeff30e5d550382afc6080220, '2023-03-09', 'JESUS', 'ANTONIO', 'ROJAS', 'CRUZ', '1984-07-18', 40, 16, 1131, '2016-05-20', NULL, NULL, 1),
+(140, '10508', 0x2d56c9afa7ed653edb2aaa6ae8f27296, '2023-03-09', 'FREDY', 'SAMUEL', 'BAUTISTA', 'VILLEGAS', '1950-05-14', 15, 17, 1131, '2005-08-01', NULL, '2023-03-09 10:23:26', 1),
+(141, '10689', 0x405c1a039a181f42019aa2982793c531, '2023-03-09', 'ELLEN', 'KATIUSKA', 'FUENTES', 'RIOS', '1966-03-16', 33, 18, 1131, '2007-02-26', NULL, NULL, 2),
+(142, '11451', 0x5721015667f69f6abe55a7234ee28807, '2023-03-09', 'BARBARA', 'CAROLINA', 'ZAMBRANO', 'AGUINALDE', '1996-11-19', 6, 18, 1131, '2018-08-01', '2021-07-01', NULL, 2),
+(143, '11476', 0xbe3ff23ed8054d2728572e354edf7671, '2023-03-09', 'MARY', '', 'CRUZ', 'SALAZAR', '1989-09-20', 12, 18, 1131, '2018-12-03', '2021-07-01', NULL, 2),
+(144, '10863', 0x63ed7aeb031c9314dd620e19e77c79e2, '2023-03-09', 'SERGIO', 'FREDDYS', 'MÁRQUEZ', 'TOVAR', '1971-12-31', 16, 1, 1131, '2013-05-02', NULL, '2023-03-08 12:28:02', 1),
+(145, '29', 0x479f7317068099dcf2a111b30db251df, '2023-03-09', 'NELSON', 'JOSE', 'MARCANO', '', '1969-09-20', 16, 1, 1131, '2000-10-26', NULL, '2023-03-08 12:26:18', 1),
+(146, '5002', 0xaef4634cdd03090997802d1839eb6c5a, '2023-03-09', 'SAMUEL', 'ALEJANDRO', 'MARQUEZ', 'TOVAR', '1966-06-28', 16, 1, 1131, '1999-07-01', NULL, '2023-03-07 12:23:29', 1),
+(147, '5014', 0x75a1d6a76e48987599d8e331c08d260b, '2023-05-19', 'ANTONIO', 'JOSE', 'DUGARTE', 'LOBO', '1964-07-23', 16, 2, 1131, '2011-03-16', NULL, '2023-03-20 10:58:28', 1),
+(148, '107', 0x4487799a782e07416359afcb8a42fb84, '2023-03-09', 'MIRNANGELA', 'LARISKA', 'SALAYA', 'GARCIA', '1977-11-08', 16, 1, 1131, '2000-08-08', NULL, '2023-03-08 11:15:29', 1),
+(149, '5003', 0x9d880ffd30f5f080be310c589ad7d227, '2023-03-09', 'JOSE', 'NICOLAS', 'MARQUEZ', 'CEJAS', '1962-02-11', 16, 1, 1131, '2007-08-01', NULL, '2023-03-01 14:33:55', 1),
+(150, '5007', 0xc371ab40bb31c34e95ae4516d646a82f, '2023-03-09', 'FREDDY', 'FRANCISCO', 'PERDOMO', '', '1949-05-17', 16, 1, 1131, '2008-08-01', NULL, '2023-03-08 15:20:24', 1),
+(151, '6146', 0x9dae052e8459779324727042c745d5c0, '2023-03-09', 'ROBINSON', 'JOSE', 'ARANGUREN', 'MAESTRE', '1970-11-15', 1, 1, 1131, '2019-09-02', NULL, '2022-05-29 16:47:14', 1),
+(152, '6128', 0x03cb2670612f39a496a117e7b4132624, '2023-03-09', 'JOSE', 'ANTONIO', 'ECKER', 'RANGEL', '1968-10-19', 37, 11, 1131, '2018-07-02', '2019-11-02', NULL, 1),
+(153, '6145', 0xb8fc0ae4e80a2cbdf90ba796266bc350, '2023-03-09', 'JHON', 'EDUARDO', 'RONDON', 'BARRERA', '1969-08-19', 1, 1, 648, '2019-08-14', NULL, NULL, 2),
+(154, '11540', 0x63ed7aeb031c9314dd620e19e77c79e2, '2023-03-09', 'SERGIO', 'FREDDYS', 'MÁRQUEZ', 'TOVAR', '1971-12-31', 16, 10, 612, '2013-05-01', NULL, NULL, 1),
+(155, '6149', 0x56ebeace0d852918899efd37d698c006, '2023-03-09', 'ANA', 'KAYRET', 'PETIT', 'URBINA', '1982-11-04', 1, 1, 647, '2020-10-20', NULL, NULL, 2),
+(156, '6150', 0x20aa455bdb16ddb4b36faf828c69bc8f, '2023-03-09', 'ENRIQUE', 'RAFAEL', 'CHIQUITO', 'SOSA', '1971-04-23', 1, 1, 647, '2020-10-01', '2021-01-28', NULL, 2),
+(157, '11541', 0x7308e004e6ddbca18c8ef22b13a43adc, '2023-03-09', 'LEIDY', 'KASANDRA', 'SUESCUM', 'TAVIO', '1997-10-10', 3, 2, 647, '2020-11-09', '2021-01-22', NULL, 2),
+(158, '6151', 0xf2a22cb545a9ea9ead1ad548eaeff6b7, '2023-03-09', 'MARYARIT', 'MARIANA', 'MEO', 'YANEZ', '1996-08-05', 1, 2, 644, '2020-12-01', NULL, NULL, 2),
+(159, '11542', 0x89d39180296383654a46b43d86ad6d5c, '2023-03-09', 'FRANKLIN', 'ALBERTO', 'PACHECO', 'ACOSTA', '1980-10-18', 13, 3, 647, '2020-12-08', NULL, '2023-03-07 09:08:23', 1),
+(160, '11543', 0x7bd1029606af4239490e64bb994df604, '2023-03-09', 'ORIANA', 'ELIZABETH', 'GRATEROL', 'GONZALEZ', '1997-09-17', 3, 2, 647, '2020-12-21', '2021-10-18', '2021-10-18 13:54:32', 2),
+(161, '11544', 0xa3ec41d3844cef761c9d545f3a69c891, '2023-03-09', 'ALFREDO', 'DAVID', 'CONQUISTA', 'RODRIGUEZ', '1995-06-05', 7, 2, 1128, '2021-02-01', NULL, '2023-02-08 08:30:12', 1),
+(162, '6152', 0xefa3a73f7ca913640d7834fc5a77ded9, '2023-03-09', 'EDGAR', 'WILMER', 'ANTON', 'MOLINA', '1965-11-15', 1, 1, 1121, '2021-02-22', NULL, '2021-07-26 17:23:41', 2),
+(163, '11545', 0xef68ab6f518658282d5d8a4cfc741956, '2023-03-09', 'FREDY', 'DARIO', 'BAUTISTA', 'QUIJADA', '1990-10-30', 8, 1, 647, '2021-02-11', '2021-10-15', NULL, 2),
+(164, '11546', 0x55299672e753dee7d23e6553d867ab30, '2023-03-09', 'IRIS', 'LUCYMAR', 'ESCORCHA', 'RONDON', '1978-05-05', 26, 12, 644, '2021-02-22', NULL, '2023-03-06 08:48:41', 1),
+(173, '11547', 0xd5afc9de8704bf23bfc792f632ffc33c, '2023-03-09', 'CARLOS', 'EDUARDO', 'BASTIDAS', 'HERNANDEZ', '1991-11-24', 9, 6, 1119, '2021-03-22', '2022-01-21', '2022-01-21 14:12:14', 2),
+(174, '11548', 0xa1e1400e80130b354a92794f2a2c4d8b, '2023-03-09', 'MARYSABEL', '', 'DOS SANTOS', 'CONTRERAS', '1986-06-20', 9, 5, 1133, '2021-04-07', NULL, '2023-02-28 16:16:21', 1),
+(175, '6153', 0x372914d41de86dd92703cd0dee53bc62, '2023-03-09', 'IVETTE', 'ALEJANDRA', 'OROZCO', 'FLORES', '1994-02-23', 1, 1, 647, '2021-04-16', NULL, '2021-05-16 20:42:46', 2),
+(176, '11549', 0x88f71d576b9b9a7eb02e7cdd3a50f189, '2023-03-09', 'WINNEY', 'JOHANA', 'BARRIENTOS', 'MC PHAIL', '1999-08-10', 5, 2, 647, '2021-05-03', '2022-12-05', '2022-11-21 13:19:12', 2),
+(177, '11550', 0x00540a991feca08385be8c6e8cce1487, '2023-03-09', 'LEONELA', 'MICHELE', 'ZAMBELLA', 'OMAÑA', '1998-09-06', 2, 1, 647, '2021-05-10', '2021-11-01', '2021-11-02 18:50:00', 2),
+(178, '11551', 0x523a178facc19f171d266721bfbd81ae, '2023-03-09', 'JUNEISY', 'ANIUSKA', 'BENITEZ', 'MACHADO', '1997-01-30', 2, 1, 647, '2021-05-10', '2021-09-03', '2021-07-02 14:37:35', 2),
+(179, '11552', 0x885c2c2836ecc293b882ce6c349b479c, '2023-03-09', 'YESENIA', 'YULIMAR DEL VALLE', 'CASARES', 'PEROZO', '1996-04-09', 3, 2, 647, '2021-05-10', '2022-02-25', '2022-02-22 10:29:37', 2),
+(180, '11553', 0xcd2cd819b3320262d69c7e6fddacf24d, '2023-03-09', 'OLIVER', 'IGNACIO', 'TOVAR', 'BENITEZ', '1999-08-20', 39, 1, 647, '2021-06-30', '2022-05-05', '2022-05-05 12:20:25', 2),
+(181, '11554', 0x5f2991af2868d42d179591bec69d6776, '2023-03-09', 'RITCELIS', 'DEL VALLE', 'RUIZ', 'DIAZ', '1993-12-04', 21, 9, 647, '2021-07-01', '2021-07-30', NULL, 2),
+(182, '1555', 0xc2d5d29ebe10d25ac764e28d1c9e0450, '2023-03-09', 'JENNY', 'LIS', 'SEGOVIA', 'ZAMBRANO', '1983-08-02', 12, 9, 647, '2021-07-01', NULL, '2023-03-08 15:48:18', 1),
+(183, '11556', 0xc97e95a81b5bdf8ad3920e6feffcae91, '2023-03-09', 'CESAR', 'AUGUSTO', 'DIAZ', 'JARAMILLO', '1985-03-28', 12, 3, 647, '2021-07-01', NULL, '2023-03-09 09:06:41', 1),
+(184, '11557', 0x4bf6b7f14a4f739f30e7fbbb58c7c5aa, '2023-03-09', 'DANALETH', 'DEL CARMEN', 'HERNANDEZ', 'MONASTERIO', '1999-08-11', 3, 2, 647, '2021-07-19', '2021-10-14', '2021-10-07 10:21:05', 2),
+(185, '11558', 0x4243db303abf01eb84843b823bf020e5, '2023-03-09', 'JOHANNA', 'DE LA CRUZ', 'TRUJILLO', 'REVETE', '1981-07-01', 5, 6, 647, '2021-07-26', NULL, '2023-03-08 09:26:43', 1),
+(186, '11559', 0x9b6418bd0e01cf1b747c12363ebbe592, '2023-03-09', 'MELANIE', 'ALEXANDRA', 'MARQUEZ', 'BAPTISTA', '2000-09-29', 2, 13, 647, '2021-07-19', NULL, '2023-03-07 15:53:14', 1),
+(187, '11560', 0x167b7aadb75cbcc8034da842e0360171, '2023-03-09', 'ESCARLET', 'MAYERLINE', 'GUILLEN', 'GUILLEN', '1997-07-10', 6, 2, 647, '2021-09-01', NULL, '2023-02-02 10:27:46', 1),
+(188, '11561', 0xa4dc3ebef91c2b91dde9e818e5514d38, '2023-03-09', 'NORBELIS', 'ALEJANDRA', 'MORRINSON', 'CORTEZ', '1997-06-04', 4, 2, 647, '2021-10-04', NULL, '2023-03-08 15:57:47', 1),
+(189, '11562', 0xb57c626ac91c0c8cca36243dfc5c5070, '2023-03-09', 'ELEANA', 'GABRIELA', 'ROJAS', 'CUNYA', '1985-10-17', 11, 2, 647, '2021-10-04', '2022-01-19', '2022-01-19 10:23:42', 2),
+(190, '11563', 0x6bf72610d23d278861e40c7cad6b76db, '2023-03-09', 'ANTHONI', 'CARLOS', 'FREITES', 'QUIROZ', '1977-06-30', 31, 11, 647, '2021-10-04', NULL, '2023-03-09 09:45:26', 1),
+(191, '6154', 0x24021e390ff9b2f57b798c4b8abf26d0, '2023-03-09', 'JESUS', 'ALBERTO', 'LAYA', 'JIMENEZ', '1978-12-16', 1, 2, 647, '2021-09-15', NULL, '2023-03-08 16:57:44', 1),
+(192, '11564', 0x4e7c83cf9599a3969f6c9ba397455a69, '2023-03-09', 'ANDREA', 'GABRIELA', 'GARCIA', 'GRANADOS', '1989-07-08', 12, 17, 647, '2021-11-01', NULL, '2023-03-06 10:02:02', 1),
+(193, '11565', 0x1e28845a33ec486b78b33124ff3c51d9, '2023-03-09', 'OSCAR AUGUSTO', 'AUGUSTO', 'ROJO', 'SUAREZ', '1999-09-03', 33, 19, 647, '2021-11-01', NULL, '2023-03-09 08:59:40', 1),
+(194, '11566', 0xd842c98458ea9c6ade77d1dbc41eada8, '2023-03-09', 'JOSE', 'JOEL', 'BOLIVAR', 'SIERRA', '1974-05-28', 27, 19, 647, '2021-11-01', NULL, '2023-03-09 09:06:12', 1),
+(195, '11567', 0xefa3a73f7ca913640d7834fc5a77ded9, '2023-03-09', 'EDGAR', 'WILMER', 'ANTON', 'MOLINA', '1965-11-15', 12, 1, 647, '2021-11-22', NULL, '2023-03-06 09:13:25', 1),
+(196, '11568', 0x970fcb0fbe4183e5401fd12b13f83342, '2023-03-09', 'BEYKER', 'ANDRES', 'LOYO', 'GONZALEZ', '1990-03-01', 31, 4, 647, '2021-11-29', '2022-08-30', '2022-08-23 13:14:21', 2),
+(197, '11569', 0x19d67bb546785ba4cf0a4846589d6d11, '2023-03-09', 'PABLO', 'SAMUEL', 'MATA', 'HERNANDEZ', '1997-09-17', 6, 1, 647, '2021-12-06', '2021-12-07', NULL, 2),
+(198, '11570', 0x36b9f98f9530546685fd0d79b1334907, '2023-03-09', 'BRANDON', 'ENMANUEL', 'RIVERA', 'HERNANDEZ', '1997-06-01', 5, 2, 647, '2021-12-06', NULL, '2022-02-10 13:59:07', 2),
+(199, '11571', 0xfa3d9af2b86645168a4b41f7535bcde2, '2023-03-09', 'YANIX', 'XINAY', 'MONSALVE', 'MACHADO', '1995-10-03', 25, 7, 647, '2021-12-06', NULL, '2023-03-07 15:44:01', 1),
+(200, '11572', 0x04c9bbac36c3b5f4c43b0fe680373e27, '2023-03-09', 'JUAN', 'PABLO', 'PEÑALOZA', 'DIAZ', '1994-01-19', 5, 1, 647, '2021-12-07', NULL, '2023-03-07 13:48:47', 1),
+(201, '11573', 0x85909ab093c06e673fff7e5fdafb123c, '2023-03-09', 'GABRIEL', 'ALEJANDRO', 'ROJAS', 'RICO', '1987-01-25', 4, 2, 647, '2022-01-10', '2022-07-29', '2022-08-02 11:56:17', 2),
+(202, '11574', 0xa1c4215f75bad02b8df90a6147ec01c7, '2023-03-09', 'JOSNELY', 'JHOVANNA', 'CASTILLO', 'GIL', '1999-12-22', 4, 6, 647, '2022-01-17', NULL, '2023-03-03 14:47:25', 1),
+(203, '11575', 0x83188453dc3444ee4825d9ff7b2ab7a6, '2023-03-09', 'CHRISTHOPHER', 'EDUARDO', 'CABRERA', 'BAPTISTA', '1993-06-27', 12, 2, 647, '2022-02-01', NULL, '2023-03-08 16:46:15', 1),
+(204, '11576', 0x36b9f98f9530546685fd0d79b1334907, '2023-03-09', 'BRANDON', 'ENMANUEL', 'RIVERA', 'HERNANDEZ', '1997-06-01', 5, 2, 647, '2021-12-06', NULL, '2023-03-08 16:54:55', 1),
+(205, '6155', 0xad7b0fe3134e037387a7fc2742792df7, '2023-03-09', 'TOMAS', 'ANTONIO', 'MERIDA', 'GALINDO', '1956-02-19', 1, 10, 647, '2022-02-16', NULL, '2022-08-18 09:49:37', 2),
+(206, '11578', 0x270f8aacfe8b59d553285073de46e171, '2023-03-09', 'GABRIEL', 'ALEJANDRO', 'MORA', 'CARVAJAL', '1996-09-29', 3, 1, 647, '2022-02-21', NULL, '2022-09-21 10:26:14', 2),
+(207, '11577', 0x1e3d59a448dd78b09bf962402842d96b, '2023-03-09', 'JHON', 'JOSE', 'MARTINEZ', 'LONDIZA', '1990-01-28', 7, 4, 647, '2022-02-08', NULL, NULL, 1),
+(208, '11579', 0xa1d5e8d025bd62b31b55b1761b283b5d, '2023-03-09', 'KEIBI', 'RAFAEL', 'MORENO', 'CAÑIZALES', '1995-05-09', 9, 6, 647, '2022-03-02', NULL, '2022-04-21 09:27:53', 2),
+(209, '11580', 0xb25f3df715172d3c050d19cdc436f6b6, '2023-03-09', 'DEIRIANA', 'ANDREINA', 'PORTA', 'MENESES', '1997-05-15', 5, 2, 647, '2022-03-02', NULL, '2023-03-08 14:47:21', 1),
+(210, '6156', 0x919482975a53e20fffe20a6efb3de610, '2023-03-09', 'LUIS', 'GIOVANNY', 'CARDENAS', 'RODRIGUEZ', '1972-02-24', 1, 1, 647, '2022-03-11', NULL, '2022-06-15 14:46:01', 2),
+(211, '11581', 0x2ab195024686baaf25768e2065bc9ae4, '2023-03-09', 'GUILLERMO', 'ENRIQUE', 'LOAIZA', 'DIAZ', '2001-05-17', 31, 17, 647, '2022-03-21', '2022-05-25', '2022-05-16 08:27:05', 2),
+(212, '11582', 0x2cfa81903478c0c02ffa1d25a47a5e9c, '2023-03-09', 'CESAR', 'TADEO', 'UBAN', 'BALZA', '1996-12-04', 8, 1, 647, '2022-04-04', '2022-08-30', '2022-08-26 11:50:10', 2),
+(213, '11583', 0x0c1e4fd7c8ac773b9a9151cb111761a6, '2023-03-09', 'DINEXY', 'ANDREINA', 'PORTA', 'MENESES', '1993-12-02', 8, 2, 647, '2022-04-04', NULL, '2023-03-08 16:55:28', 1),
+(214, '11584', 0x28de8fbe3a4fdbb7f6d7a6dac2b64216, '2023-03-09', 'RICARDO', 'ERNESTO', 'LEON', 'PIRELA', '2001-04-02', 33, 9, 647, '2022-04-20', NULL, '2023-03-02 15:01:36', 1),
+(215, '11585', 0xa1d5e8d025bd62b31b55b1761b283b5d, '2023-03-09', 'KEIBI', 'RAFAEL', 'MORENO', 'CAÑIZALES', '1995-05-09', 9, 6, 647, '2022-03-02', NULL, '2023-03-03 14:45:10', 1),
+(216, '11586', 0x33d71d2ac998727b52a71646e6b0b7fc, '2023-03-09', 'BARBARA', 'PAOLA', 'BETANCOURT', 'VAZQUEZ', '2002-09-27', 3, 1, 647, '2022-05-16', '2022-09-19', '2022-09-12 10:07:04', 2),
+(217, '11587', 0x61c13eba8b8132974bc5608b31156ae9, '2023-03-09', 'KEIVER', 'DUVAN', 'AVILA', 'PEREZ', '1997-09-28', 7, 4, 647, '2022-05-23', '2023-01-31', NULL, 2),
+(218, '11588', 0x3a0f2884ff1f4c417a37d5b7cb1c7491, '2023-03-09', 'KATHERINE', 'ESTHEFANIA', 'HERNANDEZ', 'GOMEZ', '1992-07-28', 10, 4, 647, '2022-05-23', '2023-02-28', NULL, 2),
+(219, '11589', 0x358a7cc7d966e52a33f6f01e357d5ca2, '2023-03-09', 'YULIMAR', '', 'DIAZ', 'QUINTERO', '1978-07-21', 9, 4, 647, '2022-06-01', NULL, NULL, 1),
+(220, '11590', 0x3ae6ae9251707b633e41f330f6b5351b, '2023-03-09', 'YURI', 'ANDREA', 'CHACON', 'MILLAN', '1990-06-11', 5, 1, 647, '2022-06-01', NULL, '2023-02-24 14:22:44', 1),
+(221, '11591', 0x3ad57219988deea7bc7f6c706cca7e16, '2023-03-09', 'JOSMARLY', 'YOHANA', 'MALDONADO', 'MEDINA', '1994-11-26', 4, 1, 647, '2022-06-01', '2022-06-02', NULL, 2),
+(222, '11592', 0xc13e19eb0be1fcd876dc98bb869f2628, '2023-03-09', 'WILBER', 'MOISES', 'ALGUETA', 'TORRES', '2000-10-27', 3, 1, 647, '2022-06-01', NULL, NULL, 2),
+(223, '11593', 0x578a31baf9dc7435fdc4073125db7548, '2023-03-09', 'JOSE', 'GREGORIO', 'CASTELLANOS', 'QUINTO', '1987-07-25', 6, 3, 647, '2022-06-02', NULL, '2023-03-03 13:21:41', 1),
+(224, '11594', 0x1f4f0e36be6624b89905a17e1bf64fdd, '2023-03-09', 'BELKIS', 'MARIA', 'FLOREAN', 'LAGUNA', '1981-12-11', 24, 7, 647, '2022-06-01', NULL, '2023-03-07 13:10:21', 1),
+(225, '11595', 0x7f7f9c080befe0f50280fd2f13caff30, '2023-03-09', 'KEYBERT', 'EDUARDO', 'APARICIO', 'GONZALEZ', '1994-06-13', 3, 2, 647, '2022-06-16', NULL, '2023-03-08 21:19:04', 1),
+(226, '11596', 0x062fdba11fcb6ba786cbb20ddee683ef, '2023-03-09', 'DOUGLENIS', 'DE LOS ANGELES', 'TABASQUEZ', 'MORALES', '1997-06-13', 9, 4, 647, '2022-07-18', '2022-09-02', NULL, 2),
+(227, '11597', 0xd400af68e6a66f2485d927ed68c1c401, '2023-03-09', 'IVANA', 'CARIDAD', 'GUILARTE', 'PINTO', '1999-10-31', 39, 6, 647, '2022-07-19', '2022-12-02', '2022-12-06 09:57:18', 2),
+(228, '11598', 0xd4e8ba398f297fed9566fa97f8425f24, '2023-03-09', 'ALEJANDRA', 'MARINA', 'SANCHEZ', 'CANCHICA', '1991-07-01', 3, 1, 647, '2022-08-01', NULL, '2023-03-07 10:16:00', 1),
+(229, '11599', 0x5c4b6c5d07f43a01506dc573e0a15b1e, '2023-03-09', 'JOSE', 'ANDRES', 'HERNANDEZ', 'RUIZ', '1999-03-16', 3, 2, 647, '2022-08-10', NULL, '2023-03-09 09:03:43', 1),
+(230, '11600', 0x06e477466a371d1eacd75ae15905d43d, '2023-03-09', 'JOSE', 'MIGUEL', 'PEROZO', 'HERRERA', '1994-10-04', 9, 1, 647, '2022-08-15', NULL, '2023-03-09 09:26:22', 1),
+(231, '11601', 0x18a089795f781c551411046258024a92, '2023-03-09', 'RAINIER', 'HELY', 'ROJAS', 'HADDAD', '1996-10-03', 8, 19, 647, '2022-08-15', NULL, '2023-03-06 09:01:11', 1),
+(232, '11602', 0x6d563507ea9b4aaeb43a6c5b03debed4, '2023-03-09', 'ANGELICA', 'MARIA', 'LUGO', 'RAMIREZ', '2000-07-11', 39, 6, 647, '2022-10-10', '2023-01-03', '2023-01-03 01:26:19', 2),
+(233, '11610', 0x2fe75e25db5950d7f3192bd9a567c437, '2023-03-09', 'MARIA', 'LAURA', 'GARCIA', 'JUAREZ', '1999-12-15', 4, 4, 647, '2022-10-17', '2022-10-28', NULL, 2),
+(234, '11611', 0x59edc43aa33ee663acbfa31a3c083b0f, '2023-03-09', 'JENNY', 'LUCIA', 'LIMA', 'HAMILTON', '1967-08-05', 10, 4, 647, '2022-11-07', '2022-12-02', NULL, 2),
+(235, '11612', 0xba881c64c8046bcca8225185fff51e8d, '2023-03-09', 'CRISBET', 'YOHANNI', 'BARCELO', 'CASTRO', '1993-12-19', 9, 4, 647, '2022-11-07', '2023-03-03', NULL, 2),
+(236, '11613', 0x208e6671311570c0cbcbf76b6f772a97, '2023-03-09', 'ARLEANNY', 'ALEXARI', 'MARRERO', 'QUINTERO', '2002-07-16', 3, 2, 647, '2022-11-07', NULL, '2023-03-08 16:14:21', 1),
+(237, '11614', 0x4fd02b9a12f2b1a08392566ab29ba9ad, '2023-03-09', 'JOSE', 'LUIS', 'DIAZ', 'HERRERA', '1997-02-26', 39, 6, 647, '2022-11-08', NULL, '2023-02-09 09:37:02', 1),
+(238, '11615', 0x6896b72aa59eeaaa40242214739a1bce, '2023-03-09', 'ORLAIMY', 'SAIR', 'MUÑOZ', 'JAIMES', '2001-06-28', 39, 6, 647, '2022-12-12', NULL, '2023-03-09 09:30:48', 1),
+(239, '11616', 0x9362ccc5dcb88e9f44ca6ef99a9b3cc3, '2023-03-09', 'JOSMAN', 'JOSUE', 'FUENTES', 'GRIMAN', '2000-07-17', 3, 2, 647, '2023-01-09', NULL, '2023-03-08 17:00:33', 1),
+(240, '11617', 0x988bf2793315f1ba3fbdee9d3e89b5cd, '2023-03-09', 'JORGENIS', 'JOSE', 'GUERRA', 'LEZAMA', '1996-11-28', 39, 6, 647, '2023-01-23', NULL, '2023-03-09 09:23:18', 1),
+(241, '11618', 0x7d038db3c2a8022d9d8c23c9b36a2077, '2023-03-09', 'CESAR', 'LEANDRO', 'GARCIA', 'AULAR', '2001-08-14', 39, 6, 647, '2023-01-23', NULL, '2023-03-09 09:36:13', 1),
+(242, '6157', 0x59a218968d4072da6231f2280bddaf7a, '2023-03-09', 'MAYERLING', 'KARINA', 'VALERA', 'RIVAS', '1975-10-19', 1, 2, 647, '2022-10-17', NULL, NULL, 1),
+(243, '6159', 0x8dc9c35a2bba3db28169f52d28b5f527, '2023-03-09', 'YULITZA', 'DEL VALLE', 'ESPARRAGOZA', 'CASTILLEJO', '2023-02-06', 1, 1, 647, '2023-02-06', NULL, NULL, 1),
+(244, '11619', 0xcbcdd03242d775e13741b2308aca4db6, '2023-03-09', 'RAUL', 'HUMBERTO', 'BRICEÑO', 'CORREA', '1991-02-23', 10, 4, 647, '2023-02-13', NULL, NULL, 1),
+(245, '11620', 0xbfc5e4293bf330bde6ace6bfd37f234e, '2023-03-09', 'MARY', 'ISABEL', 'ROJAS', '', '1967-08-16', 6, 1, 647, '2023-02-13', NULL, NULL, 1),
+(246, '11621', 0xa679acfe3d0deef0b6ff5b7e553b2b47, '2023-03-09', 'RUBI', 'YABISAY', 'RAMIREZ', 'LOPEZ', '1974-01-06', 6, 1, 647, '2023-02-14', NULL, '2023-03-07 16:06:08', 1),
+(247, '11622', 0x038e973a488134d8436c8bae5b50d66c, '2023-03-09', 'CARLOS', 'EDUARDO', 'NAVAS', 'EDUARDO', '2023-02-13', 39, 13, 647, '2023-02-13', NULL, '2023-04-16 00:16:02', 1),
+(248, '11623', 0x900ddc90e683652dd185b78eb9554e81, '2023-03-09', 'MIRIAM', 'DESIREE', 'HIDALGO', 'BRICEÑO', '1983-07-11', 10, 4, 647, '2023-03-07', '2023-03-07', NULL, 2),
+(252, '120154', 0x038e973a488134d8436c8bae5b50d66c, '2023-04-16', 'Carlos', NULL, 'Navas', NULL, '1994-11-22', NULL, NULL, NULL, NULL, NULL, '2023-04-16 13:49:13', 1),
+(255, '70663', 0x038e973a488134d8436c8bae5b50d66c, '2023-04-16', 'Pepe', 'Grillo', 'Pillo', 'Vanillo', '1994-11-22', 9, 16, 753, '2023-04-18', NULL, '2023-04-16 14:51:36', 1),
+(256, '999998', 0x75a1d6a76e48987599d8e331c08d260b, '2023-04-16', 'Eifen', 'Pibe', 'Kurosaki', 'Tanuko', '1994-11-22', 16, 16, 988, '2023-04-18', NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -755,7 +925,7 @@ CREATE TABLE `tbl_usuarios_contacto` (
   `Correo_secundario` varchar(255) DEFAULT NULL,
   `Telefono_principal` varchar(30) DEFAULT NULL,
   `Telefono_secundario` varchar(30) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_contacto`
@@ -1001,7 +1171,10 @@ INSERT INTO `tbl_usuarios_contacto` (`Id`, `Id_usuario`, `Correo_principal`, `Co
 (245, 245, 'mary.rojas@crowe.com.ve', '', '(0412) - 610 0692', ''),
 (246, 246, 'rubi.ramirez@crowe.com.ve', '', '(0412) - 910 1603', ''),
 (247, 247, 'carlosnavased@gmail.com', '', '(0424) - 281 3276', ''),
-(248, 248, 'miriam.hidalgo@crowe.com.ve', '', '(0412) - 541 1409', '');
+(248, 248, 'miriam.hidalgo@crowe.com.ve', '', '(0412) - 541 1409', ''),
+(249, 252, 'carlosnavased@gmail.com', NULL, '04242813274', NULL),
+(250, 255, 'carlosnavased2@gmail.com', 'carlosnavased3@gmail.com', '04242813275', NULL),
+(251, 256, 'eifenhard@hotmail.com', 'eifenhard@hotmail.com', '04242813275', NULL);
 
 -- --------------------------------------------------------
 
@@ -1013,7 +1186,7 @@ CREATE TABLE `tbl_usuarios_direccion_estado` (
   `Id` int(11) NOT NULL,
   `NombreEstado` text NOT NULL,
   `Iso3166-2` varchar(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_direccion_estado`
@@ -1056,7 +1229,7 @@ CREATE TABLE `tbl_usuarios_direccion_municipio` (
   `Id` int(11) NOT NULL,
   `Id_direccion_estado` int(11) NOT NULL,
   `NombreMunicipio` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_direccion_municipio`
@@ -1409,7 +1582,7 @@ CREATE TABLE `tbl_usuarios_direccion_parroquia` (
   `Id` int(11) NOT NULL,
   `Id_direccion_municipio` int(11) NOT NULL,
   `NombreParroquia` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_direccion_parroquia`
@@ -2565,8 +2738,8 @@ CREATE TABLE `tbl_usuarios_documentoidentidad` (
   `Id` int(11) NOT NULL,
   `Id_usuario` int(11) NOT NULL,
   `Id_tipo_documento` int(11) NOT NULL,
-  `Descripcion` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `Descripcion` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_documentoidentidad`
@@ -2812,7 +2985,10 @@ INSERT INTO `tbl_usuarios_documentoidentidad` (`Id`, `Id_usuario`, `Id_tipo_docu
 (245, 245, 1, '7927516'),
 (246, 246, 1, '11784700'),
 (247, 247, 1, '22667607'),
-(248, 248, 1, '15759452');
+(248, 248, 1, '15759452'),
+(249, 252, 1, '22667607'),
+(250, 255, 1, '22667607'),
+(251, 256, 1, '12345678');
 
 -- --------------------------------------------------------
 
@@ -2825,7 +3001,7 @@ CREATE TABLE `tbl_usuarios_documentoidentidad_tipo` (
   `Abreviatura` varchar(5) NOT NULL,
   `Descripcion` varchar(20) NOT NULL,
   `Id_estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_documentoidentidad_tipo`
@@ -2847,7 +3023,7 @@ CREATE TABLE `tbl_usuarios_jerarquia_cargo` (
   `Id_TipoCargo` int(11) NOT NULL,
   `Jerarquia` int(11) NOT NULL,
   `Id_Estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_jerarquia_cargo`
@@ -2907,7 +3083,7 @@ CREATE TABLE `tbl_usuarios_jerarquia_division` (
   `Id` int(11) NOT NULL,
   `Descripcion` text NOT NULL,
   `Id_Estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_jerarquia_division`
@@ -3072,7 +3248,7 @@ ALTER TABLE `tbl_control_encryptkey`
 -- AUTO_INCREMENT de la tabla `tbl_control_error`
 --
 ALTER TABLE `tbl_control_error`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_control_error_tipomensaje`
@@ -3090,13 +3266,13 @@ ALTER TABLE `tbl_control_error_tipoobjeto`
 -- AUTO_INCREMENT de la tabla `tbl_control_estatus`
 --
 ALTER TABLE `tbl_control_estatus`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_control_logs_bitacora`
 --
 ALTER TABLE `tbl_control_logs_bitacora`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_control_logs_bitacora_accion`
@@ -3114,13 +3290,13 @@ ALTER TABLE `tbl_control_tipocargo`
 -- AUTO_INCREMENT de la tabla `tbl_usuarios`
 --
 ALTER TABLE `tbl_usuarios`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=249;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=257;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_usuarios_contacto`
 --
 ALTER TABLE `tbl_usuarios_contacto`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=249;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=252;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_usuarios_direccion_estado`
@@ -3144,7 +3320,7 @@ ALTER TABLE `tbl_usuarios_direccion_parroquia`
 -- AUTO_INCREMENT de la tabla `tbl_usuarios_documentoidentidad`
 --
 ALTER TABLE `tbl_usuarios_documentoidentidad`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=249;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=252;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_usuarios_documentoidentidad_tipo`
