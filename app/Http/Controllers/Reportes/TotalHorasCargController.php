@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Reportes;
 use Illuminate\Http\Request;
-use App\Models\Reportes\TotalHorasCargModel;
+use App\Models\Reportes\TotalHorasCargModel as ModeloHoras;
 
 use App\Http\Controllers\Controller;
 
@@ -10,24 +10,22 @@ class TotalHorasCargController extends Controller
 {
 
     function dataRepTotalHorasCarg(){
-
-      $modelo = new TotalHorasCargModel();
-
-      $paginar = 200;
-      $cargos = $modelo->cargos();
-      $divisiones = $modelo->divisiones();
-      $fecha_desde = date("Y-m-01");
-      $fecha_hasta = date("Y-m-d");      
-      $totales = $modelo ->horasCargadas($fecha_desde, $fecha_hasta, $divisiones, $cargos);      
-      $paginas = 1;      
-      return [
-        "cargos" => $cargos,
-        "divisiones" => $divisiones,
-        "totales" => $totales,
-        "paginas" => $paginas,
-        "paginar" => $paginar,
-        "response" => true,
-      ];
+        //Agrupamos la data
+        $paginar = 200;
+        $cargos = ModeloHoras::Cargos();
+        $divisiones = ModeloHoras::Divisiones();
+        $fecha_desde = date("Y-m-01");
+        $fecha_hasta = date("Y-m-d");
+        $totales = ModeloHoras::ReporteActualCargabilidad($fecha_desde, $fecha_hasta, $divisiones, $cargos);
+        $paginas = 1;
+        return [
+            "cargos" => $cargos,
+            "divisiones" => $divisiones,
+            "totales" => $totales,
+            "paginas" => $paginas,
+            "paginar" => $paginar,
+            "response" => true,
+        ];
 
     }
 
@@ -43,10 +41,10 @@ class TotalHorasCargController extends Controller
       $fecha_hasta = $request->input("fecha_hasta");
       if ($fecha_desde === null) {
         $fecha_desde = date("Y-m-01");
-        $fecha_hasta = date("Y-m-d"); 
+        $fecha_hasta = date("Y-m-d");
       }else if ($fecha_hasta === null) {
-        $fecha_hasta = date("Y-m-d"); 
-      }     
+        $fecha_hasta = date("Y-m-d");
+      }
       $divisiones = ($request->input("divisiones") == null) ? $division : $request->input("divisiones");
       $cargos = ($request->input("cargos") == null) ? $cargo : $request->input("cargos");
       $empleado = $request->input("empleado");
@@ -57,7 +55,7 @@ class TotalHorasCargController extends Controller
       return [
         "cargos" => $cargos,
         "divisiones" => $divisiones,
-        "totales" => $totales,
+        "totales" => '',
         "paginas" => $paginas,
         "paginar" => $paginar,
         "response" => true,

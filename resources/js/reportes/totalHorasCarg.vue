@@ -354,18 +354,26 @@
 
             self.tabla.encabezado = [
               { key: 'numero', label: '#' },
-              { key: 'nombre', label: 'Empleado' },
+              { key: 'nombre', label: 'Nombre y Apellido' },
               { key: 'total_horas_cargables', label: 'Total horas cargables' },
-              //{ key: 'porcen_horas_cargables', label: '% Horas Clientes' },
-              { key: 'porcen_carga_cliente', label: '% Carga cliente' },
-              { key: 'total_horas_no_cargables', label: 'Horas no cargables' },
-              //{ key: 'porcen_horas_no_cargables', label: '% Horas No Cargables' },
-              { key: 'porcen_carga_no_cliente', label: '% Carga no cliente' },
+              { key: 'usuario_cargo', label: "Cargo"},
+              { key: 'usuario_division', label: "Division"},
+              //Proyectos
+              { key: 'total_horas_cargables', label: 'Horas Proy' },
+              { key: 'porcen_horas_cargables', label: '% Proy' },
+              //Administrativos
+              { key: 'total_horas_no_cargables', label: 'Horas Admon' },
+              { key: 'porcen_horas_no_cargables', label: '% Horas Admon' },
+              //Total Horas
               { key: 'total_horas', label: 'Total horas' },
-              { key: 'porcen_carga_total', label: '% Carga total (Ref: '+parseInt(response.data.totales[0].maximo_horas)+' Horas)' },
-              //{ key: 'exceso', label: 'Exceso' },
+              { key: 'porcen_carga_total', label: '% Carga total' },
+              { key: 'ref_usuario_total', label: 'Ref Total'},
+              //Exceso
               { key: 'exceso_cargables', label: 'Exceso carga cliente' },
               { key: 'exceso_no_cargables', label: 'Exceso carga no cliente' },
+              //Fecha
+              { key: 'fecha_ingreso', label: 'Fecha Ingreso'},
+              { key: 'fecha_egreso', label: 'Fecha Egreso'}
 
             ];
 
@@ -380,7 +388,7 @@
 
             self.maximo_horas = parseInt(response.data.totales[0].maximo_horas);
             self.formFiltro.campos.cargos.listado = response.data.cargos;
-            self.formFiltro.campos.divisiones.listado = response.data.divisiones;        
+            self.formFiltro.campos.divisiones.listado = response.data.divisiones;
 
             self.tabla.paginador.paginar = response.data.paginar;
             self.tabla.paginador.numPaginas = 1;
@@ -601,7 +609,7 @@
             self.formFiltro.campos.empleado.disabled = false;
             self.formFiltro.campos.fechaDesde.disabled = false;
             self.formFiltro.campos.fechaHasta.disabled = false;
-            
+
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
             self.formFiltro.btn.filtrar.disabled = false;
             self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
