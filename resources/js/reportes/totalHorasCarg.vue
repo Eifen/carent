@@ -41,7 +41,7 @@
              </template>
           </multiselect>
         </b-form-group>
-        <b-form-group
+        <!--<b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
           label="Cargos"
           label-for="cargos"
@@ -63,7 +63,7 @@
                              v-if="values.length &amp;&amp; !isOpen">{{ values.length }} seleccionado(s)</span>
              </template>
           </multiselect>
-        </b-form-group>
+        </b-form-group> -->
         <b-form-group
           :invalid-feedback="formFiltro.campos.fechaDesde.invalidFeedback"
           class="form-group col-12 col-sm-6 col-md-4"
@@ -242,11 +242,11 @@
               }
             },
             campos: {
-              cargos:{
-                disabled: true,
-                listado: [],
-                value: []
-              },
+              // cargos:{
+              //   disabled: true,
+              //   listado: [],
+              //   value: []
+              // },
               divisiones:{
                 disabled: true,
                 listado: [],
@@ -349,13 +349,12 @@
 
         axios.get('/dataRepTotalHorasCarg')
         .then(function (response) {
-
+          console.log(response);
           if(response.status === 200 && response.data.response === true){
 
             self.tabla.encabezado = [
               { key: 'numero', label: '#' },
               { key: 'nombre', label: 'Nombre y Apellido' },
-              { key: 'total_horas_cargables', label: 'Total horas cargables' },
               { key: 'usuario_cargo', label: "Cargo"},
               { key: 'usuario_division', label: "Division"},
               //Proyectos
@@ -369,8 +368,8 @@
               { key: 'porcen_carga_total', label: '% Carga total' },
               { key: 'ref_usuario_total', label: 'Ref Total'},
               //Exceso
-              { key: 'exceso_cargables', label: 'Exceso carga cliente' },
-              { key: 'exceso_no_cargables', label: 'Exceso carga no cliente' },
+              //{ key: 'exceso_cargables', label: 'Exceso carga cliente' },
+              //{ key: 'exceso_no_cargables', label: 'Exceso carga no cliente' },
               //Fecha
               { key: 'fecha_ingreso', label: 'Fecha Ingreso'},
               { key: 'fecha_egreso', label: 'Fecha Egreso'}
@@ -387,14 +386,14 @@
             }
 
             self.maximo_horas = parseInt(response.data.totales[0].maximo_horas);
-            self.formFiltro.campos.cargos.listado = response.data.cargos;
+            //self.formFiltro.campos.cargos.listado = response.data.cargos;
             self.formFiltro.campos.divisiones.listado = response.data.divisiones;
 
             self.tabla.paginador.paginar = response.data.paginar;
             self.tabla.paginador.numPaginas = 1;
             self.tabla.paginador.max = 1;
 
-            self.formFiltro.campos.cargos.disabled = false;
+            //self.formFiltro.campos.cargos.disabled = false;
             self.formFiltro.campos.divisiones.disabled = false;
             self.formFiltro.campos.empleado.disabled = false;
             self.formFiltro.campos.fechaDesde.disabled = false;
@@ -504,7 +503,7 @@
         },
         buscar: function(){
 
-          self.formFiltro.campos.cargos.disabled = true;
+          //self.formFiltro.campos.cargos.disabled = true;
           self.formFiltro.campos.divisiones.disabled = true;
           self.formFiltro.campos.empleado.disabled = true;
           self.formFiltro.campos.fechaDesde.disabled = true;
@@ -526,26 +525,26 @@
             var param_divisiones = null;
           }
 
-          //Evaluamos como filtraremos los cargos
-          if(self.formFiltro.campos.cargos.value.length === 0 && self.formFiltro.campos.cargos.listado.length > 1){
-            var param_cargos = null;
-          }else if(self.formFiltro.campos.cargos.value.length > 0){
+          // //Evaluamos como filtraremos los cargos
+          // if(self.formFiltro.campos.cargos.value.length === 0 && self.formFiltro.campos.cargos.listado.length > 1){
+          //   var param_cargos = null;
+          // }else if(self.formFiltro.campos.cargos.value.length > 0){
 
-            var param_cargos = [];
-            self.formFiltro.campos.cargos.value.forEach((cargo, index) => {
-              param_cargos.push({id: cargo.id});
-            });
+          //   var param_cargos = [];
+          //   self.formFiltro.campos.cargos.value.forEach((cargo, index) => {
+          //     param_cargos.push({id: cargo.id});
+          //   });
 
-          }else if(self.formFiltro.campos.cargos.value.length === 0 && self.formFiltro.campos.cargos.listado.length === 1){
-            var param_cargos = self.formFiltro.campos.cargos.listado[0].id;
-          }else{
-            var param_cargos = null;
-          }
+          // }else if(self.formFiltro.campos.cargos.value.length === 0 && self.formFiltro.campos.cargos.listado.length === 1){
+          //   var param_cargos = self.formFiltro.campos.cargos.listado[0].id;
+          // }else{
+          //   var param_cargos = null;
+          // }
 
           //Obtenemos los valores
           let desde = (self.tabla.paginador.pagina - 1) * self.tabla.paginador.paginar;
           let parametros = {
-            cargos: param_cargos,
+            //cargos: param_cargos,
             desde: desde,
             divisiones: param_divisiones,
             empleado: self.formFiltro.campos.empleado.value,
@@ -558,7 +557,7 @@
           axios.get('/buscarRepTotalHorasCarg', {params: parametros})
           .then(function (response) {
 
-            self.formFiltro.campos.cargos.disabled = false;
+            //self.formFiltro.campos.cargos.disabled = false;
             self.formFiltro.campos.divisiones.disabled = false;
             self.formFiltro.campos.empleado.disabled = false;
             self.formFiltro.campos.fechaDesde.disabled = false;
@@ -604,7 +603,7 @@
 
           }).catch(error => {
 
-            self.formFiltro.campos.cargos.disabled = false;
+            //self.formFiltro.campos.cargos.disabled = false;
             self.formFiltro.campos.divisiones.disabled = false;
             self.formFiltro.campos.empleado.disabled = false;
             self.formFiltro.campos.fechaDesde.disabled = false;
@@ -620,7 +619,7 @@
         },
         limpiarFiltro: function(){
 
-          self.formFiltro.campos.cargos.value = [];
+          //self.formFiltro.campos.cargos.value = [];
           self.formFiltro.campos.divisiones.value = [];
           self.formFiltro.campos.empleado.value = null;
           self.formFiltro.campos.fechaDesde.value = null;
