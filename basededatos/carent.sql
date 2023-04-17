@@ -365,7 +365,7 @@ DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
       COMMIT;
   END;
   START TRANSACTION;
-SELECT DATE_ADD(CURDATE(), INTERVAL 60 DAY) INTO v_fecha_creacion_cliente;
+
 INSERT INTO tbl_cliente(id, id_usuario_socio, codigo, rif, nit, razon_social, id_pais, direccion, telefono_fiscal, pagina_web, email_fiscal, id_estatus) VALUES (null, p_id_usuario_socio, p_codigo_cliente, p_rif, null, p_razon_social, p_id_pais, p_direccion, p_telefono_fiscal, p_pagina_web, p_email_fiscal, 1);
 SET v_sql_bitacora = CONCAT('INSERT INTO tbl_cliente (id, id_usuario_socio, codigo, rif, nit, razon_social, id_pais, direccion, telefono_fiscal, pagina_web, email_fiscal, id_estatus) VALUES (null, "',p_id_usuario_socio,'", "',p_codigo_cliente,'", "',p_rif,'", null, "',p_razon_social,'", "',p_id_pais,'", "',p_direccion,'", "',p_telefono_fiscal,'", "',p_pagina_web,'", "',p_email_fiscal,'", 1)');
 SET @nuevo_valor = CONCAT('{"id_usuario_socio": "',p_id_usuario_socio,'", "codigo": "',p_codigo_cliente,'", "rif": "',p_rif,'", "razon_social": "',p_razon_social,'", "id_pais": "',p_id_pais,'", "direccion": "',p_direccion,'", "telefono_fiscal": "',p_telefono_fiscal,'", "pagina_web": "',p_pagina_web,'", "email_fiscal": "',p_email_fiscal,'", "id_estatus": ",1,"}');
