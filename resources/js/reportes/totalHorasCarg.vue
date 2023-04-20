@@ -352,7 +352,6 @@
           if(response.status === 200 && response.data.response === true){
 
             self.tabla.encabezado = [
-              { key: 'numero', label: '#' },
               { key: 'nombre', label: 'Nombre y Apellido' },
               { key: 'usuario_cargo', label: "Cargo"},
               { key: 'usuario_division', label: "Division"},
@@ -374,7 +373,6 @@
               { key: 'fecha_egreso', label: 'Fecha Egreso'}
 
             ];
-
             let mensaje = "Ingrese un empleado y/o una división para generar el reporte";
               self.mostrarAlert(self.tabla.alert, true, "warning", mensaje, false, false, 0);
 
@@ -458,7 +456,6 @@
           for (const division in datos) {
             for (const user in datos[division]) {
               const data = {
-                numero: contadorRegistros,
                 nombre: datos[division][user].nombre,
                 usuario_cargo: datos[division][user].usuario_cargo,
                 usuario_division: datos[division][user].usuario_division,
@@ -545,6 +542,7 @@
           //Se utiliza el metodo get para su busqueda y se envian con los parametros
           axios.get('/buscarRepTotalHorasCarg', {params: parametros})
           .then(function (response) {
+            console.log(response);
             //self.formFiltro.campos.cargos.disabled = false;
             self.formFiltro.campos.divisiones.disabled = false;
             self.formFiltro.campos.empleado.disabled = false;
@@ -564,7 +562,6 @@
             self.tabla.paginador.max = parseInt(response.data.paginas);
 
             self.tabla.encabezado = [
-              { key: 'numero', label: '#' },
               { key: 'nombre', label: 'Nombre y Apellido' },
               { key: 'usuario_cargo', label: "Cargo"},
               { key: 'usuario_division', label: "Division"},

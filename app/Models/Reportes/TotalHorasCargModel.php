@@ -26,11 +26,25 @@ class TotalHorasCargModel extends Model
     static function Cargos($Id_cargo)
     {
         $getCargo = DB::table('tbl_cargo_empleado')
-        ->where('id',$Id_cargo)
+        ->where('id','=',$Id_cargo)
         ->get(['id', 'descripcion','orden']);
 
         return $getCargo[0];
     } // Fin cargos
+
+    /**
+     * Metodo que abstrae la cargabilidad de las divisiones
+     */
+    static function DivisionCargabilidad($id_cargo,$Id_Tipo_Division)
+    {
+        $getCargabilidad = DB::table('tbl_division_cargabilidad')
+        ->where([
+            ["id_cargo","=",$id_cargo],
+            ["id_tipo_division","=",$Id_Tipo_Division]])
+        ->first(['porcentaje']);
+
+        return $getCargabilidad; //Obtenemos un unico valor
+    }
 
     /**
      * Metodo que abstrae las divisiones de la base de datos
@@ -41,10 +55,10 @@ class TotalHorasCargModel extends Model
     {
         if($DivisionArray !== null)
         {
-            return DB::table('tbl_division')->whereIn('id',$DivisionArray)->get(['id','descripcion']);
+            return DB::table('tbl_division')->whereIn('id',$DivisionArray)->get(['id','descripcion','id_tipo']);
         }; 
 
-        return DB::table('tbl_division')->get(['id', 'descripcion']);
+        return DB::table('tbl_division')->get(['id', 'descripcion','id_tipo']);
     } // Fin divisiones
 
     /**
@@ -154,6 +168,15 @@ class TotalHorasCargModel extends Model
                 $ReferenciaTotal = $this->rangoFechasUsers[$cursorUser][$division]["horasRef"];
 
                 $Cargo = $this->Cargos($usuario->id_cargo);
+
+                #Definimos la cargabilidad
+
+                $Division = $this->Divisiones([$usuario->id_division]);
+                $Cargabilidad = $this->DivisionCargabilidad($Cargo->id, $Division[0]->id_tipo);
+
+                #Porcentaje total
+                $PerTotal = ($HoraTotal * 100) / ($HoraTotal != 0 ? $ReferenciaTotal : 1);
+
                 #Array Reporte
                 $reportDTO[$cursorUser][$division] = array(
                     "id"=> $usuario->id,
@@ -165,11 +188,12 @@ class TotalHorasCargModel extends Model
                     'total_horas_no_cargables' => $HorasAdmon,
                     'porcen_horas_no_cargables' => ($HorasAdmon * 100) / ($HorasAdmon != 0 ? $ReferenciaTotal : 1),
                     'total_horas' => $HoraTotal,
-                    'porcen_carga_total' => ($HoraTotal * 100) / ($HoraTotal != 0 ? $ReferenciaTotal : 1),
+                    'porcen_carga_total' => $PerTotal,
                     'ref_usuario_total' => $ReferenciaTotal,
-                    'fecha_ingreso' => date('Y-m-d',strtotime($usuario->fecha_ingreso)),
-                    'fecha_egreso' => date('Y-m-d', strtotime($usuario->fecha_egreso)),
-                    'orden' => $Cargo->orden
+                    'fecha_ingreso' => ($usuario->fecha_ingreso === null ? $usuario->fecha_ingreso : date('Y-m-d',strtotime($usuario->fecha_ingreso))),
+                    'fecha_egreso' => ($usuario->fecha_egreso === null ? $usuario->fecha_egreso : date('Y-m-d',strtotime($usuario->fecha_egreso))),
+                    'orden' => $Cargo->orden,
+                    'eficiencia' => $Cargabilidad
                 );
             }
         }
@@ -189,13 +213,12 @@ class TotalHorasCargModel extends Model
         if($empleado !== null) $empleadoDTO = explode(" ",$empleado);
 
         $getUsersByDivision = DB::table('tbl_usuario')
-        ->where([
-            ['id_division', '=', $idDivision],
-            ['nombre_1', 'like', "%".(isset($empleadoDTO[0]) ? $empleadoDTO[0] : "")."%"],
-            ['nombre_2', 'like', "%".(isset($empleadoDTO[1]) ? $empleadoDTO[0] : "")."%"],
-            ['apellido_1', 'like', "%".(isset($empleadoDTO[2]) ? $empleadoDTO[0] : "")."%"],
-            ['apellido_2', 'like', "%".(isset($empleadoDTO[3]) ? $empleadoDTO[0] : "")."%"],
-        ])
+        ->where('id_division', '=', $idDivision)
+        ->whereRaw('CONCAT(nombre_1,nombre_2,apellido_1,apellido_2) LIKE 
+                    "%'.(isset($empleadoDTO[0]) ? $empleadoDTO[0] : "").
+                    '%'.(isset($empleadoDTO[1]) ? $empleadoDTO[1] : "").
+                    '%'.(isset($empleadoDTO[2]) ? $empleadoDTO[2] : "").
+                    '%'.(isset($empleadoDTO[3]) ? $empleadoDTO[3] : "").'%"')
         ->get([
             'id',
             'codigo',
