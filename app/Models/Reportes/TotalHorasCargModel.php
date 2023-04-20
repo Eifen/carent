@@ -2,6 +2,8 @@
 
 namespace App\Models\Reportes;
 
+use DateInterval;
+use DateTime;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,12 +19,31 @@ class TotalHorasCargModel extends Model
     Array que almacena todas las horas totales en funcion al empleado. Formato:
     [['id' => idUser, 'horasTotales' => totalHorasEmpleado],[...]]*/
 
-    static function Cargos()
+    /**
+     * Busca el cargo del cliente en funcion de la id que tenga registrada
+     * @param Number $Id_cargo Almacena un numero con el cargo del usuario
+     */
+    static function Cargos($Id_cargo)
     {
-        return DB::table('tbl_cargo_empleado')->get(['id', 'descripcion']);
+        $getCargo = DB::table('tbl_cargo_empleado')
+        ->where('id',$Id_cargo)
+        ->get(['id', 'descripcion','orden']);
+
+        return $getCargo[0];
     } // Fin cargos
-    static function Divisiones()
+
+    /**
+     * Metodo que abstrae las divisiones de la base de datos
+     * @param Array $Iddivision captura el id de la division
+     * @return Array Retorna un array de objetos. La longitud depende de las divisiones
+     */
+    static function Divisiones($DivisionArray=null)
     {
+        if($DivisionArray !== null)
+        {
+            return DB::table('tbl_division')->whereIn('id',$DivisionArray)->get(['id','descripcion']);
+        }; 
+
         return DB::table('tbl_division')->get(['id', 'descripcion']);
     } // Fin divisiones
 
@@ -42,153 +63,115 @@ class TotalHorasCargModel extends Model
 
         for ($cursor = 0; $cursor < count($divisiones); $cursor++) {
             # LLamamos al método estatico
-            $this->getUsersPerDivision[$cursor] = $this->GetUsersByDivisionId($divisiones[$cursor]->id);
-            //Creamos el array de usuarios dependiendo de la division
+            $this->getUsersPerDivision[$cursor] = $this->GetUsersByDivisionId($divisiones[$cursor]->id,$empleado);
+            //Creamos el array de usuarios dependiendo de la division. Quitamos los array vacios
         }
 
         //Comparamos las fechas de cada usuario
-        $contadorFechas = 0;
         for ($cursor2 = 0; $cursor2 < count($this->getUsersPerDivision); $cursor2++) {
             //Agrupamos la fecha de ingreso
             foreach ($this->getUsersPerDivision[$cursor2] as $column => $valor) {
                 //Fecha ingreso
                 !is_null($valor->fecha_ingreso)
-                    ? $this->fecha_ingreso = date($valor->fecha_ingreso)
-                    : $this->fecha_ingreso = date('Y-m-d', PHP_INT_MIN);
+                    ? $this->fecha_ingreso = date('Y-m-d',strtotime($valor->fecha_ingreso))
+                    : $this->fecha_ingreso = date('Y-m-d', strtotime($fecha_desde . " -1 day"));
 
                 //Fecha de egreso
                 !is_null($valor->fecha_egreso)
-                    ? $this->fecha_egreso = date($valor->fecha_egreso)
-                    : $this->fecha_egreso = date('Y-m-d', PHP_INT_MAX);
-
-                $this->rangoFechasUsers[$cursor2] = [$valor->fecha_ingreso,$valor->fecha_egreso];
+                    ? $this->fecha_egreso = date('Y-m-d',strtotime($valor->fecha_egreso))
+                    : $this->fecha_egreso = date('Y-m-d', strtotime($fecha_hasta . " +1 day"));
 
                 //Comparamos para calcular las horas totales en función de cada empleado
-                // switch (true) {
-                //         //Ingreso despues del intervalo inicial
-                //     case $fecha_desde < $this->fecha_ingreso:
-                //         $this->totalHorasEmpleado = $this->GetHorasTotales($this->fecha_ingreso, $fecha_hasta);
-                //         break;
-                //         //Egreso antes del intervalo final
-                //     case $fecha_hasta > $this->fecha_egreso:
-                //         $this->totalHorasEmpleado = $this->GetHorasTotales($fecha_desde, $this->fecha_egreso);
-                //         break;
-                //         //Ingreso despues y egreso antes de los intervalos
-                //     case $fecha_desde < $this->fecha_ingreso && $fecha_hasta > $this->fecha_egreso:
-                //         $this->totalHorasEmpleado = $this->GetHorasTotales($this->fecha_ingreso, $this->fecha_egreso);
-                //         break;
-                //         //Su ingreso y egreso esta fuera de las intervalos
-                //     default:
-                //         $this->totalHorasEmpleado = $this->totalHoras;
-                //         break;
-                // }
+                switch (true) {
+                        //Ingreso despues del intervalo inicial
+                    case $fecha_desde < $this->fecha_ingreso:
+                        $this->totalHorasEmpleado = $this->GetHorasTotales($this->fecha_ingreso, $fecha_hasta);
+                        break;
+                        //Egreso antes del intervalo final
+                    case $fecha_hasta > $this->fecha_egreso:
+                        $this->totalHorasEmpleado = $this->GetHorasTotales($fecha_desde, $this->fecha_egreso);
+                        break;
+                        //Ingreso despues y egreso antes de los intervalos
+                    case $fecha_desde < $this->fecha_ingreso && $fecha_hasta > $this->fecha_egreso:
+                        $this->totalHorasEmpleado = $this->GetHorasTotales($this->fecha_ingreso, $this->fecha_egreso);
+                        break;
+                        //Su ingreso y egreso esta fuera de las intervalos
+                    default:
+                        $this->totalHorasEmpleado = $this->totalHoras;
+                        break;
+                }
+
+                $this->rangoFechasUsers[$cursor2][$column] = array(
+                    "id" => $valor->id,
+                    "horasRef" => $this->totalHorasEmpleado
+                ); 
             }
         }
 
-        return $this->rangoFechasUsers;
+        return $this->MakeReport($fecha_desde,$fecha_hasta);
     }
 
     /**
      * Metodo que genera el reporte de horas de cargabilidad
      * @param mixed $fecha_desde Inicio del intervalo del reporte
      * @param mixed $fecha_hasta Fin del intervalo del reporte
-     * @param mixed $empleado String que contiene el nombre de un empleado. Por defecto es null
      * @return Array retorna un array con el reporte ya generado
      */
-    protected  function MakeReport($fecha_desde, $fecha_hasta, $empleado  = null)
+    protected  function MakeReport($fecha_desde, $fecha_hasta)
     {
         $reportDTO = []; //Objeto de transferencia de data
         $userDTOArray = $this->getUsersPerDivision; //Objeto de transferencia para users
 
-        if ($empleado != null) {
-            $separarArray = explode(" ", $empleado); //[0] = nombre_1,[1] = nombre_2,[2] = apellido_1, [3] = apellido_2
+        for ($cursorUser=0; $cursorUser < count($userDTOArray) ; $cursorUser++) { 
+            # code...
+            foreach ($userDTOArray[$cursorUser] as $division => $usuario) {
+                # Nombre
+                $NombreCompleto = implode(" ",[
+                    $usuario->nombre_1,
+                    $usuario->nombre_2,
+                    $usuario->apellido_1,
+                    $usuario->apellido_2,
+                ]);
 
-            //Creamos un nuevo array depende de la longitud del array en el explode y del nombre introducido
-            switch (count($separarArray)) {
-                case 1:
-                    $userDTOArray = array_filter($this->getUsersPerDivision, function ($row) use ($separarArray) {
-                        return strpos($row['nombre_1'], $separarArray[0]) !== false;
-                    });
-                    break;
-                case 2:
-                    $userDTOArray = array_filter($this->getUsersPerDivision, function ($row) use ($separarArray) {
-                        return strpos($row['nombre_1'], $separarArray[0]) !== false ||
-                            strpos($row['nombre_2'], $separarArray[1]) !== false ||
-                            (strpos($row['nombre_1'], $separarArray[0]) !== false &&
-                                strpos($row['nombre_2'], $separarArray[1]) !== false);
-                    });
-                    break;
-                case 3:
-                    $userDTOArray = array_filter($this->getUsersPerDivision, function ($row) use ($separarArray) {
-                        return strpos($row['nombre_1'], $separarArray[0]) !== false ||
-                            strpos($row['nombre_2'], $separarArray[1]) !== false ||
-                            strpos($row['apellido_1'], $separarArray[2]) !== false ||
-                            (strpos($row['nombre_1'], $separarArray[0]) !== false &&
-                                strpos($row['nombre_2'], $separarArray[1]) !== false &&
-                                strpos($row['apellido_1'], $separarArray[2]) !== false);
-                    });
-                    break;
+                # Horas Cargables
+                $HorasProy = intval($this->GetHorasProyAdmin(
+                    $fecha_desde,
+                    $fecha_hasta,
+                    $usuario->id,
+                    2));
 
-                default:
-                    $userDTOArray = array_filter($this->getUsersPerDivision, function ($row) use ($separarArray) {
-                        return strpos($row['nombre_1'], $separarArray[0]) !== false ||
-                            strpos($row['nombre_2'], $separarArray[1]) !== false ||
-                            strpos($row['apellido_1'], $separarArray[2]) !== false ||
-                            strpos($row['apellido_2'], $separarArray[3]) !== false ||
-                            (strpos($row['nombre_1'], $separarArray[0]) !== false &&
-                                strpos($row['nombre_2'], $separarArray[1]) !== false &&
-                                strpos($row['apellido_1'], $separarArray[2]) !== false &&
-                                strpos($row['apellido_2'], $separarArray[3]) !== false);
-                    });
-                    break;
+                # Horas No Cargables
+                $HorasAdmon = intval($this->GetHorasProyAdmin(
+                    $fecha_desde,
+                    $fecha_hasta,
+                    $usuario->id,
+                    1));
+                
+                #Hora Total
+                $HoraTotal = $HorasAdmon + $HorasProy;
+
+                #Ref Hora Empleado
+                $ReferenciaTotal = $this->rangoFechasUsers[$cursorUser][$division]["horasRef"];
+
+                $Cargo = $this->Cargos($usuario->id_cargo);
+                #Array Reporte
+                $reportDTO[$cursorUser][$division] = array(
+                    "id"=> $usuario->id,
+                    "nombre"=> $NombreCompleto,
+                    "usuario_cargo" => $Cargo->descripcion,
+                    "usuario_division" => $this->Divisiones([$usuario->id_division])[0]->descripcion,
+                    'total_horas_cargables' => $HorasProy,
+                    'porcen_horas_cargables' => ($HorasProy * 100) / ($HorasProy != 0 ? $ReferenciaTotal : 1),
+                    'total_horas_no_cargables' => $HorasAdmon,
+                    'porcen_horas_no_cargables' => ($HorasAdmon * 100) / ($HorasAdmon != 0 ? $ReferenciaTotal : 1),
+                    'total_horas' => $HoraTotal,
+                    'porcen_carga_total' => ($HoraTotal * 100) / ($HoraTotal != 0 ? $ReferenciaTotal : 1),
+                    'ref_usuario_total' => $ReferenciaTotal,
+                    'fecha_ingreso' => date('Y-m-d',strtotime($usuario->fecha_ingreso)),
+                    'fecha_egreso' => date('Y-m-d', strtotime($usuario->fecha_egreso)),
+                    'orden' => $Cargo->orden
+                );
             }
-        }
-
-        #Seccionamos el código dependiendo si existe empleado o no
-        for ($cursor = 0; $cursor < count($userDTOArray); $cursor++) {
-            #Nombre
-            $NombreCompleto = implode(" ", [
-                $userDTOArray[$cursor]['nombre_1'],
-                $userDTOArray[$cursor]['nombre_2'],
-                $userDTOArray[$cursor]['Apellido_1'],
-                $userDTOArray[$cursor]['Apellido_2'],
-            ]);
-            #Horas Cargables
-            $HorasProy = intval(self::GetHorasProyAdmin(
-                $fecha_desde,
-                $fecha_hasta,
-                $userDTOArray[$cursor]['id'],
-                2
-            ), 10);
-
-            #Horas No Cargables
-            $HorasAdmon = intval(self::GetHorasProyAdmin(
-                $fecha_desde,
-                $fecha_hasta,
-                $userDTOArray[$cursor]['id'],
-                1
-            ), 10);
-
-            #Horas totales
-            $HoraTotal = $HorasAdmon + $HorasProy;
-
-            #Referencia Horas
-            $ReferenciaTotal = $this->rangoFechasUsers[$cursor]['horasTotales'];
-
-            #Array Reporte
-            $reportDTO[$cursor] = array(
-                'id' => $userDTOArray[$cursor]['id'],
-                'nombre' => $NombreCompleto,
-                'total_horas_cargables' => $HorasProy,
-                'porcen_horas_cargables' => ($HorasProy * 100) / $ReferenciaTotal,
-                'total_horas_no_cargables' => $HorasAdmon,
-                'porcen_horas_no_cargables' => ($HorasAdmon * 100) / $ReferenciaTotal,
-                'total_horas' => $HoraTotal,
-                'porcen_carga_total' => ($HoraTotal * 100) / $ReferenciaTotal,
-                'ref_usuario_total' => $ReferenciaTotal,
-                'fecha_ingreso' => $userDTOArray[$cursor]['fecha_ingreso'],
-                'fecha_egreso' => $userDTOArray[$cursor]['fecha_egreso']
-            );
         }
 
         return $reportDTO;
@@ -196,11 +179,24 @@ class TotalHorasCargModel extends Model
 
     /**
      * Metodo privado que devuelve la lista de usuarios en funcion de la division
-     * @param mixed $idDivision almacena el Id de la division
+     * @param Number $idDivision almacena el Id de la division
+     * @param String $empleado Nombre del empleado en caos que queramos filtrar por empleado
      */
-    protected  function GetUsersByDivisionId($idDivision)
+    protected  function GetUsersByDivisionId($idDivision,$empleado = null)
     {
-        $getUsersByDivision = DB::table('tbl_usuario')->where('id_division', '=', $idDivision)->get([
+        $empleadoDTO = []; //Array de Nombres
+        //[0] => Nombre 1, [1] => Nombre 2, [2] => Apellido 1, [3] => Apellido 2
+        if($empleado !== null) $empleadoDTO = explode(" ",$empleado);
+
+        $getUsersByDivision = DB::table('tbl_usuario')
+        ->where([
+            ['id_division', '=', $idDivision],
+            ['nombre_1', 'like', "%".(isset($empleadoDTO[0]) ? $empleadoDTO[0] : "")."%"],
+            ['nombre_2', 'like', "%".(isset($empleadoDTO[1]) ? $empleadoDTO[0] : "")."%"],
+            ['apellido_1', 'like', "%".(isset($empleadoDTO[2]) ? $empleadoDTO[0] : "")."%"],
+            ['apellido_2', 'like', "%".(isset($empleadoDTO[3]) ? $empleadoDTO[0] : "")."%"],
+        ])
+        ->get([
             'id',
             'codigo',
             'nombre_1',
@@ -212,6 +208,7 @@ class TotalHorasCargModel extends Model
             'fecha_ingreso',
             'fecha_egreso'
         ]);
+
         //Crea un array con los mismos Key que las columnas registradas en la base de datos
         return $getUsersByDivision;
     }
@@ -221,15 +218,29 @@ class TotalHorasCargModel extends Model
      * @param mixed $fecha_desde Inicio del intervalo
      * @param mixed $fecha_hasta Fin del intervalo
      */
-    protected  function GetHorasTotales($fecha_desde, $fecha_hasta)
+    public  function GetHorasTotales($fecha_desde, $fecha_hasta)
     {
-        DB::select('call sp_diasTotales(?,?,@horasTotales)', [$fecha_desde, $fecha_hasta]);
+        $fecha_desdeDTO = new DateTime($fecha_desde);
+        $fecha_hastaDTO = new DateTime($fecha_hasta);
+
+        //$Intervalo = $fecha_desdeDTO->diff($fecha_hasta);
+        //$TotalDias = $Intervalo->days;
+        $ContadorDias = 0;
+        $FechaLimite = clone $fecha_desdeDTO; //Clonamos la primera fecha
+
+        while ($FechaLimite <= $fecha_hastaDTO) {
+            # Procedemos a determinar los días de la semana y solo tomar lunes a viernes
+            $DiaSemana = $FechaLimite->format('N'); //Dia de la semana. Lunes a viernes es de 1 - 5
+            //Sumamos
+            if($DiaSemana < 6) $ContadorDias++;
+
+            $FechaLimite->add(new DateInterval('P1D')); //Añadimos 1 día
+        }
         //Capturamos la respuesta
-        $getHoras = DB::select('SELECT @horasTotales as HorasTotales');
-        $HorasTotales = intval($getHoras[0]->HorasTotales, 10);
+        $HorasTotales = $ContadorDias * 8; //Determinamos las horas a 8 horas
 
         //Retornamos el total de horas
-        return ($HorasTotales * 8);
+        return $HorasTotales;
     }
 
     /**

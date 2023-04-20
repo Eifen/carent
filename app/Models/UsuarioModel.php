@@ -283,7 +283,12 @@ class UsuarioModel extends Model
                 $condicion = "AND cu.correo_principal LIKE '%".$dato."%'";
                 break;
             case 4:
-                $condicion = "AND u.nombre_1 LIKE '%".$dato."%'";
+                $nombreFraccion = explode(" ",$dato); //[0] = nombre_1 [1] = nombre_ 2 [2] = apellido_1 [3] apellido_2
+                $condicion = "AND (CONCAT(u.nombre_1,u.nombre_2,u.apellido_1,u.apellido_2) 
+                              LIKE '%".(isset($nombreFraccion[0]) ? $nombreFraccion[0] : "").
+                              "%".(isset($nombreFraccion[1]) ? $nombreFraccion[1] : "").
+                              "%".(isset($nombreFraccion[2]) ? $nombreFraccion[2] : "").
+                              "%".(isset($nombreFraccion[3]) ? $nombreFraccion[3] : "")."%')";
                 break;
             default:
                 $condicion = "";
