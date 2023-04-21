@@ -115,7 +115,9 @@ class TotalHorasCargModel extends Model
 
                 $this->rangoFechasUsers[$cursor2][$column] = array(
                     "id" => $valor->id,
-                    "horasRef" => $this->totalHorasEmpleado
+                    "fecha_desde" => $this->totalHorasEmpleado["fecha_desde"],
+                    "fecha_hasta" => $this->totalHorasEmpleado["fecha_hasta"],
+                    "horasRef" => $this->totalHorasEmpleado["horas"]
                 );
             }
         }
@@ -187,8 +189,8 @@ class TotalHorasCargModel extends Model
                     'porcen_horas_no_cargables' => ($HorasAdmon * 100) / ($HorasAdmon != 0 ? $ReferenciaTotal : 1),
                     'total_horas' => $HoraTotal,
                     'porcen_carga_total' => $PerTotal,
-                    'fecha_desde' => $fecha_desde,
-                    'fecha_hasta' => $fecha_hasta,
+                    'fecha_desde' => $this->rangoFechasUsers[$cursorUser][$division]["fecha_desde"],
+                    'fecha_hasta' => $this->rangoFechasUsers[$cursorUser][$division]["fecha_hasta"],
                     'ref_usuario_total' => $ReferenciaTotal,
                     'fecha_ingreso' => ($usuario->fecha_ingreso === null ? $usuario->fecha_ingreso : date('Y-m-d',strtotime($usuario->fecha_ingreso))),
                     'fecha_egreso' => ($usuario->fecha_egreso === null ? $usuario->fecha_egreso : date('Y-m-d',strtotime($usuario->fecha_egreso))),
@@ -263,7 +265,7 @@ class TotalHorasCargModel extends Model
         $HorasTotales = $ContadorDias * 8; //Determinamos las horas a 8 horas
 
         //Retornamos el total de horas
-        return $HorasTotales;
+        return ["horas" => $HorasTotales, "fecha_desde" => $fecha_desde, "fecha_hasta" => $fecha_hasta];
     }
 
     /**
