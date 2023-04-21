@@ -37,13 +37,11 @@ class TotalHorasCargModel extends Model
      */
     static function DivisionCargabilidad($id_cargo,$Id_Tipo_Division)
     {
-        $getCargabilidad = DB::table('tbl_division_cargabilidad')
+        return DB::table('tbl_division_cargabilidad')
         ->where([
             ["id_cargo","=",$id_cargo],
             ["id_tipo_division","=",$Id_Tipo_Division]])
-        ->first(['porcentaje']);
-
-        return $getCargabilidad; //Obtenemos un unico valor
+        ->first(['porcentaje']); //Obtenemos un unico valor
     }
 
     /**
@@ -56,7 +54,7 @@ class TotalHorasCargModel extends Model
         if($DivisionArray !== null)
         {
             return DB::table('tbl_division')->whereIn('id',$DivisionArray)->get(['id','descripcion','id_tipo']);
-        }; 
+        };
 
         return DB::table('tbl_division')->get(['id', 'descripcion','id_tipo']);
     } // Fin divisiones
@@ -118,7 +116,7 @@ class TotalHorasCargModel extends Model
                 $this->rangoFechasUsers[$cursor2][$column] = array(
                     "id" => $valor->id,
                     "horasRef" => $this->totalHorasEmpleado
-                ); 
+                );
             }
         }
 
@@ -136,7 +134,7 @@ class TotalHorasCargModel extends Model
         $reportDTO = []; //Objeto de transferencia de data
         $userDTOArray = $this->getUsersPerDivision; //Objeto de transferencia para users
 
-        for ($cursorUser=0; $cursorUser < count($userDTOArray) ; $cursorUser++) { 
+        for ($cursorUser=0; $cursorUser < count($userDTOArray) ; $cursorUser++) {
             # code...
             foreach ($userDTOArray[$cursorUser] as $division => $usuario) {
                 # Nombre
@@ -160,7 +158,7 @@ class TotalHorasCargModel extends Model
                     $fecha_hasta,
                     $usuario->id,
                     1));
-                
+
                 #Hora Total
                 $HoraTotal = $HorasAdmon + $HorasProy;
 
@@ -193,7 +191,7 @@ class TotalHorasCargModel extends Model
                     'fecha_ingreso' => ($usuario->fecha_ingreso === null ? $usuario->fecha_ingreso : date('Y-m-d',strtotime($usuario->fecha_ingreso))),
                     'fecha_egreso' => ($usuario->fecha_egreso === null ? $usuario->fecha_egreso : date('Y-m-d',strtotime($usuario->fecha_egreso))),
                     'orden' => $Cargo->orden,
-                    'eficiencia' => $Cargabilidad
+                    'eficiencia' => (optional($Cargabilidad)->porcentaje <= $PerTotal ? true : false)
                 );
             }
         }
@@ -214,7 +212,7 @@ class TotalHorasCargModel extends Model
 
         $getUsersByDivision = DB::table('tbl_usuario')
         ->where('id_division', '=', $idDivision)
-        ->whereRaw('CONCAT(nombre_1,nombre_2,apellido_1,apellido_2) LIKE 
+        ->whereRaw('CONCAT(nombre_1,nombre_2,apellido_1,apellido_2) LIKE
                     "%'.(isset($empleadoDTO[0]) ? $empleadoDTO[0] : "").
                     '%'.(isset($empleadoDTO[1]) ? $empleadoDTO[1] : "").
                     '%'.(isset($empleadoDTO[2]) ? $empleadoDTO[2] : "").
