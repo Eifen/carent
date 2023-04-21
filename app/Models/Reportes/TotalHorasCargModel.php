@@ -187,11 +187,13 @@ class TotalHorasCargModel extends Model
                     'porcen_horas_no_cargables' => ($HorasAdmon * 100) / ($HorasAdmon != 0 ? $ReferenciaTotal : 1),
                     'total_horas' => $HoraTotal,
                     'porcen_carga_total' => $PerTotal,
+                    'fecha_desde' => $fecha_desde,
+                    'fecha_hasta' => $fecha_hasta,
                     'ref_usuario_total' => $ReferenciaTotal,
                     'fecha_ingreso' => ($usuario->fecha_ingreso === null ? $usuario->fecha_ingreso : date('Y-m-d',strtotime($usuario->fecha_ingreso))),
                     'fecha_egreso' => ($usuario->fecha_egreso === null ? $usuario->fecha_egreso : date('Y-m-d',strtotime($usuario->fecha_egreso))),
                     'orden' => $Cargo->orden,
-                    'eficiencia' => (optional($Cargabilidad)->porcentaje <= $PerTotal ? true : false)
+                    'eficiencia' => (optional($Cargabilidad)->porcentaje <= $PerTotal ? true : false),
                 );
             }
         }
