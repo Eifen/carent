@@ -449,7 +449,10 @@
                 fecha_egreso: datos[division][user].fecha_egreso,
                 orden: datos[division][user].orden,
                 //Si es verdadero colocamos un check, falso un cross
-                eficiencia: datos[division][user].eficiencia
+                eficiencia: datos[division][user].eficiencia,
+                //Fecha del intervalo
+                fecha_desde: datos[division][user].fecha_desde,
+                fecha_hasta: datos[division][user].fecha_hasta
               }
 
               registros.push(data);
