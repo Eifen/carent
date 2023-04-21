@@ -39,7 +39,7 @@ class TotalHorasCargController extends Controller
       $paginas = 1;
       //Filtramos el procedimiento. Debe existir minimo una division o en todo caso un nombre
       $totales = $modelo->ReporteActualCargabilidad($fecha_desde, $fecha_hasta, $divisiones,$request->input('empleado'));
-      $maximo_horas = $modelo->GetHorasTotales($fecha_desde,$fecha_hasta);
+      $maximo_horas = $modelo->GetHorasTotales($fecha_desde,$fecha_hasta)["horas"];
       return [
           "divisiones" => $divisiones,
           "totales" => (isset($totales) ? $totales : []),
