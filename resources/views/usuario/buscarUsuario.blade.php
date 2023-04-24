@@ -32,7 +32,7 @@
                   <option value="1">Código de usuario</option>
                   <option value="2">Cédula</option>
                   <option value="3">Correo electrónico</option>
-                  <option value="4">Nombre</option>
+                  <option value="4">Nombre y/o Apellido</option>
                 </select>
               </div>
               <div class="form-group col-12 col-md-6">
@@ -60,7 +60,7 @@
                 <tr>
                   <th scope="col">Código</th>
                   <th scope="col">Cédula</th>
-                  <th scope="col">Nombre</th>
+                  <th scope="col">Nombre Completo</th>
                   <th scope="col">Correo Principal</th>
                   <th scope="col">Estatus</th>
                   <th scope="col"></th>

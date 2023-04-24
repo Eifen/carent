@@ -64,7 +64,7 @@ class ProyectoModel extends Model
 
     function clientes($nombre_cliente = null, $limite = null){
 
-      $sql_condicion = ($nombre_cliente != null) ? " AND UPPER(c.razon_social) LIKE UPPER('".$nombre_cliente."%')" : "";
+      $sql_condicion = ($nombre_cliente != null) ? " AND UPPER(c.razon_social) LIKE UPPER('%".$nombre_cliente."%')" : "";
       $sql_limit = ($limite != null) ? " LIMIT ".$limite : "";
 
       $clientes = DB::select('SELECT c.id,
