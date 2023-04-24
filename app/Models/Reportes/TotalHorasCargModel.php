@@ -175,7 +175,7 @@ class TotalHorasCargModel extends Model
                 $Cargabilidad = $this->DivisionCargabilidad($Cargo->id, $Division[0]->id_tipo);
 
                 #Porcentaje total
-                $PerTotal = ($HoraTotal * 100) / ($HoraTotal != 0 ? $ReferenciaTotal : 1);
+                $PerTotal = ($HoraTotal * 100) / ($HoraTotal != 0 && $ReferenciaTotal != 0 ? $ReferenciaTotal : 1);
 
                 #Array Reporte
                 $reportDTO[$cursorUser][$division] = array(
@@ -184,9 +184,9 @@ class TotalHorasCargModel extends Model
                     "usuario_cargo" => $Cargo->descripcion,
                     "usuario_division" => $this->Divisiones([$usuario->id_division])[0]->descripcion,
                     'total_horas_cargables' => $HorasProy,
-                    'porcen_horas_cargables' => ($HorasProy * 100) / ($HorasProy != 0 ? $ReferenciaTotal : 1),
+                    'porcen_horas_cargables' => ($HorasProy * 100) / ($HorasProy != 0 && $ReferenciaTotal != 0 ? $ReferenciaTotal : 1),
                     'total_horas_no_cargables' => $HorasAdmon,
-                    'porcen_horas_no_cargables' => ($HorasAdmon * 100) / ($HorasAdmon != 0 ? $ReferenciaTotal : 1),
+                    'porcen_horas_no_cargables' => ($HorasAdmon * 100) / ($HorasAdmon != 0 && $ReferenciaTotal != 0 ? $ReferenciaTotal : 1),
                     'total_horas' => $HoraTotal,
                     'porcen_carga_total' => $PerTotal,
                     'fecha_desde' => $this->rangoFechasUsers[$cursorUser][$division]["fecha_desde"],
