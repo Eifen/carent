@@ -1,5 +1,4 @@
-require('../bootstrap');
-import $ from "jquery";
+require('bootstrap');
 import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -7,6 +6,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 window.axios = require('axios');
 window.AutoNumeric = require('autonumeric');
 window.zenscroll = require('zenscroll');
+window.$ = require('jquery');
 var self;
 
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
@@ -133,7 +133,7 @@ new Vue({
 
           }else{
 
-            var message = (error.message) ? error.message : "Exasdsadsad";
+            var message = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema.";
 
           }
 
@@ -297,9 +297,3 @@ new Vue({
   }// Fin methods
 
 });
-
-//Modales
-$('.CerrarModal_BuscarUsuario').on("click",function(){
-    $('#modal-detalle-usuario').modal("hide");
-    $('#modal-asignar-menu').modal("hide");
-})

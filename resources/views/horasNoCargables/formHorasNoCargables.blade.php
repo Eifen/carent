@@ -246,7 +246,7 @@
               <div class="modal-header">
                 <h4>Cargar Horas</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true" class="CerrarModal_HorasNoCargables">&times;</span>
+                  <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
@@ -354,7 +354,7 @@
               <div class="modal-header">
                 <h4>Modificar Horas</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true" class="CerrarModal_HorasNoCargables">&times;</span>
+                  <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
