@@ -32,7 +32,8 @@ class TotalHorasCargController extends Controller
     function buscarRepTotalHorasCarg(Request $request){
       $modelo = new ModeloHoras();
       //Agrupamos la data
-      $divisiones = ModeloHoras::Divisiones($request->input('divisiones'));
+      $divisiones = (!is_array($request->input('divisiones')) ? ModeloHoras::Divisiones() 
+                    : ModeloHoras::Divisiones($request->input('divisiones')));
       $fecha_desde = ($request->input('fecha_desde') === null ? date('Y-m-01') : date($request->input('fecha_desde')));
       $fecha_hasta = ($request->input('fecha_hasta') === null ? date('Y-m-d') : date($request->input('fecha_hasta')));
       $paginar = $request->input('paginar');
