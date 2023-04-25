@@ -83,15 +83,12 @@ new Vue({
         codigoUsuario: null,
         nombre: null,
         rif: null,
-        nit:null,
         razon_social: null,
         direccion: null,
         pais: null,
         telefono_fiscal: null,
         pagina_web: null,
         email_fiscal: null,
-        servicios: null,
-        sector: null
       },
       camposAtributos:{
         codigoCliente:{
@@ -110,11 +107,6 @@ new Vue({
           state: null
         },
         rif:{
-          disabled: true,
-          invalidFeedback: "",
-          state: null
-        },
-        nit:{
           disabled: true,
           invalidFeedback: "",
           state: null
@@ -149,16 +141,6 @@ new Vue({
           invalidFeedback: "",
           state: null
         },
-        servicios:{
-          disabled: true,
-          invalidFeedback: "Falta colocar el servicio",
-          state: null
-        },
-        sector:{
-          disabled:true,
-          invalidFeedback: "Falta colocar el sector",
-          state:null
-        }
       },
       mostrar: false,
       alert: {
@@ -193,8 +175,6 @@ new Vue({
       },
     },
     comboPaises: [],
-    comboServicios: [],
-    comboSectores: [],
     paises: [],
     loading: true,
     modalDetalleUsuario: {
@@ -240,9 +220,6 @@ new Vue({
         rif: {
           required
         },
-        nit:{
-          required
-        },
         razon_social: {
           required
         },
@@ -260,12 +237,6 @@ new Vue({
         email_fiscal: {
           required
         },
-        servicios: {
-          required
-        },
-        sector:{
-          required
-        }
       },
     }
   },
@@ -281,17 +252,6 @@ new Vue({
         response.data.paises.forEach((item, i) => {
           self.comboPaises.push({text:item.nombre, value: item.id, codigo_telf: item.codigo_telf});
         });
-
-        //Cargamos el combobox de Servicios en formato JSON
-        response.data.servicios.forEach((value, i) => {
-          self.comboServicios.push({text: value.NombreServicio, value: value.ServicioId})
-        });
-
-        //Cargamos el combobox de Sectores en formato JSON
-        response.data.sectores.forEach((value, i) => {
-          self.comboSectores.push({text: value.SectorNombre, value: value.SectorId})
-        });
-
         self.paises = response.data.paises
 
         self.form.campos.codigoCliente = response.data.codigo;
@@ -306,9 +266,6 @@ new Vue({
         self.form.camposAtributos.direccion.disabled = false;
         self.form.camposAtributos.pagina_web.disabled = false;
         self.form.camposAtributos.email_fiscal.disabled = false;
-        self.form.camposAtributos.servicios.disabled = false;
-        self.form.camposAtributos.sector.disabled = false;
-        self.form.camposAtributos.nit.disabled = false;
 
 
         self.formFiltro.mostrar = true;
@@ -558,15 +515,12 @@ new Vue({
         idUsuario: self.formFiltro.id_usuario.value,
         codigoCliente: self.form.campos.codigoCliente,
         rif: self.form.campos.rif,
-        nit:self.form.campos.nit,
         razon_social:  self.form.campos.razon_social,
         pais: self.form.campos.pais,
         direccion: self.form.campos.direccion,
         telefono_fiscal: self.form.campos.telefono_fiscal,
         pagina_web: self.form.campos.pagina_web,
-        email_fiscal: self.form.campos.email_fiscal,
-        servicios: self.form.campos.servicios,
-        sector: self.form.campos.sector
+        email_fiscal: self.form.campos.email_fiscal
       };
 
       self.form.botones.cancelar.disabled = true;

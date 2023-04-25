@@ -89,26 +89,18 @@ class ProyectoController extends Controller
 
       $modelo = new ProyectoModel();
       $descripcion = strtoupper($request->input("descripcion"));
-      //Cargamos el array de datos en el orden del procedure
-      $EstructuraProyecto = array(
-        strtoupper($request->input("descripcion")),
-        $request->input("cliente"),
-        $request->input("socio"),
-        $request->input("socioCalidad"),
-        $request->input("gerente"),
-        $request->input("fechaContratacion"),
-        $request->input("monto"),
-        $request->input("id_moneda"),
-        $request->input("empresa"),
-        $request->input("estatus"),
-        session("usuario_ip"),
-        session("usuario_id")
-      );
-
-      //Guardamos el array de divisiones
+      $cliente = $request->input("cliente");
+      $socio = $request->input("socio");
+      $socioCalidad = $request->input("socioCalidad");
+      $gerente = $request->input("gerente");
+      $fechaContratacion = $request->input("fechaContratacion");
       $divisiones = $request->input("divisiones");
+      $estatus = $request->input("estatus");
+      $id_moneda = $request->input("id_moneda");
+      $monto = $request->input("monto");
+      $empresa = $request->input("empresa");
 
-      $response = $modelo->crearProyecto($EstructuraProyecto,$divisiones);
+      $response = $modelo->crearProyecto($descripcion,$cliente,$socio,$socioCalidad,$gerente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto,$empresa);
 
       if($response["response"]){
 

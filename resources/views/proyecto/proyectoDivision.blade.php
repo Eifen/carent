@@ -122,7 +122,7 @@
               <div class="modal-header">
                 <h4>Detallé del Proyecto</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true" class="CerrarModal_Division">&times;</span>
+                  <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
@@ -176,7 +176,7 @@
               <div class="modal-header">
                 <h4>Asignación de Personal al Proyecto</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true" class="CerrarModal_Division">&times;</span>
+                  <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
@@ -289,7 +289,7 @@
                     label="Ver"
                     v-if= "empleado.permisoCarga">
                     <a v-bind:href="'/formCargarHoras/'+empleado.idAnaProy" target="_self"><i class="fas fa-user-edit" v-if= "empleado.permisoCarga"></i>
-                    </a>
+                    </a>                                          
                   </b-form-group>
                 </form>
               </div>

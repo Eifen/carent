@@ -64,7 +64,7 @@ class ProyectoModel extends Model
 
     function clientes($nombre_cliente = null, $limite = null){
 
-      $sql_condicion = ($nombre_cliente != null) ? " AND UPPER(c.razon_social) LIKE UPPER('%".$nombre_cliente."%')" : "";
+      $sql_condicion = ($nombre_cliente != null) ? " AND UPPER(c.razon_social) LIKE UPPER('".$nombre_cliente."%')" : "";
       $sql_limit = ($limite != null) ? " LIMIT ".$limite : "";
 
       $clientes = DB::select('SELECT c.id,
@@ -144,58 +144,61 @@ class ProyectoModel extends Model
 
     }
 
-    function crearProyecto($NuevoProyecto, $Divisiones){
+    function crearProyecto($descripcion,$cliente,$socio,$socioCalidad,$gerente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto,$empresa){
 
-      //Insertamos el nuevo proyecto
-      $InsertNuevoProyecto = DB::select('call sp_control_proyect(?,?,?,?,?,?,?,?,?,?,?,?,@respuesta)', $NuevoProyecto);
-      //$idProyecto = DB::table('tbl_proyecto')->insertGetId($data);
+      DB::beginTransaction();
 
-      //Transformamos el JSON a un Array
-      $Response_Json = DB::select('SELECT @respuesta as RespuestaQuery');
-      $Response_Array = json_decode($Response_Json[0]->RespuestaQuery,true);
-      $BanderaDivisionesQuery = true;
+      $data = array("descripcion" => $descripcion,
+                    "id_cliente" => $cliente,
+                    "fecha_contratacion" => $fechaContratacion,
+                    "id_estatus" => $estatus,
+                    "id_moneda" => $id_moneda,
+                    "monto" => $monto,
+                    "id_socio" => $socio,
+                    "id_socio_calidad" => $socioCalidad,
+                    "id_gerente" => $gerente,
+                    "id_empresa" => $empresa);
 
-      //Vamos prearando la variable de retorno
-      $ResponseTotal = '';
+      $idProyecto = DB::table('tbl_proyecto')->insertGetId($data);
 
-      if($Response_Array['response'])
-      {
-        foreach ($Divisiones as $Posicion => $Division) 
-        {
-          //Cargamos el array de divisiones
-          $DataDivisiones = array(
-            $Division['id'], //ID Division
-            $Response_Array['ultimoInsert'], //ID Proyecto
-            $Division['id_gerente'],  //ID gerente
-            $Division['horas'] //Horas Contratadas
-          );
-          $QueryInsert = DB::insert('insert into `tbl_proyecto_divisiones` (`id_division`, `id_proyecto`, `id_gerente`, `horas_contratadas`) values (?, ?, ?, ?)', $DataDivisiones);
+      $divisionCreada = true;
 
-          //Comprobamos que sea exitoso
-          if(!$QueryInsert){
-            $BanderaDivisionesQuery = false;
-            break;
-          }
+      for($i = 0; $i < count($divisiones); $i++){
+
+        $data = array(
+                      "id_proyecto" => $idProyecto,
+                      "id_division" => $divisiones[$i]["id"],
+                      "id_gerente" => $divisiones[$i]["id_gerente"],
+                      "horas_contratadas" => $divisiones[$i]["horas"]
+                     );
+
+        if(!DB::table('tbl_proyecto_divisiones')->insert($data)){
+          $divisionCreada = false;
+          break;
         }
-      }
-      
-      if($BanderaDivisionesQuery){
-        $client = DB::select('SELECT c.razon_social FROM tbl_cliente c WHERE c.id = '.$Response_Array['cliente'].'');
-        $ResponseTotal = array(
-          "cliente" => $client[0]->razon_social,
-          "response" => $Response_Array['response'],
-          "message" => $Response_Array['message'],
-        );
-      }else{
-        $ResponseTotal = array(
-          "response" => false,
-          "message" => "Ha ocurrido un error al crear el proyecto",
-        );        
+
       }
 
-      return $ResponseTotal;
+      if($divisionCreada){
+
+        $client = DB::select('SELECT c.razon_social FROM tbl_cliente c WHERE c.id = '.$cliente.'');
+
+        DB::commit();
+        return array(
+          "cliente" => $client[0]->razon_social,
+          "response" => true,
+          "message" => "Proyecto creado con éxito."
+        );
+
+      }else{
+
+        DB::rollBack();
+        return array("response" => false, "message" => "Error al tratar de crear el proyecto.");
+
+      }
+
     }
-///////////////////////////////////////////
+
     function proyectos($id_division, $paginar, $desde = 0, $proyecto = "", $cliente = "", $divisiones = [], $estatus = null){
 
       if(trim($proyecto) != ""){
@@ -502,12 +505,13 @@ class ProyectoModel extends Model
 
       try{
 
-        // $sql_factura = DB::select('SELECT *
-        //                            FROM tbl_factura_proyecto fp
-        //                            WHERE fp.id_proyecto = '.$idProyecto.'
-        //                            AND fp.id_estatus = 1');
-        //Se ha eliminado la condición que diferencia entre un proyecto con proceso de facturación activo.
-        
+        $sql_factura = DB::select('SELECT *
+                                   FROM tbl_factura_proyecto fp
+                                   WHERE fp.id_proyecto = '.$idProyecto.'
+                                   AND fp.id_estatus = 1');
+
+        if(count($sql_factura) == 0){
+
           $update = DB::table('tbl_proyecto')->where("id", $idProyecto)->update($parametros_proyecto);
 
           $divisionCreada = true;
@@ -583,6 +587,15 @@ class ProyectoModel extends Model
             "response" => true,
             "message" => "Proyecto actualizado con éxito."
           );
+
+        }else{
+
+          return array(
+            "response" => false,
+            "message" => "El proyecto ya posee un proceso de facturación activo, es decir tiene al menos una factura en estatus activa!."
+          );
+
+        }
 
       } catch(\Illuminate\Database\QueryException $ex){
 

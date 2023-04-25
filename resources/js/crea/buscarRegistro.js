@@ -1,5 +1,5 @@
-require('../bootstrap');
-import $ from "jquery";
+require('bootstrap');
+import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap-vue/node_modules/bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
