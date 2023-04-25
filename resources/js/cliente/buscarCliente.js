@@ -1,4 +1,5 @@
-require('bootstrap');
+require('../bootstrap');
+import $ from "jquery";
 import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap-vue/node_modules/bootstrap/dist/css/bootstrap.css';
@@ -6,7 +7,6 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 window.axios = require('axios');
 window.AutoNumeric = require('autonumeric');
 window.zenscroll = require('zenscroll');
-window.$ = require('jquery');
 var self;
 
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
@@ -88,7 +88,7 @@ new Vue({
 
           self.formSearch.submit.html = 'Consultar';
           self.formSearch.submit.disabled = false;
-
+          console.log(response)
           if(response.status === 200 && response.data.response === true){
 
             self.clientes.mostrar = true;
@@ -208,3 +208,8 @@ new Vue({
   }// Fin methods
 
 });
+
+//Cerramos el modal
+$('.CerrarModal-Cliente').on("click", function(){
+    $('#modal-detalle-cliente').modal("hide");
+})

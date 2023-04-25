@@ -12,7 +12,7 @@
                 <div class="col-12">
                     <div class="table-responsive">
                         <table class="table">
-                            <thead>
+                            <thead v-if="usersList.length > 0">
                                 <tr>
                                     <th scope="col">Código</th>
                                     <th scope="col">Cédula</th>
@@ -27,8 +27,8 @@
                                       :key="index"
                                       v-for="(user, index) in usersList"
                                       v-if="usersList.length > 0" />
-                                <tr v-else-if="usersList.length = 0" class="table-warning">
-                                    <td colspan="6">No se encontraron resultados</td>
+                                <tr v-if="showNoData" class="table-warning">
+                                    <td class="p-3" colspan="6">No se encontraron resultados</td>
                                 </tr>
                                 <tr v-if="loading">
                                     <td colspan="6">
@@ -105,6 +105,13 @@ export default {
     },
     mounted: () => {
         self.searchUser()
+    },
+    computed: {
+
+        showNoData : () => {
+            return (self.usersList.length === 0 && !self.loading)
+        }
+
     },
     methods: {
 

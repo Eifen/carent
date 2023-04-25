@@ -265,6 +265,61 @@ class UsuarioModel extends Model
 
     }
 
+    function buscarUsuarios($buscarPor,$dato){
+        $condicion = "";
+        $retorno = array();
+
+        switch ((int) $buscarPor) {
+            case 0:
+                $condicion = "";
+                break;
+            case 1:
+                $condicion = "AND u.codigo LIKE '%".$dato."%'";
+                break;
+            case 2:
+                $condicion = "AND udi.documento LIKE '%".$dato."%'";
+                break;
+            case 3:
+                $condicion = "AND cu.correo_principal LIKE '%".$dato."%'";
+                break;
+            case 4:
+                $nombreFraccion = explode(" ",$dato); //[0] = nombre_1 [1] = nombre_ 2 [2] = apellido_1 [3] apellido_2
+                $condicion = "AND (CONCAT(u.nombre_1,u.nombre_2,u.apellido_1,u.apellido_2) 
+                              LIKE '%".(isset($nombreFraccion[0]) ? $nombreFraccion[0] : "").
+                              "%".(isset($nombreFraccion[1]) ? $nombreFraccion[1] : "").
+                              "%".(isset($nombreFraccion[2]) ? $nombreFraccion[2] : "").
+                              "%".(isset($nombreFraccion[3]) ? $nombreFraccion[3] : "")."%')";
+                break;
+            default:
+                $condicion = "";
+                break;
+        }
+
+        $usuarios = DB::select('SELECT u.id,
+                                    u.codigo as Codigo,
+                                    CONCAT(tdi.abreviatura,"-",udi.documento) AS Cedula,
+                                    CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS Nombre,
+                                    cu.correo_principal AS Correo,
+                                    e.descripcion AS Estatus
+                                    FROM tbl_usuario u,
+                                    tbl_estatus e,
+                                    tbl_contacto_usuario cu,
+                                    tbl_usuario_documento_identidad udi,
+                                    tbl_tipo_documento_identidad tdi
+                                    WHERE e.tabla = "tbl_usuario"
+                                    AND e.valor = u.id_estatus
+                                    AND u.id = cu.id_usuario
+                                    AND u.id = udi.id_usuario
+                                    AND udi.id_tipo_documento_identidad = tdi.id '.$condicion);
+          if(count($usuarios) > 0){
+            $retorno = $usuarios;
+          }else{
+            $retorno = array();
+          }
+
+          return $retorno;
+    }
+
     function permisoActualizar($id_usuario, $id_menu){
 
       $permiso = DB::select('SELECT CASE mu.U

@@ -119,6 +119,26 @@
                   type="text"
                   v-model="$v.form.campos.codigoCliente.$model"></b-form-input>
               </b-form-group>
+              {{--NIT--}}
+              <b-form-group
+                :invalid-feedback="form.camposAtributos.nit.invalidFeedback"
+                class="col-12 col-sm-6"
+                description="NIT"
+                label="Nit del Cliente"
+                label-for="nit"
+                id="group-nit">
+                <b-form-input
+                @input="cleanFieldForm(form.camposAtributos.nit)"
+                :disabled="form.camposAtributos.nit.disabled"
+                :state="form.camposAtributos.nit.state"
+                autocomplete="off"
+                class="text-uppercase"
+                id="nit"
+                ref="nit"
+                size="sm"
+                type="text"
+                v-model="$v.form.campos.nit.$model"></b-form-input>
+              </b-form-group>
               <b-form-group
                 :invalid-feedback="form.camposAtributos.rif.invalidFeedback"
                 class="col-12 col-sm-6"
@@ -176,6 +196,54 @@
                   size="sm"
                   type="text"
                   v-model="$v.form.campos.direccion.$model"></b-form-textarea>
+              </b-form-group>
+              {{-- SECTORES Y SERVICIOS --}}
+              <b-form-group
+                class="col-12 col-sm-6"
+                id="group-sector"
+                :invalid-feedback="form.camposAtributos.sector.invalidFeedback"
+                description = "Sector asociado"
+                label = "Sector"
+                label-for = "sector">
+                <b-form-select
+                @change = "cleanFieldForm(form.camposAtributos.sector)"
+                :disabled="form.camposAtributos.sector.disabled"
+                :options="comboSectores"
+                :state="form.camposAtributos.sector.state"
+                :value="null"
+                id="sector"
+                ref="sector"
+                size="sm"
+                v-model="$v.form.campos.sector.$model">
+                <template v-slot:first>
+                  {{--Si esta vacio mostramos un mensaje--}}
+                  <option :value="null" disabled="true">Seleccione una opción</option>
+                </template>
+                </b-form-select>
+              </b-form-group>
+              {{--SERVICIOS--}}
+              <b-form-group
+                {{--Anexamos el mensaje de feeback--}}
+                :invalid-feedback="form.camposAtributos.servicios.invalidFeedback"
+                class="col-12 col-sm-6"
+                id="group-servicios"
+                description="Servicio asociado"
+                label="Servicio"
+                label-for="servicios">
+                <b-form-select
+                @change="cleanFieldForm(form.camposAtributos.servicios)"
+                :disabled="form.camposAtributos.servicios.disabled"
+                :options="comboServicios"
+                :state="form.camposAtributos.servicios.state"
+                :value="null"
+                id="servicios"
+                ref="servicios"
+                size="sm"
+                v-model="$v.form.campos.servicios.$model">
+                <template v-slot:first>
+                  <option :value="null" disabled="true">Seleccione una opción</option>
+                </template>
+                </b-form-select>
               </b-form-group>
               <b-form-group
                 :invalid-feedback="form.camposAtributos.pais.invalidFeedback"

@@ -185,6 +185,16 @@ class ClienteModel extends Model
       return $paises;
   }
 
+  function servicios(){
+    $paises = DB::select('SELECT ser.ServicioId, ser.NombreServicio FROM tbl_servicio ser WHERE ser.EstadoServicio = 1');
+    return $paises;
+  }
+
+  function sectores(){
+    $sector = DB::select('SELECT sec.SectorId, sec.SectorNombre FROM tbl_sector sec WHERE sec.SectorEstado = 1');
+    return $sector;
+  }
+
   function buscarCliente($codigo){
 
     $cliente = DB::select('SELECT id,
@@ -219,7 +229,7 @@ class ClienteModel extends Model
 
   function crearCliente($parametros){
 
-    $funcionario = DB::select('call sp_nuevo_cliente(?,?,?,?,?,?,?,?,?,?,?,@respuesta)',$parametros);
+    $funcionario = DB::select('call sp_nuevo_cliente(?,?,?,?,?,?,?,?,?,?,?,?,?,?,@respuesta)',$parametros);
     $respuestaSp = DB::select('SELECT @respuesta AS respuesta_json');
     $respuestaJson = json_decode($respuestaSp[0]->respuesta_json, true);
 
@@ -306,20 +316,23 @@ class ClienteModel extends Model
 
   function detalleCliente($id_cliente){
 
-    $info = DB::select('SELECT id,
-                                id_usuario_socio,
-                                (SELECT codigo FROM tbl_usuario WHERE id_usuario_socio = id) codigoU,
-                                (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE id_usuario_socio = id) nombre,
-                                codigo,
-                                rif,
-                                razon_social,
-                                direccion,
-                                telefono_fiscal,
-                                pagina_web,
-                                email_fiscal,
-                                (SELECT pa.nombre FROM tbl_paises pa WHERE pa.id = id_pais) pais
-                          FROM tbl_cliente
-                          WHERE id = '.$id_cliente.'
+    $info = DB::select('SELECT cli.id,
+                                cli.id_usuario_socio,
+                                (SELECT u.codigo FROM tbl_usuario u WHERE u.id = cli.id_usuario_socio) AS  codigoU,
+                                (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE u.id = cli.id_usuario_socio) AS nombre,
+                                cli.codigo,
+                                cli.rif,
+                                cli.nit,
+                                cli.razon_social,
+                                cli.direccion,
+                                cli.telefono_fiscal,
+                                cli.pagina_web,
+                                cli.email_fiscal,
+                                (SELECT pa.nombre FROM tbl_paises pa WHERE pa.id = cli.id_pais) AS pais,
+                                (SELECT sec.SectorNombre FROM tbl_sector sec WHERE sec.SectorId = cli.SectorAsociado) AS sector,
+                                (SELECT ser.NombreServicio FROM tbl_servicio ser WHERE ser.ServicioId = cli.ServicioAsociado) AS servicio
+                          FROM tbl_cliente cli
+                          WHERE cli.id = '.$id_cliente.'
                         ');
     if(count($info) > 0)
     {
@@ -380,14 +393,19 @@ class ClienteModel extends Model
                                 (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE id_usuario_socio = id) nombre,
                                  codigo,
                                  rif,
+                                 nit,
                                  razon_social,
                                  direccion,
                                  telefono_fiscal,
                                  pagina_web,
                                  email_fiscal,
                                  id_estatus,
+                                 SectorAsociado,
+                                 ServicioAsociado,
                                  id_pais,
-                                 (SELECT pa.nombre FROM tbl_paises pa WHERE pa.id = id_pais) pais
+                                 (SELECT pa.nombre FROM tbl_paises pa WHERE pa.id = id_pais) pais,
+                                 (SELECT sec.SectorNombre FROM tbl_sector sec WHERE sec.SectorId = SectorAsociado) sector,
+                                 (SELECT ser.NombreServicio FROM tbl_servicio ser WHERE ser.ServicioId = ServicioAsociado) servicio
                           FROM tbl_cliente
                           WHERE id = '.$id_cliente.'');
 
@@ -424,7 +442,7 @@ class ClienteModel extends Model
     //     return array("response" => false, "message" => "Error al tratar de actualizar la información del cliente.");
     //   }
 
-    $getResponse = DB::select('call sp_update_client(?,?,?,?,?,?,?,?,?,?,?,?,@respuesta)',$parametros);
+    $getResponse = DB::select('call sp_update_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,@respuesta)',$parametros);
     $respuestaSp = DB::select('SELECT @respuesta AS response_objectJson');
     $respuestaJson = json_decode($respuestaSp[0]->response_objectJson, true);
 
