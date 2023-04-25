@@ -509,8 +509,8 @@
           //Evaluamos como filtraremos la division
           var param_divisiones = (self.formFiltro.campos.divisiones.value !== null
                                   ? [ self.formFiltro.campos.divisiones.value.id ]
-                                  : null);
-          if(typeof param_divisiones[0] === 'undefined') param_divisiones = null;
+                                  : 0);
+          if(typeof param_divisiones[0] === 'undefined') param_divisiones = 0;
 
           //Obtenemos los valores
           let desde = (self.tabla.paginador.pagina - 1) * self.tabla.paginador.paginar;
