@@ -37,6 +37,9 @@
             @include('UI.Users.userCreate')
         @endif
 
+        @if (Request::url() === URL::route('updateUser'))
+            @include('UI.Users.userUpdate')
+        @endif
         {{-- Redireccion de rutas para Clientes --}}
     </section>
 @endsection
