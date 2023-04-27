@@ -40,5 +40,10 @@ Route::prefix('/')->group(function(){
             Route::get('/',[LoginController::class,'index'])->name('createUser');
             Route::post('/newUser',[UsersController::class,'NewUser']);
         });
+        //Update
+        Route::prefix('/update')->group(function(){
+            Route::get('/',[LoginController::class,'index'])->name('updateUser');
+            Route::post('/updateUser',[UsersController::class,'UpdateUser']);
+        });
     });
 });

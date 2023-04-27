@@ -12,12 +12,26 @@ class UsersController extends Controller
 {
     protected $modelInstance;
 
+    /**
+     * Metodo que extrae todos los usuarios
+     * @return Response devuelve objeto response con la data resultante
+     */
     public function index(){
         $this->modelInstance = new ConfigModel();
         $allData = $this->modelInstance->GetAll('users');
 
         //Retornamos toda la data
         return response($allData,200);
+    }
+
+    /**
+     * Metodo que busca un usuario por el Id
+     * @param Request Obtiene un array de los datos provenientes de la vista a través de un objeto JSON
+     * @return Response Retorna los datos del usuario por ID a excepción de la clave
+     */
+    public function UserPerId(Request $dataUser)
+    {
+        
     }
 
     //Documento de identidad
@@ -72,9 +86,13 @@ class UsersController extends Controller
     public function NewUser(Request $dataUser)
     {
         $decryptCode = ConfigController::DecryptData($dataUser->input('user')['Code']);
+
+        //Tercer nivel de validaciones
+
+        //Fecha de ingreso null o vacia
         $fechaIngreso = $dataUser->input('user')['DateIngreso'] != null || $dataUser->input('user')['DateIngreso'] != ''
                         ? date("Y-m-d",strtotime($dataUser->input('user')['DateIngreso']))
-                        : $dataUser->input('user')['DateIngreso'];
+                        : date("Y-m-d");
 
         $paramsUser = array(
             mb_strtoupper($dataUser->input('user')['FirstName']),
@@ -106,4 +124,6 @@ class UsersController extends Controller
 
         return response($RegisterUser,200);
     }
+
+    //Actualización de usuarios
 }

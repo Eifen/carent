@@ -34,6 +34,7 @@ class UsersModel extends Model
 
     /**
      * Metodo que devuelve los municipios asociados a un estado
+     * @param Number $Id = id del estado
      * @return Array info de los municipios disponibles
      */
     public static function GetMunicipalityById($Id)
@@ -47,6 +48,7 @@ class UsersModel extends Model
 
     /**
      * Metodo que devuelve todas las parroquias asociadas al municipio
+     * @param Number $Id = id del municipio
      * @return Array info de todas las parroquias disponibles
      */
     public static function GetParishById($Id)
@@ -80,6 +82,43 @@ class UsersModel extends Model
         ->get(['Id','Descripcion']);
         return $getCargo;
         //[0] = Id, [1] = Descripcion
+    }
+
+    /**
+     * Metodo que devuelve los datos del usuario
+     * @return Array devuelve un array de referencias data["info1"] con la información del usuario
+     */
+    public static function PrepareDataUpdate($Codigo)
+    {
+        $GetUser = DB::table('tbl_usuarios')
+        //Documento de identidad
+        ->join("tbl_usuarios_documentoidentidad", "tbl_usuarios.Id", "=", "tbl_usuarios_documentoidentidad.Id_usuario")
+        ->join("tbl_usuarios_documentoidentidad_tipo", "tbl_usuarios_documentoidentidad.Id_tipo_documento", "=", "tbl_usuarios_documentoidentidad_tipo.Id")
+        //Correo y Numero
+        ->join("tbl_usuarios_contacto", "tbl_usuarios.Id", "=", "tbl_usuarios_contacto.Id_usuario")
+        //Dirección
+        ->join("tbl_usuarios_direccion_parroquia","tbl_usuarios.Id_direccion_parroquia","=","tbl_usuarios_direccion_parroquia.Id")
+        //Municipio
+        ->join("tbl_usuarios_direccion_municipio","tbl_usuarios_direccion_parroquia.Id_direccion_municipio","=","tbl_usuarios_direccion_municipio.Id")
+        //Municipio
+        ->join("tbl_usuarios_direccion_estado","tbl_usuarios_direccion_municipio.Id_direccion_estado","=","tbl_usuarios_direccion_estado.Id")
+        //Hacemos el select
+        ->select("tbl_usuarios.Id","tbl_usuarios.Codigo","tbl_usuarios.Primer_nombre","tbl_usuarios.Segundo_nombre","tbl_usuarios.Primer_Apellido","tbl_usuarios.Segundo_apellido","tbl_usuarios.Fecha_nacimiento","tbl_usuarios.Fecha_ingreso","tbl_usuarios.Fecha_egreso","tbl_usuarios.documentoidentidad_tipo")
+        ->where("Codigo","=",$Codigo)
+        ->first([
+            'Id',
+            'Codigo',
+            'Primer_nombre',
+            'Segundo_nombre',
+            'Primer_apellido',
+            'Segundo_apellido',
+            'Fecha_nacimiento',
+            'Fecha_ingreso',
+            'Fecha_egreso',
+            'Id_jerarquia_cargo',
+            'Id_jerarquia_division',
+            'Id_direccion_parroquia'
+        ]);
     }
 
     /**
