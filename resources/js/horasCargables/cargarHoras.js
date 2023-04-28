@@ -253,8 +253,11 @@ new Vue({
           horas_asignadas: horas_asignadas,
           fecha:  self.form.fecha.value,
           descripcion: self.form.descripcion.value,
-          horas_trabajadas: self.form.horas_trabajadas.value,
+          //Filtramos las horas en función si se coloco una hora o no
+          horas_trabajadas: (typeof self.form.horas_trabajadas.value === 'undefined' ? "00:00" 
+          : self.form.horas_trabajadas.value),
         }
+        
         //Se utiliza el metodo post para cargar horas y se envian con los parametros
         axios.post('/cargarHoras', parametros)
         .then(function (response) {

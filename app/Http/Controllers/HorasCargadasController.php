@@ -81,6 +81,20 @@ class HorasCargadasController extends Controller
 
       if ($horas_asignadas >= $horasT + $horas_cargadas) {
         if ($fechaActual > $fecha) {
+          //Filtramos por fecha Unix
+          if($fecha < date('2020-07-01'))
+          {
+            $response = array("response" => false, "message" => "Debe ingresar una fecha mayor o igual que el 1 de Julio del 2020");
+            return $response;
+          }
+
+          //Filtramos por horas vacias
+          if($horasT <= 0)
+          {
+            $response = array("response" => false, "message" => "Debe ingresar una hora trabajada");
+            return $response;
+          }
+
           $response = $modelo->cargarHoras($idProyAnalista,$fecha,$descripcion,$horas_trabajadas);
 
           if($response["response"]){
@@ -101,6 +115,7 @@ class HorasCargadasController extends Controller
           //$this->notificarHorasCargadas($parametros_email,$descripcion,$horas_trabajadas,$response["proyecto"]);
           return $response;
         }
+
         $response = array("response" => false, "message" => "A intentado introducir una actividad en una fecha a futuros acción no permitida");
         return $response;
       }
