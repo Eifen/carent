@@ -527,7 +527,10 @@
           //Se utiliza el metodo get para su busqueda y se envian con los parametros
           axios.get('/buscarRepTotalHorasCarg', {params: parametros})
           .then(function (response) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6bb643571201fd33e7a6e01791a43f9729518998
             //self.formFiltro.campos.cargos.disabled = false;
             self.formFiltro.campos.divisiones.disabled = false;
             self.formFiltro.campos.empleado.disabled = false;
