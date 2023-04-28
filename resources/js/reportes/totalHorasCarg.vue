@@ -176,8 +176,8 @@
           </alert>
         </template>
         <template v-slot:cell(e)="data">
-           <i v-if="data.item.eficiencia=='eficiente'" class="fas fa-check" style="color: #40d44a;"></i>
-           <i v-if="data.item.eficiencia=='deficiente'" class="fas fa-times" style="color: #ce122e;"></i>
+           <i v-if="data.item.eficiencia" class="fas fa-check" style="color: #40d44a;"></i>
+           <i v-if="!data.item.eficiencia" class="fas fa-times" style="color: #ce122e;"></i>
         </template>
         <template v-slot:custom-foot v-if="tabla.registros.length > 0">
           <b-tr>
