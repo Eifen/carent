@@ -174,9 +174,6 @@ class TotalHorasCargModel extends Model
                 $Division = $this->Divisiones([$usuario->id_division]);
                 $Cargabilidad = $this->DivisionCargabilidad($Cargo->id, $Division[0]->id_tipo);
 
-                #Porcentaje Proyecto
-                $PerProyecto =  ($HorasProy * 100) / ($HorasProy != 0 && $ReferenciaTotal != 0 ? $ReferenciaTotal : 1);
-
                 #Porcentaje total
                 $PerTotal = ($HoraTotal * 100) / ($HoraTotal != 0 && $ReferenciaTotal != 0 ? $ReferenciaTotal : 1);
 
@@ -187,7 +184,7 @@ class TotalHorasCargModel extends Model
                     "usuario_cargo" => $Cargo->descripcion,
                     "usuario_division" => $this->Divisiones([$usuario->id_division])[0]->descripcion,
                     'total_horas_cargables' => $HorasProy,
-                    'porcen_horas_cargables' => $PerProyecto,
+                    'porcen_horas_cargables' => ($HorasProy * 100) / ($HorasProy != 0 && $ReferenciaTotal != 0 ? $ReferenciaTotal : 1),
                     'total_horas_no_cargables' => $HorasAdmon,
                     'porcen_horas_no_cargables' => ($HorasAdmon * 100) / ($HorasAdmon != 0 && $ReferenciaTotal != 0 ? $ReferenciaTotal : 1),
                     'total_horas' => $HoraTotal,
@@ -198,7 +195,7 @@ class TotalHorasCargModel extends Model
                     'fecha_ingreso' => ($usuario->fecha_ingreso === null ? $usuario->fecha_ingreso : date('Y-m-d',strtotime($usuario->fecha_ingreso))),
                     'fecha_egreso' => ($usuario->fecha_egreso === null ? $usuario->fecha_egreso : date('Y-m-d',strtotime($usuario->fecha_egreso))),
                     'orden' => $Cargo->orden,
-                    'eficiencia' => (optional($Cargabilidad)->porcentaje <= $PerProyecto ? "eficiente" : "deficiente"),
+                    'eficiencia' => (optional($Cargabilidad)->porcentaje <= $PerTotal ? true : false),
                 );
             }
         }
