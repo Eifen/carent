@@ -14,12 +14,14 @@ class TotalHorasCargController extends Controller
         //Agrupamos la data
         $paginar = 50;
         $divisiones = ModeloHoras::Divisiones();
+        $cargos = ModeloHoras::GetAllCargos();
         $fecha_desde = date("Y-m-01");
         $fecha_hasta = date("Y-m-d");
         $paginas = 1;
         $maximo_horas = $modelo->GetHorasTotales($fecha_desde,$fecha_hasta);
         return [
             "divisiones" => $divisiones,
+            "cargos" => $cargos,
             "fecha_desde" => $fecha_desde,
             "fecha_hasta" => $fecha_hasta,
             "paginas" => $paginas,
@@ -34,6 +36,8 @@ class TotalHorasCargController extends Controller
       //Agrupamos la data
       $divisiones = (!is_array($request->input('divisiones')) ? ModeloHoras::Divisiones() 
                     : ModeloHoras::Divisiones($request->input('divisiones')));
+      $cargos = (!is_array($request->input('cargos')) ? 0 
+                    : ModeloHoras::GetAllCargos($request->input('cargos')));
       $fecha_desde = ($request->input('fecha_desde') === null ? date('Y-m-01') : date($request->input('fecha_desde')));
       $fecha_hasta = ($request->input('fecha_hasta') === null ? date('Y-m-d') : date($request->input('fecha_hasta')));
       $paginar = $request->input('paginar');
@@ -43,6 +47,7 @@ class TotalHorasCargController extends Controller
       $maximo_horas = $modelo->GetHorasTotales($fecha_desde,$fecha_hasta)["horas"];
       return [
           "divisiones" => $divisiones,
+          "cargos" => (get_debug_type($cargos) == 'int' ? "NoSelect" : ModeloHoras::Cargos($cargos[0]->id)->descripcion),
           "totales" => (isset($totales) ? $totales : []),
           "fecha_desde" => $fecha_desde,
           "fecha_hasta" => $fecha_hasta,

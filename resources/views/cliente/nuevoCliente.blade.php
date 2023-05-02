@@ -145,7 +145,7 @@
                 description="Iniciar con: V-, E-, P-, G-, J-, C-"
                 label="Rif"
                 label-for="rif"
-                id="group-rif">
+                id="rif">
                 <the-mask
                   mask="F- MMMMMMMMMM" :tokens="hexTokens"
                   @input="cleanFieldForm(form.camposAtributos.rif)"

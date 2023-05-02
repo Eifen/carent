@@ -45,6 +45,17 @@ class TotalHorasCargModel extends Model
     }
 
     /**
+     * Metodo que abstrae el grupo de cargos
+     * @param int $id_cargo. Id del cargo
+     */
+    static function GroupCargo($id_cargo)
+    {
+        return DB::table('tbl_cargo_group_niveles')
+        ->where("id_cargo","=",$id_cargo)
+        ->first();
+    }
+
+    /**
      * Metodo que abstrae las divisiones de la base de datos
      * @param Array $Iddivision captura el id de la division
      * @return Array Retorna un array de objetos. La longitud depende de las divisiones
@@ -58,6 +69,21 @@ class TotalHorasCargModel extends Model
 
         return DB::table('tbl_division')->get(['id', 'descripcion','id_tipo']);
     } // Fin divisiones
+
+    /**
+     * Metodo que abstrae los cargos de la base de datos
+     * @param Array $CargosArray captura el id de la division, o los id
+     * @return Array Retorna un array de objetos. La longitud depende de las divisiones
+     */
+    static function GetAllCargos($CargosArray=null)
+    {
+        if($CargosArray !== null)
+        {
+            return DB::table('tbl_cargo_empleado')->whereIn('id',$CargosArray)->get(['id','descripcion']);
+        };
+
+        return DB::table('tbl_cargo_empleado')->get(['id', 'descripcion']);
+    } // Fin cargos
 
     /**
      * Metodo que devuelve el formato de Reporte
@@ -173,9 +199,17 @@ class TotalHorasCargModel extends Model
 
                 $Division = $this->Divisiones([$usuario->id_division]);
                 $Cargabilidad = $this->DivisionCargabilidad($Cargo->id, $Division[0]->id_tipo);
+                $CargabilidadAdmin = 100 - optional($Cargabilidad)->porcentaje;
+                $GroupCargo = $this->GroupCargo($Cargo->id);
 
-		#Porcentaje proyectos
-		$PerProyecto = ($HorasProy * 100) / ($HorasProy != 0 && $ReferenciaTotal != 0 ? $ReferenciaTotal : 1);
+		        #Porcentaje proyectos
+		        $PerProyecto = ($HorasProy * 100) / ($HorasProy != 0 && $ReferenciaTotal != 0 ? $ReferenciaTotal : 1);
+                $ExcesoPerProy = ($PerProyecto > optional($Cargabilidad)->porcentaje ? ($PerProyecto - optional($Cargabilidad)->porcentaje) : 0);
+
+                #Porcentaje Administrativo
+                $PerAdmon = ($HorasAdmon * 100) / ($HorasAdmon != 0 && $ReferenciaTotal != 0 ? $ReferenciaTotal : 1);
+                $ExcesoPerAdmon = ($PerAdmon > $CargabilidadAdmin ? ($PerAdmon - $CargabilidadAdmin) : 0);
+
 
                 #Porcentaje total
                 $PerTotal = ($HoraTotal * 100) / ($HoraTotal != 0 && $ReferenciaTotal != 0 ? $ReferenciaTotal : 1);
@@ -189,9 +223,13 @@ class TotalHorasCargModel extends Model
                     'total_horas_cargables' => $HorasProy,
                     'porcen_horas_cargables' => $PerProyecto,
                     'total_horas_no_cargables' => $HorasAdmon,
-                    'porcen_horas_no_cargables' => ($HorasAdmon * 100) / ($HorasAdmon != 0 && $ReferenciaTotal != 0 ? $ReferenciaTotal : 1),
+                    'porcen_horas_no_cargables' => $PerAdmon,
                     'total_horas' => $HoraTotal,
-                    'porcen_carga_total' => $PerTotal,
+                    'porcen_carga_total' => ($PerTotal > 100 ? 100 : $PerTotal),
+                    'total_exceso_proyectos' => $ReferenciaTotal * ($ExcesoPerProy / 100),
+                    'exceso_per_proyectos' => $ExcesoPerProy,
+                    'total_exceso_administrativo' => $ReferenciaTotal * ($ExcesoPerAdmon / 100),
+                    'exceso_per_administrativo' => $ExcesoPerAdmon,
                     'fecha_desde' => $this->rangoFechasUsers[$cursorUser][$division]["fecha_desde"],
                     'fecha_hasta' => $this->rangoFechasUsers[$cursorUser][$division]["fecha_hasta"],
                     'ref_usuario_total' => $ReferenciaTotal,
@@ -199,6 +237,7 @@ class TotalHorasCargModel extends Model
                     'fecha_egreso' => ($usuario->fecha_egreso === null ? $usuario->fecha_egreso : date('Y-m-d',strtotime($usuario->fecha_egreso))),
                     'orden' => $Cargo->orden,
                     'eficiencia' => (optional($Cargabilidad)->porcentaje <= $PerProyecto  ? true : false),
+                    'grupo_nivel' => (optional($GroupCargo)->nivel_group)
                 );
             }
         }
