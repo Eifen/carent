@@ -11,12 +11,26 @@ use Illuminate\Support\Facades\Session;
 class UsersController extends Controller
 {
     protected $modelInstance;
+    protected $permitControl = false;
+
+    /**
+     * Metodo inicial de carga de pantalla de usuarios
+     * @param Request Almacena los datos de la sesion y permisos de acceder a la vista principal
+     */
+    public function index(Request $request)
+    {
+        //Enviamos la data dependiendo del estado de la sesión
+        if($request->session()->has('idUsuario')){ $this->permitControl = true; }
+
+        return view('index')->with('Session',$this->permitControl);
+    }
 
     /**
      * Metodo que extrae todos los usuarios
      * @return Response devuelve objeto response con la data resultante
      */
-    public function index(){
+    public function GetAllUser()
+    {
         $this->modelInstance = new ConfigModel();
         $allData = $this->modelInstance->GetAll('users');
 
@@ -25,29 +39,19 @@ class UsersController extends Controller
     }
 
     /**
-     * Metodo que busca un usuario por el Id
+     * Metodo que busca un usuario por el Code
      * @param Request Obtiene un array de los datos provenientes de la vista a través de un objeto JSON
-     * @return Response Retorna los datos del usuario por ID a excepción de la clave
+     * @return Response Retorna los datos del usuario a excepción de la clave
      */
-    public function UserPerId(Request $dataUser)
+    public function UserPerCode(Request $dataUser)
     {
-        
-    }
+        //Pasamos el codigo para obtener todos los datos y luego lo almacenamos en un sessión
+        $user = UsersModel::PrepareDataUpdate($dataUser->input("codigoSQL"));
 
-    //Documento de identidad
-    public function GetTypeDocument()
-    {
-        $getType = UsersModel::TypeDocument(1);
-        //Retornamos la data
-        return response($getType,200);
-    }
+        //Convertidos la data a un json
+        Session::put("dataUpdate",$user);
 
-    //Estados del Pais
-    public function GetEstado()
-    {
-        $getState = UsersModel::GetAllState();
-        //Retornamos la data
-        return response($getState,200);
+        return response('User loaded',200);
     }
 
     //Municipios en funcion del Estado
@@ -66,20 +70,21 @@ class UsersController extends Controller
         return response($getParish,200);
     }
 
-    //Todas las divisiones
-    public function GetDivision()
+    /**
+     * Metodo que sincroniza la data inicial
+     * @return Response Object con las listas en el formulario
+     */
+    public function GetInitData()
     {
-        $getDivision = UsersModel::GetAllDivision();
-        //retornamos la data
-        return response($getDivision,200);
-    }
+        $dataInit = [
+            "TiposDocumento" => UsersModel::TypeDocument(1),
+            "StatesUsuario" =>  UsersModel::GetAllState(),
+            "Divisiones" => UsersModel::GetAllDivision(),
+            "Cargos" => UsersModel::GetAllCargo(),
+            "StatusUsuario" => ConfigModel::GetAllStatus('usuarios')
+        ];
 
-    //Todos los cargos
-    public function GetCargo()
-    {
-        $getCargo = UsersModel::GetAllCargo();
-        //retornamos la data
-        return response($getCargo,200);
+        return response($dataInit,200);
     }
 
     //Registro de nuevo Usuarios

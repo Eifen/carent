@@ -26,23 +26,21 @@ Route::prefix('/')->group(function(){
     Route::get('/logout',[LoginController::class,'Logout']);
     //Usuarios
     Route::prefix('/usuarios')->group(function(){
-        Route::get('/',[LoginController::class,'index'])->name('users');
+        Route::get('/',[UsersController::class,'index'])->name('users');
         Route::post('/limitPag',[ConfigController::class,'LimitPag']);
-        Route::post('/allUsers',[UsersController::class,'index']);
-        Route::post('/getTypeDocument',[UsersController::class,'GetTypeDocument']);
-        Route::post('/getState',[UsersController::class,'GetEstado']);
+        Route::post('/allUsers',[UsersController::class,'GetAllUser']);
+        Route::post('/getParamsInit',[UsersController::class,'GetInitData']); //Parametros iniciales
         Route::post('/getMunicipality',[UsersController::class,'GetMunicipality']);
         Route::post('/getParish',[UsersController::class,'GetParish']);
-        Route::post('/getDivision',[UsersController::class,'GetDivision']);
-        Route::post('/getCargo',[UsersController::class,'GetCargo']);
         //Create
         Route::prefix('/create')->group(function(){
-            Route::get('/',[LoginController::class,'index'])->name('createUser');
+            Route::get('/',[UsersController::class,'index'])->name('createUser');
             Route::post('/newUser',[UsersController::class,'NewUser']);
         });
         //Update
         Route::prefix('/update')->group(function(){
-            Route::get('/',[LoginController::class,'index'])->name('updateUser');
+            Route::get('/',[UsersController::class,'index'])->name('updateUser');
+            Route::post('/loadingUser',[UsersController::class,'UserPerCode']);
             Route::post('/updateUser',[UsersController::class,'UpdateUser']);
         });
     });

@@ -9,22 +9,20 @@ use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
-    protected $tupleValidacion = false;
+    protected $validacion = false;
     //Inicializar aplicación
     public function index(Request $request){
 
         $LoginInstance = new LoginModel();
         $encryptData = $LoginInstance->GetEncryptKey();
         //Enviamos la data dependiendo del estado de la sesión
-        if($request->session()->has('idUsuario')){ $this->tupleValidacion = true; }
+        if($request->session()->has('idUsuario')){ $this->validacion = true; }
 
         //Traemos el KEY y el IV de la base de datos y lo asignamos a una instancia de Session
         $request->session()->put('encrypt-key', $encryptData["key"]);
         $request->session()->put('encrypt-iv', $encryptData["iv"]);
 
-        return view('index')
-        ->with('Session',$this->tupleValidacion)
-        ->with('DataSession', $request);
+        return view('index')->with('Session',$this->validacion);
     }
 
     /**

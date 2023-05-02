@@ -7,4 +7,4 @@ import './bootstrap';
 import './UI/login';
 import './UI/header';
 import './UI/Users/usersIndex';
-import './UI/Users/usersCreate';
+import './UI/Users/usersControl';

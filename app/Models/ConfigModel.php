@@ -44,4 +44,17 @@ class ConfigModel extends Model
         $Response = json_decode($GetReponse[0]-> JsonDataTable,true);
         return $Response;
     }
+
+    /**
+     * Metodo que retorna los status en función al tipo de tabla
+     * @param string $tableReference Tabla a la que se hace referencia
+     * @return array Devuelve un array con la información del status
+     */
+    public static function GetAllStatus($tableReference)
+    {
+        switch ($tableReference) {
+            case 'usuarios':
+                return DB::table('tbl_usuarios_status')->get();
+        }
+    }
 }

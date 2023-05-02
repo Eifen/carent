@@ -1,5 +1,5 @@
 <template>
-    <DatePicker v-model="date">
+    <DatePicker v-model="date" is-required>
         <template #default="{ togglePopover }">
             <font-awesome
             string-icon="fa-solid fa-calendar" @click="togglePopover"
@@ -16,12 +16,12 @@ import FontAwesome from "../Components/FontAwesome/FontAwesome.vue";
 export default {
     data(){
         return{
-            date: new Date(),
+            date: '',
             dateDTO: { day: 0, month: 0, year: 0 } // Objeto de transferencia
         }
     },
     watch:{
-        date(){
+        date(newDate){
             this.dateDTO = {
                 day: this.date.getDate(),
                 month: this.date.getMonth() + 1,

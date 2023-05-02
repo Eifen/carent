@@ -71,7 +71,21 @@ const usersApp = createApp ({
         titleParse(){ if(this.isMounted) return JSON.parse(JSON.stringify(this.usersColumn)); },
         searchParse(){ if(this.isMounted) return JSON.parse(JSON.stringify(this.selectSearch)); },
         //Metodo dedicados a las configuraciones de la tabla
-        editUsuarios(idUsuario){ console.log(this.usersData[idUsuario]) },
+        editUsuarios(idUsuario){
+            //Seccionamos el ID y luego lo pasamos al controlador
+            const paramsDTO = { "codigoSQL": this.usersData[idUsuario].codigo };
+
+            axios.post('/usuarios/update/loadingUser',paramsDTO)
+            .then(request => {
+                //Verificamos que la data de respuesta no este vacia
+                if(request.status === 200 && request.data === '') throw request;
+                //Redireccionamos
+                window.location.href = "/usuarios/update"
+            })
+            .catch(error => {
+                console.error(error);
+            })
+         },
         permisosUsuarios(idUsuario){ console.log(this.usersData[idUsuario]) },
         crearUsuario(){ window.location.href = "/usuarios/create" }
 

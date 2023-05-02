@@ -16,7 +16,7 @@ class UsersModel extends Model
     {
         $getType = DB::table('tbl_usuarios_documentoidentidad_tipo')
         ->where('Id_estatus',$estatus)
-        ->get(['Abreviatura','Descripcion']);
+        ->get(['AbreviaturaTipo','DescripcionTipo']);
         return $getType;
         //[0] = Venezolana, [1] = Extranjera
     }
@@ -67,7 +67,7 @@ class UsersModel extends Model
     public static function GetAllDivision()
     {
         $getDivision = DB::table(('tbl_usuarios_jerarquia_division'))
-        ->get(['Id','Descripcion']);
+        ->get(['Id','NombreDivision']);
         return $getDivision;
         //[0] = Id, [1] = Descripcion
     }
@@ -79,18 +79,22 @@ class UsersModel extends Model
     public static function GetAllCargo()
     {
         $getCargo = DB::table(('tbl_usuarios_jerarquia_cargo'))
-        ->get(['Id','Descripcion']);
+        ->get(['Id','NombreCargo']);
         return $getCargo;
         //[0] = Id, [1] = Descripcion
     }
 
     /**
      * Metodo que devuelve los datos del usuario
+     * @param Int $codigo: Almacena el codigo del usuario
      * @return Array devuelve un array de referencias data["info1"] con la información del usuario
      */
-    public static function PrepareDataUpdate($Codigo)
+    public static function PrepareDataUpdate($codigo)
     {
         $GetUser = DB::table('tbl_usuarios')
+        //Cargo y Division
+        ->join("tbl_usuarios_jerarquia_cargo","tbl_usuarios.Id_jerarquia_cargo","=","tbl_usuarios_jerarquia_cargo.Id")
+        ->join("tbl_usuarios_jerarquia_division","tbl_usuarios.Id_jerarquia_division","=","tbl_usuarios_jerarquia_division.Id")
         //Documento de identidad
         ->join("tbl_usuarios_documentoidentidad", "tbl_usuarios.Id", "=", "tbl_usuarios_documentoidentidad.Id_usuario")
         ->join("tbl_usuarios_documentoidentidad_tipo", "tbl_usuarios_documentoidentidad.Id_tipo_documento", "=", "tbl_usuarios_documentoidentidad_tipo.Id")
@@ -103,22 +107,11 @@ class UsersModel extends Model
         //Municipio
         ->join("tbl_usuarios_direccion_estado","tbl_usuarios_direccion_municipio.Id_direccion_estado","=","tbl_usuarios_direccion_estado.Id")
         //Hacemos el select
-        ->select("tbl_usuarios.Id","tbl_usuarios.Codigo","tbl_usuarios.Primer_nombre","tbl_usuarios.Segundo_nombre","tbl_usuarios.Primer_Apellido","tbl_usuarios.Segundo_apellido","tbl_usuarios.Fecha_nacimiento","tbl_usuarios.Fecha_ingreso","tbl_usuarios.Fecha_egreso","tbl_usuarios.documentoidentidad_tipo")
-        ->where("Codigo","=",$Codigo)
-        ->first([
-            'Id',
-            'Codigo',
-            'Primer_nombre',
-            'Segundo_nombre',
-            'Primer_apellido',
-            'Segundo_apellido',
-            'Fecha_nacimiento',
-            'Fecha_ingreso',
-            'Fecha_egreso',
-            'Id_jerarquia_cargo',
-            'Id_jerarquia_division',
-            'Id_direccion_parroquia'
-        ]);
+        ->select("tbl_usuarios.Id","tbl_usuarios.Id_estatus as StatusId","tbl_usuarios.Codigo","tbl_usuarios.Primer_nombre","tbl_usuarios.Segundo_nombre","tbl_usuarios.Primer_Apellido","tbl_usuarios.Segundo_apellido","tbl_usuarios.Fecha_nacimiento","tbl_usuarios.Fecha_ingreso","tbl_usuarios.Fecha_egreso","tbl_usuarios_documentoidentidad_tipo.AbreviaturaTipo","tbl_usuarios_documentoidentidad.Descripcion as Cedula","tbl_usuarios_contacto.Correo_principal", "tbl_usuarios_contacto.Correo_secundario","tbl_usuarios_contacto.Telefono_principal","tbl_usuarios_contacto.Telefono_secundario","tbl_usuarios_direccion_parroquia.Id as ParroquiaId","tbl_usuarios_direccion_municipio.Id as MunicipioId","tbl_usuarios_direccion_estado.Id as EstadoId","tbl_usuarios_jerarquia_cargo.Id as CargoId","tbl_usuarios_jerarquia_division.Id as DivisionId")
+        ->where("tbl_usuarios.Codigo","=",$codigo)
+        ->first();
+
+        return $GetUser;
     }
 
     /**

@@ -95,9 +95,12 @@
                     <label for="DocumentoIdentidad">Documento de Identidad <span :class="formClass.requiredField">*</span></label>
                     <div class="input-group" :class="formClass.select">
                         <span class="input-group-text" id="basic-addon1">
-                            <select class="form-select" @change="enableInput">
-                            <option selected disabled>Tipo</option>
-                            <option v-for="(select, cursor) in typeDocument" :key="cursor" :value="select.Abreviatura">{{ select.Descripcion }}</option>
+                            <select class="form-select" @change="enableInput" v-model="inputDocumentoSelect">
+                            <option value=0 selected disabled>Tipo</option>
+                            <option v-for="(select, cursor) in typeDocument" :key="cursor"
+                            :value="select.AbreviaturaTipo">
+                                {{ select.DescripcionTipo }}
+                            </option>
                             </select>
                         </span>
                         <input type="text" class="form-control" aria-describedby="basic-addon1"
@@ -224,6 +227,16 @@
                         v-model="inputSecondPhone">
                     </div>
                 </div>
+                <!-- Estado. Solo para Edit -->
+                <div class="mb-3" v-if="isEdit">
+                    <label for="Status">Status del empleado</label>
+                    <div class="input-group">
+                        <select class="form-select" v-model="inputStatusSelect">
+                            <option value=0 selected disabled>Seleccione el status</option>
+                            <option v-for="(select, cursor) in statusData" :key="cursor" :value="select.Id">{{ select.Descripcion }}</option>
+                        </select>
+                    </div>
+                </div>
             </fieldset>
             <!-- Datos para el empleado -->
             <legend :class="formClass.legend" v-text="messages.empleado"></legend>
@@ -239,7 +252,7 @@
             <fieldset :class="formClass.fieldset" v-if="inputCheckedCrowe">
                 <!-- Estado -->
                 <div class="mb-3">
-                    <label for="DocumentoIdentidad">Estado</label>
+                    <label for="Estado">Estado</label>
                     <div class="input-group">
                         <select class="form-select" v-model="inputEstadoSelect">
                             <option value=0 selected disabled>Seleccione el estado</option>
@@ -249,7 +262,7 @@
                 </div>
                 <!-- Municipio -->
                 <div class="mb-3">
-                    <label for="DocumentoIdentidad">Municipio</label>
+                    <label for="Municipio">Municipio</label>
                     <div class="input-group">
                         <select class="form-select" :disabled="inputEstadoSelect == 0" v-model="inputMunicipioSelect">
                             <option value=0 selected disabled>Seleccione el Municipio</option>
@@ -259,7 +272,7 @@
                 </div>
                 <!-- Parroquia -->
                 <div class="mb-3">
-                    <label for="DocumentoIdentidad">Parroquia</label>
+                    <label for="Parroquia">Parroquia</label>
                     <div class="input-group">
                         <select class="form-select" :disabled="inputMunicipioSelect == 0" v-model="inputParroquiaSelect">
                             <option value=0 selected disabled>Seleccione la Parroquia</option>
@@ -269,21 +282,21 @@
                 </div>
                 <!-- División -->
                 <div class="mb-3">
-                    <label for="DocumentoIdentidad">División</label>
+                    <label for="Division">División</label>
                     <div class="input-group">
                         <select class="form-select" v-model="inputDivisionSelect">
                             <option value=0 selected disabled>Seleccione la División</option>
-                            <option v-for="(select, cursor) in divisionData" :key="cursor" :value="select.Id">{{ select.Descripcion }}</option>
+                            <option v-for="(select, cursor) in divisionData" :key="cursor" :value="select.Id">{{ select.NombreDivision }}</option>
                         </select>
                     </div>
                 </div>
                 <!-- Cargo -->
                 <div class="mb-3">
-                    <label for="DocumentoIdentidad">Cargo</label>
+                    <label for="Cargo">Cargo</label>
                     <div class="input-group">
                         <select class="form-select" :disabled="inputDivisionSelect == 0" v-model="inputCargoSelect">
                             <option value=0 selected disabled>Seleccione el Cargo</option>
-                            <option v-for="(select, cursor) in cargoData" :key="cursor" :value="select.Id">{{ select.Descripcion }}</option>
+                            <option v-for="(select, cursor) in cargoData" :key="cursor" :value="select.Id">{{ select.NombreCargo }}</option>
                         </select>
                     </div>
                 </div>
@@ -305,6 +318,26 @@
                         v-if="messages.form.ingresoError != ''">
                             <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
                             {{messages.form.ingresoError}}
+                    </div>
+                </div>
+                <!-- Fecha de egreso. Solo para el edit -->
+                <div class="mb-3" v-if="isEdit">
+                    <label for="egreso">Fecha de Egreso</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control"
+                        placeholder="Ejemplo: 1990-02-18"
+                        id="egreso"
+                        aria-describedby="basic-addon2"
+                        v-model="inputEgreso">
+                        <span class="input-group-text" id="basic-addon2">
+                            <calendar @to-input="insertEgreso"></calendar>
+                        </span>
+                    </div>
+                    <!-- Mensajes de error en fecha -->
+                    <div :class="formClass.failureValidation"
+                        v-if="messages.form.egresoError != ''">
+                            <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
+                            {{messages.form.egresoError}}
                     </div>
                 </div>
             </fieldset>
@@ -330,9 +363,9 @@ const LIMITSTRING = { NAME: 20 }
 
 export default {
     props:{
-        isEdit: Boolean,
-        isClick: Boolean,
-        dataEdit: Array,
+        isEdit: Boolean, //Define si el formulario es de edición o de creación
+        isClick: Boolean, //Controla el estado del boton
+        dataEdit: Object, //Almacena la data para update
     },
     data(){
         return{
@@ -367,7 +400,8 @@ export default {
                     documentError: '',
                     firstemailError: '',
                     secondemailError: '',
-                    ingresoError:''
+                    ingresoError:'',
+                    egresoError:'',
                 }
             },
             inputBirthday: '', //Value del input Birthday
@@ -376,6 +410,7 @@ export default {
             inputLastname: '', //Value del input para Last Name
             inputLastSecondname: '', //Value del input para Last Second Name
             inputSelect: '', //Value del input para el Documento de Identidad
+            inputDocumentoSelect: 0, //Value del input para la selección del tipo de documento
             inputCode: '', //Value del input para el Código
             inputFirstEmail: '', //Value para el primer correo (Principal)
             inputSecondEmail:'', //Value para el segundo correo (Secundario)
@@ -387,7 +422,9 @@ export default {
             inputParroquiaSelect: 0, //Almacena el value de la parroquia
             inputDivisionSelect: 0, //Almacena el value de la división
             inputCargoSelect: 0, //Almacena el value del cargo
+            inputStatusSelect: 0, //Almacena el value del status
             inputIngreso: '', //Almacena la fecha de ingreso
+            inputEgreso: '', //Almacena la fecha de egreso
             getTargetTypeDocument: '', //Almacena el tipo de select en el documento de identidad
             inputWatchers: [], //Array que almacena todos los watcher
 
@@ -398,6 +435,7 @@ export default {
             parishData:[], //Data para la parroquia
             divisionData: [], //Data para la division
             cargoData: [], //Data para los cargos
+            statusData: [], //Data para el status del empleado
 
             //Espacio reservado para el control del Create / Edit
             submitButton: {
@@ -475,7 +513,7 @@ export default {
         },
         {
             //Validaciones de fechas
-            propiedades: ['inputBirthday','inputIngreso'],
+            propiedades: ['inputBirthday','inputIngreso','inputEgreso'],
             watch: (newDate) =>
             {
                 try{
@@ -486,16 +524,18 @@ export default {
                     //Fecha de ingreso
                     if(this.inputIngreso == newDate && !validateDate.response && newDate.length >= 10)
                     throw {"message":validateDate.message,"errorInput":"ingresoError","input":"inputIngreso"};
+                    //Fecha de egreso
+                    if(this.inputEgreso == newDate && !validateDate.response && newDate.length >= 10)
+                    throw {"message":validateDate.message,"errorInput":"egresoError","input":"inputEgreso"};
                     //Si no presenta ningún error, es que cumple con el formato
 
                     //Desactivamos las banderas y el error si la fecha es vacia
-                    if(this.inputBirthday == '' || this.inputBirthday.length < 10)
-                    {
-                        this.messages.form.birthdayError = '';
-                        this.submitButton.birthdayValid = false;
-                    }
+                    if(this.inputBirthday == '' || this.inputBirthday.length < 10) this.submitButton.birthdayValid = false;
 
-                    if(this.inputIngreso == '' || this.inputIngreso.length < 10) this.messages.form.ingresoError = '';
+                    //Deshabilitamos los errores
+                     if(this.inputBirthday == '' || this.inputBirthday.length <= 10) this.messages.form.birthdayError = '';
+                    if(this.inputIngreso == '' || this.inputIngreso.length <= 10) this.messages.form.ingresoError = '';
+                    if(this.inputEgreso == '' || this.inputEgreso.length <= 10) this.messages.form.egresoError = '';
 
                     //Activamos la bandera de la fecha de Nacimiento
                     if(this.inputBirthday == newDate && validateDate.response && this.inputBirthday.length == 10)
@@ -582,10 +622,29 @@ export default {
                 }
             }
         }]
+
+        //Axios Request
+        axios.post('/usuarios/getParamsInit')
+        .then(request => {
+            if(request.status !== 200) throw request;
+
+            //Si sincroniza con cada una de las listas
+            this.typeDocument = request.data.TiposDocumento
+            this.stateData = request.data.StatesUsuario
+            this.divisionData = request.data.Divisiones
+            this.cargoData = request.data.Cargos
+            this.statusData = request.data.StatusUsuario
+            //Si la bandera de edit esta activa, pasamos la data almacenada en el cliente
+            if(this.isEdit) this.$emit('init-user');
+        })
+        .catch(error => {
+            console.error(error)
+        })
     },
     mounted()
     {
         this.$emit('encrypt');
+
         //Registramos los watch
         for (let cursorWatch = 0; cursorWatch < this.inputWatchers.length; cursorWatch++) {
             const propiedadesWatchers = this.inputWatchers[cursorWatch].propiedades;
@@ -597,43 +656,6 @@ export default {
                 this.$watch(propiedad,this.inputWatchers[cursorWatch].watch);
             }
         }
-
-        //Axios
-        //Type Document
-        axios.post('/usuarios/getTypeDocument')
-        .then(request => {
-            if(request.status !== 200) throw request;
-
-            //Si sincroniza
-            this.typeDocument = request.data;
-        })
-        .catch(error => {
-            console.error(error)
-        })
-
-        //State User
-        axios.post('/usuarios/getState')
-        .then(request => {
-            if(request.status !== 200) throw request;
-
-            //Se sincroniza
-            this.stateData = request.data;
-        })
-        .catch(error=>{
-            console.error(error)
-        })
-
-        //Division User
-        axios.post('/usuarios/getDivision')
-        .then(request => {
-            if(request.status !== 200) throw request;
-
-            //Se sincroniza
-            this.divisionData = request.data;
-        })
-        .catch(error=>{
-            console.error(error)
-        })
     },
     methods:{
         /**
@@ -646,6 +668,7 @@ export default {
          * @param {*} dateDTO Captura el objeto de transferencia que viene desde el emit del componente
          */
         insertIngreso(dateDTO){ this.inputIngreso = `${dateDTO.year}-${dateDTO.month}-${dateDTO.day}`; },
+        insertEgreso(dateDTO){ this.inputEgreso = `${dateDTO.year}-${dateDTO.month}-${dateDTO.day}`; },
         /**
          * Metodo que habilita el input del documento de identidad
          * @param {*} inputEvent Objeto de tipo Input event que captura el valor seleccionado
@@ -659,6 +682,7 @@ export default {
          */
         DTOEmit()
         {
+            //Pasamos los parametros a analizar
             let paramsToEmit =
             {
                 "FirstName": this.inputFirstname,
@@ -675,13 +699,46 @@ export default {
                 "IdParish": this.inputParroquiaSelect,
                 "IdCargo": this.inputCargoSelect,
                 "IdDivision": this.inputDivisionSelect,
-                "DateIngreso": this.inputIngreso
+                "DateIngreso": this.inputIngreso,
             }
 
+            //Preparamos los parametros de update en caso de actualizar
+            let paramsToUpdate =
+            {
+                "DateEgreso": this.inputEgreso,
+                "Status": this.inputStatusSelect
+            }
+
+            //Si estamos en edición, unimos los dos objetos
+            if(this.isEdit) paramsToEmit = { ...paramsToEmit, ...paramsToUpdate }
             this.$emit('submit-form',paramsToEmit);
         }
     },
     watch:{
+        //Watch para el update
+        dataEdit(newEdit){
+            this.inputFirstname = newEdit.Primer_nombre
+            this.inputSecondname = newEdit.Segundo_nombre
+            this.inputLastname = newEdit.Primer_Apellido
+            this.inputLastSecondname = newEdit.Segundo_apellido
+            this.inputSelect = newEdit.AbreviaturaTipo + "-" + newEdit.Cedula
+            this.inputDocumentoSelect = newEdit.AbreviaturaTipo
+            this.inputBirthday = newEdit.Fecha_nacimiento
+            this.inputCode = newEdit.Codigo
+            this.inputFirstEmail = newEdit.Correo_principal
+            this.inputSecondEmail = newEdit.Correo_secundario
+            this.inputFirstPhone = newEdit.Telefono_principal
+            this.inputSecondPhone = newEdit.Telefono_secundario
+            this.inputStatusSelect = newEdit.StatusId
+            //Activamos la casilla de empleado
+            this.inputEstadoSelect = newEdit.EstadoId
+            this.inputMunicipioSelect = newEdit.MunicipioId
+            this.inputParroquiaSelect = newEdit.ParroquiaId
+            this.inputDivisionSelect = newEdit.DivisionId
+            this.inputCargoSelect = newEdit.CargoId
+            this.inputIngreso = newEdit.Fecha_ingreso
+         },
+
         //Watch del documento de identidad
         inputSelect(newSelect)
         {
@@ -696,7 +753,10 @@ export default {
                 //Activamos la bandera del documento
                 this.submitButton.documentValid = true;
             }catch (errorMessage){
-                this.inputSelect = `${this.getTargetTypeDocument}-`;
+                //Reestructuramos el formato en un funcion se activo el evento change o no
+                this.inputSelect = this.getTargetTypeDocument != ''
+                                    ? `${this.getTargetTypeDocument}-`
+                                    : `${this.dataEdit.AbreviaturaTipo}-`;
                 //Desactivamos la bandera
                 this.submitButton.documentValid = false;
                 //Pasamos el error
@@ -739,19 +799,6 @@ export default {
                 this.parishData = request.data;
             }).catch(error => {
                 console.error(error);
-            })
-        },
-        inputDivisionSelect(){
-            //Cargo User
-            axios.post('/usuarios/getCargo')
-            .then(request => {
-                if(request.status !== 200) throw request;
-
-                //Se sincroniza
-                this.cargoData = request.data;
-            })
-            .catch(error=>{
-                console.error(error)
             })
         },
         //Watch del submitButton
