@@ -538,7 +538,6 @@
           //Se utiliza el metodo get para su busqueda y se envian con los parametros
           axios.get('/buscarRepTotalHorasCarg', {params: parametros})
           .then(function (response) {
-            console.log(response)
             self.formFiltro.campos.cargos.disabled = false;
             self.formFiltro.campos.divisiones.disabled = false;
             self.formFiltro.campos.empleado.disabled = false;
@@ -590,8 +589,6 @@
             {
               self.tabla.registros = self.tabla.registros.filter(usuario => usuario.usuario_cargo == response.data.cargos)
             }
-
-            console.log(self.tabla.registros)
 
             if(response.data.totales.length === 0){
 
