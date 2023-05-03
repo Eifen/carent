@@ -41,14 +41,14 @@
              </template>
           </multiselect>
         </b-form-group>
-        <!--<b-form-group
+        <b-form-group
           class="form-group col-12 col-sm-6 col-md-4"
           label="Cargos"
           label-for="cargos"
           id="group-cargos">
           <multiselect :clear-on-select="false"
                        :disabled="formFiltro.campos.cargos.disabled"
-                       :multiple="true"
+                       :multiple="false"
                        :options="formFiltro.campos.cargos.listado"
                        :preserve-search="true"
                        :show-labels="false"
@@ -63,7 +63,7 @@
                              v-if="values.length &amp;&amp; !isOpen">{{ values.length }} seleccionado(s)</span>
              </template>
           </multiselect>
-        </b-form-group> -->
+        </b-form-group>
         <b-form-group
           :invalid-feedback="formFiltro.campos.fechaDesde.invalidFeedback"
           class="form-group col-12 col-sm-6 col-md-4"
@@ -176,8 +176,8 @@
           </alert>
         </template>
         <template v-slot:cell(e)="data">
-           <i v-if="data.item.eficiencia" class="fas fa-check" style="color: #40d44a;"></i>
-           <i v-if="!data.item.eficiencia" class="fas fa-times" style="color: #ce122e;"></i>
+           <i v-if="data.item.eficiencia == 'Eficiente'" class="fas fa-check" style="color: #40d44a;"></i>
+           <i v-if="data.item.eficiencia == 'Deficiente'" class="fas fa-times" style="color: #ce122e;"></i>
         </template>
         <template v-slot:custom-foot v-if="tabla.registros.length > 0">
           <b-tr>
@@ -243,11 +243,11 @@
               }
             },
             campos: {
-              // cargos:{
-              //   disabled: true,
-              //   listado: [],
-              //   value: []
-              // },
+              cargos:{
+                disabled: true,
+                listado: [],
+                value: []
+              },
               divisiones:{
                 disabled: true,
                 listado: [],
@@ -356,14 +356,14 @@
               self.mostrarAlert(self.tabla.alert, true, "warning", mensaje, false, false, 0);
 
             self.maximo_horas = parseInt(response.data.maximo_horas);
-            //self.formFiltro.campos.cargos.listado = response.data.cargos;
+            self.formFiltro.campos.cargos.listado = response.data.cargos;
             self.formFiltro.campos.divisiones.listado = response.data.divisiones;
 
             self.tabla.paginador.paginar = response.data.paginar;
             self.tabla.paginador.numPaginas = 1;
             self.tabla.paginador.max = 1;
 
-            //self.formFiltro.campos.cargos.disabled = false;
+            self.formFiltro.campos.cargos.disabled = false;
             self.formFiltro.campos.divisiones.disabled = false;
             self.formFiltro.campos.empleado.disabled = false;
             self.formFiltro.campos.fechaDesde.disabled = false;
@@ -437,19 +437,24 @@
               const data = {
                 nombre: datos[division][user].nombre,
                 usuario_cargo: datos[division][user].usuario_cargo,
+                nivel: datos[division][user].grupo_nivel,
                 usuario_division: datos[division][user].usuario_division,
+                eficiencia: (datos[division][user].eficiencia ? "Eficiente" : "Deficiente"),
                 total_horas_cargables: datos[division][user].total_horas_cargables,
-                porcen_horas_cargables: parseFloat(datos[division][user].porcen_horas_cargables.toFixed(2)),
+                porcen_horas_cargables: parseFloat(datos[division][user].porcen_horas_cargables.toFixed(2)).toLocaleString("es-ES"),
                 total_horas_no_cargables: datos[division][user].total_horas_no_cargables,
-                porcen_horas_no_cargables: parseFloat(datos[division][user].porcen_horas_no_cargables.toFixed(2)),
+                porcen_horas_no_cargables: parseFloat(datos[division][user].porcen_horas_no_cargables.toFixed(2)).toLocaleString("es-ES"),
                 total_horas: datos[division][user].total_horas,
-                porcen_carga_total: parseFloat(datos[division][user].porcen_carga_total.toFixed(2)),
+                porcen_carga_total: parseFloat(datos[division][user].porcen_carga_total.toFixed(2)).toLocaleString("es-ES"),
+                total_horas_exceso_admin: parseFloat(datos[division][user].total_exceso_administrativo.toFixed(0)).toLocaleString("es-ES"),
+                porcen_exceso_admin: parseFloat(datos[division][user].exceso_per_administrativo.toFixed(2)).toLocaleString("es-ES"),
+                total_horas_exceso_proy: parseFloat(datos[division][user].total_exceso_proyectos.toFixed(0)).toLocaleString("es-ES"),
+                porcen_exceso_proy: parseFloat(datos[division][user].exceso_per_proyectos.toFixed(2)).toLocaleString("es-ES"),
                 ref_usuario_total: datos[division][user].ref_usuario_total,
                 fecha_ingreso: datos[division][user].fecha_ingreso,
                 fecha_egreso: datos[division][user].fecha_egreso,
                 orden: datos[division][user].orden,
                 //Si es verdadero colocamos un check, falso un cross
-                eficiencia: datos[division][user].eficiencia,
                 //Fecha del intervalo
                 fecha_desde: datos[division][user].fecha_desde,
                 fecha_hasta: datos[division][user].fecha_hasta
@@ -495,7 +500,7 @@
         },
         buscar: function(){
 
-          //self.formFiltro.campos.cargos.disabled = true;
+          self.formFiltro.campos.cargos.disabled = true;
           self.formFiltro.campos.divisiones.disabled = true;
           self.formFiltro.campos.empleado.disabled = true;
           self.formFiltro.campos.fechaDesde.disabled = true;
@@ -512,10 +517,16 @@
                                   : 0);
           if(typeof param_divisiones[0] === 'undefined') param_divisiones = 0;
 
+          //Evaluamos como filtraremos el cargo
+          var param_cargos = (self.formFiltro.campos.cargos.value !== null
+                                  ? [ self.formFiltro.campos.cargos.value.id ]
+                                  : 0);
+          if(typeof param_cargos[0] === 'undefined') param_cargos = 0;
+
           //Obtenemos los valores
           let desde = (self.tabla.paginador.pagina - 1) * self.tabla.paginador.paginar;
           let parametros = {
-            //cargos: param_cargos,
+            cargos: param_cargos,
             desde: desde,
             divisiones: param_divisiones,
             empleado: self.formFiltro.campos.empleado.value,
@@ -527,7 +538,7 @@
           //Se utiliza el metodo get para su busqueda y se envian con los parametros
           axios.get('/buscarRepTotalHorasCarg', {params: parametros})
           .then(function (response) {
-            //self.formFiltro.campos.cargos.disabled = false;
+            self.formFiltro.campos.cargos.disabled = false;
             self.formFiltro.campos.divisiones.disabled = false;
             self.formFiltro.campos.empleado.disabled = false;
             self.formFiltro.campos.fechaDesde.disabled = false;
@@ -559,6 +570,9 @@
               //Total Horas
               { key: 'total_horas', label: 'Total horas' },
               { key: 'porcen_carga_total', label: '% Carga total' },
+              //Exceso
+              { key: 'porcen_exceso_admin', label: '% Exceso Admon'},
+              { key: 'porcen_exceso_proy', label: '% Exceso Proy'},
               { key: 'ref_usuario_total', label: 'Ref Total'},
               //Exceso
               //{ key: 'exceso_cargables', label: 'Exceso carga cliente' },
@@ -571,6 +585,11 @@
 
             self.tabla.registros = self.registroTabla(response.data.totales);
 
+            if(response.data.cargos != "NoSelect")
+            {
+              self.tabla.registros = self.tabla.registros.filter(usuario => usuario.usuario_cargo == response.data.cargos)
+            }
+
             if(response.data.totales.length === 0){
 
               let mensaje = "No existen registro de horas para este filtrado";
@@ -580,7 +599,7 @@
 
           }).catch(error => {
 
-            //self.formFiltro.campos.cargos.disabled = false;
+            self.formFiltro.campos.cargos.disabled = false;
             self.formFiltro.campos.divisiones.disabled = false;
             self.formFiltro.campos.empleado.disabled = false;
             self.formFiltro.campos.fechaDesde.disabled = false;
@@ -596,7 +615,7 @@
         },
         limpiarFiltro: function(){
 
-          //self.formFiltro.campos.cargos.value = [];
+          self.formFiltro.campos.cargos.value = [];
           self.formFiltro.campos.divisiones.value = [];
           self.formFiltro.campos.empleado.value = null;
           self.formFiltro.campos.fechaDesde.value = null;
