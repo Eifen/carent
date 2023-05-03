@@ -585,6 +585,9 @@
 
             self.tabla.registros = self.registroTabla(response.data.totales);
 
+            //Filtramos la fecha desde
+            self.tabla.registros = self.tabla.registros.filter(usuario => usuario.fecha_egreso >= response.data.fecha_desde);
+
             if(response.data.cargos != "NoSelect")
             {
               self.tabla.registros = self.tabla.registros.filter(usuario => usuario.usuario_cargo == response.data.cargos)
