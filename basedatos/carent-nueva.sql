@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-04-2023 a las 22:28:57
+-- Tiempo de generación: 04-05-2023 a las 04:09:50
 -- Versión del servidor: 10.4.25-MariaDB
 -- Versión de PHP: 8.1.10
 
@@ -185,7 +185,7 @@ END IF;
 
 #Si existe procedemos a crearle contacto
 SET @IdUser = (SELECT US.Id FROM tbl_usuarios US WHERE US.Codigo = p_Codigo LIMIT 1);
-SET @TipoDocumento = (SELECT UT.Id FROM tbl_usuarios_documentoidentidad_tipo UT WHERE UT.Abreviatura = p_TipoDocumento LIMIT 1);
+SET @TipoDocumento = (SELECT UT.Id FROM tbl_usuarios_documentoidentidad_tipo UT WHERE UT.AbreviaturaTipo = p_TipoDocumento LIMIT 1);
 #Contacto
 INSERT INTO `tbl_usuarios_contacto`(`Id_usuario`, `Correo_principal`, `Correo_secundario`, `Telefono_principal`, `Telefono_secundario`) VALUES (@IdUser,p_Correo1,p_Correo2,p_Telefono1,p_Telefono2);
 #Documento
@@ -458,7 +458,15 @@ INSERT INTO `tbl_control_error` (`Id`, `Id_error_tipomensaje`, `Id_error_tipoobj
 (42, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:10:37', 1),
 (43, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:16:48', 1),
 (44, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:19:17', 1),
-(45, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:19:22', 1);
+(45, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:19:22', 1),
+(46, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-05-01 10:10:22', 1),
+(47, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-05-01 10:14:29', 1),
+(48, 1, 1, 'sp_NewContactUser', 'Se ha producido un error en la consulta: (42S22) Unknown column \'UT.Abreviatura\' in \'where clause\'', '2023-05-01 10:15:16', 1),
+(49, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-05-01 10:15:30', 1),
+(50, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (1201)\"}', '2023-05-01 10:15:42', 1),
+(51, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (1201)\"}', '2023-05-01 10:15:52', 1),
+(52, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-05-03 21:20:55', 1),
+(53, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-05-03 21:48:29', 1);
 
 -- --------------------------------------------------------
 
@@ -595,7 +603,15 @@ INSERT INTO `tbl_control_logs_bitacora` (`Id`, `Id_bitacora_accion`, `Descripcio
 (51, 1, 'createUser', '127.0.0.1', 1, 'tbl_usuarios', 'INSERT INTO `tbl_usuarios`(`Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`) VALUES(70663,AES_ENCRYPT(p_Cedula,@Key),@FechaCambio,p_Nombre1,p_Nombre2,p_Apellido1,p_Apellido2,p_FechaNacimiento,p_IdCargo,p_IdDivision,p_IdParroquia,p_FechaIngreso,NULL,NULL,1)', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-04-16 14:51:13'),
 (52, 2, 'login', '127.0.0.1', 255, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-16 14:51:36 WHERE u.Codigo = 70663;', NULL, '{\"fecha_ultimo_login\": \"2023-04-16 14:51:36\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-16 14:51:36'),
 (53, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-16 14:51:52 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-16 14:16:43\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-16 14:51:52\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-16 14:51:52'),
-(54, 1, 'createUser', '127.0.0.1', 1, 'tbl_usuarios', 'INSERT INTO `tbl_usuarios`(`Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`) VALUES(999998,AES_ENCRYPT(p_Cedula,@Key),@FechaCambio,p_Nombre1,p_Nombre2,p_Apellido1,p_Apellido2,p_FechaNacimiento,p_IdCargo,p_IdDivision,p_IdParroquia,p_FechaIngreso,NULL,NULL,1)', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-04-16 16:21:27');
+(54, 1, 'createUser', '127.0.0.1', 1, 'tbl_usuarios', 'INSERT INTO `tbl_usuarios`(`Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`) VALUES(999998,AES_ENCRYPT(p_Cedula,@Key),@FechaCambio,p_Nombre1,p_Nombre2,p_Apellido1,p_Apellido2,p_FechaNacimiento,p_IdCargo,p_IdDivision,p_IdParroquia,p_FechaIngreso,NULL,NULL,1)', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-04-16 16:21:27'),
+(55, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-29 18:20:29 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-16 14:51:52\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-29 18:20:29\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-29 18:20:29'),
+(56, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-30 08:56:23 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-29 18:20:29\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-30 08:56:23\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-30 08:56:23'),
+(57, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-30 11:09:03 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-30 08:56:23\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-30 11:09:03\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-30 11:09:03'),
+(58, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-05-01 10:06:33 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-30 11:09:03\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-05-01 10:06:33\",\"ultima_ip\": \"127.0.0.1\"}', '2023-05-01 10:06:33'),
+(59, 1, 'createUser', '127.0.0.1', 1, 'tbl_usuarios', 'INSERT INTO `tbl_usuarios`(`Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`) VALUES(1201,AES_ENCRYPT(p_Cedula,@Key),@FechaCambio,p_Nombre1,p_Nombre2,p_Apellido1,p_Apellido2,p_FechaNacimiento,p_IdCargo,p_IdDivision,p_IdParroquia,p_FechaIngreso,NULL,NULL,1)', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-05-01 10:15:16'),
+(60, 1, 'createUser', '127.0.0.1', 1, 'tbl_usuarios', 'INSERT INTO `tbl_usuarios`(`Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`) VALUES(1201,AES_ENCRYPT(p_Cedula,@Key),@FechaCambio,p_Nombre1,p_Nombre2,p_Apellido1,p_Apellido2,p_FechaNacimiento,p_IdCargo,p_IdDivision,p_IdParroquia,p_FechaIngreso,NULL,NULL,1)', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-05-01 10:19:19'),
+(61, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-05-01 20:24:33 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-05-01 10:06:33\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-05-01 20:24:33\",\"ultima_ip\": \"127.0.0.1\"}', '2023-05-01 20:24:33'),
+(62, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-05-03 21:21:06 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-05-01 20:24:33\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-05-03 21:21:06\",\"ultima_ip\": \"127.0.0.1\"}', '2023-05-03 21:21:06');
 
 -- --------------------------------------------------------
 
@@ -668,7 +684,7 @@ CREATE TABLE `tbl_usuarios` (
 --
 
 INSERT INTO `tbl_usuarios` (`Id`, `Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`) VALUES
-(1, '0001', 0x9f824ad4b17be95f20aa30c5eef9d8f6, '2023-05-08', 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '1986-08-05', 16, 16, 1131, '2020-01-01', NULL, '2023-04-16 14:51:52', 1),
+(1, '0001', 0x9f824ad4b17be95f20aa30c5eef9d8f6, '2023-05-08', 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '1986-08-05', 16, 16, 1131, '2020-01-01', NULL, '2023-05-03 21:21:06', 1),
 (2, '10', 0xcb4dc5daf4d8865eb1bd01d6c898c269, '2023-03-09', 'NATHALIE', 'YAMILET', 'LOPEZ', 'TREJO', '1972-08-20', 17, 1, 1131, '2000-02-21', NULL, '2023-03-08 23:41:42', 1),
 (3, '10092', 0x10e54efb266e50c523273c638cb690c5, '2023-03-09', 'YESENIA', 'BEATRIZ', 'MARTINEZ', 'GALLARDO', '1979-06-01', 15, 1, 1131, '2004-09-01', NULL, '2023-03-07 08:27:55', 1),
 (4, '10141', 0x383155d3ec475bf8ace4b67bf0aaba8d, '2023-03-09', 'JESUS', 'ERASMO', 'PEREZ', 'ERASMO', '1959-11-09', 17, 1, 1131, '2005-02-02', NULL, '2023-02-06 09:52:51', 1),
@@ -910,7 +926,8 @@ INSERT INTO `tbl_usuarios` (`Id`, `Codigo`, `Clave`, `Fecha_cambio_clave`, `Prim
 (248, '11623', 0x900ddc90e683652dd185b78eb9554e81, '2023-03-09', 'MIRIAM', 'DESIREE', 'HIDALGO', 'BRICEÑO', '1983-07-11', 10, 4, 647, '2023-03-07', '2023-03-07', NULL, 2),
 (252, '120154', 0x038e973a488134d8436c8bae5b50d66c, '2023-04-16', 'Carlos', NULL, 'Navas', NULL, '1994-11-22', NULL, NULL, NULL, NULL, NULL, '2023-04-16 13:49:13', 1),
 (255, '70663', 0x038e973a488134d8436c8bae5b50d66c, '2023-04-16', 'Pepe', 'Grillo', 'Pillo', 'Vanillo', '1994-11-22', 9, 16, 753, '2023-04-18', NULL, '2023-04-16 14:51:36', 1),
-(256, '999998', 0x75a1d6a76e48987599d8e331c08d260b, '2023-04-16', 'Eifen', 'Pibe', 'Kurosaki', 'Tanuko', '1994-11-22', 16, 16, 988, '2023-04-18', NULL, NULL, 1);
+(256, '999998', 0x75a1d6a76e48987599d8e331c08d260b, '2023-04-16', 'Eifen', 'Pibe', 'Kurosaki', 'Tanuko', '1994-11-22', 16, 16, 988, '2023-04-18', NULL, NULL, 1),
+(258, '1201', 0x038e973a488134d8436c8bae5b50d66c, '2023-05-01', 'CARLOS', 'SALAZAR', 'PILLO', '', '1994-11-22', NULL, NULL, NULL, '2023-05-01', NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -932,7 +949,7 @@ CREATE TABLE `tbl_usuarios_contacto` (
 --
 
 INSERT INTO `tbl_usuarios_contacto` (`Id`, `Id_usuario`, `Correo_principal`, `Correo_secundario`, `Telefono_principal`, `Telefono_secundario`) VALUES
-(1, 1, 'dmolina101@gmail.com', '', '(0424) - 446 3739', ''),
+(1, 1, 'dmolina101@gmail.com', '', '04244463739', ''),
 (2, 2, 'nathalie.lopez@crowe.com.ve', '', '', ''),
 (3, 3, 'yesenia.martinez@crowe.com.ve', '', '', ''),
 (4, 4, 'jesus.perez@crowe.com.ve', '', '', ''),
@@ -944,128 +961,128 @@ INSERT INTO `tbl_usuarios_contacto` (`Id`, `Id_usuario`, `Correo_principal`, `Co
 (10, 10, 'jorge.gonzalez@crowe.com.ve', '', '', ''),
 (11, 11, 'maria.sequeda@crowe.com.ve', '', '', ''),
 (12, 12, 'yodelina.torres@crowe.com.ve', '', '', ''),
-(13, 13, 'katherine.zurita@crowe.com.ve', '', '(0424) - 190 7404', '(0424) - 317 0363'),
-(14, 14, 'mileidis.moreno@crowe.com.ve', '', '(0424) - 171 8118', ''),
-(15, 15, 'francia.medina@crowe.com.ve', '', '(0416) - 694 7046', ''),
-(16, 16, 'astrid.mendoza@crowe.com.ve', '', '(0424) - 165 2571', ''),
+(13, 13, 'katherine.zurita@crowe.com.ve', '', '04241907404', '04243170363'),
+(14, 14, 'mileidis.moreno@crowe.com.ve', '', '04241718118', ''),
+(15, 15, 'francia.medina@crowe.com.ve', '', '04166947046', ''),
+(16, 16, 'astrid.mendoza@crowe.com.ve', '', '04241652571', ''),
 (17, 17, 'maria.tovar@crowe.com.ve', '', '02124829623', '04242473031'),
-(18, 18, 'mariana.brito@crowe.com.ve', '', '(0424) - 290 2167', ''),
-(19, 19, 'belkis.cortina@crowe.com.ve', '', '(0212) - 415 9553', '(0416) - 407 9713'),
-(20, 20, 'lucrecia.silva@crowe.com.ve', '', '(0426) - 419 9217', ''),
-(21, 21, 'normedy.parra@crowe.com.ve', '', '(0212) - 524 1716', '(0412) - 012 5384'),
-(22, 22, 'josvelis.castillo@crowe.com.ve', '', '(0414) - 835 0920', '(0212) - 344 0542'),
-(23, 23, 'luis.russian@crowe.com.ve', '', '(0424) - 260 2227', '(0212) - 339 5206'),
-(24, 24, 'jonathan.azocar@crowe.com.ve', '', '(0212) - 377 4758', '(0426) - 637 3419'),
-(25, 25, 'yerlenis.valderrama@crowe.com.ve', '', '(0424) - 295 0201', ''),
-(26, 26, 'kleiver.corro@crowe.com.ve', '', '(0212) - 419 0028', '(0412) - 949 6868'),
-(27, 27, 'maryuri.barazarte@crowe.com.ve', '', '(0212) - 244 4894', '(0424) - 183 9221'),
+(18, 18, 'mariana.brito@crowe.com.ve', '', '04242902167', ''),
+(19, 19, 'belkis.cortina@crowe.com.ve', '', '02124159553', '04164079713'),
+(20, 20, 'lucrecia.silva@crowe.com.ve', '', '04264199217', ''),
+(21, 21, 'normedy.parra@crowe.com.ve', '', '02125241716', '04120125384'),
+(22, 22, 'josvelis.castillo@crowe.com.ve', '', '04148350920', '02123440542'),
+(23, 23, 'luis.russian@crowe.com.ve', '', '04242602227', '02123395206'),
+(24, 24, 'jonathan.azocar@crowe.com.ve', '', '02123774758', '04266373419'),
+(25, 25, 'yerlenis.valderrama@crowe.com.ve', '', '04242950201', ''),
+(26, 26, 'kleiver.corro@crowe.com.ve', '', '02124190028', '04129496868'),
+(27, 27, 'maryuri.barazarte@crowe.com.ve', '', '02122444894', '04241839221'),
 (28, 28, 'pedro.benitez@crowe.com.ve', '', '', ''),
-(29, 29, 'dennys.flores@crowe.com.ve', '', '(0416) - 019 2302', ''),
-(30, 30, 'genesis.marcano@crowe.com.ve', '', '(0239) - 248 2117', '(0414) - 020 9137'),
-(31, 31, 'keilimar.suarez@crowe.com.ve', '', '(0416) - 928 1259', '(0212) - 745 9838'),
-(32, 32, 'johanne.muñoz@crowe.com.ve', '', '(0414) - 315 5147', ''),
-(33, 33, 'alfredo.hernandez@crowe.com.ve', '', '(0412) - 711 6777', ''),
+(29, 29, 'dennys.flores@crowe.com.ve', '', '04160192302', ''),
+(30, 30, 'genesis.marcano@crowe.com.ve', '', '02392482117', '04140209137'),
+(31, 31, 'keilimar.suarez@crowe.com.ve', '', '04169281259', '02127459838'),
+(32, 32, 'johanne.muñoz@crowe.com.ve', '', '04143155147', ''),
+(33, 33, 'alfredo.hernandez@crowe.com.ve', '', '04127116777', ''),
 (34, 34, 'raul.vargas@crowe.com.ve', '', '', ''),
-(35, 35, 'shelcie.paz@crowe.com.ve', '', '(0212) - 258 3241', '(0414) - 908 4285'),
-(36, 36, 'ladymar.morett@crowe.com.ve', '', '(0212) - 451 2556', '(0426) - 119 7245'),
-(37, 37, 'anthony.garcia@crowe.com.ve', '', '(0426) - 213 0363', '(0412) - 384 0786'),
+(35, 35, 'shelcie.paz@crowe.com.ve', '', '02122583241', '04149084285'),
+(36, 36, 'ladymar.morett@crowe.com.ve', '', '02124512556', '04261197245'),
+(37, 37, 'anthony.garcia@crowe.com.ve', '', '04262130363', '04123840786'),
 (38, 38, 'solmary.martinez@crowe.com.ve', '', '02123397992', '04129904281'),
-(39, 39, 'jackeline.ramos@crowe.com.ve', '', '(0212) - 641 2375', '(0416) - 823 3236'),
-(40, 40, 'belkis.vazquez@crowe.com.ve', '', '(0426) - 215 7178', ''),
-(41, 41, 'yuzleibby.maldonado@crowe.com.ve', '', '(0424) - 219 4508', '(0212) - 870 3102'),
-(42, 42, 'giovanni.corredor@crowe.com.ve', '', '(0412) - 010 2693', '(0212) - 347 2038'),
-(43, 43, 'kleiver.cadenas@crowe.com.ve', '', '(0414) - 319 6616', '(0212) - 267 8468'),
-(44, 44, 'ivette.orozco@crowe.com.ve', '', '(0424) - 261 3215', '(0212) - 434 1107'),
-(45, 45, 'zunaya.wilches@crowe.com.ve', '', '(0414) - 031 6013', '(0212) - 613 5612'),
-(46, 46, 'jesus.abraham@crowe.com.ve', '', '(0212) - 372 7075', '(0424) - 214 7829'),
-(47, 47, 'jose.perozo@dominio.com', '', '(0426) - 253 9113', ''),
-(48, 48, 'roberto.villegas@crowe.com.ve', '', '(0212) - 870 3830', '(0424) - 176 2670'),
-(49, 49, 'sandro.mayora@crowe.com.ve', '', '(0412) - 367 5678', '(0212) - 516 3034'),
-(50, 50, 'eduardo.bastos@crowe.com.ve', '', '(0212) - 987 5898', '(0424) - 130 4353'),
-(51, 51, 'vanessa.rojas@crowe.com.ve', '', '(0414) - 782 6035', ''),
-(52, 52, 'carlos.revete@crowe.com.ve', '', '(0424) - 259 1419', ''),
-(53, 53, 'vianney.rugeles@crowe.com.ve', '', '(0212) - 443 4371', '(0412) - 998 7473'),
-(54, 54, 'edwin.burgos@crowe.com.ve', '', '(0414) - 287 1671', ''),
-(55, 55, 'nombre.apellido@dominio.com', '', '(0212) - 363 7192', '(0412) - 858 4022'),
+(39, 39, 'jackeline.ramos@crowe.com.ve', '', '02126412375', '04168233236'),
+(40, 40, 'belkis.vazquez@crowe.com.ve', '', '04262157178', ''),
+(41, 41, 'yuzleibby.maldonado@crowe.com.ve', '', '04242194508', '02128703102'),
+(42, 42, 'giovanni.corredor@crowe.com.ve', '', '04120102693', '02123472038'),
+(43, 43, 'kleiver.cadenas@crowe.com.ve', '', '04143196616', '02122678468'),
+(44, 44, 'ivette.orozco@crowe.com.ve', '', '04242613215', '02124341107'),
+(45, 45, 'zunaya.wilches@crowe.com.ve', '', '04140316013', '02126135612'),
+(46, 46, 'jesus.abraham@crowe.com.ve', '', '02123727075', '04242147829'),
+(47, 47, 'jose.perozo@dominio.com', '', '04262539113', ''),
+(48, 48, 'roberto.villegas@crowe.com.ve', '', '02128703830', '04241762670'),
+(49, 49, 'sandro.mayora@crowe.com.ve', '', '04123675678', '02125163034'),
+(50, 50, 'eduardo.bastos@crowe.com.ve', '', '02129875898', '04241304353'),
+(51, 51, 'vanessa.rojas@crowe.com.ve', '', '04147826035', ''),
+(52, 52, 'carlos.revete@crowe.com.ve', '', '04242591419', ''),
+(53, 53, 'vianney.rugeles@crowe.com.ve', '', '02124434371', '04129987473'),
+(54, 54, 'edwin.burgos@crowe.com.ve', '', '04142871671', ''),
+(55, 55, 'nombre.apellido@dominio.com', '', '02123637192', '04128584022'),
 (56, 56, 'freddy.vargas@crowe.com.ve', '', '04241292285', ''),
 (57, 57, 'yorman.rangel@crowe.com.ve', '', '', ''),
 (58, 58, 'jose.utrera@crowe.com.ve', '', '', ''),
-(59, 59, 'alejandro.lira@crowe.com.ve', '', '(0212) - 672 4819', '(0414) - 246 0103'),
-(60, 60, 'yordalis.echarrys@crowe.com.ve', '', '(0412) - 293 2692', ''),
-(61, 61, 'eliana.ponce@crowe.com.ve', '', '(0212) - 576 1138', '(0414) - 911 3335'),
-(62, 62, 'stefany.gonzalez@crowe.com.ve', '', '(0424) - 208 5444', ''),
-(63, 63, 'naivelys.altuve@crowe.com.ve', '', '(0414) - 791 4010', ''),
-(64, 64, 'gabriela.gil@crowe.com.ve', '', '(0212) - 662 1812', '(0426) - 287 4127'),
-(65, 65, 'orianna.alejos@crowe.com.ve', '', '(0212) - 668 9284', '(0426) - 315 8428'),
-(66, 66, 'marynes.gonzalez@crowe.com.ve', '', '(0212) - 492 9084', '(0424) - 262 8459'),
+(59, 59, 'alejandro.lira@crowe.com.ve', '', '02126724819', '04142460103'),
+(60, 60, 'yordalis.echarrys@crowe.com.ve', '', '04122932692', ''),
+(61, 61, 'eliana.ponce@crowe.com.ve', '', '02125761138', '04149113335'),
+(62, 62, 'stefany.gonzalez@crowe.com.ve', '', '04242085444', ''),
+(63, 63, 'naivelys.altuve@crowe.com.ve', '', '04147914010', ''),
+(64, 64, 'gabriela.gil@crowe.com.ve', '', '02126621812', '04262874127'),
+(65, 65, 'orianna.alejos@crowe.com.ve', '', '02126689284', '04263158428'),
+(66, 66, 'marynes.gonzalez@crowe.com.ve', '', '02124929084', '04242628459'),
 (67, 67, 'eligio.mendoza@crowe.com.ve', '', '', ''),
 (68, 68, 'marielvi.oller@crowe.com.ve', '', '', ''),
-(69, 69, 'alba.navia@crowe.com.ve', '', '(0212) - 762 5333', '(0424) - 298 4865'),
-(70, 70, 'nombre.apellido@dominio.com', '', '(0414) - 126 6489', '(0212) - 861 4414'),
-(71, 71, 'yessica.rivas@crowe.com.ve', '', '(0212) - 875 0733', '(0424) - 267 7331'),
-(72, 72, 'nombre.apellido@dominio.com', '', '(0414) - 211 9162', ''),
-(73, 73, 'yda.chirinos@crowe.com.ve', '', '(0212) - 515 9794', '(0424) - 136 0393'),
-(74, 74, 'nombre.apellido@dominio.com', '', '(0212) - 614 9790', '(0414) - 326 0002'),
-(75, 75, 'nombre.apellido@dominio.com', '', '(0212) - 324 3797', '(0412) - 249 3721'),
-(76, 76, 'nombre.apellido@dominio.com', '', '(0412) - 574 6284', ''),
-(77, 77, 'nombre.apellido@dominio.com', '', '(0412) - 256 4514', ''),
-(78, 78, 'nombre.apellido@dominio.com', '', '(0414) - 267 8216', ''),
-(79, 79, 'nahomy.quintero@crowe.com.ve', '', '(0212) - 744 6051', '(0424) - 174 3888'),
-(80, 80, 'maria.espina@crowe.com.ve', '', '(0127) - 304 196', '(0426) - 513 1381'),
-(81, 81, 'nombre.apellido@dominio.com', '', '(0424) - 269 6996', '(0412) - 921 7899'),
-(82, 82, 'nombre.apellido@dominio.com', '', '(0412) - 709 8992', ''),
-(83, 83, 'glender.cortez@crowe.com.ve', '', '(0414) - 219 0677', '(0212) - 532 1810'),
+(69, 69, 'alba.navia@crowe.com.ve', '', '02127625333', '04242984865'),
+(70, 70, 'nombre.apellido@dominio.com', '', '04141266489', '02128614414'),
+(71, 71, 'yessica.rivas@crowe.com.ve', '', '02128750733', '04242677331'),
+(72, 72, 'nombre.apellido@dominio.com', '', '04142119162', ''),
+(73, 73, 'yda.chirinos@crowe.com.ve', '', '02125159794', '04241360393'),
+(74, 74, 'nombre.apellido@dominio.com', '', '02126149790', '04143260002'),
+(75, 75, 'nombre.apellido@dominio.com', '', '02123243797', '04122493721'),
+(76, 76, 'nombre.apellido@dominio.com', '', '04125746284', ''),
+(77, 77, 'nombre.apellido@dominio.com', '', '04122564514', ''),
+(78, 78, 'nombre.apellido@dominio.com', '', '04142678216', ''),
+(79, 79, 'nahomy.quintero@crowe.com.ve', '', '02127446051', '04241743888'),
+(80, 80, 'maria.espina@crowe.com.ve', '', '0127304196', '04265131381'),
+(81, 81, 'nombre.apellido@dominio.com', '', '04242696996', '04129217899'),
+(82, 82, 'nombre.apellido@dominio.com', '', '04127098992', ''),
+(83, 83, 'glender.cortez@crowe.com.ve', '', '04142190677', '02125321810'),
 (84, 84, 'alberto.evies@crowe.com.ve', '', '02124335180', '04141057605'),
-(85, 85, 'angela.aranea@crowe.com.ve', '', '(0212) - 515 3658', '(0426) - 304 6685'),
-(86, 86, 'arturo.sosa@crowe.com.ve', '', '(0424) - 134 0102', ''),
-(87, 87, 'adrian.perez@crowe.com.ve', '', '(0212) - 861 3428', '(0412) - 804 5133'),
-(88, 88, 'elisa.pasero@crowe.com.ve', '', '(0412) - 368 8968', ''),
+(85, 85, 'angela.aranea@crowe.com.ve', '', '02125153658', '04263046685'),
+(86, 86, 'arturo.sosa@crowe.com.ve', '', '04241340102', ''),
+(87, 87, 'adrian.perez@crowe.com.ve', '', '02128613428', '04128045133'),
+(88, 88, 'elisa.pasero@crowe.com.ve', '', '04123688968', ''),
 (89, 89, 'omar.marquez@crowe.com.ve', '', '', ''),
-(90, 90, 'angelica.funes@crowe.com.ve', '', '(0212) - 858 3253', '(0426) - 290 5898'),
-(91, 91, 'eslyn.rojas@crowe.com.ve', '', '(0424) - 344 3594', '(0212) - 808 4209'),
-(92, 92, 'carmen.ochoa@crowe.com.ve', '', '(0424) - 149 5523', ''),
+(90, 90, 'angelica.funes@crowe.com.ve', '', '02128583253', '04262905898'),
+(91, 91, 'eslyn.rojas@crowe.com.ve', '', '04243443594', '02128084209'),
+(92, 92, 'carmen.ochoa@crowe.com.ve', '', '04241495523', ''),
 (93, 93, 'laura.rojas@crowe.com.ve', '', '', ''),
-(94, 94, 'nombre.apellido@dominio.com', '', '(0424) - 225 8139', ''),
+(94, 94, 'nombre.apellido@dominio.com', '', '04242258139', ''),
 (95, 95, 'nombre.apellido@dominio.com', '', '', ''),
-(96, 96, 'nombre.apellido@dominio.com', '', '(0416) - 939 7195', ''),
+(96, 96, 'nombre.apellido@dominio.com', '', '04169397195', ''),
 (97, 97, 'jose.machado@crowe.com.ve', '', '', ''),
 (98, 98, 'nombre.apellido@dominio.com', '', '', ''),
 (99, 99, 'jennifer.villa@crowe.com.ve', '', '', ''),
-(100, 100, 'anacecilia.castano@crowe.com.ve', '', '(0212) - 571 6504', ''),
+(100, 100, 'anacecilia.castano@crowe.com.ve', '', '02125716504', ''),
 (101, 101, 'amayoisbi.garcia@crowe.com.ve', '', '04127013435', ''),
 (102, 102, 'jennifer.chacon@crowe.com.ve', '', '04125897240', ''),
-(103, 103, 'ignayari.mendoza@crowe.com.ve', '', '(0412) - 928 9923', ''),
-(104, 104, 'reina.fajardo@crowe.com.ve', '', '(0416) - 426 9965', ''),
-(105, 105, 'yolimer.mendoza@crowe.com.ve', '', '(0414) - 901 8276', '(0212) - 681 3348'),
-(106, 106, 'ignayari.mendoza@crowe.com.ve', '', '(0412) - 976 2870', ''),
-(107, 107, 'adriana.guzman@crowe.com.ve', '', '(0212) - 941 2882', '(0414) - 454 9562'),
+(103, 103, 'ignayari.mendoza@crowe.com.ve', '', '04129289923', ''),
+(104, 104, 'reina.fajardo@crowe.com.ve', '', '04164269965', ''),
+(105, 105, 'yolimer.mendoza@crowe.com.ve', '', '04149018276', '02126813348'),
+(106, 106, 'ignayari.mendoza@crowe.com.ve', '', '04129762870', ''),
+(107, 107, 'adriana.guzman@crowe.com.ve', '', '02129412882', '04144549562'),
 (108, 108, 'jose.estaba@crowe.com.ve', '', '02128602803', '04243389487'),
-(109, 109, 'karina.perez@crowe.com.ve', '', '(0426) - 592 0655', ''),
-(110, 110, 'zonny.garcia@crowe.com.ve', '', '(0424) - 313 8868', '(0239) - 225 2293'),
-(111, 111, 'nombre.apellido@dominio.com', '', '(0426) - 887 0548', ''),
-(112, 112, 'nombre.apellido@dominio.com', '', '(0426) - 216 6223', ''),
-(113, 113, 'leonardo.alopez21@gmail.com', '', '(0414) - 259 8750', ''),
-(114, 114, 'josearturo0706@gmail.com', '', '(0212) - 481 8970', '(0412) - 825 9076'),
-(115, 115, 'nombre.apellido@dominio.com', '', '(0212) - 451 8087', '(0412) - 957 6671'),
+(109, 109, 'karina.perez@crowe.com.ve', '', '04265920655', ''),
+(110, 110, 'zonny.garcia@crowe.com.ve', '', '04243138868', '02392252293'),
+(111, 111, 'nombre.apellido@dominio.com', '', '04268870548', ''),
+(112, 112, 'nombre.apellido@dominio.com', '', '04262166223', ''),
+(113, 113, 'leonardo.alopez21@gmail.com', '', '04142598750', ''),
+(114, 114, 'josearturo0706@gmail.com', '', '02124818970', '04128259076'),
+(115, 115, 'nombre.apellido@dominio.com', '', '02124518087', '04129576671'),
 (116, 116, 'antonio.reyes@crowe.com.ve', '', '02122425335', '04141626367'),
-(117, 117, 'duvan.pinto@crowe.com.ve', '', '(0424) - 184 2688', ''),
-(118, 118, 'freddy.perdomo@crowe.com.ve', '', '(0212) - 976 6425', '(0414) - 446 6147'),
-(119, 119, 'fernando.rangel@crowe.com.ve', '', '(0414) - 178 2596', ''),
-(120, 120, 'gelen.cardenas@crowe.com.ve', '', '(0212) - 576 7453', '(0416) - 465 4993'),
-(121, 121, 'nombre.apellido@dominio.com', '', '(0212) - 237 3113', ''),
-(122, 122, 'nombre.apellido@dominio.com', '', '(0212) - 237 3113', '(0414) - 208 1976'),
-(123, 123, 'laura.rojas@crowe.com.ve', '', '(0416) - 932 2811', ''),
+(117, 117, 'duvan.pinto@crowe.com.ve', '', '04241842688', ''),
+(118, 118, 'freddy.perdomo@crowe.com.ve', '', '02129766425', '04144466147'),
+(119, 119, 'fernando.rangel@crowe.com.ve', '', '04141782596', ''),
+(120, 120, 'gelen.cardenas@crowe.com.ve', '', '02125767453', '04164654993'),
+(121, 121, 'nombre.apellido@dominio.com', '', '02122373113', ''),
+(122, 122, 'nombre.apellido@dominio.com', '', '02122373113', '04142081976'),
+(123, 123, 'laura.rojas@crowe.com.ve', '', '04169322811', ''),
 (124, 124, 'amelia.diaz@crowe.com.ve', '', '', ''),
-(125, 125, 'emilio.leon@crowe.com.ve', '', '(0416) - 608 4971', '(0424) - 118 0197'),
-(126, 126, 'gustavo.puchi@crowe.com.ve', '', '(0212) - 483 4655', '(0412) - 220 6492'),
-(127, 127, 'alfio.saglimbeni@crowe.com.ve', '', '(0416) - 827 2679', ''),
-(128, 128, 'arianna.matos@crowe.com.ve', '', '(0212) - 323 8208', '(0412) - 600 0531'),
+(125, 125, 'emilio.leon@crowe.com.ve', '', '04166084971', '04241180197'),
+(126, 126, 'gustavo.puchi@crowe.com.ve', '', '02124834655', '04122206492'),
+(127, 127, 'alfio.saglimbeni@crowe.com.ve', '', '04168272679', ''),
+(128, 128, 'arianna.matos@crowe.com.ve', '', '02123238208', '04126000531'),
 (129, 129, 'ana.blandin@crowe.com.ve', '', '02124329839', '04241624237'),
 (130, 130, 'oscar.piña@crowe.com.ve', '', '', ''),
-(131, 131, 'nombre.apellido@dominio.com', '', '(0212) - 808 4742', '(0524) - 704 2110'),
-(132, 132, 'duglimar.mendez@crowe.com.ve', '', '(0416) - 206 2192', ''),
-(133, 133, 'sol.viana@crowe.com.ve', '', '(0212) - 631 6797', '(0424) - 146 9101'),
-(134, 134, 'douglas.torrealba@crowe.com.ve', '', '(0416) - 209 4874', '(0416) - 800 0868'),
+(131, 131, 'nombre.apellido@dominio.com', '', '02128084742', '05247042110'),
+(132, 132, 'duglimar.mendez@crowe.com.ve', '', '04162062192', ''),
+(133, 133, 'sol.viana@crowe.com.ve', '', '02126316797', '04241469101'),
+(134, 134, 'douglas.torrealba@crowe.com.ve', '', '04162094874', '04168000868'),
 (135, 135, 'nombre.apellido@dominio.com', '', '04267528235', '02128715756'),
 (136, 136, 'nombre.apellido@dominio.com', '', '04261396926', ''),
 (137, 137, 'nombre.apellido@dominio.com', '', '04126305629', ''),
@@ -1074,107 +1091,108 @@ INSERT INTO `tbl_usuarios_contacto` (`Id`, `Id_usuario`, `Correo_principal`, `Co
 (140, 140, 'fredy.bautista@crowe.com.ve', '', '', ''),
 (141, 141, 'nombre.apellido@dominio.com', '', '', ''),
 (142, 142, 'barbara.zambrano@crowe.com.ve', '', '', ''),
-(143, 143, 'mary.cruz@crowe.com.ve', '', '(0424) - 968 6614', '(0286) - 934 1430'),
-(144, 144, 'sergio.marquez@crowe.com.ve', 'sergiofmarquezt@gmail.com', '(0414) - 907 0900', ''),
-(145, 145, 'nelson.marcano@crowe.com.ve', '', '(0412) - 019 5573', ''),
+(143, 143, 'mary.cruz@crowe.com.ve', '', '04249686614', '02869341430'),
+(144, 144, 'sergio.marquez@crowe.com.ve', 'sergiofmarquezt@gmail.com', '04149070900', ''),
+(145, 145, 'nelson.marcano@crowe.com.ve', '', '04120195573', ''),
 (146, 146, 'alfio.saglimbeni@crowe.com.ve', 'smarquezt66@gmail.com', '', ''),
-(147, 147, 'antonio.dugarte@crowe.com.ve', '', '(0424) - 226 5723', ''),
-(148, 148, 'mirnangela.salaya@crowe.com.ve', '', '(0424) - 151 1028', ''),
-(149, 149, 'jose.marquez@crowe.com.ve', '', '(0414) - 255 4850', ''),
+(147, 147, 'antonio.dugarte@crowe.com.ve', '', '04242265723', ''),
+(148, 148, 'mirnangela.salaya@crowe.com.ve', '', '04241511028', ''),
+(149, 149, 'jose.marquez@crowe.com.ve', '', '04142554850', ''),
 (150, 150, 'freddyperdomo17@gmail.com', '', '', ''),
-(151, 151, 'robison.aranguren@crowe.com.ve', '', '(0414) - 134 9727', ''),
-(152, 152, 'joseecker51@gmail.com', '', '(0414) - 101 7189', '(0414) - 263 8949'),
-(153, 153, 'jhon.rondon@crowe.com.ve', 'eduardobarrera69@gmail.com', '(0412) - 318 6673', ''),
-(154, 154, 'contraloriacrowe@gmail.com', '', '(0414) - 907 0900', '(0212) - 235 0147'),
-(155, 155, 'anapetit04@gmail.com', '', '(0414) - 933 0573', ''),
-(156, 156, 'enrique.chiquito@gmail.com', '', '(0412) - 208 7873', '(0426) - 533 2319'),
-(157, 157, 'suscumleidy@gmail.com', '', '(0412) - 293 5740', '(0212) - 581 4635'),
-(158, 158, 'mary050896@gmail.com', '', '(0414) - 325 3136', '(0212) - 342 4248'),
-(159, 159, 'franklin.pacheco@crowe.com.ve', '', '(0424) - 156 5718', ''),
-(160, 160, 'oriana.graterol@crowe.com.ve', '', '(0412) - 571 7905', '(0212) - 862 9219'),
-(161, 161, 'alfredo.conquista@crowe.com.ve', '', '(0424) - 110 6550', '(0212) - 416 0138'),
-(162, 162, 'wilmeranton65@gmail.com', '', '(0414) - 314 1335', '(0424) - 154 1595'),
-(163, 163, 'freddy.bautista@crowe.com.ve', '', '(0414) - 109 3990', '(0212) - 976 3028'),
-(164, 164, 'iris.escorcha@crowe.com.ve', '', '(0426) - 406 3883', '(0212) - 362 2056'),
-(173, 173, 'carlos.bastidas@crowe.com.ve', 'clbastidas91@gmail.com', '(0412) - 639 4216', ''),
-(174, 174, 'marysabel.dossantos@crowe.com.ve', '', '(0426) - 510 1377', ''),
-(175, 175, 'ivetteorozco1994@gmail.com', '', '(0424) - 261 3215', ''),
-(176, 176, 'winney.barrientos@crowe.com.ve', 'winneyphail18@gmail.com', '(0426) - 704 2706', '(0414) - 241 5947'),
-(177, 177, 'leonela.zambella@crowe.com.ve', 'leonelaz1998@gmail.com', '(0212) - 471 5309', '(0424) - 236 4607'),
-(178, 178, 'juneisy.benitez@crowe.com.ve', 'june.abm@gmail.com', '(0412) - 295 9794', '(0426) - 407 3835'),
-(179, 179, 'yesenia.casares@crowe.com.ve', '', '(0424) - 143 3149', '(0412) - 728 5524'),
-(180, 180, 'oliver.tovar@crowe.com.ve', 'tovaroliver22@gmail.com', '(0424) - 272 1414', ''),
-(181, 181, 'ritcelis.ruiz@crowe.com.ve', '', '(0412) - 309 9563', ''),
-(182, 182, 'jenny.lis@crowe.com.ve', '', '(0414) - 206 3611', '(0212) - 763 1690'),
-(183, 183, 'cesar.diaz@crowe.com.ve', '', '(0414) - 113 6672', ''),
-(184, 184, 'danaleth.hernandez@crowe.com.ve', 'danaleth@gmail.com', '(0426) - 415 7175', '(0412) - 962 9136'),
-(185, 185, 'johanna.trujillo@crowe.com.ve', 'jcrevette_@hotmail.com', '(0414) - 286 2057', ''),
-(186, 186, 'melanie.marquez@crowe.com.ve', 'melaniealexandra.m@gmail.com', '(0212) - 369 7554', '(0424) - 260 8583'),
-(187, 187, 'escarlet.guillen@crowe.com.ve', 'escarletguillen@gmail.com', '(0414) - 917 7892', ''),
-(188, 188, 'morrinsonn@gmail.com', 'morrinsonn@gmail.com', '(0424) - 161 6129', '(0212) - 585 8604'),
-(189, 189, 'gabigabi175@gmail.com', '', '(0424) - 277 9956', ''),
-(190, 190, 'anthoni.freites@gmail.com', '', '(0412) - 209 3659', ''),
+(151, 151, 'robison.aranguren@crowe.com.ve', '', '04141349727', ''),
+(152, 152, 'joseecker51@gmail.com', '', '04141017189', '04142638949'),
+(153, 153, 'jhon.rondon@crowe.com.ve', 'eduardobarrera69@gmail.com', '04123186673', ''),
+(154, 154, 'contraloriacrowe@gmail.com', '', '04149070900', '02122350147'),
+(155, 155, 'anapetit04@gmail.com', '', '04149330573', ''),
+(156, 156, 'enrique.chiquito@gmail.com', '', '04122087873', '04265332319'),
+(157, 157, 'suscumleidy@gmail.com', '', '04122935740', '02125814635'),
+(158, 158, 'mary050896@gmail.com', '', '04143253136', '02123424248'),
+(159, 159, 'franklin.pacheco@crowe.com.ve', '', '04241565718', ''),
+(160, 160, 'oriana.graterol@crowe.com.ve', '', '04125717905', '02128629219'),
+(161, 161, 'alfredo.conquista@crowe.com.ve', '', '04241106550', '02124160138'),
+(162, 162, 'wilmeranton65@gmail.com', '', '04143141335', '04241541595'),
+(163, 163, 'freddy.bautista@crowe.com.ve', '', '04141093990', '02129763028'),
+(164, 164, 'iris.escorcha@crowe.com.ve', '', '04264063883', '02123622056'),
+(173, 173, 'carlos.bastidas@crowe.com.ve', 'clbastidas91@gmail.com', '04126394216', ''),
+(174, 174, 'marysabel.dossantos@crowe.com.ve', '', '04265101377', ''),
+(175, 175, 'ivetteorozco1994@gmail.com', '', '04242613215', ''),
+(176, 176, 'winney.barrientos@crowe.com.ve', 'winneyphail18@gmail.com', '04267042706', '04142415947'),
+(177, 177, 'leonela.zambella@crowe.com.ve', 'leonelaz1998@gmail.com', '02124715309', '04242364607'),
+(178, 178, 'juneisy.benitez@crowe.com.ve', 'june.abm@gmail.com', '04122959794', '04264073835'),
+(179, 179, 'yesenia.casares@crowe.com.ve', '', '04241433149', '04127285524'),
+(180, 180, 'oliver.tovar@crowe.com.ve', 'tovaroliver22@gmail.com', '04242721414', ''),
+(181, 181, 'ritcelis.ruiz@crowe.com.ve', '', '04123099563', ''),
+(182, 182, 'jenny.lis@crowe.com.ve', '', '04142063611', '02127631690'),
+(183, 183, 'cesar.diaz@crowe.com.ve', '', '04141136672', ''),
+(184, 184, 'danaleth.hernandez@crowe.com.ve', 'danaleth@gmail.com', '04264157175', '04129629136'),
+(185, 185, 'johanna.trujillo@crowe.com.ve', 'jcrevette_@hotmail.com', '04142862057', ''),
+(186, 186, 'melanie.marquez@crowe.com.ve', 'melaniealexandra.m@gmail.com', '02123697554', '04242608583'),
+(187, 187, 'escarlet.guillen@crowe.com.ve', 'escarletguillen@gmail.com', '04149177892', ''),
+(188, 188, 'morrinsonn@gmail.com', 'morrinsonn@gmail.com', '04241616129', '02125858604'),
+(189, 189, 'gabigabi175@gmail.com', '', '04242779956', ''),
+(190, 190, 'anthoni.freites@gmail.com', '', '04122093659', ''),
 (191, 191, 'layajesus@gmail.com', '', '', ''),
-(192, 192, 'andrea.garcia@crowe.com.ve', '', '(0424) - 106 1875', ''),
-(193, 193, 'oscarrojo999@gmail.com', '', '(0414) - 133 2793', ''),
+(192, 192, 'andrea.garcia@crowe.com.ve', '', '04241061875', ''),
+(193, 193, 'oscarrojo999@gmail.com', '', '04141332793', ''),
 (194, 194, 'bolivarsierrajose@gmail.com', '', '', ''),
-(195, 195, 'wilmer.anton@crowe.com.ve', '', '(0414) - 314 1335', ''),
-(196, 196, 'beiker.loyo@crowe.com.ve', '', '(0416) - 053 3153', ''),
-(197, 197, 'pablo.mata@crowe.com.ve', '', '(0412) - 639 0605', '(0212) - 714 5134'),
-(198, 198, 'brandon.rivera@crowe.com.ve', '', '(0414) - 258 0055', '(0212) - 858 5721'),
-(199, 199, 'laura.rojas@crowe.com.ve', '', '(0414) - 160 5224', ''),
-(200, 200, 'juan.peñaloza@crowe.com.ve', '', '(0424) - 150 9619', '(0212) - 662 5836'),
-(201, 201, 'gabriel.rojas@crowe.com.ve', '', '(0414) - 135 4747', ''),
-(202, 202, 'josnely.castillo@crowe.com.ve', '', '(0416) - 836 6572', ''),
-(203, 203, 'christhopher.cabrera@crowe.com.ve', '', '(0414) - 186 2719', ''),
-(204, 204, 'brandon.rivea@crowe.com.ve', 'brandon.rivea@crowe.com.ve', '(0414) - 258 0055', ''),
-(205, 205, 'tomega9120@hotmail.com', 'tomega9120@hotmail.com', '(0414) - 246 6825', '(0212) - 241 3316'),
-(206, 206, 'gabriel.mora@crowe.com.ve', '', '(0424) - 147 9638', ''),
-(207, 207, 'jhon.martinez@crowe.com.ve', '', '(0424) - 202 4245', ''),
-(208, 208, 'keibimoreno@crowehowart.com', '', '(0414) - 126 9931', ''),
-(209, 209, 'deiriana.porta@crowe.com.ve', '', '(0424) - 123 5742', ''),
-(210, 210, 'ignayari.mendoza@crowe.com.ve', 'cardenaslg2000@yahoo.com', '(0412) - 960 1010', ''),
-(211, 211, 'guillermo.loaiza@crowe.com.ve', 'guillermoloaiza2001@gmail.com', '(0424) - 136 5019', ''),
-(212, 212, 'cesar.uban@crowe.com.ve', '', '(0414) - 926 7484', ''),
-(213, 213, 'dinexy.porta@crowe.com.ve', '', '(0412) - 737 7145', ''),
-(214, 214, 'ricardo.leon@crowe.com.ve', '', '(0412) - 211 2830', ''),
-(215, 215, 'keibi.moreno@crowe.com.ve', '', '(0414) - 126 9931', ''),
-(216, 216, 'barbara.betancourt@crowe.com.ve', '', '(0412) - 637 1772', ''),
-(217, 217, 'keiver.avila@crowe.com', '', '(0424) - 148 7560', ''),
-(218, 218, 'katherine.hernandez@crowe.com.ve', '', '(0414) - 021 3336', '(0212) - 631 0289'),
-(219, 219, 'yulimar.diaz@crowe.com.ve', '', '(0414) - 907 7239', ''),
-(220, 220, 'yuri.chacon@crowe.com.ve', '', '(0414) - 466 3156', ''),
-(221, 221, 'josmarly.maldonado@crowe.com.ve', '', '(0424) - 279 1966', ''),
-(222, 222, 'wilber.algueta@crowe.com.ve', '', '(0424) - 197 8449', ''),
-(223, 223, 'jose.castellanos@crowe.com.ve', '', '(0412) - 938 4012', ''),
-(224, 224, 'belkis.florean@crowe.com.ve', '', '(0424) - 164 2116', ''),
-(225, 225, 'keybert.aparicio@crowe.com.ve', '', '(0412) - 911 8289', ''),
-(226, 226, 'douglenis.tabasquez@crowe.com.ve', '', '(0424) - 168 8418', ''),
-(227, 227, 'ivana.guilarte@crowe.com.ve', '', '(0414) - 215 5483', ''),
-(228, 228, 'alejandra.sanchez@crowe.com.ve', '', '(0424) - 775 5090', ''),
-(229, 229, 'jose.hernandez@crowe.com.ve', '', '(0424) - 201 6719', ''),
-(230, 230, 'jose.perozo@crowe.com.ve', '', '(0424) - 128 8112', '(0412) - 338 9072'),
-(231, 231, 'fernando.rangel@crowe.com.ve', '', '(0424) - 165 3758', ''),
-(232, 232, 'angelica.lugo@crowe.com.ve', '', '(0412) - 581 1373', ''),
-(233, 233, 'maria.garcia@crowe.com.ve', '', '(0414) - 274 1686', ''),
-(234, 234, 'jenny.lima@crowe.com.ve', '', '(0424) - 160 3064', '(0212) - 693 2351'),
-(235, 235, 'crisbet.barcelo@crowe.com.ve', '', '(0412) - 731 8638', '(0212) - 753 2952'),
-(236, 236, 'arleanny.marrero@crowe.com.ve', '', '(0412) - 335 1501', ''),
-(237, 237, 'jose.diaz@crowe.com.ve', '', '(0424) - 298 5622', '(0414) - 990 2681'),
-(238, 238, 'orlaimy.muÑoz@gmail.com', '', '(0412) - 714 5942', ''),
-(239, 239, 'josman.fuentes@crowe.com.ve', '', '(0414) - 220 4960', ''),
-(240, 240, 'jorgenis.guerra@crowe.com.ve', '', '(0412) - 013 6708', '(0212) - 352 7361'),
-(241, 241, 'cesar.garcia@crowe.com.ve', '', '(0424) - 238 8485', ''),
-(242, 242, 'mays_krv@gmail.com', '', '(0412) - 090 0323', '(0212) - 365 5132'),
-(243, 243, 'yulitzaesparragoza@hotmail.com', '', '(0412) - 997 4260', ''),
-(244, 244, 'raul.briceño@crowe.com.ve', '', '(0414) - 289 5119', ''),
-(245, 245, 'mary.rojas@crowe.com.ve', '', '(0412) - 610 0692', ''),
-(246, 246, 'rubi.ramirez@crowe.com.ve', '', '(0412) - 910 1603', ''),
-(247, 247, 'carlosnavased@gmail.com', '', '(0424) - 281 3276', ''),
-(248, 248, 'miriam.hidalgo@crowe.com.ve', '', '(0412) - 541 1409', ''),
+(195, 195, 'wilmer.anton@crowe.com.ve', '', '04143141335', ''),
+(196, 196, 'beiker.loyo@crowe.com.ve', '', '04160533153', ''),
+(197, 197, 'pablo.mata@crowe.com.ve', '', '04126390605', '02127145134'),
+(198, 198, 'brandon.rivera@crowe.com.ve', '', '04142580055', '02128585721'),
+(199, 199, 'laura.rojas@crowe.com.ve', '', '04141605224', ''),
+(200, 200, 'juan.peñaloza@crowe.com.ve', '', '04241509619', '02126625836'),
+(201, 201, 'gabriel.rojas@crowe.com.ve', '', '04141354747', ''),
+(202, 202, 'josnely.castillo@crowe.com.ve', '', '04168366572', ''),
+(203, 203, 'christhopher.cabrera@crowe.com.ve', '', '04141862719', ''),
+(204, 204, 'brandon.rivea@crowe.com.ve', 'brandon.rivea@crowe.com.ve', '04142580055', ''),
+(205, 205, 'tomega9120@hotmail.com', 'tomega9120@hotmail.com', '04142466825', '02122413316'),
+(206, 206, 'gabriel.mora@crowe.com.ve', '', '04241479638', ''),
+(207, 207, 'jhon.martinez@crowe.com.ve', '', '04242024245', ''),
+(208, 208, 'keibimoreno@crowehowart.com', '', '04141269931', ''),
+(209, 209, 'deiriana.porta@crowe.com.ve', '', '04241235742', ''),
+(210, 210, 'ignayari.mendoza@crowe.com.ve', 'cardenaslg2000@yahoo.com', '04129601010', ''),
+(211, 211, 'guillermo.loaiza@crowe.com.ve', 'guillermoloaiza2001@gmail.com', '04241365019', ''),
+(212, 212, 'cesar.uban@crowe.com.ve', '', '04149267484', ''),
+(213, 213, 'dinexy.porta@crowe.com.ve', '', '04127377145', ''),
+(214, 214, 'ricardo.leon@crowe.com.ve', '', '04122112830', ''),
+(215, 215, 'keibi.moreno@crowe.com.ve', '', '04141269931', ''),
+(216, 216, 'barbara.betancourt@crowe.com.ve', '', '04126371772', ''),
+(217, 217, 'keiver.avila@crowe.com', '', '04241487560', ''),
+(218, 218, 'katherine.hernandez@crowe.com.ve', '', '04140213336', '02126310289'),
+(219, 219, 'yulimar.diaz@crowe.com.ve', '', '04149077239', ''),
+(220, 220, 'yuri.chacon@crowe.com.ve', '', '04144663156', ''),
+(221, 221, 'josmarly.maldonado@crowe.com.ve', '', '04242791966', ''),
+(222, 222, 'wilber.algueta@crowe.com.ve', '', '04241978449', ''),
+(223, 223, 'jose.castellanos@crowe.com.ve', '', '04129384012', ''),
+(224, 224, 'belkis.florean@crowe.com.ve', '', '04241642116', ''),
+(225, 225, 'keybert.aparicio@crowe.com.ve', '', '04129118289', ''),
+(226, 226, 'douglenis.tabasquez@crowe.com.ve', '', '04241688418', ''),
+(227, 227, 'ivana.guilarte@crowe.com.ve', '', '04142155483', ''),
+(228, 228, 'alejandra.sanchez@crowe.com.ve', '', '04247755090', ''),
+(229, 229, 'jose.hernandez@crowe.com.ve', '', '04242016719', ''),
+(230, 230, 'jose.perozo@crowe.com.ve', '', '04241288112', '04123389072'),
+(231, 231, 'fernando.rangel@crowe.com.ve', '', '04241653758', ''),
+(232, 232, 'angelica.lugo@crowe.com.ve', '', '04125811373', ''),
+(233, 233, 'maria.garcia@crowe.com.ve', '', '04142741686', ''),
+(234, 234, 'jenny.lima@crowe.com.ve', '', '04241603064', '02126932351'),
+(235, 235, 'crisbet.barcelo@crowe.com.ve', '', '04127318638', '02127532952'),
+(236, 236, 'arleanny.marrero@crowe.com.ve', '', '04123351501', ''),
+(237, 237, 'jose.diaz@crowe.com.ve', '', '04242985622', '04149902681'),
+(238, 238, 'orlaimy.muÑoz@gmail.com', '', '04127145942', ''),
+(239, 239, 'josman.fuentes@crowe.com.ve', '', '04142204960', ''),
+(240, 240, 'jorgenis.guerra@crowe.com.ve', '', '04120136708', '02123527361'),
+(241, 241, 'cesar.garcia@crowe.com.ve', '', '04242388485', ''),
+(242, 242, 'mays_krv@gmail.com', '', '04120900323', '02123655132'),
+(243, 243, 'yulitzaesparragoza@hotmail.com', '', '04129974260', ''),
+(244, 244, 'raul.briceño@crowe.com.ve', '', '04142895119', ''),
+(245, 245, 'mary.rojas@crowe.com.ve', '', '04126100692', ''),
+(246, 246, 'rubi.ramirez@crowe.com.ve', '', '04129101603', ''),
+(247, 247, 'carlosnavased@gmail.com', '', '04242813276', ''),
+(248, 248, 'miriam.hidalgo@crowe.com.ve', '', '04125411409', ''),
 (249, 252, 'carlosnavased@gmail.com', NULL, '04242813274', NULL),
 (250, 255, 'carlosnavased2@gmail.com', 'carlosnavased3@gmail.com', '04242813275', NULL),
-(251, 256, 'eifenhard@hotmail.com', 'eifenhard@hotmail.com', '04242813275', NULL);
+(251, 256, 'eifenhard@hotmail.com', 'eifenhard@hotmail.com', '04242813275', NULL),
+(252, 258, 'carlosnavased@gmail.com', 'carlosnavased@gmail.com', '04242813274', NULL);
 
 -- --------------------------------------------------------
 
@@ -2988,7 +3006,8 @@ INSERT INTO `tbl_usuarios_documentoidentidad` (`Id`, `Id_usuario`, `Id_tipo_docu
 (248, 248, 1, '15759452'),
 (249, 252, 1, '22667607'),
 (250, 255, 1, '22667607'),
-(251, 256, 1, '12345678');
+(251, 256, 1, '12345678'),
+(252, 258, 1, '22667607');
 
 -- --------------------------------------------------------
 
@@ -2998,8 +3017,8 @@ INSERT INTO `tbl_usuarios_documentoidentidad` (`Id`, `Id_usuario`, `Id_tipo_docu
 
 CREATE TABLE `tbl_usuarios_documentoidentidad_tipo` (
   `Id` int(11) NOT NULL,
-  `Abreviatura` varchar(5) NOT NULL,
-  `Descripcion` varchar(20) NOT NULL,
+  `AbreviaturaTipo` varchar(5) NOT NULL,
+  `DescripcionTipo` varchar(20) NOT NULL,
   `Id_estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -3007,7 +3026,7 @@ CREATE TABLE `tbl_usuarios_documentoidentidad_tipo` (
 -- Volcado de datos para la tabla `tbl_usuarios_documentoidentidad_tipo`
 --
 
-INSERT INTO `tbl_usuarios_documentoidentidad_tipo` (`Id`, `Abreviatura`, `Descripcion`, `Id_estatus`) VALUES
+INSERT INTO `tbl_usuarios_documentoidentidad_tipo` (`Id`, `AbreviaturaTipo`, `DescripcionTipo`, `Id_estatus`) VALUES
 (1, 'V', 'Cédula Venezolana', 1),
 (2, 'E', 'Cédula Extranjera', 1);
 
@@ -3019,7 +3038,7 @@ INSERT INTO `tbl_usuarios_documentoidentidad_tipo` (`Id`, `Abreviatura`, `Descri
 
 CREATE TABLE `tbl_usuarios_jerarquia_cargo` (
   `Id` int(11) NOT NULL,
-  `Descripcion` text NOT NULL,
+  `NombreCargo` text NOT NULL,
   `Id_TipoCargo` int(11) NOT NULL,
   `Jerarquia` int(11) NOT NULL,
   `Id_Estatus` int(11) NOT NULL
@@ -3029,7 +3048,7 @@ CREATE TABLE `tbl_usuarios_jerarquia_cargo` (
 -- Volcado de datos para la tabla `tbl_usuarios_jerarquia_cargo`
 --
 
-INSERT INTO `tbl_usuarios_jerarquia_cargo` (`Id`, `Descripcion`, `Id_TipoCargo`, `Jerarquia`, `Id_Estatus`) VALUES
+INSERT INTO `tbl_usuarios_jerarquia_cargo` (`Id`, `NombreCargo`, `Id_TipoCargo`, `Jerarquia`, `Id_Estatus`) VALUES
 (1, 'Contratado por horas', 1, 0, 1),
 (2, 'Pasantes', 1, 0, 1),
 (3, 'Asistente I', 1, 0, 1),
@@ -3081,7 +3100,7 @@ INSERT INTO `tbl_usuarios_jerarquia_cargo` (`Id`, `Descripcion`, `Id_TipoCargo`,
 
 CREATE TABLE `tbl_usuarios_jerarquia_division` (
   `Id` int(11) NOT NULL,
-  `Descripcion` text NOT NULL,
+  `NombreDivision` text NOT NULL,
   `Id_Estatus` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -3089,7 +3108,7 @@ CREATE TABLE `tbl_usuarios_jerarquia_division` (
 -- Volcado de datos para la tabla `tbl_usuarios_jerarquia_division`
 --
 
-INSERT INTO `tbl_usuarios_jerarquia_division` (`Id`, `Descripcion`, `Id_Estatus`) VALUES
+INSERT INTO `tbl_usuarios_jerarquia_division` (`Id`, `NombreDivision`, `Id_Estatus`) VALUES
 (1, 'Auditoría Externa', 1),
 (2, 'Asesoría Tributaria', 1),
 (3, 'Auditoría TI', 1),
@@ -3110,6 +3129,26 @@ INSERT INTO `tbl_usuarios_jerarquia_division` (`Id`, `Descripcion`, `Id_Estatus`
 (18, 'Servicios Profesionales (Puerto Ordaz)', 1),
 (19, 'Administración', 1),
 (20, 'Crowe Anzoátegui (PLC)', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `tbl_usuarios_status`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `tbl_usuarios_status` (
+`Id` int(11)
+,`Descripcion` text
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `tbl_usuarios_status`
+--
+DROP TABLE IF EXISTS `tbl_usuarios_status`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tbl_usuarios_status`  AS SELECT `cu`.`Id` AS `Id`, `cu`.`Descripcion` AS `Descripcion` FROM `tbl_control_estatus` AS `cu` WHERE `cu`.`Id` between 1 and 4 ;
 
 --
 -- Índices para tablas volcadas
@@ -3248,7 +3287,7 @@ ALTER TABLE `tbl_control_encryptkey`
 -- AUTO_INCREMENT de la tabla `tbl_control_error`
 --
 ALTER TABLE `tbl_control_error`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_control_error_tipomensaje`
@@ -3272,7 +3311,7 @@ ALTER TABLE `tbl_control_estatus`
 -- AUTO_INCREMENT de la tabla `tbl_control_logs_bitacora`
 --
 ALTER TABLE `tbl_control_logs_bitacora`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_control_logs_bitacora_accion`
@@ -3290,13 +3329,13 @@ ALTER TABLE `tbl_control_tipocargo`
 -- AUTO_INCREMENT de la tabla `tbl_usuarios`
 --
 ALTER TABLE `tbl_usuarios`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=257;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=259;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_usuarios_contacto`
 --
 ALTER TABLE `tbl_usuarios_contacto`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=252;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=253;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_usuarios_direccion_estado`
@@ -3320,7 +3359,7 @@ ALTER TABLE `tbl_usuarios_direccion_parroquia`
 -- AUTO_INCREMENT de la tabla `tbl_usuarios_documentoidentidad`
 --
 ALTER TABLE `tbl_usuarios_documentoidentidad`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=252;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=253;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_usuarios_documentoidentidad_tipo`
