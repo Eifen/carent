@@ -19,6 +19,9 @@ body{
     list-style: none;
     color: @Text-Color
 }
+//Desactivamos mostrar contraseñas en edge
+input[type="password"]::-ms-reveal{ display: none;}
+
 /*Elementos para ocultar*/
 [v-cloak] { display: none }
 

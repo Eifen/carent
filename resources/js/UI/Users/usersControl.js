@@ -21,7 +21,7 @@ const createUser = createApp({
             isCreateClick: false, //Controla el boton de crear usuario
             isEditClick: false, //Controla el boton de edit usuario
             updateModel: {},
-            paramDTOCreate:
+            paramDTOUser:
             {
                 "FirstName": '',
                 "SecondName": '',
@@ -35,6 +35,11 @@ const createUser = createApp({
                 "IdDivision": 0,
                 "DateIngreso": ''
             }, //Objeto que prepara la data para crear el usuario
+            paramDTOEdit:
+            {
+                "IdStatus": 0,
+                "DateEgreso": ''
+            },//Objeto que almacena los campos del edit
             paramDTONewContact:
             {
                 "FirstEmail": '',
@@ -69,7 +74,7 @@ const createUser = createApp({
             this.validateNivel2(Data);
             //Solicitamos al controlador
             axios.post('/usuarios/create/newUser',{
-                "user": JSON.parse(JSON.stringify(this.paramDTOCreate)),
+                "user": JSON.parse(JSON.stringify(this.paramDTOUser)),
                 "contact": JSON.parse(JSON.stringify(this.paramDTONewContact)),
                 "document": JSON.parse(JSON.stringify(this.paramDTONewDocument))})
             .then(request => {
@@ -101,7 +106,23 @@ const createUser = createApp({
          * Metodo que actualiza un usuario
          * @param {*} Data Almacena los datos a actualizar
          */
-        updateUser(Data){ console.log(Data) },
+        updateUser(Data)
+        {
+            this.isEditClick = true;
+            this.validateNivel2(Data);
+
+            //Validaciones unicas para edit
+            Data.Status == 0 ? this.paramDTOEdit.IdStatus = null : this.paramDTOEdit.IdStatus = Data.Status
+            !Validate.Date(Data.DateEgreso).response
+            ? this.paramDTOEdit.DateEgreso = ''
+            : this.paramDTOEdit.DateEgreso = Data.DateEgreso;
+
+            //Unimos el array user en edit
+            this.paramDTOEdit = { ...this.paramDTOEdit, ...this.paramDTOUser}
+            console.log(this.paramDTOEdit);
+
+            //TODO: Conexión AXIOS Update User
+        },
         /**
          * Reformatea el telefono quitando los caracteres "()" y "-"
          * @param {*} phoneValue Captura el valor actual del telefono
@@ -129,13 +150,13 @@ const createUser = createApp({
                     "password": '000000'
                 })
             //Segundo nivel de validaciones
-            DataToReview.IdParish == 0 ? this.paramDTOCreate.IdParish = null : this.paramDTOCreate.IdParish = DataToReview.IdParish
-            DataToReview.IdCargo == 0 ? this.paramDTOCreate.IdCargo = null : this.paramDTOCreate.IdCargo = DataToReview.IdCargo
-            DataToReview.IdDivision == 0 ? this.paramDTOCreate.IdDivision = null : this.paramDTOCreate.IdDivision = DataToReview.IdDivision
+            DataToReview.IdParish == 0 ? this.paramDTOUser.IdParish = null : this.paramDTOUser.IdParish = DataToReview.IdParish
+            DataToReview.IdCargo == 0 ? this.paramDTOUser.IdCargo = null : this.paramDTOUser.IdCargo = DataToReview.IdCargo
+            DataToReview.IdDivision == 0 ? this.paramDTOUser.IdDivision = null : this.paramDTOUser.IdDivision = DataToReview.IdDivision
 
             //Descomponer cedula
-            this.paramDTOCreate.Cedula = DTOCedula[1].replace(/,/g,'');
-            this.paramDTONewDocument.Cedula = this.paramDTOCreate.Cedula;
+            this.paramDTOUser.Cedula = DTOCedula[1].replace(/,/g,'');
+            this.paramDTONewDocument.Cedula = this.paramDTOUser.Cedula;
             this.paramDTONewDocument.TipoCedula = DTOCedula[0];
 
             //Descomponer numero
@@ -154,25 +175,25 @@ const createUser = createApp({
 
             //Descomponer Nombres
             !Validate.String(DTOSecondName,20).response
-            ? this.paramDTOCreate.SecondName = ''
-            : this.paramDTOCreate.SecondName = DTOSecondName;
+            ? this.paramDTOUser.SecondName = ''
+            : this.paramDTOUser.SecondName = DTOSecondName;
 
             !Validate.String(DTOSecondLastName,20).response
-            ? this.paramDTOCreate.SecondLastName = ''
-            : this.paramDTOCreate.SecondLastName = DTOSecondLastName;
+            ? this.paramDTOUser.SecondLastName = ''
+            : this.paramDTOUser.SecondLastName = DTOSecondLastName;
 
-            this.paramDTOCreate.FirstName = DataToReview.FirstName;
-            this.paramDTOCreate.LastName = DataToReview.LastName;
+            this.paramDTOUser.FirstName = DataToReview.FirstName;
+            this.paramDTOUser.LastName = DataToReview.LastName;
 
             //Descomponer Fechas
             !Validate.Date(DTOFechaIngreso).response
-            ? this.paramDTOCreate.DateIngreso = ''
-            : this.paramDTOCreate.DateIngreso = DataToReview.DateIngreso;
+            ? this.paramDTOUser.DateIngreso = ''
+            : this.paramDTOUser.DateIngreso = DataToReview.DateIngreso;
 
-            this.paramDTOCreate.Birthday = DataToReview.Birthday
+            this.paramDTOUser.Birthday = DataToReview.Birthday
 
             //Descomponer Codigo
-            this.paramDTOCreate.Code = `${DTOCode.Codigo}`
+            this.paramDTOUser.Code = `${DTOCode.Codigo}`
         },
         /**
          * Recibe la data de encriptacion de la base de datos y lo asigna  a dos variables en Data

@@ -4,7 +4,7 @@
     <div class="mb-3">
       <label for="Estado">Estado</label>
       <div class="input-group">
-        <select class="form-select" v-model="scope.inputEstadoSelect">
+        <select class="form-select" v-model="scope.inputEstadoSelect" title="StateSelect">
           <option value="0" selected disabled>Seleccione el estado</option>
           <option v-for="(select, cursor) in scope.stateData"
             :key="cursor"
@@ -18,7 +18,7 @@
     <div class="mb-3">
       <label for="Municipio">Municipio</label>
       <div class="input-group">
-        <select class="form-select"
+        <select class="form-select" title="MunicipalitySelect"
           :disabled="scope.inputEstadoSelect == 0"
           v-model="scope.inputMunicipioSelect">
           <option value="0" selected disabled>Seleccione el Municipio</option>
@@ -34,7 +34,7 @@
     <div class="mb-3">
       <label for="Parroquia">Parroquia</label>
       <div class="input-group">
-        <select class="form-select"
+        <select class="form-select" title="ParishSelect"
           :disabled="scope.inputMunicipioSelect == 0"
           v-model="scope.inputParroquiaSelect">
           <option value="0" selected disabled>Seleccione la Parroquia</option>
@@ -50,7 +50,7 @@
     <div class="mb-3">
       <label for="Division">División</label>
       <div class="input-group">
-        <select class="form-select" v-model="scope.inputDivisionSelect">
+        <select class="form-select" v-model="scope.inputDivisionSelect" title="DivisionSelect">
           <option value="0" selected disabled>Seleccione la División</option>
           <option v-for="(select, cursor) in scope.divisionData"
             :key="cursor"
@@ -64,7 +64,7 @@
     <div class="mb-3">
       <label for="Cargo">Cargo</label>
       <div class="input-group">
-        <select class="form-select"
+        <select class="form-select" title="CargoSelect"
           :disabled="scope.inputDivisionSelect == 0"
           v-model="scope.inputCargoSelect">
           <option value="0" selected disabled>Seleccione el Cargo</option>
@@ -85,10 +85,10 @@
           class="form-control"
           placeholder="Ejemplo: 1990-02-18"
           id="ingreso"
-          aria-describedby="basic-addon2"
+          aria-describedby="basic-addon12"
           v-model="scope.inputIngreso"
           disabled/>
-        <span class="input-group-text" id="basic-addon2">
+        <span class="input-group-text" id="basic-addon12">
           <calendar @to-input="ingresoDTO"></calendar>
         </span>
       </div>
@@ -108,10 +108,10 @@
           class="form-control"
           placeholder="Ejemplo: 1990-02-18"
           id="egreso"
-          aria-describedby="basic-addon2"
+          aria-describedby="basic-addon13"
           v-model="scope.inputEgreso"
           disabled/>
-        <span class="input-group-text" id="basic-addon2">
+        <span class="input-group-text" id="basic-addon13">
           <calendar @to-input="egresoDTO"></calendar>
         </span>
       </div>

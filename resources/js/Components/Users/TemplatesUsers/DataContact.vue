@@ -4,7 +4,7 @@
     <div class="mb-3">
       <label for="FirstEmail">Correo Principal <span :class="scope.formClass.requiredField">*</span></label>
       <div class="input-group">
-        <span class="input-group-text" id="basic-addon1">
+        <span class="input-group-text" id="basic-addon8">
           <font-awesome string-icon="fa-solid fa-at"></font-awesome>
         </span>
         <input
@@ -12,7 +12,7 @@
           class="form-control"
           placeholder="Ejemplo: usuario@empresa.dominio"
           id="FirstEmail"
-          aria-describedby="basic-addon1"
+          aria-describedby="basic-addon8"
           v-model="scope.inputFirstEmail"/>
       </div>
       <!-- Mensajes de error en Email -->
@@ -28,7 +28,7 @@
     <div class="mb-3">
       <label for="SecondEmail">Correo Secundario</label>
       <div class="input-group">
-        <span class="input-group-text" id="basic-addon1">
+        <span class="input-group-text" id="basic-addon9">
           <font-awesome string-icon="fa-solid fa-at"></font-awesome>
         </span>
         <input
@@ -36,7 +36,7 @@
           class="form-control"
           placeholder="Ejemplo: usuario2@empresa2.dominio2"
           id="SecondEmail"
-          aria-describedby="basic-addon1"
+          aria-describedby="basic-addon9"
           v-model="scope.inputSecondEmail"/>
       </div>
       <!-- Mensajes de error en Email -->
@@ -52,7 +52,7 @@
       <label for="FirstPhone">Telefono Principal
         <span :class="scope.formClass.requiredField">*</span></label>
       <div class="input-group">
-        <span class="input-group-text" id="basic-addon1">
+        <span class="input-group-text" id="basic-addon10">
           <font-awesome string-icon="fa-solid fa-hashtag"></font-awesome>
         </span>
         <input
@@ -60,7 +60,7 @@
           class="form-control"
           placeholder="Ingrese el número de TLF"
           id="FirstPhone"
-          aria-describedby="basic-addon1"
+          aria-describedby="basic-addon10"
           v-model="scope.inputFirstPhone"/>
       </div>
     </div>
@@ -69,7 +69,7 @@
     <div class="mb-3">
       <label for="SecondPhone">Telefono Secundario</label>
       <div class="input-group">
-        <span class="input-group-text" id="basic-addon1">
+        <span class="input-group-text" id="basic-addon11">
           <font-awesome string-icon="fa-solid fa-hashtag"></font-awesome>
         </span>
         <input
@@ -77,7 +77,7 @@
           class="form-control"
           placeholder="Ingrese el número de TLF"
           id="SecondPhone"
-          aria-describedby="basic-addon1"
+          aria-describedby="basic-addon11"
           v-model="scope.inputSecondPhone"/>
       </div>
     </div>
@@ -85,7 +85,7 @@
     <div class="mb-3" v-if="enableEdit">
       <label for="Status">Status del empleado</label>
       <div class="input-group">
-        <select class="form-select" v-model="scope.inputStatusSelect">
+        <select class="form-select" v-model="scope.inputStatusSelect" title="StatusSelect">
           <option value="0" selected disabled>Seleccione el status</option>
           <option v-for="(select, cursor) in scope.statusData"
             :key="cursor"

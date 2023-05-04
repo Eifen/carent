@@ -29,16 +29,7 @@ const loginApp = createApp ({
         }
     },
     methods:{
-        /**
-         * Metodo que controla el cambio en la información de la contraseña
-         * @param {*} nuevoEstado Estado actual del boton
-         */
-        changeInput(nuevoEstado){
-            this.showPassword === true
-            ? (this.controlEye = 'fa-solid fa-eye-slash', this.TypeInputPassword = 'text')
-            : (this.controlEye = 'fa-solid fa-eye', this.TypeInputPassword = 'password')
-            this.showPassword = nuevoEstado;
-        },
+        changeInput(){ this.showPassword = !this.showPassword; },
         /**
          * MEtodo que controla el inicio de sesion
          * @param {*} $EncryptKey Contexto o llave del encrypt. String
@@ -163,6 +154,12 @@ const loginApp = createApp ({
             handler(estadoPassword){
                 estadoPassword.IsEmpty === true ? this.ErrorStyle.HasError.password = true : this.ErrorStyle.HasError.password = false;
             }
+        },
+        showPassword(newValue)
+        {
+            newValue === true
+            ? (this.controlEye = 'fa-solid fa-eye-slash', this.TypeInputPassword = 'text')
+            : (this.controlEye = 'fa-solid fa-eye', this.TypeInputPassword = 'password')
         }
     },
     components: { FontAwesome }

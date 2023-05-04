@@ -19,13 +19,13 @@
                 </span>
                 {{--Clave del Usuario--}}
                 <div :class="{'input-group': ErrorStyle.base, 'mb-3': !ErrorStyle.HasError.password}">
-                    <span class="input-group-text" id="basic-addon2">
+                    <span class="input-group-text" id="basic-addon3">
                         <font-awesome string-icon="fa-solid fa-lock"></font-awesome>
                     </span>
                     <input :type="TypeInputPassword" class="form-control" placeholder="Contraseña"
                     aria-label="Clave" aria-describedby="basic-addon2" id="passwordUsuario" v-model="passwordUsuario.value"
                     @input="verifyPassword()"/>
-                    <span class="input-group-text form-eye" id="basic-addon2" @click="changeInput(!state)">
+                    <span class="input-group-text form-eye" id="basic-addon4" @click="changeInput()">
                         {{--Control del ojo--}}
                         <font-awesome :string-icon="controlEye"></font-awesome>
                     </span>
@@ -52,10 +52,10 @@
             <a href="#" id="credentials-forgot-password">Olvidé mi contraseña</a>
         </div>
         <div class="login-content-social">
-            <div class="login-content-social-icon"><a href="https://www.instagram.com/crowe.ve"><font-awesome string-icon="fa-brands fa-instagram"></font-awesome></a></div>
-            <div class="login-content-social-icon"><a href="https://www.facebook.com/CroweVzla"><font-awesome string-icon="fa-brands fa-facebook"></font-awesome></a></div>
-            <div class="login-content-social-icon"><a href="https://twitter.com/crowe_vzla"><font-awesome string-icon="fa-brands fa-twitter"></font-awesome></a></div>
-            <div class="login-content-social-icon"><a href="https://www.youtube.com/channel/UCx7ekjvHFTuGkenLjap-oFQ"><font-awesome string-icon="fa-brands fa-youtube"></font-awesome></a></div>
+            <div class="login-content-social-icon"><a href="https://www.instagram.com/crowe.ve" title="CroweInstagram"><font-awesome string-icon="fa-brands fa-instagram"></font-awesome></a></div>
+            <div class="login-content-social-icon"><a href="https://www.facebook.com/CroweVzla" title="CroweFacebook"><font-awesome string-icon="fa-brands fa-facebook"></font-awesome></a></div>
+            <div class="login-content-social-icon"><a href="https://twitter.com/crowe_vzla" title="CroweTwitter"><font-awesome string-icon="fa-brands fa-twitter"></font-awesome></a></div>
+            <div class="login-content-social-icon"><a href="https://www.youtube.com/channel/UCx7ekjvHFTuGkenLjap-oFQ" title="CroweYoutube"><font-awesome string-icon="fa-brands fa-youtube"></font-awesome></a></div>
         </div>
     </div>
 </section>
