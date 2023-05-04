@@ -91,7 +91,7 @@ class UsersModel extends Model
      */
     public static function PrepareDataUpdate($codigo)
     {
-        $GetUser = DB::table('tbl_usuarios')
+        $getUser = DB::table('tbl_usuarios')
         //Cargo y Division
         ->join("tbl_usuarios_jerarquia_cargo","tbl_usuarios.Id_jerarquia_cargo","=","tbl_usuarios_jerarquia_cargo.Id")
         ->join("tbl_usuarios_jerarquia_division","tbl_usuarios.Id_jerarquia_division","=","tbl_usuarios_jerarquia_division.Id")
@@ -111,36 +111,55 @@ class UsersModel extends Model
         ->where("tbl_usuarios.Codigo","=",$codigo)
         ->first();
 
-        return $GetUser;
+        return $getUser;
     }
 
     /**
      * Método que registra al usuario en función a los parametros proporcionados
-     * @param mixed $ParamsCreate Almacena los datos para la creación de usuario y registrar el movimiento
-     * @param mixed $ParamsContact Almacena los datos para los documentos del usuario recién creado
+     * @param mixed $paramsUsers Almacena los datos para la creación de usuario y registrar el movimiento
+     * @param mixed $paramsContact Almacena los datos para los documentos del usuario recién creado
+     * @param mixed $typeControl Define si hará un create o un update
      */
-    public static function CreateUser($ParamsCreate,$ParamsContact)
+    public static function ControlUser($paramsUsers,$paramsContact,$typeControl)
     {
-        DB::select('call sp_NewUser(?,?,?,?,?,?,?,?,?,?,?,?,?,@response)',$ParamsCreate);
-        $GetResponse = DB::select('SELECT @response as JsonResponse');
-        $Response1 = json_decode($GetResponse[0]->JsonResponse,true);
-
-        //Si creo el usuario exitosamente, procedemos a registrar su contacto y documento
-        if($Response1["response"])
-        {
-            DB::select('call sp_NewContactUser(?,?,?,?,?,?,?,@response2)',$ParamsContact);
-            $GetResponse2 = DB::select('SELECT @response2 as JsonResponse2');
-            $Response2 = json_decode($GetResponse2[0]->JsonResponse2,true);
-
-            //Si registro el contacto, devuelve la primera respuesta
-            if($Response2["response"])
-            {
-                return $Response1;
-            }
-
-            return $Response2;
+        switch ($typeControl) {
+            case 'create':
+                DB::select('call sp_NewUser(?,?,?,?,?,?,?,?,?,?,?,?,?,@response)',$paramsUsers);
+                break;
+            
+            case 'update':
+                DB::select('call sp_UpdateUser(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,@response)',$paramsUsers);
+                break;
         }
 
-        return $Response1;
+        $getResponse = DB::select('SELECT @response as JsonResponse');
+        $response1 = json_decode($getResponse[0]->JsonResponse,true);
+
+        //Si creo o actualizó el usuario exitosamente, procedemos a registrar su contacto y documento o actualizarlo
+        if($response1["response"])
+        {
+            switch ($typeControl) {
+                case 'create':
+                    DB::select('call sp_NewContactUser(?,?,?,?,?,?,?,@response2)',$paramsContact);
+                    break;
+                
+                case 'update':
+                    DB::select('call sp_UpdateContactUser(?,?,?,?,?,?,?,@response2)',$paramsContact);
+                    break;
+            }
+
+            $getResponse2 = DB::select('SELECT @response2 as JsonResponse2');
+            $response2 = json_decode($getResponse2[0]->JsonResponse2,true);
+
+            //Si registro el contacto, devuelve la primera respuesta
+            if($response2["response"])
+            {
+                return $response1;
+            }
+
+            return $response2;
+        }
+
+        return $response1;
     }
 }

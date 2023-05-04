@@ -88,9 +88,10 @@ class UsersController extends Controller
     }
 
     //Registro de nuevo Usuarios
-    public function NewUser(Request $dataUser)
+    public function UserControl(Request $dataUser)
     {
         $decryptCode = ConfigController::DecryptData($dataUser->input('user')['Code']);
+        $paramsEdit = array(); //Array para la función de edit
 
         //Tercer nivel de validaciones
 
@@ -115,20 +116,46 @@ class UsersController extends Controller
             ConfigController::GetIpUser()
         );
 
+        //Fecha de egreso null o vacia si se está editando
+        if($dataUser->input('isEdit'))
+        {
+            $fechaEgreso = $dataUser->input('user')['DateEgreso'] != null || $dataUser->input('user')['DateEgreso'] != ''
+            ? date("Y-m-d",strtotime($dataUser->input('user')['DateEgreso']))
+            : null;
+
+            $paramsEdit = array(
+                $dataUser->input('user')['IdUser'],
+                $dataUser->input('user')['IdStatus'],
+                $fechaEgreso
+            );
+
+            //Colocamos el status y la fecha de egreso al final del array
+            $paramsUser = array_merge($paramsUser,$paramsEdit);
+        }
+
         $paramsContact = array(
             $decryptCode,
-            $dataUser->input('contact')["FirstEmail"],
-            $dataUser->input('contact')["SecondEmail"],
-            $dataUser->input('contact')["FirstPhone"],
-            $dataUser->input('contact')["SecondPhone"],
-            $dataUser->input('document')["TipoCedula"],
-            $dataUser->input('document')["Cedula"],
+            strtolower($dataUser->input('contact')["FirstEmail"]),
+            strtolower($dataUser->input('contact')["SecondEmail"]),
+            strtolower($dataUser->input('contact')["FirstPhone"]),
+            strtolower($dataUser->input('contact')["SecondPhone"]),
+            strtolower($dataUser->input('document')["TipoCedula"]),
+            strtolower($dataUser->input('document')["Cedula"]),
         );
 
-        $RegisterUser = UsersModel::CreateUser($paramsUser,$paramsContact);
+        $dataUser->input('isEdit')
+        ? ($ResponseUser = UsersModel::ControlUser($paramsUser,$paramsContact,"update"))
+        : $ResponseUser = UsersModel::ControlUser($paramsUser,$paramsContact,"create");
 
-        return response($RegisterUser,200);
+        //Eliminamos el session update en caso de que exista.
+        //if(Session::has('dataUpdate')) Session::forget("dataUpdate");
+
+        return response($ResponseUser,200);
     }
 
     //Actualización de usuarios
+    public function UpdateUser(Request $dataUser)
+    {
+
+    }
 }

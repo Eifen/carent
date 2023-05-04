@@ -167,7 +167,8 @@
           placeholder="Ejemplo: 0001"
           id="Codigo"
           aria-describedby="basic-addon7"
-          v-model="scope.inputCode"/>
+          v-model="scope.inputCode"
+          :disabled="enableEdit ? true : false"/>
       </div>
     </div>
   </fieldset>
@@ -178,7 +179,7 @@ import Calendar from "@/Components/Calendar.vue";
 import FontAwesome from "@/Components/FontAwesome/FontAwesome.vue";
 
 export default {
-    props: { scope: Object }, //scope: Objeto encargado de heredar la data del padre
+    props: { scope: Object, enableEdit: Boolean }, //scope: Objeto encargado de heredar la data del padre
     components: { Calendar, FontAwesome },
     methods:
     {

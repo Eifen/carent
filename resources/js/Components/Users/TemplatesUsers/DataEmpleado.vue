@@ -5,11 +5,13 @@
       <label for="Estado">Estado</label>
       <div class="input-group">
         <select class="form-select" v-model="scope.inputEstadoSelect" title="StateSelect">
-          <option value="0" selected disabled>Seleccione el estado</option>
           <option v-for="(select, cursor) in scope.stateData"
             :key="cursor"
-            :value="select.Id">
-            {{ select.NombreEstado }}
+            :value="select.Id"
+            :selected="select.Id == 0"
+            :disabled="select.Id == 0">
+            <span v-if="select.Id != 0">{{ select.NombreEstado }}</span>
+            <span v-if="select.Id == 0">Seleccione el Estado</span>
           </option>
         </select>
       </div>
@@ -21,11 +23,13 @@
         <select class="form-select" title="MunicipalitySelect"
           :disabled="scope.inputEstadoSelect == 0"
           v-model="scope.inputMunicipioSelect">
-          <option value="0" selected disabled>Seleccione el Municipio</option>
+          <option value=0 selected disabled>Seleccione el Municipio</option>
           <option v-for="(select, cursor) in scope.municipalityData"
             :key="cursor"
-            :value="select.Id">
-            {{ select.NombreMunicipio }}
+            :value="select.Id"
+            :selected="select.Id == 0"
+            :disabled="select.Id == 0">
+            <span v-if="select.Id != 0">{{ select.NombreMunicipio }}</span>
           </option>
         </select>
       </div>
@@ -37,11 +41,13 @@
         <select class="form-select" title="ParishSelect"
           :disabled="scope.inputMunicipioSelect == 0"
           v-model="scope.inputParroquiaSelect">
-          <option value="0" selected disabled>Seleccione la Parroquia</option>
+          <option value=0 selected disabled>Seleccione la Parroquia</option>
           <option v-for="(select, cursor) in scope.parishData"
             :key="cursor"
-            :value="select.Id">
-            {{ select.NombreParroquia }}
+            :value="select.Id"
+            :selected="select.Id == 0"
+            :disabled="select.Id == 0">
+            <span v-if="select.Id != 0">{{ select.NombreParroquia }}</span>
           </option>
         </select>
       </div>
@@ -51,11 +57,13 @@
       <label for="Division">División</label>
       <div class="input-group">
         <select class="form-select" v-model="scope.inputDivisionSelect" title="DivisionSelect">
-          <option value="0" selected disabled>Seleccione la División</option>
           <option v-for="(select, cursor) in scope.divisionData"
             :key="cursor"
-            :value="select.Id">
-            {{ select.NombreDivision }}
+            :value="select.Id"
+            :selected="select.Id == 0"
+            :disabled="select.Id == 0">
+            <span v-if="select.Id != 0">{{ select.NombreDivision }}</span>
+            <span v-if="select.Id == 0">Seleccione la División</span>
           </option>
         </select>
       </div>
@@ -67,11 +75,13 @@
         <select class="form-select" title="CargoSelect"
           :disabled="scope.inputDivisionSelect == 0"
           v-model="scope.inputCargoSelect">
-          <option value="0" selected disabled>Seleccione el Cargo</option>
           <option v-for="(select, cursor) in scope.cargoData"
             :key="cursor"
-            :value="select.Id">
-            {{ select.NombreCargo }}
+            :value="select.Id"
+            :selected="select.Id == 0"
+            :disabled="select.Id == 0">
+            <span v-if="select.Id != 0">{{ select.NombreCargo }}</span>
+            <span v-if="select.Id == 0">Seleccione el Cargo</span>
           </option>
         </select>
       </div>

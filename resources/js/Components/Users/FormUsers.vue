@@ -7,7 +7,8 @@
             <div :class="formClass.requiredTitle">Campos Obligatorios (<span :class="formClass.requiredField">*</span>)</div>
             <data-principal :scope="DTOData"
             @active-document="enableInput"
-            @active-birthday="insertDate"></data-principal>
+            @active-birthday="insertDate"
+            :enable-edit="isEdit"></data-principal>
             <!-- Datos de contacto -->
             <legend :class="formClass.legend" v-text="messages.contacto"></legend>
             <data-contact :scope="DTOData" :enableEdit="isEdit"></data-contact>

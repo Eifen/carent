@@ -37,6 +37,7 @@ const createUser = createApp({
             }, //Objeto que prepara la data para crear el usuario
             paramDTOEdit:
             {
+                "IdUser": 0,
                 "IdStatus": 0,
                 "DateEgreso": ''
             },//Objeto que almacena los campos del edit
@@ -76,7 +77,8 @@ const createUser = createApp({
             axios.post('/usuarios/create/newUser',{
                 "user": JSON.parse(JSON.stringify(this.paramDTOUser)),
                 "contact": JSON.parse(JSON.stringify(this.paramDTONewContact)),
-                "document": JSON.parse(JSON.stringify(this.paramDTONewDocument))})
+                "document": JSON.parse(JSON.stringify(this.paramDTONewDocument)),
+                "isEdit": false})
             .then(request => {
                 if(request.status === 200 && !request.data.response) throw request.data.message;
                 toast.success(request.data.message, {
@@ -101,13 +103,14 @@ const createUser = createApp({
          * Metodo que actualiza el data model para actualizar usuarios
          * @param {*} dataUser Datos del usuario a actualizar
          */
-        prepareUpdate(dataUser){ this.updateModel = dataUser; },
+        prepareUpdate(dataUser){ this.updateModel = dataUser; console.log(this.updateModel)},
         /**
          * Metodo que actualiza un usuario
          * @param {*} Data Almacena los datos a actualizar
          */
         updateUser(Data)
         {
+            console.log(Data)
             this.isEditClick = true;
             this.validateNivel2(Data);
 
@@ -117,11 +120,40 @@ const createUser = createApp({
             ? this.paramDTOEdit.DateEgreso = ''
             : this.paramDTOEdit.DateEgreso = Data.DateEgreso;
 
+            //Pasamos el Id del usuario
+            this.paramDTOEdit.IdUser = this.updateModel.Id;
+
             //Unimos el array user en edit
             this.paramDTOEdit = { ...this.paramDTOEdit, ...this.paramDTOUser}
             console.log(this.paramDTOEdit);
 
-            //TODO: Conexión AXIOS Update User
+            //Conexión AXIOS Update User
+            axios.post('/usuarios/update/updateUser',{
+                "user": JSON.parse(JSON.stringify(this.paramDTOEdit)),
+                "contact": JSON.parse(JSON.stringify(this.paramDTONewContact)),
+                "document": JSON.parse(JSON.stringify(this.paramDTONewDocument)),
+                "isEdit": true})
+            .then(request => 
+                {
+                    if(request.status === 200 && !request.data.response) throw request.data.message;
+                    toast.success(request.data.message, {
+                        position: toast.POSITION.TOP_LEFT,
+                        autoClose: false
+                    });
+    
+                    setTimeout(() => {
+                        window.location.href = "/usuarios";
+                    }, AXIOSINTERVAL + 200);
+                })
+            .catch(error => 
+                {
+                    toast.error(error, {
+                        position: toast.POSITION.TOP_LEFT,
+                        autoClose:NOTIFYINTERVAL
+                    });
+    
+                    this.isEditClick = false;
+                })
         },
         /**
          * Reformatea el telefono quitando los caracteres "()" y "-"
@@ -150,9 +182,9 @@ const createUser = createApp({
                     "password": '000000'
                 })
             //Segundo nivel de validaciones
-            DataToReview.IdParish == 0 ? this.paramDTOUser.IdParish = null : this.paramDTOUser.IdParish = DataToReview.IdParish
-            DataToReview.IdCargo == 0 ? this.paramDTOUser.IdCargo = null : this.paramDTOUser.IdCargo = DataToReview.IdCargo
-            DataToReview.IdDivision == 0 ? this.paramDTOUser.IdDivision = null : this.paramDTOUser.IdDivision = DataToReview.IdDivision
+            DataToReview.IdParish == 0 ? this.paramDTOUser.IdParish = 0 : this.paramDTOUser.IdParish = DataToReview.IdParish
+            DataToReview.IdCargo == 0 ? this.paramDTOUser.IdCargo = 0 : this.paramDTOUser.IdCargo = DataToReview.IdCargo
+            DataToReview.IdDivision == 0 ? this.paramDTOUser.IdDivision = 0 : this.paramDTOUser.IdDivision = DataToReview.IdDivision
 
             //Descomponer cedula
             this.paramDTOUser.Cedula = DTOCedula[1].replace(/,/g,'');

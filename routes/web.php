@@ -35,13 +35,13 @@ Route::prefix('/')->group(function(){
         //Create
         Route::prefix('/create')->group(function(){
             Route::get('/',[UsersController::class,'index'])->name('createUser');
-            Route::post('/newUser',[UsersController::class,'NewUser']);
+            Route::post('/newUser',[UsersController::class,'UserControl']);
         });
         //Update
         Route::prefix('/update')->group(function(){
             Route::get('/',[UsersController::class,'index'])->name('updateUser');
             Route::post('/loadingUser',[UsersController::class,'UserPerCode']);
-            Route::post('/updateUser',[UsersController::class,'UpdateUser']);
+            Route::post('/updateUser',[UsersController::class,'UserControl']);
         });
     });
 });

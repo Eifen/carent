@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-05-2023 a las 04:09:50
--- Versión del servidor: 10.4.25-MariaDB
--- Versión de PHP: 8.1.10
+-- Tiempo de generación: 04-05-2023 a las 22:17:40
+-- Versión del servidor: 10.4.27-MariaDB
+-- Versión de PHP: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -371,6 +371,130 @@ SET p_error_response = CONCAT('{"response":false,"message": "',@MensajeError,'"}
 
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateContactUser` (IN `p_Codigo` VARCHAR(6), IN `p_Correo1` VARCHAR(255), IN `p_Correo2` VARCHAR(255), IN `p_Telefono1` VARCHAR(30), IN `p_Telefono2` VARCHAR(30), IN `p_TipoDocumento` VARCHAR(5), IN `p_Cedula` VARCHAR(255), OUT `p_JsonResponse` TEXT)   BEGIN
+DECLARE v_CustomMessage TEXT;
+DECLARE v_CustomError CONDITION FOR SQLSTATE '45000';
+DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
+	BEGIN
+    	GET DIAGNOSTICS CONDITION 1 @code = RETURNED_SQLSTATE, @error_msj = MESSAGE_TEXT;
+        ROLLBACK;
+        SET v_CustomMessage = CONCAT("Se ha producido un error en la consulta: (",@code,") ",@error_msj);
+        #Guardamos el error
+        CALL sp_SQLException(1,1,"sp_UpdateContactUser",v_CustomMessage,1,@responseError);
+        SET p_JsonResponse = (SELECT @responseError);
+    END;
+DECLARE EXIT HANDLER FOR v_CustomError
+	BEGIN
+    	#Guardamos el error
+        CALL sp_SQLException(1,1,"sp_UpdateContactUser",v_CustomMessage,1,@responseError);
+        SET p_JsonResponse = (SELECT @responseError);
+    END;
+#Validacion del Usuario
+SET @isExist = (SELECT COUNT(US.Id) FROM tbl_usuarios US WHERE US.Codigo = p_Codigo LIMIT 1);
+IF @isExist = 0 THEN
+	SET v_CustomMessage = CONCAT('{"response":false,"message":"Error 0020: Este usuario no existe (',p_Codigo,')"}');
+    #Activamos el error
+    SIGNAL SQLSTATE '45000';
+END IF;
+
+#Si existe procedemos a actualizar el contacto
+SET @IdUser = (SELECT TU.Id FROM tbl_usuarios TU WHERE TU.Codigo = p_Codigo LIMIT 1);
+SET @TipoDocumento = (SELECT UT.Id FROM tbl_usuarios_documentoidentidad_tipo UT WHERE UT.AbreviaturaTipo = p_TipoDocumento LIMIT 1);
+#Contacto
+UPDATE `tbl_usuarios_contacto` SET `Correo_principal`=p_Correo1,`Correo_secundario`=p_Correo2,`Telefono_principal`=p_Telefono1,`Telefono_secundario`=p_Telefono2 WHERE `Id_usuario` = @IdUser;
+
+#Documento
+UPDATE `tbl_usuarios_documentoidentidad` SET `Id_tipo_documento`=@TipoDocumento,`Descripcion`=p_Cedula WHERE `Id_usuario` = @IdUser;
+
+#Devolvemos el response si no hay ningun SQL Error
+SET p_JsonResponse = CONCAT('{"response":true,"message":"Contacto actualizado con exito para el usuario ',p_Codigo,'"}');
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateUser` (IN `p_Nombre1` VARCHAR(20), IN `p_Nombre2` VARCHAR(20), IN `p_Apellido1` VARCHAR(20), IN `p_Apellido2` VARCHAR(20), IN `p_Codigo` VARCHAR(6), IN `p_FechaNacimiento` DATE, IN `p_FechaIngreso` DATE, IN `p_Cedula` VARCHAR(255), IN `p_IdParroquia` INT, IN `p_IdCargo` INT, IN `p_IdDivision` INT, IN `p_IdUser` INT, IN `p_IpUser` VARCHAR(39), IN `p_IdUpdateUser` INT, IN `p_IdStatus` INT, IN `p_FechaEgreso` DATE, OUT `p_JsonResponse` TEXT)   BEGIN
+DECLARE v_CustomMessage TEXT;
+DECLARE v_CustomError CONDITION FOR SQLSTATE '45000';
+DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
+	BEGIN
+    	GET DIAGNOSTICS CONDITION 1 @code = RETURNED_SQLSTATE, @error_msj = MESSAGE_TEXT;
+        ROLLBACK;
+        SET v_CustomMessage = CONCAT("Se ha producido un error en la consulta: (",@code,") ",@error_msj);
+        #Guardamos el error
+        CALL sp_SQLException(1,1,"sp_UpdateUser",v_CustomMessage,1,@responseError);
+        SET p_JsonResponse = (SELECT @responseError);
+    END;
+DECLARE EXIT HANDLER FOR v_CustomError
+	BEGIN
+    	#Guardamos el error
+        CALL sp_SQLException(1,1,"sp_UpdateUser",v_CustomMessage,1,@responseError);
+        SET p_JsonResponse = (SELECT @responseError);
+    END;
+#Validacion del Usuario
+SET @isExist = (SELECT COUNT(US.Id) FROM tbl_usuarios US WHERE US.Id = p_IdUser LIMIT 1);
+IF @isExist != 1 THEN
+	SET v_CustomMessage = CONCAT('{"response":false,"message":"Error 0020: Este usuario no existe (',p_IdUser,')"}');
+    #Activamos el error
+    SIGNAL SQLSTATE '45000';
+END IF;
+
+#Capturamos el ultimo login del usuario quien esta registrando el nuevo miembro
+SET @LastInsert = (SELECT MAX(BL2.Id) FROM tbl_control_logs_bitacora BL2 WHERE BL2.Id_usuario_responsable = p_IdUser 
+                   AND BL2.Descripcion_accion LIKE "updateUser%" LIMIT 1); #Almacena el ultimo insert de creacion de Usuario
+SET @LastLogin = (SELECT Us.Fecha_login FROM tbl_usuarios Us WHERE Us.Id = p_IdUser LIMIT 1); #Almacena la ultima fecha de login
+SET @LastIp = (SELECT IFNULL(BL.Ip_responsable,"0.0.0.0") FROM tbl_control_logs_bitacora BL WHERE BL.Id = @LastInsert); #Almacena la ultima IP
+
+#Si existe el usuario quien esta actualizando procedemos a actualizar al usuario
+SET @FechaActual = (SELECT SYSDATE());
+SET @FechaCambio = (SELECT DATE(SYSDATE()+90));
+
+#Acomodamos el ultimo valor
+SET @LastNameAll = (SELECT CONCAT(TU.Primer_nombre," ",TU.Segundo_nombre,", ",TU.Primer_apellido," ",TU.Segundo_apellido) from tbl_usuarios TU WHERE TU.Id = p_IdUpdateUser);
+SET @LastBirthday = (SELECT TU.Fecha_nacimiento from tbl_usuarios TU WHERE TU.Id = p_IdUpdateUser);
+SET @LastCargo= (SELECT TU.Id_jerarquia_cargo from tbl_usuarios TU WHERE TU.Id = p_IdUpdateUser);
+SET @LastDivision= (SELECT TU.Id_jerarquia_division from tbl_usuarios TU WHERE TU.Id = p_IdUpdateUser);
+SET @LastParroquia= (SELECT TU.Id_direccion_parroquia from tbl_usuarios TU WHERE TU.Id = p_IdUpdateUser);
+SET @LastFechaIngreso= (SELECT TU.Fecha_ingreso from tbl_usuarios TU WHERE TU.Id = p_IdUpdateUser);
+SET @LastFechaEgreso= (SELECT TU.Fecha_egreso from tbl_usuarios TU WHERE TU.Id = p_IdUpdateUser);
+SET @LastStatus= (SELECT TU.Id_estatus from tbl_usuarios TU WHERE TU.Id = p_IdUpdateUser);
+
+SET @LastValue = CONCAT('{"name":"',@LastNameAll,'",
+                        "birthday":"',@LastBirthday,'",
+                        "cargo":',@LastCargo,',
+                        "division":',@LastDivision,',
+                        "parroquia":',@LastPArroquia,',
+                        "fecha_ingreso":"',@LastFechaIngreso,'",
+                        "fecha_egreso":"',@LastFechaEgreso,'",
+                        "status":',@LastStatus,',
+                        "ultima_ip":"',@LastIp,'"}');
+
+UPDATE `tbl_usuarios` SET `Codigo`=p_Codigo,`Fecha_cambio_clave`=@FechaCambio,`Primer_nombre`=p_Nombre1,`Segundo_nombre`=p_Nombre2,`Primer_apellido`=p_Apellido1,`Segundo_apellido`=p_Apellido2,`Fecha_nacimiento`=p_FechaNacimiento,`Id_jerarquia_cargo`=p_IdCargo,`Id_jerarquia_division`=p_IdDivision,`Id_direccion_parroquia`=p_IdParroquia,`Fecha_ingreso`=p_FechaIngreso,`Fecha_egreso`=p_FechaEgreso,`Id_estatus`=p_IdStatus WHERE `Id` = p_IdUpdateUser;
+
+#Guardamos el SQL
+SET @SQLRealizado = CONCAT('UPDATE `tbl_usuarios` SET `Codigo`=',p_Codigo,',`Fecha_cambio_clave`=@FechaCambio,`Primer_nombre`=p_Nombre1,`Segundo_nombre`=p_Nombr2,`Primer_apellido`=p_Apellido1,`Segundo_apellido`=p_Apellido2,`Fecha_nacimiento`=p_FechaNacimiento,`Id_jerarquia_cargo`=p_IdCargo,`Id_jerarquia_division`=p_IdDivision,`Id_direccion_parroquia`=p_IdParroquia,`Fecha_ingreso`=p_FechaIngreso,`Fecha_egreso`=p_FechaEgreso,`Id_estatus`=p_IdStatus WHERE `Id` = p_IdUpdateUser');
+
+#Acomodamos el nuevo valor
+SET @NewValue = CONCAT('{"name":"',CONCAT(p_Nombre1," ",p_Nombre2,", ",p_Apellido1," ",p_Apellido2),'",
+                        "birthday":"',p_FechaNacimiento,'",
+                        "cargo":',p_IdCargo,',
+                        "division":',p_IdDivision,',
+                        "parroquia":',p_IdParroquia,',
+                        "fecha_ingreso":"',p_FechaIngreso,'",
+                        "fecha_egreso":"',p_FechaEgreso,'",
+                        "status":',p_IdStatus,',
+                        "ultima_ip":"',p_IpUser,'"}');
+CALL sp_InsertLog(2,"updateUser",p_IpUser,p_IdUser,"tbl_usuarios",@SQLRealizado,@LastValue,@NewValue,@FechaActual,@jsonResponse);
+#Extraemos el JSON a una variable
+SET @ResponseJson = JSON_UNQUOTE(JSON_EXTRACT(@jsonResponse,'$.response'));
+
+#Verificamos si registró efectivamente en la bitacora
+IF @ResponseJson != "true" THEN
+	SET v_CustomMessage = CONCAT('{"response":false,"message":"Error 0015: ha ocurrido un error en la bitacora"}');
+    SIGNAL SQLSTATE '45000'; #Si no ha podido registrar nada, dispara el error
+END IF;
+
+#Si paso toda las validaciones
+SET p_JsonResponse = CONCAT('{"response":true,"message":"Usuario ',p_Codigo,' actualizado exitosamente"}');
+END$$
+
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -384,7 +508,7 @@ CREATE TABLE `tbl_control_encryptkey` (
   `EncryptKey` mediumtext NOT NULL,
   `EncryptIv` mediumtext NOT NULL,
   `Id_estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `tbl_control_encryptkey`
@@ -407,7 +531,7 @@ CREATE TABLE `tbl_control_error` (
   `Error_mensaje` text NOT NULL,
   `Fecha` datetime NOT NULL,
   `Id_estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `tbl_control_error`
@@ -466,7 +590,8 @@ INSERT INTO `tbl_control_error` (`Id`, `Id_error_tipomensaje`, `Id_error_tipoobj
 (50, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (1201)\"}', '2023-05-01 10:15:42', 1),
 (51, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (1201)\"}', '2023-05-01 10:15:52', 1),
 (52, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-05-03 21:20:55', 1),
-(53, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-05-03 21:48:29', 1);
+(53, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-05-03 21:48:29', 1),
+(54, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-05-04 13:47:20', 1);
 
 -- --------------------------------------------------------
 
@@ -477,7 +602,7 @@ INSERT INTO `tbl_control_error` (`Id`, `Id_error_tipomensaje`, `Id_error_tipoobj
 CREATE TABLE `tbl_control_error_tipomensaje` (
   `Id` int(11) NOT NULL,
   `Descripcion` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `tbl_control_error_tipomensaje`
@@ -496,7 +621,7 @@ INSERT INTO `tbl_control_error_tipomensaje` (`Id`, `Descripcion`) VALUES
 CREATE TABLE `tbl_control_error_tipoobjeto` (
   `Id` int(11) NOT NULL,
   `NombreObjeto` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `tbl_control_error_tipoobjeto`
@@ -514,7 +639,7 @@ INSERT INTO `tbl_control_error_tipoobjeto` (`Id`, `NombreObjeto`) VALUES
 CREATE TABLE `tbl_control_estatus` (
   `Id` int(11) NOT NULL,
   `Descripcion` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `tbl_control_estatus`
@@ -543,7 +668,7 @@ CREATE TABLE `tbl_control_logs_bitacora` (
   `Valor_anterior` text DEFAULT NULL,
   `Nuevo_valor` text DEFAULT NULL,
   `Fecha_Registro` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `tbl_control_logs_bitacora`
@@ -611,7 +736,14 @@ INSERT INTO `tbl_control_logs_bitacora` (`Id`, `Id_bitacora_accion`, `Descripcio
 (59, 1, 'createUser', '127.0.0.1', 1, 'tbl_usuarios', 'INSERT INTO `tbl_usuarios`(`Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`) VALUES(1201,AES_ENCRYPT(p_Cedula,@Key),@FechaCambio,p_Nombre1,p_Nombre2,p_Apellido1,p_Apellido2,p_FechaNacimiento,p_IdCargo,p_IdDivision,p_IdParroquia,p_FechaIngreso,NULL,NULL,1)', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-05-01 10:15:16'),
 (60, 1, 'createUser', '127.0.0.1', 1, 'tbl_usuarios', 'INSERT INTO `tbl_usuarios`(`Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`) VALUES(1201,AES_ENCRYPT(p_Cedula,@Key),@FechaCambio,p_Nombre1,p_Nombre2,p_Apellido1,p_Apellido2,p_FechaNacimiento,p_IdCargo,p_IdDivision,p_IdParroquia,p_FechaIngreso,NULL,NULL,1)', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-05-01 10:19:19'),
 (61, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-05-01 20:24:33 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-05-01 10:06:33\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-05-01 20:24:33\",\"ultima_ip\": \"127.0.0.1\"}', '2023-05-01 20:24:33'),
-(62, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-05-03 21:21:06 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-05-01 20:24:33\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-05-03 21:21:06\",\"ultima_ip\": \"127.0.0.1\"}', '2023-05-03 21:21:06');
+(62, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-05-03 21:21:06 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-05-01 20:24:33\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-05-03 21:21:06\",\"ultima_ip\": \"127.0.0.1\"}', '2023-05-03 21:21:06'),
+(63, 1, 'createUser', '127.0.0.1', 1, 'tbl_usuarios', 'INSERT INTO `tbl_usuarios`(`Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`) VALUES(123456,AES_ENCRYPT(p_Cedula,@Key),@FechaCambio,p_Nombre1,p_Nombre2,p_Apellido1,p_Apellido2,p_FechaNacimiento,p_IdCargo,p_IdDivision,p_IdParroquia,p_FechaIngreso,NULL,NULL,1)', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-05-04 13:47:31'),
+(64, 1, 'createUser', '127.0.0.1', 1, 'tbl_usuarios', 'INSERT INTO `tbl_usuarios`(`Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`) VALUES(654321,AES_ENCRYPT(p_Cedula,@Key),@FechaCambio,p_Nombre1,p_Nombre2,p_Apellido1,p_Apellido2,p_FechaNacimiento,p_IdCargo,p_IdDivision,p_IdParroquia,p_FechaIngreso,NULL,NULL,1)', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-05-04 13:51:18'),
+(65, 2, 'updateUser', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE `tbl_usuarios` SET `Codigo`=11622,`Fecha_cambio_clave`=@FechaCambio,`Primer_nombre`=p_Nombre1,`Segundo_nombre`=p_Nombr2,`Primer_apellido`=p_Apellido1,`Segundo_apellido`=p_Apellido2,`Fecha_nacimiento`=p_FechaNacimiento,`Id_jerarquia_cargo`=p_IdCargo,`Id_jerarquia_division`=p_IdDivision,`Id_direccion_parroquia`=p_IdParroquia,`Fecha_ingreso`=p_FechaIngreso,`Fecha_egreso`=p_FechaEgreso,`Id_estatus`=p_IdStatus WHERE `Id` = p_IdUpdateUser', NULL, NULL, '2023-05-04 13:53:46'),
+(66, 2, 'updateUser', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE `tbl_usuarios` SET `Codigo`=11622,`Fecha_cambio_clave`=@FechaCambio,`Primer_nombre`=p_Nombre1,`Segundo_nombre`=p_Nombr2,`Primer_apellido`=p_Apellido1,`Segundo_apellido`=p_Apellido2,`Fecha_nacimiento`=p_FechaNacimiento,`Id_jerarquia_cargo`=p_IdCargo,`Id_jerarquia_division`=p_IdDivision,`Id_direccion_parroquia`=p_IdParroquia,`Fecha_ingreso`=p_FechaIngreso,`Fecha_egreso`=p_FechaEgreso,`Id_estatus`=p_IdStatus WHERE `Id` = p_IdUpdateUser', NULL, NULL, '2023-05-04 13:54:33'),
+(67, 2, 'updateUser', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE `tbl_usuarios` SET `Codigo`=11622,`Fecha_cambio_clave`=@FechaCambio,`Primer_nombre`=p_Nombre1,`Segundo_nombre`=p_Nombr2,`Primer_apellido`=p_Apellido1,`Segundo_apellido`=p_Apellido2,`Fecha_nacimiento`=p_FechaNacimiento,`Id_jerarquia_cargo`=p_IdCargo,`Id_jerarquia_division`=p_IdDivision,`Id_direccion_parroquia`=p_IdParroquia,`Fecha_ingreso`=p_FechaIngreso,`Fecha_egreso`=p_FechaEgreso,`Id_estatus`=p_IdStatus WHERE `Id` = p_IdUpdateUser', NULL, NULL, '2023-05-04 13:54:53'),
+(68, 1, 'createUser', '127.0.0.1', 1, 'tbl_usuarios', 'INSERT INTO `tbl_usuarios`(`Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`) VALUES(989898,AES_ENCRYPT(p_Cedula,@Key),@FechaCambio,p_Nombre1,p_Nombre2,p_Apellido1,p_Apellido2,p_FechaNacimiento,p_IdCargo,p_IdDivision,p_IdParroquia,p_FechaIngreso,NULL,NULL,1)', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-05-04 14:27:13'),
+(69, 2, 'updateUser', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE `tbl_usuarios` SET `Codigo`=989898,`Fecha_cambio_clave`=@FechaCambio,`Primer_nombre`=p_Nombre1,`Segundo_nombre`=p_Nombr2,`Primer_apellido`=p_Apellido1,`Segundo_apellido`=p_Apellido2,`Fecha_nacimiento`=p_FechaNacimiento,`Id_jerarquia_cargo`=p_IdCargo,`Id_jerarquia_division`=p_IdDivision,`Id_direccion_parroquia`=p_IdParroquia,`Fecha_ingreso`=p_FechaIngreso,`Fecha_egreso`=p_FechaEgreso,`Id_estatus`=p_IdStatus WHERE `Id` = p_IdUpdateUser', NULL, NULL, '2023-05-04 14:51:30');
 
 -- --------------------------------------------------------
 
@@ -622,7 +754,7 @@ INSERT INTO `tbl_control_logs_bitacora` (`Id`, `Id_bitacora_accion`, `Descripcio
 CREATE TABLE `tbl_control_logs_bitacora_accion` (
   `Id` int(11) NOT NULL,
   `Accion` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `tbl_control_logs_bitacora_accion`
@@ -643,7 +775,7 @@ INSERT INTO `tbl_control_logs_bitacora_accion` (`Id`, `Accion`) VALUES
 CREATE TABLE `tbl_control_tipocargo` (
   `Id` int(11) NOT NULL,
   `TipoCargo` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `tbl_control_tipocargo`
@@ -677,7 +809,7 @@ CREATE TABLE `tbl_usuarios` (
   `Fecha_egreso` date DEFAULT NULL,
   `Fecha_login` datetime DEFAULT NULL,
   `Id_estatus` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios`
@@ -922,12 +1054,11 @@ INSERT INTO `tbl_usuarios` (`Id`, `Codigo`, `Clave`, `Fecha_cambio_clave`, `Prim
 (244, '11619', 0xcbcdd03242d775e13741b2308aca4db6, '2023-03-09', 'RAUL', 'HUMBERTO', 'BRICEÑO', 'CORREA', '1991-02-23', 10, 4, 647, '2023-02-13', NULL, NULL, 1),
 (245, '11620', 0xbfc5e4293bf330bde6ace6bfd37f234e, '2023-03-09', 'MARY', 'ISABEL', 'ROJAS', '', '1967-08-16', 6, 1, 647, '2023-02-13', NULL, NULL, 1),
 (246, '11621', 0xa679acfe3d0deef0b6ff5b7e553b2b47, '2023-03-09', 'RUBI', 'YABISAY', 'RAMIREZ', 'LOPEZ', '1974-01-06', 6, 1, 647, '2023-02-14', NULL, '2023-03-07 16:06:08', 1),
-(247, '11622', 0x038e973a488134d8436c8bae5b50d66c, '2023-03-09', 'CARLOS', 'EDUARDO', 'NAVAS', 'EDUARDO', '2023-02-13', 39, 13, 647, '2023-02-13', NULL, '2023-04-16 00:16:02', 1),
+(247, '11622', 0x038e973a488134d8436c8bae5b50d66c, '2023-05-04', 'CARLOS', 'EDUARDO', 'NAVAS', 'SALAZAR', '1994-11-22', 39, 13, 647, '2023-02-13', NULL, '2023-04-16 00:16:02', 1),
 (248, '11623', 0x900ddc90e683652dd185b78eb9554e81, '2023-03-09', 'MIRIAM', 'DESIREE', 'HIDALGO', 'BRICEÑO', '1983-07-11', 10, 4, 647, '2023-03-07', '2023-03-07', NULL, 2),
-(252, '120154', 0x038e973a488134d8436c8bae5b50d66c, '2023-04-16', 'Carlos', NULL, 'Navas', NULL, '1994-11-22', NULL, NULL, NULL, NULL, NULL, '2023-04-16 13:49:13', 1),
-(255, '70663', 0x038e973a488134d8436c8bae5b50d66c, '2023-04-16', 'Pepe', 'Grillo', 'Pillo', 'Vanillo', '1994-11-22', 9, 16, 753, '2023-04-18', NULL, '2023-04-16 14:51:36', 1),
-(256, '999998', 0x75a1d6a76e48987599d8e331c08d260b, '2023-04-16', 'Eifen', 'Pibe', 'Kurosaki', 'Tanuko', '1994-11-22', 16, 16, 988, '2023-04-18', NULL, NULL, 1),
-(258, '1201', 0x038e973a488134d8436c8bae5b50d66c, '2023-05-01', 'CARLOS', 'SALAZAR', 'PILLO', '', '1994-11-22', NULL, NULL, NULL, '2023-05-01', NULL, NULL, 1);
+(249, '123456', 0x0da6f143877920c00c2274201572c754, '2023-05-04', 'ASJKDAJD', '', 'AJSKDAJSD', '', '2023-05-18', 39, 13, 647, '2023-05-04', NULL, NULL, 1),
+(250, '654321', 0x64969d5de20cff513e10c0ed636f392b, '2023-05-04', 'ASDASD', '', 'ASDASDASD', '', '2023-04-10', 39, 13, 647, '2023-05-04', NULL, NULL, 1),
+(251, '989898', 0x2a7fe511cec55c90eaeb031022169e56, '2023-05-04', 'PRUEBA1', '', 'PRUEBA2', '', '2023-01-03', 11, 11, 26, '2023-05-04', NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -942,7 +1073,7 @@ CREATE TABLE `tbl_usuarios_contacto` (
   `Correo_secundario` varchar(255) DEFAULT NULL,
   `Telefono_principal` varchar(30) DEFAULT NULL,
   `Telefono_secundario` varchar(30) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_contacto`
@@ -1187,12 +1318,11 @@ INSERT INTO `tbl_usuarios_contacto` (`Id`, `Id_usuario`, `Correo_principal`, `Co
 (244, 244, 'raul.briceño@crowe.com.ve', '', '04142895119', ''),
 (245, 245, 'mary.rojas@crowe.com.ve', '', '04126100692', ''),
 (246, 246, 'rubi.ramirez@crowe.com.ve', '', '04129101603', ''),
-(247, 247, 'carlosnavased@gmail.com', '', '04242813276', ''),
+(247, 247, 'carlosnavased@gmail.com', '', '04242813274', ''),
 (248, 248, 'miriam.hidalgo@crowe.com.ve', '', '04125411409', ''),
-(249, 252, 'carlosnavased@gmail.com', NULL, '04242813274', NULL),
-(250, 255, 'carlosnavased2@gmail.com', 'carlosnavased3@gmail.com', '04242813275', NULL),
-(251, 256, 'eifenhard@hotmail.com', 'eifenhard@hotmail.com', '04242813275', NULL),
-(252, 258, 'carlosnavased@gmail.com', 'carlosnavased@gmail.com', '04242813274', NULL);
+(249, 249, 'sajkdaskd@adjksdjasd.com', NULL, '21893129318', NULL),
+(250, 250, 'sakdjasd@dajksdajd.com', '', '10923012391', ''),
+(251, 251, 'casdadasd@cag.com', '', '09302930232', '');
 
 -- --------------------------------------------------------
 
@@ -1204,13 +1334,14 @@ CREATE TABLE `tbl_usuarios_direccion_estado` (
   `Id` int(11) NOT NULL,
   `NombreEstado` text NOT NULL,
   `Iso3166-2` varchar(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_direccion_estado`
 --
 
 INSERT INTO `tbl_usuarios_direccion_estado` (`Id`, `NombreEstado`, `Iso3166-2`) VALUES
+(0, 'Estado no registrado', '0'),
 (1, 'Amazonas', 'VE-X'),
 (2, 'Anzoátegui', 'VE-B'),
 (3, 'Apure', 'VE-C'),
@@ -1247,13 +1378,14 @@ CREATE TABLE `tbl_usuarios_direccion_municipio` (
   `Id` int(11) NOT NULL,
   `Id_direccion_estado` int(11) NOT NULL,
   `NombreMunicipio` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_direccion_municipio`
 --
 
 INSERT INTO `tbl_usuarios_direccion_municipio` (`Id`, `Id_direccion_estado`, `NombreMunicipio`) VALUES
+(0, 0, 'Municipio no Registrado'),
 (1, 1, 'Alto Orinoco'),
 (2, 1, 'Atabapo'),
 (3, 1, 'Atures'),
@@ -1600,13 +1732,14 @@ CREATE TABLE `tbl_usuarios_direccion_parroquia` (
   `Id` int(11) NOT NULL,
   `Id_direccion_municipio` int(11) NOT NULL,
   `NombreParroquia` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_direccion_parroquia`
 --
 
 INSERT INTO `tbl_usuarios_direccion_parroquia` (`Id`, `Id_direccion_municipio`, `NombreParroquia`) VALUES
+(0, 0, 'Parroquia no registrada'),
 (1, 1, 'Alto Orinoco'),
 (2, 1, 'Huachamacare Acanaña'),
 (3, 1, 'Marawaka Toky Shamanaña'),
@@ -2757,7 +2890,7 @@ CREATE TABLE `tbl_usuarios_documentoidentidad` (
   `Id_usuario` int(11) NOT NULL,
   `Id_tipo_documento` int(11) NOT NULL,
   `Descripcion` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_documentoidentidad`
@@ -3004,10 +3137,9 @@ INSERT INTO `tbl_usuarios_documentoidentidad` (`Id`, `Id_usuario`, `Id_tipo_docu
 (246, 246, 1, '11784700'),
 (247, 247, 1, '22667607'),
 (248, 248, 1, '15759452'),
-(249, 252, 1, '22667607'),
-(250, 255, 1, '22667607'),
-(251, 256, 1, '12345678'),
-(252, 258, 1, '22667607');
+(249, 249, 1, '213123123'),
+(250, 250, 1, '213182378127'),
+(251, 251, 1, '2237774');
 
 -- --------------------------------------------------------
 
@@ -3020,7 +3152,7 @@ CREATE TABLE `tbl_usuarios_documentoidentidad_tipo` (
   `AbreviaturaTipo` varchar(5) NOT NULL,
   `DescripcionTipo` varchar(20) NOT NULL,
   `Id_estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_documentoidentidad_tipo`
@@ -3042,55 +3174,56 @@ CREATE TABLE `tbl_usuarios_jerarquia_cargo` (
   `Id_TipoCargo` int(11) NOT NULL,
   `Jerarquia` int(11) NOT NULL,
   `Id_Estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_jerarquia_cargo`
 --
 
 INSERT INTO `tbl_usuarios_jerarquia_cargo` (`Id`, `NombreCargo`, `Id_TipoCargo`, `Jerarquia`, `Id_Estatus`) VALUES
-(1, 'Contratado por horas', 1, 0, 1),
-(2, 'Pasantes', 1, 0, 1),
-(3, 'Asistente I', 1, 0, 1),
-(4, 'Asistente II', 1, 0, 1),
-(5, 'Asistente III', 1, 0, 1),
-(6, 'Semi-Senior I', 1, 0, 1),
-(7, 'Semi-Senior II', 1, 0, 1),
-(8, 'Semi-Senior III', 1, 0, 1),
-(9, 'Senior I', 1, 0, 1),
-(10, 'Senior II', 1, 0, 1),
-(11, 'Senior III', 1, 0, 1),
-(12, 'Supervisor', 3, 0, 1),
-(13, 'Gerente', 3, 0, 1),
-(14, 'Gerente Senior', 3, 0, 1),
-(15, 'Director', 3, 0, 1),
-(16, 'Socio', 3, 0, 1),
-(17, 'Acting Partner', 1, 0, 1),
-(18, 'Asesor Legal', 1, 0, 1),
-(19, 'Asistente de Socios', 2, 0, 1),
-(20, 'Asistente de Gerentes', 2, 0, 1),
-(21, 'Analista', 2, 0, 1),
-(22, 'Chofer', 2, 0, 1),
-(23, 'Supervisor de Mantenimiento', 2, 0, 1),
-(24, 'Operaria de Mantenimiento', 2, 0, 1),
-(25, 'Recepcionista', 2, 0, 1),
-(26, 'Editora', 2, 0, 1),
-(27, 'Analista Senior I', 2, 0, 1),
-(28, 'Analista Senior II', 2, 0, 1),
-(29, 'Analista Senior III', 2, 0, 1),
-(30, 'Editora', 2, 0, 2),
-(31, 'Asistente', 2, 0, 1),
-(32, 'Asistente de Facturación y Cobranza', 2, 0, 1),
-(33, 'Asistente Administrativo', 2, 0, 1),
-(34, 'Soporte Técnico I', 2, 0, 1),
-(35, 'Soporte Técnico II', 2, 0, 1),
-(36, 'Soporte Técnico III', 2, 0, 1),
-(37, 'Mensajero', 2, 0, 1),
-(38, 'Recepcionista', 2, 0, 2),
-(39, 'Pasante', 2, 0, 1),
-(40, 'Trabajador Social', 2, 0, 1),
-(41, 'Pasante Inces', 2, 0, 1),
-(42, 'Asistente de Proyecto', 2, 0, 1);
+(0, 'Cargo no Registrado', 3, 0, 1),
+(1, 'Contratado por horas', 1, 17, 1),
+(2, 'Pasantes', 1, 1, 1),
+(3, 'Asistente I', 1, 2, 1),
+(4, 'Asistente II', 1, 2, 1),
+(5, 'Asistente III', 1, 2, 1),
+(6, 'Semi-Senior I', 1, 3, 1),
+(7, 'Semi-Senior II', 1, 3, 1),
+(8, 'Semi-Senior III', 1, 3, 1),
+(9, 'Senior I', 1, 4, 1),
+(10, 'Senior II', 1, 4, 1),
+(11, 'Senior III', 1, 4, 1),
+(12, 'Supervisor', 3, 5, 1),
+(13, 'Gerente', 3, 6, 1),
+(14, 'Gerente Senior', 3, 6, 1),
+(15, 'Director', 3, 7, 1),
+(16, 'Socio', 3, 9, 1),
+(17, 'Acting Partner', 1, 8, 1),
+(18, 'Asesor Legal', 1, 7, 1),
+(19, 'Asistente de Socios', 2, 10, 1),
+(20, 'Asistente de Gerentes', 2, 10, 1),
+(21, 'Analista', 2, 12, 1),
+(22, 'Chofer', 2, 15, 1),
+(23, 'Supervisor de Mantenimiento', 2, 5, 1),
+(24, 'Operaria de Mantenimiento', 2, 16, 1),
+(25, 'Recepcionista', 2, 11, 1),
+(26, 'Editora', 2, 14, 1),
+(27, 'Analista Senior I', 2, 12, 1),
+(28, 'Analista Senior II', 2, 12, 1),
+(29, 'Analista Senior III', 2, 12, 1),
+(30, 'Editora', 2, 14, 2),
+(31, 'Asistente', 2, 10, 1),
+(32, 'Asistente de Facturación y Cobranza', 2, 10, 1),
+(33, 'Asistente Administrativo', 2, 10, 1),
+(34, 'Soporte Técnico I', 2, 13, 1),
+(35, 'Soporte Técnico II', 2, 13, 1),
+(36, 'Soporte Técnico III', 2, 13, 1),
+(37, 'Mensajero', 2, 15, 1),
+(38, 'Recepcionista', 2, 11, 2),
+(39, 'Pasante', 2, 1, 1),
+(40, 'Trabajador Social', 2, 14, 1),
+(41, 'Pasante Inces', 2, 1, 1),
+(42, 'Asistente de Proyecto', 2, 10, 1);
 
 -- --------------------------------------------------------
 
@@ -3102,13 +3235,14 @@ CREATE TABLE `tbl_usuarios_jerarquia_division` (
   `Id` int(11) NOT NULL,
   `NombreDivision` text NOT NULL,
   `Id_Estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_jerarquia_division`
 --
 
 INSERT INTO `tbl_usuarios_jerarquia_division` (`Id`, `NombreDivision`, `Id_Estatus`) VALUES
+(0, 'Division no registrada', 1),
 (1, 'Auditoría Externa', 1),
 (2, 'Asesoría Tributaria', 1),
 (3, 'Auditoría TI', 1),
@@ -3148,7 +3282,7 @@ CREATE TABLE `tbl_usuarios_status` (
 --
 DROP TABLE IF EXISTS `tbl_usuarios_status`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tbl_usuarios_status`  AS SELECT `cu`.`Id` AS `Id`, `cu`.`Descripcion` AS `Descripcion` FROM `tbl_control_estatus` AS `cu` WHERE `cu`.`Id` between 1 and 4 ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tbl_usuarios_status`  AS SELECT `cu`.`Id` AS `Id`, `cu`.`Descripcion` AS `Descripcion` FROM `tbl_control_estatus` AS `cu` WHERE `cu`.`Id` between 1 and 44  ;
 
 --
 -- Índices para tablas volcadas
@@ -3287,7 +3421,7 @@ ALTER TABLE `tbl_control_encryptkey`
 -- AUTO_INCREMENT de la tabla `tbl_control_error`
 --
 ALTER TABLE `tbl_control_error`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_control_error_tipomensaje`
@@ -3311,7 +3445,7 @@ ALTER TABLE `tbl_control_estatus`
 -- AUTO_INCREMENT de la tabla `tbl_control_logs_bitacora`
 --
 ALTER TABLE `tbl_control_logs_bitacora`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_control_logs_bitacora_accion`
@@ -3329,13 +3463,13 @@ ALTER TABLE `tbl_control_tipocargo`
 -- AUTO_INCREMENT de la tabla `tbl_usuarios`
 --
 ALTER TABLE `tbl_usuarios`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=259;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=252;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_usuarios_contacto`
 --
 ALTER TABLE `tbl_usuarios_contacto`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=253;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=252;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_usuarios_direccion_estado`
@@ -3359,7 +3493,7 @@ ALTER TABLE `tbl_usuarios_direccion_parroquia`
 -- AUTO_INCREMENT de la tabla `tbl_usuarios_documentoidentidad`
 --
 ALTER TABLE `tbl_usuarios_documentoidentidad`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=253;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=252;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_usuarios_documentoidentidad_tipo`
