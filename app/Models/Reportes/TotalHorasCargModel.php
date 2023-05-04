@@ -64,10 +64,14 @@ class TotalHorasCargModel extends Model
     {
         if($DivisionArray !== null)
         {
-            return DB::table('tbl_division')->whereIn('id',$DivisionArray)->get(['id','descripcion','id_tipo']);
+            return DB::table('tbl_division')->whereIn('id',$DivisionArray)
+            ->orderBy('orden_division','asc')
+            ->get(['id','descripcion','id_tipo']);
         };
 
-        return DB::table('tbl_division')->get(['id', 'descripcion','id_tipo']);
+        return DB::table('tbl_division')
+        ->orderBy('orden_division','asc')
+        ->get(['id', 'descripcion','id_tipo']);
     } // Fin divisiones
 
     /**
