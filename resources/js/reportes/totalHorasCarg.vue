@@ -176,8 +176,8 @@
           </alert>
         </template>
         <template v-slot:cell(e)="data">
-           <i v-if="data.item.eficiencia == 'Eficiente'" class="fas fa-check" style="color: #40d44a;"></i>
-           <i v-if="data.item.eficiencia == 'Deficiente'" class="fas fa-times" style="color: #ce122e;"></i>
+           <i v-if="data.item.eficiencia == 'E'" class="fas fa-check" style="color: #40d44a;"></i>
+           <i v-if="data.item.eficiencia == 'DE'" class="fas fa-times" style="color: #ce122e;"></i>
         </template>
         <template v-slot:custom-foot v-if="tabla.registros.length > 0">
           <b-tr>
@@ -439,7 +439,7 @@
                 usuario_cargo: datos[division][user].usuario_cargo,
                 nivel: datos[division][user].grupo_nivel,
                 usuario_division: datos[division][user].usuario_division,
-                eficiencia: (datos[division][user].eficiencia ? "Eficiente" : "Deficiente"),
+                eficiencia: (datos[division][user].eficiencia ? "E" : "DE"),
                 total_horas_cargables: datos[division][user].total_horas_cargables,
                 porcen_horas_cargables: parseFloat(datos[division][user].porcen_horas_cargables.toFixed(2)).toLocaleString("es-ES"),
                 total_horas_no_cargables: datos[division][user].total_horas_no_cargables,
