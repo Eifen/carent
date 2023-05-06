@@ -1,5 +1,4 @@
-require('../bootstrap');
-import $ from "jquery";
+require('bootstrap');
 import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap-vue/node_modules/bootstrap/dist/css/bootstrap.css';
@@ -676,8 +675,3 @@ new Vue({
    }// Fin methods
 
 });
-
-$('.CerrarModal_Horas').on("click",function(){
-    $('#modal-detalle-Hcargadas').modal("hide")
-    $('#modal-eliminar-Hcargadas').modal("hide")
-})
