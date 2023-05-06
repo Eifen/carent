@@ -48,7 +48,7 @@
           id="group-cargos">
           <multiselect :clear-on-select="false"
                        :disabled="formFiltro.campos.cargos.disabled"
-                       :multiple="true"
+                       :multiple="false"
                        :options="formFiltro.campos.cargos.listado"
                        :preserve-search="true"
                        :show-labels="false"
@@ -175,8 +175,14 @@
                  :variante="tabla.alert.variante">
           </alert>
         </template>
+<<<<<<< HEAD
+        <template v-slot:cell(e)="data">
+           <i v-if="data.item.eficiencia == 'E'" class="fas fa-check" style="color: #40d44a;"></i>
+           <i v-if="data.item.eficiencia == 'DE'" class="fas fa-times" style="color: #ce122e;"></i>
+=======
         <template v-slot:cell(numero)="data">
           <b>{{ data.item.numero }}</b>
+>>>>>>> 08afc5ddb8cc4dc475b33246a073b50f8385c9f5
         </template>
         <template v-slot:custom-foot v-if="tabla.registros.length > 0">
           <b-tr>
@@ -376,11 +382,17 @@
               let mensaje = "No hay carga de hora de los empleados";
               self.mostrarAlert(self.tabla.alert, true, "warning", mensaje, false, false, 0);
 
+<<<<<<< HEAD
+            self.maximo_horas = parseInt(response.data.maximo_horas);
+            self.formFiltro.campos.cargos.listado = response.data.cargos;
+            self.formFiltro.campos.divisiones.listado = response.data.divisiones;
+=======
             }
 
             self.maximo_horas = parseInt(response.data.totales[0].maximo_horas);
             self.formFiltro.campos.cargos.listado = response.data.cargos;
             self.formFiltro.campos.divisiones.listado = response.data.divisiones;        
+>>>>>>> 08afc5ddb8cc4dc475b33246a073b50f8385c9f5
 
             self.tabla.paginador.paginar = response.data.paginar;
             self.tabla.paginador.numPaginas = 1;
@@ -453,8 +465,38 @@
         },
         registroTabla: function(datos){
 
+<<<<<<< HEAD
+          for (const division in datos) {
+            for (const user in datos[division]) {
+              const data = {
+                nombre: datos[division][user].nombre,
+                usuario_cargo: datos[division][user].usuario_cargo,
+                nivel: datos[division][user].grupo_nivel,
+                usuario_division: datos[division][user].usuario_division,
+                eficiencia: (datos[division][user].eficiencia ? "E" : "DE"),
+                total_horas_cargables: datos[division][user].total_horas_cargables,
+                porcen_horas_cargables: parseFloat(datos[division][user].porcen_horas_cargables.toFixed(2)).toLocaleString("es-ES"),
+                total_horas_no_cargables: datos[division][user].total_horas_no_cargables,
+                porcen_horas_no_cargables: parseFloat(datos[division][user].porcen_horas_no_cargables.toFixed(2)).toLocaleString("es-ES"),
+                total_horas: datos[division][user].total_horas,
+                porcen_carga_total: parseFloat(datos[division][user].porcen_carga_total.toFixed(2)).toLocaleString("es-ES"),
+                total_horas_exceso_admin: parseFloat(datos[division][user].total_exceso_administrativo.toFixed(0)).toLocaleString("es-ES"),
+                porcen_exceso_admin: parseFloat(datos[division][user].exceso_per_administrativo.toFixed(2)).toLocaleString("es-ES"),
+                total_horas_exceso_proy: parseFloat(datos[division][user].total_exceso_proyectos.toFixed(0)).toLocaleString("es-ES"),
+                porcen_exceso_proy: parseFloat(datos[division][user].exceso_per_proyectos.toFixed(2)).toLocaleString("es-ES"),
+                ref_usuario_total: datos[division][user].ref_usuario_total,
+                fecha_ingreso: datos[division][user].fecha_ingreso,
+                fecha_egreso: datos[division][user].fecha_egreso,
+                orden: datos[division][user].orden,
+                //Si es verdadero colocamos un check, falso un cross
+                //Fecha del intervalo
+                fecha_desde: datos[division][user].fecha_desde,
+                fecha_hasta: datos[division][user].fecha_hasta
+              }
+=======
           const registros = [];
           datos.forEach((item, i) => {
+>>>>>>> 08afc5ddb8cc4dc475b33246a073b50f8385c9f5
 
             const data = {
               numero: (i + 1),
@@ -534,6 +576,12 @@
             var param_cargos = null;
           }
 
+          //Evaluamos como filtraremos el cargo
+          var param_cargos = (self.formFiltro.campos.cargos.value !== null
+                                  ? [ self.formFiltro.campos.cargos.value.id ]
+                                  : 0);
+          if(typeof param_cargos[0] === 'undefined') param_cargos = 0;
+
           //Obtenemos los valores
           let desde = (self.tabla.paginador.pagina - 1) * self.tabla.paginador.paginar;
           let parametros = {
@@ -549,7 +597,10 @@
           //Se utiliza el metodo get para su busqueda y se envian con los parametros
           axios.get('/buscarRepTotalHorasCarg', {params: parametros})
           .then(function (response) {
+<<<<<<< HEAD
+=======
 
+>>>>>>> 08afc5ddb8cc4dc475b33246a073b50f8385c9f5
             self.formFiltro.campos.cargos.disabled = false;
             self.formFiltro.campos.divisiones.disabled = false;
             self.formFiltro.campos.empleado.disabled = false;
@@ -569,6 +620,31 @@
             self.tabla.paginador.max = parseInt(response.data.paginas);
 
             self.tabla.encabezado = [
+<<<<<<< HEAD
+              { key: 'nombre', label: 'Nombre y Apellido' },
+              { key: 'usuario_cargo', label: "Cargo"},
+              { key: 'usuario_division', label: "Division"},
+              'e',
+              //Proyectos
+              { key: 'total_horas_cargables', label: 'Horas Proy' },
+              { key: 'porcen_horas_cargables', label: '% Proy' },
+              //Administrativos
+              { key: 'total_horas_no_cargables', label: 'Horas Admon' },
+              { key: 'porcen_horas_no_cargables', label: '% Horas Admon' },
+              //Total Horas
+              { key: 'total_horas', label: 'Total horas' },
+              { key: 'porcen_carga_total', label: '% Carga total' },
+              //Exceso
+              { key: 'porcen_exceso_admin', label: '% Exceso Admon'},
+              { key: 'porcen_exceso_proy', label: '% Exceso Proy'},
+              { key: 'ref_usuario_total', label: 'Ref Total'},
+              //Exceso
+              //{ key: 'exceso_cargables', label: 'Exceso carga cliente' },
+              //{ key: 'exceso_no_cargables', label: 'Exceso carga no cliente' },
+              //Fecha
+              { key: 'fecha_ingreso', label: 'Fecha Ingreso'},
+              { key: 'fecha_egreso', label: 'Fecha Egreso'}
+=======
               { key: 'numero', label: '#' },
               { key: 'nombre', label: 'Empleado' },
               { key: 'total_horas_cargables', label: 'Horas Clientes' },
@@ -582,10 +658,19 @@
               //{ key: 'exceso', label: 'Exceso' },
               { key: 'exceso_cargables', label: 'Exceso carga cliente' },
               { key: 'exceso_no_cargables', label: 'Exceso carga no cliente' },
+>>>>>>> 08afc5ddb8cc4dc475b33246a073b50f8385c9f5
 
             ];
 
             self.tabla.registros = self.registroTabla(response.data.totales);
+            //Filtramos la fecha desde
+            self.tabla.registros = self.tabla.registros.filter(usuario => usuario.fecha_egreso >= response.data.fecha_desde || usuario.fecha_egreso == null);
+
+
+            if(response.data.cargos != "NoSelect")
+            {
+              self.tabla.registros = self.tabla.registros.filter(usuario => usuario.usuario_cargo == response.data.cargos)
+            }
 
             if(response.data.totales.length === 0){
 
