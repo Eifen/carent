@@ -48,7 +48,7 @@
           id="group-cargos">
           <multiselect :clear-on-select="false"
                        :disabled="formFiltro.campos.cargos.disabled"
-                       :multiple="true"
+                       :multiple="false"
                        :options="formFiltro.campos.cargos.listado"
                        :preserve-search="true"
                        :show-labels="false"
@@ -534,6 +534,12 @@
             var param_cargos = null;
           }
 
+          //Evaluamos como filtraremos el cargo
+          var param_cargos = (self.formFiltro.campos.cargos.value !== null
+                                  ? [ self.formFiltro.campos.cargos.value.id ]
+                                  : 0);
+          if(typeof param_cargos[0] === 'undefined') param_cargos = 0;
+
           //Obtenemos los valores
           let desde = (self.tabla.paginador.pagina - 1) * self.tabla.paginador.paginar;
           let parametros = {
@@ -549,7 +555,6 @@
           //Se utiliza el metodo get para su busqueda y se envian con los parametros
           axios.get('/buscarRepTotalHorasCarg', {params: parametros})
           .then(function (response) {
-
             self.formFiltro.campos.cargos.disabled = false;
             self.formFiltro.campos.divisiones.disabled = false;
             self.formFiltro.campos.empleado.disabled = false;
@@ -586,6 +591,14 @@
             ];
 
             self.tabla.registros = self.registroTabla(response.data.totales);
+            //Filtramos la fecha desde
+            self.tabla.registros = self.tabla.registros.filter(usuario => usuario.fecha_egreso >= response.data.fecha_desde || usuario.fecha_egreso == null);
+
+
+            if(response.data.cargos != "NoSelect")
+            {
+              self.tabla.registros = self.tabla.registros.filter(usuario => usuario.usuario_cargo == response.data.cargos)
+            }
 
             if(response.data.totales.length === 0){
 
