@@ -1,7 +1,8 @@
-require('bootstrap');
+require('../bootstrap');
+import $ from "jquery";
 import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
-import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/node_modules/bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 window.zenscroll = require('zenscroll');
 window.axios = require('axios');
@@ -544,3 +545,8 @@ new Vue({
   }// Fin methods
 
 });
+
+$('.CerrarModal_ConceptoHoras').on("click",function(){
+    $('#modal-crear-concepto').modal("hide")
+    $('#modal-modificar-concepto').modal("hide")
+})

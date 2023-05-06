@@ -1,0 +1,41 @@
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(359deg);
+    }
+}
+
+tr {
+
+    td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+}
+
+.dropdown-item {
+
+    &:hover {
+        background-color: #F2F6FC;
+        cursor: pointer;
+    }
+
+}
+
+.bi-gear {
+    font-size: 1.2rem;
+
+    &:hover {
+        color: #0d6efd;
+        cursor: pointer;
+
+        &:before {
+            animation: spin 2s infinite linear;
+        }
+
+    }
+
+}

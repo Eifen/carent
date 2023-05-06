@@ -26,6 +26,12 @@ Route::get('/logout', 'LoginController@logout');
 Route::get('/cambiarClave', 'InicioController@cambiarClave')/*->middleware('usuario.session')*/;
 Route::post('/guardarNuevaClave', 'InicioController@guardarNuevaClave');
 
+/* Módulo de Usuario */
+Route::get('/usuarios', function() {return view('usuario/index');})->middleware('usuario.session');
+Route::get('/searchUsers', 'UsuarioController@searchUsers');
+Route::get('/buscarUsuarios', 'UsuarioController@buscarUsuarios');
+
+
 
 Route::get('/formNuevoUsuario', function() {return view('usuario/nuevoUsuario');})->middleware('usuario.session');
 Route::get('/dataInicialNuevoUsuario','UsuarioController@dataInicialNuevoUsuario')->middleware('usuario.session');
@@ -36,7 +42,6 @@ Route::get('/divisiones', 'UsuarioController@divisiones');
 Route::get('/cargos', 'UsuarioController@cargos');
 Route::post('/crearUsuario', 'UsuarioController@crearUsuario');
 Route::get('/formBuscarUsuario', function() {return view('usuario/buscarUsuario');});
-Route::get('/buscarUsuarios', 'UsuarioController@buscarUsuarios');
 Route::get('/detalleUsuario', 'UsuarioController@detalleUsuario');
 Route::get('/formModificarUsuario/{idUsuario}', 'UsuarioController@formModificarUsuario')->middleware('usuario.session')->where('idUsuario', '[0-9]+');//Validamos que solo pase números*/
 Route::get('/detalleUsuarioModificar', 'UsuarioController@detalleUsuarioModificar');

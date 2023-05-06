@@ -192,58 +192,132 @@ class UsuarioModel extends Model
 
     }// Fin crearUsuario
 
-    function buscarUsuarios($opcionBusqueda, $dato){
+    function searchUsers($params){
 
-      switch ((int) $opcionBusqueda) {
-        case 1:
-          $condicion = "WHERE u.codigo LIKE '%".$dato."%'";
-          break;
-        case 2:
-            $condicion = "WHERE udi.documento LIKE '%".$dato."%'";
-            break;
-        case 3:
-            $condicion = "WHERE cu.correo_principal LIKE '%".$dato."%'";
-            break;
-        case 4:
-            $condicion = "WHERE (u.nombre_1 LIKE '%".$dato."%' OR u.nombre_2 LIKE '%".$dato."%')";
-            break;
-        case 5:
-            $condicion = "WHERE (u.apellido_1 LIKE '%".$dato."%' OR u.apellido_2 LIKE '%".$dato."%')";
-            break;
-        default:
-          $condicion = "WHERE u.codigo LIKE '%".$dato."%'";
-          break;
-      }
+        switch ((int) $params["searchBy"]) {
+            case 0:
+                $condicion = "";
+                break;
+            case 1:
+                $condicion = "AND u.codigo LIKE '%".$params["data"]."%'";
+                break;
+            case 2:
+                $condicion = "AND udi.documento LIKE '%".$params["data"]."%'";
+                break;
+            case 3:
+                $condicion = "AND cu.correo_principal LIKE '%".$params["data"]."%'";
+                break;
+            case 4:
+                $condicion = "AND (
+                                         u.nombre_1 LIKE '%".$params["data"]."%'
+                                      OR u.nombre_2 LIKE '%".$params["data"]."%'
+                                      OR u.apellido_1 LIKE '%".$params["data"]."%'
+                                      OR u.apellido_2 LIKE '%".$params["data"]."%'
+                              )";
+                break;
+            default:
+                $condicion = "";
+                break;
+        }
 
-      $usuarios = DB::select('SELECT u.id,
-                                     u.codigo,
-                                     u.avatar,
-                                     CONCAT(tdi.abreviatura,"-",udi.documento) cedula,
-                                     CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS nombre,
-                                     e.descripcion AS estatus,
-                                     cu.correo_principal
+        $users = DB::select('SELECT u.id,
+                                    u.codigo,
+                                    u.avatar,
+                                    CONCAT(tdi.abreviatura,"-",udi.documento) cedula,
+                                    CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS nombre,
+                                    e.descripcion AS estatus,
+                                    cu.correo_principal
                              FROM tbl_usuario u,
                                   tbl_estatus e,
                                   tbl_contacto_usuario cu,
                                   tbl_usuario_documento_identidad udi,
                                   tbl_tipo_documento_identidad tdi
-                             '.$condicion.'
-                             AND e.tabla = "tbl_usuario"
+                             WHERE e.tabla = "tbl_usuario"
                              AND e.valor = u.id_estatus
                              AND u.id = cu.id_usuario
                              AND u.id = udi.id_usuario
-                             AND udi.id_tipo_documento_identidad = tdi.id');
+                             AND udi.id_tipo_documento_identidad = tdi.id
+                             '.$condicion.'
+                             LIMIT '.$params["searchFrom"].', '.$params["paginate"]);
 
-      if(count($usuarios) > 0){
+        $pages = DB::select('SELECT CEILING( COUNT(1) / '.$params["paginate"].') AS pages
+                             FROM tbl_usuario u,
+                                  tbl_estatus e,
+                                  tbl_contacto_usuario cu,
+                                  tbl_usuario_documento_identidad udi,
+                                  tbl_tipo_documento_identidad tdi
+                             WHERE e.tabla = "tbl_usuario"
+                             AND e.valor = u.id_estatus
+                             AND u.id = cu.id_usuario
+                             AND u.id = udi.id_usuario
+                             AND udi.id_tipo_documento_identidad = tdi.id
+                             '.$condicion);
 
-        return $usuarios;
+        return [
+            "pages" => $pages[0]->pages,
+            "users" => $users
+        ];
+        /*if(count($usuarios) > 0) {
+            return $usuarios;
+        } else {
+            return array();
+        }*/
 
-      }else{
+    }
 
-        return array();
+    function buscarUsuarios($buscarPor,$dato){
+        $condicion = "";
+        $retorno = array();
 
-      }
+        switch ((int) $buscarPor) {
+            case 0:
+                $condicion = "";
+                break;
+            case 1:
+                $condicion = "AND u.codigo LIKE '%".$dato."%'";
+                break;
+            case 2:
+                $condicion = "AND udi.documento LIKE '%".$dato."%'";
+                break;
+            case 3:
+                $condicion = "AND cu.correo_principal LIKE '%".$dato."%'";
+                break;
+            case 4:
+                $nombreFraccion = explode(" ",$dato); //[0] = nombre_1 [1] = nombre_ 2 [2] = apellido_1 [3] apellido_2
+                $condicion = "AND (CONCAT(u.nombre_1,u.nombre_2,u.apellido_1,u.apellido_2) 
+                              LIKE '%".(isset($nombreFraccion[0]) ? $nombreFraccion[0] : "").
+                              "%".(isset($nombreFraccion[1]) ? $nombreFraccion[1] : "").
+                              "%".(isset($nombreFraccion[2]) ? $nombreFraccion[2] : "").
+                              "%".(isset($nombreFraccion[3]) ? $nombreFraccion[3] : "")."%')";
+                break;
+            default:
+                $condicion = "";
+                break;
+        }
 
+        $usuarios = DB::select('SELECT u.id,
+                                    u.codigo as Codigo,
+                                    CONCAT(tdi.abreviatura,"-",udi.documento) AS Cedula,
+                                    CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) AS Nombre,
+                                    cu.correo_principal AS Correo,
+                                    e.descripcion AS Estatus
+                                    FROM tbl_usuario u,
+                                    tbl_estatus e,
+                                    tbl_contacto_usuario cu,
+                                    tbl_usuario_documento_identidad udi,
+                                    tbl_tipo_documento_identidad tdi
+                                    WHERE e.tabla = "tbl_usuario"
+                                    AND e.valor = u.id_estatus
+                                    AND u.id = cu.id_usuario
+                                    AND u.id = udi.id_usuario
+                                    AND udi.id_tipo_documento_identidad = tdi.id '.$condicion);
+          if(count($usuarios) > 0){
+            $retorno = $usuarios;
+          }else{
+            $retorno = array();
+          }
+
+          return $retorno;
     }
 
     function permisoActualizar($id_usuario, $id_menu){

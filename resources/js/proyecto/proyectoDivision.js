@@ -1,7 +1,8 @@
-require('bootstrap');
+require('../bootstrap');
+import $ from "jquery";
 import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
-import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/node_modules/bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 window.zenscroll = require('zenscroll');
 window.axios = require('axios');
@@ -801,3 +802,9 @@ new Vue({
   }// Fin methods
 
 });
+
+//Cerramos el modal
+$('.CerrarModal_Division').on("click", function(){
+    $('#modal-detalle-Dproyecto').modal("hide");
+    $('#modal-asignar-Aproyecto').modal("hide");
+})

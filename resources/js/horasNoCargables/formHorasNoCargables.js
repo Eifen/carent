@@ -1,7 +1,8 @@
-require('bootstrap');
+require('../bootstrap');
+import $ from "jquery";
 import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
-import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/node_modules/bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 window.zenscroll = require('zenscroll');
 window.axios = require('axios');
@@ -731,7 +732,7 @@ new Vue({
 
             if(fecha_desde >= fecha_hasta){
 
-              $('#'+formulario+" #fechaHasta").find(".mensaje").html("La Decha Hasta no puede ser menor o igual a la Fecha Desde!").addClass("invalid-feedback");
+              $('#'+formulario+" #fechaHasta").find(".mensaje").html("La Fecha Hasta no puede ser menor o igual a la Fecha Desde!").addClass("invalid-feedback");
               $('#'+formulario+" #fechaHasta").find(".form-control").addClass("error");
 
             }else{
@@ -967,3 +968,8 @@ new Vue({
   }// Fin methods
 
 });
+
+$('.CerrarModal_HorasNoCargables').on("click",function(){
+    $('#modal-modificar').modal("hide")
+    $('#modal-cargar').modal("hide")
+})

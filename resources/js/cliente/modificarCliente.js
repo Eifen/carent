@@ -1,7 +1,8 @@
-require('bootstrap');
+require('../bootstrap');
+import $ from "jquery";
 import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
-import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/node_modules/bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
@@ -52,6 +53,8 @@ const datosIniciales = () => {
                  detalleUsuario: response.data.info,
                  estatus: response.data.estatus,
                  paises: response.data.paises,
+                 servicios: response.data.servicios,
+                 sectores: response.data.sectores,
                  response: true
                });
 
@@ -93,6 +96,8 @@ new Vue({
     },
     comboEstatus: [],
     comboPaises: [],
+    comboServicios:[],
+    comboSector: [],
     refreshForm: false,
     form: {
       codigoCliente:{
@@ -135,6 +140,17 @@ new Vue({
       },
       estatus:{
         disabled: false,
+        validar: true,
+        value: ""
+      },
+      sector:{
+        disabled: false,
+        validar: true,
+        value: ""
+      },
+      servicio:{
+        disabled: false,
+        validar: true,
         value: ""
       }
     },
@@ -171,7 +187,9 @@ new Vue({
     },
     loading: true,
     dataInicial: false,
-    id_pais: ""
+    id_pais: "",
+    id_sector: 0,
+    id_servicio: 0,
   },
 
   beforeCreate: async function(){
@@ -194,6 +212,10 @@ new Vue({
         self.form.pais.value = dataInit.infoClie.pais;
         self.id_pais = dataInit.infoClie.id_pais;
         self.form.direccion.value = dataInit.infoClie.direccion;
+        self.form.sector.value = dataInit.infoClie.sector;
+        self.id_sector = dataInit.infoClie.SectorAsociado;
+        self.id_servicio = dataInit.infoClie.ServicioAsociado;
+        self.form.servicio.value = dataInit.infoClie.servicio;
 
         self.form.telefono_fiscal.value = dataInit.infoClie.telefono_fiscal;
         self.form.pagina_web.value = dataInit.infoClie.pagina_web;
@@ -201,6 +223,9 @@ new Vue({
         self.form.estatus.value = dataInit.infoClie.id_estatus;
         self.comboEstatus = dataInit.estatus;
         self.comboPaises = dataInit.paises;
+        self.comboSector = dataInit.sectores;
+        self.comboServicios = dataInit.servicios;
+
         self.loading = false;
 
       }else{
@@ -234,7 +259,7 @@ new Vue({
         AutoNumeric.getAutoNumericElement("#nit").set(self.form.nit.value);
 
 
-        var indices = ["rif","nit","razon_social","pais","direccion","telefono_fiscal","pagina_web","email_fiscal","estatus"];
+        var indices = ["rif","nit","razon_social","pais","direccion","telefono_fiscal","pagina_web","email_fiscal","estatus","sector","servicio"];
 
         indices.forEach(function(indiceObjecto, indice) {
           self.form[indiceObjecto].disabled = false;
@@ -248,150 +273,20 @@ new Vue({
   },
   updated: function () {},
   methods:{
-
-    buscar: function(e){
-
-      self.alert.mostrar = false;
-      self.usuarios.mostrar = false;
-
-      if(self.formSearch.inputSearch.value.trim() !== ""){
-
-        self.formSearch.submit.html = '<i class="fas fa-cog fa-spin"></i>';
-        self.formSearch.submit.disabled = true;
-        // Obtenemos los valores
-        let parametros = {
-          buscarPor: self.formSearch.select.value,
-          dato: self.formSearch.inputSearch.value
-        };
-        //Se utiliza el metodo get para su busqueda y se envian con los parametros
-        axios.get('/buscarUsuariosS', {params: parametros})
-        .then(function (response) {
-
-          self.formSearch.submit.html = 'Buscar';
-          self.formSearch.submit.disabled = false;
-
-          if(response.status === 200 && response.data.response === true){
-
-            self.usuarios.mostrar = true;
-            self.usuarios.registros = response.data.usuarios;
-            $('#modal-detalle-usuario').modal("show");
-
-
-          }else{
-
-            throw response.data;
-
-          }
-
-        })
-        .catch(error => {
-
-          self.formSearch.submit.html = 'Buscar';
-          self.formSearch.submit.disabled = false;
-
-          self.alert.mostrar = true;
-
-          self.usuarios.registros = [];
-          self.usuarios.mostrar = false;
-
-          if(error.response){
-
-            var message = "Existe un error!, consulte con el administrador del sistema.";
-
-          }else{
-
-            var message = (error.message) ? error.message : "Existe un error!, consulte con el administrador del sistema.";
-
-          }
-
-          self.alert.message = message;
-
-        });
-
-      }else{
-
-        $(".inputSearch").parent().find(".mensaje").html("Campo requerido").addClass("invalid-feedback");
-        $(".inputSearch").addClass("error");
-        zenscroll.toY($(".inputSearch").offset().top - 100);
-
-      }
-
-    },
-
-    tipoFiltro: function(e){
-
-      let opcion = parseInt(e.target.value);
-      let valoresPermitidos = [1,2,3,4];
-
-      self.usuarios.mostrar = false;
-      self.usuarios.registros = [];
-
-      if(valoresPermitidos.includes(opcion)){
-        self.formSearch.inputSearch.disabled = false;
-        self.formSearch.submit.disabled = false;
-      }else{
-        self.formSearch.inputSearch.disabled = true;
-        self.formSearch.submit.disabled = true;
-      }
-
-    },
-
-    evaluarCampo: function(id, e){
-
-      if(e.target.type === 'text'){
-        self.formSearch[id].value = (e.target.value.trim() === "") ? "" : $(e.target).val();
-      }
-
-      if(id === "inputSearch" && self.formSearch["inputSearch"].value.trim() === ""){
-        self.usuarios.registros = [];
-        self.usuarios.mostrar = false;
-      }
-
-      self.limpiarMensajeError(e);
-
-    },
-
-    SelecionarUsuario: function(idUsuario,e){
-
-      self.detalleUsuario.error = false;
-       $(e.target).removeClass("fa-check-square").addClass("fa-cog fa-spin");
-      // Obtenemos los valores
-      let parametros = {
-        idUsuario: idUsuario
-      };
-      //Se utiliza el metodo get para su busqueda y se envian con los parametros
-      axios.get('/detalleUsuarios', {params: parametros})
-      .then(function (response) {
-
-        if(response.status === 200 && response.data.response === true){
-
-          self.usuarios.mostrar = true;
-          self.detalleUsuario.data = response.data.info;
-          $(e.target).removeClass("fa-cog fa-spin").addClass("fa-check-square");
-
-        }else{
-
-          throw response.data;
-
-        }
-
-      })
-      .catch(error => {
-
-        self.detalleUsuario.error = true;
-        $('#modal-detalle-usuario').modal("show");
-        $(e.target).removeClass("fa-check-square").addClass("fa-cog fa-spin");
-
-      });
-
-    },
-
     pais: function(){
 
       self.form.telefono_fiscal.value = "";
       self.form.telefono_fiscal.disabled = false;
       self.id_pais = self.form.pais.value.id;
       self.form.telefono_fiscal.value = self.form.pais.value.codigo_telf;
+    },
+
+    sector: function(){
+      self.id_sector = self.form.sector.value.SectorId
+    },
+
+    servicio: function(){
+      self.id_servicio = self.form.servicio.value.ServicioId
     },
 
     valuesForm: function(e){
@@ -459,7 +354,10 @@ new Vue({
           telefono_fiscal: self.form.telefono_fiscal.value,
           pagina_web: self.form.pagina_web.value,
           email_fiscal: self.form.email_fiscal.value,
-          estatus: self.form.estatus.value
+          estatus: self.form.estatus.value,
+          servicio: self.form.servicio.value,
+          sector: self.id_sector,
+          servicio: self.id_servicio
         }
 
         self.submitActualizar.content = '<i class="fas fa-cog fa-spin"></i>';
@@ -474,7 +372,7 @@ new Vue({
 
           if(response.status === 200 && response.data.response === true){
 
-            var indices = ["rif","nit","razon_social","pais","direccion","telefono_fiscal","pagina_web","email_fiscal","estatus"];
+            var indices = ["rif","nit","razon_social","pais","direccion","telefono_fiscal","pagina_web","email_fiscal","estatus","sector","servicio"];
 
             indices.forEach(function(indiceObjecto, indice) {
               self.form[indiceObjecto].disabled = false;
@@ -499,7 +397,7 @@ new Vue({
         })
         .catch(error => {
 
-          var indices = ["rif","nit","razon_social","pais","direccion","telefono_fiscal","pagina_web","email_fiscal","estatus"];
+          var indices = ["rif","nit","razon_social","pais","direccion","telefono_fiscal","pagina_web","email_fiscal","estatus","sector","servicio"];
 
           indices.forEach(function(indiceObjecto, indice) {
             self.form[indiceObjecto].disabled = false;

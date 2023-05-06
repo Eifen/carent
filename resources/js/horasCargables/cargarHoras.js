@@ -1,7 +1,8 @@
-require('bootstrap');
+require('../bootstrap');
+import $ from "jquery";
 import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
-import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/node_modules/bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import 'vue2-timepicker/dist/VueTimepicker.css'
 window.zenscroll = require('zenscroll');
@@ -252,8 +253,11 @@ new Vue({
           horas_asignadas: horas_asignadas,
           fecha:  self.form.fecha.value,
           descripcion: self.form.descripcion.value,
-          horas_trabajadas: self.form.horas_trabajadas.value,
+          //Filtramos las horas en función si se coloco una hora o no
+          horas_trabajadas: (typeof self.form.horas_trabajadas.value === 'undefined' ? "00:00" 
+          : self.form.horas_trabajadas.value),
         }
+        
         //Se utiliza el metodo post para cargar horas y se envian con los parametros
         axios.post('/cargarHoras', parametros)
         .then(function (response) {
@@ -672,3 +676,8 @@ new Vue({
    }// Fin methods
 
 });
+
+$('.CerrarModal_Horas').on("click",function(){
+    $('#modal-detalle-Hcargadas').modal("hide")
+    $('#modal-eliminar-Hcargadas').modal("hide")
+})

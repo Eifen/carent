@@ -149,27 +149,55 @@ class UsuarioController extends Controller
 
     }
 
+    function searchUsers(Request $request) {
+
+        $model = new UsuarioModel();
+
+        $params = [
+            "data" => strtolower($request->input("data")),
+            "paginate" => (int) $request->input("paginate"),
+            "searchBy" => (int) $request->input("searchBy"),
+            "searchFrom" => (int) $request->input("searchFrom")
+        ];
+        $data = $model->searchUsers($params);
+        $permisoActualizar = $model->permisoActualizar(session("usuario_id"), 3);
+
+        if(!empty($data)) {
+
+            return [
+                "pages" => $data["pages"],
+                "permisoActualizar" => $permisoActualizar,
+                "response" => true,
+                "users" => $data["users"]
+            ];
+
+        } else {
+
+            return [
+                "message" => "No se encontraron resultados",
+                "response" => false
+            ];
+
+        }
+
+    }
+
     function buscarUsuarios(Request $request){
 
-      $modelo = new UsuarioModel();
+        $model = new UsuarioModel();
+        $buscarPor = (int) $request -> input("buscarPor");
+        $dato = strtolower($request -> input("dato"));
+        $permisoActualizar = $model->permisoActualizar(session("usuario_id"), 3);
+        //Busqueda de usuarios
+        $usuarios= $model->buscarUsuarios($buscarPor,$dato);
+        //Condicion de retorno
+        if(!empty($usuarios)){
+            $response = array("response" => true, "usuarios" => $usuarios, "permisoActualizar" => $permisoActualizar);
+          }else{
+            $response = array("response" => false, "message" => "No se encontraron resultados");
+          }
 
-      $buscarPor = (int) $request->input("buscarPor");
-      $dato = strtolower($request->input("dato"));
-      $usuarios = $modelo->buscarUsuarios($buscarPor, $dato);
-      $permisoActualizar = $modelo->permisoActualizar(session("usuario_id"), 3);
-
-      if(!empty($usuarios)){
-
-        $response = array("response" => true, "usuarios" => $usuarios, "permisoActualizar" => $permisoActualizar);
-
-      }else{
-
-        $response = array("response" => false, "message" => "No se encontraron resultados");
-
-      }
-
-      return $response;
-
+        return $response;
     }
 
     function detalleUsuario(Request $request){
