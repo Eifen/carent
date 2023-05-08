@@ -55,7 +55,7 @@ export class Validate
     {
         let splitDocument = documentData.split('-');
         let documentDTO = '';
-        const documentFormat  = new RegExp('^(V-|E-)([0-9]{1,3}(,[0-9]{3})*|[0-9]{1-3})$');
+        const documentFormat  = new RegExp('^(V-|E-)([0-9]{1,3}(\.[0-9]{3})*|[0-9]{1-3})$');
         const numberDocument = splitDocument[1];
         const verifyNumber = this.Number(splitDocument[1]);
 
@@ -65,7 +65,7 @@ export class Validate
         if(verifyNumber.response)
         {
             //Si es un número, volvemos a unir el array luego de formatear el numero
-            splitDocument[1] = Number(numberDocument).toLocaleString('en-US',{usingGrouping:true});
+            splitDocument[1] = Number(numberDocument).toLocaleString('de-DE');
             documentDTO = splitDocument.join('-');
             //Procedemos a verificar si cumple con el formato
             if(documentFormat.test(documentDTO)) return {"response":true,"message":documentDTO};

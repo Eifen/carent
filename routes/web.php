@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\ClientController;
 use Illuminate\Support\Facades\URL;
 
 /*
@@ -42,6 +43,18 @@ Route::prefix('/')->group(function(){
             Route::get('/',[UsersController::class,'index'])->name('updateUser');
             Route::post('/loadingUser',[UsersController::class,'UserPerCode']);
             Route::post('/updateUser',[UsersController::class,'UserControl']);
+        });
+    });
+    //Clientes
+    Route::prefix('/clientes')->group(function(){
+        Route::get('/',[ClientController::class,'index'])->name('clients');
+        Route::post('/limitPag',[ConfigController::class,'LimitPag']);
+        Route::post('/allClients',[ClientController::class,'GetAllClients']);
+        Route::post('/getParamsInits',[ClientController::class,'GetInitData']); //Parametros iniciales
+        //Create
+        Route::prefix('/create')->group(function(){
+            Route::get('/',[ClientController::class,'index'])->name('createClient');
+            Route::post('/newClient',[ClientController::class,'ClientControl']);
         });
     });
 });

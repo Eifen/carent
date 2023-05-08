@@ -41,5 +41,12 @@
             @include('UI.Users.userUpdate')
         @endif
         {{-- Redireccion de rutas para Clientes --}}
+        @if (Request::url() === URL::route('clients'))
+            @include('UI.Clients.clientIndex')
+        @endif
+
+        @if (Request::url() === URL::route('createClient'))
+            @include('UI.Clients.clientCreate')
+        @endif
     </section>
 @endsection

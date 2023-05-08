@@ -110,7 +110,7 @@ export default {
         Debe existir una propiedad llamada settings y si tiene más de 1 opción*/
     paginationLenght: Number, //La cantidad de páginas
     paginationLimit: Number, // El Tamaño máximo de cada página
-    tableInfo: Array, //Array Objeto que almacena el resultado del select
+    tableInfo: Array, //Array Objeto que almacena el resultado de la tabla
     titleTable: String, //Titulo de la tabla
     buttonTitle: String, //Titulo del boton de crear
     selectSearch: Object, //Objeto que almaneca los select de búsqueda

@@ -31,15 +31,18 @@ export const userWatchers =
         },
 
         //Watch del documento de identidad
-        inputSelect(newSelect) {
+        inputSelect(newSelect,oldSelect) {
             try {
-                const valueDTO = newSelect.replace(/,/g, '');
+                const valueDTO = newSelect.replace(/\./g, '');
                 const verifyFormat = Validate.FormatDocument(valueDTO);
                 //Luego de validar transformamos de nuevo la data
                 if (!verifyFormat.response) throw verifyFormat.message;
                 if (this.inputSelect.length > 2) this.messages.form.documentError = '';
 
-                this.inputSelect = verifyFormat.message
+                valueDTO.length > 14
+                ? this.inputSelect = oldSelect
+                : this.inputSelect = verifyFormat.message;
+
                 //Activamos la bandera del documento
                 this.submitButton.documentValid = true;
             } catch (errorMessage) {

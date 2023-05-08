@@ -117,7 +117,7 @@
           class="form-control"
           aria-describedby="basic-addon5"
           :disabled="scope.inputSelect === ''"
-          placeholder="Ejemplo: 15,365,987"
+          placeholder="Ejemplo: 15.365.987"
           id="DocumentoIdentidad"
           v-model="scope.inputSelect"/>
       </div>
@@ -155,7 +155,7 @@
     </div>
 
     <!-- Código -->
-    <div class="mb-3">
+    <div class="mb-3" v-if="!enableEdit">
       <label for="Codigo">Código <span :class="scope.formClass.requiredField">*</span></label>
       <div class="input-group">
         <span class="input-group-text" id="basic-addon7">
