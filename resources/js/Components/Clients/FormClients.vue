@@ -8,6 +8,7 @@
             <data-socio :scope="DTOData"></data-socio>
             <!-- Datos del Cliente -->
             <legend :class="formClass.legend" v-text="messages.cliente" v-if="inputSocioSelect != 0"></legend>
+            <data-cliente :scope="DTOData" :is-edit="isEdit" v-if="inputSocioSelect != 0"></data-cliente>
             <!-- Datos de contacto -->
             <legend :class="formClass.legend" v-text="messages.contacto" v-if="inputSocioSelect != 0"></legend>
             <!-- Submit Button. Que permanece inactivo mientras que no se hayan llegano todos los datos requeridos -->
@@ -26,9 +27,11 @@
 //Espacio de importaciones
 //Hooks
 import { createdMixin } from '@/Components/Clients/LifecycleClients/created.js'
+import { clientWatchers } from '@/Components/Clients/LifecycleClients/watchers.js'
 
 //Templates
 import DataSocio from '@/Components/Clients/TemplatesClients/DataSocio.vue';
+import DataCliente from '@/Components/Clients/TemplatesClients/DataCliente.vue';
 
 //librerias
 import FontAwesome from "@/Components/FontAwesome/FontAwesome.vue";
@@ -65,10 +68,13 @@ export default {
                 contacto: "Datos de contacto del cliente",
                 buttonCreate: "Crear cliente",
                 buttonEdit: "Actualizar cliente",
-                error: {} //Objeto que controla los mensajes de error
+                error: {
+                    rifError: ''
+                } //Objeto que controla los mensajes de error
             }, //Controla los mensajes del sistema. Tanto de error como de layouts
             submitButton:
             {
+                selectSocio: false,
                 isValid: false, //Controla el estado del botón de crear cliente
             }, //Control las validaciones
             dataSelect:
@@ -77,10 +83,12 @@ export default {
             },
             inputWatchers: [], //Array que inicializa los Watchers
             inputSocioSelect: 0, //Select de Socios
+            inputNit: '', //Value del NIT
         }
     },
     created() { createdMixin(this) },
     computed: { DTOData(){ return this.$data }}, //Metodo computado que envia la data a sus hijos a través de propiedades
-    components: { FontAwesome, DataSocio }
+    components: { FontAwesome, DataSocio, DataCliente },
+    mixins: [ clientWatchers ]
 }
 </script>

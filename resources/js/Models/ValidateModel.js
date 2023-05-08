@@ -139,4 +139,12 @@ export class Validate
 
         return {"response":false,"message":"Failure"}
     }
+    static RifFormat(rifData)
+    {
+        const rifDTO = new RegExp('^(V|E|J|P|G|C)$');
+        //Revisamos si coincide
+        if (rifDTO.test(rifData)) return {"reponse":true,"message":"Success"};
+        //Si no coincide
+        return {"response":false,"message":"NoInitRif"}
+    }
 }

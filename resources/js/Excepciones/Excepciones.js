@@ -2,6 +2,8 @@ export class Exceptions
 {
     /**
      * Metodo estatico que captura el nombre de la excepción.
+     * @param {*} $StringException Tipo de error. String
+     * @returns Object o string con el tipo de error
      */
     static CatchWarning($StringException)
     {
@@ -40,6 +42,10 @@ export class Exceptions
 
             case 'NoEmailFormat':
                 return "El correo no posee el formato correo. Ejemplo: usuarios@empresa.dominio";
+            
+            //Init Rif
+            case 'NoInitRif':
+                return "El rif debe iniciar con: V, E, P, G, J o C"
         }
     }
 }
