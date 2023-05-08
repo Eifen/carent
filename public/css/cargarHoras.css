@@ -1,1 +1,158 @@
-html{overflow-x:hidden}[v-cloak]{display:none}#cargarHoras{background-color:#e9ecef}#cargarHoras .wrapper-forms{min-height:calc(100vh - 62px);padding-bottom:50px;padding-top:100px}@media (max-width:575px){#cargarHoras .wrapper-forms{padding-bottom:0;padding-top:50px}}#cargarHoras .wrapper-forms form{background-color:#fff;border:1px solid rgba(0,0,0,.13);border-radius:3px;margin-bottom:50px;padding:15px;transition:all .3s}#cargarHoras .wrapper-forms form:hover{box-shadow:0 5px 5px 0 rgba(0,0,0,.18)}#cargarHoras .wrapper-forms form>div.logo{margin-bottom:40px;margin-top:30px;text-align:center}#cargarHoras .wrapper-forms form>div.logo img{height:90px;width:auto}#cargarHoras .wrapper-forms form>div.form-group label{color:#091f40}#cargarHoras .wrapper-forms form>div.form-group .invalid-feedback{display:block!important}#cargarHoras .wrapper-forms form>div.form-group .form-control{border-radius:2px}#cargarHoras .wrapper-forms form>div.form-group .form-control.error{border-color:#dc3545}#cargarHoras .wrapper-forms form>div.form-group .form-control:disabled{cursor:not-allowed}#cargarHoras .wrapper-forms form>div.form-group .form-control-distint{background-color:#fff;border-radius:2px;height:2.4em;width:10em}#cargarHoras .wrapper-forms form>div.form-group .form-control-distint.error{border-color:#dc3545}#cargarHoras .wrapper-forms form>div.form-group .form-control-distint:disabled{cursor:not-allowed}#cargarHoras .wrapper-forms .table{background-color:#fff;border:1px solid rgba(0,0,0,.13);border-radius:3px;margin-bottom:50px;padding:15px;transition:all .3s}#cargarHoras .wrapper-forms .table:hover{box-shadow:0 5px 5px 0 rgba(0,0,0,.18)}#cargarHoras .wrapper-forms .table thead tr th{background-color:#091f40;color:#fff;text-align:center}#cargarHoras .wrapper-forms .table tbody tr{transition:all .3s}#cargarHoras .wrapper-forms .table tbody tr:hover{background-color:rgba(246,168,28,.5)}#cargarHoras .wrapper-forms .table tbody tr td,#cargarHoras .wrapper-forms .table tbody tr th{text-align:center}#cargarHoras .wrapper-forms .table tbody tr td a{color:#212529!important}#cargarHoras .wrapper-forms .table tbody tr td .far:hover,#cargarHoras .wrapper-forms .table tbody tr td .fas:hover{cursor:pointer}#cargarHoras .wrapper-forms .table tfoot tr td>div{display:table;margin-left:auto;margin-right:auto}#cargarHoras .wrapper-forms .table tfoot tr td>div>div{display:table-cell;padding-left:5px;padding-right:5px;vertical-align:middle}#cargarHoras .wrapper-forms .table tfoot tr td>div>div .form-control{max-width:70px}#cargarHoras .wrapper-forms .table tfoot tr td>div>div .icono{color:#091f40;font-size:1.5rem}#cargarHoras .wrapper-forms .table tfoot tr td>div>div .icono:hover{color:#000;cursor:pointer}#cargarHoras .wrapper-forms .btn{border:2px solid #091f40;border-radius:2px;font-weight:600;transition:all .3s;width:100%}#cargarHoras .wrapper-forms .btn:hover{background-color:#f6a81c!important;color:#091f40!important}#cargarHoras .wrapper-forms .btn:disabled{cursor:not-allowed}#cargarHoras .wrapper-forms .btn.filtrar{background-color:#091f40;color:#fff}#cargarHoras .wrapper-forms .btn.limpiar_filtro{color:#091f40}#cargarHoras .wrapper-forms .wrapper-alert{margin-top:15px}#cargarHoras .wrapper-forms .wrapper-alert>div{padding-left:0;padding-right:0}#cargarHoras .wrapper-forms .wrapper-alert>div .alert{margin-bottom:0;text-align:center;width:100%}
+html {
+  overflow-x: hidden;
+}
+[v-cloak] {
+  display: none;
+}
+#cargarHoras {
+  background-color: #E9ECEF;
+}
+#cargarHoras .wrapper-forms {
+  min-height: calc(100vh - 62px);
+  padding-bottom: 50px;
+  padding-top: 100px;
+}
+@media (max-width: 575px) {
+  #cargarHoras .wrapper-forms {
+    padding-bottom: 0px;
+    padding-top: 50px;
+  }
+}
+#cargarHoras .wrapper-forms form {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.13);
+  border-radius: 3px;
+  margin-bottom: 50px;
+  padding: 15px;
+  transition: all 0.3s;
+}
+#cargarHoras .wrapper-forms form:hover {
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+}
+#cargarHoras .wrapper-forms form > div.logo {
+  margin-bottom: 40px;
+  margin-top: 30px;
+  text-align: center;
+}
+#cargarHoras .wrapper-forms form > div.logo img {
+  height: 90px;
+  width: auto;
+}
+#cargarHoras .wrapper-forms form > div.form-group label {
+  color: #091F40;
+}
+#cargarHoras .wrapper-forms form > div.form-group .invalid-feedback {
+  display: block !important;
+}
+#cargarHoras .wrapper-forms form > div.form-group .form-control {
+  border-radius: 2px;
+}
+#cargarHoras .wrapper-forms form > div.form-group .form-control.error {
+  border-color: #dc3545;
+}
+#cargarHoras .wrapper-forms form > div.form-group .form-control:disabled {
+  cursor: not-allowed;
+}
+#cargarHoras .wrapper-forms form > div.form-group .form-control-distint {
+  border-radius: 2px;
+  background-color: white;
+  width: 10em;
+  height: 2.4em;
+}
+#cargarHoras .wrapper-forms form > div.form-group .form-control-distint.error {
+  border-color: #dc3545;
+}
+#cargarHoras .wrapper-forms form > div.form-group .form-control-distint:disabled {
+  cursor: not-allowed;
+}
+#cargarHoras .wrapper-forms .table {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.13);
+  border-radius: 3px;
+  margin-bottom: 50px;
+  padding: 15px;
+  transition: all 0.3s;
+}
+#cargarHoras .wrapper-forms .table:hover {
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+}
+#cargarHoras .wrapper-forms .table thead tr th {
+  background-color: #091F40;
+  color: white;
+  text-align: center;
+}
+#cargarHoras .wrapper-forms .table tbody tr {
+  transition: all 0.3s;
+}
+#cargarHoras .wrapper-forms .table tbody tr:hover {
+  background-color: rgba(246, 168, 28, 0.5);
+}
+#cargarHoras .wrapper-forms .table tbody tr th {
+  text-align: center;
+}
+#cargarHoras .wrapper-forms .table tbody tr td {
+  text-align: center;
+}
+#cargarHoras .wrapper-forms .table tbody tr td a {
+  color: #212529 !important;
+}
+#cargarHoras .wrapper-forms .table tbody tr td .fas:hover,
+#cargarHoras .wrapper-forms .table tbody tr td .far:hover {
+  cursor: pointer;
+}
+#cargarHoras .wrapper-forms .table tfoot tr td > div {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+}
+#cargarHoras .wrapper-forms .table tfoot tr td > div > div {
+  display: table-cell;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: middle;
+}
+#cargarHoras .wrapper-forms .table tfoot tr td > div > div .form-control {
+  max-width: 70px;
+}
+#cargarHoras .wrapper-forms .table tfoot tr td > div > div .icono {
+  color: #091F40;
+  font-size: 1.5rem;
+}
+#cargarHoras .wrapper-forms .table tfoot tr td > div > div .icono:hover {
+  color: #000000;
+  cursor: pointer;
+}
+#cargarHoras .wrapper-forms .btn {
+  border: 2px solid #091F40;
+  border-radius: 2px;
+  font-weight: 600;
+  transition: all 0.3s;
+  width: 100%;
+}
+#cargarHoras .wrapper-forms .btn:hover {
+  background-color: #F6A81C !important;
+  color: #091F40 !important;
+}
+#cargarHoras .wrapper-forms .btn:disabled {
+  cursor: not-allowed;
+}
+#cargarHoras .wrapper-forms .btn.filtrar {
+  background-color: #091F40;
+  color: #ffffff;
+}
+#cargarHoras .wrapper-forms .btn.limpiar_filtro {
+  color: #091F40;
+}
+#cargarHoras .wrapper-forms .wrapper-alert {
+  margin-top: 15px;
+}
+#cargarHoras .wrapper-forms .wrapper-alert > div {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+#cargarHoras .wrapper-forms .wrapper-alert > div .alert {
+  margin-bottom: 0px;
+  text-align: center;
+  width: 100%;
+}
+
