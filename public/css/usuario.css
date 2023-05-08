@@ -1,1 +1,11 @@
-body{margin:0!important}[v-cloak]{display:none}#app{background-color:#f2f6fc;min-height:100vh}
+body {
+  margin: 0px !important;
+}
+[v-cloak] {
+  display: none;
+}
+#app {
+  background-color: #F2F6FC;
+  min-height: 100vh;
+}
+

@@ -1,1 +1,218 @@
-html{overflow-x:hidden}[v-cloak]{display:none}#nuevoCliente{background-color:#e9ecef}#nuevoCliente .wrapper-forms{min-height:calc(100vh - 62px);padding-bottom:50px;padding-top:50px}@media (max-width:575px){#nuevoCliente .wrapper-forms{padding-bottom:0;padding-top:50px}}#nuevoCliente .wrapper-forms .titulo-principal{color:rgba(0,0,0,.7);margin-bottom:20px}#nuevoCliente .wrapper-forms form{background-color:#fff;border:1px solid rgba(0,0,0,.13);border-radius:18px;margin-bottom:50px;margin-left:0;margin-right:0;padding:15px;transition:all .3s}#nuevoCliente .wrapper-forms form:hover{box-shadow:0 5px 5px 0 rgba(0,0,0,.18)}#nuevoCliente .wrapper-forms form>div.form-group label{color:#091f40}#nuevoCliente .wrapper-forms form>div.form-group .form-control{border-radius:18px}#nuevoCliente .wrapper-forms form>div.form-group .form-control:disabled{cursor:not-allowed}#nuevoCliente .wrapper-forms .table{background-color:#fff;border:1px solid rgba(0,0,0,.13);border-radius:18px;margin-bottom:50px;padding:15px;transition:all .3s}#nuevoCliente .wrapper-forms .table:hover{box-shadow:0 5px 5px 0 rgba(0,0,0,.18)}#nuevoCliente .wrapper-forms .table thead tr th{background-color:#091f40;color:#fff;text-align:center;vertical-align:middle}#nuevoCliente .wrapper-forms .table tbody tr{transition:all .3s}#nuevoCliente .wrapper-forms .table tbody tr:hover{background-color:rgba(246,168,28,.5)}#nuevoCliente .wrapper-forms .table tbody tr td,#nuevoCliente .wrapper-forms .table tbody tr th{text-align:center}#nuevoCliente .wrapper-forms .table tbody tr td a{color:#212529!important}#nuevoCliente .wrapper-forms .table tbody tr td .far:hover,#nuevoCliente .wrapper-forms .table tbody tr td .fas:hover{cursor:pointer}#nuevoCliente .wrapper-forms .table tfoot tr td>div{display:table;margin-left:auto;margin-right:auto}#nuevoCliente .wrapper-forms .table tfoot tr td>div>div{display:table-cell;padding-left:5px;padding-right:5px;vertical-align:middle}#nuevoCliente .wrapper-forms .table tfoot tr td>div>div .form-control{max-width:70px}#nuevoCliente .wrapper-forms .table tfoot tr td>div>div .icono{color:#091f40;font-size:1.5rem}#nuevoCliente .wrapper-forms .table tfoot tr td>div>div .icono:hover{color:#000;cursor:pointer}#nuevoCliente .wrapper-forms .btn{border-radius:18px;font-weight:600}#nuevoCliente .wrapper-forms .btn:hover{background-color:#f6a81c!important;color:#091f40!important}#nuevoCliente .wrapper-forms .btn:disabled{cursor:not-allowed}#nuevoCliente .wrapper-forms .wrapper-alert{border-radius:18px;margin-top:15px}#nuevoCliente .wrapper-forms .wrapper-alert>div{padding-left:0;padding-right:0}#nuevoCliente .wrapper-forms .wrapper-alert>div .alert{border-radius:18px;margin-bottom:0;text-align:center;width:100%}.modal .modal-content{border-radius:18px}.modal .modal-dialog .modal-header{padding:.25rem 1rem}.modal .modal-dialog .modal-body form{padding:0}.modal .modal-dialog .modal-body form>div.form-group label{color:#091f40}.modal .modal-dialog .modal-body form>div.form-group .form-control{border-radius:2px}.modal .modal-dialog .modal-body form>div.form-group .btn:disabled,.modal .modal-dialog .modal-body form>div.form-group .form-control:disabled{cursor:not-allowed}.modal .modal-dialog .modal-body form>div.form-group .btn.btn-outline-success{border:2px solid;font-weight:600}.modal .modal-dialog .modal-body .alert{border-radius:18px;margin-bottom:0}.modal .modal-dialog .modal-body .table{transition:all .3s}.modal .modal-dialog .modal-body .table:hover{box-shadow:0 5px 5px 0 rgba(0,0,0,.18)}.modal .modal-dialog .modal-body .table thead tr th{background-color:#091f40;color:#fff;text-align:center}.modal .modal-dialog .modal-body .table tbody tr{transition:all .3s}.modal .modal-dialog .modal-body .table tbody tr:hover{background-color:rgba(246,168,28,.5)}.modal .modal-dialog .modal-body .table tbody tr td,.modal .modal-dialog .modal-body .table tbody tr th{text-align:center}.modal .modal-dialog .modal-body .table tbody tr td .icono{margin-left:5px;margin-right:5px}.modal .modal-dialog .modal-body .table tbody tr td .icono:hover{cursor:pointer}.modal .modal-dialog .modal-body .table tbody tr td .icono:hover.bi-trash{color:#dd3d31}.modal .modal-dialog footer{padding:.25rem 1rem!important}.modal .modal-dialog footer .alert{border-radius:18px;margin:10px 0}.modal .modal-dialog footer button{margin-left:0;margin-right:0}
+html {
+  overflow-x: hidden;
+}
+[v-cloak] {
+  display: none;
+}
+#nuevoCliente {
+  background-color: #E9ECEF;
+}
+#nuevoCliente .wrapper-forms {
+  min-height: calc(100vh - 62px);
+  padding-bottom: 50px;
+  padding-top: 50px;
+}
+@media (max-width: 575px) {
+  #nuevoCliente .wrapper-forms {
+    padding-bottom: 0px;
+    padding-top: 50px;
+  }
+}
+#nuevoCliente .wrapper-forms .titulo-principal {
+  color: rgba(0, 0, 0, 0.7);
+  margin-bottom: 20px;
+}
+#nuevoCliente .wrapper-forms form {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.13);
+  border-radius: 18px;
+  margin-bottom: 50px;
+  margin-left: 0px;
+  margin-right: 0px;
+  padding: 15px;
+  transition: all 0.3s;
+}
+#nuevoCliente .wrapper-forms form:hover {
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+}
+#nuevoCliente .wrapper-forms form > div.form-group label {
+  color: #091F40;
+}
+#nuevoCliente .wrapper-forms form > div.form-group .form-control {
+  border-radius: 18px;
+}
+#nuevoCliente .wrapper-forms form > div.form-group .form-control:disabled {
+  cursor: not-allowed;
+}
+#nuevoCliente .wrapper-forms .table {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.13);
+  border-radius: 18px;
+  margin-bottom: 50px;
+  padding: 15px;
+  transition: all 0.3s;
+}
+#nuevoCliente .wrapper-forms .table:hover {
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+}
+#nuevoCliente .wrapper-forms .table thead tr th {
+  background-color: #091F40;
+  color: white;
+  text-align: center;
+  vertical-align: middle;
+}
+#nuevoCliente .wrapper-forms .table tbody tr {
+  transition: all 0.3s;
+}
+#nuevoCliente .wrapper-forms .table tbody tr:hover {
+  background-color: rgba(246, 168, 28, 0.5);
+}
+#nuevoCliente .wrapper-forms .table tbody tr th {
+  text-align: center;
+}
+#nuevoCliente .wrapper-forms .table tbody tr td {
+  text-align: center;
+}
+#nuevoCliente .wrapper-forms .table tbody tr td a {
+  color: #212529 !important;
+}
+#nuevoCliente .wrapper-forms .table tbody tr td .fas:hover,
+#nuevoCliente .wrapper-forms .table tbody tr td .far:hover {
+  cursor: pointer;
+}
+#nuevoCliente .wrapper-forms .table tfoot tr td > div {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+}
+#nuevoCliente .wrapper-forms .table tfoot tr td > div > div {
+  display: table-cell;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: middle;
+}
+#nuevoCliente .wrapper-forms .table tfoot tr td > div > div .form-control {
+  max-width: 70px;
+}
+#nuevoCliente .wrapper-forms .table tfoot tr td > div > div .icono {
+  color: #091F40;
+  font-size: 1.5rem;
+}
+#nuevoCliente .wrapper-forms .table tfoot tr td > div > div .icono:hover {
+  color: #000000;
+  cursor: pointer;
+}
+#nuevoCliente .wrapper-forms .btn {
+  border-radius: 18px;
+  font-weight: 600;
+}
+#nuevoCliente .wrapper-forms .btn:hover {
+  background-color: #F6A81C !important;
+  color: #091F40 !important;
+}
+#nuevoCliente .wrapper-forms .btn:disabled {
+  cursor: not-allowed;
+}
+#nuevoCliente .wrapper-forms .wrapper-alert {
+  margin-top: 15px;
+  border-radius: 18px;
+}
+#nuevoCliente .wrapper-forms .wrapper-alert > div {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+#nuevoCliente .wrapper-forms .wrapper-alert > div .alert {
+  border-radius: 18px;
+  margin-bottom: 0px;
+  text-align: center;
+  width: 100%;
+}
+.modal {
+  /*&[id^="modal-eliminar-"]{
+
+    .modal-dialog{
+
+      .modal-body{
+        border-top-right-radius: calc(0.3rem - 1px);
+        border-top-left-radius: calc(0.3rem - 1px);
+        padding: 0px;
+      }
+
+    }
+
+  }*/
+}
+.modal .modal-content {
+  border-radius: 18px;
+}
+.modal .modal-dialog .modal-header {
+  padding: 0.25rem 1rem;
+}
+.modal .modal-dialog .modal-body form {
+  padding: 0px;
+}
+.modal .modal-dialog .modal-body form > div.form-group label {
+  color: #091F40;
+}
+.modal .modal-dialog .modal-body form > div.form-group .form-control {
+  border-radius: 2px;
+}
+.modal .modal-dialog .modal-body form > div.form-group .form-control:disabled {
+  cursor: not-allowed;
+}
+.modal .modal-dialog .modal-body form > div.form-group .btn:disabled {
+  cursor: not-allowed;
+}
+.modal .modal-dialog .modal-body form > div.form-group .btn.btn-outline-success {
+  border: 2px solid;
+  font-weight: 600;
+}
+.modal .modal-dialog .modal-body .alert {
+  border-radius: 18px;
+  margin-bottom: 0px;
+}
+.modal .modal-dialog .modal-body .table {
+  transition: all 0.3s;
+}
+.modal .modal-dialog .modal-body .table:hover {
+  box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.18);
+}
+.modal .modal-dialog .modal-body .table thead tr th {
+  background-color: #091F40;
+  color: white;
+  text-align: center;
+}
+.modal .modal-dialog .modal-body .table tbody tr {
+  transition: all 0.3s;
+}
+.modal .modal-dialog .modal-body .table tbody tr:hover {
+  background-color: rgba(246, 168, 28, 0.5);
+}
+.modal .modal-dialog .modal-body .table tbody tr th {
+  text-align: center;
+}
+.modal .modal-dialog .modal-body .table tbody tr td {
+  text-align: center;
+}
+.modal .modal-dialog .modal-body .table tbody tr td .icono {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.modal .modal-dialog .modal-body .table tbody tr td .icono:hover {
+  cursor: pointer;
+}
+.modal .modal-dialog .modal-body .table tbody tr td .icono:hover.bi-trash {
+  color: #DD3D31;
+}
+.modal .modal-dialog footer {
+  padding: 0.25rem 1rem !important;
+}
+.modal .modal-dialog footer .alert {
+  border-radius: 18px;
+  margin: 10px 0px 10px 0px;
+}
+.modal .modal-dialog footer button {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
