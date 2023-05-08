@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 04-05-2023 a las 22:17:40
--- Versión del servidor: 10.4.27-MariaDB
--- Versión de PHP: 8.2.0
+-- Tiempo de generación: 08-05-2023 a las 04:50:41
+-- Versión del servidor: 10.4.25-MariaDB
+-- Versión de PHP: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -288,6 +288,13 @@ IF tableTarget = 'users' THEN
     LEAVE query_select;
 END IF;
 
+IF tableTarget = 'clients' THEN
+	#Creamos un JSON con la información de la consulta
+    SET @JsonSelect = (SELECT CONCAT("[",GROUP_CONCAT('{"codigo":"',Cs.Codigo_cliente,'","socio encargado":"',CONCAT(Us.Primer_nombre," ",Us.Segundo_nombre," ",Us.Primer_apellido," ",Us.Segundo_apellido),'","razon social":"',Cs.Razon_social,'","correo":"',Cs.Email_fiscal,'","estatus":',Us.Id_estatus,'}'),"]") FROM tbl_clientes Cs INNER JOIN tbl_usuarios Us ON Us.Id = Cs.Id_usuario_socio);
+    SET p_jsonResponse = CONCAT('{"response":true,"message":',@JsonSelect,'}');
+    LEAVE query_select;
+END IF;
+
 #Si no entra en ninguna condición
 SET v_CustomMessage = CONCAT('{"response":false,"message":"Error 0017: La selección de tabla no coincide con ninguna tabla (',tableTarget,')"}');
 SIGNAL SQLSTATE '45000'; #Activamos el error
@@ -500,6 +507,555 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `tbl_clientes`
+--
+
+CREATE TABLE `tbl_clientes` (
+  `Id` int(11) NOT NULL,
+  `Id_usuario_socio` int(11) NOT NULL,
+  `Codigo_cliente` int(11) NOT NULL,
+  `Rif` varchar(15) NOT NULL,
+  `Nit` int(11) NOT NULL,
+  `Razon_social` varchar(500) NOT NULL,
+  `Id_pais` int(11) NOT NULL,
+  `Direccion` text NOT NULL,
+  `Telefono_fiscal` varchar(20) NOT NULL,
+  `Pagina_web` varchar(250) NOT NULL,
+  `Email_fiscal` varchar(100) NOT NULL,
+  `Id_cliente_sector` int(11) NOT NULL,
+  `Id_cliente_servicio` int(11) NOT NULL,
+  `Id_estatus` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `tbl_clientes`
+--
+
+INSERT INTO `tbl_clientes` (`Id`, `Id_usuario_socio`, `Codigo_cliente`, `Rif`, `Nit`, `Razon_social`, `Id_pais`, `Direccion`, `Telefono_fiscal`, `Pagina_web`, `Email_fiscal`, `Id_cliente_sector`, `Id_cliente_servicio`, `Id_estatus`) VALUES
+(14, 146, 1451, 'J314087754', 0, 'A.C. CONSULTORES UCAB', 240, 'Universidad Católica Andrés Bello Centro Loyola, Piso 2, Caracas. Dtto. Capital', '+5822122356047', '', 'acconsultores@com.ve', 2, 2, 1),
+(15, 5007, 1534, 'J000998345', 0, 'ADMINISTRADORA CCCT', 240, 'Av.la Estancia con calle Ernesto Blochn C.C.C.T nivel PB OF Administracion Urb. Chuao', '+582129593604', '', 'administradoraccct@gmail.com', 0, 0, 1),
+(16, 150, 1020, 'J0002474327', 0, 'ADMINISTRADORA CENTRO FINANCIERO LATINO, C.A.', 240, 'Av. Urdaneta, Esq de animas Plaza España, Edif Centro financieros latino,piso 8, ofic A-C Caracas', '+582125618212', '', 'centro@gmail.com.ve', 0, 0, 1),
+(17, 149, 1164, 'J002639632', 0, 'ADMINISTRADORA HOTAL', 240, 'av. whashintong hotel avila san  bernardino caracas', '+582125522243', '', 'administradorahotal@gmail.com', 0, 0, 1),
+(18, 149, 2188, 'J308240486', 0, 'AEROCLOSET, C.A.', 240, 'Av. la estancia ccct torre a nivel p2 urb chuao', '+58', '', 'aerocloset@gmail.com', 0, 0, 1),
+(19, 149, 2131, 'J075433548', 0, 'AGENCIA GENERALES CONAVEN, C.A.', 240, 'Av. Orinoco Edif. Torre Uno Piso 4 Urb. Las Mercedes Caracas, Edo. Miranda Zona Postal 1060', '+58', '', 'conaven@gmail.com', 0, 0, 1),
+(20, 147, 2184, 'J312492414', 0, 'AGROBIGOTT,C.A.', 240, 'Urb. Los Ruices  AV. Fco de Miranda EDIF Bigott  Caracas, (PETARE)  MIRANDA', '+58', '', 'agrobigott@gmail.com', 0, 0, 1),
+(21, 144, 1868, 'J000599009', 0, 'ANAYANSI, C.A.', 240, 'Calle Final calle 4 Local Galpon N°03 Urb. Terrinca Guatire Edo. Miranda', '+58', '', 'anayansi@gmail.com', 0, 0, 1),
+(22, 150, 1906, 'J306991719', 0, 'ARROBA SEGUROS SOCIEDAD DE CORRETAJE DE SEGUROS,C.A.', 240, 'Av. Don Diego Cisnero Edif. Siemens Torre norte, Piso 4,Ofc Arroba Urb. Los Ruices, Caracas- Miranda', '+58', '', 'aarrobaseguros@gmail.com', 0, 0, 1),
+(23, 146, 1618, 'J001256970', 0, 'AVICOLA DEL CENTRO C.A.', 240, 'Carretera Cua-San Casimiro Local  Nro. 49-B Sector La Cienega San Casimiro Estado Aragua-Zona Postal 2338', '+58', '', 'avicola@gmail.com', 0, 0, 1),
+(24, 146, 1617, 'J306515933', 0, 'AVICOLA SANTA CRUZ, C.A.', 240, 'Calle Hernandez Nadal Local Nro 03 Sector  Frente a Urbanización el Remanso Vía Turagua Santa Cruz -Aragua Zona Postal 2123', '+58', '', 'avicolasantacruz@gmail.com', 0, 0, 1),
+(25, 150, 1064, 'J001708472', 0, 'AVILA RAYOS X, C.A.', 240, 'Av.San Juan Bosco con  Sexta Transversal, Edif. Clinica el Avila, Piso 2 Altamira, Caracas.', '+582122761030', '', 'avilarayosx@gmail.com', 0, 0, 1),
+(26, 150, 1065, 'J000121940', 0, 'AVILA SERVICIOS MEDICOS, C.A.', 240, 'Sexta Transversal de Altamira con Av.San Juan Bosco, Edif. Clinica Avila Altamira, Caracas.', '+582122081026', '', 'aviserme@gmail.com', 0, 0, 1),
+(27, 149, 1409, 'J080066227', 0, 'BANCO ACTIVO BANCO UNIVERSAL', 240, 'Torre Europa', '+58', '', 'correo@dominio.com', 0, 0, 2),
+(28, 146, 1738, 'G200057955', 0, 'BANCO AGRICOLA DE VENEZUELA', 240, 'Avenida Francisco de Miranda  Edificio Cavendes Piso 17  Chacao-Caracas', '+58', '', 'bancoagricola@gmail.com', 0, 0, 1),
+(29, 145, 1266, 'J304742029', 0, 'BANCO DE COMERCIO EXTERIOR, C.A.', 240, 'Calle los Chaguaramos Centro Gerencial Mohedano Piso 1 La Castellana-Caracas', '+582122651433', '', 'bancoex@gmail.com', 0, 0, 1),
+(30, 146, 1448, 'J313413615', 0, 'BANCO DE EXPORTACION Y COMERCIO', 240, 'Av. Casanova con Av. Las Acacias Torre Banhorient, Piso 11. Oficina 11A. Plaza Venezuela Caracas, Dtto Capital', '+582127935249', '', 'bancodeexportacion@gmail.com', 0, 0, 1),
+(31, 146, 1654, 'G200099976', 0, 'BANCO DE VENEZUELA, BANCO UNIVERSAL', 240, 'Avenida Universidad Esquina de Sociedad  Torre Banco de Venezuela, Parroquia Catedral  Caracas, Dtto Capital', '+58', '', 'bancodevenezuela@gmail.com', 0, 0, 1),
+(32, 146, 1359, 'G200051876', 0, 'BANCO DEL TESORO, C.A.', 240, 'Calle Guaicaipuro, Torre Banco del Tesoro Urbanización El Rosal Caracas, Dtto Capital', '+58', '', 'bancodeltesoro@gmail.com', 0, 0, 1),
+(33, 145, 1375, 'J002853018', 0, 'BANESCO HOLDING, C.A.', 240, 'centro ciudad banesco', '+58', '', 'correo@dominio.com', 0, 0, 2),
+(34, 149, 2138, 'G200096772', 0, 'BOLSA PUBLICA DE VALORES BICENTENARIA', 240, 'Av.  Francisco de Miranda Edif. Torre Europa Piso Nivel C Ofic S/N  Urb. El Rosal Caracas Chacao Zona Postal 1060', '+58', '', 'bolsapublica@gmail.com', 0, 0, 1),
+(35, 147, 2182, 'J000067481', 0, 'C.A. CIGARRERA BIGOTT SUCS', 240, 'Urb. Los Ruices  AV. Fco de Miranda EDIF Bigott  Caracas, (PETARE)  MIRANDA', '+58', '', 'cigarrerabigott@gmail.com', 0, 0, 1),
+(36, 149, 1874, 'J000048398', 0, 'CAJA DE AHORRO BANVENEZ', 240, 'Esquina Veroes a Santa Capilla Av. Urdaneta Edif Veroes Piso 4 Ofic Caja de Ahorro Caracas', '+58', '', 'banvenez@gmail.com', 0, 0, 1),
+(37, 144, 1962, 'J294280986', 0, 'CALIFORNIA HOME FASHION, C.A.', 240, 'Av. Andres Bello calle 4 con calle 5 Qta. Vera Urb. Los Palos Grandes  Urb. Los Palos Grandes Caracas (Chacao) Miranda ZP 1060', '+58', '', 'californiahomefashion@gmail.com', 0, 0, 1),
+(38, 150, 1158, 'J001168281', 0, 'CENTRO MEDICO LOIRA, C.A.', 240, 'Av. Loira, Edif. Centro Medico Loira, Piso 1  Oficina de Presidencia  El Paraiso, Caracas, Dtto Capital', '+582124052095', '', 'centromedicoloira@gmail.com', 0, 0, 1),
+(39, 149, 2187, 'J001147853', 0, 'CERAMICAS CARIBE, C.A.', 240, 'Chivacoa  Ctra.Autopista Centro Occidental,Dtb Chivacoa Via Nirgua Local Nro S/N Sector Sabana Larga-Yaracuy', '+582127000224', '', 'ceramicascaribe@gmail.com', 0, 0, 1),
+(40, 146, 1019, 'J002726598', 0, 'CONDOMINIO CENTRO FINANCIERO LATINO', 240, 'Avenida Urdaneta, Esquina de Animas a Plaza España, Edificio Centro Financiero Latino, Piso 8, Oficina A-C Caracas. Dtto. Capital', '+582125618212', '', 'condomcentrofianlatino@gmail.com', 0, 0, 1),
+(41, 147, 2109, 'J095003264', 0, 'CONPROIND', 240, 'Av. Rio Caura con Rio Paragua. Ubr.Prados del Este-La Piramide Piso 03 Ofc 307 Caracas.', '+582129776309', '', 'conproind@gmail.com', 2, 2, 1),
+(42, 147, 2154, 'J003636916', 0, 'CONSTRUCTORA NORBERTO ODEBRECHT, S.A', 240, 'Urb. Prados del Este Av. Rio Caura Edif. Torre Humboldt Torre Humboldt Piso 10, Of.10-13', '+58', '', 'odebrecth@gmail.com', 0, 0, 1),
+(43, 149, 1978, 'J000963142', 0, 'CONTINENTAL DE SISTEMAS Y MAQUINAS. C.A., CONTIMACA', 240, 'Av. Milan Edificio CONTIMACA Piso 1 Urb. Los Ruices Sur.', '+58', '', 'contimaca@gmail.com', 0, 0, 1),
+(44, 150, 1689, 'J001340769', 0, 'CORAL', 240, 'Calle La Limonera, Edificio LARCO Piso 1, Urbanización La Trinidad', '+582129442777', '', 'coral@gmail.com', 0, 0, 1),
+(45, 147, 2166, 'J003082902', 0, 'CORPORACION DELCOP, C.A.', 240, 'Calle Las Vegas Edificio DELCOP  Piso 1 Local DELCOP Zona Industrial de la Trinidad Caracas-Estado Miranda Zona Postal 1080', '+58', '', 'corpodelcop@gmail.com', 0, 0, 1),
+(46, 147, 2189, 'J409590577', 0, 'DISTRIBUIDORA AMAZONIA 1134, C.A.', 240, 'Calle Santa Ana Edificio Centro Empresarial Boleita Piso 5 Oficina 5-B Urbanización Boleita', '+58', '', 'amazonia@gmail.com', 0, 0, 1),
+(47, 147, 2183, 'J302385490', 0, 'DISTRIBUIDORA BIGOTT C.A.', 240, 'Urb. Los Ruices  AV. Fco de Miranda EDIF Bigott Caracas, (PETARE) MIRANDA', '+58', '', 'distribigott@gmal.com', 0, 0, 1),
+(48, 150, 2151, 'J409554635', 0, 'DISTRIBUIDORA MACONDO 333, C.A.', 240, 'Calle Santa Ana Edif Centro Empresarial Boleita, Piso 5 Ofic 5-B Ubr. Boleita Sur Caracas-Miranda', '+58', '', 'macondo@gmail.com', 0, 0, 1),
+(49, 150, 2178, 'J407514571', 0, 'DP DELTA SERVICIOS, C.A.', 240, 'Av. Los Samanes Final Norte  Edificio Clinico La Florida PB  Urb. La Florida-Caracas', '+58', '', 'estudiomedicotomograf@gmail.com', 0, 0, 1),
+(50, 5002, 1983, 'J300388840', 0, 'ESTUDIO MEDICO TOMOGRAF, C.A.', 240, '', '+58', '', '', 0, 0, 1),
+(51, 150, 2171, 'J302455413', 0, 'FARMACIA MEDITOTAL, C.A.', 240, 'Av. Costanera Centro Empresarial Athenas,PB Barcelona. Edo. Anzoategui', '+58', '', 'famaciameditotal@gmail.com', 0, 0, 1),
+(52, 146, 1018, 'J002901322', 0, 'FINANCORP VALORES CASA DE BOLSA, C.A.', 240, '', '+582120000000', '', 'correo@dominio.com', 0, 0, 1),
+(53, 150, 2097, 'J000143676', 0, 'FSVEN INDUSTRIAL SOLUTIONS, S.A', 240, 'Av. Rio Caura con Rio Paragua. Ubr.Prados del Este-La Piramide Piso 03 Ofc 301 Caracas.', '+58', '', 'fsvenindustrial@gmail.com', 0, 0, 1),
+(54, 146, 2181, 'J315820439', 0, 'FUNDACIÓN ESPAÑA SALUD', 240, 'Av. El Parque con Esquina Av. Andres Bello Edificio Oficentro Piso 4 Oficina 4-A y 4-B Urb. San Bernandino-Caracas', '+582125785802', '', 'fundacionespaña@gmail.com', 0, 0, 1),
+(55, 150, 2159, 'J000762627', 0, 'GENIA CARE PHARMACEUTICAL, S.A', 240, 'Calle Callejon Gutierrez Edid EUROCIENCIA piso 1local EDIFICIO URB La California Norte Caracas Miranda  Zona Postal 1070', '+58', '', 'geniacarepharma@gmail.com', 0, 0, 1),
+(56, 150, 2160, 'J000681716', 0, 'GENIA CARE, C.A.', 240, 'Av. Francisco de Miranda Esq. Con Avenida El Parque Edif Torre Country Piso 4 y 5 Of. S/N URB El Bosque Caracas  (CHACAO) MIRANDA ZONA POSTAL 1060', '+58', '', 'geniacare@gmail.com', 0, 0, 1),
+(57, 150, 1648, 'J309264613', 0, 'GLOBAL LEASING, C.A.', 240, 'Av. Diego Cisneros, Calle Los Laboratorios Edificio Otinca, Piso 5 Oficina 47 Los Ruices-Caracas', '+58', '', 'globalleasing@gmail.com', 0, 0, 1),
+(58, 5002, 2186, 'J401443001', 0, 'GPB NEFTEGAZ SERVICES B.V. SUCURSAL, C.A.', 240, '', '+58', '', '', 0, 0, 1),
+(59, 146, 1614, 'J075168186', 0, 'GRANJA ALCONCA, C.A.', 240, 'Avenida 3 Parcela A5-1 Urbanización Industrial Santa Cruz Estado Aragua.', '+02433000143', '', 'granjaalconca@gmail.com', 0, 0, 1),
+(60, 146, 1615, 'J303834817', 0, 'GRANJA MUCURITA, C.A.', 240, 'Carretera Asentamiento Campesino Mucura I Local Nro 34 Sector Mucura Villa de Cura Estado Aragua-Zona Postal 2126', '+58', '', 'geanjamucurita@gmail.com', 0, 0, 1),
+(61, 146, 1616, 'J075791215', 0, 'GRUPO AVICOLA INTEGRADO DEL CENTRO,C.A.', 240, 'Calle Hernandez Nadal Local Nro 06 Sector Frente a Urbanización el Remanso Vía Turagua Santa Cruz -Aragua Zona Postal 2123', '+58', '', 'grupoavicola@gmail.com', 0, 0, 1),
+(62, 150, 1283, 'J000683778', 0, 'GRUPO MEDICO VARGAS, C.A.', 240, 'Av. Ppal, Urb. Santa Sofia, El Cafetal. Quinta los Abuelos Caracas- Dtto. Capital', '+582129811369', '', 'grupomedicovargas@gmail.com', 0, 0, 1),
+(63, 146, 1675, 'J296479461', 0, 'GRUPO TUTICKET.COM,VE, C.A.', 240, 'Av.Sur, Centro Empresarial Lagunita, Piso 2,  Ofinina 208, Urb.La Lagunita', '+582123195353', '', 'grupotuticket@gmail.com', 0, 0, 1),
+(64, 147, 1920, 'J295320795', 0, 'IMAN GROUP, C.A.', 240, 'Av. Don Diego Cisneros Edif. Siemens Torre Norte Piso4 Ofic.Iman Group Urb. Los Ruices , Edo. Miranda Zona Postal 1071', '+58', '', 'imangroup@gmail.com', 0, 0, 1),
+(65, 150, 1996, 'J301183185', 0, 'IMPORTADORA ACIPROSALUD, C.A.', 240, 'Calle Alameda Av. Venezuela Edif. Folgana Piso 1 Apto 1-A  El Rosal Chacao-Caracas', '+58', '', 'aciprosalud@gmail.com', 0, 0, 1),
+(66, 146, 1496, 'J312605316', 0, 'INDUSTRIA CONSOLIDADAS DE GASES ICG C,A', 240, 'Urbanización Industrial Terrinca Av. Principal, Galpon Nº 5 Guatire, Estado Miranda', '+582129511921', '', 'icg@gmail.com', 0, 0, 1),
+(67, 146, 1179, 'J300706206', 0, 'INDUSTRIAS CORPAÑAL,C.A.', 240, 'Urb. Industrial Guayabal, Parcelas Nº 12 y 13, Edificio Corpañal', '+582123612812', '', 'induscorpañal@gmail.com', 0, 0, 1),
+(68, 147, 2091, 'J296507570', 0, 'INDUSTRIAS DE CARTONAJE CRD, C.A.', 240, 'Santa Teresa del Tuy Av. San Antonio. Sector Tumuso, Galpón C-2A Caracas  - Miranda', '+582129490900', '', 'induscartonaje@gmail.com', 0, 0, 1),
+(69, 150, 1948, 'J000003890', 0, 'INSTITUTO CLINICO LA FLORIDA', 240, 'Av. Los Samanes Final Norte  Edificio Clinico La Florida PB  Urb. La Florida-Caracas', '+58', '', 'insticlinicolafloria@gmail.com', 0, 0, 1),
+(70, 150, 1127, 'J307107030', 0, 'INVERSIONES SERCAVILA 51, C.A.', 240, 'Av.San Juan Bosco con Sexta Transversal, Edif. Clinica el Avila, Piso 2 Altamira, Caracas', '+58', '', 'sercavila@gmail.com', 0, 0, 1),
+(71, 149, 1554, 'J313305278', 0, 'INVERSIONES VISTALPARQUE, C.A.', 240, '1era. Av, Urbanización Santa Eduvigis 1070. Caracas.', '+582122081900', '', 'invervistalparque@gmail.com', 0, 0, 1),
+(72, 150, 1066, 'J001798170', 0, 'LABORATORIO AVILAB, C.A.', 240, 'Av.San Juan Bosco con  Sexta Transversal, Edif. Clinica el Avila, Piso 2 Altamira, Caracas.', '+582122640116', '', 'labavilab@gmail.com', 0, 0, 1),
+(73, 150, 1982, 'J003240001', 0, 'LABORATORIO INSTITUTO CLINICO LA FLORIDA, C.A.', 240, 'Av. Los Samanes Final Norte Edificio Clinico La Florida PB Urb. La Florida-Caracas', '+58', '', 'labinstitutoclinicolaflorida@gmail.com', 0, 0, 1),
+(74, 147, 1873, 'J312694491', 0, 'LACTEOS ANANKE, C.A.', 240, 'Calle Bolivar Edificio Quenetyl Local 8 PB S/N Urbanización La Trinidad Caracas-Miranda', '+58', '', 'lacteosanake@gmail.com', 0, 0, 1),
+(75, 144, 1960, 'J313169986', 0, 'LENCERIA EL RECREO, C.A.', 240, 'Av. Venezuela con Av. Bracamonte y Av. Crispulo Benites C.C. Sambil nivel P/B local L-169 Sector Este Barquisimeto Edo. Lara ZP 3001', '+58', '', 'lenceriaelrecreo@gmail.com', 0, 0, 1),
+(76, 144, 1954, 'J400129346', 0, 'LENCERIA HOGAR TORBES, C.A.', 240, 'Av. Antonio José de Sucre CC Centro Sambil nivel feria Forum Shops  Local FN-3 Sector Las Lomas  San CristobalEdo. Tachira ZP 5001', '+58', '', 'lenceriahogartorbes@gmail.com', 0, 0, 1),
+(77, 144, 1956, 'J299204846', 0, 'LENCERIA VIÑA VALENCIA, C.A.', 240, 'Av. Carabobo con calle Uslar Qta. Chispita Nro. 141-121 Urb. La Viña  Valencia Edo. Carabobo ZP 2001', '+58', '', 'viñavalecnia@gmail.com', 0, 0, 1),
+(78, 150, 1904, 'J312911972', 0, 'MAKLER ADMINISTRADORA DE RIESGOS, S.A.', 240, 'Av. Don Diego Cisnero Edif. Siemens Torre norte, Piso 4,Ofc Makler  Urb. Los Ruices, Caracas- Miranda', '+58', '', 'makleradmideriesgos@gmail.com', 0, 0, 1),
+(79, 150, 1905, 'J302911478', 0, 'MAKLER SOCIEDAD DE CORRETAJE DE SEGUROS, C.A.', 240, 'Av. Don Diego Cisnero Edif. Siemens Torre norte, Piso 4,Ofc Makler  Urb. Los Ruices, Caracas- Miranda', '+58', '', 'maklersociedad@gmail.com', 0, 0, 1),
+(80, 147, 1881, 'J300254925', 0, 'MAXIMIZA CASA DE BOLSA, C.A.', 240, 'Av. Francisco de Miranda Torre Europa Piso 3 Oficina 3B3  El Rosal Caracas', '+58', '', 'maximizacasadebolsa@gmail.com', 0, 0, 1),
+(82, 146, 1357, 'G200035919', 0, 'MERCADOS DE ALIMENTOS , C.A.(MERCAL)', 240, 'Av. Fuerzas Armadas Edif CVAL Piso 3 Sector La Candelaria Caracas-Dtto Capital  Zona Postal 1010', '+582125051177', '', 'mercal@gmail.com', 0, 0, 1),
+(84, 144, 1530, 'J001097449', 0, 'OPTICA CARONI, C.A.', 240, 'Urb. Boleita Norte, Calle Santa Clara Edif. Bertolini Piso nº 02 Caracas-Dtto.Capital', '+582122384233', '', 'opticacaroni@gmail.com', 0, 0, 1),
+(85, 146, 1505, 'J000950369', 0, 'PETROLEOS DE VENEZUELA, S.A.', 240, 'Av Bolivar con calle el Empalme. Torre Este, PH Urb. La Campiña. PDVSA.', '+582127083281', '', 'petroleosdevenezuela@gmail.com', 0, 0, 1),
+(86, 150, 1604, 'J000297908', 0, 'POLICLINICA LAS MERCEDES, C.A.', 240, 'Avenida Principal  Las Mercedes-Caracas', '+582129932911', '', 'policlinicalasmercedes@gmail.com', 0, 0, 1),
+(87, 147, 1817, 'J302202531', 0, 'PROSEGUROS, S.A.', 240, 'Avenida Francisco de Miranda Con 4ta. Avenida Edificio Torre PROSEGUROS Piso 6 Oficina 6-A,6-B,6-C,6-D 6-E y 6-F, UrbanizaciónLos Palos Grandes Caracas(Chacao) Miranda Zona Postal 1060', '+58', '', 'proseguros@gmail.com', 0, 0, 1),
+(88, 5007, 1984, 'J003390062', 0, 'RADIODIAGNOSTICO LA FLORIDA, C.A.', 240, '', '+58', '', '', 0, 0, 1),
+(89, 150, 1690, 'J000908320', 0, 'REFRIMET INDUSTRIAL,C.A.', 240, 'Calle La Limonera, Edificio LARCO Piso 1, Urbanización La Trinidad', '+582129442777', '', 'refrimet@gmail.com', 0, 0, 1),
+(90, 149, 2114, 'J003285536', 0, 'REPRESENTACIONES LABIN VE, S.A.', 240, 'Calle Los Laboratorios  Edificio Torre Beta Piso 1 Oficina 105 Los Ruices Estado Miranda', '+58', '', 'representacioneslabinve@gmail.com', 0, 0, 1),
+(91, 149, 1285, 'J306649590', 0, 'SERVICIOS GZ', 240, 'Edif. Ofinca, PISO 2 Oficina 24, Los Cortijos de Lourdes, Av. Los Laboratorios.', '+582122325626', '', 'serviciosgz@gmail.com', 0, 0, 1),
+(92, 149, 1938, 'J403483302', 0, 'SETA NAVIERA, C.A.', 240, 'Esquina Puente Yanez Edificio Beco Piso 8 La Candelaria Distrito Capital', '+58', '', 'setanaviera@gmail.com', 0, 0, 1),
+(93, 145, 1095, 'G200041315', 0, 'SOCIEDAD NACIONAL DE GARANTIAS RECIPROCAS PARA LA MEDIANA Y PEQUEÑA INDUSTRIA, S.A. (SOGAMPI)', 240, 'Av.Principal de los Cortijos de Lourdes Centro Los Cortijos, PH-Caracas.', '+582122385323', '', 'sogampi@gmail.com', 0, 0, 1),
+(94, 146, 2083, 'J300766454', 0, 'STATERA CASA DE BOLSA', 240, 'AV.LAS MERCEDES ENTRE GUAICAIPURO Y CARABOBO TORRE FORUM PISO 15 OFIC 15-B  EL ROSAL-EDO. MIRANDA', '+58', '', 'stateracasadebolsa@gmail.com', 0, 0, 1),
+(95, 150, 1613, 'J314853813', 0, 'SUPER MAX, C.A.', 240, 'Calle Santa Ana Edificio Centro Empresarial Boleita piso 5 Oficina 5_B Urb. Boleita Sur Caracas Edo. Miranda', '+2560765', '', 'supermax@gmail.com', 0, 0, 1),
+(96, 149, 1439, 'J000359148', 0, 'TAUREL & CÍA SUCRS', 240, 'Final Av.Milan, Edif. Taurel  Los Ruices Sur  Estado Miranda', '+582122050128', '', 'taurelsucrs@gmail.com', 0, 0, 1),
+(97, 146, 1605, 'J000122555', 0, 'UNIVERSIDAD CATOLICA ANDRES BELLO', 240, 'AV. Intercomunal de Antimano Caracas.', '+58', '', 'universidadcatolica@gmail.com', 0, 0, 1),
+(98, 146, 1936, 'J312309385', 0, 'VALORALTA CASA DE BOLSA', 240, '', '+582120000000', '', 'corre@dominio.com', 0, 0, 1),
+(99, 150, 1067, 'J000381976', 0, 'VEN AMERICAN, C.A.', 240, 'Av. Sur 4, Edif. Ven American  Quinta Crespo, Caracas.', '+582124810921', '', 'venamerica@gmail.com', 0, 0, 1),
+(100, 144, 1958, 'J315056429', 0, 'VENEZUELAN HOME FASHION HQ C.A.', 240, 'Calle principal de Caricuao Edif. Telares de Palo Grande  piso PB Of. 1 Urb. Caricuao Caracas distrito Capital ZP 1100', '+58', '', 'venezuelanhome@gmail.com', 0, 0, 1),
+(101, 144, 1454, 'G200109963', 0, 'C. A. VENEZOLANA DE INDUSTRIAS MILITARES, CAVIM', 240, 'Urb. Las Mercedes, Calle Jalisco, Edif. CAVIM. Caracas, Las Mercedes  Distrito Capital.', '+58', '', 'cavim@gmail.com', 0, 0, 1),
+(102, 149, 2190, 'J301288670', 0, 'AGB PANAMERICANA DE VENEZUELA MEDICIÓN, S.A.', 240, '', '+582129184100', 'valerie.prado@nielsen.com', 'valerie.prado@nielsen.com', 0, 0, 1),
+(103, 146, 2191, 'J000122555', 0, 'UNIVERSIDAD CATÓLICA ANDRÉS BELLO (UCAB)', 240, '', '+582124074490', 'www.ucab.edu.ve', 'jmayo@ucab.edu.ve', 0, 0, 1),
+(104, 58, 2192, 'J000067481', 0, 'C.A. CIGARRERA BIGOTT, SUCS', 240, '', '+582122037769', 'abigail_mendoza@bat.com', 'stefania_tassinari@bat.com', 0, 0, 1),
+(105, 58, 2193, 'J302385490', 0, 'DISTRIBUIDORA BIGOTT, C.A.', 240, '', '+582122037769', 'abigail_mendoza@bat.com', 'stefania_tassinari@bat.com', 0, 0, 1),
+(106, 58, 2194, 'J312492414', 0, 'AGROBIGOTT, C.A.', 240, '', '+582122037769', 'abigail_mendoza@bat.com', 'stefania_tassinari@bat.com', 0, 0, 1),
+(107, 58, 2195, 'J002980265', 0, 'ATRIO SEGUROS, S.A.', 240, '', '+58126298000', 'hbustamante@atrioseguros.com', 'hbustamante@atrioseguros.com', 0, 0, 1),
+(108, 149, 2196, 'J075102240', 0, 'SERVINAVE, C.A.', 240, '', '+582125729622', '', 'correo@dominio.com', 0, 0, 1),
+(109, 144, 2197, 'J001682104', 0, 'DISTEPAL INDUSTRIAL, S.A.', 240, '', '+582129931975', 'faltuve@amadecasa.com', 'faltuve@amadecasa.com', 0, 0, 1),
+(110, 144, 2198, 'J00', 0, 'GRF CPA&ADVISORS', 240, '', '+58212500500', 'GRF CPA&ADVISORS', 'rtrujillo@grfcpa.com', 0, 0, 1),
+(111, 146, 2199, 'J302406641', 0, 'CORPORACIÓN TELEMIC, C.A.', 240, '', '+582513355250', 'dennys.camacaro@inter.com.ve', 'dennys.camacaro@inter.com.ve', 0, 0, 1),
+(112, 146, 2200, 'J305737622', 0, 'VENCO SERVICE, C.A.', 240, '', '+582513355250', 'dennys.camacaro@inter.com.ve', 'dennys.camacaro@inter.com.ve', 0, 0, 1),
+(113, 146, 2201, 'J308748994', 0, 'INTER BUILDING, C.A.', 240, '', '+582513355250', 'elizabeth.mohen@inter.com.ve', 'elizabeth.mohen@inter.com.ve', 0, 0, 1),
+(114, 146, 2202, 'J305737657', 0, 'INFOCABLE, C.A.', 240, '', '+582513355250', 'dennys.camacaro@inter.com.ve', 'dennys.camacaro@inter.com.ve', 0, 0, 1),
+(115, 144, 2203, 'J306373969', 0, 'ORICA VENEZUELA', 240, 'Torre Humbolt Piso 5 Oficina 5-14\nBaruta.', '+4144434478', '', 'jose.colmenares@orica.com', 0, 0, 1),
+(116, 145, 2204, 'J300619460', 0, 'BANCO OCCIDENTAL DE DESCUENTO BANCO UNIVERSAL, C.A.', 240, 'Avenida 17 con Calle 77 avenida Cinco de Julio Torre BOD, sector Paraiso MARACAIBO Estado Zulia', '+587502974', 'www.bodinternet.com', 'itirado@bod.com.ve', 0, 0, 1),
+(117, 4, 2205, 'G200051876', 0, 'BANCO DEL TESORO, BANCO UNIVERSAL, C.A', 240, 'Calle Guaicapuro. Edificio BAnco del Tesoro El Rosal Caracas', '+589999429', '', 'atencionc@bt.gob.ve', 0, 0, 2),
+(118, 144, 2206, 'J300558053', 0, 'SOS ALDEAS INFANTILES VENEZUELA', 240, 'AV DIEGO CISNEROS EDIF CENTRO EMPRESARIAL LOS\nRUICES PISO 5 OF 503 URB LOS RUICES CARACAS MIRANDA ZONA POSTAL 1070', '+582122391514', 'www.aldeasinfantiles.org.ve', 'tanny.valero@aldeasinfantiles.org.ve', 0, 0, 1),
+(119, 0, 2207, 'J312692740', 0, 'TRANSPORTE PAKPLAZA,C.A.', 240, 'Av. Principal de la  Lomas Lagunita,  Irb. Lomas de la Lagunita', '+5804143355077', '', 'pakplaza@gmail.com', 0, 0, 1),
+(120, 0, 2208, 'J00019575', 0, 'INDUSTRIAS FARCOMETICAS ASOCIADOS (INDUFARAS)', 240, 'Calle las Vegas, Zona Industrial  la Trinidad', '+5802129454711', '', 'indufaras@gmail.com', 0, 0, 1),
+(121, 0, 2209, 'J000900957', 0, 'DISTRIBUIDORA IFA, C.A.', 240, 'Calle Marcano E/ Narvaez y Amador Hernandez', '+5804123234132', '', 'ifamercadeo@gmail.com', 0, 0, 1),
+(122, 0, 2210, 'J400065399', 0, 'REPRESENTACIONES COSPER, S.A', 240, 'Calle las Vegas, Zona Industrial la Trinidad', '+5804147934132', '', 'ifamercadeo@gmail.com', 0, 0, 1),
+(123, 0, 2211, 'J400518008', 0, 'FONDO GLOBAL DE LA CONTRUCCION, C.A.', 240, 'Av. Tamanaco y Francisco de Miranda, El Rosal', '+5802129572005', '', 'aguillermo@fgdcve.com', 0, 0, 1),
+(124, 0, 2212, 'J401501001', 0, 'M2 PANELES DE CONSTRUCCION, C.A.', 240, 'Carretera Nacional Los Guayos Sector Mozanquita, Valencia', '+5802129572005', '', 'aguillermo@fgdcve.com', 0, 0, 1),
+(125, 0, 2213, 'J400626412', 0, 'CONSTRUCTORA JAAR, C.A.', 240, 'Av. Tamanaco y Francisco de Miranda, El Rosal', '+5802129572005', '', 'aguillermo@fgdcve.com', 0, 0, 1),
+(126, 0, 2214, 'J402997655', 0, 'CONSORCIO ESTRUCTURA METALICAS MODERNAS', 240, 'Av. Tamanaco y Francisco de Miranda, El Rosal', '+5802129572005', '', 'aguillermo@fgdcve.com', 0, 0, 1),
+(127, 0, 2215, 'J313550388', 0, 'NIDEC MOTORS VENEZUELA, S.A.', 240, 'Zona Industrial los Tanques, parcela 1, Villa de Cura', '+5804141267638', '', 'ricardo.reyes@nidec-motor.com', 0, 0, 1),
+(128, 0, 2216, 'J306842675', 0, 'MERCADOLIBRE VENEZUELA, S.R.L.', 240, 'AV. Eugenio Mendoza de la Castellana', '+5802126306000', '', 'ext_gbarrio@mercadolibre.com', 0, 0, 1),
+(129, 0, 2217, 'J294782914', 0, 'VENPROCA VENEZOLANA DE PROYECTOS, C.A.', 240, 'Av. Francisco de Miranda, El Rosal', '+5804162392655', '', 'jgil@venproca.com', 0, 0, 1),
+(130, 0, 2218, 'J411660752', 0, 'IMPORTADORA DIVINOS & DESTILADOS, C.A.', 240, 'Calle Bolivar, Urb. Baruta', '+5804142708935', '', 'divinosydestilados@gmail.com', 0, 0, 1),
+(131, 0, 2219, 'J315546302', 0, 'FUNDACION FONDO DE PREVISION SOCIAL CENTRO DE ESPECIALIDADES ANZOATEGUI', 240, 'Av. Principal de Lecheria, Centro de especialidades Anzoategui, Nucleo E CC Edif. Yariku, Nucleo E Piso 3, Oficina 9, Lecheria - Edo. Anzoategui', '+58', '', 'fpscea@gmail.com', 0, 0, 1),
+(132, 0, 2219, 'J315546302', 0, 'FUNDACION FONDO DE PREVISION SOCIAL CENTRO DE ESPECIALIDADES ANZOATEGUI', 240, 'Av. Principal de Lecheria, Centro de especialidades Anzoategui, Nucleo E CC Edif. Yariku, Nucleo E Piso 3, Oficina 9, Lecheria - Edo. Anzoategui', '+58', '', 'fpscea@gmail.com', 0, 0, 1),
+(133, 0, 2219, 'J315546302', 0, 'FUNDACION FONDO DE PREVISION SOCIAL CENTRO DE ESPECIALIDADES ANZOATEGUI', 240, 'Av. Principal de Lecheria, Centro de especialidades Anzoategui, Nucleo E CC Edif. Yariku, Nucleo E Piso 3, Oficina 9, Lecheria - Edo. Anzoategui', '+58', '', 'fpscea@gmail.com', 0, 0, 1),
+(134, 58, 2220, 'J296507570', 0, 'INDUSTRIA DE CARTONAJE CRD, C.A.', 240, 'Avenida San Antonio, Sector El Tumuso, Galpón Nro. C-2A, Santa Teresa del Tuy Miranda', '+5802129490900', '', 'correo@dominio.com', 0, 0, 1),
+(135, 146, 2221, 'J306241809', 0, 'TELEMIC INDUSTRIAS VENEZOLANAS PARA LAS TELECOMUNICACIONES, C.A.', 240, 'Zona Industrial II, Calle 3 entre Calle 4 y 6, Galpon N° 259, Barquisimeto	Estado Lara', '+02513355250', '', 'dennys.camacaro@inter.com.ve', 0, 0, 1),
+(136, 147, 2222, 'J310886229', 0, 'HERRENKNECHT, S.A.', 240, 'Avenida Tamanaco, Edificio La Unión, piso 3 3-A Urbanización El Rosal', '+5812345678', '', 'correo@dominio.com', 0, 0, 1),
+(137, 146, 2223, 'J311821414', 0, 'FONDO DE AHORROS DEL GRUPO SERVIQUIM', 240, 'Av. Francisco de Miranda Edif. Parque Cristal Torre Este -Piso 7 Piso 7 Los Palos Grandes. Caracas', '+5555555', 'MZambrano@serviquim.com', 'mzambrano@serviquim.com', 0, 0, 1),
+(138, 144, 2224, 'G200053577', 0, 'FONDO DE DESARROLLO NACIONAL FONDEN, S.A.', 240, 'Avenida Urdaneta, Esquina de Carmelitas a Esquina Altagracia.Edificio Norte del Ministerio del Poder Popular para la Banca y Finanza. Parroquia Altagracia. Piso 1 Caracas', '+5802128025248', 'jleon@fonden.gob.ve', 'jleon@fonden.gob.ve', 0, 0, 1),
+(139, 149, 2225, 'J315259311', 0, 'AC NIELSEN DE VENEZUELA, S.A', 240, 'Av. José María Vargas,Edf. Torre del Colegio Médico,Urb. Santa Fe Norte.Piso 10. Caracas', '+5802129184100', 'valerie.prado@nielseniq.com', 'valerie.prado@nielseniq.com', 0, 0, 1),
+(140, 7, 2226, 'J305366128', 0, 'CORPORACIÓN IADIEXPORT, C.A.', 240, 'URBANIZACIÓN INDUSTRIAL EL CUJIAL.CALLE PPAL.PARCELA 45,SANTA TERESA DEL TUY,ESTADO MIRANDA.', '+5802392313755', 'elsymaestre@gmail.com', 'elsymaestre@gmail.com', 0, 0, 1),
+(141, 58, 2227, 'J310370109', 0, 'INVERSIONES 9954, C.A.', 240, 'Av. Río Caura,CC Concresa,Nivel 1 Oficina FM Center,Caracas Prados del Este', '+58', 'milagroslopez@fmcenter.com.ve', 'jesussilva2709@gmail.com', 0, 0, 1),
+(142, 58, 2228, 'J303045057', 0, 'CHARTER COMMUNICATIONS INTERNATIONAL DE VENEZUELA, C.A.', 240, 'Urb. Parque Sebucán,Av. Los Chorros con Av. Parque Sebucán,Edif. C-Com, piso 1. Oficina Único,Caracas', '+5802122860438', 'info@internetccom.net', 'info@internetccom.net', 0, 0, 1),
+(143, 147, 2229, 'C5014115060', 0, 'ALCON PHARMACEUTICAL,C.A', 240, 'URB LOS RUICES CARACAS MIRANDA,CALLE TERCERA TRANSVERSAL,EDIF NOVARTIS PISO 2 OF\nALA NOROESTE. Piso 2 Caracas, Miranda', '+582031011', 'www.alcon.com', 'leyva.lugo_toledo@alcon.com', 0, 0, 1),
+(144, 146, 2230, 'J309798421', 0, 'SC MÁRQUEZ,PERDOMO Y ASOCIADOS', 240, 'CALLE LOS LABORATORIOSEDIF OFINCA PISO 4 OFIC 43 LOS RUICES, CARACAS', '+5802122350147', 'WWW.CROWEVENEZUELA.COM', 'auditoria@crowe.com', 0, 0, 1),
+(145, 150, 2231, 'J002664436', 0, 'CONSOCIO CREDICARD, C.A.', 240, 'Av Prinicpal del Bosque, Av. Santa Isabel y Santa Lucia.Torre Credicard. piso 19 caracas', '+581802129559849', '', 'correo@dominio.com', 0, 0, 1),
+(146, 149, 2232, 'J000596620', 0, 'FUNDACION BIGOTT', 240, 'CENTRO HISTORICO DE PETARE EL VIGIA. MIRANDA', '+5802122037511', 'GINANNINA_RODRIGUEZ@BAT.COM', 'ginannina_rodriguez@bat.com', 0, 0, 1),
+(147, 146, 2233, 'J300292223', 0, 'GRUPO FINANCORP, C.A.', 240, 'Caracas. venezuella', '+582125555555', '', 'correo@domino.com', 0, 0, 1),
+(148, 147, 2234, 'J070133805', 0, 'BANESCO, BANCO UNIVERSAL, C.A', 240, 'Avenida Princcipal de Bello Monte entre calle  Lincoln y Soborna. Edificio Ciudad Banesco. Bello Monte, Piso 3 Cuadrante C. Caracas, Distrito Capital', '+5802125017496', 'www.banesco.com', 'correo@dominio.com', 0, 0, 1),
+(149, 58, 2235, 'J310079463', 0, 'SOPORTE S.P.I, C.A', 240, 'Avenida Principal de los Dos camnos Centro Comercial Milenium, Los Dos Caminos. Miranda Nivel 11 11-1', '+582126271220', 'www.spi.com.ve', 'lmaldonado@spi.com.ve', 0, 0, 1),
+(150, 58, 2236, 'J000468621', 0, 'DESARROLLO E INVERSIONES S.A.', 240, 'Avenida Francisco de Miranda. Edificio CAVENDES. Urbanizacion los Palos Grandes. Piso 9 oficina 905. Miranda', '+580212000000', '', 'sintegram@hotmail.com', 0, 0, 1),
+(151, 146, 2237, 'J500373646', 0, 'ACCIONA SOCIEDAD DE CORRETAJE DE VALORES S.A.', 240, 'Centro San Ignacio, Torre Copernico Piso 2 Oficina 203 y 204 Caracas', '+5802122345678', 'acciona.com.ve', 'leonela.oviedo@accionavalores.com', 0, 0, 1),
+(152, 150, 2238, 'J293958717', 0, 'SERVICIOS CLÍNICOS SANTA MÓNIICA C.A.', 240, 'Avenida Teresa de la Parra Edificio San Nicolas Santa Monica Caracas', '+580259474', '', 'correo@dominio.com', 0, 0, 1),
+(153, 150, 2239, 'J000423865', 0, 'QUESOLANDIA S.A.', 240, 'Calle Chicago entre Av. Milan y Trieste. Edificio Industrial Quesolandia .Los Ruices. caracas', '+58', 'www.elpaisa.net', 'jguerra@elpaisa.com.ve', 0, 0, 1),
+(154, 150, 2240, 'J070014733', 0, 'PASTEURIZADORA TÁCHIRA C.A.', 240, 'calle 8, Edificio 9-13.Sector La Concordia. PB.N° 9-13. San Cristobal. Estado Tachira', '+5802763491488', 'www.elpaisa.net', 'jguerra@paisa.com.ve', 0, 0, 1),
+(155, 58, 2241, 'J002591200', 0, 'MODUSISTEMA C.A.', 240, 'Ctra. Petare Santa Lucía, Edificio Centro Industrial Viana, Galpón 6-A, PB Caracas', '+5802129930721', 'www.crowe.com.ve', 'sistema.carent@crowe.com.ve', 0, 0, 1),
+(156, 146, 2242, 'J413183463', 0, 'FINTECH VALORES CASA DE BOLSA, C.A.', 240, 'Calle 149, Edificio Centro A1 Local LA 149 Valencia Estado carabobo', '+5804146634484', 'nmedina@fintechvalores.com', 'nmedina@fintechvalores.com', 0, 0, 1),
+(158, 58, 2243, 'J002376090', 0, 'ELECTRÓNICA DE FÁBRICAS FACTRONICS, C.A.', 240, 'Av. Rómulo Gallegos, Edificio Centro Gerencial Los Andes, Sector Boleíta Norte, PH-1B caracas', '+5802122222222', 'www.ejemplo.com.ve', 'mbmqueen@gmail.com', 0, 0, 1),
+(159, 149, 2244, 'J001370510', 0, 'MÉDICOS UNIDOS LOS JABILLOS, C.A.', 240, 'AV. ANDRES BELLO ENTRE LAS CALLES LAS PALMAS Y LOS MANOLOS. EDIFICIO POLICLINICA MENDEZ GIMON. CARACAS', '+5802121234567', 'WWW.CROER.COM.VE', 'bechacin@gmail.com', 0, 0, 1),
+(161, 149, 2245, 'J001630678', 0, 'RESTOVEN DE VENEZUELA, C.A', 240, 'AV ABRAHAN LINCOLN. EDIF SELEMAR. BOULEVARD DE SABANA GRANDE', '+5802127628010', 'www.crowe.com.ve', 'CVILLALBA@RESTOVEN.COM', 0, 0, 1),
+(162, 144, 2246, 'J500373646', 0, 'SOCIEDAD CIVIL ALAN ALDANA ABOGADOS Y ASOCIADOS', 240, 'Av. LUIS ROCHE. Edif. HELENA. P2 Ofic. 16. Altamira', '+5802128239390', 'contacto@aldanayabogados.com', 'aldanayabogados.com', 0, 0, 1),
+(163, 146, 2247, 'J00000000', 0, 'Campomarino S.A.', 176, 'Aeropuerto Marcos A Gelabert Albrook. Av Canfield.Hangar 24b', '+5073150595', 'www.campomarino.ws', 'info@campomarino.ws', 0, 0, 1),
+(164, 147, 2248, 'J301037464', 0, 'CBPO Ingenieria de Venezuela, C.A.', 240, 'Avenida Rio Caura.Edif. Torre Humboldt.Piso 10 10-13 Urbanización Prados del Este', '+5802122111100', 'vepinto@oec-eng.com', 'vepinto@oec-eng.com', 0, 0, 1),
+(166, 146, 2249, 'J314087754', 0, 'AC UCAB Servicios', 240, 'AV TEHERAN.UNIVERSIDAD CATOLICA ANDRES BELLO EDIF LOYOLA .PISO 1. OFIC. UNICA.URB.MONTALBAN. CARACAS', '+581234567', 'mmanzanilla@ucab.edu.ve', 'rcastill@ucab.edu.ve', 0, 0, 1),
+(167, 147, 2250, 'J314229001', 0, 'MPF ASESORIA Y CONSULTORIA', 240, 'Avenida Principal de Los Ruices. Edificio Monaca P1 Caracas', '+5802122350147', 'www.crowe.com.ve', 'mpf@crowe.com', 0, 0, 1),
+(173, 146, 2251, 'J500194552', 0, 'PIDEYUMMY, S.A.', 240, 'La Floresta avenida Francisco de Miranda Torre Banco del Orinoco PH 1, Chavcao Caracas', '+584164099083', 'https://yummydelivery.com.ve/', 'tucontacto@yummydelivery.com.ve', 0, 0, 1),
+(202, 150, 2252, 'J309901303', 0, 'Messangi Venezuela, C.A.', 240, 'Av. Francisco de Miranda y Av. Libertador  Multicentro Empresarial del Este Ofic. A-91. Piso 9 Edif. Miranda Torre A Chacao', '+5802122666510', 'www.crowe.com.ve', 'admin-ve@messangi.com', 0, 0, 1),
+(203, 150, 2253, 'J003398268', 0, 'Geosinteticos Trical, C.A.', 240, 'Esquina de Calle Nirgua, con calle Socuy Quinta: Ursulina PB La Trinidad Caracas', '+5802129422968', 'irojas@trical.net', 'sistema.carten@crowe.com.ve', 0, 0, 1),
+(204, 150, 2254, 'J310885850', 0, 'CENTRO MÉDICO PROFESIONAL LAS MERCEDES C.A.', 240, 'Avenida José Martí con calle Mucuchies, Centro Médico Profesional Las Mercedes, Piso 5, Oficina Administración. Urb. Las Mercedes. Municipio Baruta, Edo. Miranda.', '+5802129929591', 'www.crowe.com.ve', 'sistema. carent@crowe.com.ve', 0, 0, 1),
+(205, 146, 2255, 'J000126518', 0, 'COMPAÑÍA ANÓNIMA CINES UNIDOS', 240, 'Urbanización Prados del Este.Av. Río Caura y Paragua.Edificio Núcleo Ejecutivo La Pirámide PA Ofic 01. Caracas', '+5802126207454', 'ygonzalez@cinesunidos.com', 'ygonzalez@cinesunidos.com', 0, 0, 1),
+(206, 146, 2256, 'J302626471', 0, 'MULTICINE LAS TRINITARIAS, C.A.', 240, 'Urbanización Prados del Este.Av. Río Caura y Paragua.Edificio Núcleo Ejecutivo La Pirámide.PA Ofic 01. Caracas', '+582126207454', 'ygonzalez@cinesunidos.com', 'ygonzalez@cinesunidos.com', 0, 0, 1),
+(207, 150, 2257, 'J000654042', 0, 'TRICAL DE VENEZUELA.C.A.', 240, 'ESQUINA CALLE DE NIRGUA, CON CALLE SOCUY.QUINTA LA URSULINAPB LA TRINIDAD. CARACAS', '+5824122748336', 'JROJAS@TRICAL.NET', 'JROJAS@TRICAL.NET', 0, 0, 1),
+(208, 150, 2258, 'J295904690', 0, '1001 Propiedades, C.A.', 240, 'Av. Principal C/C Mucuhies Edfi. Centro Profosional las Mercedes Piso 1 Ofic. 15 Centro Profesional las Mercedes Caracas', '+5802129932911', 'annalisaherrera@yahoo.com', 'annalisaherrera@yahoo.com', 0, 0, 1),
+(209, 144, 2259, 'G200001607', 0, 'gobernacion del estado tachira', 240, 'calle 4 y 5con carrera 11 local sede del ejecutivodel estado táchira piso 6 sector centro san cristobal. san crsitobal. Estado Táchira', '+582121234567', 'www.crowe.com.ve', 'sistema.carent@crowe.com', 0, 0, 1),
+(210, 146, 2260, 'E398974', 0, 'UNIQUE INTERNATIONAL BANK, INC', 183, 'MIRAMAR PLAZA 954\nPONCE DE LEON AVENUE\nSTE 209\nSAN JUAN PR 00907', '+17879452012', 'www.crowe.com0ve', 'sistema.carent@crowe.com.ve', 0, 0, 1),
+(211, 58, 2261, 'J297981705', 0, 'BELIZE INVESTMENTS C.A.', 240, 'AV PPAL CC CONCRESA NIVEL 1 OF 10 URB PRADOS DEL\nESTE CARACAS DISTRITO CAPITAL ZONA POSTAL 1061', '+5802122222222', 'WWW.CROWE.COM.VE', 'SISTEMAS.CARENT@CROWE.COM.VE', 0, 0, 1),
+(212, 146, 2262, 'J95048551', 0, 'BANCO CARONI, BANCO UNIVERSAL', 240, 'AVENIDA VIA VENEZUELA EDIFICIO MULTICENTRO OFICINA PB.SCETRO VILAL COLOMBIA.PUERTO ORDAZ CIUDAD GUAYANA.', '+58212123456', 'https://www.crowe.com/ve', 'sistema.carent@crowe.com.ve', 0, 0, 1),
+(213, 58, 2263, 'J000067481', 0, 'CLÍNICA SANATRIX, C.A.', 240, 'AV 4TA COB 2DA CALLE .EDF HIGEA. OB.CAMPO ALEGRE. CARACAS', '+582016625', 'https://www.crowe.com/ve', 'sistema.carent@crowe.com.ve', 0, 0, 1),
+(214, 146, 2264, 'J12345678', 0, 'OPERADORA C.C., S.S. DE C.V', 90, 'HONDURAS', '+509123456', 'WWW.CROWE.COM.HN', 'SISTEMA.CARENT@CROWE.COM.VE', 0, 0, 1),
+(215, 146, 2265, 'J123456789', 0, 'CONSTRUCTORA C.C., S.A. DE C.V.', 90, 'HONDURAS', '+504123456789', 'WWW.CROWE.COM.VE', 'SISTEMA.CARENT@CROWE.COM.VE', 0, 0, 1),
+(216, 146, 2266, 'J12345678', 0, 'El palacio del niño', 90, 'honduras', '+5041234567', 'www.crowe.com.ve', 'sistema.carent@com.ve', 0, 0, 1),
+(217, 150, 2267, 'J000146608', 0, 'LAPREVEN, S.A.', 240, 'Avenida Bethoven Torre Financiera.Oficina A y B Piso 1 Bello Monte. Caracas', '+5801412844526', 'https//www.crowe.com.ve', 'marlene.villasinda@geniacare.com', 0, 0, 1),
+(218, 144, 2268, 'J123456789', 0, 'ceramicasa', 90, 'honduras', '+50412345678', 'www.crowe.com.ve', 'sistema.carent@crowe.com.ve', 0, 0, 1),
+(219, 146, 2269, 'J123456789', 0, 'EDIFICA INMOBILIARIA', 90, 'honduras', '+504123456789', 'www.crowe.com.ve', 'sistema.carent@crowe.com.ve', 0, 0, 1),
+(220, 146, 2270, 'J12345678', 0, 'EDIFICA INMOBILIARIA', 90, 'honduras', '+504123456789', 'WWW.CROWE.COM.VE', 'SISTEMAS.CARENT@CROWE.COM.VE', 0, 0, 1),
+(221, 144, 2271, 'G200001704', 0, 'SUPERINTENDENCIA NACIONAL DE VALORES (SUNAVAL)', 240, 'AVENIDA FRANCISCO SOLANO LOPEZ EDIFICIO SUNAVAL. SABANA GRANDE. CARACAS', '+5804142219729', 'https://www.sunaval.gob.ve', 'javierslh@gmail.com', 0, 0, 1),
+(222, 146, 2272, 'J316374173', 0, 'BANCRECER S.A.  BANCO MICROFINANCIERO', 240, 'AVENIDA FRANCISCO DE MIRANDA.TORRE BAZAR BOLIVAR. PB. CARACAS', '+5802126108902', 'WWW.BANCRECER.COM.VE', 'RAUL.RONDON@BANCRECER.COM.VE', 0, 0, 1),
+(223, 58, 2273, 'J294989063', 0, 'CASA MONTORO FG C.A.', 240, 'Parcelamiento los Dolores.Calle principal La Yerba Buena.Quinta Santa Barbara Carrizal Estado Miranda', '+5804122353639', 'www.crowe.com.ve', 'graceg16@gmail.com', 0, 0, 1),
+(224, 58, 2274, 'J413002507', 0, 'SEQUOIA SOLUCIONES INTEGRALES, C.A.', 240, 'Sector el Pueblo Calle Rivas Edif Juan XXIII Los Teques', '+5804122353639', 'www.crowe.com.ve', 'graceg16@gmail.com', 0, 0, 1),
+(225, 58, 2275, 'J410003405', 0, 'LA NUECERY`S, C.A.', 240, 'Sector el Pueblo, Calle Rivas,Edif Juan XXIII. Miranda,. Los Teques', '+5804122353639', 'www.crowe.com.ve', 'graceg16@gmail.com', 0, 0, 1),
+(226, 146, 2276, 'J501835705', 0, 'MULTIPLICAS SOCIEDAD DE CORRETAJE DE VALORES C.A.', 240, 'Av. Blandin Centro San Ignacio PISO 9 TE-P09-01 Caracas (Chacao) Centro San Ignacio', '+5804149277584', 'info@multiplicas.com.ve', 'tramirez@multiplicas.com.ve', 0, 0, 1),
+(227, 147, 2277, 'J00000000', 0, 'INVERSIONES CRUZANG', 240, 'CARACAS', '+5884241908561', 'info@cruzang.net', 'info@cruzang.net', 0, 0, 1),
+(228, 147, 2278, 'J316358968', 0, 'INVERSIONES PROTECA, C.A', 240, 'Calle 1 con calle 2 Edif. Cyanamid ofic31 P3 LA Urbina Caracasa', '+582122420562', 'www.crowe.com.ve', 'inversionesproteca@gmail.com', 0, 0, 1),
+(229, 147, 2279, 'J311960414', 0, 'INTERVIT, C.A.', 240, 'AVENIDA JALISCO. EDIFICIOLA COLONIA P3 3-A LAS MERCEDES CARACAS', '+5802129934794', 'WWW.INTERVIT.COM.VE', 'CF@BOSTO.GROUP', 0, 0, 1),
+(230, 150, 2280, 'J412545400', 0, 'MONEYWAYS CORP ITFB, C.A', 240, 'AV. VENEZUELA  EDIFICIO PLATINUM II PISO 8 OF 8-B URBANIZACION EL ROSAL CARACAS', '+5802129529861', 'WWW.CROWE.COM.VE', 'jvan@moneywayscorp.com', 0, 0, 1),
+(231, 7, 2281, 'J306036849', 0, 'ALMACENADORA VENEZUELA, C.A.', 240, 'CALLE LONDRES PLAZA C PISO 5 OFICINA 5-B URBANIZACIÓN LAS MERCEDES LAS MERCEDES', '+5802129931803', 'n.medouze@almaven.com', 'n.medouze@almaven.com', 0, 0, 1),
+(232, 146, 2282, 'J000701466', 0, 'Camara Venezolana Americana de Comercio e Industria', 240, '2da Av. de Campo Alegre Torre Credival Piso 10, Chacao. Caracas', '+5821211111111', 'www.venamcham.org', 'sistema.carent@carent.com.ve', 0, 0, 1),
+(233, 146, 2283, 'J296963274', 0, 'Banco del Alba', 240, 'Av. Francisco Solano López con calle San Gerónimo Edificio Los Llanos Sabana Grande.Caracas', '+02129059300', 'www.bt.gob.ve', 'contacto@bancodelalba.org', 0, 0, 1),
+(234, 145, 2284, 'J095170993', 0, 'VENEZUELAN EXPRESS CASA DE CAMBIO, C.A.', 240, 'AV. LIBERTADOR  EDIFICIO NUEVO CENTRO  PB A Y B HACAO CARACAS', '+58123456', 'WWW.CROWE.COM.VE', 'SISTEMA.CARENT@CROWE.COM.VE', 0, 0, 1),
+(235, 58, 2285, 'J412732510', 0, 'INVERSIONES THEODORA 11-11, C.A.', 240, 'Carretera Petare Guarenas km 14 Galpon S/N Caucaguita Miranda', '+5802127313802', 'www.crowe.com.ve', 'sistema.carent@crowe.com.ve', 0, 0, 1),
+(236, 58, 2286, 'J001280669', 0, 'BAUMER BAVE, S.A.', 240, 'Avenida principal Lebrum Galpon  41-A Industrial Lebrum, Parroquia Petare', '+5802122569336', 'www.crowe.com.ve', 'sistema.carent@cowe.com.ve', 0, 0, 1),
+(240, 146, 2287, 'J294969976', 0, 'petrodelta, s.a.', 240, 'CALLE EL EMPALME URBANIZACION LA CAMPIÑA EDIFICIO PETROLEOS DE VENEZUELA CARACAS', '+5821230070312', 'https://www.crowe.com/ve', 'GONZALEZLMR@PETRODELTA.PDVSA..COM', 0, 0, 1),
+(241, 58, 2288, 'J300522369', 0, 'SEGUROS ALTAMIRA C.A.', 240, 'AV LIBERTADOR  CC CENTRO COMERCIAL LIBERTADOR  NIVEL\nPH OF 3-5 CARACAS', '+582122222222', 'http://www.segurosaltamira.com', 'ja.legal@segurosaltamira.com', 0, 0, 1),
+(242, 146, 2289, 'J411877891', 0, 'PETROSERVICIOS MORICHAL, S.A.', 240, 'CTRA NACIONAL VIA  VIBORAL CC VIRGEN DEL VALLE RB TIPURO PLANTA ALTA	OF 18-A MATURIN ESTADO MONAGAS', '+5804265945537', 'WWW.CROWE.COM.VE', 'petroserviciosmorichal@gmail.com', 0, 0, 1),
+(243, 147, 2290, 'J000355789', 0, 'PMI, C.A.', 240, 'Avenida Francisco de Miranda Torre KPMG, piso 6 Chacao Caracas D.C.', '+581234567', 'WWW.CROWE.COM.VE', 'SISTEMAS.CARENT@CROWE.COM.VE', 0, 0, 1),
+(244, 146, 2291, 'J000303614', 0, 'C.A. Telares de Palo Grande', 240, 'Zona Industrial Ruiz Pineda Carretera Vieja de los Teques Edif. Telares de Palo Grande Caracas', '+8402124033620362', 'http://telaresdepalogrande.com', 'asanchez@telaresdepalogrande.com', 0, 0, 1),
+(245, 146, 2292, 'J000040206', 0, 'H. Blohm, S.A.', 240, 'Zona Industrial Ruiz Pineda Carretera Vieja de los Teques Edif. Telares de Palo Grande Caracas', '+582124033620', 'www.crowe.com.ve', 'asanchez@telaresdepalogrande.com', 0, 0, 1),
+(246, 149, 2293, 'J000846774', 0, 'Fundicion Pacifico, C.A.', 240, 'Sector Hacienda Las Mercedes, Filas de Mariche Carretera Petare-Santa Lucia, KM 12, Calle El Desvio Local Galpon FP Caracas Miranda', '+582127186800', 'https://www.fundicionpacifico.com', 'ecommerce@fundicionpacifico.com', 0, 0, 1),
+(247, 146, 2294, 'J501835705', 0, 'MULTIPLICAS CASA DE BOLSA C.A.', 240, 'Av. Blandin Centro San Ignacio PISO 9 TE-P09-01 Caracas (Chacao) Miranda', '+5804149277584', 'info@multiplicas.com.ve', 'tramirez@multiplicas.com.ve', 0, 0, 1),
+(248, 146, 2295, 'J3315701677', 0, 'SUMA CASA DE BOLSA C.A.', 240, 'Av. Paseo Eraso C/Calle Chivacoa Edificio Tamanaco PISO 11 11-C 11-D Caracas', '+5802127507200', 'www.sumavalores.com', 'info@sumavalores.com', 0, 0, 1),
+(249, 146, 2296, 'J000467382', 0, 'SEGUROS LA FE, C.A.', 240, 'AVENIDA SOLANO LÓPEZ QUINTA SAN GERMAN PISO 1 OFIC 1-B SABANA GRANDE CARACAS', '+5804129954575', 'WWW.CROWE.COM.VE', 'CARENT@CROWE.COM.VE', 0, 0, 1),
+(250, 146, 2297, 'J406095737', 0, 'WITTY GROWTH C.A.', 240, 'Av Bolivar Norte Edificio CC Home Shopping Nivel 2 Local L-2-7 Valencia Estado Carabobo', '+5804141362723', 'www.crowe.com.ve', 'sistema.carent@crow.com.ve', 0, 0, 1),
+(251, 4, 2298, 'J12345', 123, 'CLIENTE PRUEBA 1', 12, 'Direccion de cliente prueba 1', '+54123456789', 'pagina.com.ve', '1234@1234.com', 1, 2, 1),
+(252, 4, 2299, 'J18291289', 1234, 'pEDRO', 11, 'DIRECCION DE PEDRO PEDRO', '+96678686886', 'pagina.com', 'hola@pagina.com', 2, 11, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_clientes_direccion_pais`
+--
+
+CREATE TABLE `tbl_clientes_direccion_pais` (
+  `Id` int(11) NOT NULL,
+  `Nombre_pais` varchar(300) NOT NULL,
+  `Iso3` varchar(300) NOT NULL,
+  `Codigo_telf` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `tbl_clientes_direccion_pais`
+--
+
+INSERT INTO `tbl_clientes_direccion_pais` (`Id`, `Nombre_pais`, `Iso3`, `Codigo_telf`) VALUES
+(1, 'AfganistÃ¡n', 'AFG', '93'),
+(2, 'Albania', 'ALB', '355'),
+(3, 'Alemania', 'DEU', '49'),
+(4, 'Algeria', 'DZA', '213'),
+(5, 'Andorra', 'AND', '376'),
+(6, 'Angola', 'AGO', '244'),
+(7, 'Anguila', 'AIA', '1264'),
+(8, 'AntÃ¡rtida', 'ATA', '672'),
+(9, 'Antigua y Barbuda', 'ATG', '1268'),
+(10, 'Antillas Neerlandesas', 'ANT', '599'),
+(11, 'Arabia Saudita', 'SAU', '966'),
+(12, 'Argentina', 'ARG', '54'),
+(13, 'Armenia', 'ARM', '374'),
+(14, 'Aruba', 'ABW', '297'),
+(15, 'Australia', 'AUS', '61'),
+(16, 'Austria', 'AUT', '43'),
+(17, 'AzerbayÃ¡n', 'AZE', '994'),
+(18, 'BÃ©lgica', 'BEL', '32'),
+(19, 'Bahamas', 'BHS', '1242'),
+(20, 'Bahrein', 'BHR', '973'),
+(21, 'Bangladesh', 'BGD', '880'),
+(22, 'Barbados', 'BRB', '1246'),
+(23, 'Belice', 'BLZ', '501'),
+(24, 'BenÃ­n', 'BEN', '229'),
+(25, 'BhutÃ¡n', 'BTN', '975'),
+(26, 'Bielorrusia', 'BLR', '375'),
+(27, 'Birmania', 'MMR', '95'),
+(28, 'Bolivia', 'BOL', '591'),
+(29, 'Bosnia y Herzegovina', 'BIH', '387'),
+(30, 'Botsuana', 'BWA', '267'),
+(31, 'Brasil', 'BRA', '55'),
+(32, 'BrunÃ©i', 'BRN', '673'),
+(33, 'Bulgaria', 'BGR', '359'),
+(34, 'Burkina Faso', 'BFA', '226'),
+(35, 'Burundi', 'BDI', '257'),
+(36, 'Cabo Verde', 'CPV', '238'),
+(37, 'Camboya', 'KHM', '855'),
+(38, 'CamerÃºn', 'CMR', '237'),
+(39, 'CanadÃ¡', 'CAN', '1'),
+(40, 'Chad', 'TCD', '235'),
+(41, 'Chile', 'CHL', '56'),
+(42, 'China', 'CHN', '86'),
+(43, 'Chipre', 'CYP', '357'),
+(44, 'Ciudad del Vaticano', 'VAT', '39'),
+(45, 'Colombia', 'COL', '57'),
+(46, 'Comoras', 'COM', '269'),
+(47, 'Congo', 'COG', '242'),
+(48, 'Congo', 'COD', '243'),
+(49, 'Corea del Norte', 'PRK', '850'),
+(50, 'Corea del Sur', 'KOR', '82'),
+(51, 'Costa de Marfil', 'CIV', '225'),
+(52, 'Costa Rica', 'CRI', '506'),
+(53, 'Croacia', 'HRV', '385'),
+(54, 'Cuba', 'CUB', '53'),
+(55, 'Dinamarca', 'DNK', '45'),
+(56, 'Dominica', 'DMA', '1767'),
+(57, 'Ecuador', 'ECU', '593'),
+(58, 'Egipto', 'EGY', '20'),
+(59, 'El Salvador', 'SLV', '503'),
+(60, 'Emiratos Ãrabes Unidos', 'ARE', '971'),
+(61, 'Eritrea', 'ERI', '291'),
+(62, 'Eslovaquia', 'SVK', '421'),
+(63, 'Eslovenia', 'SVN', '386'),
+(64, 'EspaÃ±a', 'ESP', '34'),
+(65, 'Estados Unidos de AmÃ©rica', 'USA', '1'),
+(66, 'Estonia', 'EST', '372'),
+(67, 'EtiopÃ­a', 'ETH', '251'),
+(68, 'Filipinas', 'PHL', '63'),
+(69, 'Finlandia', 'FIN', '358'),
+(70, 'Fiyi', 'FJI', '679'),
+(71, 'Francia', 'FRA', '33'),
+(72, 'GabÃ³n', 'GAB', '241'),
+(73, 'Gambia', 'GMB', '220'),
+(74, 'Georgia', 'GEO', '995'),
+(75, 'Ghana', 'GHA', '233'),
+(76, 'Gibraltar', 'GIB', '350'),
+(77, 'Granada', 'GRD', '1473'),
+(78, 'Grecia', 'GRC', '30'),
+(79, 'Groenlandia', 'GRL', '299'),
+(80, 'Guadalupe', 'GLP', ''),
+(81, 'Guam', 'GUM', '1671'),
+(82, 'Guatemala', 'GTM', '502'),
+(83, 'Guayana Francesa', 'GUF', ''),
+(84, 'Guernsey', 'GGY', ''),
+(85, 'Guinea', 'GIN', '224'),
+(86, 'Guinea Ecuatorial', 'GNQ', '240'),
+(87, 'Guinea-Bissau', 'GNB', '245'),
+(88, 'Guyana', 'GUY', '592'),
+(89, 'HaitÃ­', 'HTI', '509'),
+(90, 'Honduras', 'HND', '504'),
+(91, 'Hong kong', 'HKG', '852'),
+(92, 'HungrÃ­a', 'HUN', '36'),
+(93, 'India', 'IND', '91'),
+(94, 'Indonesia', 'IDN', '62'),
+(95, 'IrÃ¡n', 'IRN', '98'),
+(96, 'Irak', 'IRQ', '964'),
+(97, 'Irlanda', 'IRL', '353'),
+(98, 'Isla Bouvet', 'BVT', ''),
+(99, 'Isla de Man', 'IMN', '44'),
+(100, 'Isla de Navidad', 'CXR', '61'),
+(101, 'Isla Norfolk', 'NFK', ''),
+(102, 'Islandia', 'ISL', '354'),
+(103, 'Islas Bermudas', 'BMU', '1441'),
+(104, 'Islas CaimÃ¡n', 'CYM', '1345'),
+(105, 'Islas Cocos (Keeling)', 'CCK', '61'),
+(106, 'Islas Cook', 'COK', '682'),
+(107, 'Islas de Ã…land', 'ALA', ''),
+(108, 'Islas Feroe', 'FRO', '298'),
+(109, 'Islas Georgias del Sur y Sandwich del Sur', 'SGS', ''),
+(110, 'Islas Heard y McDonald', 'HMD', ''),
+(111, 'Islas Maldivas', 'MDV', '960'),
+(112, 'Islas Malvinas', 'FLK', '500'),
+(113, 'Islas Marianas del Norte', 'MNP', '1670'),
+(114, 'Islas Marshall', 'MHL', '692'),
+(115, 'Islas Pitcairn', 'PCN', '870'),
+(116, 'Islas SalomÃ³n', 'SLB', '677'),
+(117, 'Islas Turcas y Caicos', 'TCA', '1649'),
+(118, 'Islas Ultramarinas Menores de Estados Unidos', 'UMI', ''),
+(119, 'Islas VÃ­rgenes BritÃ¡nicas', 'VG', '1284'),
+(120, 'Islas VÃ­rgenes de los Estados Unidos', 'VIR', '1340'),
+(121, 'Israel', 'ISR', '972'),
+(122, 'Italia', 'ITA', '39'),
+(123, 'Jamaica', 'JAM', '1876'),
+(124, 'JapÃ³n', 'JPN', '81'),
+(125, 'Jersey', 'JEY', ''),
+(126, 'Jordania', 'JOR', '962'),
+(127, 'KazajistÃ¡n', 'KAZ', '7'),
+(128, 'Kenia', 'KEN', '254'),
+(129, 'KirgizstÃ¡n', 'KGZ', '996'),
+(130, 'Kiribati', 'KIR', '686'),
+(131, 'Kuwait', 'KWT', '965'),
+(132, 'LÃ­bano', 'LBN', '961'),
+(133, 'Laos', 'LAO', '856'),
+(134, 'Lesoto', 'LSO', '266'),
+(135, 'Letonia', 'LVA', '371'),
+(136, 'Liberia', 'LBR', '231'),
+(137, 'Libia', 'LBY', '218'),
+(138, 'Liechtenstein', 'LIE', '423'),
+(139, 'Lituania', 'LTU', '370'),
+(140, 'Luxemburgo', 'LUX', '352'),
+(141, 'MÃ©xico', 'MEX', '52'),
+(142, 'MÃ³naco', 'MCO', '377'),
+(143, 'Macao', 'MAC', '853'),
+(144, 'MacedÃ´nia', 'MKD', '389'),
+(145, 'Madagascar', 'MDG', '261'),
+(146, 'Malasia', 'MYS', '60'),
+(147, 'Malawi', 'MWI', '265'),
+(148, 'Mali', 'MLI', '223'),
+(149, 'Malta', 'MLT', '356'),
+(150, 'Marruecos', 'MAR', '212'),
+(151, 'Martinica', 'MTQ', ''),
+(152, 'Mauricio', 'MUS', '230'),
+(153, 'Mauritania', 'MRT', '222'),
+(154, 'Mayotte', 'MYT', '262'),
+(155, 'Micronesia', 'FSM', '691'),
+(156, 'Moldavia', 'MDA', '373'),
+(157, 'Mongolia', 'MNG', '976'),
+(158, 'Montenegro', 'MNE', '382'),
+(159, 'Montserrat', 'MSR', '1664'),
+(160, 'Mozambique', 'MOZ', '258'),
+(161, 'Namibia', 'NAM', '264'),
+(162, 'Nauru', 'NRU', '674'),
+(163, 'Nepal', 'NPL', '977'),
+(164, 'Nicaragua', 'NIC', '505'),
+(165, 'Niger', 'NER', '227'),
+(166, 'Nigeria', 'NGA', '234'),
+(167, 'Niue', 'NIU', '683'),
+(168, 'Noruega', 'NOR', '47'),
+(169, 'Nueva Caledonia', 'NCL', '687'),
+(170, 'Nueva Zelanda', 'NZL', '64'),
+(171, 'OmÃ¡n', 'OMN', '968'),
+(172, 'PaÃ­ses Bajos', 'NLD', '31'),
+(173, 'PakistÃ¡n', 'PAK', '92'),
+(174, 'Palau', 'PLW', '680'),
+(175, 'Palestina', 'PSE', ''),
+(176, 'PanamÃ¡', 'PAN', '507'),
+(177, 'PapÃºa Nueva Guinea', 'PNG', '675'),
+(178, 'Paraguay', 'PRY', '595'),
+(179, 'PerÃº', 'PER', '51'),
+(180, 'Polinesia Francesa', 'PYF', '689'),
+(181, 'Polonia', 'POL', '48'),
+(182, 'Portugal', 'PRT', '351'),
+(183, 'Puerto Rico', 'PRI', '1'),
+(184, 'Qatar', 'QAT', '974'),
+(185, 'Reino Unido', 'GBR', '44'),
+(186, 'RepÃºblica Centroafricana', 'CAF', '236'),
+(187, 'RepÃºblica Checa', 'CZE', '420'),
+(188, 'RepÃºblica Dominicana', 'DOM', '1809'),
+(189, 'ReuniÃ³n', 'REU', ''),
+(190, 'Ruanda', 'RWA', '250'),
+(191, 'RumanÃ­a', 'ROU', '40'),
+(192, 'Rusia', 'RUS', '7'),
+(193, 'Sahara Occidental', 'ESH', ''),
+(194, 'Samoa', 'WSM', '685'),
+(195, 'Samoa Americana', 'ASM', '1684'),
+(196, 'San BartolomÃ©', 'BLM', '590'),
+(197, 'San CristÃ³bal y Nieves', 'KNA', '1869'),
+(198, 'San Marino', 'SMR', '378'),
+(199, 'San MartÃ­n (Francia)', 'MAF', '1599'),
+(200, 'San Pedro y MiquelÃ³n', 'SPM', '508'),
+(201, 'San Vicente y las Granadinas', 'VCT', '1784'),
+(202, 'Santa Elena', 'SHN', '290'),
+(203, 'Santa LucÃ­a', 'LCA', '1758'),
+(204, 'Santo TomÃ© y PrÃ­ncipe', 'STP', '239'),
+(205, 'Senegal', 'SEN', '221'),
+(206, 'Serbia', 'SRB', '381'),
+(207, 'Seychelles', 'SYC', '248'),
+(208, 'Sierra Leona', 'SLE', '232'),
+(209, 'Singapur', 'SGP', '65'),
+(210, 'Siria', 'SYR', '963'),
+(211, 'Somalia', 'SOM', '252'),
+(212, 'Sri lanka', 'LKA', '94'),
+(213, 'SudÃ¡frica', 'ZAF', '27'),
+(214, 'SudÃ¡n', 'SDN', '249'),
+(215, 'Suecia', 'SWE', '46'),
+(216, 'Suiza', 'CHE', '41'),
+(217, 'SurinÃ¡m', 'SUR', '597'),
+(218, 'Svalbard y Jan Mayen', 'SJM', ''),
+(219, 'Swazilandia', 'SWZ', '268'),
+(220, 'TadjikistÃ¡n', 'TJK', '992'),
+(221, 'Tailandia', 'THA', '66'),
+(222, 'TaiwÃ¡n', 'TWN', '886'),
+(223, 'Tanzania', 'TZA', '255'),
+(224, 'Territorio BritÃ¡nico del OcÃ©ano Ãndico', 'IOT', ''),
+(225, 'Territorios Australes y AntÃ¡rticas Franceses', 'ATF', ''),
+(226, 'Timor Oriental', 'TLS', '670'),
+(227, 'Togo', 'TGO', '228'),
+(228, 'Tokelau', 'TKL', '690'),
+(229, 'Tonga', 'TON', '676'),
+(230, 'Trinidad y Tobago', 'TTO', '1868'),
+(231, 'Tunez', 'TUN', '216'),
+(232, 'TurkmenistÃ¡n', 'TKM', '993'),
+(233, 'TurquÃ­a', 'TUR', '90'),
+(234, 'Tuvalu', 'TUV', '688'),
+(235, 'Ucrania', 'UKR', '380'),
+(236, 'Uganda', 'UGA', '256'),
+(237, 'Uruguay', 'URY', '598'),
+(238, 'UzbekistÃ¡n', 'UZB', '998'),
+(239, 'Vanuatu', 'VUT', '678'),
+(240, 'Venezuela', 'VEN', '58'),
+(241, 'Vietnam', 'VNM', '84'),
+(242, 'Wallis y Futuna', 'WLF', '681'),
+(243, 'Yemen', 'YEM', '967'),
+(244, 'Yibuti', 'DJI', '253'),
+(245, 'Zambia', 'ZMB', '260'),
+(246, 'Zimbabue', 'ZWE', '263');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_clientes_sector`
+--
+
+CREATE TABLE `tbl_clientes_sector` (
+  `Id` int(11) NOT NULL,
+  `Nombre_sector` varchar(255) NOT NULL,
+  `Id_estatus` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `tbl_clientes_sector`
+--
+
+INSERT INTO `tbl_clientes_sector` (`Id`, `Nombre_sector`, `Id_estatus`) VALUES
+(0, 'No tiene sector registrado', 1),
+(1, 'Privado', 1),
+(2, 'Publico', 1),
+(3, 'Mixto', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tbl_clientes_servicios`
+--
+
+CREATE TABLE `tbl_clientes_servicios` (
+  `Id` int(11) NOT NULL,
+  `Nombre_servicio` varchar(255) NOT NULL,
+  `Id_estatus` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `tbl_clientes_servicios`
+--
+
+INSERT INTO `tbl_clientes_servicios` (`Id`, `Nombre_servicio`, `Id_estatus`) VALUES
+(0, 'No tiene servicio asignado', 1),
+(1, 'Financiero', 1),
+(2, 'Manufactura', 1),
+(3, 'Energético', 1),
+(4, 'Salud', 1),
+(5, 'Seguros', 1),
+(6, 'Agroalimentario', 1),
+(7, 'Telecomunicaciones', 1),
+(8, 'Fintech', 1),
+(9, 'Construcción', 1),
+(10, 'Automotriz', 1),
+(11, 'Servicios', 1),
+(12, 'Agrícola', 1),
+(13, 'Distribución', 1),
+(14, 'Logística', 1),
+(15, 'Almacenaje', 1),
+(16, 'ONG/Fundaciones', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `tbl_control_encryptkey`
 --
 
@@ -508,7 +1064,7 @@ CREATE TABLE `tbl_control_encryptkey` (
   `EncryptKey` mediumtext NOT NULL,
   `EncryptIv` mediumtext NOT NULL,
   `Id_estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_control_encryptkey`
@@ -531,7 +1087,7 @@ CREATE TABLE `tbl_control_error` (
   `Error_mensaje` text NOT NULL,
   `Fecha` datetime NOT NULL,
   `Id_estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_control_error`
@@ -602,7 +1158,7 @@ INSERT INTO `tbl_control_error` (`Id`, `Id_error_tipomensaje`, `Id_error_tipoobj
 CREATE TABLE `tbl_control_error_tipomensaje` (
   `Id` int(11) NOT NULL,
   `Descripcion` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_control_error_tipomensaje`
@@ -621,7 +1177,7 @@ INSERT INTO `tbl_control_error_tipomensaje` (`Id`, `Descripcion`) VALUES
 CREATE TABLE `tbl_control_error_tipoobjeto` (
   `Id` int(11) NOT NULL,
   `NombreObjeto` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_control_error_tipoobjeto`
@@ -639,7 +1195,7 @@ INSERT INTO `tbl_control_error_tipoobjeto` (`Id`, `NombreObjeto`) VALUES
 CREATE TABLE `tbl_control_estatus` (
   `Id` int(11) NOT NULL,
   `Descripcion` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_control_estatus`
@@ -668,7 +1224,7 @@ CREATE TABLE `tbl_control_logs_bitacora` (
   `Valor_anterior` text DEFAULT NULL,
   `Nuevo_valor` text DEFAULT NULL,
   `Fecha_Registro` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_control_logs_bitacora`
@@ -743,7 +1299,13 @@ INSERT INTO `tbl_control_logs_bitacora` (`Id`, `Id_bitacora_accion`, `Descripcio
 (66, 2, 'updateUser', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE `tbl_usuarios` SET `Codigo`=11622,`Fecha_cambio_clave`=@FechaCambio,`Primer_nombre`=p_Nombre1,`Segundo_nombre`=p_Nombr2,`Primer_apellido`=p_Apellido1,`Segundo_apellido`=p_Apellido2,`Fecha_nacimiento`=p_FechaNacimiento,`Id_jerarquia_cargo`=p_IdCargo,`Id_jerarquia_division`=p_IdDivision,`Id_direccion_parroquia`=p_IdParroquia,`Fecha_ingreso`=p_FechaIngreso,`Fecha_egreso`=p_FechaEgreso,`Id_estatus`=p_IdStatus WHERE `Id` = p_IdUpdateUser', NULL, NULL, '2023-05-04 13:54:33'),
 (67, 2, 'updateUser', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE `tbl_usuarios` SET `Codigo`=11622,`Fecha_cambio_clave`=@FechaCambio,`Primer_nombre`=p_Nombre1,`Segundo_nombre`=p_Nombr2,`Primer_apellido`=p_Apellido1,`Segundo_apellido`=p_Apellido2,`Fecha_nacimiento`=p_FechaNacimiento,`Id_jerarquia_cargo`=p_IdCargo,`Id_jerarquia_division`=p_IdDivision,`Id_direccion_parroquia`=p_IdParroquia,`Fecha_ingreso`=p_FechaIngreso,`Fecha_egreso`=p_FechaEgreso,`Id_estatus`=p_IdStatus WHERE `Id` = p_IdUpdateUser', NULL, NULL, '2023-05-04 13:54:53'),
 (68, 1, 'createUser', '127.0.0.1', 1, 'tbl_usuarios', 'INSERT INTO `tbl_usuarios`(`Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`) VALUES(989898,AES_ENCRYPT(p_Cedula,@Key),@FechaCambio,p_Nombre1,p_Nombre2,p_Apellido1,p_Apellido2,p_FechaNacimiento,p_IdCargo,p_IdDivision,p_IdParroquia,p_FechaIngreso,NULL,NULL,1)', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-05-04 14:27:13'),
-(69, 2, 'updateUser', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE `tbl_usuarios` SET `Codigo`=989898,`Fecha_cambio_clave`=@FechaCambio,`Primer_nombre`=p_Nombre1,`Segundo_nombre`=p_Nombr2,`Primer_apellido`=p_Apellido1,`Segundo_apellido`=p_Apellido2,`Fecha_nacimiento`=p_FechaNacimiento,`Id_jerarquia_cargo`=p_IdCargo,`Id_jerarquia_division`=p_IdDivision,`Id_direccion_parroquia`=p_IdParroquia,`Fecha_ingreso`=p_FechaIngreso,`Fecha_egreso`=p_FechaEgreso,`Id_estatus`=p_IdStatus WHERE `Id` = p_IdUpdateUser', NULL, NULL, '2023-05-04 14:51:30');
+(69, 2, 'updateUser', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE `tbl_usuarios` SET `Codigo`=989898,`Fecha_cambio_clave`=@FechaCambio,`Primer_nombre`=p_Nombre1,`Segundo_nombre`=p_Nombr2,`Primer_apellido`=p_Apellido1,`Segundo_apellido`=p_Apellido2,`Fecha_nacimiento`=p_FechaNacimiento,`Id_jerarquia_cargo`=p_IdCargo,`Id_jerarquia_division`=p_IdDivision,`Id_direccion_parroquia`=p_IdParroquia,`Fecha_ingreso`=p_FechaIngreso,`Fecha_egreso`=p_FechaEgreso,`Id_estatus`=p_IdStatus WHERE `Id` = p_IdUpdateUser', NULL, NULL, '2023-05-04 14:51:30'),
+(70, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-05-05 10:46:23 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-05-03 21:21:06\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-05-05 10:46:23\",\"ultima_ip\": \"127.0.0.1\"}', '2023-05-05 10:46:23'),
+(71, 2, 'updateUser', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE `tbl_usuarios` SET `Codigo`=123456,`Fecha_cambio_clave`=@FechaCambio,`Primer_nombre`=p_Nombre1,`Segundo_nombre`=p_Nombr2,`Primer_apellido`=p_Apellido1,`Segundo_apellido`=p_Apellido2,`Fecha_nacimiento`=p_FechaNacimiento,`Id_jerarquia_cargo`=p_IdCargo,`Id_jerarquia_division`=p_IdDivision,`Id_direccion_parroquia`=p_IdParroquia,`Fecha_ingreso`=p_FechaIngreso,`Fecha_egreso`=p_FechaEgreso,`Id_estatus`=p_IdStatus WHERE `Id` = p_IdUpdateUser', NULL, NULL, '2023-05-05 10:50:30'),
+(72, 2, 'updateUser', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE `tbl_usuarios` SET `Codigo`=123456,`Fecha_cambio_clave`=@FechaCambio,`Primer_nombre`=p_Nombre1,`Segundo_nombre`=p_Nombr2,`Primer_apellido`=p_Apellido1,`Segundo_apellido`=p_Apellido2,`Fecha_nacimiento`=p_FechaNacimiento,`Id_jerarquia_cargo`=p_IdCargo,`Id_jerarquia_division`=p_IdDivision,`Id_direccion_parroquia`=p_IdParroquia,`Fecha_ingreso`=p_FechaIngreso,`Fecha_egreso`=p_FechaEgreso,`Id_estatus`=p_IdStatus WHERE `Id` = p_IdUpdateUser', NULL, NULL, '2023-05-05 11:00:20'),
+(73, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-05-06 21:04:42 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-05-05 10:46:23\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-05-06 21:04:42\",\"ultima_ip\": \"127.0.0.1\"}', '2023-05-06 21:04:42'),
+(74, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-05-07 11:51:25 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-05-06 21:04:42\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-05-07 11:51:25\",\"ultima_ip\": \"127.0.0.1\"}', '2023-05-07 11:51:25'),
+(75, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-05-07 19:34:03 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-05-07 11:51:25\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-05-07 19:34:03\",\"ultima_ip\": \"127.0.0.1\"}', '2023-05-07 19:34:03');
 
 -- --------------------------------------------------------
 
@@ -754,7 +1316,7 @@ INSERT INTO `tbl_control_logs_bitacora` (`Id`, `Id_bitacora_accion`, `Descripcio
 CREATE TABLE `tbl_control_logs_bitacora_accion` (
   `Id` int(11) NOT NULL,
   `Accion` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_control_logs_bitacora_accion`
@@ -775,7 +1337,7 @@ INSERT INTO `tbl_control_logs_bitacora_accion` (`Id`, `Accion`) VALUES
 CREATE TABLE `tbl_control_tipocargo` (
   `Id` int(11) NOT NULL,
   `TipoCargo` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_control_tipocargo`
@@ -809,14 +1371,14 @@ CREATE TABLE `tbl_usuarios` (
   `Fecha_egreso` date DEFAULT NULL,
   `Fecha_login` datetime DEFAULT NULL,
   `Id_estatus` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios`
 --
 
 INSERT INTO `tbl_usuarios` (`Id`, `Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`) VALUES
-(1, '0001', 0x9f824ad4b17be95f20aa30c5eef9d8f6, '2023-05-08', 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '1986-08-05', 16, 16, 1131, '2020-01-01', NULL, '2023-05-03 21:21:06', 1),
+(1, '0001', 0x9f824ad4b17be95f20aa30c5eef9d8f6, '2023-05-08', 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '1986-08-05', 16, 16, 1131, '2020-01-01', NULL, '2023-05-07 19:34:03', 1),
 (2, '10', 0xcb4dc5daf4d8865eb1bd01d6c898c269, '2023-03-09', 'NATHALIE', 'YAMILET', 'LOPEZ', 'TREJO', '1972-08-20', 17, 1, 1131, '2000-02-21', NULL, '2023-03-08 23:41:42', 1),
 (3, '10092', 0x10e54efb266e50c523273c638cb690c5, '2023-03-09', 'YESENIA', 'BEATRIZ', 'MARTINEZ', 'GALLARDO', '1979-06-01', 15, 1, 1131, '2004-09-01', NULL, '2023-03-07 08:27:55', 1),
 (4, '10141', 0x383155d3ec475bf8ace4b67bf0aaba8d, '2023-03-09', 'JESUS', 'ERASMO', 'PEREZ', 'ERASMO', '1959-11-09', 17, 1, 1131, '2005-02-02', NULL, '2023-02-06 09:52:51', 1),
@@ -1056,7 +1618,7 @@ INSERT INTO `tbl_usuarios` (`Id`, `Codigo`, `Clave`, `Fecha_cambio_clave`, `Prim
 (246, '11621', 0xa679acfe3d0deef0b6ff5b7e553b2b47, '2023-03-09', 'RUBI', 'YABISAY', 'RAMIREZ', 'LOPEZ', '1974-01-06', 6, 1, 647, '2023-02-14', NULL, '2023-03-07 16:06:08', 1),
 (247, '11622', 0x038e973a488134d8436c8bae5b50d66c, '2023-05-04', 'CARLOS', 'EDUARDO', 'NAVAS', 'SALAZAR', '1994-11-22', 39, 13, 647, '2023-02-13', NULL, '2023-04-16 00:16:02', 1),
 (248, '11623', 0x900ddc90e683652dd185b78eb9554e81, '2023-03-09', 'MIRIAM', 'DESIREE', 'HIDALGO', 'BRICEÑO', '1983-07-11', 10, 4, 647, '2023-03-07', '2023-03-07', NULL, 2),
-(249, '123456', 0x0da6f143877920c00c2274201572c754, '2023-05-04', 'ASJKDAJD', '', 'AJSKDAJSD', '', '2023-05-18', 39, 13, 647, '2023-05-04', NULL, NULL, 1),
+(249, '123456', 0x0da6f143877920c00c2274201572c754, '2023-05-05', 'ASJKDAJD', '', 'AJSKDAJSD', '', '2023-05-18', 39, 13, 647, '2023-05-04', NULL, NULL, 1),
 (250, '654321', 0x64969d5de20cff513e10c0ed636f392b, '2023-05-04', 'ASDASD', '', 'ASDASDASD', '', '2023-04-10', 39, 13, 647, '2023-05-04', NULL, NULL, 1),
 (251, '989898', 0x2a7fe511cec55c90eaeb031022169e56, '2023-05-04', 'PRUEBA1', '', 'PRUEBA2', '', '2023-01-03', 11, 11, 26, '2023-05-04', NULL, NULL, 1);
 
@@ -1073,7 +1635,7 @@ CREATE TABLE `tbl_usuarios_contacto` (
   `Correo_secundario` varchar(255) DEFAULT NULL,
   `Telefono_principal` varchar(30) DEFAULT NULL,
   `Telefono_secundario` varchar(30) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_contacto`
@@ -1320,7 +1882,7 @@ INSERT INTO `tbl_usuarios_contacto` (`Id`, `Id_usuario`, `Correo_principal`, `Co
 (246, 246, 'rubi.ramirez@crowe.com.ve', '', '04129101603', ''),
 (247, 247, 'carlosnavased@gmail.com', '', '04242813274', ''),
 (248, 248, 'miriam.hidalgo@crowe.com.ve', '', '04125411409', ''),
-(249, 249, 'sajkdaskd@adjksdjasd.com', NULL, '21893129318', NULL),
+(249, 249, 'sajkdaskd@adjksdjasd.com', '', '21893129318', ''),
 (250, 250, 'sakdjasd@dajksdajd.com', '', '10923012391', ''),
 (251, 251, 'casdadasd@cag.com', '', '09302930232', '');
 
@@ -1334,7 +1896,7 @@ CREATE TABLE `tbl_usuarios_direccion_estado` (
   `Id` int(11) NOT NULL,
   `NombreEstado` text NOT NULL,
   `Iso3166-2` varchar(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_direccion_estado`
@@ -1378,7 +1940,7 @@ CREATE TABLE `tbl_usuarios_direccion_municipio` (
   `Id` int(11) NOT NULL,
   `Id_direccion_estado` int(11) NOT NULL,
   `NombreMunicipio` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_direccion_municipio`
@@ -1732,7 +2294,7 @@ CREATE TABLE `tbl_usuarios_direccion_parroquia` (
   `Id` int(11) NOT NULL,
   `Id_direccion_municipio` int(11) NOT NULL,
   `NombreParroquia` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_direccion_parroquia`
@@ -2890,7 +3452,7 @@ CREATE TABLE `tbl_usuarios_documentoidentidad` (
   `Id_usuario` int(11) NOT NULL,
   `Id_tipo_documento` int(11) NOT NULL,
   `Descripcion` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_documentoidentidad`
@@ -3152,7 +3714,7 @@ CREATE TABLE `tbl_usuarios_documentoidentidad_tipo` (
   `AbreviaturaTipo` varchar(5) NOT NULL,
   `DescripcionTipo` varchar(20) NOT NULL,
   `Id_estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_documentoidentidad_tipo`
@@ -3174,7 +3736,7 @@ CREATE TABLE `tbl_usuarios_jerarquia_cargo` (
   `Id_TipoCargo` int(11) NOT NULL,
   `Jerarquia` int(11) NOT NULL,
   `Id_Estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_jerarquia_cargo`
@@ -3235,7 +3797,7 @@ CREATE TABLE `tbl_usuarios_jerarquia_division` (
   `Id` int(11) NOT NULL,
   `NombreDivision` text NOT NULL,
   `Id_Estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Volcado de datos para la tabla `tbl_usuarios_jerarquia_division`
@@ -3282,11 +3844,42 @@ CREATE TABLE `tbl_usuarios_status` (
 --
 DROP TABLE IF EXISTS `tbl_usuarios_status`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tbl_usuarios_status`  AS SELECT `cu`.`Id` AS `Id`, `cu`.`Descripcion` AS `Descripcion` FROM `tbl_control_estatus` AS `cu` WHERE `cu`.`Id` between 1 and 44  ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tbl_usuarios_status`  AS SELECT `cu`.`Id` AS `Id`, `cu`.`Descripcion` AS `Descripcion` FROM `tbl_control_estatus` AS `cu` WHERE `cu`.`Id` between 1 and 44 ;
 
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `tbl_clientes`
+--
+ALTER TABLE `tbl_clientes`
+  ADD PRIMARY KEY (`Id`),
+  ADD KEY `FK_cliente_socio` (`Id_usuario_socio`),
+  ADD KEY `FK_cliente_pais` (`Id_pais`),
+  ADD KEY `FK_cliente_sector` (`Id_cliente_sector`),
+  ADD KEY `FK_cliente_estatus` (`Id_estatus`),
+  ADD KEY `FK_cliente_servicio` (`Id_cliente_servicio`);
+
+--
+-- Indices de la tabla `tbl_clientes_direccion_pais`
+--
+ALTER TABLE `tbl_clientes_direccion_pais`
+  ADD PRIMARY KEY (`Id`);
+
+--
+-- Indices de la tabla `tbl_clientes_sector`
+--
+ALTER TABLE `tbl_clientes_sector`
+  ADD PRIMARY KEY (`Id`),
+  ADD KEY `FK_sector_estatus` (`Id_estatus`);
+
+--
+-- Indices de la tabla `tbl_clientes_servicios`
+--
+ALTER TABLE `tbl_clientes_servicios`
+  ADD PRIMARY KEY (`Id`),
+  ADD KEY `FK_clientes_estatus` (`Id_estatus`);
 
 --
 -- Indices de la tabla `tbl_control_encryptkey`
@@ -3412,6 +4005,30 @@ ALTER TABLE `tbl_usuarios_jerarquia_division`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `tbl_clientes`
+--
+ALTER TABLE `tbl_clientes`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=253;
+
+--
+-- AUTO_INCREMENT de la tabla `tbl_clientes_direccion_pais`
+--
+ALTER TABLE `tbl_clientes_direccion_pais`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=247;
+
+--
+-- AUTO_INCREMENT de la tabla `tbl_clientes_sector`
+--
+ALTER TABLE `tbl_clientes_sector`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `tbl_clientes_servicios`
+--
+ALTER TABLE `tbl_clientes_servicios`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
 -- AUTO_INCREMENT de la tabla `tbl_control_encryptkey`
 --
 ALTER TABLE `tbl_control_encryptkey`
@@ -3445,7 +4062,7 @@ ALTER TABLE `tbl_control_estatus`
 -- AUTO_INCREMENT de la tabla `tbl_control_logs_bitacora`
 --
 ALTER TABLE `tbl_control_logs_bitacora`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
 -- AUTO_INCREMENT de la tabla `tbl_control_logs_bitacora_accion`
@@ -3516,6 +4133,28 @@ ALTER TABLE `tbl_usuarios_jerarquia_division`
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `tbl_clientes`
+--
+ALTER TABLE `tbl_clientes`
+  ADD CONSTRAINT `FK_cliente_estatus` FOREIGN KEY (`Id_estatus`) REFERENCES `tbl_control_estatus` (`Id`),
+  ADD CONSTRAINT `FK_cliente_pais` FOREIGN KEY (`Id_pais`) REFERENCES `tbl_clientes_direccion_pais` (`Id`),
+  ADD CONSTRAINT `FK_cliente_sector` FOREIGN KEY (`Id_cliente_sector`) REFERENCES `tbl_clientes_sector` (`Id`),
+  ADD CONSTRAINT `FK_cliente_servicio` FOREIGN KEY (`Id_cliente_servicio`) REFERENCES `tbl_clientes_servicios` (`Id`),
+  ADD CONSTRAINT `FK_cliente_socio` FOREIGN KEY (`Id_usuario_socio`) REFERENCES `tbl_usuarios` (`Id`);
+
+--
+-- Filtros para la tabla `tbl_clientes_sector`
+--
+ALTER TABLE `tbl_clientes_sector`
+  ADD CONSTRAINT `FK_sector_estatus` FOREIGN KEY (`Id_estatus`) REFERENCES `tbl_control_estatus` (`Id`);
+
+--
+-- Filtros para la tabla `tbl_clientes_servicios`
+--
+ALTER TABLE `tbl_clientes_servicios`
+  ADD CONSTRAINT `FK_clientes_estatus` FOREIGN KEY (`Id_estatus`) REFERENCES `tbl_control_estatus` (`Id`);
 
 --
 -- Filtros para la tabla `tbl_control_encryptkey`
