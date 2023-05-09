@@ -139,6 +139,7 @@ export class Validate
 
         return {"response":false,"message":"Failure"}
     }
+
     /**
      * Metodo que verifica el primer caracter del rif
      * @param {*} rifData Captura el valor del input del rif
@@ -152,5 +153,19 @@ export class Validate
         if (matchRif != null) return {"response":true,"message":matchRif};
         //Si no coincide
         return {"response":false,"message":"NoInitRif"}
+    }
+
+    /**
+     * Metodo que comprueba el formato del número dependiendo del país
+     * @param {*} phoneClientData String que captura lo colocado en el campo Telefono principal
+     * @returns Objeto en formato {response:boolean,message:string|object}
+     */
+    static PhoneClient(phoneClientData)
+    {
+        const phoneClientFormat = new RegExp('^(\\+)([0-9]*)-([0-9]{0,19})$');
+        const matchPhone = phoneClientData.match(phoneClientFormat);
+        if(matchPhone != null) return {"response":true,"message":matchPhone};
+        //Si no pasa el test
+        return {"response":false,"message":"Failure"}
     }
 }

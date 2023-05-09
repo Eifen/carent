@@ -18,38 +18,30 @@ export const createdMixin = (self) => {
     //Espacio de creacion de Watchers globales
     self.inputWatchers =
     [{
-        propiedades: ['inputRazonSocial'],
-        watch: (newString) =>
+        propiedades: ['inputSectorSelect','inputServicioSelect','inputSocioSelect'],
+        watch: () => 
         {
-            try{
-                const validateString = Validate.String(newString,self.LimitString.NAME);
-                //Razon Social
-                if(self.inputRazonSocial == newString && !validateString.response)
-                throw {"message": validateString.message, "errorInput": "razonSocialError", "input": "inputRazonSocial"};
-                //Control de banderas
-                if(self.inputRazonSocial.length != 0 && validateString.response) self.submitButton.razonSocialValid = true;
-                if(self.inputRazonSocial.length == 0) self.submitButton.razonSocialValid = false;
-                //-
-                //Desactivamos los mensajes de error
-                if(self.inputRazonSocial.length > 0) self.messages.error.razonSocialError = '';
+            //Control de banderas
+            if(self.inputSectorSelect != 0) self.submitButton.sectorValid = true;
+            if(self.inputServicioSelect != 0) self.submitButton.servicioValid = true;
+            if(self.inputSocioSelect != 0) self.submitButton.selectSocio = true; 
 
-            }catch (jsonCatch){
-                //Capuramos el error
-                self[jsonCatch.input] = '';
-                self.messages.error[jsonCatch.errorInput] = Exceptions.CatchWarning(jsonCatch.message) + self.LimitString.NAME;
-                //Desactivamos Banderas
-                if(jsonCatch.input == 'inputRazonSocial') self.submitButton.razonSocialValid = false;
-            }
-        }
+            //Control de desactivar
+            if(self.inputSectorSelect == 0) self.submitButton.sectorValid = false;
+            if(self.inputServicioSelect == 0) self.submitButton.servicioValid = false;
+            if(self.inputSocioSelect == 0) self.submitButton.selectSocio = false; 
+        }           
     }]
 
     //Axios
     axios.post('/clientes/getParamsInits')
     .then(request => {
         if(request.status !== 200) throw request;
-
         //Si pasa el control, procedemos a insertarlo
         self.dataSelect.socio = request.data.dataSocio
+        self.dataSelect.servicios = request.data.dataServicios
+        self.dataSelect.sectores = request.data.dataSectores
+        self.dataSelect.paises = request.data.dataPaises
     })
     .catch(error => {
         console.error(error);

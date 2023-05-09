@@ -11,9 +11,11 @@
             <data-cliente :scope="DTOData" :is-edit="isEdit" v-if="inputSocioSelect != 0"></data-cliente>
             <!-- Datos de contacto -->
             <legend :class="formClass.legend" v-text="messages.contacto" v-if="inputSocioSelect != 0"></legend>
+            <data-contact-cliente :scope="DTOData" :is-edit="isEdit" v-if="inputSocioSelect != 0"></data-contact-cliente>
             <!-- Submit Button. Que permanece inactivo mientras que no se hayan llegano todos los datos requeridos -->
             <div :class="formClass.button"
             :id="[!submitButton.isValid ? formClass.disableButton : isClick ? formClass.disableButton : null]"
+            v-if="inputSocioSelect != 0"
             @click="DTOEmit()">
                 <span v-if="isEdit & !isClick">{{ messages.buttonEdit }}</span>
                 <span v-else-if="!isEdit & !isClick">{{ messages.buttonCreate }}</span>
@@ -33,6 +35,7 @@ import { clientWatchers } from '@/Components/Clients/LifecycleClients/watchers.j
 //Templates
 import DataSocio from '@/Components/Clients/TemplatesClients/DataSocio.vue';
 import DataCliente from '@/Components/Clients/TemplatesClients/DataCliente.vue';
+import DataContactCliente from '@/Components/Clients/TemplatesClients/DataContactCliente.vue';
 
 //librerias
 import FontAwesome from "@/Components/FontAwesome/FontAwesome.vue";
@@ -71,7 +74,10 @@ export default {
                 buttonEdit: "Actualizar cliente",
                 error: {
                     rifError: '',
-                    razonSocialError: ''
+                    razonSocialError: '',
+                    telefonoError: '',
+                    direccionError: '',
+                    firstemailError: ''
                 } //Objeto que controla los mensajes de error
             }, //Controla los mensajes del sistema. Tanto de error como de layouts
             submitButton:
@@ -79,26 +85,41 @@ export default {
                 selectSocio: false,
                 rifValid: false,
                 razonSocialValid: false,
+                sectorValid:false,
+                servicioValid: false,
+                paisesValid: false,
+                telefonoValid: false,
+                direccionValid: false,
+                firstemailValid: false,
                 isValid: false, //Controla el estado del botón de crear cliente
             }, //Controla las validaciones
             dataSelect:
             {
-                socio: [] //Data de todos los socios activos
+                socio: [], //Data de todos los socios activos
+                servicios: [], //Data de todos los servicios
+                sectores: [], //Data de todos los sectores
+                paises: [] //Data de todos los paises
             },
             inputWatchers: [], //Array que inicializa los Watchers
             inputSocioSelect: 0, //Select de Socios
+            inputSectorSelect: 0, //Select de sectores
+            inputServicioSelect: 0, //Select de servicios
+            inputPaisSelect: 0, //Select de paises
             inputNit: '', //Value del NIT
             inputRif: '', //Value del RIF
+            inputTelefono: '', //Telefono principal
             inputRazonSocial: '', //Value de la razon social
+            inputDireccion: '', //Value de la direccion fiscal
+            inputFirstEmail: '', //Value del correo electronico principal de la empresa
             //Constantes
-            LimitString: { NAME: 50, DIR: 200, WEB: 100, RIF: 15 } //Máximo de caracteres para los campos de clientes
+            LimitString: { NAME: 50, DIR: 200, WEB: 100, RIF: 15, TLF: 20} //Máximo de caracteres para los campos de clientes
         }
     },
     //Ciclo de Vida
     created() { createdMixin(this) },
     mounted() { mountedMixin(this) },
     computed: { DTOData(){ return this.$data }}, //Metodo computado que envia la data a sus hijos a través de propiedades
-    components: { FontAwesome, DataSocio, DataCliente },
+    components: { FontAwesome, DataSocio, DataCliente, DataContactCliente },
     mixins: [ clientWatchers ]
 }
 </script>

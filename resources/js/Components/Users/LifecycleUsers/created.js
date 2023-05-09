@@ -42,27 +42,30 @@ export const createdMixin = (self) =>
                     throw {"message": validateString.message, "errorInput": "lastsecondnameError", "input":"inputLastSecondname"};
 
                     //Si paso las validaciones
-                    if(self.inputFirstname.length > 0) self.messages.form.firstnameError = '';
-                    if(self.inputSecondname.length > 0) self.messages.form.secondnameError = '';
-                    if(self.inputLastname.length > 0) self.messages.form.lastnameError = '';
-                    if(self.inputLastSecondname.length > 0) self.messages.form.lastsecondnameError = '';
-
-                    //Desactivamos las banderas si el valor es vacio
-                    if(self.inputFirstname.length == 0) self.submitButton.firstnameValid = false;
-                    if(self.inputLastname.length == 0) self.submitButton.lastnameValid = false;
-
                     //Activamos la bandera del primer nombre y primer apellido
-                    if(self.inputFirstname != '' && validateString.response) self.submitButton.firstnameValid = true;
-                    if(self.inputLastname != '' && validateString.response) self.submitButton.lastnameValid = true;
+                    if(self.inputFirstname.length > 0 && self.inputFirstname.length <= LIMITSTRING.NAME){
+                        self.messages.form.firstnameError = '';
+                        self.submitButton.firstnameValid = true;
+                    }
+                    if(self.inputLastname.length > 0 && self.inputLastname.length <= LIMITSTRING.NAME){
+                        self.messages.form.lastnameError = '';
+                        self.submitButton.lastnameValid = true;
+                    }
+                    //Datos opcionales
+                    if(self.inputSecondname.length > 0 && self.inputSecondname.length <= LIMITSTRING.NAME) self.messages.form.secondnameError = '';
+                    if(self.inputLastSecondname.length > 0 && self.inputLastSecondname.length <= LIMITSTRING.NAME) self.messages.form.lastsecondnameError = '';
+
+                    //Desactivamos las banderas si el valor es vacio o si es mayor al limite
+                    if(self.inputFirstname.length == 0 || self.inputFirstname.length > LIMITSTRING.NAME) self.submitButton.firstnameValid = false;
+                    if(self.inputLastname.length == 0 || self.inputLastname.length > LIMITSTRING.NAME) self.submitButton.lastnameValid = false;
 
                 }catch(errorJSON)
                 {
-                    self[errorJSON.input] = '';
                     //Desactivamos las banderas
                     if(errorJSON.input == 'inputFirstname') self.submitButton.firstnameValid = false;
                     if(errorJSON.input == 'inputLastname') self.submitButton.lastnameValid = false;
                     //Pasamos el error
-                    self.messages.form[errorJSON.errorInput] = Exceptions.CatchWarning(errorJSON.message) + LIMITSTRING.NAME;
+                    self.messages.form[errorJSON.errorInput] = Exceptions.CatchWarning(errorJSON.message) + self[errorJSON.input].length +`(${LIMITSTRING.NAME})`;
                 }
             }
         },
@@ -108,33 +111,54 @@ export const createdMixin = (self) =>
         {
             //Validaciones de Correo
             propiedades: ['inputFirstEmail','inputSecondEmail'],
-            watch: (newEmail) =>
+            watch: () =>
             {
                 try{
-                    const validateEmail = Validate.Email(newEmail)
-                    //Correo principal
-                    if(self.inputFirstEmail == newEmail && !validateEmail.response && newEmail != '')
-                    throw {"message":validateEmail.message,"errorInput":"firstemailError"};
-
-                    //Correo Secundario
-                    if(self.inputSecondEmail == newEmail && !validateEmail.response && newEmail != '')
-                    throw {"message":validateEmail.message,"errorInput":"secondemailError"};
+                    const validateFirstEmail = Validate.Email(self.inputFirstEmail);
+                    const validateSecondEmail = Validate.Email(self.inputSecondEmail);
+                    //Verificamos la gestión de errores
+                    switch(true)
+                    {
+                        //Ambos correos
+                        case (!validateFirstEmail.response && !validateSecondEmail.response)
+                            && (self.inputFirstEmail.length > 0 && self.inputSecondEmail.length > 0):
+                            throw {"message":validateFirstEmail.message,"target":"Both"};
+                        //Correo principal
+                        case !validateFirstEmail.response && self.inputFirstEmail.length > 0:
+                            throw {"message":validateFirstEmail.message,"target":"First"};
+                        
+                        //Correo Secundario
+                        case !validateSecondEmail.response && self.inputSecondEmail.length > 0:
+                            throw {"message":validateSecondEmail.message,"target":"Second"};
+                    }
 
                     //Borramos el error
-                    if(self.inputFirstEmail == newEmail && validateEmail.response) self.messages.form.firstemailError = '';
-                    if(self.inputSecondEmail == newEmail && validateEmail.response) self.messages.form.secondemailError = '';
+                    if(self.inputSecondEmail.length == 0 || validateSecondEmail.response) self.messages.form.secondemailError = '';
 
                     //Desactivamos la bandera si el input esta vacio
-                    if(self.inputFirstEmail == '') self.submitButton.firstemailValid = false;
+                    if(self.inputFirstEmail.length == 0 || validateFirstEmail.response)self.messages.form.firstemailError = '';
+                    if(self.inputFirstEmail.length == 0) self.submitButton.firstemailValid = false;
 
                     //Activamos la bandera del correo principal
-                    if(self.inputFirstEmail == newEmail && validateEmail.response) self.submitButton.firstemailValid = true;
+                    if(validateFirstEmail.response) self.submitButton.firstemailValid = true;
                 }catch(errorJSON)
                 {
-                    //Desactivamos la bandera
-                    if(errorJSON.errorInput == 'firstemailError') self.submitButton.firstemailValid = false;
-                    //Pasamos el error
-                    self.messages.form[errorJSON.errorInput] = Exceptions.CatchWarning(errorJSON.message);
+                    switch(errorJSON.target){
+                        case 'First':
+                            self.messages.form.firstemailError = Exceptions.CatchWarning(errorJSON.message);
+                            self.messages.form.secondemailError = '';
+                            self.submitButton.firstemailValid = false;
+                            break;
+                        case 'Second':
+                            self.messages.form.secondemailError = Exceptions.CatchWarning(errorJSON.message);
+                            self.messages.form.firstemailError = '';
+                            break;
+                        case 'Both':
+                            self.messages.form.firstemailError = Exceptions.CatchWarning(errorJSON.message);
+                            self.submitButton.firstemailValid = false;
+                            self.messages.form.secondemailError = Exceptions.CatchWarning(errorJSON.message);
+                            break;
+                    }
                 }
             }
         },

@@ -60,6 +60,40 @@
                 {{ scope.messages.error.razonSocialError }}
             </div>
         </div>
+        <!-- Selección de Sector -->
+        <div class="mb-3">
+            <label for="Sector">Sector <span :class="scope.formClass.requiredField">*</span></label>
+            <div class="input-group">
+                <select class="form-select" title="SectorSelect"
+                v-model="scope.inputSectorSelect">
+                    <option v-for="(select, cursor) in scope.dataSelect.sectores"
+                    :key="cursor"
+                    :value="select.Id"
+                    :disabled="select.Id == 0"
+                    :selected="select.Id == 0">
+                        <span v-if="select.Id != 0">{{ select.Nombre_sector }}</span>
+                        <span v-if="select.Id == 0">Seleccione el Sector</span>
+                    </option>
+                </select>
+            </div>
+        </div>
+        <!-- Selección de Servicio -->
+        <div class="mb-3">
+            <label for="Sector">Servicio <span :class="scope.formClass.requiredField">*</span></label>
+            <div class="input-group">
+                <select class="form-select" title="ServicioSelect"
+                v-model="scope.inputServicioSelect">
+                    <option v-for="(select, cursor) in scope.dataSelect.servicios"
+                    :key="cursor"
+                    :value="select.Id"
+                    :disabled="select.Id == 0"
+                    :selected="select.Id == 0">
+                        <span v-if="select.Id != 0">{{ select.Nombre_servicio }}</span>
+                        <span v-if="select.Id == 0">Seleccione el Servicio</span>
+                    </option>
+                </select>
+            </div>
+        </div>
     </fieldset>
 </template>
 

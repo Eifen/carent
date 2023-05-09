@@ -44,7 +44,10 @@ class ClientController extends Controller
     public function GetInitData()
     {
         $paramsInit = [
-            "dataSocio" => ClientModel::GetAllSocios(1)
+            "dataSocio" => ClientModel::GetAllSocios(1),
+            "dataSectores" => ClientModel::GetAllSectores(1),
+            "dataServicios" => ClientModel::GetAllServicios(1),
+            "dataPaises" => ClientModel::GetAllPaises()
         ];
 
         return response($paramsInit,200);

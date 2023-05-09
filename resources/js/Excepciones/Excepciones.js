@@ -27,7 +27,7 @@ export class Exceptions
 
             //String Exception
             case 'OutRange':
-                return "Se ha excedido el rango de caracteres. Máximo de caracteres: ";
+                return "Se ha excedido el rango de caracteres. Actual (Máximo) = ";
 
             case 'EmptyString':
                 return "Este valor no puede estar vacio";

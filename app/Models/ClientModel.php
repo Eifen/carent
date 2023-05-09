@@ -19,4 +19,35 @@ class ClientModel extends Model
         ->where('Id_estatus','=',$Status)
         ->get(['Id','Primer_nombre','Segundo_nombre','Primer_apellido','Segundo_apellido']);
     }
+    
+    /**
+     * Metodo que devuelve todos los sectores activos. Campo Id y Nombre_sector
+     * @param int $Status Captura el tipo de estatus
+     * @return Array Retorna un array de todos los sectores
+     */
+    static public function GetAllSectores($Status){
+        return DB::table('tbl_clientes_sector')
+        ->where('Id_estatus',$Status)
+        ->get(['Id','Nombre_sector']);
+    }
+
+    /**
+     * Metodo que devuelve todos los servicios activos. Campo Id y Nombre_servicio
+     * @param int $Status Captura el tipo de estatus
+     * @return Array Retorna un array de todos los servicios
+     */
+    static public function GetAllServicios($Status){
+        return DB::table('tbl_clientes_servicios')
+        ->where('Id_estatus',$Status)
+        ->get(['Id','Nombre_servicio']);
+    }
+
+    /**
+     * Metodo sin parametros que devuelve todos los paises registrados
+     * @return Array Retorna un array de todos los paises
+     */
+    static public function GetAllPaises()
+    {
+        return DB::table('tbl_clientes_direccion_pais')->get();
+    }
 }
