@@ -38,6 +38,28 @@
                 {{ scope.messages.error.rifError }}
             </div>
         </div>
+        <!-- Razon social -->
+        <div class="mb-3">
+            <label for="razonSocial">Nombre o razón social <span :class="scope.formClass.requiredField">*</span></label>
+            <div class="input-group">
+                <span class="input-group-text" id="basic-addon3">
+                    <font-awesome string-icon="fa-solid fa-user"></font-awesome>
+                </span>
+                <input
+                type="text"
+                class="form-control"
+                placeholder="Ejemplo: Banco de Venezuela"
+                id="razonSocial"
+                aria-describedby="basic-addon3"
+                v-model="scope.inputRazonSocial"/>
+            </div>
+            <!-- Mensajes de error en Nombre-->
+            <div :class="scope.formClass.failureValidation"
+                v-if="scope.messages.error.razonSocialError != ''">
+                <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
+                {{ scope.messages.error.razonSocialError }}
+            </div>
+        </div>
     </fieldset>
 </template>
 

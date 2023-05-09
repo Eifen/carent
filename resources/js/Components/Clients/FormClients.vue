@@ -27,6 +27,7 @@
 //Espacio de importaciones
 //Hooks
 import { createdMixin } from '@/Components/Clients/LifecycleClients/created.js'
+import { mountedMixin } from '@/Components/Clients/LifecycleClients/mounted.js'
 import { clientWatchers } from '@/Components/Clients/LifecycleClients/watchers.js'
 
 //Templates
@@ -69,14 +70,17 @@ export default {
                 buttonCreate: "Crear cliente",
                 buttonEdit: "Actualizar cliente",
                 error: {
-                    rifError: ''
+                    rifError: '',
+                    razonSocialError: ''
                 } //Objeto que controla los mensajes de error
             }, //Controla los mensajes del sistema. Tanto de error como de layouts
             submitButton:
             {
                 selectSocio: false,
+                rifValid: false,
+                razonSocialValid: false,
                 isValid: false, //Controla el estado del botón de crear cliente
-            }, //Control las validaciones
+            }, //Controla las validaciones
             dataSelect:
             {
                 socio: [] //Data de todos los socios activos
@@ -84,9 +88,15 @@ export default {
             inputWatchers: [], //Array que inicializa los Watchers
             inputSocioSelect: 0, //Select de Socios
             inputNit: '', //Value del NIT
+            inputRif: '', //Value del RIF
+            inputRazonSocial: '', //Value de la razon social
+            //Constantes
+            LimitString: { NAME: 50, DIR: 200, WEB: 100, RIF: 15 } //Máximo de caracteres para los campos de clientes
         }
     },
+    //Ciclo de Vida
     created() { createdMixin(this) },
+    mounted() { mountedMixin(this) },
     computed: { DTOData(){ return this.$data }}, //Metodo computado que envia la data a sus hijos a través de propiedades
     components: { FontAwesome, DataSocio, DataCliente },
     mixins: [ clientWatchers ]

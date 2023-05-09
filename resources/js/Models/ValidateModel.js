@@ -82,7 +82,7 @@ export class Validate
      */
     static Number(numberData)
     {
-        const numberFormat = new RegExp('^([0-9])+$');
+        const numberFormat = new RegExp('^([0-9]*)+$');
         if(numberFormat.test(numberData)) return {"response":true,"message":"Success"};
         return {"response":false, "message":"IsNotNumber"}
     }
@@ -139,11 +139,17 @@ export class Validate
 
         return {"response":false,"message":"Failure"}
     }
+    /**
+     * Metodo que verifica el primer caracter del rif
+     * @param {*} rifData Captura el valor del input del rif
+     * @returns Object {"response":true/false,"message":string}
+     */
     static RifFormat(rifData)
     {
-        const rifDTO = new RegExp('^(V|E|J|P|G|C)$');
+        const rifDTO = new RegExp('^(V|v|E|e|J|j|P|p|G|g|C|c)([0-9]{0,14})$');
+        const matchRif = rifData.match(rifDTO); //Devolvemos todas las coincidencias en el string en funcion del REGEX
         //Revisamos si coincide
-        if (rifDTO.test(rifData)) return {"reponse":true,"message":"Success"};
+        if (matchRif != null) return {"response":true,"message":matchRif};
         //Si no coincide
         return {"response":false,"message":"NoInitRif"}
     }
