@@ -30,12 +30,11 @@ export const userWatchers =
             this.inputIngreso = newEdit.Fecha_ingreso
         },
         //Nombres
-        inputFirstname(newString){ this.validateString(this.limitString.NAME,newString,'inputFirstname','firstnameError',[true,'firstnameValid']) },
-        inputSecondname(newString){ this.validateString(this.limitString.NAME,newString,'inputSecondname','secondnameError',[false,'']) },
+        inputFirstname(newString) { this.validateString(this.limitString.NAME, newString, 'inputFirstname', 'firstnameError', [true, 'firstnameValid']) },
+        inputSecondname(newString) { this.validateString(this.limitString.NAME, newString, 'inputSecondname', 'secondnameError', [false, '']) },
         //Apellidos
-        inputLastname(newString){ this.validateString(this.limitString.NAME,newString,'inputLastname','lastnameError',[true,'lastnameValid']) },
-        inputLastSecondname(newString){ this.validateString(this.limitString.NAME,newString,'inputLastSecondname','lastsecondnameError',[false,'']) },
-
+        inputLastname(newString) { this.validateString(this.limitString.NAME, newString, 'inputLastname', 'lastnameError', [true, 'lastnameValid']) },
+        inputLastSecondname(newString) { this.validateString(this.limitString.NAME, newString, 'inputLastSecondname', 'lastsecondnameError', [false, '']) },
         //Watch del documento de identidad
         inputSelect(newSelect, oldSelect) {
             try {
