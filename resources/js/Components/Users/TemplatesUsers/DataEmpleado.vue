@@ -24,7 +24,7 @@
           :disabled="scope.inputEstadoSelect == 0"
           v-model="scope.inputMunicipioSelect">
           <option value=0 selected disabled>Seleccione el Municipio</option>
-          <option v-for="(select, cursor) in scope.municipalityData"
+          <option v-for="(select, cursor) in scope.municipality.select"
             :key="cursor"
             :value="select.Id"
             :selected="select.Id == 0"
@@ -42,7 +42,7 @@
           :disabled="scope.inputMunicipioSelect == 0"
           v-model="scope.inputParroquiaSelect">
           <option value=0 selected disabled>Seleccione la Parroquia</option>
-          <option v-for="(select, cursor) in scope.parishData"
+          <option v-for="(select, cursor) in scope.parish.select"
             :key="cursor"
             :value="select.Id"
             :selected="select.Id == 0"

@@ -33,29 +33,25 @@ class UsersModel extends Model
     }
 
     /**
-     * Metodo que devuelve los municipios asociados a un estado
-     * @param Number $Id = id del estado
+     * Metodo que devuelve los municipios
      * @return Array info de los municipios disponibles
      */
-    public static function GetMunicipalityById($Id)
+    public static function GetMunicipality()
     {
         $getMunicipality = DB::table('tbl_usuarios_direccion_municipio')
-        ->where('Id_direccion_estado',$Id)
-        ->get(['Id','NombreMunicipio']);
+        ->get(['Id','NombreMunicipio','Id_direccion_estado']);
         return $getMunicipality;
         //[0] = Id, [1] = NombreMunicipio
     }
 
     /**
-     * Metodo que devuelve todas las parroquias asociadas al municipio
-     * @param Number $Id = id del municipio
+     * Metodo que devuelve todas las parroquias
      * @return Array info de todas las parroquias disponibles
      */
-    public static function GetParishById($Id)
+    public static function GetParish()
     {
         $getParish = DB::table('tbl_usuarios_direccion_parroquia')
-        ->where('Id_direccion_municipio',$Id)
-        ->get(['Id','NombreParroquia']);
+        ->get(['Id','NombreParroquia','Id_direccion_municipio']);
         return $getParish;
         //[0] = Id, [1] = NombreParroquia
     }
@@ -126,7 +122,7 @@ class UsersModel extends Model
             case 'create':
                 DB::select('call sp_NewUser(?,?,?,?,?,?,?,?,?,?,?,?,?,@response)',$paramsUsers);
                 break;
-            
+
             case 'update':
                 DB::select('call sp_UpdateUser(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,@response)',$paramsUsers);
                 break;
@@ -142,7 +138,7 @@ class UsersModel extends Model
                 case 'create':
                     DB::select('call sp_NewContactUser(?,?,?,?,?,?,?,@response2)',$paramsContact);
                     break;
-                
+
                 case 'update':
                     DB::select('call sp_UpdateContactUser(?,?,?,?,?,?,?,@response2)',$paramsContact);
                     break;

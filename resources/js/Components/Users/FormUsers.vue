@@ -122,11 +122,17 @@ export default {
             //Espacio dedicado a variables de data en la base de datos
             typeDocument: [],
             stateData: [], //Data para estados
-            municipalityData:[], //Data para los municipios
-            parishData:[], //Data para la parroquia
             divisionData: [], //Data para la division
             cargoData: [], //Data para los cargos
             statusData: [], //Data para el status del empleado
+            municipality: {
+                init: [], //Data inicial
+                select: [] //Data que se mostrara
+            }, //Control para los municipios
+            parish:{
+                init:[], //Data inicial
+                select:[] //Data que se mostrara
+            }, //Contro para las parroquias
 
             //Espacio reservado para el control del Create / Edit
             submitButton: {
@@ -138,7 +144,9 @@ export default {
                 firstphoneValid: false, // telefono principal
                 firstemailValid:false, // correo principal
                 isValid: false
-            }
+            },
+            //Constantes
+            limitString: { NAME: 20 }
         }
     },
     components: { Calendar, FontAwesome, DataPrincipal, DataContact, DataEmpleado },

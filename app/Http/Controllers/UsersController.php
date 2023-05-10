@@ -54,22 +54,6 @@ class UsersController extends Controller
         return response('User loaded',200);
     }
 
-    //Municipios en funcion del Estado
-    public function GetMunicipality(Request $getIdState)
-    {
-        $getMunicipality = UsersModel::GetMunicipalityById($getIdState->input('IdState'));
-        //Retornamos la data
-        return response($getMunicipality,200);
-    }
-
-    //Parroquias en funcion del Municipio
-    public function GetParish(Request $getIdMunicipality)
-    {
-        $getParish = UsersModel::GetParishById($getIdMunicipality->input('IdMunicipio'));
-        //retornamos la data
-        return response($getParish,200);
-    }
-
     /**
      * Metodo que sincroniza la data inicial
      * @return Response Object con las listas en el formulario
@@ -77,11 +61,13 @@ class UsersController extends Controller
     public function GetInitData()
     {
         $dataInit = [
-            "TiposDocumento" => UsersModel::TypeDocument(1),
-            "StatesUsuario" =>  UsersModel::GetAllState(),
-            "Divisiones" => UsersModel::GetAllDivision(),
-            "Cargos" => UsersModel::GetAllCargo(),
-            "StatusUsuario" => ConfigModel::GetAllStatus('usuarios')
+            "tiposDocumento" => UsersModel::TypeDocument(1),
+            "statesUsuario" =>  UsersModel::GetAllState(),
+            "divisiones" => UsersModel::GetAllDivision(),
+            "cargos" => UsersModel::GetAllCargo(),
+            "statusUsuario" => ConfigModel::GetAllStatus('usuarios'),
+            "municipalityUsuario" => UsersModel::GetMunicipality(),
+            "parishUsuario" => UsersModel::GetParish()
         ];
 
         return response($dataInit,200);

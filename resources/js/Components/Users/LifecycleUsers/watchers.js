@@ -29,9 +29,15 @@ export const userWatchers =
             this.inputCargoSelect = newEdit.CargoId
             this.inputIngreso = newEdit.Fecha_ingreso
         },
+        //Nombres
+        inputFirstname(newString){ this.validateString(this.limitString.NAME,newString,'inputFirstname','firstnameError',[true,'firstnameValid']) },
+        inputSecondname(newString){ this.validateString(this.limitString.NAME,newString,'inputSecondname','secondnameError',[false,'']) },
+        //Apellidos
+        inputLastname(newString){ this.validateString(this.limitString.NAME,newString,'inputLastname','lastnameError',[true,'lastnameValid']) },
+        inputLastSecondname(newString){ this.validateString(this.limitString.NAME,newString,'inputLastSecondname','lastsecondnameError',[false,'']) },
 
         //Watch del documento de identidad
-        inputSelect(newSelect,oldSelect) {
+        inputSelect(newSelect, oldSelect) {
             try {
                 const valueDTO = newSelect.replace(/\./g, '');
                 const verifyFormat = Validate.FormatDocument(valueDTO);
@@ -40,8 +46,8 @@ export const userWatchers =
                 if (this.inputSelect.length > 2) this.messages.form.documentError = '';
 
                 valueDTO.length > 14
-                ? this.inputSelect = oldSelect
-                : this.inputSelect = verifyFormat.message;
+                    ? this.inputSelect = oldSelect
+                    : this.inputSelect = verifyFormat.message;
 
                 //Activamos la bandera del documento
                 this.submitButton.documentValid = true;
@@ -56,6 +62,7 @@ export const userWatchers =
                 this.messages.form.documentError = Exceptions.CatchWarning(errorMessage);
             }
         },
+        //Codigo de usuario
         inputCode(newCode, oldCode) {
             const codeFormat = new RegExp('^([0-9]{0,6})$');
             if (!codeFormat.test(newCode)) this.inputCode = oldCode;
@@ -68,30 +75,12 @@ export const userWatchers =
         },
         //Activamos de Inputs Watchers
         inputEstadoSelect(getEstado) {
-            const paramsToPost = { "IdState": getEstado }
             //Consultamos los municipios
-            axios.post('/usuarios/getMunicipality', paramsToPost)
-                .then(request => {
-                    if (request.status !== 200) throw request;
-
-                    //Sincronizamos
-                    this.municipalityData = request.data
-                }).catch(error => {
-                    console.error(error);
-                })
+            this.municipality.select = this.municipality.init.filter((municipality) => { return municipality.Id_direccion_estado === getEstado })
         },
         inputMunicipioSelect(getMunicipio) {
-            const paramsToPost = { "IdMunicipio": getMunicipio }
             //Consultamos las parroquias
-            axios.post('/usuarios/getParish', paramsToPost)
-                .then(request => {
-                    if (request.status !== 200) throw request;
-
-                    //Sincronizamos
-                    this.parishData = request.data;
-                }).catch(error => {
-                    console.error(error);
-                })
+            this.parish.select = this.parish.init.filter((parish) => { return parish.Id_direccion_municipio === getMunicipio })
         },
         //Watch del submitButton
         submitButton: {

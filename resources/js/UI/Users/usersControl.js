@@ -110,7 +110,6 @@ const createUser = createApp({
          */
         updateUser(Data)
         {
-            console.log(Data)
             this.isEditClick = true;
             this.validateNivel2(Data);
 
@@ -133,25 +132,25 @@ const createUser = createApp({
                 "contact": JSON.parse(JSON.stringify(this.paramDTONewContact)),
                 "document": JSON.parse(JSON.stringify(this.paramDTONewDocument)),
                 "isEdit": true})
-            .then(request => 
+            .then(request =>
                 {
                     if(request.status === 200 && !request.data.response) throw request.data.message;
                     toast.success(request.data.message, {
                         position: toast.POSITION.TOP_LEFT,
                         autoClose: false
                     });
-    
+
                     setTimeout(() => {
                         window.location.href = "/usuarios";
                     }, AXIOSINTERVAL + 200);
                 })
-            .catch(error => 
+            .catch(error =>
                 {
                     toast.error(error, {
                         position: toast.POSITION.TOP_LEFT,
                         autoClose:NOTIFYINTERVAL
                     });
-    
+
                     this.isEditClick = false;
                 })
         },
