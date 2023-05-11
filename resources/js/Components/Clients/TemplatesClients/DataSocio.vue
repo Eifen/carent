@@ -16,6 +16,20 @@
         </select>
       </div>
     </div>
+    <!-- Estado del cliente. Solo para Edit -->
+    <div class="mb-3" v-if="isEdit">
+      <label for="Status">Status del cliente</label>
+      <div class="input-group">
+        <select class="form-select" v-model="scope.inputStatusSelect" title="StatusSelect">
+          <option value="0" selected disabled>Seleccione el status</option>
+          <option v-for="(select, cursor) in scope.dataSelect.status"
+            :key="cursor"
+            :value="select.Id">
+            {{ select.Descripcion }}
+          </option>
+        </select>
+      </div>
+    </div>
   </fieldset>
 </template>
 

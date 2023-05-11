@@ -16,7 +16,7 @@
             <div :class="formClass.button"
             :id="[!submitButton.isValid ? formClass.disableButton : isClick ? formClass.disableButton : null]"
             v-if="inputSocioSelect != 0"
-            @click="DTOEmit()">
+            @click="ClientEmit()">
                 <span v-if="isEdit & !isClick">{{ messages.buttonEdit }}</span>
                 <span v-else-if="!isEdit & !isClick">{{ messages.buttonCreate }}</span>
                 <span v-else-if="isClick"><font-awesome string-icon="fa-solid fa-spinner" is-spin></font-awesome></span>
@@ -31,6 +31,7 @@
 import { createdMixin } from '@/Components/Clients/LifecycleClients/created.js'
 import { mountedMixin } from '@/Components/Clients/LifecycleClients/mounted.js'
 import { clientWatchers } from '@/Components/Clients/LifecycleClients/watchers.js'
+import { clientMethods } from '@/Components/Clients/LifecycleClients/methods.js'
 
 //Templates
 import DataSocio from '@/Components/Clients/TemplatesClients/DataSocio.vue';
@@ -77,7 +78,8 @@ export default {
                     razonSocialError: '',
                     telefonoError: '',
                     direccionError: '',
-                    firstemailError: ''
+                    firstemailError: '',
+                    webError: '',
                 } //Objeto que controla los mensajes de error
             }, //Controla los mensajes del sistema. Tanto de error como de layouts
             submitButton:
@@ -98,19 +100,22 @@ export default {
                 socio: [], //Data de todos los socios activos
                 servicios: [], //Data de todos los servicios
                 sectores: [], //Data de todos los sectores
-                paises: [] //Data de todos los paises
+                paises: [], //Data de todos los paises
+                status: [] //Data de los status para cliente
             },
             inputWatchers: [], //Array que inicializa los Watchers
             inputSocioSelect: 0, //Select de Socios
             inputSectorSelect: 0, //Select de sectores
             inputServicioSelect: 0, //Select de servicios
             inputPaisSelect: 0, //Select de paises
+            inputStatusSelect: 0, //Select del Status
             inputNit: '', //Value del NIT
             inputRif: '', //Value del RIF
             inputTelefono: '', //Telefono principal
             inputRazonSocial: '', //Value de la razon social
             inputDireccion: '', //Value de la direccion fiscal
             inputFirstEmail: '', //Value del correo electronico principal de la empresa
+            inputWeb: '', //Value de la pagina web
             //Constantes
             LimitString: { NAME: 50, DIR: 200, WEB: 100, RIF: 15, TLF: 20} //Máximo de caracteres para los campos de clientes
         }
@@ -120,6 +125,6 @@ export default {
     mounted() { mountedMixin(this) },
     computed: { DTOData(){ return this.$data }}, //Metodo computado que envia la data a sus hijos a través de propiedades
     components: { FontAwesome, DataSocio, DataCliente, DataContactCliente },
-    mixins: [ clientWatchers ]
+    mixins: [ clientWatchers, clientMethods ]
 }
 </script>

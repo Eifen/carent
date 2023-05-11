@@ -38,7 +38,14 @@
         @endif
 
         @if (Request::url() === URL::route('updateUser'))
-            @include('UI.Users.userUpdate')
+            @if (Session::has('dataUpdate'))
+                @include('UI.Users.userUpdate')
+            @else {{--Redirecciona si dataUpdate no existe--}}
+                @php
+                    header('Location: /usuarios');
+                    exit();
+                @endphp
+            @endif
         @endif
         {{-- Redireccion de rutas para Clientes --}}
         @if (Request::url() === URL::route('clients'))

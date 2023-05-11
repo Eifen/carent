@@ -82,6 +82,28 @@
                 <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
                 {{ scope.messages.error.firstemailError }}
             </div>
+        </div>
+        <!-- Página Web -->
+        <div class="mb-3">
+            <label for="paginaWeb">Página Web</label>
+            <div class="input-group">
+                <span class="input-group-text" id="basic-addon6">
+                    <font-awesome string-icon="fa-solid fa-user"></font-awesome>
+                </span>
+                <input
+                type="text"
+                class="form-control"
+                placeholder="Ejemplo: https://crowe.com.ve"
+                id="paginaWeb"
+                aria-describedby="basic-addon6"
+                v-model="scope.inputWeb"/>
+            </div>
+            <!-- Mensajes de error en Nombre-->
+            <div :class="scope.formClass.failureValidation"
+                v-if="scope.messages.error.webError != ''">
+                <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
+                {{ scope.messages.error.webError }}
+            </div>
         </div>        
     </fieldset>
 </template>

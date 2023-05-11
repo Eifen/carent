@@ -38,7 +38,8 @@ const clientsIndex = createApp ({
         .then(request => {
             if(request.status !== 200) throw request.data;
             //Si pasa la data, asignamos a maxPagination
-            setTimeout( () => { this.maxPagination = Math.ceil(request.data) }, AXIOSINTERVAL)
+            setTimeout( () => { this.maxPagination = Math.ceil(request.data); }, AXIOSINTERVAL)
+            
         })
         .catch(error => {
             console.error(error);

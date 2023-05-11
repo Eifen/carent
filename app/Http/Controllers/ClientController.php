@@ -47,9 +47,44 @@ class ClientController extends Controller
             "dataSocio" => ClientModel::GetAllSocios(1),
             "dataSectores" => ClientModel::GetAllSectores(1),
             "dataServicios" => ClientModel::GetAllServicios(1),
-            "dataPaises" => ClientModel::GetAllPaises()
+            "dataPaises" => ClientModel::GetAllPaises(),
+            "dataStatus" => ConfigModel::GetAllStatus('clientes')
         ];
 
         return response($paramsInit,200);
+    }
+
+    /**
+     * Metodo que crea o actualiza un cliente
+     * @param Request $dataClient Variable en formato request que recibe la data recibida por POST
+     * @return Array Retorna un array en formato response
+     */
+    public function ClientControl(Request $dataClient)
+    {
+        $paramsEdit = array(); #Inicializacion de array de edición
+
+        //Pasamos la data
+        $paramsToControl = array(
+            $dataClient->input('client')['IdSocio'],
+            $dataClient->input('client')['Rif'],
+            $dataClient->input('client')['Nit'] === null ? 0 : $dataClient->input('client')['Nit'],
+            mb_strtoupper($dataClient->input('client')['RazonSocial']),
+            $dataClient->input('client')['IdPais'],
+            $dataClient->input('client')['Direccion'],
+            strtolower($dataClient->input('client')['Telefono']),
+            strtolower($dataClient->input('client')['PaginaWeb']),
+            strtolower($dataClient->input('client')['EmailFiscal']),
+            $dataClient->input('client')['IdSector'],
+            $dataClient->input('client')['IdServicio'],
+            Session::get('idUsuario'),
+            ConfigController::GetIpUser()
+        );
+
+        $dataClient->input('isEdit')
+        ? null
+        : $ResponseClient = ClientModel::ControlClients($paramsToControl,'create');
+
+        //Retornamos la data
+        return response($ResponseClient,200);
     }
 }

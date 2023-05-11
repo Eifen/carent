@@ -103,7 +103,15 @@ const createUser = createApp({
          * Metodo que actualiza el data model para actualizar usuarios
          * @param {*} dataUser Datos del usuario a actualizar
          */
-        prepareUpdate(dataUser){ this.updateModel = dataUser; console.log(this.updateModel)},
+        prepareUpdate(dataUser){ 
+            this.updateModel = dataUser;
+            //Una vez almacenada, eliminamos su valor en la sessión para que sea de unico uso
+            axios.put('deleteUpdateData')
+            .then(request => {})
+            .catch(error => {
+                console.error(error);
+            })
+        },
         /**
          * Metodo que actualiza un usuario
          * @param {*} Data Almacena los datos a actualizar
@@ -186,7 +194,7 @@ const createUser = createApp({
             DataToReview.IdDivision == 0 ? this.paramDTOUser.IdDivision = 0 : this.paramDTOUser.IdDivision = DataToReview.IdDivision
 
             //Descomponer cedula
-            this.paramDTOUser.Cedula = DTOCedula[1].replace(/,/g,'');
+            this.paramDTOUser.Cedula = DTOCedula[1].replace(/\./g,'');
             this.paramDTONewDocument.Cedula = this.paramDTOUser.Cedula;
             this.paramDTONewDocument.TipoCedula = DTOCedula[0];
 

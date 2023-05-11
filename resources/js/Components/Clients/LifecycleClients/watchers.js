@@ -19,45 +19,11 @@ export const clientWatchers =
             }else{ this.submitButton.paisesValid = false }
         },
         //Razon Social
-        inputRazonSocial(newValue)
-        {
-            try{
-                const validateRazon = Validate.String(newValue,this.LimitString.NAME);
-                if(!validateRazon.response) throw validateRazon.message;
-                //Control de banderas
-                if(newValue.length != 0 && validateRazon.response) this.submitButton.razonSocialValid = true;
-                if(newValue.length == 0 || newValue.length > this.LimitString.NAME) this.submitButton.razonSocialValid = false;
-                //-
-                //Desactivamos los mensajes de error
-                if(newValue.length > 0 && newValue.length <= this.LimitString.NAME) this.messages.error.razonSocialError = '';
-
-            }catch (error){
-                //Capuramos el error
-                this.messages.error.razonSocialError = Exceptions.CatchWarning(error) + newValue.length +`(${this.LimitString.NAME})`;
-                //Desactivamos Banderas
-                this.submitButton.razonSocialValid = false;
-            }
-        },
+        inputRazonSocial(newValue){ this.validateString(this.LimitString.NAME,newValue,'inputRazonSocial','razonSocialError',[true,'razonSocialValid']) },
         //Direccion
-        inputDireccion(newValue)
-        {
-            try{
-                const validateDireccion = Validate.String(newValue,this.LimitString.DIR);
-                if(!validateDireccion.response) throw validateDireccion.message;
-                //Control de banderas
-                if(newValue.length != 0 && validateDireccion.response) this.submitButton.direccionValid = true;
-                if(newValue.length == 0 || newValue.length > this.LimitString.DIR) this.submitButton.direccionValid = false;
-                //-
-                //Desactivamos los mensajes de error
-                if(newValue.length > 0 && newValue.length <= this.LimitString.DIR) this.messages.error.direccionError = '';
-
-            }catch (error){
-                //Capuramos el error
-                this.messages.error.direccionError = Exceptions.CatchWarning(error) + newValue.length +`(${this.LimitString.DIR})`;
-                //Desactivamos Banderas
-                this.submitButton.direccionValid = false;
-            }
-        },
+        inputDireccion(newValue){ this.validateString(this.LimitString.DIR,newValue,'inputDireccion','direccionError',[true,'direccionValid']) },
+        //Pagina Web
+        inputWeb(newValue){ this.validateString(this.LimitString.WEB,newValue,'inputWeb','webError',[false,'']) },
         //Correo electronico
         inputFirstEmail(newValue)
         {

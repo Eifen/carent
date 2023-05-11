@@ -42,6 +42,7 @@ export const createdMixin = (self) => {
         self.dataSelect.servicios = request.data.dataServicios
         self.dataSelect.sectores = request.data.dataSectores
         self.dataSelect.paises = request.data.dataPaises
+        self.dataSelect.status = request.data.dataStatus
     })
     .catch(error => {
         console.error(error);

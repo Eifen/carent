@@ -33,6 +33,7 @@ Route::prefix('/')->group(function(){
         Route::post('/getParamsInit',[UsersController::class,'GetInitData']); //Parametros iniciales
         Route::post('/getMunicipality',[UsersController::class,'GetMunicipality']);
         Route::post('/getParish',[UsersController::class,'GetParish']);
+        Route::put('/deleteUpdateData',[UsersController::class,'DeleteDataUpdate']); //Elimina la Session['dataUpdate']
         //Create
         Route::prefix('/create')->group(function(){
             Route::get('/',[UsersController::class,'index'])->name('createUser');

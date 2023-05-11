@@ -84,7 +84,7 @@ class UsersController extends Controller
         //Fecha de ingreso null o vacia
         $fechaIngreso = $dataUser->input('user')['DateIngreso'] != null || $dataUser->input('user')['DateIngreso'] != ''
                         ? date("Y-m-d",strtotime($dataUser->input('user')['DateIngreso']))
-                        : date("Y-m-d");
+                        : null;
 
         $paramsUser = array(
             mb_strtoupper($dataUser->input('user')['FirstName']),
@@ -134,14 +134,13 @@ class UsersController extends Controller
         : $ResponseUser = UsersModel::ControlUser($paramsUser,$paramsContact,"create");
 
         //Eliminamos el session update en caso de que exista.
-        //if(Session::has('dataUpdate')) Session::forget("dataUpdate");
+        if(Session::has('dataUpdate') && $ResponseUser['response']) Session::forget("dataUpdate");
 
         return response($ResponseUser,200);
     }
 
-    //Actualización de usuarios
-    public function UpdateUser(Request $dataUser)
-    {
-
-    }
+    /**
+     * Metodo que borra la session dela data Update
+     */
+    public function DeleteDataUpdate(){ if(Session::has('dataUpdate')) Session::forget("dataUpdate"); }
 }

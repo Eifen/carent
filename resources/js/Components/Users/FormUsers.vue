@@ -107,7 +107,7 @@ export default {
             inputSecondEmail:'', //Value para el segundo correo (Secundario)
             inputFirstPhone:'', //Value para el Telefono Principal
             inputSecondPhone:'', //Value para el Telefono Secundario
-            inputCheckedCrowe: this.isEdit ? true : false, //Confirmacion si el usuario es empleado
+            inputCheckedCrowe: false, //Confirmacion si el usuario es empleado
             inputEstadoSelect: 0, //Almacena el value del estado
             inputMunicipioSelect: 0, //Almacena el value del municipio
             inputParroquiaSelect: 0, //Almacena el value de la parroquia

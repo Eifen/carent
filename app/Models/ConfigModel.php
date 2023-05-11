@@ -55,6 +55,8 @@ class ConfigModel extends Model
         switch ($tableReference) {
             case 'usuarios':
                 return DB::table('tbl_usuarios_status')->get();
+            case 'clientes':
+                return DB::table('tbl_clientes_status')->get();
         }
     }
 }

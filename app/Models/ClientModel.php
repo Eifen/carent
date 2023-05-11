@@ -50,4 +50,26 @@ class ClientModel extends Model
     {
         return DB::table('tbl_clientes_direccion_pais')->get();
     }
+
+    /**
+     * Metodo que crea o actualiza un cliente
+     * @param Array $dataRequest Los parametros a ejecutar en el procedure
+     * @param String $typeControl Tipo de operacion = create, o update
+     * @return Array Retorna un array response con la estrucutra {response:boolean,message:string|object}
+     */
+    static public function ControlClients($dataRequest, $typeControl)
+    {
+        //Separamos el tipo de proceso
+        switch ($typeControl) {
+            case 'create':
+                DB::select('call sp_NewClient(?,?,?,?,?,?,?,?,?,?,?,?,?,@response)',$dataRequest);
+                break;
+        }
+
+        //Capturamos el JSON
+        $GetResponse = DB::select('SELECT @response AS JsonResponse');
+        $response = json_decode($GetResponse[0]->JsonResponse,true);
+
+        return $response;
+    }
 }

@@ -35,6 +35,16 @@ export const userWatchers =
         //Apellidos
         inputLastname(newString) { this.validateString(this.limitString.NAME, newString, 'inputLastname', 'lastnameError', [true, 'lastnameValid']) },
         inputLastSecondname(newString) { this.validateString(this.limitString.NAME, newString, 'inputLastSecondname', 'lastsecondnameError', [false, '']) },
+        //Fechas
+        inputBirthday(newDate) { this.validateDate(newDate,'inputBirthday', 'birthdayError',[true,'birthdayValid']) },
+        inputIngreso(newDate) { this.validateDate(newDate,'inputIngreso', 'ingresoError',[false,'']) },
+        inputEgreso(newDate) { this.validateDate(newDate,'inputEgreso', 'egresoError',[false,'']) },
+        //Emails.
+        inputFirstEmail(newEmail) { this.validateEmail(newEmail,'inputFirstEmail','firstemailError', [true,'firstemailValid']) },
+        inputSecondEmail(newEmail) { this.validateEmail(newEmail,'inputSecondEmail','secondemailError', [false,'']) },
+        //Telefonos
+        inputFirstPhone(newPhone,oldPhone) { this.validatePhone(newPhone,oldPhone,'inputFirstPhone',[true,'firstphoneValid']) },
+        inputSecondPhone(newPhone,oldPhone) { this.validatePhone(newPhone,oldPhone,'inputSecondPhone',[false,'']) },
         //Watch del documento de identidad
         inputSelect(newSelect, oldSelect) {
             try {
