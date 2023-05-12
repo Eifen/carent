@@ -42,7 +42,7 @@ BEGIN
 			ROLLBACK; #Cancelamos cualquier query que se hubiese ejecutado
 			
 			#Registramos el error en el procedure
-			CALL sp_mensaje_bd(1,1,\"sp_nuevo_cliente\",v_ErrorMsj,NULL,1,@response); 
+			CALL sp_mensaje_bd(1,1,\"sp_create_client\",v_ErrorMsj,NULL,1,@response); 
 			
 			#Producimos en la salida un JSON de error
 			SET p_Response = '{

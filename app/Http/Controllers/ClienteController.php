@@ -117,7 +117,7 @@ class ClienteController extends Controller
     );
 
     $response = $modelo->crearCliente($parametros);
-
+   
     if($response["response"]){
 
       $parametros = [
