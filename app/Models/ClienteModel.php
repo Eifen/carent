@@ -229,7 +229,7 @@ class ClienteModel extends Model
 
   function crearCliente($parametros){
 
-    $funcionario = DB::select('call sp_nuevo_cliente(?,?,?,?,?,?,?,?,?,?,?,?,?,?,@respuesta)',$parametros);
+    $funcionario = DB::select('call sp_create_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,@respuesta)',$parametros);
     $respuestaSp = DB::select('SELECT @respuesta AS respuesta_json');
     $respuestaJson = json_decode($respuestaSp[0]->respuesta_json, true);
 

@@ -15,8 +15,8 @@ return new class extends Migration
     {
 
         $procedure = "
-DROP PROCEDURE IF EXISTS sp_nuevo_cliente;
-CREATE PROCEDURE `sp_nuevo_cliente`(IN `p_IdUsuario` INT, IN `p_IdSocio` INT, IN `p_CodigoCliente` INT, IN `p_Rif` VARCHAR(30), IN `p_Nit` INT, IN `p_RazonSocial` VARCHAR(60), IN `p_IdPais` INT, IN `p_Address` TEXT, IN `p_TelefonoFiscal` VARCHAR(30), IN `p_PaginaWeb` VARCHAR(150), IN `p_EmailFiscal` VARCHAR(100), IN `p_IdSectorAsociado` INT, IN `p_IdServicioAsociado` INT, IN `p_IpAction` VARCHAR(40), OUT `p_Response` TEXT)
+DROP PROCEDURE IF EXISTS sp_create_client;
+CREATE PROCEDURE `sp_create_client`(IN `p_IdUsuario` INT, IN `p_IdSocio` INT, IN `p_CodigoCliente` INT, IN `p_Rif` VARCHAR(30), IN `p_Nit` INT, IN `p_RazonSocial` VARCHAR(60), IN `p_IdPais` INT, IN `p_Address` TEXT, IN `p_TelefonoFiscal` VARCHAR(30), IN `p_PaginaWeb` VARCHAR(150), IN `p_EmailFiscal` VARCHAR(100), IN `p_IdSectorAsociado` INT, IN `p_IdServicioAsociado` INT, IN `p_IpAction` VARCHAR(40), OUT `p_Response` TEXT)
 BEGIN
 
 	/*DECLARACION DE VARIABLES*/
@@ -149,6 +149,6 @@ END;
      */
     public function down()
     {
-        Schema::dropIfExists('sp_nuevo_cliente');
+        Schema::dropIfExists('sp_create_client');
     }
 };
