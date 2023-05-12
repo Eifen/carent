@@ -117,7 +117,7 @@ class ClienteController extends Controller
     );
 
     $response = $modelo->crearCliente($parametros);
-
+   
     if($response["response"]){
 
       $parametros = [
@@ -195,9 +195,9 @@ class ClienteController extends Controller
     return $response;
   }
 
-  function modificarCliente(Request $request){
+    function UpdateClientData(Request $request){
 
-    $modelo = new ClienteModel();
+        $model = new ClienteModel();
 
     $parametros = array(
       $request->input("idCliente"),
@@ -217,24 +217,25 @@ class ClienteController extends Controller
       $request->input("servicio")
     );
 
-    $response = $modelo->modificarCliente($parametros);
+        $response = $model->UpdateClientData($params);
 
-    if($response["response"]){
+        if($response["response"]){
 
-      $parametros = [
-        "accion" => 'Modificación del cliente: '. $request->input("codigoCliente"),
-        "direccion_ip" => $request->session()->get('usuario_ip'),
-        "fecha" => date("Y-m-d H:i:s"),
-        "tabla" => 'tbl_cliente',
-        "usuario_id" => $request->session()->get('usuario_id')
-      ];
+            $params = [
+                "accion" => 'Modificación del cliente: '. $request->input("codigoCliente"),
+                "direccion_ip" => $request->session()->get('usuario_ip'),
+                "fecha" => date("Y-m-d H:i:s"),
+                "tabla" => 'tbl_cliente',
+                "usuario_id" => $request->session()->get('usuario_id')
+            ];
 
-      $modeloAudit = new AuditoriaLogModel();
-      $modeloAudit->logs_auditoria($parametros);
+            $model = new AuditoriaLogModel();
+            $model->logs_auditoria($params);
+
+        }
+
+        return $response;
 
     }
 
-    return $response;
-
-  }
 }
