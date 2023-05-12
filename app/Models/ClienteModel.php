@@ -390,14 +390,19 @@ class ClienteModel extends Model
                                 (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE id_usuario_socio = id) nombre,
                                  codigo,
                                  rif,
+                                 nit,
                                  razon_social,
                                  direccion,
                                  telefono_fiscal,
                                  pagina_web,
                                  email_fiscal,
                                  id_estatus,
+                                 SectorAsociado,
+                                 ServicioAsociado,
                                  id_pais,
-                                 (SELECT pa.nombre FROM tbl_paises pa WHERE pa.id = id_pais) pais
+                                 (SELECT pa.nombre FROM tbl_paises pa WHERE pa.id = id_pais) pais,
+                                 (SELECT sec.SectorNombre FROM tbl_sector sec WHERE sec.SectorId = SectorAsociado) sector,
+                                 (SELECT ser.NombreServicio FROM tbl_servicio ser WHERE ser.ServicioId = ServicioAsociado) servicio
                           FROM tbl_cliente
                           WHERE id = '.$id_cliente.'');
 
