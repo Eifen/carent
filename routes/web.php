@@ -61,7 +61,7 @@ Route::get('/buscarUsuariosG', 'ClienteController@buscarUsuariosG');
 Route::get('/detalleUsuarios', 'ClienteController@detalleUsuario');
 Route::get('/formModificarCliente/{idCliente}', 'ClienteController@formModificarCliente')->middleware('usuario.session')->where('idCliente', '[0-9]+');//Validamos que solo pase números*/
 Route::get('/detalleClienteModificar', 'ClienteController@detalleClienteModificar');
-Route::post('/modificarCliente', 'ClienteController@modificarCliente');
+Route::post('/UpdateClientData', 'ClienteController@UpdateClientData');
 Route::get('/formBuscarRegistro', function() {return view('crea/buscarRegistro');})->middleware('usuario.session');
 Route::get('/buscarRegistro', 'CreaController@buscarRegistro');
 Route::get('/detalleRegistro', 'CreaController@detalleRegistro');
