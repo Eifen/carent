@@ -15,8 +15,8 @@ return new class extends Migration
     {
 
         $procedure = "
-DROP PROCEDURE IF EXISTS sp_nuevo_cliente;
-CREATE PROCEDURE `sp_nuevo_cliente`(IN `p_IdUsuario` INT, IN `p_IdSocio` INT, IN `p_CodigoCliente` INT, IN `p_Rif` VARCHAR(30), IN `p_Nit` INT, IN `p_RazonSocial` VARCHAR(60), IN `p_IdPais` INT, IN `p_Address` TEXT, IN `p_TelefonoFiscal` VARCHAR(30), IN `p_PaginaWeb` VARCHAR(150), IN `p_EmailFiscal` VARCHAR(100), IN `p_IdSectorAsociado` INT, IN `p_IdServicioAsociado` INT, IN `p_IpAction` VARCHAR(40), OUT `p_Response` TEXT)
+DROP PROCEDURE IF EXISTS sp_create_client;
+CREATE PROCEDURE `sp_create_client`(IN `p_IdUsuario` INT, IN `p_IdSocio` INT, IN `p_CodigoCliente` INT, IN `p_Rif` VARCHAR(30), IN `p_Nit` INT, IN `p_RazonSocial` VARCHAR(60), IN `p_IdPais` INT, IN `p_Address` TEXT, IN `p_TelefonoFiscal` VARCHAR(30), IN `p_PaginaWeb` VARCHAR(150), IN `p_EmailFiscal` VARCHAR(100), IN `p_IdSectorAsociado` INT, IN `p_IdServicioAsociado` INT, IN `p_IpAction` VARCHAR(40), OUT `p_Response` TEXT)
 BEGIN
 
 	/*DECLARACION DE VARIABLES*/
@@ -42,7 +42,7 @@ BEGIN
 			ROLLBACK; #Cancelamos cualquier query que se hubiese ejecutado
 			
 			#Registramos el error en el procedure
-			CALL sp_mensaje_bd(1,1,\"sp_nuevo_cliente\",v_ErrorMsj,NULL,1,@response); 
+			CALL sp_mensaje_bd(1,1,\"sp_create_client\",v_ErrorMsj,NULL,1,@response); 
 			
 			#Producimos en la salida un JSON de error
 			SET p_Response = '{
@@ -59,7 +59,7 @@ BEGIN
         
 			ROLLBACK;
 			IF v_ErrorMsj IS NOT NULL THEN
-			  CALL sp_mensaje_bd(1,1,\"sp_nuevo_cliente\",v_ErrorMsj,NULL,1,@response);
+			  CALL sp_mensaje_bd(1,1,\"sp_create_client\",v_ErrorMsj,NULL,1,@response);
 			END IF;
 			IF p_Response = \"\" OR p_Response IS NULL THEN
 			  SET p_Response = '{\"message\": \"Ocurrió un error a la hora tratar de crear!\",\"response\": false}';
@@ -149,6 +149,6 @@ END;
      */
     public function down()
     {
-        Schema::dropIfExists('sp_nuevo_cliente');
+        Schema::dropIfExists('sp_create_client');
     }
 };
