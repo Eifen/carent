@@ -504,7 +504,7 @@ new Vue({
           self.form[indiceObjecto].disabled = true;
         });
         //Se utiliza el metodo post para la modificacion y se envian con los parametros
-        axios.post('/modificarCliente', parametros)
+        axios.post('/UpdateClientData', parametros)
         .then(function (response) {
 
           if(response.status === 200 && response.data.response === true){
