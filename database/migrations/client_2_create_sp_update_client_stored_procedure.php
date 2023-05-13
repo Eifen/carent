@@ -16,7 +16,7 @@ return new class extends Migration
 
         $procedure = "
 DROP PROCEDURE IF EXISTS sp_update_client;
-CREATE PROCEDURE `sp_update_client`(IN `p_IdUsuario` INT, IN `p_IdSocio` INT, IN `p_CodigoCliente` INT, IN `p_Rif` VARCHAR(30), IN `p_Nit` INT, IN `p_RazonSocial` VARCHAR(60), IN `p_IdPais` INT, IN `p_Address` TEXT, IN `p_TelefonoFiscal` VARCHAR(30), IN `p_PaginaWeb` VARCHAR(150), IN `p_EmailFiscal` VARCHAR(100), IN `p_IpAction` VARCHAR(40), OUT `p_Response` TEXT)
+CREATE PROCEDURE `sp_update_client`(IN `p_IdUsuario` INT, IN `p_IdSocio` INT, IN `p_CodigoCliente` INT, IN `p_Rif` VARCHAR(30), IN `p_Nit` INT, IN `p_RazonSocial` VARCHAR(60), IN `p_IdPais` INT, IN `p_Address` TEXT, IN `p_TelefonoFiscal` VARCHAR(30), IN `p_PaginaWeb` VARCHAR(150), IN `p_EmailFiscal` VARCHAR(100), IN `p_IpAction` VARCHAR(40), IN `p_Status` INT OUT, IN `p_Sector` INT, IN `p_Servicio`, `p_Response` TEXT)
 BEGIN
 
 	/*- Variables Generales -*/
@@ -24,7 +24,7 @@ BEGIN
 	DECLARE v_SqlQuery TEXT;
 	DECLARE v_TemporalWeb TEXT;
 	DECLARE v_TemporalNit INT;
-    
+
 	/*- Variable de errores -*/
 	DECLARE v_ErrorMsj TEXT DEFAULT NULL;
 	DECLARE v_ErrorControl CONDITION FOR SQLSTATE '45000';  #Variable para customizar el error SQL 45000
@@ -32,31 +32,31 @@ BEGIN
 	/*MANEJADOR DE ERRORES EN PRODUCCION*/
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION,SQLWARNING
 	    BEGIN
-        
+
 		    #Almacenar mensaje de error
 			GET DIAGNOSTICS CONDITION 1 @err_code = RETURNED_SQLSTATE, @err_msj = MESSAGE_TEXT;
-            
+
 			#Creamos un string mensaje del error y lo almacenamos en una de las variables
 			SELECT CONCAT('Se ha producido un error, de codigo: ',@err_code,' (SQL): ',@err_msj) INTO v_ErrorMsj;
-			
+
 			ROLLBACK; #Cancelamos cualquier query que se hubiese ejecutado
-			
+
 			#Registramos el error en el procedure
-			CALL sp_mensaje_bd(1,1,\"sp_update_client\", v_ErrorMsj, NULL, 1, @response); 
-			
+			CALL sp_mensaje_bd(1,1,\"sp_update_client\", v_ErrorMsj, NULL, 1, @response);
+
 			#Producimos en la salida un JSON de error
 			SET p_Response = '{
 			    \"message\": \"Se ha producido un error en la consulta SQL al momento de actualizar el cliente. ' + v_ErrorMsj + '\",
 			    \"response\": false
 			}';
-			
+
 			COMMIT; #Guardamos los cambios
 		END;
-        
+
 	#Errores no registrados
-	DECLARE EXIT HANDLER FOR v_ErrorControl 
+	DECLARE EXIT HANDLER FOR v_ErrorControl
 		BEGIN
-        
+
 			ROLLBACK;
 			IF v_ErrorMsj IS NOT NULL THEN
 			    CALL sp_mensaje_bd(1,1,\"sp_update_client\",v_ErrorMsj,NULL,1,@response);
@@ -66,12 +66,12 @@ BEGIN
 			    SET p_Response = '{\"message\": \"Ocurrió un error a la hora tratar de actualizar!\",\"response\": false}';
 			END IF;
 		  COMMIT;
-          
+
 		END;
-        
+
 	#Tras manejar los errores en SQL, procedemos a ejecutar las consultas
 	START TRANSACTION;
-    
+
 	#Creamos la consulta
 	UPDATE tbl_cliente p SET
 	       p.id_usuario_socio = p_IdSocio,
@@ -119,20 +119,20 @@ BEGIN
 
 	#Capturamos la respuesta del procedure
 	SET @v_Request = JSON_UNQUOTE(JSON_EXTRACT(@response,'$.response'));
-    
+
 	IF @v_Request = \"true\" THEN
-    
+
 		SET p_Response = CONCAT('{\"message\": \"Columna actualizada sin problemas\",\"response\":true}');
 		COMMIT; #Guardamos Cambio
-        
+
 	ELSE
-    
+
 		#Error en caso de fallo al upgradear
 		SET p_Response = '{\"message\":\"Ocurrió un error al momento de registrar la Actualización\",\"response\":false}';
 		ROLLBACK;
-    
+
 	END IF;
-    
+
 END";
 
         DB::unprepared($procedure);
