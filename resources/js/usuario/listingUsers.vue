@@ -72,7 +72,7 @@
 <script>
 
 import Filters from './userListFilter.vue'
-import User from './User.vue'
+import User from './user.vue'
 import VueNumeric from 'vue-numeric';
 import { useUtils } from '../../js/components/Utils.js'
 const utils = useUtils()

@@ -229,7 +229,7 @@ class ClienteModel extends Model
 
   function crearCliente($parametros){
 
-    $funcionario = DB::select('call sp_nuevo_cliente(?,?,?,?,?,?,?,?,?,?,?,?,?,?,@respuesta)',$parametros);
+    $funcionario = DB::select('call sp_create_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,@respuesta)',$parametros);
     $respuestaSp = DB::select('SELECT @respuesta AS respuesta_json');
     $respuestaJson = json_decode($respuestaSp[0]->respuesta_json, true);
 
@@ -416,36 +416,14 @@ class ClienteModel extends Model
     }
   }
 
-  function modificarCliente($parametros){
+    function UpdateClientData($params) {
 
-    // DB::beginTransaction();
+        $sp = DB::select('CALL sp_update_client(?,?,?,?,?,?,?,?,?,?,?,?,@response)',$params);
+        $responseSp = DB::select('SELECT @response AS objectJson');
+        $responseSp = json_decode($responseSp[0]->objectJson, true);
 
-    // try {
+        return $responseSp;
 
-    //     $data = array(
-    //                   "id_usuario_socio" => $parametros["idUsuario"],
-    //                   "rif" => $parametros["rif"],
-    //                   "razon_social" => $parametros["razon_social"],
-    //                   "id_pais" => $parametros["id_pais"],
-    //                   "direccion" => $parametros["direccion"],
-    //                   "telefono_fiscal" => $parametros["telefono_fiscal"],
-    //                   "pagina_web" => $parametros["pagina_web"],
-    //                   "email_fiscal" => $parametros["email_fiscal"],
-    //                   "id_estatus" => $parametros["estatus"]);
-    //       $contacto = DB::table('tbl_cliente')->where("id",$parametros["idCliente"])->update($data);
-    //       DB::commit();
+    }
 
-    //       return array("response" => true, "message" => "Cliente actualizado con Éxito!.");
-
-    //   } catch(\Illuminate\Database\QueryException $ex){
-    //     DB::rollBack();
-    //     return array("response" => false, "message" => "Error al tratar de actualizar la información del cliente.");
-    //   }
-
-    $getResponse = DB::select('call sp_update_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,@respuesta)',$parametros);
-    $respuestaSp = DB::select('SELECT @respuesta AS response_objectJson');
-    $respuestaJson = json_decode($respuestaSp[0]->response_objectJson, true);
-
-    return $respuestaJson;
-  }// Fin modificarUsuario
 }
