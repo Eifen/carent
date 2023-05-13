@@ -19,7 +19,7 @@ class ClientModel extends Model
         ->where('Id_estatus','=',$Status)
         ->get(['Id','Primer_nombre','Segundo_nombre','Primer_apellido','Segundo_apellido']);
     }
-    
+
     /**
      * Metodo que devuelve todos los sectores activos. Campo Id y Nombre_sector
      * @param int $Status Captura el tipo de estatus
@@ -52,6 +52,17 @@ class ClientModel extends Model
     }
 
     /**
+     * Metodo que obtiene la data de un cliente por su codigo
+     * @param int $codeClient Recibe el codigo para usar como filtro
+     * @return Array retorna un array asociativo con la información del cliente
+     */
+    static public function GetClientsPerCode($codeClient){
+        return DB::table('tbl_clientes')
+        ->where('Codigo_cliente','=',$codeClient)
+        ->first();
+    }
+
+    /**
      * Metodo que crea o actualiza un cliente
      * @param Array $dataRequest Los parametros a ejecutar en el procedure
      * @param String $typeControl Tipo de operacion = create, o update
@@ -63,6 +74,9 @@ class ClientModel extends Model
         switch ($typeControl) {
             case 'create':
                 DB::select('call sp_NewClient(?,?,?,?,?,?,?,?,?,?,?,?,?,@response)',$dataRequest);
+                break;
+            case 'update':
+                DB::select('call sp_UpdateClient(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,@response)',$dataRequest);
                 break;
         }
 

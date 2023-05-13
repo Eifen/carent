@@ -103,7 +103,7 @@ const createUser = createApp({
          * Metodo que actualiza el data model para actualizar usuarios
          * @param {*} dataUser Datos del usuario a actualizar
          */
-        prepareUpdate(dataUser){ 
+        prepareUpdate(dataUser){
             this.updateModel = dataUser;
             //Una vez almacenada, eliminamos su valor en la sessión para que sea de unico uso
             axios.put('deleteUpdateData')
@@ -132,7 +132,6 @@ const createUser = createApp({
 
             //Unimos el array user en edit
             this.paramDTOEdit = { ...this.paramDTOEdit, ...this.paramDTOUser}
-            console.log(this.paramDTOEdit);
 
             //Conexión AXIOS Update User
             axios.post('/usuarios/update/updateUser',{

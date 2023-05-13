@@ -5,7 +5,7 @@
             <!-- Data Socio -->
             <legend :class="formClass.legend" v-text="isEdit ? messages.titleEdit: messages.titleCreate"></legend>
             <div :class="formClass.requiredTitle">Campos Obligatorios (<span :class="formClass.requiredField">*</span>)</div>
-            <data-socio :scope="DTOData"></data-socio>
+            <data-socio :scope="DTOData" :is-edit="isEdit"></data-socio>
             <!-- Datos del Cliente -->
             <legend :class="formClass.legend" v-text="messages.cliente" v-if="inputSocioSelect != 0"></legend>
             <data-cliente :scope="DTOData" :is-edit="isEdit" v-if="inputSocioSelect != 0"></data-cliente>

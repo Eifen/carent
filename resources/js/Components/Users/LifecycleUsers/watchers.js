@@ -14,7 +14,7 @@ export const userWatchers =
             this.inputLastSecondname = newEdit.Segundo_apellido
             this.inputSelect = newEdit.AbreviaturaTipo + "-" + newEdit.Cedula
             this.inputDocumentoSelect = newEdit.AbreviaturaTipo
-            this.inputBirthday = newEdit.Fecha_nacimiento
+            this.inputBirthday = newEdit.Fecha_nacimiento === null ? "" : newEdit.Fecha_nacimiento
             this.inputCode = newEdit.Codigo
             this.inputFirstEmail = newEdit.Correo_principal
             this.inputSecondEmail = newEdit.Correo_secundario
@@ -27,7 +27,8 @@ export const userWatchers =
             this.inputParroquiaSelect = newEdit.ParroquiaId
             this.inputDivisionSelect = newEdit.DivisionId
             this.inputCargoSelect = newEdit.CargoId
-            this.inputIngreso = newEdit.Fecha_ingreso
+            this.inputIngreso = newEdit.Fecha_ingreso === null ? "" : newEdit.Fecha_ingreso
+            this.inputEgreso = newEdit.Fecha_egreso === null ? "" : newEdit.Fecha_egreso
         },
         //Nombres
         inputFirstname(newString) { this.validateString(this.limitString.NAME, newString, 'inputFirstname', 'firstnameError', [true, 'firstnameValid']) },

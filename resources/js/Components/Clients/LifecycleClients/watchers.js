@@ -5,6 +5,26 @@ export const clientWatchers =
 {
     watch:
     {
+        //Watch para el update
+        dataEdit(newEdit) {
+            //Obtenemos el codigo del pais
+            const selectPaisCode = this.dataSelect.paises.find((pais) => { return pais.Id == newEdit.Id_pais })
+            //Formateamos el telefono ([1] numero de telefono)
+            const DTOTelefono = newEdit.Telefono_fiscal.split(selectPaisCode.Codigo_telf);
+            //Asignamos la data
+            this.inputSocioSelect = newEdit.Id_usuario_socio;
+            this.inputSectorSelect = newEdit.Id_cliente_sector;
+            this.inputServicioSelect = newEdit.Id_cliente_servicio;
+            this.inputPaisSelect = newEdit.Id_pais;
+            this.inputStatusSelect = newEdit.Id_estatus;
+            this.inputNit = newEdit.Nit;
+            this.inputRif = newEdit.Rif;
+            this.inputTelefono = `+${selectPaisCode.Codigo_telf}-${DTOTelefono[1]}`;
+            this.inputRazonSocial = newEdit.Razon_social;
+            this.inputDireccion = newEdit.Direccion;
+            this.inputFirstEmail = newEdit.Email_fiscal;
+            this.inputWeb = newEdit.Pagina_web;
+        },
         //Select Paises
         inputPaisSelect(newValue)
         {
@@ -15,7 +35,8 @@ export const clientWatchers =
                 const selectPais = this.dataSelect.paises.find((pais) => {
                     return pais.Id == this.inputPaisSelect
                 });
-                this.inputTelefono = `+${selectPais.Codigo_telf}-`;       
+                //En caso de que estemos en crear cliente, añadiremos el codigo del pais
+                if (!this.isEdit) this.inputTelefono = `+${selectPais.Codigo_telf}-`;
             }else{ this.submitButton.paisesValid = false }
         },
         //Razon Social

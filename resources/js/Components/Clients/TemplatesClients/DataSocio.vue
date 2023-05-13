@@ -1,5 +1,5 @@
 <template>
-  <fieldset :class="scope.formClass.fieldset" v-if="!isEdit">
+  <fieldset :class="scope.formClass.fieldset">
     <!-- Selección de Socio -->
     <div class="mb-3">
       <label for="Socio">Socio <span :class="scope.formClass.requiredField">*</span></label>

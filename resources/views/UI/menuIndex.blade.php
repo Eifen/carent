@@ -55,5 +55,17 @@
         @if (Request::url() === URL::route('createClient'))
             @include('UI.Clients.clientCreate')
         @endif
+
+        @if (Request::url() === URL::route('updateClient'))
+            @if(Session::has('clientUpdate'))
+                @include('UI.Clients.clientUpdate')
+            @else
+                @php
+                    header('Location: /clientes');
+                    exit();
+                @endphp
+            @endif
+        @endif
+        {{-- Redirección de rutas para Proyectos --}}
     </section>
 @endsection

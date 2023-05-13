@@ -55,6 +55,18 @@ class ClientController extends Controller
     }
 
     /**
+     * Metodo que hace un llamao al control para traer la data de un cliente por su codigo
+     * @param Request $clientUpdate almacena el objeto pasado por parametro POST a la solicitud
+     * @return Response Retorna un objeto responde con status 200 si logra crear existosamente la sesión
+     */
+    public function ClientPerCode(Request $clientUpdate)
+    {
+        //Creamos una instancia de sesión temporal
+        Session::put("clientUpdate",ClientModel::GetClientsPerCode($clientUpdate->input('codigoSQL')));
+        return response("User Loaded",200);
+    }
+
+    /**
      * Metodo que crea o actualiza un cliente
      * @param Request $dataClient Variable en formato request que recibe la data recibida por POST
      * @return Array Retorna un array en formato response
@@ -80,11 +92,25 @@ class ClientController extends Controller
             ConfigController::GetIpUser()
         );
 
+        if($dataClient->input('isEdit'))
+        {
+            $paramsEdit = array(
+                $dataClient->input('client')['IdClient'],
+                $dataClient->input('client')['IdStatus']
+            );
+
+            //Unimos ambos array
+            $paramsToControl = array_merge($paramsToControl,$paramsEdit);
+        }
+
         $dataClient->input('isEdit')
-        ? null
+        ? $ResponseClient = ClientModel::ControlClients($paramsToControl,'update')
         : $ResponseClient = ClientModel::ControlClients($paramsToControl,'create');
 
         //Retornamos la data
         return response($ResponseClient,200);
     }
+
+    /** Metodo que elimina la sesión temporal de clientUpdate */
+    public function DeleteClientUpdate() { if(Session::has('clientUpdate')) Session::forget('clientUpdate'); }
 }

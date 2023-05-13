@@ -19,18 +19,18 @@ export const createdMixin = (self) => {
     self.inputWatchers =
     [{
         propiedades: ['inputSectorSelect','inputServicioSelect','inputSocioSelect'],
-        watch: () => 
+        watch: () =>
         {
             //Control de banderas
             if(self.inputSectorSelect != 0) self.submitButton.sectorValid = true;
             if(self.inputServicioSelect != 0) self.submitButton.servicioValid = true;
-            if(self.inputSocioSelect != 0) self.submitButton.selectSocio = true; 
+            if(self.inputSocioSelect != 0) self.submitButton.selectSocio = true;
 
             //Control de desactivar
             if(self.inputSectorSelect == 0) self.submitButton.sectorValid = false;
             if(self.inputServicioSelect == 0) self.submitButton.servicioValid = false;
-            if(self.inputSocioSelect == 0) self.submitButton.selectSocio = false; 
-        }           
+            if(self.inputSocioSelect == 0) self.submitButton.selectSocio = false;
+        }
     }]
 
     //Axios
@@ -43,6 +43,8 @@ export const createdMixin = (self) => {
         self.dataSelect.sectores = request.data.dataSectores
         self.dataSelect.paises = request.data.dataPaises
         self.dataSelect.status = request.data.dataStatus
+        //Revisamos si edit existe
+        if(self.isEdit) self.$emit('init-client');
     })
     .catch(error => {
         console.error(error);

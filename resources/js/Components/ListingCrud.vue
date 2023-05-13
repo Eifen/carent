@@ -176,7 +176,6 @@ export default {
     //Establecemos la pagina actual a la vista
     this.controlView.pagActual = this.controlPagination.cursor + 1;
   },
-  mounted() { console.log(this.tableInfo)},
   methods: {
     /**
      * Metodo que habilita el input tras seleccionar una delas opciones

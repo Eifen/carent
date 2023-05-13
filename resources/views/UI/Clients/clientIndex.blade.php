@@ -9,5 +9,6 @@
     title-table="clientes"
     button-title="cliente"
     :select-search="clientParse(selectSearch)"
-    @createButton="createClient()"></listing-crud>
+    @createButton="createClient()"
+    @columns1target="editClient"></listing-crud>
 </div>
