@@ -16,7 +16,7 @@ return new class extends Migration
 
         $procedure = "
 DROP PROCEDURE IF EXISTS sp_update_client;
-CREATE PROCEDURE `sp_update_client`(IN `p_IdUsuario` INT, IN `p_IdSocio` INT, IN `p_CodigoCliente` INT, IN `p_Rif` VARCHAR(30), IN `p_Nit` INT, IN `p_RazonSocial` VARCHAR(60), IN `p_IdPais` INT, IN `p_Address` TEXT, IN `p_TelefonoFiscal` VARCHAR(30), IN `p_PaginaWeb` VARCHAR(150), IN `p_EmailFiscal` VARCHAR(100), IN `p_IpAction` VARCHAR(40), IN `p_Status` INT, IN `p_Sector` INT, IN `p_Servicio`,OUT `p_Response` TEXT)
+CREATE PROCEDURE `sp_update_client`(IN `p_IdUsuario` INT, IN `p_IdSocio` INT, IN `p_CodigoCliente` INT, IN `p_Rif` VARCHAR(30), IN `p_Nit` INT, IN `p_RazonSocial` VARCHAR(60), IN `p_IdPais` INT, IN `p_Address` TEXT, IN `p_TelefonoFiscal` VARCHAR(30), IN `p_PaginaWeb` VARCHAR(150), IN `p_EmailFiscal` VARCHAR(100), IN `p_IpAction` VARCHAR(40), IN `p_Status` INT, IN `p_Sector` INT, IN `p_Servicio` INT, OUT `p_Response` TEXT)
 BEGIN
 
 	/*- Variables Generales -*/
