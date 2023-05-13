@@ -418,7 +418,7 @@ class ClienteModel extends Model
 
     function UpdateClientData($params) {
 
-        $sp = DB::select('CALL sp_update_client(?,?,?,?,?,?,?,?,?,?,?,?,@response)',$params);
+        $sp = DB::select('CALL sp_update_client(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,@response)',$params);
         $responseSp = DB::select('SELECT @response AS objectJson');
         $responseSp = json_decode($responseSp[0]->objectJson, true);
 
