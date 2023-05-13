@@ -42,9 +42,9 @@ class ClienteController extends Controller
     $sectores = $modelo->sectores();
     if (!empty($codigoCliente)) {
       $codigo = $codigoCliente->codigo + 1;
-      $response = array("response" => true, 
-                        "codigo" => $codigo, 
-                        "paises" => $paises, 
+      $response = array("response" => true,
+                        "codigo" => $codigo,
+                        "paises" => $paises,
                         "servicios" => $servicios,
                         "sectores" => $sectores);
     }else{
@@ -117,7 +117,7 @@ class ClienteController extends Controller
     );
 
     $response = $modelo->crearCliente($parametros);
-   
+
     if($response["response"]){
 
       $parametros = [
@@ -180,7 +180,7 @@ class ClienteController extends Controller
     $paises = $modelo->paises();
     $servicios = $modelo->servicios();
     $sectores = $modelo->sectores();
-    
+
 
     if(!empty($infoCliente)){
       $response = array("response" => true,
@@ -217,7 +217,7 @@ class ClienteController extends Controller
       $request->input("servicio")
     );
 
-        $response = $model->UpdateClientData($params);
+        $response = $model->UpdateClientData($parametros);
 
         if($response["response"]){
 
