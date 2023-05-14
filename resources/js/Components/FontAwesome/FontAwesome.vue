@@ -1,26 +1,72 @@
 <template>
-        <FontAwesomeIcon :icon="stringIcon"></FontAwesomeIcon>
+  <FontAwesomeIcon :icon="stringIcon" :spin="isSpin"></FontAwesomeIcon>
 </template>
 
 <script>
 //Importamos las librerias de fontawesome y vue
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faUser } from '@fortawesome/free-solid-svg-icons'
-import { faLock } from '@fortawesome/free-solid-svg-icons'
-import { faEye } from '@fortawesome/free-solid-svg-icons';
-import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+//Solid icons
+import {
+  faUser,
+  faLock,
+  faEye,
+  faEyeSlash,
+  faCircleExclamation,
+  faSpinner,
+  faBars,
+  faXmark,
+  faCaretDown,
+  faGear,
+  faAngleLeft,
+  faAngleRight,
+  faAnglesLeft,
+  faAnglesRight,
+  faCalendar,
+  faHashtag,
+  faAt
+} from "@fortawesome/free-solid-svg-icons";
+//Brands Icons
+import {
+  faInstagram,
+  faFacebook,
+  faTwitter,
+  faYoutube,
+} from "@fortawesome/free-brands-svg-icons";
+
 /* Agregamos los iconos a la libreria*/
-library.add(faUser,faLock, faEye,faEyeSlash)
+library.add(
+  faUser,
+  faLock,
+  faEye,
+  faEyeSlash,
+  faCircleExclamation,
+  faSpinner,
+  faInstagram,
+  faFacebook,
+  faTwitter,
+  faYoutube,
+  faBars,
+  faXmark,
+  faCaretDown,
+  faGear,
+  faAngleLeft,
+  faAngleRight,
+  faAnglesLeft,
+  faAnglesRight,
+  faCalendar,
+  faHashtag,
+  faAt
+);
 
 export default {
-    props: {
-        stringIcon: String
-    },
-    components: { FontAwesomeIcon }
-}
+  props: {
+    stringIcon: String,
+    isSpin: Boolean,
+  },
+  components: { FontAwesomeIcon },
+};
 </script>
 
 <style>
-
 </style>

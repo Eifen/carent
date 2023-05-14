@@ -11,9 +11,9 @@
 </head>
 <body>
     @if (!$Session)
-        @include('ControlUser.login')
+        @include('UI.login')
     @else
-        @include('ControlUser.InitSession')
+        @include('UI.menuIndex')
     @endif
 </body>
 </html>

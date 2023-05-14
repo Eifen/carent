@@ -1,0 +1,59 @@
+@extends('layouts.menuLayout')
+
+{{-- DropDown Menu --}}
+@section('usuarios')
+    @include('layouts.navBar.usuarios')
+@endsection
+
+@section('clientes')
+    @include('layouts.navBar.clientes')
+@endsection
+
+@section('proyectos')
+    @include('layouts.navBar.proyectos')
+@endsection
+
+@section('facturacion')
+    @include('layouts.navBar.facturacion')
+@endsection
+
+@section('reportes')
+    @include('layouts.navBar.reportes')
+@endsection
+
+@section('miCuenta')
+    @include('layouts.navBar.miCuenta')
+@endsection
+
+{{-- Body Dashboard --}}
+@section('dashboard')
+    <section class="dashboard">
+        {{-- Redireccion de rutas para Usuarios --}}
+        @if (Request::url() === URL::route('users'))
+          @include('UI.Users.userIndex')
+        @endif
+
+        @if (Request::url() === URL::route('createUser'))
+            @include('UI.Users.userCreate')
+        @endif
+
+        @if (Request::url() === URL::route('updateUser'))
+            @if (Session::has('dataUpdate'))
+                @include('UI.Users.userUpdate')
+            @else {{--Redirecciona si dataUpdate no existe--}}
+                @php
+                    header('Location: /usuarios');
+                    exit();
+                @endphp
+            @endif
+        @endif
+        {{-- Redireccion de rutas para Clientes --}}
+        @if (Request::url() === URL::route('clients'))
+            @include('UI.Clients.clientIndex')
+        @endif
+
+        @if (Request::url() === URL::route('createClient'))
+            @include('UI.Clients.clientCreate')
+        @endif
+    </section>
+@endsection

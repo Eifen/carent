@@ -1,0 +1,102 @@
+.list-container{
+    .styleContainer();
+    display: grid;
+    gap: 30px;
+    align-items: center;
+    justify-content: center;
+    grid-template-columns: repeat(6,1fr);
+
+    //Titulo
+    &-title{
+        grid-area: 1 / 1 / 2 / 3;
+        text-transform: uppercase;
+        font: bolder 2em sans-serif;
+        padding: 20px;
+    }
+
+    //Create button
+    &-create{
+        grid-area: 1 / 4 / 2 / 7;
+        justify-self: end;
+        .buttonCRUD();
+    }
+
+    //Buscar
+    &-search{
+        grid-area: 2 / 1 / 3 / 7;
+        padding: 0 20px;
+
+        & .input-group-text{
+            padding: 6px;
+            background: @Background-Color;
+            border: 1px solid @Text-Color;
+
+            & .form-select{
+                .selectIntoAddon();
+            }
+        }
+
+        & .form-control{
+            border: 1px solid @Text-Color;
+        }
+    }
+
+    //Pagination
+    &-pagination-container
+    {
+        grid-area: 3 / 2 / 4 / 6;
+        justify-self: center;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+
+        //input pagination
+        & .form-control{
+            width: 33px;
+            margin: 0 10px;
+            font-weight: bolder;
+            font-size: 0.8em;
+            border: 1px solid @Thead-Color;
+            padding: 6px;
+            text-align: center;
+
+            &:focus{ border-color: inherit; outline: none; box-shadow: none;}
+        }
+
+        //Text
+        &-info{ font-size: 0.7em; }
+    }
+
+    //Tabla
+    &-table{
+        grid-area: 4 / 1 / 5 / 7;
+
+        &-thead{
+            background: @Thead-Color;
+            color: @Text-Thead-Color;
+            text-align: center;
+        }
+
+        & td, & tr { height: 20px;}
+        //Td para los setting
+        & tbody .list-container-table-setting-container{
+            position: relative;
+
+            &-modal{
+                background: none;
+                width: 12rem;
+                position: absolute;
+                top: -20px; right: 30px;
+                z-index: 1;
+                padding: 8px;
+                border-radius: 5px;
+                border: solid 1px @Shadow-Hover-Color;
+                font-size: 0.9em;
+                font-weight: bolder;
+                transform: scale(0);
+                transition: transform 0.5s ease-in-out;
+            }
+        }
+    }
+}

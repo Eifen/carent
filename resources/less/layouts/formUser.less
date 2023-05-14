@@ -1,0 +1,54 @@
+.dashboard-form-container{
+    .styleContainer();
+
+    &-form{
+
+        //Campo obligatorio
+        &-title{
+            font-weight: bold;
+
+            &-field{ color: @Failure-Submit-Color }
+        }
+        //Legend
+        &-legends{
+            font-size: min(5vw,1.6em);
+            font-weight: bolder;
+        }
+
+        //Fieldset
+        &-fieldset{
+            display: grid;
+            grid-template-columns: repeat(auto-fill,minmax(15rem,1fr));
+            grid-auto-flow: dense;
+            margin-bottom: 10px;
+            gap: 10px;
+            padding: 10px;
+        }
+
+        //Form Check
+        & .form-check {margin-bottom: 10px;}
+
+        //Select
+        & .form-select-container{
+
+            & .input-group-text{
+                width: 40%; //Acomodamos solo el tamaño para ajustar el texto
+
+                & .form-select{
+                    .selectIntoAddon();
+                    padding: 0px;
+                    padding-right: 36px; //Quitamos solo el padding de izquierda, arriba y abajo
+                }
+            }
+        }
+
+        //Button
+        &-button{
+            .buttonCRUD();
+            margin-bottom: 20px;
+        }
+
+        //Disable button
+        & #dashboard-form-container-form-button-disable{ pointer-events: none; opacity: 0.6; }
+    }
+}
