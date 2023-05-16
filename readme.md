@@ -105,6 +105,10 @@ Ejemplo de los parametros de un procedimiento almacenado:
 ```
 sp_create_client(p_user_id, p_partner_id, ..., p_response)
 ```
+Ejemplo para crear una vista: 
+```
+vw_clients
+```
 <ul>
     <li>Use nombres de columna simples y descriptivos</li>
     <li>Use nombres de tablas simples y descriptivos</li>
