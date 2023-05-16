@@ -109,6 +109,10 @@ Ejemplo para crear una vista:
 ```
 vw_clients
 ```
+Ejemplo para crear una función: 
+```
+fn_clients
+```
 <ul>
     <li>Use nombres de columna simples y descriptivos</li>
     <li>Use nombres de tablas simples y descriptivos</li>
