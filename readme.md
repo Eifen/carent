@@ -89,9 +89,9 @@ php artisan schedule:list
 
 Ejemplo de tabla: 
 ```
-cliente => client
+clientes => clients
 ```
-Ejemplo de nombre de columnas de la tabla client: 
+Ejemplo de nombre de columnas de la tabla clients: 
 ```
 id
 business_name
@@ -116,23 +116,36 @@ Ejemplo para crear una función:
 ```
 fn_clients
 ```
-Para las claves foráneas se debe indicar la tabla origen y luego la tabla destino seguido del campo destino. Un ejemplo podemos imaginar que se necesita crear una clave foránea de la tabla `client` a la tabla `user` ya que en la tabla cliente hay un campo llamado `partner_id` donde se indica el id del usuario que es el socio para ese cliente, entonces quedaría algo como el siguiente ejemplo: 
+Para las claves foráneas se debe indicar la tabla origen y luego la tabla destino seguido del campo destino. Un ejemplo podemos imaginar que se necesita crear una clave foránea de la tabla `clients` a la tabla `users` ya que en la tabla cliente hay un campo llamado `partner_id` donde se indica el id del usuario que es el socio para ese cliente, entonces quedaría algo como el siguiente ejemplo: 
 ```
 fk_client_user_id
 ```
 
-- [x] <b>Use solo letras minúsculas, números y guiones bajos:</b> no utilice puntos, espacios ni guiones en los nombres de bases de datos, esquemas, tablas o columnas. Los puntos son para identificar objetos, normalmente en el patrón base de `datos.esquema.tabla.columna`.
+- [x] <b>Use solo letras minúsculas, números y guiones bajos:</b> no utilice puntos, espacios ni guiones en los nombres de bases de datos, esquemas, tablas o columnas. Los puntos son para identificar objetos, normalmente en el patrón base de `esquema.tabla.columna`.
 
-Las consultas son más difíciles de escribir si usa letras mayúsculas en los nombres de tablas o columnas. Si todo está en minúsculas, nadie tiene que recordar si la tabla de usuarios es `User` o `user`.
+Las consultas son más difíciles de escribir si usa letras mayúsculas en los nombres de tablas o columnas. Si todo está en minúsculas, nadie tiene que recordar si la tabla de usuarios es `Users` o `users`.
 
-- [x] <b>Escribir los nombre de las tablas en singular</b>
+- [x] <b>Escribir los nombre de las tablas en plural:</b> escribir las tablas en singular aumenta la probabilidad de colisionar con una palabra reservada dentro de la base de datos
 
-- [x] <b>Use nombres de tablas simples y descriptivos:</b> si el nombre de la tabla se compone de varias palabras, use guiones bajos para separar las palabras. Es mucho más fácil leer `project_invoice` que `projectinvoice`.
+- [x] <b>Use nombres de tablas simples y descriptivos:</b> si el nombre de la tabla se compone de varias palabras, use guiones bajos para separar las palabras. Es mucho más fácil leer `project_invoices` que `projectinvoices`.
 
-Y siempre que sea posible, utilice una palabra en lugar de dos: `invoice`, esto es un ejemplo pero no esta mal en este caso usar `project_invoice` porque se puede emplear solo una tabla `invoice` para todo tipo de facturas y no solo facturas a proyectos o se puede separar en `project_invoice`, todo depende de la normalización de la base de datos en ese momento.
+Y siempre que sea posible, utilice una palabra en lugar de dos: `invoices`, esto es un ejemplo pero no esta mal en este caso usar `project_invoices` porque se puede emplear solo una tabla `invoices` para todo tipo de facturas y no solo facturas a proyectos o se puede separar en `project_invoices`, todo depende de la normalización de la base de datos en ese momento.
 
-No agregar prefijos a las tablas. Tener tablas con nombres como `tbl_user`, `tbl_client`, etc, no vale la pena escribirlo porque la naturaleza propia del objeto es ser una tabla además que solo alargas el nombre de la tabla propiamente dicha. Pasa lo contrario con los otros objecto que si se debe colocar un prefijo para identificarlos mejor como `SP` para procedimientos almacenados o `VW` para las vistas, ya que la razón principal de una base de datos es almacenar datos en tablas y estos objectos son menos comunes y se utilizan para manejar mejor el CRUD en dichas tablas.
+No agregar prefijos a las tablas. Tener tablas con nombres como `tbl_users`, `tbl_clients`, etc, no vale la pena escribirlo porque la naturaleza propia del objeto es ser una tabla además que solo alargas el nombre de la tabla propiamente dicha. Pasa lo contrario con los otros objecto que si se debe colocar un prefijo para identificarlos mejor como `SP` para procedimientos almacenados o `VW` para las vistas, ya que la razón principal de una base de datos es almacenar datos en tablas y estos objectos son menos comunes y se utilizan para manejar mejor el CRUD en dichas tablas.
 
-<ul>
-    <li>Tener una clave primaria entera</li>
-</ul>
+- [x] <b>Tener una clave primaria entera:</b> toda tabla tiene que poseer una campo de tipo de dato entero que sea clave primaria; puede ser autoincremental o no.
+
+- [x] <b>Sea consistente con las claves foráneas:</b> para las claves foráneas se debe indicar la tabla origen y luego la tabla destino seguido del campo destino. Un ejemplo podemos imaginar que se necesita crear una clave foránea de la tabla `clients` a la tabla `users` ya que en la tabla cliente hay un campo llamado `partner_id` donde se indica el id del usuario que es el socio para ese cliente, entonces quedaría algo como el siguiente ejemplo: 
+```
+fk_client_user_id
+```
+Puede existir el caso donde por ejemplo la tabla `client` puede poseer dos columnas que apuntan como clave foranea a una misma tabla destino `users`, por ejemplo:
+```
+partner_id -> para indicar el socio por el cual provino ese cliente
+user_id -> para indicar el usuario que creo ese cliente
+```
+Entonces no vamos a crear 2 llaves foráneas con el mismo nombre `fk_client_user_id`; para diferencialos podemos colocar a una de las llaves foráneas nombrandola por su razon de ser quedando:
+```
+fk_client_partner_id -> para el campo partner_id
+fk_client_user_id -> para el campo user_id
+```
