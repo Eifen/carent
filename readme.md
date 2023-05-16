@@ -113,6 +113,10 @@ Ejemplo para crear una función:
 ```
 fn_clients
 ```
+Para las claves foráneas se debe indicar la tabla origen y luego la tabla destino seguido del campo destino. Ejemplo para crear una llave foránea: 
+```
+fk_client_partner_id
+```
 <ul>
     <li>Use nombres de columna simples y descriptivos</li>
     <li>Use nombres de tablas simples y descriptivos</li>
