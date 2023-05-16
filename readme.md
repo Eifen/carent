@@ -97,7 +97,10 @@ partner_id
 service_id
 status_id
 ```
-
+Ejemplo de procedimiento almacenado para crear un nuevo cliente: 
+```
+sp_create_client
+```
 <ul>
     <li>Use solo letras minúsculas, números y guiones bajos</li>
     <li>Use nombres de columna simples y descriptivos</li>
