@@ -101,8 +101,11 @@ Ejemplo de procedimiento almacenado para crear un nuevo cliente:
 ```
 sp_create_client
 ```
+Ejemplo de los parametros de un procedimiento almacenado: 
+```
+sp_create_client(p_user_id, p_partner_id, ..., p_response)
+```
 <ul>
-    <li>Use solo letras minúsculas, números y guiones bajos</li>
     <li>Use nombres de columna simples y descriptivos</li>
     <li>Use nombres de tablas simples y descriptivos</li>
     <li>Tener una clave primaria entera</li>
