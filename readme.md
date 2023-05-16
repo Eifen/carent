@@ -91,7 +91,8 @@ cliente => client
 Ejemplo de nombre de columnas de la tabla client: 
 ```
 id
-name
+business_name
+code
 partner_id
 service_id
 status_id
