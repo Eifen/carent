@@ -80,6 +80,9 @@ Este comando se ejecutará en primer plano e invocará al programador cada minut
 php artisan schedule:list
 ```
 ## Nomenclatura de programación
+
+🚨 La identación para el código de base de datos, PHP, JavaScript, CSS o cualquier otro lenguaje empleado en el sistema debe ser a 4 espacios.
+
 ### Nomenclatura para base de datos
 
 - [x] <b>Nombrar tablas, columnas u otro objeto de base de datos en ingles:</b> esto para hacerlo más comercial a la hora de poder vender el sistema.
