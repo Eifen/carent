@@ -93,7 +93,7 @@ clientes => clients
 ```
 Ejemplo de nombre de columnas de la tabla clients: 
 ```
-id
+client_id
 business_name
 code
 partner_id
@@ -134,6 +134,11 @@ Y siempre que sea posible, utilice una palabra en lugar de dos: `invoices`, esto
 No agregar prefijos a las tablas. Tener tablas con nombres como `tbl_users`, `tbl_clients`, etc, no vale la pena escribirlo porque la naturaleza propia del objeto es ser una tabla además que solo alargas el nombre de la tabla propiamente dicha. Pasa lo contrario con los otros objecto que si se debe colocar un prefijo para identificarlos mejor como `SP` para procedimientos almacenados o `VW` para las vistas, ya que la razón principal de una base de datos es almacenar datos en tablas y estos objectos son menos comunes y se utilizan para manejar mejor el CRUD en dichas tablas.
 
 - [x] <b>Tener una clave primaria entera:</b> toda tabla tiene que poseer una campo de tipo de dato entero que sea clave primaria; puede ser autoincremental o no.
+
+- [x] <b>No usar como nombre en las llaves primaria solo ID:</b> esto para evitar ambiguedades en las consultas y detectar rápido los errores. Ejemplo:
+```
+id => client_id
+```
 
 - [x] <b>Sea consistente con las claves foráneas:</b> para las claves foráneas se debe indicar la tabla origen y luego la tabla destino seguido del campo destino. Un ejemplo podemos imaginar que se necesita crear una clave foránea de la tabla `clients` a la tabla `users` ya que en la tabla cliente hay un campo llamado `partner_id` donde se indica el id del usuario que es el socio para ese cliente, entonces quedaría algo como el siguiente ejemplo: 
 ```
