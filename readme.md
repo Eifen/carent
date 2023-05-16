@@ -80,3 +80,4 @@ Este comando se ejecutará en primer plano e invocará al programador cada minut
 php artisan schedule:list
 ```
 ## Nomenclatura de programación
+### Noenclatura para base de datos
