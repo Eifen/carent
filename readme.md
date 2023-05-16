@@ -126,8 +126,11 @@ fk_client_user_id
 Las consultas son más difíciles de escribir si usa letras mayúsculas en los nombres de tablas o columnas. Si todo está en minúsculas, nadie tiene que recordar si la tabla de usuarios es `User` o `user`.
 
 - [x] <b>Escribir los nombre de las tablas en singular</b>
+
+- [x] <b>Use nombres de tablas simples y descriptivos:</b> si el nombre de la tabla se compone de varias palabras, use guiones bajos para separar las palabras. Es mucho más fácil leer `project_invoice` que `projectinvoice`.
+
+Y siempre que sea posible, utilice una palabra en lugar de dos: `invoice`, esto es un ejemplo pero no esta mal en este caso usar `project_invoice` porque se puede emplear solo una tabla `invoice` para todo tipo de facturas y no solo facturas a proyectos o se puede separar en `project_invoice`, todo depende de la normalización de la base de datos en ese momento.
+
 <ul>
-    <li>Use nombres de tablas simples y descriptivos</li>
     <li>Tener una clave primaria entera</li>
-    <li></li>
 </ul>
