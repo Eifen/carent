@@ -113,7 +113,7 @@ Ejemplo para crear una función:
 ```
 fn_clients
 ```
-Para las claves foráneas se debe indicar la tabla origen y luego la tabla destino seguido del campo destino. Ejemplo para crear una llave foránea: 
+Para las claves foráneas se debe indicar la tabla origen y luego la tabla destino seguido del campo destino. Un ejemplo podemos imaginar que se necesita crear una clave foránea de la tabla `client` a la tabla `user` ya que en la tabla cliente hay un campo llamado `partner_id` donde se indica el id del usuario que es el socio para ese cliente, entonces quedaria algo como el siguiente ejemplo: 
 ```
 fk_client_partner_id
 ```
