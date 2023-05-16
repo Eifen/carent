@@ -131,6 +131,8 @@ Las consultas son más difíciles de escribir si usa letras mayúsculas en los n
 
 Y siempre que sea posible, utilice una palabra en lugar de dos: `invoice`, esto es un ejemplo pero no esta mal en este caso usar `project_invoice` porque se puede emplear solo una tabla `invoice` para todo tipo de facturas y no solo facturas a proyectos o se puede separar en `project_invoice`, todo depende de la normalización de la base de datos en ese momento.
 
+No agregar prefijos a las tablas. Tener tablas con nombres como `tbl_user`, `tbl_client`, etc, no vale la pena escribirlo porque la naturaleza propia del objeto es ser una tabla además que solo alargas el nombre de la tabla propiamente dicha. Pasa lo contrario con los otros objecto que si se debe colocar un prefijo para identificarlos mejor como `SP` para procedimientos almacenados o `VW` para las vistas, ya que la razón principal de una base de datos es almacenar datos en tablas y estos objectos son menos comunes y se utilizan para manejar mejor el CRUD en dichas tablas.
+
 <ul>
     <li>Tener una clave primaria entera</li>
 </ul>
