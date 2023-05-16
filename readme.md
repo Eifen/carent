@@ -118,8 +118,12 @@ Para las claves foráneas se debe indicar la tabla origen y luego la tabla desti
 fk_client_user_id
 ```
 
+- [x] <b>Use solo letras minúsculas, números y guiones bajos:</b> no utilice puntos, espacios ni guiones en los nombres de bases de datos, esquemas, tablas o columnas. Los puntos son para identificar objetos, normalmente en el patrón base de `datos.esquema.tabla.columna`.
+
+Las consultas son más difíciles de escribir si usa letras mayúsculas en los nombres de tablas o columnas. Si todo está en minúsculas, nadie tiene que recordar si la tabla de usuarios es `User` o `user`.
+
+- [x] <b>Escribir los nombre de las tablas en singular</b>
 <ul>
-    <li>Use nombres de columna simples y descriptivos</li>
     <li>Use nombres de tablas simples y descriptivos</li>
     <li>Tener una clave primaria entera</li>
     <li></li>
