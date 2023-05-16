@@ -81,8 +81,15 @@ php artisan schedule:list
 ```
 ## Nomenclatura de programación
 ### Nomenclatura para base de datos
+
+1) Nombrar tablas, columnas u otro objeto de base de datos en ingles:
+Esto para hacerlo más comercial a la hora de poder vender el sistema.
+
+
 <ul>
     <li>Use solo letras minúsculas, números y guiones bajos</li>
+    <li>Use nombres de columna simples y descriptivos</li>
+    <li>Use nombres de tablas simples y descriptivos</li>
+    <li>Tener una clave primaria entera</li>
+    <li></li>
 </ul>
-
-####Use solo letras minúsculas, números y guiones bajos
