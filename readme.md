@@ -149,3 +149,5 @@ Entonces no vamos a crear 2 llaves foráneas con el mismo nombre `fk_client_user
 fk_client_partner_id -> para el campo partner_id
 fk_client_user_id -> para el campo user_id
 ```
+
+- [x] <b>Almacenar fechas y horas como fechas y horas:</b> no almacenar las fechas con el tipo de dato `Datetimes`.
