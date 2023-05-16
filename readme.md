@@ -84,9 +84,17 @@ php artisan schedule:list
 
 - [x] <b>Nombrar tablas, columnas u otro objeto de base de datos en ingles:</b> esto para hacerlo más comercial a la hora de poder vender el sistema.
 
-Ejemplo: 
+Ejemplo de tabla: 
 ```
-php artisan schedule:list
+cliente => client
+```
+Ejemplo de nombre de columnas de la tabla client: 
+```
+id
+name
+partner_id
+service_id
+status_id
 ```
 
 <ul>
