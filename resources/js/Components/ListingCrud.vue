@@ -3,18 +3,8 @@
     <div :class="tableClass.title">{{ titleTable }}</div>
     <div :class="tableClass.create" @click="$emit('createbutton')">Crear {{ buttonTitle }}</div>
     <!-- Búsqueda de datos en tiempo real -->
-    <div class="input-group mb-3" :class="tableClass.search">
-      <span class="input-group-text" id="basic-addon1">
-        <select class="form-select" @change="enableInput" aria-label="Default select example">
-          <option selected disabled>Consultar por...</option>
-          <option v-for="(select, cursor) in selectSearch" :key="cursor" :value="select">{{ select }}</option>
-        </select>
-      </span>
-      <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1"
-        :disabled="!controlInput.isSelect"
-        :placeholder="controlInput.placeholder"
-        @input="searchData"/>
-    </div>
+    <pagination :scope="DTOData" :columns-search="selectSearch"
+    @search-data="searchData"></pagination>
     <!-- =====================================================================
         Paginacion
         ========================================================================   -->
@@ -68,7 +58,7 @@
               <span v-else>{{ columnData }}</span>
             </td>
             <td :class="tableClass.setting"
-              v-if="controlTable.data[actualIndex + controlTable.minLength] !== undefined">
+              v-if="controlTable.data[actualIndex + controlTable.minLength] !== undefined && 'settings' in titleObject ">
               <!-- Condicion del icono del FontAwesome -->
               <font-awesome string-icon="fa-solid fa-gear"
                 :spin="actualIndex === controlTable.hover.index ? true : false"
@@ -102,6 +92,7 @@
 
 <script>
 import FontAwesome from "../Components/FontAwesome/FontAwesome.vue";
+import Pagination from "../Components/Pagination.vue";
 
 export default {
   props: {
@@ -132,7 +123,6 @@ export default {
         pagination: "",
         infoPag: "",
       },
-      controlInput: { isSelect: false, placeholder: "", valueTarget: "" }, //Controla el input de búsqueda
       controlTable: {
         data: this.tableInfo, //Inicialmente tendrá la informacion de toda la tabla objetivo
         dataLength: this.tableInfo.length, //Tamaño máximo del array
@@ -178,19 +168,6 @@ export default {
   },
   methods: {
     /**
-     * Metodo que habilita el input tras seleccionar una delas opciones
-     * @param {*} select Click Event para saber que valor se le hizo target y cambiar en función
-     */
-    enableInput(select) {
-      this.controlInput.isSelect = true;
-      //Guardamos el target
-      this.controlInput.valueTarget = select.target.value.toLowerCase();
-
-      //Actualizamos el Placeholder
-      this.controlInput.placeholder =
-        "Ingrese la información para " + this.controlInput.valueTarget;
-    },
-    /**
      * Metodo que muestra el modal del Settings
      * @param {*} targetIndex Captura el indice actual del hover
      */
@@ -203,19 +180,27 @@ export default {
       this.controlTable.setting.index = targetIndex;
     },
     /**
-     * Metodo que se encarga de buscar un dato en función del select indicado
-     * @param {*} inputEvent InputEvent Object para almacenar el valor del input
+     * Metodo que filtra la información en funcion de los ingresado en los campos
+     * @param {Object} dataInput Objeto que almacena la información de los input y su correspondiente columna a buscar
      */
-    searchData(inputEvent) {
+    searchData(dataInput) {
         //Filtramos el array en función al select, lo cual actualizará automaticamente
-        const ArrayDTO = this.tableInfo.filter((data) =>
-        data[this.controlInput.valueTarget].toLowerCase()
-        .includes(inputEvent.target.value.toLowerCase()));
+        let dataListDTO = this.tableInfo
+
+        for (const columnToSearch in dataInput) {
+            dataListDTO = dataListDTO.filter(data => {
+                return data[columnToSearch].toLowerCase().includes(dataInput[columnToSearch])
+                })
+        }
 
         //Espacio de transferencia de datos
-        this.controlTable.data = ArrayDTO;
-        this.controlTable.dataLength = ArrayDTO.length;
-        this.controlTable.maxLength = ArrayDTO.length;
+        this.controlTable.data = dataListDTO;
+        this.controlTable.dataLength = dataListDTO.length;
+        //Si el length del nuevo array es menor o igual al limite por paginacion, asignamos el nuevo length
+        if(dataListDTO.length <= this.paginationLimit){
+            this.controlTable.maxLength = this.controlTable.minLength + dataListDTO.length;
+        }else { this.controlTable.maxLength = this.controlTable.minLength + this.paginationLimit }
+        //Caso contrario, volvemos a su valor inicial
 
         //Estado de la paginación
         this.controlTable.dataLength <= this.paginationLimit
@@ -263,6 +248,7 @@ export default {
       },
     },
   },
-  components: { FontAwesome },
+  computed: { DTOData(){ return this.$data }}, //Enviamos el objeto data como parametro
+  components: { FontAwesome, Pagination },
 };
 </script>
