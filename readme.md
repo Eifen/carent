@@ -159,11 +159,13 @@ fk_client_user_id -> para el campo user_id
 
 ### Nomenclatura para base de datos
 
-- [x] <b>Para nombrar clases, componentes Vue usar `PascalCase`:</b> Las clases y los objetos deben tener nombres de sustantivos o frases nominales como Customer, WikiPage, Account y AddressParser. Evite palabras como Administrador, Procesador, Datos o Información en el nombre de una clase. Un nombre de clase no debe ser un verbo.
+- [x] Para nombrar clases, componentes Vue usar `Upper Camel Case`.
+
+- [x] <b>Para nombrar clases, componentes Vue usar `PascalCase`:</b> Las clases y los objetos deben tener nombres de sustantivos o frases nominales como Clients, WikiPage, Users y AddressParser. Evite palabras como Administrador, Procesador, Datos o Información en el nombre de una clase. Un nombre de clase no debe ser un verbo.
 
 Ejemplo
 ```
-GetClients
+Clients
 ```
 
 - [x] Para nombrar variables, urls y propiedades Vue usar `camelCase`.
