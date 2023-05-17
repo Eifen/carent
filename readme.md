@@ -157,15 +157,16 @@ fk_client_user_id -> para el campo user_id
 
 - [x] <b>Almacenar fechas y horas como fechas y horas:</b> no almacenar las fechas con el tipo de dato `Datetimes`.
 
-### Nomenclatura para base de datos
+### Nomenclatura para PHP, VueJS, CSS
 
-- [x] Para nombrar clases, componentes Vue usar `Upper Camel Case`.
+- [x] Para nombrar clases, componentes Vue, archivos CSS usar `Upper Camel Case`.
 
 Ejemplo
 ```
 Clients.vue
 ClientsController.php
 class AccountController extends Controller
+Front.css
 ```
 
 - [x] Las clases deben tener nombres de sustantivos o frases nominales como Clients, WikiPage, Users y AddressParser. Evite palabras como Administrador, Procesador, Datos o Información en el nombre de una clase. Un nombre de clase no debe ser un verbo.
@@ -195,3 +196,11 @@ updateClient()
 ```
 
 - [x] El número ideal de argumentos para una función es cero (niládico). Luego viene uno (monádico), seguido de cerca por dos (diádico). Deben evitarse tres argumentos (triádicos) siempre que sea posible. Más de tres (poliádico) requiere una justificación muy especial, y no debería usarse de todos modos.
+
+- [x] Los nombre de los selectores en CSS deben ser en `kebab-case`
+
+Ejemplo
+```
+.modal-body
+#modal-client
+```
