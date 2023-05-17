@@ -156,3 +156,21 @@ fk_client_user_id -> para el campo user_id
 ```
 
 - [x] <b>Almacenar fechas y horas como fechas y horas:</b> no almacenar las fechas con el tipo de dato `Datetimes`.
+
+### Nomenclatura para base de datos
+
+- [x] <b>Para nombrar clases, componentes Vue usar `PascalCase`:</b> Las clases y los objetos deben tener nombres de sustantivos o frases nominales como Customer, WikiPage, Account y AddressParser. Evite palabras como Administrador, Procesador, Datos o Información en el nombre de una clase. Un nombre de clase no debe ser un verbo.
+
+Ejemplo
+```
+GetClients
+```
+
+- [x] Para nombrar variables, urls y propiedades Vue usar `camelCase`.
+
+Ejemplo
+```
+clientList
+```
+
+- [x] Para nombrar urls, `camelCase`.
