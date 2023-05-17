@@ -16,7 +16,7 @@ class LoginController extends Controller
         $LoginInstance = new LoginModel();
         $encryptData = $LoginInstance->GetEncryptKey();
         //Enviamos la data dependiendo del estado de la sesión
-        if($request->session()->has('idUsuario')){ $this->validacion = true; }
+        if($request->session()->has('userId')){ $this->validacion = true; }
 
         //Traemos el KEY y el IV de la base de datos y lo asignamos a una instancia de Session
         $request->session()->put('encrypt-key', $encryptData["key"]);
@@ -42,9 +42,9 @@ class LoginController extends Controller
 
         if($Login['response'])
         {
-            Session::put('idUsuario',$Login['idUsuario']);
-            Session::put('idCargo',$Login['idCargo']);
-            Session::put('idDivision',$Login['idDivision']);
+            Session::put('userId',$Login['userId']);
+            Session::put('positionId',$Login['positionId']);
+            Session::put('departmentId',$Login['departmentId']);
             Session::put('emailUser',$Login['emailUser']);
             Session::put('passwordChange',$Login['passwordChange']);
         }

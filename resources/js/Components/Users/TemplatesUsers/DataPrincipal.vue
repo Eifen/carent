@@ -108,8 +108,8 @@
             <option
               v-for="(select, cursor) in scope.typeDocument"
               :key="cursor"
-              :value="select.AbreviaturaTipo">
-              {{ select.DescripcionTipo }}
+              :value="select.identity_abbreviation">
+              {{ select.identity_description }}
             </option>
           </select>
         </span>

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 11-05-2023 a las 19:20:42
--- Versión del servidor: 10.4.27-MariaDB
--- Versión de PHP: 8.2.0
+-- Tiempo de generación: 17-05-2023 a las 09:01:24
+-- Versión del servidor: 10.4.25-MariaDB
+-- Versión de PHP: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -25,7 +25,7 @@ DELIMITER $$
 --
 -- Procedimientos
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_InsertLog` (IN `p_bitacora_accion` INT, IN `p_descripcion` TEXT, IN `p_ipResponsable` VARCHAR(255), IN `p_idResponsable` INT, IN `p_tablaAfectada` TEXT, IN `p_sqlRealizado` MEDIUMTEXT, IN `p_valorAnterior` TEXT, IN `p_valorNuevo` TEXT, IN `p_fechaModificacion` DATETIME, OUT `p_jsonResponse` TEXT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_insert_logs` (IN `p_action_id` INT, IN `p_log_description` TEXT, IN `p_user_responsible_ip` VARCHAR(255), IN `p_user_responsible_id` INT, IN `p_affected_table` TEXT, IN `p_query_sql` MEDIUMTEXT, IN `p_old_value` TEXT, IN `p_new_value` TEXT, IN `p_register_date` DATETIME, OUT `p_json_response` TEXT)   BEGIN
 DECLARE v_customErrorMessage TEXT;
 DECLARE v_customError CONDITION FOR SQLSTATE '45000';
 DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
@@ -34,46 +34,46 @@ DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
         SET v_customErrorMessage = CONCAT("Ha ocurrido un error en el registro de datos en la bitacora: (",@code,") ",@error_msg);
         ROLLBACK;
         #Guardamos la data en p_jsonResponse
-        CALL sp_SQLException(1,1,"sp_InsertLog",v_customErrorMessage,1,@response);
-        SET p_jsonResponse = (SELECT @response);
+        CALL sp_sql_exceptions(1,1,"sp_insert_Log",v_customErrorMessage,@response);
+        SET p_json_response = (SELECT @response);
     END;
 #Error Personalizado
 DECLARE EXIT HANDLER FOR v_customError
 	BEGIN
     	#Registramos el error
-        CALL sp_SQLException(1,1,"sp_InsertLog",v_customErrorMessage,1,@responseCustom);
-        SET p_jsonResponse = (SELECT @responseCustom);
+        CALL sp_sql_exceptions(1,1,"sp_insert_Log",v_customErrorMessage,@responseCustom);
+        SET p_json_response = (SELECT @responseCustom);
     END;
 #Verificación de errores internos
-SET @ExistTipoAccion = (SELECT COUNT(LA.Id) FROM tbl_control_logs_bitacora_accion LA WHERE LA.Id = p_bitacora_accion);
-SET @ExistUser = (SELECT COUNT(U.Id) FROM tbl_usuarios U WHERE U.Id = p_idResponsable);
+SET @existActionType = (SELECT COUNT(la.action_id) FROM control_logs_action la WHERE la.action_id = p_action_id);
+SET @existUser = (SELECT COUNT(u.user_id) FROM users u WHERE u.user_id = p_user_responsible_id);
 
-IF @ExistTipoAccion = 0 AND @ExistUser = 0 THEN
-	SET v_customErrorMessage = CONCAT('{"response":false,"message": "Error 0008: El ID_ACCION_BITACORA(',p_bitacora_accion,'), 
-                                      y el ID_USER(',p_idResponsable,') no existen"}');
+IF @existActionType = 0 AND @existUser = 0 THEN
+	SET v_customErrorMessage = CONCAT('{"response":false,"message": "Error 0004: El ID_ACCION_BITACORA(',p_action_id,'), 
+                                      and ID_USER(',p_user_responsible_id,') does not exist"}');
     SIGNAL SQLSTATE '45000'; #Disparo el error	
 END IF;
 
-IF @ExistTipoAccion = 0 THEN
-	SET v_customErrorMessage = CONCAT('{"response":false,"message": "Error 0009: El ID_ACCION_BITACORA(',p_bitacora_accion,') no existe"}');
+IF @existActionType = 0 THEN
+	SET v_customErrorMessage = CONCAT('{"response":false,"message": "Error 0005: ID_ACCION_BITACORA(',p_action_id,') does not exist"}');
     SIGNAL SQLSTATE '45000'; #Disparo el error
 END IF;
 
-IF @ExistUser = 0 THEN
-	SET v_customErrorMessage = CONCAT('{"response":false,"message": "Error 0010: El ID_USER(',p_idResponsable,') no existe"}');
+IF @existUser = 0 THEN
+	SET v_customErrorMessage = CONCAT('{"response":false,"message": "Error 0006: ID_USER(',p_user_responsible_id,') does not exist"}');
     SIGNAL SQLSTATE '45000'; #Disparo el error
 END IF;
 
 ##En caso que logren pasar todas las validaciones
-INSERT INTO `tbl_control_logs_bitacora`(`Id_bitacora_accion`, `Descripcion_accion`, `Ip_responsable`, `Id_usuario_responsable`, `Tabla_afectada`, `Sql_realizado`, `Valor_anterior`, `Nuevo_valor`, `Fecha_Registro`) 
-VALUES (p_bitacora_accion,p_descripcion,p_ipResponsable,p_idResponsable,
-        p_tablaAfectada,p_sqlRealizado,p_valorAnterior,p_valorNuevo,p_fechaModificacion);
+INSERT INTO `control_logs`(`action_id`, `log_description`, `user_responsible_ip`, `user_responsible_id`, `affected_table`, `query_sql`, `old_value`, `new_value`, `register_date`) 
+VALUES (p_action_id,p_log_description,p_user_responsible_ip,p_user_responsible_id,
+        p_affected_table,p_query_sql,p_old_value,p_new_value,p_register_date);
         
 #Si no genero SQLEXCEPTION DEVOLVEMOS UN JSON
-SET p_jsonResponse = CONCAT('{"response":true, "message": "Se han modificado algunas tablas y se han registrado en la bitacora"}');
+SET p_json_response = CONCAT('{"response":true, "message": "Se han modificado algunas tablas y se han registrado en la bitacora"}');
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_Login` (IN `p_userCode` VARCHAR(6), IN `p_userPassword` TEXT, IN `p_ipUser` VARCHAR(39), OUT `p_jsonResponse` TEXT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_login` (IN `p_user_code` VARCHAR(6), IN `p_user_password` TEXT, IN `p_user_ip` VARCHAR(39), OUT `p_json_response` TEXT)   BEGIN
 #Manejo de errores
 DECLARE v_customErrorMessage TEXT;
 DECLARE v_customError CONDITION FOR SQLSTATE '45000';
@@ -84,294 +84,295 @@ DECLARE EXIT HANDLER FOR SQLEXCEPTION,SQLWARNING
         ROLLBACK;
         SET v_customErrorMessage = CONCAT("Se ha producido un error en el inicio de sesión: (",@code,") ",@error_string);
         #Guardamos el error
-        CALL sp_SQLException(1,1,"sp_Login",v_customErrorMessage,1,@responseError);
-        SET p_jsonResponse = (SELECT @responseError);
+        CALL sp_sql_exceptions(1,1,"sp_login",v_customErrorMessage,@responseError);
+        SET p_json_response = (SELECT @responseError);
     END;
 DECLARE EXIT HANDLER FOR v_customError
 	BEGIN
-    	CALL sp_SQLException(1,1,"sp_Login",v_customErrorMessage,1,@responseError);
-        SET p_jsonResponse = (SELECT @responseError);
+    	CALL sp_sql_exceptions(1,1,"sp_login",v_customErrorMessage,@responseError);
+        SET p_json_response = (SELECT @responseError);
     END;
 #Validaciones de usuario
-SET @ExistUser = (SELECT COUNT(Us.Id) FROM tbl_usuarios Us WHERE Us.Codigo = p_userCode AND Us.Id_estatus = 1 LIMIT 1);
-IF @ExistUser = 0 THEN
-	SET v_customErrorMessage = CONCAT('{"response":false,"message":"Error 0011: El ID_CODE(',p_userCode,') no existe o tiene el acceso denegado"}');
+SET @existUser = (SELECT COUNT(us.user_id) FROM users us WHERE us.user_code = p_user_code AND us.status_id = 1 LIMIT 1);
+IF @existUser = 0 THEN
+	SET v_customErrorMessage = CONCAT('{"response":false,"message":"Error 0007: ID_CODE(',p_user_code,') does not exist or have access denied"}');
     SIGNAL SQLSTATE '45000'; #Disparabamos el error si no existe el usuario
 END IF;
 #Validacion de llave de Encrypt
-SET @KeyEncrypt = (SELECT EK.EncryptKey FROM tbl_control_encryptkey EK WHERE EK.Id_estatus = 1 LIMIT 1);
-IF @KeyEncrypt = 0 OR @KeyEncrypt IS NULL THEN
-	SET v_customErrorMessage = CONCAT('{"response":false,"message":"Error 0012: No existen Key Encrypt registradas"}');
+SET @keyEncrypt = (SELECT ek.encrypt_key FROM control_encrypts ek WHERE ek.status_id = 1 LIMIT 1);
+IF @keyEncrypt = 0 OR @keyEncrypt IS NULL THEN
+	SET v_customErrorMessage = CONCAT('{"response":false,"message":"Error 0008: there are no registered encryption keys"}');
     SIGNAL SQLSTATE '45000'; #Disparamos el error si no existe Key Encrypt
 END IF;
 
 #Validamos la contraseña
-SET @TruePassword =(SELECT CAST(AES_DECRYPT(Us.Clave,@KeyEncrypt) AS CHAR) FROM tbl_usuarios Us WHERE Us.Codigo = p_userCode AND Us.Id_estatus = 1);
-IF p_userPassword != @TruePassword OR @TruePassword IS NULL THEN
-	SET v_customErrorMessage = CONCAT('{"response":false,"message":"Error 0013: La contraseña no coincide con la registrada en el sistema"}');
+SET @truePassword =(SELECT CAST(AES_DECRYPT(us.password,@keyEncrypt) AS CHAR) FROM users us WHERE us.user_code = p_user_code AND us.status_id = 1);
+IF CAST(p_user_password AS CHAR) != @truePassword OR @truePassword IS NULL THEN
+	SET v_customErrorMessage = CONCAT('{"response":false,"message":"Error 0009: Password incorrect, insert again"}');
     SIGNAL SQLSTATE '45000'; #Disparamos el error si las contraseñas no coinciden
 END IF;
 
 #Validamos cambio de la clave
-SET @ChangePass = (SELECT IF(Us.Fecha_cambio_clave > CURDATE(), false, true) FROM tbl_usuarios Us WHERE Us.Codigo = p_userCode AND Us.Id_estatus = 1);
-IF @ChangePass IS NULL THEN
-	SET v_customErrorMessage = CONCAT('{"response":false,"message":"Error 0014: el ID_CODE(',p_userCode,') no se encuentra activo"}');
+SET @changePass = (SELECT IF(us.time_change_password > CURDATE(), false, true) FROM users us WHERE us.user_code = p_user_code AND us.status_id = 1);
+IF @changePass IS NULL THEN
+	SET v_customErrorMessage = CONCAT('{"response":false,"message":"Error 0010: ID_CODE(',p_user_code,') it is inactive"}');
     SIGNAL SQLSTATE '45000'; #Disparamos el error si no devuelve nada la consulta
 END IF;
 
 #Capturamos el ultimo login del usuario
-SET @IdUser = (SELECT Us.Id FROM tbl_usuarios Us WHERE Us.Codigo = p_userCode LIMIT 1);
-SET @LastInsert = (SELECT MAX(BL2.Id) FROM tbl_control_logs_bitacora BL2 WHERE BL2.Id_usuario_responsable = @IdUser 
-                   AND BL2.Descripcion_accion LIKE "login%" LIMIT 1); #Almacena el ultimo insert de login
-SET @LastLogin = (SELECT Us.Fecha_login FROM tbl_usuarios Us WHERE Us.Id = @IdUser LIMIT 1); #Almacena la ultima fecha de login
-SET @LastIp = (SELECT IFNULL(BL.Ip_responsable,"0.0.0.0") FROM tbl_control_logs_bitacora BL WHERE BL.Id = @LastInsert); #Almacena la ultima IP
+SET @idUser = (SELECT us.user_id FROM users Us WHERE us.user_code = p_user_code LIMIT 1);
+SET @lastInsert = (SELECT MAX(cl2.log_id) FROM control_logs cl2 WHERE cl2.user_responsible_id = @idUser 
+                   AND cl2.log_description LIKE "login%" LIMIT 1); #Almacena el ultimo insert de login
+SET @lastLogin = (SELECT us.login_date FROM users us WHERE us.user_id = @IdUser LIMIT 1); #Almacena la ultima fecha de login
+SET @lastIp = (SELECT IFNULL(cl.user_responsible_ip,"0.0.0.0") FROM control_logs cl WHERE cl.log_id = @lastInsert); #Almacena la ultima IP
 
 #Actualizamos el ultimo login
-SET @FechaActual = (SELECT SYSDATE());
-UPDATE tbl_usuarios u SET u.Fecha_login = @FechaActual WHERE u.Codigo = p_userCode;
-SET @SQLRealizado = CONCAT("UPDATE tbl_usuarios u SET u.Fecha_login = ",@FechaActual," WHERE u.Codigo = ",p_userCode,";");
+SET @dateNow = (SELECT SYSDATE());
+UPDATE users u SET u.login_date = @dateNow WHERE u.user_code = p_user_code;
+SET @querySql = CONCAT("UPDATE users u SET u.login_date = ",@dateNow," WHERE u.user_code = ",p_user_code,";");
 
 #Acomodamos el ultimo valor y el nuevo
-SET @LastValue = CONCAT('{"fecha_ultimo_login": "',@LastLogin,'","ultima_ip": "',@LastIp,'"}');
-SET @NewValue = CONCAT('{"fecha_ultimo_login": "',@FechaActual,'","ultima_ip": "',p_ipUser,'"}');
+SET @lastValue = CONCAT('{"date_last_login": "',@lastLogin,'","last_ip": "',@lastIp,'"}');
+SET @newValue = CONCAT('{"date_last_login": "',@dateNow,'","last_ip": "',p_user_ip,'"}');
 
 #Preparamos las variables para response
-SET @CargoId = (SELECT IFNULL(us.Id_jerarquia_cargo,0) FROM tbl_usuarios us WHERE us.Id = @IdUser LIMIT 1);
-SET @DivisionId = (SELECT IFNULL(us.Id_jerarquia_division,0) FROM tbl_usuarios us WHERE us.Id = @IdUser LIMIT 1);
-SET @EmailId = (SELECT IFNULL(Ub.Correo_principal,Ub.Correo_secundario) FROM tbl_usuarios_contacto Ub WHERE Ub.Id_usuario = @IdUser LIMIT 1);
+SET @positionId = (SELECT IFNULL(us.position_id,0) FROM users us WHERE us.user_id = @idUser LIMIT 1);
+SET @departmentId = (SELECT IFNULL(us.department_id,0) FROM users us WHERE us.user_id = @idUser LIMIT 1);
+SET @emailId = (SELECT IFNULL(uc.primary_email,uc.secondary_email) FROM users_contact uc WHERE uc.user_id = @idUser LIMIT 1);
 
-CALL sp_InsertLog(2,"login",p_ipUser,@IdUser,"tbl_usuarios",@SQLRealizado,@LastValue,@NewValue,@FechaActual,@jsonResponse);
+CALL sp_insert_logs(2,"login",p_user_ip,@idUser,"users",@querySql,@lastValue,@newValue,@dateNow,@jsonResponse);
 #Extraemos el JSON a una variable
-SET @ResponseJson = JSON_UNQUOTE(JSON_EXTRACT(@jsonResponse,'$.response'));
+SET @responseJson = JSON_UNQUOTE(JSON_EXTRACT(@jsonResponse,'$.response'));
 
 #Verificamos si registró efectivamente en la bitacora
-IF @ResponseJson != "true" THEN
-	SET v_customErrorMessage = CONCAT('{"response":false,"message":"Error 0015: ha ocurrido un error en la bitacora"}');
+IF @responseJson != "true" THEN
+	SET v_customErrorMessage = CONCAT('{"response":false,"message":"Error 0011: Insert log has failed (',JSON_UNQUOTE(JSON_EXTRACT(@jsonResponse,'$.message')),')"}');
     SIGNAL SQLSTATE '45000'; #Si no ha podido registrar nada, dispara el error
 END IF;
 
 #Si paso todas las validaciones procedemos a registrar
-SET p_jsonResponse = CONCAT('{"passwordChange": ',@ChangePass,',"idCargo": ',@CargoId,', 
-                            "idDivision": ',@DivisionID,',"idUsuario": ',@IdUser,',
-                            "emailUser": "',@EmailId,'","message": "Bienvenido. En breves momentos será redireccionado...",
+SET p_json_response = CONCAT('{"passwordChange": ',@changePass,',"positionId": ',@positionId,', 
+                            "departmentId": ',@departmentId,',"userId": ',@idUser,',
+                            "emailUser": "',@emailId,'","message": "Bienvenido. En breves momentos será redireccionado...",
                             "response": true}');
 END$$
 
-CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_NewClient` (IN `p_IdSocio` INT, IN `p_Rif` VARCHAR(30), IN `p_Nit` INT, IN `p_RazonSocial` VARCHAR(60), IN `p_IdPais` INT, IN `p_Address` TEXT, IN `p_TelefonoFiscal` VARCHAR(30), IN `p_PaginaWeb` VARCHAR(150), IN `p_EmailFiscal` VARCHAR(100), IN `p_IdSectorAsociado` INT, IN `p_IdServicioAsociado` INT, IN `p_IdUsuario` INT, IN `p_IpUser` VARCHAR(40), OUT `p_JsonResponse` TEXT)   BEGIN
-DECLARE v_CustomMessage TEXT;
+CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_new_clients` (IN `p_partner_user_id` INT, IN `p_rif` VARCHAR(30), IN `p_nit` INT, IN `p_bussiness_name` VARCHAR(60), IN `p_country_id` INT, IN `p_address` TEXT, IN `p_tax_phone` VARCHAR(30), IN `p_website` VARCHAR(150), IN `p_tax_email` VARCHAR(100), IN `p_sector_id` INT, IN `p_service_id` INT, IN `p_user_id` INT, IN `p_user_ip` VARCHAR(40), OUT `p_json_response` TEXT)   BEGIN
+DECLARE v_customMessage TEXT;
 DECLARE v_CustomError CONDITION FOR SQLSTATE '45000';
 DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
 	BEGIN
     	GET DIAGNOSTICS CONDITION 1 @code = RETURNED_SQLSTATE, @error_msj = MESSAGE_TEXT;
         ROLLBACK;
-        SET v_CustomMessage = CONCAT("Se ha producido un error en la consulta: (",@code,") ",@error_msj);
+        SET v_customMessage = CONCAT("Se ha producido un error en la consulta: (",@code,") ",@error_msj);
         #Guardamos el error
-        CALL sp_SQLException(1,1,"sp_NewClient",v_CustomMessage,1,@responseError);
-        SET p_JsonResponse = (SELECT @responseError);
+        CALL sp_sql_exceptions(1,1,"sp_new_clients",v_customMessage,@responseError);
+        SET p_json_response = (SELECT @responseError);
     END;
-DECLARE EXIT HANDLER FOR v_CustomError
+DECLARE EXIT HANDLER FOR v_customError
 	BEGIN
     	#Guardamos el error
-        CALL sp_SQLException(1,1,"sp_NewClient",v_CustomMessage,1,@responseError);
-        SET p_JsonResponse = (SELECT @responseError);
+        CALL sp_sql_exceptions(1,1,"sp_new_clients",v_customMessage,@responseError);
+        SET p_json_response = (SELECT @responseError);
     END;
 #Validacion del Usuario Socio
-SET @isExist = (SELECT COUNT(US.Id) FROM tbl_usuarios US WHERE US.Id = p_IdSocio LIMIT 1);
+SET @isExist = (SELECT COUNT(us.user_id) FROM users us WHERE us.user_id = p_partner_user_id LIMIT 1);
 IF @isExist = 0 THEN
-	SET v_CustomMessage = CONCAT('{"response":false,"message":"Error 0022: Este socio no existe (',p_IdUsuario,')"}');
+	SET v_customMessage = CONCAT('{"response":false,"message":"Error 0014: partner does not exist (',p_partner_user_id,')"}');
     #Activamos el error
     SIGNAL SQLSTATE '45000';
 END IF;
 
 #Capturamos el ultimo login del usuario quien esta registrando el nuevo cliente
-SET @LastInsert = (SELECT MAX(BL2.Id) FROM tbl_control_logs_bitacora BL2 WHERE BL2.Id_usuario_responsable = p_IdUsuario 
-                   AND BL2.Descripcion_accion LIKE "createUser%" LIMIT 1); #Almacena el ultimo insert de creacion de Usuario
-SET @LastLogin = (SELECT Us.Fecha_login FROM tbl_usuarios Us WHERE Us.Id = p_IdUsuario LIMIT 1); #Almacena la ultima fecha de login
-SET @LastIp = (SELECT IFNULL(BL.Ip_responsable,"0.0.0.0") FROM tbl_control_logs_bitacora BL WHERE BL.Id = @LastInsert); #Almacena la ultima IP
+SET @lastInsert = (SELECT MAX(cl2.log_id) FROM control_logs cl2 WHERE cl2.user_responsible_id = p_user_id 
+                   AND cl2.log_description LIKE "createClient%" LIMIT 1); #Almacena el ultimo insert de creacion de Cliente
+SET @lastLogin = (SELECT us.login_date FROM users us WHERE us.user_id = p_user_id LIMIT 1); #Almacena la ultima fecha de login
+SET @lastIp = (SELECT IFNULL(cl.user_responsible_ip,"0.0.0.0") FROM control_logs cl WHERE cl.log_id = @lastInsert); #Almacena la ultima IP
 
 #Si existe el usuario socio, procedemos a crear al cliente
-SET @FechaActual = (SELECT SYSDATE());
+SET @dateNow = (SELECT SYSDATE());
 
 #Acomodamos el ultimo valor y el nuevo
-SET @LastValue = CONCAT('{"ultima_ip":"',@LastIp,'"}');
-SET @NewValue = CONCAT('{"ultima_ip":"',p_IpUser,'"}');
+SET @lastValue = CONCAT('{"ultima_ip":"',@lastIp,'"}');
+SET @newValue = CONCAT('{"ultima_ip":"',p_user_ip,'"}');
 
 #Obtenemos el ultimo codigo registrado
-SET @LastInsertId = (SELECT MAX(Id) FROM tbl_clientes);
-SET @LastCodeCliente = (SELECT TC.Codigo_cliente FROM tbl_clientes TC WHERE TC.Id = @LastInsertId) + 1;
+SET @lastInsertId = (SELECT MAX(client_id) FROM clients);
+SET @lastCodeClient = (SELECT cs.client_code FROM clients cs WHERE cs.client_id = @lastInsertId) + 1;
 
 #Creamos el nuevo cliente
-INSERT INTO `tbl_clientes`(`Id_usuario_socio`, `Codigo_cliente`, `Rif`, `Nit`, `Razon_social`, `Id_pais`, `Direccion`, `Telefono_fiscal`, `Pagina_web`, `Email_fiscal`, `Id_cliente_sector`, `Id_cliente_servicio`, `Id_estatus`) VALUES (p_IdSocio,@LastCodeCliente,p_Rif,p_Nit,p_RazonSocial,p_IdPais,p_Address,p_TelefonoFiscal,p_PaginaWeb,p_EmailFiscal,p_IdSectorAsociado,p_IdServicioAsociado,1);
+INSERT INTO `clients`(`partner_user_id`, `client_code`, `rif`, `nit`, `bussiness_name`, `country_id`, `client_address`, `tax_phone`, `website`, `tax_email`, `sector_id`, `service_id`, `status_id`) VALUES (p_partner_user_id,@lastCodeClient,p_rif,p_nit,p_bussiness_name,p_country_id,p_address,p_tax_phone,p_website,p_tax_email,p_sector_id,p_service_id,1);
 
-SET @SQLRealizado = CONCAT('INSERT INTO `tbl_clientes`(`Id_usuario_socio`, `Codigo_cliente`, `Rif`, `Nit`, `Razon_social`, `Id_pais`, `Direccion`, `Telefono_fiscal`, `Pagina_web`, `Email_fiscal`, `Id_cliente_sector`, `Id_cliente_servicio`, `Id_estatus`) VALUES (p_IdSocio,',@LastCodeCliente,',p_Rif,p_Nit,p_RazonSocial,p_IdPais,p_Address,p_TelefonoFiscal,p_PaginaWeb,p_EmailFiscal,p_IdSectorAsociado,p_IdServicioAsociado,1);');
+SET @querySql = CONCAT('INSERT INTO `clients`(`partner_user_id`, `client_code`, `rif`, `nit`, `bussiness_name`, `country_id`, `client_address`, `tax_phone`, `website`, `tax_email`, `sector_id`, `service_id`, `status_id`) VALUES (p_partner_user_id,',@lastCodeClient,',p_rif,p_nit,p_bussiness_name,p_country_id,p_address,p_tax_phone,p_website,p_tax_email,p_sector_id,p_servicio_id,1);');
 
-CALL sp_InsertLog(1,"createClient",p_IpUser,p_IdUsuario,"tbl_clientes",@SQLRealizado,@LastValue,@NewValue,@FechaActual,@jsonResponse);
+CALL sp_insert_logs(1,"createClient",p_user_ip,p_user_id,"clients",@querySql,@lastValue,@newValue,@dateNow,@jsonResponse);
 #Extraemos el JSON a una variable
-SET @ResponseJson = JSON_UNQUOTE(JSON_EXTRACT(@jsonResponse,'$.response'));
+SET @responseJson = JSON_UNQUOTE(JSON_EXTRACT(@jsonResponse,'$.response'));
 
 #Verificamos si registró efectivamente en la bitacora
-IF @ResponseJson != "true" THEN
-	SET v_CustomMessage = CONCAT('{"response":false,"message":"Error 0015: ha ocurrido un error en la bitacora"}');
+IF @responseJson != "true" THEN
+	SET v_customMessage = CONCAT('{"response":false,"message":"Error 0011: Insert log has failed (',JSON_UNQUOTE(JSON_EXTRACT(@jsonResponse,'$.message')),')"}');
     SIGNAL SQLSTATE '45000'; #Si no ha podido registrar nada, dispara el error
 END IF;
 
 #Si paso toda las validaciones
-SET p_JsonResponse = CONCAT('{"response":true,"message":"Cliente ',p_RazonSocial,' creado exitosamente. Codigo: ',@LastCodeCliente,'"}');
+SET p_json_response = CONCAT('{"response":true,"message":"Client ',p_bussiness_name,' created. Code: ',@lastCodeClient,'"}');
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_NewContactUser` (IN `p_Codigo` VARCHAR(6), IN `p_Correo1` VARCHAR(255), IN `p_Correo2` VARCHAR(255), IN `p_Telefono1` VARCHAR(30), IN `p_Telefono2` VARCHAR(30), IN `p_TipoDocumento` VARCHAR(5), IN `p_Cedula` VARCHAR(255), OUT `p_JsonResponse` TEXT)   BEGIN
-DECLARE v_CustomMessage TEXT;
-DECLARE v_CustomError CONDITION FOR SQLSTATE '45000';
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_new_contact_users` (IN `p_user_code` VARCHAR(6), IN `p_primary_email` VARCHAR(255), IN `p_secondary_email` VARCHAR(255), IN `p_primary_phone` VARCHAR(30), IN `p_secondary_phone` VARCHAR(30), IN `p_identity_type` VARCHAR(5), IN `p_identity_number` VARCHAR(255), OUT `p_json_response` TEXT)   BEGIN
+DECLARE v_customMessage TEXT;
+DECLARE v_customError CONDITION FOR SQLSTATE '45000';
 DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
 	BEGIN
     	GET DIAGNOSTICS CONDITION 1 @code = RETURNED_SQLSTATE, @error_msj = MESSAGE_TEXT;
         ROLLBACK;
-        SET v_CustomMessage = CONCAT("Se ha producido un error en la consulta: (",@code,") ",@error_msj);
+        SET v_customMessage = CONCAT("Se ha producido un error en la consulta: (",@code,") ",@error_msj);
         #Guardamos el error
-        CALL sp_SQLException(1,1,"sp_NewContactUser",v_CustomMessage,1,@responseError);
-        SET p_JsonResponse = (SELECT @responseError);
+        CALL sp_sql_exceptions(1,1,"sp_new_contact_users",v_customMessage,@responseError);
+        SET p_json_response = (SELECT @responseError);
     END;
 DECLARE EXIT HANDLER FOR v_CustomError
 	BEGIN
     	#Guardamos el error
-        CALL sp_SQLException(1,1,"sp_NewContactUser",v_CustomMessage,1,@responseError);
-        SET p_JsonResponse = (SELECT @responseError);
+        CALL sp_sql_exceptions(1,1,"sp_new_contact_users",v_customMessage,@responseError);
+        SET p_json_response = (SELECT @responseError);
     END;
 #Validacion del Usuario
-SET @isExist = (SELECT COUNT(US.Id) FROM tbl_usuarios US WHERE US.Codigo = p_Codigo LIMIT 1);
+SET @isExist = (SELECT COUNT(us.user_id) FROM users us WHERE us.user_code = p_user_code LIMIT 1);
 IF @isExist = 0 THEN
-	SET v_CustomMessage = CONCAT('{"response":false,"message":"Error 0019: Este usuario no existe (',p_Codigo,')"}');
+	SET v_customMessage = CONCAT('{"response":false,"message":"Error 0016: This users is already registered (',p_user_code,')"}');
     #Activamos el error
     SIGNAL SQLSTATE '45000';
 END IF;
 
 #Si existe procedemos a crearle contacto
-SET @IdUser = (SELECT US.Id FROM tbl_usuarios US WHERE US.Codigo = p_Codigo LIMIT 1);
+SET @idUser = (SELECT us.user_id FROM users us WHERE us.user_code = p_user_code LIMIT 1);
 #Validacion de la cedula
-SET @TipoDocumento = (SELECT UT.Id FROM tbl_usuarios_documentoidentidad_tipo UT WHERE UT.AbreviaturaTipo = p_TipoDocumento LIMIT 1);
-SET @documentExist = (SELECT COUNT(US.Id) FROM tbl_usuarios_documentoidentidad US WHERE US.Descripcion = p_Cedula AND US.Id_tipo_documento = @TipoDocumento LIMIT 1);
+SET @identityType = (SELECT ut.identity_type_id FROM users_identity_type ut WHERE ut.identity_abbreviation = p_identity_type LIMIT 1);
+SET @documentExist = (SELECT COUNT(ui.identity_id) FROM users_identity ui WHERE ui.identity_number = p_identity_number AND ui.identity_type_id = @identityType LIMIT 1);
 IF @documentExist != 0 THEN
-	SET v_CustomMessage = CONCAT('{"response":false,"message":"Error 0021: Esta cedula ya está registrada (',p_Cedula,')"}');
-    DELETE FROM tbl_usuarios WHERE Id = @IdUser;
+	SET v_customMessage = CONCAT('{"response":false,"message":"Error 0017: This identity is already registered (',p_identity_number,')"}');
+    DELETE FROM users WHERE user_id = @idUser;
 	SIGNAL SQLSTATE '45000';
 END IF;
 #Contacto
-INSERT INTO `tbl_usuarios_contacto`(`Id_usuario`, `Correo_principal`, `Correo_secundario`, `Telefono_principal`, `Telefono_secundario`) VALUES (@IdUser,p_Correo1,p_Correo2,p_Telefono1,p_Telefono2);
+INSERT INTO `users_contact`(`user_id`, `primary_email`, `secondary_email`, `primary_phone`, `secondary_phone`) VALUES (@idUser,p_primary_email,p_secondary_email,p_primary_phone,p_secondary_phone);
 #Documento
-INSERT INTO `tbl_usuarios_documentoidentidad`(`Id_usuario`, `Id_tipo_documento`, `Descripcion`) VALUES (@IdUser,@TipoDocumento,p_Cedula);
+INSERT INTO `users_identity`(`user_id`, `identity_type_id`, `identity_number`) VALUES (@idUser,@identityType,p_identity_number);
 
 #Devolvemos el response si no hay ningun SQL Error
-SET p_JsonResponse = CONCAT('{"response":true,"message":"Contacto registrado con exito para el usuario ',p_Codigo,'"}');
+SET p_json_response = CONCAT('{"response":true,"message":"Contact users registered succesfully ',p_user_code,'"}');
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_NewUser` (IN `p_Nombre1` VARCHAR(20), IN `p_Nombre2` VARCHAR(20), IN `p_Apellido1` VARCHAR(20), IN `p_Apellido2` VARCHAR(20), IN `p_Codigo` VARCHAR(6), IN `p_FechaNacimiento` DATE, IN `p_FechaIngreso` DATE, IN `p_Cedula` VARCHAR(255), IN `p_IdParroquia` INT, IN `p_IdCargo` INT, IN `p_IdDivision` INT, IN `p_IdUser` INT, IN `p_IpUser` VARCHAR(39), OUT `p_JsonResponse` TEXT)   BEGIN
-DECLARE v_CustomMessage TEXT;
-DECLARE v_CustomError CONDITION FOR SQLSTATE '45000';
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_new_users` (IN `p_first_name` VARCHAR(20), IN `p_second_name` VARCHAR(20), IN `p_first_surname` VARCHAR(20), IN `p_second_surname` VARCHAR(20), IN `p_user_code` VARCHAR(6), IN `p_birthday` DATE, IN `p_admission_date` DATE, IN `p_identity_number` VARCHAR(255), IN `p_parish_id` INT, IN `p_position_id` INT, IN `p_department_id` INT, IN `p_user_id` INT, IN `p_user_ip` VARCHAR(39), OUT `p_json_response` TEXT)   BEGIN
+DECLARE v_customMessage TEXT;
+DECLARE v_customError CONDITION FOR SQLSTATE '45000';
 DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
 	BEGIN
     	GET DIAGNOSTICS CONDITION 1 @code = RETURNED_SQLSTATE, @error_msj = MESSAGE_TEXT;
         ROLLBACK;
-        SET v_CustomMessage = CONCAT("Se ha producido un error en la consulta: (",@code,") ",@error_msj);
+        SET v_customMessage = CONCAT("Se ha producido un error en la consulta: (",@code,") ",@error_msj);
         #Guardamos el error
-        CALL sp_SQLException(1,1,"sp_NewUser",v_CustomMessage,1,@responseError);
-        SET p_JsonResponse = (SELECT @responseError);
+        CALL sp_sql_exceptions(1,1,"sp_new_users",v_customMessage,@responseError);
+        SET p_json_response = (SELECT @responseError);
     END;
-DECLARE EXIT HANDLER FOR v_CustomError
+DECLARE EXIT HANDLER FOR v_customError
 	BEGIN
     	#Guardamos el error
-        CALL sp_SQLException(1,1,"sp_NewUser",v_CustomMessage,1,@responseError);
-        SET p_JsonResponse = (SELECT @responseError);
+        CALL sp_sql_exceptions(1,1,"sp_new_users",v_customMessage,@responseError);
+        SET p_json_response = (SELECT @responseError);
     END;
 #Validacion del Usuario
-SET @isExist = (SELECT COUNT(US.Id) FROM tbl_usuarios US WHERE US.Codigo = p_Codigo LIMIT 1);
+SET @isExist = (SELECT COUNT(us.user_id) FROM users us WHERE us.user_code = p_user_code LIMIT 1);
 IF @isExist = 1 THEN
-	SET v_CustomMessage = CONCAT('{"response":false,"message":"Error 0018: Este usuario ya existe (',p_Codigo,')"}');
+	SET v_customMessage = CONCAT('{"response":false,"message":"Error 0016: This user is already registered (',p_user_code,')"}');
     #Activamos el error
     SIGNAL SQLSTATE '45000';
 END IF;
 
 #Capturamos el ultimo login del usuario quien esta registrando el nuevo miembro
-SET @LastInsert = (SELECT MAX(BL2.Id) FROM tbl_control_logs_bitacora BL2 WHERE BL2.Id_usuario_responsable = p_IdUser 
-                   AND BL2.Descripcion_accion LIKE "createUser%" LIMIT 1); #Almacena el ultimo insert de creacion de Usuario
-SET @LastLogin = (SELECT Us.Fecha_login FROM tbl_usuarios Us WHERE Us.Id = p_IdUser LIMIT 1); #Almacena la ultima fecha de login
-SET @LastIp = (SELECT IFNULL(BL.Ip_responsable,"0.0.0.0") FROM tbl_control_logs_bitacora BL WHERE BL.Id = @LastInsert); #Almacena la ultima IP
+SET @lastInsert = (SELECT MAX(cl.log_id) FROM control_logs cl WHERE cl.user_responsible_id = p_user_id
+                   AND cl.log_description LIKE "createUser%" LIMIT 1); #Almacena el ultimo insert de creacion de Usuario
+SET @lastLogin = (SELECT us.login_date FROM users us WHERE us.user_id = p_user_id LIMIT 1); #Almacena la ultima fecha de login
+SET @lastIp = (SELECT IFNULL(cl.user_responsible_ip,"0.0.0.0") FROM control_logs cl WHERE cl.log_id = @lastInsert); #Almacena la ultima IP
 
 #Si no existe procedemos a registrar al usuario
-SET @Key = (SELECT EK.EncryptKey FROM tbl_control_encryptkey EK WHERE EK.Id_estatus = 1 LIMIT 1);
-SET @FechaActual = (SELECT SYSDATE());
-SET @FechaCambio = (SELECT DATE(SYSDATE()+90));
+SET @key = (SELECT ek.encrypt_key FROM control_encrypts ek WHERE ek.status_id = 1 LIMIT 1);
+SET @dateNow = (SELECT SYSDATE());
+SET @dateChange = (SELECT DATE(SYSDATE()+90));
 
-INSERT INTO `tbl_usuarios`(`Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`)
-VALUES(p_Codigo,AES_ENCRYPT(p_Cedula,@Key),@FechaCambio,p_Nombre1,p_Nombre2,p_Apellido1,p_Apellido2,p_FechaNacimiento,p_IdCargo,p_IdDivision,p_IdParroquia,p_FechaIngreso,NULL,NULL,1);
+INSERT INTO `users`(`user_code`, `password`, `time_change_password`, `first_name`, `second_name`, `first_surname`, `second_surname`, `birthday`, `position_id`, `department_id`, `parish_id`, `admission_date`, `departure_date`, `login_date`, `status_id`)
+VALUES(p_user_code,AES_ENCRYPT(p_identity_number,@key),@dateChange,p_first_name,p_second_name,p_first_surname,p_second_surname,p_birthday,p_position_id,p_department_id,p_parish_id,p_admission_date,NULL,NULL,1);
 
 #Guardamos el SQL
-SET @SQLRealizado = CONCAT('INSERT INTO `tbl_usuarios`(`Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`) VALUES(',p_Codigo,',AES_ENCRYPT(p_Cedula,@Key),@FechaCambio,p_Nombre1,p_Nombre2,p_Apellido1,p_Apellido2,p_FechaNacimiento,p_IdCargo,p_IdDivision,p_IdParroquia,p_FechaIngreso,NULL,NULL,1)');
+SET @querySql = CONCAT('INSERT INTO `users`(`user_code`, `password`, `time_change_password`, `first_name`, `second_name`, `first_surname`, `second_surname`, `birthday`, `position_id`, `department_id`, `parish_id`, `admission_date`, `departure_date`, `login_date`, `status_id`)
+VALUES(',p_user_code,',AES_ENCRYPT(p_identity_number,@key),@dateChange,p_first_name,p_second_name,p_first_surname,p_second_surname,p_birthday,p_position_id,p_department_id,p_parish_id,p_admission_date,NULL,NULL,1);');
 
 #Acomodamos el ultimo valor y el nuevo
-SET @LastValue = CONCAT('{"ultima_ip":"',@LastIp,'"}');
-SET @NewValue = CONCAT('{"ultima_ip":"',p_IpUser,'"}');
+SET @lastValue = CONCAT('{"ultima_ip":"',@lastIp,'"}');
+SET @newValue = CONCAT('{"ultima_ip":"',p_user_ip,'"}');
 
-CALL sp_InsertLog(1,"createUser",p_IpUser,p_IdUser,"tbl_usuarios",@SQLRealizado,@LastValue,@NewValue,@FechaActual,@jsonResponse);
+CALL sp_insert_logs(1,"createUser",p_user_ip,p_user_id,"users",@querySql,@lastValue,@newValue,@dateNow,@jsonResponse);
 #Extraemos el JSON a una variable
-SET @ResponseJson = JSON_UNQUOTE(JSON_EXTRACT(@jsonResponse,'$.response'));
+SET @responseJson = JSON_UNQUOTE(JSON_EXTRACT(@jsonResponse,'$.response'));
 
 #Verificamos si registró efectivamente en la bitacora
-IF @ResponseJson != "true" THEN
-	SET v_CustomMessage = CONCAT('{"response":false,"message":"Error 0015: ha ocurrido un error en la bitacora"}');
+IF @responseJson != "true" THEN
+	SET v_customMessage = CONCAT('{"response":false,"message":"Error 0011: Insert log has failed (',JSON_UNQUOTE(JSON_EXTRACT(@jsonResponse,'$.message')),')"}');
     SIGNAL SQLSTATE '45000'; #Si no ha podido registrar nada, dispara el error
 END IF;
 
 #Si paso toda las validaciones
-SET p_JsonResponse = CONCAT('{"response":true,"message":"Usuario ',p_Codigo,' creado exitosamente"}');
+SET p_json_response = CONCAT('{"response":true,"message":"User ',p_user_code,' created succesfully"}');
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_QueryPagination` (IN `tableTarget` TEXT, OUT `p_jsonResponse` TEXT)   query_select: BEGIN
-DECLARE v_CustomMessage TEXT;
-DECLARE v_CustomError CONDITION FOR SQLSTATE '45000';
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_query_pagination` (IN `table_target` TEXT, OUT `p_json_response` TEXT)   query_select: BEGIN
+DECLARE v_customMessage TEXT;
+DECLARE v_customError CONDITION FOR SQLSTATE '45000';
 DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
 	BEGIN
     	GET DIAGNOSTICS CONDITION 1 @code = RETURNED_SQLSTATE, @error_msj = MESSAGE_TEXT;
         ROLLBACK;
-        SET v_CustomMessage = CONCAT("Se ha producido un error en la consulta: (",@code,") ",@error_msj);
+        SET v_customMessage = CONCAT("Se ha producido un error en la consulta: (",@code,") ",@error_msj);
         #Guardamos el error
-        CALL sp_SQLException(1,1,"sp_QueryPagination",v_CustomMessage,1,@responseError);
-        SET p_jsonResponse = (SELECT @responseError);
+        CALL sp_sql_exceptions(1,1,"sp_query_pagination",v_customMessage,@responseError);
+        SET p_json_response = (SELECT @responseError);
     END;
-DECLARE EXIT HANDLER FOR v_CustomError
+DECLARE EXIT HANDLER FOR v_customError
 	BEGIN
     	#Guardamos el error
-        CALL sp_SQLException(1,1,"sp_QueryPagination",v_CustomMessage,1,@responseError);
-        SET p_jsonResponse = (SELECT @responseError);
+        CALL sp_sql_exceptions(1,1,"sp_query_pagination",v_customMessage,@responseError);
+        SET p_json_response = (SELECT @responseError);
     END;
 #Validaciones Custom
-IF tableTarget = "" OR tableTarget is NULL THEN
-	SET v_CustomMessage = CONCAT('{"response":false,"message":"Error 0016: La selección de tabla está vacia (',tableTarget,')"}');
+IF table_target = "" OR table_target is NULL THEN
+	SET v_customMessage = CONCAT('{"response":false,"message":"Error 0012: table target is empty (',table_target,')"}');
     SIGNAL SQLSTATE '45000'; #Activamos el error
 END IF;
 
 #Validaciones para los Select
-IF tableTarget = 'users' THEN
+IF table_target = 'users' THEN
 	#Creamos un JSON CON la informacion de la consulta
-	SET @JsonSelect = (SELECT CONCAT("[",GROUP_CONCAT('{"codigo":"',Us.Codigo,'","cedula":"',Ud.Descripcion,'","nombre":"',CONCAT(Us.Primer_nombre," ",Us.Segundo_nombre," ",Us.Primer_apellido," ",Us.Segundo_apellido),'","correo":"',Uc.Correo_principal,'","estatus":',Us.Id_estatus,'}'),"]") FROM tbl_usuarios Us INNER JOIN tbl_usuarios_documentoidentidad Ud ON Ud.Id_usuario = Us.Id INNER JOIN tbl_usuarios_contacto Uc ON Uc.Id_usuario = Us.Id);
-    SET p_jsonResponse = CONCAT('{"response":true,"message":',@JsonSelect,'}');
+	SET @jsonSelect = (SELECT CONCAT("[",GROUP_CONCAT('{"codigo":"',us.user_code,'","cedula":"',ui.identity_number,'","nombre":"',CONCAT(us.first_name," ",us.second_name," ",us.first_surname," ",us.second_surname),'","correo":"',uc.primary_email,'","estatus":',us.status_id,'}'),"]") FROM users us INNER JOIN users_identity ui ON ui.user_id = us.user_id INNER JOIN users_contact uc ON uc.user_id = us.user_id);
+    SET p_json_response = CONCAT('{"response":true,"message":',@jsonSelect,'}');
     LEAVE query_select;
 END IF;
 
-IF tableTarget = 'clients' THEN
+IF table_target = 'clients' THEN
 	#Creamos un JSON con la información de la consulta
-    SET @JsonSelect = (SELECT CONCAT("[",GROUP_CONCAT('{"codigo":"',Cs.Codigo_cliente,'","socio encargado":"',CONCAT(Us.Primer_nombre," ",Us.Segundo_nombre," ",Us.Primer_apellido," ",Us.Segundo_apellido),'","razon social":"',Cs.Razon_social,'","correo":"',Cs.Email_fiscal,'","estatus":',Us.Id_estatus,'}'),"]") FROM tbl_clientes Cs INNER JOIN tbl_usuarios Us ON Us.Id = Cs.Id_usuario_socio);
-    SET p_jsonResponse = CONCAT('{"response":true,"message":',@JsonSelect,'}');
+    SET @jsonSelect = (SELECT CONCAT("[",GROUP_CONCAT('{"codigo":"',cs.client_code,'","socio encargado":"',CONCAT(us.first_name," ",us.second_name," ",us.first_surname," ",us.second_surname),'","razon social":"',cs.bussiness_name,'","correo":"',cs.tax_email,'","estatus":',us.status_id,'}'),"]") FROM clients cs INNER JOIN users us ON us.user_id = cs.partner_user_id);
+    SET p_json_response = CONCAT('{"response":true,"message":',@jsonSelect,'}');
     LEAVE query_select;
 END IF;
 
 #Si no entra en ninguna condición
-SET v_CustomMessage = CONCAT('{"response":false,"message":"Error 0017: La selección de tabla no coincide con ninguna tabla (',tableTarget,')"}');
+SET v_customMessage = CONCAT('{"response":false,"message":"Error 0013: Table target does not match any table in the database (',table_target,')"}');
 SIGNAL SQLSTATE '45000'; #Activamos el error
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_SQLException` (IN `p_Id_objeto_afectado` INT, IN `p_Id_tipo_mensaje` INT, IN `p_objeto_afectado` VARCHAR(255), IN `p_mensaje_error` TEXT, IN `p_estatus_error` INT, OUT `p_error_response` TEXT)   BEGIN
-DECLARE v_CustomErrorMessage TEXT;
-DECLARE v_CustomError CONDITION FOR SQLSTATE '45000';
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_sql_exceptions` (IN `p_type_object_id` INT, IN `p_type_message_id` INT, IN `p_affected_object` VARCHAR(255), IN `p_error_message` TEXT, OUT `p_error_response` TEXT)   BEGIN
+DECLARE v_customErrorMessage TEXT;
+DECLARE v_customError CONDITION FOR SQLSTATE '45000';
 #Gestión de errores
 DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
 	BEGIN
@@ -380,201 +381,279 @@ DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
                       ,@error_string,'"}') INTO p_error_response;
     END;
 #Error personalizado
-DECLARE EXIT HANDLER FOR v_CustomError
+DECLARE EXIT HANDLER FOR v_customError
 	BEGIN
-    	SET p_error_response = v_CustomErrorMessage;
+    	SET p_error_response = v_customErrorMessage;
     END;
 
 #Init de errores
-SET @ExistObject = (SELECT COUNT(CT.Id) FROM tbl_control_error_tipoobjeto CT WHERE CT.Id = p_Id_objeto_afectado LIMIT 1);
-SET @ExistMensaje = (SELECT COUNT(CM.Id) FROM tbl_control_error_tipomensaje CM WHERE CM.Id = p_Id_tipo_mensaje LIMIT 1);
-SET @ExistStatus = (SELECT COUNT(CE.Id) FROM tbl_control_estatus CE WHERE CE.Id = p_estatus_error LIMIT 1);
+SET @existObject = (SELECT COUNT(eo.type_object_id) FROM control_errors_type_object eo WHERE eo.type_object_id = p_type_object_id LIMIT 1);
+SET @existMessage = (SELECT COUNT(em.type_message_id) FROM control_errors_type_messages em WHERE em.type_message_id = p_type_message_id LIMIT 1);
 
 #Condicionales de error
 #Verifica si mas de uno no existe
-IF @ExistObject = 0 AND @ExistMensaje = 0 AND @ExistStatus = 0 THEN
-	SET v_CustomErrorMessage = CONCAT('{"response":false,"message": "Error 0001: El
-                                 ID_OBJETO(',p_Id_objeto_afectado,'),
-                                 ID_TIPO_MENSAJE(',p_Id_tipo_mensaje,') y El
-                                 ID_ESTATUS(',p_estatus_error,') no existen"}');
-    SIGNAL SQLSTATE '45000'; #Dispara el custom error
-END IF;
-IF @ExistMensaje = 0 AND @ExistStatus = 0 THEN
-	SET v_CustomErrorMessage = CONCAT('{"response":false,"message": "Error 0002:
-                                 ID_TIPO_MENSAJE(',p_Id_tipo_mensaje,') 
-                                 y El ID_ESTATUS(',p_estatus_error,') no existen"}');
-    SIGNAL SQLSTATE '45000'; #Dispara el custom error
-END IF;
-IF @ExistObject = 0 AND @ExistMensaje = 0 THEN
-	SET v_CustomErrorMessage = CONCAT('{"response":false,"message": "Error 0003: El
-                                 ID_OBJETO(',p_Id_objeto_afectado,') y 
-                                 ID_TIPO_MENSAJE(',p_Id_tipo_mensaje,') no existen"}');
-    SIGNAL SQLSTATE '45000'; #Dispara el custom error
-END IF;
-IF @ExistObject = 0 AND @ExistStatus = 0 THEN
-	SET v_CustomErrorMessage = CONCAT('{"response":false,"message": "Error 0004: El
-                                 ID_OBJETO(',p_Id_objeto_afectado,')
-                                 y El ID_ESTATUS(',p_estatus_error,') no existen"}');
+IF @existObject = 0 AND @existMessage = 0 THEN
+	SET v_customErrorMessage = CONCAT('{"response":false,"message": "Error 0001:
+                                 ID_OBJETO(',p_type_object_id,'), and
+                                 ID_TIPO_MENSAJE(',p_type_message_id,') does not exist"}');
     SIGNAL SQLSTATE '45000'; #Dispara el custom error
 END IF;
 #Verifica si no existen por separado
-IF @ExistObject = 0 THEN
-	SET v_CustomErrorMessage = CONCAT('{"response":false,"message": "Error 0005: El
-                                 ID_OBJETO(',p_Id_objeto_afectado,') no existe"}');
+IF @existObject = 0 THEN
+	SET v_customErrorMessage = CONCAT('{"response":false,"message": "Error 0002:
+                                 ID_OBJETO(',p_Id_objeto_afectado,') does not exist"}');
     SIGNAL SQLSTATE '45000'; #Dispara el custom error
 END IF;
-IF @ExistMensaje = 0 THEN
-	SET v_CustomErrorMessage = CONCAT('{"response":false,"message": "Error 0006: El
-                                 ID_TIPO_MENSAJE(',p_Id_tipo_mensaje,') no existe"}');
-    SIGNAL SQLSTATE '45000'; #Dispara el custom error
-END IF;
-IF @ExistStatus = 0 THEN
-	SET v_CustomErrorMessage = CONCAT('{"response":false,"message": "Error 0007: El
-                                 ID_ESTATUS(',p_estatus_error,') no existe"}');
+IF @existMensaje = 0 THEN
+	SET v_customErrorMessage = CONCAT('{"response":false,"message": "Error 0003:
+                                 ID_TIPO_MENSAJE(',p_Id_tipo_mensaje,') does not exist"}');
     SIGNAL SQLSTATE '45000'; #Dispara el custom error
 END IF;
 
 #Indicamos la fecha actual a una variable
-SET @FechaActual = (SELECT SYSDATE());
+SET @dateNow = (SELECT SYSDATE());
 
 #Registramos el error y cuando se produjo
-INSERT INTO `tbl_control_error`(`Id_error_tipomensaje`, `Id_error_tipoobjeto`, `Objeto_afectado`, `Error_mensaje`, `Fecha`, `Id_estatus`) 
-VALUES (p_Id_tipo_mensaje,p_Id_objeto_afectado,p_objeto_afectado,p_mensaje_error,@FechaActual,p_estatus_error);
+INSERT INTO `control_errors`(`type_message_id`, `type_object_id`, `affected_object`, `error_message`, `error_date`) 
+VALUES (p_type_message_id,p_type_object_id,p_affected_object,p_error_message,@dateNow);
 
-SET @MensajeError = JSON_UNQUOTE(JSON_EXTRACT(p_mensaje_error,'$.message'));
+SET @errorMessage = JSON_UNQUOTE(JSON_EXTRACT(p_error_message,'$.message'));
 #Si pasa todos los controles devuelve otro json
-SET p_error_response = CONCAT('{"response":false,"message": "',@MensajeError,'"}');
+SET p_error_response = CONCAT('{"response":false,"message": "',@errorMessage,'"}');
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateContactUser` (IN `p_Codigo` VARCHAR(6), IN `p_Correo1` VARCHAR(255), IN `p_Correo2` VARCHAR(255), IN `p_Telefono1` VARCHAR(30), IN `p_Telefono2` VARCHAR(30), IN `p_TipoDocumento` VARCHAR(5), IN `p_Cedula` VARCHAR(255), OUT `p_JsonResponse` TEXT)   BEGIN
-DECLARE v_CustomMessage TEXT;
-DECLARE v_CustomError CONDITION FOR SQLSTATE '45000';
+CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_update_clients` (IN `p_partner_user_id` INT, IN `p_rif` VARCHAR(30), IN `p_nit` INT, IN `p_bussiness_name` VARCHAR(60), IN `p_country_id` INT, IN `p_address` TEXT, IN `p_tax_phone` VARCHAR(30), IN `p_website` VARCHAR(150), IN `p_tax_email` VARCHAR(100), IN `p_sector_id` INT, IN `p_service_id` INT, IN `p_user_id` INT, IN `p_user_ip` VARCHAR(40), IN `p_client_id` INT, IN `p_status_id` INT, OUT `p_json_response` TEXT)   BEGIN
+DECLARE v_customMessage TEXT;
+DECLARE v_customError CONDITION FOR SQLSTATE '45000';
 DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
 	BEGIN
     	GET DIAGNOSTICS CONDITION 1 @code = RETURNED_SQLSTATE, @error_msj = MESSAGE_TEXT;
         ROLLBACK;
-        SET v_CustomMessage = CONCAT("Se ha producido un error en la consulta: (",@code,") ",@error_msj);
+        SET v_customMessage = CONCAT("Se ha producido un error en la consulta: (",@code,") ",@error_msj);
         #Guardamos el error
-        CALL sp_SQLException(1,1,"sp_UpdateContactUser",v_CustomMessage,1,@responseError);
-        SET p_JsonResponse = (SELECT @responseError);
+        CALL sp_sql_exceptions(1,1,"sp_update_clients",v_customMessage,@responseError);
+        SET p_json_response = (SELECT @responseError);
     END;
-DECLARE EXIT HANDLER FOR v_CustomError
+DECLARE EXIT HANDLER FOR v_customError
 	BEGIN
     	#Guardamos el error
-        CALL sp_SQLException(1,1,"sp_UpdateContactUser",v_CustomMessage,1,@responseError);
-        SET p_JsonResponse = (SELECT @responseError);
+        CALL sp_sql_exceptions(1,1,"sp_update_clients",v_customMessage,@responseError);
+        SET p_json_response = (SELECT @responseError);
+    END;
+#Validacion del Usuario Socio
+SET @isExist = (SELECT COUNT(us.user_id) FROM users us WHERE us.user_id = p_partner_user_id LIMIT 1);
+IF @isExist = 0 THEN
+	SET v_customMessage = CONCAT('{"response":false,"message":"Error 0014: partner does not exist (',p_partner_user_id,')"}');
+    #Activamos el error
+    SIGNAL SQLSTATE '45000';
+END IF;
+
+#Validacion del Id Client
+SET @isExistClient = (SELECT COUNT(cs.client_id) FROM clients cs WHERE cs.client_id = p_client_id LIMIT 1);
+IF @isExistClient = 0 THEN
+	SET v_customMessage = CONCAT('{"response":false,"message":"Error 0015: This client does not exist (',p_client_id,')"}');
+    SIGNAL SQLSTATE '45000';
+END IF;
+
+#Capturamos el ultimo login del usuario quien esta actualizando al cliente
+SET @lastInsert = (SELECT MAX(cl2.log_id) FROM control_logs cl2 WHERE cl2.user_responsible_id = p_user_id
+                   AND cl2.log_description LIKE "updateClient%" LIMIT 1); #Almacena el ultimo insert de actualizacion de Cliente
+SET @lastLogin = (SELECT us.login_date FROM users us WHERE us.user_id = p_user_id LIMIT 1); #Almacena la ultima fecha de login
+SET @lastIp = (SELECT IFNULL(cl.user_responsible_ip,"0.0.0.0") FROM control_logs cl WHERE cl.log_id = @lastInsert); #Almacena la ultima IP
+
+#Si existe el usuario socio, procedemos a crear al cliente
+SET @dateNow = (SELECT SYSDATE());
+
+#Acomodamos el ultimo valor y el nuevo
+SET @lastPartner = (SELECT cs.partner_user_id FROM clients cs WHERE cs.client_id = p_client_id LIMIT 1);
+SET @lastRif = (SELECT cs.rif FROM clients cs WHERE cs.client_id = p_client_id LIMIT 1);
+SET @lastNit = (SELECT cs.nit FROM clients cs WHERE cs.client_id = p_client_id LIMIT 1);
+SET @lastBussinessName = (SELECT cs.bussiness_name FROM clients cs WHERE cs.client_id = p_client_id LIMIT 1);
+SET @lastCountry = (SELECT cs.country_id FROM clients cs WHERE cs.client_id = p_client_id LIMIT 1);
+SET @lastAddress = (SELECT cs.client_address FROM clients cs WHERE cs.client_id = p_client_id LIMIT 1);
+SET @lastPhone = (SELECT cs.tax_phone FROM clients cs WHERE cs.client_id = p_client_id LIMIT 1);
+SET @lastWeb = (SELECT cs.website FROM clients cs WHERE cs.client_id = p_client_id LIMIT 1);
+SET @lastEmail = (SELECT cs.tax_email FROM clients cs WHERE cs.client_id = p_client_id LIMIT 1);
+SET @lastSector = (SELECT cs.sector_id FROM clients cs WHERE cs.client_id = p_client_id LIMIT 1);
+SET @lastService = (SELECT cs.service_id FROM clients cs WHERE cs.client_id = p_client_id LIMIT 1);
+SET @lastStatus = (SELECT cs.status_id FROM clients cs WHERE cs.client_id = p_client_id LIMIT 1);
+
+SET @LastValue = CONCAT('{"socio":"',@lastPartner,'",
+                        "rif":"',@lastRif,'",
+                        "nit":"',@lastNit,'",
+                        "razon":"',@lastBussinessName,'",
+                        "pais":"',@lastCountry,'",
+                        "direccion":"',@lastAddress,'",
+                        "telefono":"',@lastPhone,'",
+                        "pagina":"',@lastWeb,'",
+                        "email":"',@lastEmail,'",
+                        "sector":"',@lastSector,'",
+                        "servicio":"',@lastService,'",
+                        "status":"',@lastStatus,'",
+                        "ultima_ip":"',@lastIp,'"}');
+#Nuevos valores
+SET @NewValue = CONCAT('{"socio":"',p_partner_user_id,'",
+                        "rif":"',p_rif,'",
+                        "nit":"',p_nit,'",
+                        "razon":"',p_bussiness_name,'",
+                        "pais":"',p_country_id,'",
+                        "direccion":"',p_address,'",
+                        "telefono":"',p_tax_phone,'",
+                        "pagina":"',p_website,'",
+                        "email":"',p_tax_email,'",
+                        "sector":"',p_sector_id,'",
+                        "servicio":"',p_service_id,'",
+                        "status":"',p_status_id,'",
+                        "ultima_ip":"',p_user_ip,'"}');
+
+#Actualizamos el cliente
+UPDATE `clients` SET `partner_user_id`= p_partner_user_id,`rif`=p_rif,`nit`=p_nit,`bussiness_name`=p_bussiness_name,`country_id`=p_country_id,`client_address`=p_address,`tax_phone`=p_tax_phone,`website`=p_website,`tax_email`=p_tax_email,`sector_id`=p_sector_id,`service_id`=p_service_id,`status_id`=p_status_id WHERE `client_id` = p_client_id;
+
+SET @querySql = CONCAT('UPDATE `clients` SET `partner_user_id`= ',p_partner_user_id,',`rif`=p_rif,`nit`=p_nit,`bussiness_name`=p_bussiness_name,`country_id`=p_country_id,`client_address`=p_address,`tax_phone`=p_tax_phone,`website`=p_website,`tax_email`=p_tax_email,`sector_id`=p_sector_id,`service_id`=p_service_id,`status_id`=p_status_id WHERE `client_id` = ',p_client_id,';');
+
+CALL sp_insert_logs(2,"updateClient",p_user_ip,p_user_id,"clients",@querySql,@lastValue,@newValue,@dateNow,@jsonResponse);
+#Extraemos el JSON a una variable
+SET @responseJson = JSON_UNQUOTE(JSON_EXTRACT(@jsonResponse,'$.response'));
+
+#Verificamos si registró efectivamente en la bitacora
+IF @responseJson != "true" THEN
+	SET v_CustomMessage = CONCAT('{"response":false,"message":"Error 0011: Insert log has failed (',JSON_UNQUOTE(JSON_EXTRACT(@jsonResponse,'$.message')),')"}');
+    SIGNAL SQLSTATE '45000'; #Si no ha podido registrar nada, dispara el error
+END IF;
+
+#Si paso toda las validaciones
+SET p_json_response = CONCAT('{"response":true,"message":"Client ',p_bussiness_name,' updated."}');
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_contact_users` (IN `p_user_code` VARCHAR(6), IN `p_primary_email` VARCHAR(255), IN `p_secondary_email` VARCHAR(255), IN `p_primary_phone` VARCHAR(30), IN `p_secondary_phone` VARCHAR(30), IN `p_identity_type` VARCHAR(5), IN `p_identity_number` VARCHAR(255), OUT `p_json_response` TEXT)   BEGIN
+DECLARE v_customMessage TEXT;
+DECLARE v_customError CONDITION FOR SQLSTATE '45000';
+DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
+	BEGIN
+    	GET DIAGNOSTICS CONDITION 1 @code = RETURNED_SQLSTATE, @error_msj = MESSAGE_TEXT;
+        ROLLBACK;
+        SET v_customMessage = CONCAT("Se ha producido un error en la consulta: (",@code,") ",@error_msj);
+        #Guardamos el error
+        CALL sp_sql_exceptions(1,1,"sp_update_contact_users",v_CustomMessage,@responseError);
+        SET p_json_response = (SELECT @responseError);
+    END;
+DECLARE EXIT HANDLER FOR v_customError
+	BEGIN
+    	#Guardamos el error
+        CALL sp_sql_exceptions(1,1,"sp_UpdateContactUser",v_CustomMessage,@responseError);
+        SET p_json_response = (SELECT @responseError);
     END;
 #Validacion del Usuario
-SET @isExist = (SELECT COUNT(US.Id) FROM tbl_usuarios US WHERE US.Codigo = p_Codigo LIMIT 1);
+SET @isExist = (SELECT COUNT(us.user_id) FROM users us WHERE us.user_code = p_user_code LIMIT 1);
 IF @isExist = 0 THEN
-	SET v_CustomMessage = CONCAT('{"response":false,"message":"Error 0020: Este usuario no existe (',p_Codigo,')"}');
+	SET v_CustomMessage = CONCAT('{"response":false,"message":"Error 0018: This users does not exist (',p_user_code,')"}');
     #Activamos el error
     SIGNAL SQLSTATE '45000';
 END IF;
 
 #Si existe procedemos a actualizar el contacto
-SET @IdUser = (SELECT TU.Id FROM tbl_usuarios TU WHERE TU.Codigo = p_Codigo LIMIT 1);
-SET @TipoDocumento = (SELECT UT.Id FROM tbl_usuarios_documentoidentidad_tipo UT WHERE UT.AbreviaturaTipo = p_TipoDocumento LIMIT 1);
+SET @idUser = (SELECT us.user_id FROM users us WHERE us.user_code = p_user_code LIMIT 1);
+SET @identityType = (SELECT ut.identity_type_id FROM users_identity_type ut WHERE ut.identity_abbreviation = p_identity_type LIMIT 1);
 #Validacion de la cedula
-SET @documentExist = (SELECT COUNT(US.Id) FROM tbl_usuarios_documentoidentidad US WHERE US.Descripcion = p_Cedula AND US.Id_tipo_documento = @TipoDocumento AND US.Id_usuario != @IdUser LIMIT 1);
+SET @documentExist = (SELECT COUNT(ui.identity_id) FROM users_identity ui WHERE ui.identity_number = p_identity_number AND ui.identity_type_id = @identityType AND ui.user_id != @idUser LIMIT 1);
 IF @documentExist != 0 THEN
-	SET v_CustomMessage = CONCAT('{"response":false,"message":"Error 0021: Esta cedula ya está registrada (',p_Cedula,')"}');
+	SET v_customMessage = CONCAT('{"response":false,"message":"Error 0017: This identity is already registered (',p_identity_number,')"}');
 	SIGNAL SQLSTATE '45000';
 END IF;
 #Contacto
-UPDATE `tbl_usuarios_contacto` SET `Correo_principal`=p_Correo1,`Correo_secundario`=p_Correo2,`Telefono_principal`=p_Telefono1,`Telefono_secundario`=p_Telefono2 WHERE `Id_usuario` = @IdUser;
+UPDATE `users_contact` SET `primary_email`=p_primary_email,`secondary_email`=p_secondary_email,`primary_phone`=p_primary_phone,`secondary_phone`=p_secondary_phone WHERE `user_id` = @idUser;
 
 #Documento
-UPDATE `tbl_usuarios_documentoidentidad` SET `Id_tipo_documento`=@TipoDocumento,`Descripcion`=p_Cedula WHERE `Id_usuario` = @IdUser;
+UPDATE `users_identity` SET `identity_type_id`=@identityType,`identity_number`=p_identity_number WHERE  `user_id` = @idUser;
 
 #Devolvemos el response si no hay ningun SQL Error
-SET p_JsonResponse = CONCAT('{"response":true,"message":"Contacto actualizado con exito para el usuario ',p_Codigo,'"}');
+SET p_json_response = CONCAT('{"response":true,"message":"Contact user update succesfully for user ',p_user_Code,'"}');
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_UpdateUser` (IN `p_Nombre1` VARCHAR(20), IN `p_Nombre2` VARCHAR(20), IN `p_Apellido1` VARCHAR(20), IN `p_Apellido2` VARCHAR(20), IN `p_Codigo` VARCHAR(6), IN `p_FechaNacimiento` DATE, IN `p_FechaIngreso` DATE, IN `p_Cedula` VARCHAR(255), IN `p_IdParroquia` INT, IN `p_IdCargo` INT, IN `p_IdDivision` INT, IN `p_IdUser` INT, IN `p_IpUser` VARCHAR(39), IN `p_IdUpdateUser` INT, IN `p_IdStatus` INT, IN `p_FechaEgreso` DATE, OUT `p_JsonResponse` TEXT)   BEGIN
-DECLARE v_CustomMessage TEXT;
-DECLARE v_CustomError CONDITION FOR SQLSTATE '45000';
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_users` (IN `p_first_name` VARCHAR(20), IN `p_second_name` VARCHAR(20), IN `p_first_surname` VARCHAR(20), IN `p_second_surname` VARCHAR(20), IN `p_user_code` VARCHAR(6), IN `p_birthday` DATE, IN `p_admission_date` DATE, IN `p_identity_number` VARCHAR(255), IN `p_parish_id` INT, IN `p_position_id` INT, IN `p_department_id` INT, IN `p_user_id` INT, IN `p_user_ip` VARCHAR(39), IN `p_user_update_id` INT, IN `p_status_id` INT, IN `p_departure_date` DATE, OUT `p_json_response` TEXT)   BEGIN
+DECLARE v_customMessage TEXT;
+DECLARE v_customError CONDITION FOR SQLSTATE '45000';
 DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
 	BEGIN
     	GET DIAGNOSTICS CONDITION 1 @code = RETURNED_SQLSTATE, @error_msj = MESSAGE_TEXT;
         ROLLBACK;
-        SET v_CustomMessage = CONCAT("Se ha producido un error en la consulta: (",@code,") ",@error_msj);
+        SET v_customMessage = CONCAT("Se ha producido un error en la consulta: (",@code,") ",@error_msj);
         #Guardamos el error
-        CALL sp_SQLException(1,1,"sp_UpdateUser",v_CustomMessage,1,@responseError);
-        SET p_JsonResponse = (SELECT @responseError);
+        CALL sp_sql_exceptions(1,1,"sp_update_users",v_customMessage,@responseError);
+        SET p_json_response = (SELECT @responseError);
     END;
-DECLARE EXIT HANDLER FOR v_CustomError
+DECLARE EXIT HANDLER FOR v_customError
 	BEGIN
     	#Guardamos el error
-        CALL sp_SQLException(1,1,"sp_UpdateUser",v_CustomMessage,1,@responseError);
-        SET p_JsonResponse = (SELECT @responseError);
+        CALL sp_sql_exceptions(1,1,"sp_update_users",v_customMessage,@responseError);
+        SET p_json_response = (SELECT @responseError);
     END;
 #Validacion del Usuario
-SET @isExist = (SELECT COUNT(US.Id) FROM tbl_usuarios US WHERE US.Id = p_IdUser LIMIT 1);
+SET @isExist = (SELECT COUNT(us.user_id) FROM users us WHERE us.user_id = p_user_id LIMIT 1);
 IF @isExist != 1 THEN
-	SET v_CustomMessage = CONCAT('{"response":false,"message":"Error 0020: Este usuario no existe (',p_IdUser,')"}');
+	SET v_customMessage = CONCAT('{"response":false,"message":"Error 0018: This users does not exist (',p_user_id,')"}');
     #Activamos el error
     SIGNAL SQLSTATE '45000';
 END IF;
 
 #Capturamos el ultimo login del usuario quien esta registrando el nuevo miembro
-SET @LastInsert = (SELECT MAX(BL2.Id) FROM tbl_control_logs_bitacora BL2 WHERE BL2.Id_usuario_responsable = p_IdUser 
-                   AND BL2.Descripcion_accion LIKE "updateUser%" LIMIT 1); #Almacena el ultimo insert de creacion de Usuario
-SET @LastLogin = (SELECT Us.Fecha_login FROM tbl_usuarios Us WHERE Us.Id = p_IdUser LIMIT 1); #Almacena la ultima fecha de login
-SET @LastIp = (SELECT IFNULL(BL.Ip_responsable,"0.0.0.0") FROM tbl_control_logs_bitacora BL WHERE BL.Id = @LastInsert); #Almacena la ultima IP
+SET @lastInsert = (SELECT MAX(cl2.log_id) FROM control_logs cl2 WHERE cl2.user_responsible_id = p_user_id 
+                   AND cl2.log_description LIKE "updateUser%" LIMIT 1); #Almacena el ultimo insert de creacion de Usuario
+SET @lastLogin = (SELECT us.login_date FROM users us WHERE us.user_id = p_user_id LIMIT 1); #Almacena la ultima fecha de login
+SET @lastIp = (SELECT IFNULL(cl.user_responsible_ip,"0.0.0.0") FROM control_logs cl WHERE cl.log_id = @lastInsert); #Almacena la ultima IP
 
 #Si existe el usuario quien esta actualizando procedemos a actualizar al usuario
-SET @FechaActual = (SELECT SYSDATE());
-SET @FechaCambio = (SELECT DATE(SYSDATE()+90));
+SET @dateNow = (SELECT SYSDATE());
+SET @dateChange = (SELECT DATE(SYSDATE()+90));
 
 #Acomodamos el ultimo valor
-SET @LastNameAll = (SELECT CONCAT(TU.Primer_nombre," ",TU.Segundo_nombre,", ",TU.Primer_apellido," ",TU.Segundo_apellido) from tbl_usuarios TU WHERE TU.Id = p_IdUpdateUser);
-SET @LastBirthday = (SELECT TU.Fecha_nacimiento from tbl_usuarios TU WHERE TU.Id = p_IdUpdateUser);
-SET @LastCargo= (SELECT TU.Id_jerarquia_cargo from tbl_usuarios TU WHERE TU.Id = p_IdUpdateUser);
-SET @LastDivision= (SELECT TU.Id_jerarquia_division from tbl_usuarios TU WHERE TU.Id = p_IdUpdateUser);
-SET @LastParroquia= (SELECT TU.Id_direccion_parroquia from tbl_usuarios TU WHERE TU.Id = p_IdUpdateUser);
-SET @LastFechaIngreso= (SELECT TU.Fecha_ingreso from tbl_usuarios TU WHERE TU.Id = p_IdUpdateUser);
-SET @LastFechaEgreso= (SELECT TU.Fecha_egreso from tbl_usuarios TU WHERE TU.Id = p_IdUpdateUser);
-SET @LastStatus= (SELECT TU.Id_estatus from tbl_usuarios TU WHERE TU.Id = p_IdUpdateUser);
+SET @lastNameAll = (SELECT CONCAT(us.first_name," ",us.second_name,", ",us.first_surname," ",us.second_surname) from users us WHERE us.user_id = p_user_update_id);
+SET @lastBirthday = (SELECT us.birthday from users us WHERE us.user_id = p_user_update_id);
+SET @lastPosition= (SELECT us.position_id from users us WHERE us.user_id = p_user_update_id);
+SET @lastDepartment= (SELECT us.department_id from users us WHERE us.user_id = p_user_update_id);
+SET @lastParish= (SELECT us.parish_id from users us WHERE us.user_id = p_user_update_id);
+SET @lastAdmission= (SELECT us.admission_date from users us WHERE us.user_id = p_user_update_id);
+SET @lastDeparture= (SELECT us.departure_date from users us WHERE us.user_id = p_user_update_id);
+SET @lastStatus= (SELECT us.status_id from users us WHERE us.user_id = p_user_update_id);
 
-SET @LastValue = CONCAT('{"name":"',@LastNameAll,'",
-                        "birthday":"',@LastBirthday,'",
-                        "cargo":',@LastCargo,',
-                        "division":',@LastDivision,',
-                        "parroquia":',@LastPArroquia,',
-                        "fecha_ingreso":"',@LastFechaIngreso,'",
-                        "fecha_egreso":"',@LastFechaEgreso,'",
-                        "status":',@LastStatus,',
-                        "ultima_ip":"',@LastIp,'"}');
+SET @lastValue = CONCAT('{"name":"',@lastNameAll,'",
+                        "birthday":"',@lastBirthday,'",
+                        "cargo":',@lastPosition,',
+                        "division":',@lastDepartment,',
+                        "parroquia":',@lastParish,',
+                        "fecha_ingreso":"',@lastAdmission,'",
+                        "fecha_egreso":"',@lastDeparture,'",
+                        "status":',@lastStatus,',
+                        "ultima_ip":"',@lastIp,'"}');
 
-UPDATE `tbl_usuarios` SET `Codigo`=p_Codigo,`Fecha_cambio_clave`=@FechaCambio,`Primer_nombre`=p_Nombre1,`Segundo_nombre`=p_Nombre2,`Primer_apellido`=p_Apellido1,`Segundo_apellido`=p_Apellido2,`Fecha_nacimiento`=p_FechaNacimiento,`Id_jerarquia_cargo`=p_IdCargo,`Id_jerarquia_division`=p_IdDivision,`Id_direccion_parroquia`=p_IdParroquia,`Fecha_ingreso`=p_FechaIngreso,`Fecha_egreso`=p_FechaEgreso,`Id_estatus`=p_IdStatus WHERE `Id` = p_IdUpdateUser;
+UPDATE `users` SET `user_code`=p_user_code,`time_change_password`=@dateChange,`first_name`=p_first_name,`second_name`=p_second_name,`first_surname`=p_first_surname,`second_surname`=p_second_surname,`birthday`=p_birthday,`position_id`=p_position_id,`department_id`=p_department_id,`parish_id`=p_parish_id,`admission_date`=p_admission_date,`departure_date`=p_departure_date,`status_id`=p_status_id WHERE `user_id` = p_user_update_id;
 
 #Guardamos el SQL
-SET @SQLRealizado = CONCAT('UPDATE `tbl_usuarios` SET `Codigo`=',p_Codigo,',`Fecha_cambio_clave`=@FechaCambio,`Primer_nombre`=p_Nombre1,`Segundo_nombre`=p_Nombr2,`Primer_apellido`=p_Apellido1,`Segundo_apellido`=p_Apellido2,`Fecha_nacimiento`=p_FechaNacimiento,`Id_jerarquia_cargo`=p_IdCargo,`Id_jerarquia_division`=p_IdDivision,`Id_direccion_parroquia`=p_IdParroquia,`Fecha_ingreso`=p_FechaIngreso,`Fecha_egreso`=p_FechaEgreso,`Id_estatus`=p_IdStatus WHERE `Id` = p_IdUpdateUser');
+SET @querySql = CONCAT('UPDATE `users` SET `user_code`=',p_user_code,',`time_change_password`=@dateChange,`first_name`=p_first_name,`second_name`=p_second_name,`first_surname`=p_first_surname,`second_surname`=p_second_surname,`birthday`=p_birthday,`position_id`=p_position_id,`department_id`=p_department_id,`parish_id`=p_parish_id,`admission_date`=p_admission_date,`departure_date`=p_departure_date,`status_id`=p_status_id WHERE `user_id` = p_user_update_id;');
 
 #Acomodamos el nuevo valor
-SET @NewValue = CONCAT('{"name":"',CONCAT(p_Nombre1," ",p_Nombre2,", ",p_Apellido1," ",p_Apellido2),'",
-                        "birthday":"',p_FechaNacimiento,'",
-                        "cargo":',p_IdCargo,',
-                        "division":',p_IdDivision,',
-                        "parroquia":',p_IdParroquia,',
-                        "fecha_ingreso":"',p_FechaIngreso,'",
-                        "fecha_egreso":"',p_FechaEgreso,'",
-                        "status":',p_IdStatus,',
-                        "ultima_ip":"',p_IpUser,'"}');
-CALL sp_InsertLog(2,"updateUser",p_IpUser,p_IdUser,"tbl_usuarios",@SQLRealizado,@LastValue,@NewValue,@FechaActual,@jsonResponse);
+SET @newValue = CONCAT('{"name":"',CONCAT(p_first_name," ",p_second_name,", ",p_first_surname," ",p_second_surname),'",
+                        "birthday":"',p_birthday,'",
+                        "cargo":',p_position_id,',
+                        "division":',p_department_id,',
+                        "parroquia":',p_parish_id,',
+                        "fecha_ingreso":"',p_admission_date,'",
+                        "fecha_egreso":"',p_departure_date,'",
+                        "status":',p_status_id,',
+                        "ultima_ip":"',p_user_ip,'"}');
+CALL sp_insert_logs(2,"updateUser",p_user_ip,p_user_id,"users",@querySql,@lastValue,@newValue,@dateNow,@jsonResponse);
 #Extraemos el JSON a una variable
-SET @ResponseJson = JSON_UNQUOTE(JSON_EXTRACT(@jsonResponse,'$.response'));
+SET @responseJson = JSON_UNQUOTE(JSON_EXTRACT(@jsonResponse,'$.response'));
 
 #Verificamos si registró efectivamente en la bitacora
-IF @ResponseJson != "true" THEN
-	SET v_CustomMessage = CONCAT('{"response":false,"message":"Error 0015: ha ocurrido un error en la bitacora"}');
+IF @responseJson != "true" THEN
+	SET v_customMessage = CONCAT('{"response":false,"message":"Error 0011: Insert log has failed (',JSON_UNQUOTE(JSON_EXTRACT(@jsonResponse,'$.message')),')"}');
     SIGNAL SQLSTATE '45000'; #Si no ha podido registrar nada, dispara el error
 END IF;
 
 #Si paso toda las validaciones
-SET p_JsonResponse = CONCAT('{"response":true,"message":"Usuario ',p_Codigo,' actualizado exitosamente"}');
+SET p_json_response = CONCAT('{"response":true,"message":"User ',p_user_code,' update succesfully"}');
 END$$
 
 DELIMITER ;
@@ -582,33 +661,33 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tbl_clientes`
+-- Estructura de tabla para la tabla `clients`
 --
 
-CREATE TABLE `tbl_clientes` (
-  `Id` int(11) NOT NULL,
-  `Id_usuario_socio` int(11) NOT NULL,
-  `Codigo_cliente` int(11) NOT NULL,
-  `Rif` varchar(15) NOT NULL,
-  `Nit` int(11) NOT NULL,
-  `Razon_social` varchar(500) NOT NULL,
-  `Id_pais` int(11) NOT NULL,
-  `Direccion` text NOT NULL,
-  `Telefono_fiscal` varchar(20) NOT NULL,
-  `Pagina_web` varchar(250) NOT NULL,
-  `Email_fiscal` varchar(100) NOT NULL,
-  `Id_cliente_sector` int(11) NOT NULL,
-  `Id_cliente_servicio` int(11) NOT NULL,
-  `Id_estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE `clients` (
+  `client_id` int(11) NOT NULL,
+  `partner_user_id` int(11) NOT NULL,
+  `client_code` int(11) NOT NULL,
+  `rif` varchar(15) NOT NULL,
+  `nit` int(11) NOT NULL,
+  `bussiness_name` varchar(500) NOT NULL,
+  `country_id` int(11) NOT NULL,
+  `client_address` text NOT NULL,
+  `tax_phone` varchar(20) NOT NULL,
+  `website` varchar(250) NOT NULL,
+  `tax_email` varchar(100) NOT NULL,
+  `sector_id` int(11) NOT NULL,
+  `service_id` int(11) NOT NULL,
+  `status_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `tbl_clientes`
+-- Volcado de datos para la tabla `clients`
 --
 
-INSERT INTO `tbl_clientes` (`Id`, `Id_usuario_socio`, `Codigo_cliente`, `Rif`, `Nit`, `Razon_social`, `Id_pais`, `Direccion`, `Telefono_fiscal`, `Pagina_web`, `Email_fiscal`, `Id_cliente_sector`, `Id_cliente_servicio`, `Id_estatus`) VALUES
+INSERT INTO `clients` (`client_id`, `partner_user_id`, `client_code`, `rif`, `nit`, `bussiness_name`, `country_id`, `client_address`, `tax_phone`, `website`, `tax_email`, `sector_id`, `service_id`, `status_id`) VALUES
 (14, 146, 1451, 'J314087754', 0, 'A.C. CONSULTORES UCAB', 240, 'Universidad Católica Andrés Bello Centro Loyola, Piso 2, Caracas. Dtto. Capital', '+5822122356047', '', 'acconsultores@com.ve', 2, 2, 1),
-(15, 5007, 1534, 'J000998345', 0, 'ADMINISTRADORA CCCT', 240, 'Av.la Estancia con calle Ernesto Blochn C.C.C.T nivel PB OF Administracion Urb. Chuao', '+582129593604', '', 'administradoraccct@gmail.com', 0, 0, 1),
+(15, 150, 1534, 'J000998345', 0, 'ADMINISTRADORA CCCT', 240, 'Av.la Estancia con calle Ernesto Blochn C.C.C.T nivel PB OF Administracion Urb. Chuao', '+582129593604', '', 'administradoraccct@gmail.com', 0, 0, 1),
 (16, 150, 1020, 'J0002474327', 0, 'ADMINISTRADORA CENTRO FINANCIERO LATINO, C.A.', 240, 'Av. Urdaneta, Esq de animas Plaza España, Edif Centro financieros latino,piso 8, ofic A-C Caracas', '+582125618212', '', 'centro@gmail.com.ve', 0, 0, 1),
 (17, 149, 1164, 'J002639632', 0, 'ADMINISTRADORA HOTAL', 240, 'av. whashintong hotel avila san  bernardino caracas', '+582125522243', '', 'administradorahotal@gmail.com', 0, 0, 1),
 (18, 149, 2188, 'J308240486', 0, 'AEROCLOSET, C.A.', 240, 'Av. la estancia ccct torre a nivel p2 urb chuao', '+58', '', 'aerocloset@gmail.com', 0, 0, 1),
@@ -619,7 +698,7 @@ INSERT INTO `tbl_clientes` (`Id`, `Id_usuario_socio`, `Codigo_cliente`, `Rif`, `
 (23, 146, 1618, 'J001256970', 0, 'AVICOLA DEL CENTRO C.A.', 240, 'Carretera Cua-San Casimiro Local  Nro. 49-B Sector La Cienega San Casimiro Estado Aragua-Zona Postal 2338', '+58', '', 'avicola@gmail.com', 0, 0, 1),
 (24, 146, 1617, 'J306515933', 0, 'AVICOLA SANTA CRUZ, C.A.', 240, 'Calle Hernandez Nadal Local Nro 03 Sector  Frente a Urbanización el Remanso Vía Turagua Santa Cruz -Aragua Zona Postal 2123', '+58', '', 'avicolasantacruz@gmail.com', 0, 0, 1),
 (25, 150, 1064, 'J001708472', 0, 'AVILA RAYOS X, C.A.', 240, 'Av.San Juan Bosco con  Sexta Transversal, Edif. Clinica el Avila, Piso 2 Altamira, Caracas.', '+582122761030', '', 'avilarayosx@gmail.com', 0, 0, 1),
-(26, 150, 1065, 'J000121940', 0, 'AVILA SERVICIOS MEDICOS, C.A.', 240, 'Sexta Transversal de Altamira con Av.San Juan Bosco, Edif. Clinica Avila Altamira, Caracas.', '+582122081026', '', 'aviserme@gmail.com', 0, 0, 1),
+(26, 150, 1065, 'J000121940', 0, 'AVILA SERVICIOS MEDICOS, C.A.', 240, 'Sexta Transversal de Altamira con Av.San Juan Bosco, Edif. Clinica Avila Altamira, Caracas.', '+582122081026', '', 'aviserme@gmail.com', 2, 4, 1),
 (27, 149, 1409, 'J080066227', 0, 'BANCO ACTIVO BANCO UNIVERSAL', 240, 'Torre Europa', '+58', '', 'correo@dominio.com', 0, 0, 2),
 (28, 146, 1738, 'G200057955', 0, 'BANCO AGRICOLA DE VENEZUELA', 240, 'Avenida Francisco de Miranda  Edificio Cavendes Piso 17  Chacao-Caracas', '+58', '', 'bancoagricola@gmail.com', 0, 0, 1),
 (29, 145, 1266, 'J304742029', 0, 'BANCO DE COMERCIO EXTERIOR, C.A.', 240, 'Calle los Chaguaramos Centro Gerencial Mohedano Piso 1 La Castellana-Caracas', '+582122651433', '', 'bancoex@gmail.com', 0, 0, 1),
@@ -643,7 +722,7 @@ INSERT INTO `tbl_clientes` (`Id`, `Id_usuario_socio`, `Codigo_cliente`, `Rif`, `
 (47, 147, 2183, 'J302385490', 0, 'DISTRIBUIDORA BIGOTT C.A.', 240, 'Urb. Los Ruices  AV. Fco de Miranda EDIF Bigott Caracas, (PETARE) MIRANDA', '+58', '', 'distribigott@gmal.com', 0, 0, 1),
 (48, 150, 2151, 'J409554635', 0, 'DISTRIBUIDORA MACONDO 333, C.A.', 240, 'Calle Santa Ana Edif Centro Empresarial Boleita, Piso 5 Ofic 5-B Ubr. Boleita Sur Caracas-Miranda', '+58', '', 'macondo@gmail.com', 0, 0, 1),
 (49, 150, 2178, 'J407514571', 0, 'DP DELTA SERVICIOS, C.A.', 240, 'Av. Los Samanes Final Norte  Edificio Clinico La Florida PB  Urb. La Florida-Caracas', '+58', '', 'estudiomedicotomograf@gmail.com', 0, 0, 1),
-(50, 5002, 1983, 'J300388840', 0, 'ESTUDIO MEDICO TOMOGRAF, C.A.', 240, '', '+58', '', '', 0, 0, 1),
+(50, 146, 1983, 'J300388840', 0, 'ESTUDIO MEDICO TOMOGRAF, C.A.', 240, '', '+58', '', '', 0, 0, 1),
 (51, 150, 2171, 'J302455413', 0, 'FARMACIA MEDITOTAL, C.A.', 240, 'Av. Costanera Centro Empresarial Athenas,PB Barcelona. Edo. Anzoategui', '+58', '', 'famaciameditotal@gmail.com', 0, 0, 1),
 (52, 146, 1018, 'J002901322', 0, 'FINANCORP VALORES CASA DE BOLSA, C.A.', 240, '', '+582120000000', '', 'correo@dominio.com', 0, 0, 1),
 (53, 150, 2097, 'J000143676', 0, 'FSVEN INDUSTRIAL SOLUTIONS, S.A', 240, 'Av. Rio Caura con Rio Paragua. Ubr.Prados del Este-La Piramide Piso 03 Ofc 301 Caracas.', '+58', '', 'fsvenindustrial@gmail.com', 0, 0, 1),
@@ -651,8 +730,8 @@ INSERT INTO `tbl_clientes` (`Id`, `Id_usuario_socio`, `Codigo_cliente`, `Rif`, `
 (55, 150, 2159, 'J000762627', 0, 'GENIA CARE PHARMACEUTICAL, S.A', 240, 'Calle Callejon Gutierrez Edid EUROCIENCIA piso 1local EDIFICIO URB La California Norte Caracas Miranda  Zona Postal 1070', '+58', '', 'geniacarepharma@gmail.com', 0, 0, 1),
 (56, 150, 2160, 'J000681716', 0, 'GENIA CARE, C.A.', 240, 'Av. Francisco de Miranda Esq. Con Avenida El Parque Edif Torre Country Piso 4 y 5 Of. S/N URB El Bosque Caracas  (CHACAO) MIRANDA ZONA POSTAL 1060', '+58', '', 'geniacare@gmail.com', 0, 0, 1),
 (57, 150, 1648, 'J309264613', 0, 'GLOBAL LEASING, C.A.', 240, 'Av. Diego Cisneros, Calle Los Laboratorios Edificio Otinca, Piso 5 Oficina 47 Los Ruices-Caracas', '+58', '', 'globalleasing@gmail.com', 0, 0, 1),
-(58, 5002, 2186, 'J401443001', 0, 'GPB NEFTEGAZ SERVICES B.V. SUCURSAL, C.A.', 240, '', '+58', '', '', 0, 0, 1),
-(59, 146, 1614, 'J075168186', 0, 'GRANJA ALCONCA, C.A.', 240, 'Avenida 3 Parcela A5-1 Urbanización Industrial Santa Cruz Estado Aragua.', '+02433000143', '', 'granjaalconca@gmail.com', 0, 0, 1),
+(58, 146, 2186, 'J401443001', 0, 'GPB NEFTEGAZ SERVICES B.V. SUCURSAL, C.A.', 240, '', '+58', '', '', 0, 0, 1),
+(59, 146, 1614, 'J075168186', 0, 'GRANJA ALCONCA, C.A.', 240, 'Avenida 3 Parcela A5-1 Urbanización Industrial Santa Cruz Estado Aragua.', '+584243300143', '', 'granjaalconca@gmail.com', 0, 0, 1),
 (60, 146, 1615, 'J303834817', 0, 'GRANJA MUCURITA, C.A.', 240, 'Carretera Asentamiento Campesino Mucura I Local Nro 34 Sector Mucura Villa de Cura Estado Aragua-Zona Postal 2126', '+58', '', 'geanjamucurita@gmail.com', 0, 0, 1),
 (61, 146, 1616, 'J075791215', 0, 'GRUPO AVICOLA INTEGRADO DEL CENTRO,C.A.', 240, 'Calle Hernandez Nadal Local Nro 06 Sector Frente a Urbanización el Remanso Vía Turagua Santa Cruz -Aragua Zona Postal 2123', '+58', '', 'grupoavicola@gmail.com', 0, 0, 1),
 (62, 150, 1283, 'J000683778', 0, 'GRUPO MEDICO VARGAS, C.A.', 240, 'Av. Ppal, Urb. Santa Sofia, El Cafetal. Quinta los Abuelos Caracas- Dtto. Capital', '+582129811369', '', 'grupomedicovargas@gmail.com', 0, 0, 1),
@@ -679,7 +758,7 @@ INSERT INTO `tbl_clientes` (`Id`, `Id_usuario_socio`, `Codigo_cliente`, `Rif`, `
 (85, 146, 1505, 'J000950369', 0, 'PETROLEOS DE VENEZUELA, S.A.', 240, 'Av Bolivar con calle el Empalme. Torre Este, PH Urb. La Campiña. PDVSA.', '+582127083281', '', 'petroleosdevenezuela@gmail.com', 0, 0, 1),
 (86, 150, 1604, 'J000297908', 0, 'POLICLINICA LAS MERCEDES, C.A.', 240, 'Avenida Principal  Las Mercedes-Caracas', '+582129932911', '', 'policlinicalasmercedes@gmail.com', 0, 0, 1),
 (87, 147, 1817, 'J302202531', 0, 'PROSEGUROS, S.A.', 240, 'Avenida Francisco de Miranda Con 4ta. Avenida Edificio Torre PROSEGUROS Piso 6 Oficina 6-A,6-B,6-C,6-D 6-E y 6-F, UrbanizaciónLos Palos Grandes Caracas(Chacao) Miranda Zona Postal 1060', '+58', '', 'proseguros@gmail.com', 0, 0, 1),
-(88, 5007, 1984, 'J003390062', 0, 'RADIODIAGNOSTICO LA FLORIDA, C.A.', 240, '', '+58', '', '', 0, 0, 1),
+(88, 150, 1984, 'J003390062', 0, 'RADIODIAGNOSTICO LA FLORIDA, C.A.', 240, '', '+58', '', '', 0, 0, 1),
 (89, 150, 1690, 'J000908320', 0, 'REFRIMET INDUSTRIAL,C.A.', 240, 'Calle La Limonera, Edificio LARCO Piso 1, Urbanización La Trinidad', '+582129442777', '', 'refrimet@gmail.com', 0, 0, 1),
 (90, 149, 2114, 'J003285536', 0, 'REPRESENTACIONES LABIN VE, S.A.', 240, 'Calle Los Laboratorios  Edificio Torre Beta Piso 1 Oficina 105 Los Ruices Estado Miranda', '+58', '', 'representacioneslabinve@gmail.com', 0, 0, 1),
 (91, 149, 1285, 'J306649590', 0, 'SERVICIOS GZ', 240, 'Edif. Ofinca, PISO 2 Oficina 24, Los Cortijos de Lourdes, Av. Los Laboratorios.', '+582122325626', '', 'serviciosgz@gmail.com', 0, 0, 1),
@@ -710,21 +789,21 @@ INSERT INTO `tbl_clientes` (`Id`, `Id_usuario_socio`, `Codigo_cliente`, `Rif`, `
 (116, 145, 2204, 'J300619460', 0, 'BANCO OCCIDENTAL DE DESCUENTO BANCO UNIVERSAL, C.A.', 240, 'Avenida 17 con Calle 77 avenida Cinco de Julio Torre BOD, sector Paraiso MARACAIBO Estado Zulia', '+587502974', 'www.bodinternet.com', 'itirado@bod.com.ve', 0, 0, 1),
 (117, 4, 2205, 'G200051876', 0, 'BANCO DEL TESORO, BANCO UNIVERSAL, C.A', 240, 'Calle Guaicapuro. Edificio BAnco del Tesoro El Rosal Caracas', '+589999429', '', 'atencionc@bt.gob.ve', 0, 0, 2),
 (118, 144, 2206, 'J300558053', 0, 'SOS ALDEAS INFANTILES VENEZUELA', 240, 'AV DIEGO CISNEROS EDIF CENTRO EMPRESARIAL LOS\nRUICES PISO 5 OF 503 URB LOS RUICES CARACAS MIRANDA ZONA POSTAL 1070', '+582122391514', 'www.aldeasinfantiles.org.ve', 'tanny.valero@aldeasinfantiles.org.ve', 0, 0, 1),
-(119, 0, 2207, 'J312692740', 0, 'TRANSPORTE PAKPLAZA,C.A.', 240, 'Av. Principal de la  Lomas Lagunita,  Irb. Lomas de la Lagunita', '+5804143355077', '', 'pakplaza@gmail.com', 0, 0, 1),
-(120, 0, 2208, 'J00019575', 0, 'INDUSTRIAS FARCOMETICAS ASOCIADOS (INDUFARAS)', 240, 'Calle las Vegas, Zona Industrial  la Trinidad', '+5802129454711', '', 'indufaras@gmail.com', 0, 0, 1),
-(121, 0, 2209, 'J000900957', 0, 'DISTRIBUIDORA IFA, C.A.', 240, 'Calle Marcano E/ Narvaez y Amador Hernandez', '+5804123234132', '', 'ifamercadeo@gmail.com', 0, 0, 1),
-(122, 0, 2210, 'J400065399', 0, 'REPRESENTACIONES COSPER, S.A', 240, 'Calle las Vegas, Zona Industrial la Trinidad', '+5804147934132', '', 'ifamercadeo@gmail.com', 0, 0, 1),
-(123, 0, 2211, 'J400518008', 0, 'FONDO GLOBAL DE LA CONTRUCCION, C.A.', 240, 'Av. Tamanaco y Francisco de Miranda, El Rosal', '+5802129572005', '', 'aguillermo@fgdcve.com', 0, 0, 1),
-(124, 0, 2212, 'J401501001', 0, 'M2 PANELES DE CONSTRUCCION, C.A.', 240, 'Carretera Nacional Los Guayos Sector Mozanquita, Valencia', '+5802129572005', '', 'aguillermo@fgdcve.com', 0, 0, 1),
-(125, 0, 2213, 'J400626412', 0, 'CONSTRUCTORA JAAR, C.A.', 240, 'Av. Tamanaco y Francisco de Miranda, El Rosal', '+5802129572005', '', 'aguillermo@fgdcve.com', 0, 0, 1),
-(126, 0, 2214, 'J402997655', 0, 'CONSORCIO ESTRUCTURA METALICAS MODERNAS', 240, 'Av. Tamanaco y Francisco de Miranda, El Rosal', '+5802129572005', '', 'aguillermo@fgdcve.com', 0, 0, 1),
-(127, 0, 2215, 'J313550388', 0, 'NIDEC MOTORS VENEZUELA, S.A.', 240, 'Zona Industrial los Tanques, parcela 1, Villa de Cura', '+5804141267638', '', 'ricardo.reyes@nidec-motor.com', 0, 0, 1),
-(128, 0, 2216, 'J306842675', 0, 'MERCADOLIBRE VENEZUELA, S.R.L.', 240, 'AV. Eugenio Mendoza de la Castellana', '+5802126306000', '', 'ext_gbarrio@mercadolibre.com', 0, 0, 1),
-(129, 0, 2217, 'J294782914', 0, 'VENPROCA VENEZOLANA DE PROYECTOS, C.A.', 240, 'Av. Francisco de Miranda, El Rosal', '+5804162392655', '', 'jgil@venproca.com', 0, 0, 1),
-(130, 0, 2218, 'J411660752', 0, 'IMPORTADORA DIVINOS & DESTILADOS, C.A.', 240, 'Calle Bolivar, Urb. Baruta', '+5804142708935', '', 'divinosydestilados@gmail.com', 0, 0, 1),
-(131, 0, 2219, 'J315546302', 0, 'FUNDACION FONDO DE PREVISION SOCIAL CENTRO DE ESPECIALIDADES ANZOATEGUI', 240, 'Av. Principal de Lecheria, Centro de especialidades Anzoategui, Nucleo E CC Edif. Yariku, Nucleo E Piso 3, Oficina 9, Lecheria - Edo. Anzoategui', '+58', '', 'fpscea@gmail.com', 0, 0, 1),
-(132, 0, 2219, 'J315546302', 0, 'FUNDACION FONDO DE PREVISION SOCIAL CENTRO DE ESPECIALIDADES ANZOATEGUI', 240, 'Av. Principal de Lecheria, Centro de especialidades Anzoategui, Nucleo E CC Edif. Yariku, Nucleo E Piso 3, Oficina 9, Lecheria - Edo. Anzoategui', '+58', '', 'fpscea@gmail.com', 0, 0, 1),
-(133, 0, 2219, 'J315546302', 0, 'FUNDACION FONDO DE PREVISION SOCIAL CENTRO DE ESPECIALIDADES ANZOATEGUI', 240, 'Av. Principal de Lecheria, Centro de especialidades Anzoategui, Nucleo E CC Edif. Yariku, Nucleo E Piso 3, Oficina 9, Lecheria - Edo. Anzoategui', '+58', '', 'fpscea@gmail.com', 0, 0, 1),
+(119, 1, 2207, 'J312692740', 0, 'TRANSPORTE PAKPLAZA,C.A.', 240, 'Av. Principal de la  Lomas Lagunita,  Irb. Lomas de la Lagunita', '+5804143355077', '', 'pakplaza@gmail.com', 0, 0, 1),
+(120, 1, 2208, 'J00019575', 0, 'INDUSTRIAS FARCOMETICAS ASOCIADOS (INDUFARAS)', 240, 'Calle las Vegas, Zona Industrial  la Trinidad', '+5802129454711', '', 'indufaras@gmail.com', 0, 0, 1),
+(121, 1, 2209, 'J000900957', 0, 'DISTRIBUIDORA IFA, C.A.', 240, 'Calle Marcano E/ Narvaez y Amador Hernandez', '+5804123234132', '', 'ifamercadeo@gmail.com', 0, 0, 1),
+(122, 1, 2210, 'J400065399', 0, 'REPRESENTACIONES COSPER, S.A', 240, 'Calle las Vegas, Zona Industrial la Trinidad', '+5804147934132', '', 'ifamercadeo@gmail.com', 0, 0, 1),
+(123, 1, 2211, 'J400518008', 0, 'FONDO GLOBAL DE LA CONTRUCCION, C.A.', 240, 'Av. Tamanaco y Francisco de Miranda, El Rosal', '+5802129572005', '', 'aguillermo@fgdcve.com', 0, 0, 1),
+(124, 1, 2212, 'J401501001', 0, 'M2 PANELES DE CONSTRUCCION, C.A.', 240, 'Carretera Nacional Los Guayos Sector Mozanquita, Valencia', '+5802129572005', '', 'aguillermo@fgdcve.com', 0, 0, 1),
+(125, 1, 2213, 'J400626412', 0, 'CONSTRUCTORA JAAR, C.A.', 240, 'Av. Tamanaco y Francisco de Miranda, El Rosal', '+5802129572005', '', 'aguillermo@fgdcve.com', 0, 0, 1),
+(126, 1, 2214, 'J402997655', 0, 'CONSORCIO ESTRUCTURA METALICAS MODERNAS', 240, 'Av. Tamanaco y Francisco de Miranda, El Rosal', '+5802129572005', '', 'aguillermo@fgdcve.com', 0, 0, 1),
+(127, 1, 2215, 'J313550388', 0, 'NIDEC MOTORS VENEZUELA, S.A.', 240, 'Zona Industrial los Tanques, parcela 1, Villa de Cura', '+5804141267638', '', 'ricardo.reyes@nidec-motor.com', 0, 0, 1),
+(128, 1, 2216, 'J306842675', 0, 'MERCADOLIBRE VENEZUELA, S.R.L.', 240, 'AV. Eugenio Mendoza de la Castellana', '+5802126306000', '', 'ext_gbarrio@mercadolibre.com', 0, 0, 1),
+(129, 1, 2217, 'J294782914', 0, 'VENPROCA VENEZOLANA DE PROYECTOS, C.A.', 240, 'Av. Francisco de Miranda, El Rosal', '+5804162392655', '', 'jgil@venproca.com', 0, 0, 1),
+(130, 1, 2218, 'J411660752', 0, 'IMPORTADORA DIVINOS & DESTILADOS, C.A.', 240, 'Calle Bolivar, Urb. Baruta', '+5804142708935', '', 'divinosydestilados@gmail.com', 0, 0, 1),
+(131, 1, 2219, 'J315546302', 0, 'FUNDACION FONDO DE PREVISION SOCIAL CENTRO DE ESPECIALIDADES ANZOATEGUI', 240, 'Av. Principal de Lecheria, Centro de especialidades Anzoategui, Nucleo E CC Edif. Yariku, Nucleo E Piso 3, Oficina 9, Lecheria - Edo. Anzoategui', '+58', '', 'fpscea@gmail.com', 0, 0, 1),
+(132, 1, 2219, 'J315546302', 0, 'FUNDACION FONDO DE PREVISION SOCIAL CENTRO DE ESPECIALIDADES ANZOATEGUI', 240, 'Av. Principal de Lecheria, Centro de especialidades Anzoategui, Nucleo E CC Edif. Yariku, Nucleo E Piso 3, Oficina 9, Lecheria - Edo. Anzoategui', '+58', '', 'fpscea@gmail.com', 0, 0, 1),
+(133, 1, 2219, 'J315546302', 0, 'FUNDACION FONDO DE PREVISION SOCIAL CENTRO DE ESPECIALIDADES ANZOATEGUI', 240, 'Av. Principal de Lecheria, Centro de especialidades Anzoategui, Nucleo E CC Edif. Yariku, Nucleo E Piso 3, Oficina 9, Lecheria - Edo. Anzoategui', '+58', '', 'fpscea@gmail.com', 0, 0, 1),
 (134, 58, 2220, 'J296507570', 0, 'INDUSTRIA DE CARTONAJE CRD, C.A.', 240, 'Avenida San Antonio, Sector El Tumuso, Galpón Nro. C-2A, Santa Teresa del Tuy Miranda', '+5802129490900', '', 'correo@dominio.com', 0, 0, 1),
 (135, 146, 2221, 'J306241809', 0, 'TELEMIC INDUSTRIAS VENEZOLANAS PARA LAS TELECOMUNICACIONES, C.A.', 240, 'Zona Industrial II, Calle 3 entre Calle 4 y 6, Galpon N° 259, Barquisimeto	Estado Lara', '+02513355250', '', 'dennys.camacaro@inter.com.ve', 0, 0, 1),
 (136, 147, 2222, 'J310886229', 0, 'HERRENKNECHT, S.A.', 240, 'Avenida Tamanaco, Edificio La Unión, piso 3 3-A Urbanización El Rosal', '+5812345678', '', 'correo@dominio.com', 0, 0, 1),
@@ -803,30 +882,26 @@ INSERT INTO `tbl_clientes` (`Id`, `Id_usuario_socio`, `Codigo_cliente`, `Rif`, `
 (248, 146, 2295, 'J3315701677', 0, 'SUMA CASA DE BOLSA C.A.', 240, 'Av. Paseo Eraso C/Calle Chivacoa Edificio Tamanaco PISO 11 11-C 11-D Caracas', '+5802127507200', 'www.sumavalores.com', 'info@sumavalores.com', 0, 0, 1),
 (249, 146, 2296, 'J000467382', 0, 'SEGUROS LA FE, C.A.', 240, 'AVENIDA SOLANO LÓPEZ QUINTA SAN GERMAN PISO 1 OFIC 1-B SABANA GRANDE CARACAS', '+5804129954575', 'WWW.CROWE.COM.VE', 'CARENT@CROWE.COM.VE', 0, 0, 1),
 (250, 146, 2297, 'J406095737', 0, 'WITTY GROWTH C.A.', 240, 'Av Bolivar Norte Edificio CC Home Shopping Nivel 2 Local L-2-7 Valencia Estado Carabobo', '+5804141362723', 'www.crowe.com.ve', 'sistema.carent@crow.com.ve', 0, 0, 1),
-(251, 4, 2298, 'J12345', 123, 'CLIENTE PRUEBA 1', 12, 'Direccion de cliente prueba 1', '+54123456789', 'pagina.com.ve', '1234@1234.com', 1, 2, 1),
-(252, 4, 2299, 'J18291289', 1234, 'pEDRO', 11, 'DIRECCION DE PEDRO PEDRO', '+96678686886', 'pagina.com', 'hola@pagina.com', 2, 11, 1),
-(253, 10, 2299, '12213', 1234567, 'Prueba', 2, 'Pepota', '087', 'ddd.com', 'ada@casa', 1, 5, 1),
-(254, 5, 2300, '2137123dd', 21893213, 'Pepe prueba', 5, 'adakdjpppoo', '2193120', 'ggg.com', 'asjd@c.com', 1, 1, 1),
-(255, 145, 2301, 'J13123', 0, 'ASDAS', 9, 'DIRECCION', '+126812313212', '', 'asda@adasd.com', 1, 1, 1);
+(251, 144, 2298, 'J123', 2568, 'TESTING', 240, 'Testing Address', '+584245555555', '', 'test@testing.com', 1, 1, 1);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tbl_clientes_direccion_pais`
+-- Estructura de tabla para la tabla `clients_countries`
 --
 
-CREATE TABLE `tbl_clientes_direccion_pais` (
-  `Id` int(11) NOT NULL,
-  `Nombre_pais` varchar(300) NOT NULL,
-  `Iso3` varchar(300) NOT NULL,
-  `Codigo_telf` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE `clients_countries` (
+  `country_id` int(11) NOT NULL,
+  `country_name` varchar(300) NOT NULL,
+  `iso3` varchar(300) NOT NULL,
+  `phone_code` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `tbl_clientes_direccion_pais`
+-- Volcado de datos para la tabla `clients_countries`
 --
 
-INSERT INTO `tbl_clientes_direccion_pais` (`Id`, `Nombre_pais`, `Iso3`, `Codigo_telf`) VALUES
+INSERT INTO `clients_countries` (`country_id`, `country_name`, `iso3`, `phone_code`) VALUES
 (0, 'No se ha seleccionado un pais', '0', '0'),
 (1, 'AfganistÃ¡n', 'AFG', '93'),
 (2, 'Albania', 'ALB', '355'),
@@ -1078,21 +1153,21 @@ INSERT INTO `tbl_clientes_direccion_pais` (`Id`, `Nombre_pais`, `Iso3`, `Codigo_
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tbl_clientes_sector`
+-- Estructura de tabla para la tabla `clients_sectors`
 --
 
-CREATE TABLE `tbl_clientes_sector` (
-  `Id` int(11) NOT NULL,
-  `Nombre_sector` varchar(255) NOT NULL,
-  `Id_estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE `clients_sectors` (
+  `sector_id` int(11) NOT NULL,
+  `sector_name` varchar(255) NOT NULL,
+  `status_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `tbl_clientes_sector`
+-- Volcado de datos para la tabla `clients_sectors`
 --
 
-INSERT INTO `tbl_clientes_sector` (`Id`, `Nombre_sector`, `Id_estatus`) VALUES
-(0, 'No tiene sector registrado', 1),
+INSERT INTO `clients_sectors` (`sector_id`, `sector_name`, `status_id`) VALUES
+(0, 'Sector not registered', 1),
 (1, 'Privado', 1),
 (2, 'Publico', 1),
 (3, 'Mixto', 2);
@@ -1100,21 +1175,21 @@ INSERT INTO `tbl_clientes_sector` (`Id`, `Nombre_sector`, `Id_estatus`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tbl_clientes_servicios`
+-- Estructura de tabla para la tabla `clients_services`
 --
 
-CREATE TABLE `tbl_clientes_servicios` (
-  `Id` int(11) NOT NULL,
-  `Nombre_servicio` varchar(255) NOT NULL,
-  `Id_estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+CREATE TABLE `clients_services` (
+  `service_id` int(11) NOT NULL,
+  `service_name` varchar(255) NOT NULL,
+  `status_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Volcado de datos para la tabla `tbl_clientes_servicios`
+-- Volcado de datos para la tabla `clients_services`
 --
 
-INSERT INTO `tbl_clientes_servicios` (`Id`, `Nombre_servicio`, `Id_estatus`) VALUES
-(0, 'No tiene servicio asignado', 1),
+INSERT INTO `clients_services` (`service_id`, `service_name`, `status_id`) VALUES
+(0, 'Service not registered', 1),
 (1, 'Financiero', 1),
 (2, 'Manufactura', 1),
 (3, 'Energético', 1),
@@ -1135,221 +1210,234 @@ INSERT INTO `tbl_clientes_servicios` (`Id`, `Nombre_servicio`, `Id_estatus`) VAL
 -- --------------------------------------------------------
 
 --
--- Estructura Stand-in para la vista `tbl_clientes_status`
--- (Véase abajo para la vista actual)
---
-CREATE TABLE `tbl_clientes_status` (
-`Id` int(11)
-,`Descripcion` text
-);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `tbl_control_encryptkey`
+-- Estructura de tabla para la tabla `control_encrypts`
 --
 
-CREATE TABLE `tbl_control_encryptkey` (
-  `Id` int(11) NOT NULL,
-  `EncryptKey` mediumtext NOT NULL,
-  `EncryptIv` mediumtext NOT NULL,
-  `Id_estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+CREATE TABLE `control_encrypts` (
+  `encrypt_id` int(11) NOT NULL,
+  `encrypt_key` mediumtext NOT NULL,
+  `encrypt_iv` mediumtext NOT NULL,
+  `status_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Volcado de datos para la tabla `tbl_control_encryptkey`
+-- Volcado de datos para la tabla `control_encrypts`
 --
 
-INSERT INTO `tbl_control_encryptkey` (`Id`, `EncryptKey`, `EncryptIv`, `Id_estatus`) VALUES
+INSERT INTO `control_encrypts` (`encrypt_id`, `encrypt_key`, `encrypt_iv`, `status_id`) VALUES
 (1, '0123456789abcdef0123456789abcdef', 'abcdef9876543210abcdef9876543210', 1);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tbl_control_error`
+-- Estructura de tabla para la tabla `control_errors`
 --
 
-CREATE TABLE `tbl_control_error` (
-  `Id` int(11) NOT NULL,
-  `Id_error_tipomensaje` int(11) NOT NULL,
-  `Id_error_tipoobjeto` int(11) NOT NULL,
-  `Objeto_afectado` varchar(50) NOT NULL,
-  `Error_mensaje` text NOT NULL,
-  `Fecha` datetime NOT NULL,
-  `Id_estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+CREATE TABLE `control_errors` (
+  `error_id` int(11) NOT NULL,
+  `type_message_id` int(11) NOT NULL,
+  `type_object_id` int(11) NOT NULL,
+  `affected_object` varchar(50) NOT NULL,
+  `error_message` text NOT NULL,
+  `error_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Volcado de datos para la tabla `tbl_control_error`
+-- Volcado de datos para la tabla `control_errors`
 --
 
-INSERT INTO `tbl_control_error` (`Id`, `Id_error_tipomensaje`, `Id_error_tipoobjeto`, `Objeto_afectado`, `Error_mensaje`, `Fecha`, `Id_estatus`) VALUES
-(1, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-05 09:39:56', 1),
-(2, 1, 1, 'sp_InsertLog', 'Ha ocurrido un error en el registro de datos en la bitacora: (23000) Column \'Valor_anterior\' cannot be null', '2023-04-05 09:47:30', 1),
-(3, 1, 1, 'sp_Login', 'Se ha producido un error en el inicio de sesión: (HY000) Syntax error in JSON text in argument 1 to function \'json_extract\' at position 13', '2023-04-05 09:49:46', 1),
-(4, 1, 1, 'sp_Login', 'Se ha producido un error en el inicio de sesión: (HY000) Syntax error in JSON text in argument 1 to function \'json_extract\' at position 13', '2023-04-05 09:56:21', 1),
-(5, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-05 10:04:19', 1),
-(6, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-05 10:09:50', 1),
-(7, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-05 13:56:49', 1),
-(8, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0016: La selección de tabla está vacia ()\"}', '2023-04-10 11:00:10', 1),
-(9, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-10 11:03:11', 1),
-(10, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0016: La selección de tabla está vacia ()\"}', '2023-04-10 11:03:45', 1),
-(11, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0017: La selección de tabla no coincide con ninguna tabla (users2)\"}', '2023-04-10 11:30:14', 1),
-(12, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0016: La selección de tabla está vacia ()\"}', '2023-04-10 11:30:21', 1),
-(13, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0017: La selección de tabla no coincide con ninguna tabla (users2)\"}', '2023-04-10 11:35:01', 1),
-(14, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0017: La selección de tabla no coincide con ninguna tabla (users2)\"}', '2023-04-10 11:35:08', 1),
-(15, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0016: La selección de tabla está vacia ()\"}', '2023-04-10 11:35:33', 1),
-(16, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-14 11:04:39', 1),
-(17, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-14 13:34:24', 1),
-(18, 1, 1, 'sp_NewUser', 'Se ha producido un error en la consulta: (21S01) El número de columnas no corresponde al número en la línea 1', '2023-04-16 00:01:33', 1),
-(19, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-16 00:12:34', 1),
-(20, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0011: El ID_CODE(999999) no existe o tiene el acceso denegado\"}', '2023-04-16 00:21:34', 1),
-(21, 1, 1, 'sp_NewContactUser', '{\"response\":false,\"message\":\"Error 0019: Este usuario no existe (999999)\"}', '2023-04-16 13:07:25', 1),
-(22, 1, 1, 'sp_NewUser', 'Se ha producido un error en la consulta: (22007) Truncated incorrect datetime value: \'20230416132394\'', '2023-04-16 13:23:04', 1),
-(23, 1, 1, 'sp_NewUser', 'Se ha producido un error en la consulta: (23000) Column \'Id_usuario\' cannot be null', '2023-04-16 13:29:50', 1),
-(24, 1, 1, 'sp_NewContactUser', 'Se ha producido un error en la consulta: (23000) Column \'Id_usuario\' cannot be null', '2023-04-16 13:42:16', 1),
-(25, 1, 1, 'sp_NewUser', 'Se ha producido un error en la consulta: (23000) Cannot add or update a child row: a foreign key constraint fails (`carent-nueva`.`tbl_usuarios`, CONSTRAINT `FK_division_usuario` FOREIGN KEY (`Id_jerarquia_division`) REFERENCES `tbl_usuarios_jerarquia_division` (`Id`))', '2023-04-16 14:42:33', 1),
-(26, 1, 1, 'sp_NewUser', 'Se ha producido un error en la consulta: (23000) Cannot add or update a child row: a foreign key constraint fails (`carent-nueva`.`tbl_usuarios`, CONSTRAINT `FK_division_usuario` FOREIGN KEY (`Id_jerarquia_division`) REFERENCES `tbl_usuarios_jerarquia_division` (`Id`))', '2023-04-16 14:46:53', 1),
-(27, 1, 1, 'sp_NewUser', 'Se ha producido un error en la consulta: (22007) Truncated incorrect datetime value: \'20230416144892\'', '2023-04-16 14:48:02', 1),
-(28, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 15:23:42', 1),
-(29, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 15:25:33', 1),
-(30, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 15:26:54', 1),
-(31, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 15:28:50', 1),
-(32, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 15:58:02', 1),
-(33, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:00:01', 1),
-(34, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:00:16', 1),
-(35, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:00:30', 1),
-(36, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:00:55', 1),
-(37, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:03:02', 1),
-(38, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:06:55', 1),
-(39, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:06:57', 1),
-(40, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:07:29', 1),
-(41, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:09:55', 1),
-(42, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:10:37', 1),
-(43, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:16:48', 1),
-(44, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:19:17', 1),
-(45, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:19:22', 1),
-(46, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-05-01 10:10:22', 1),
-(47, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-05-01 10:14:29', 1),
-(48, 1, 1, 'sp_NewContactUser', 'Se ha producido un error en la consulta: (42S22) Unknown column \'UT.Abreviatura\' in \'where clause\'', '2023-05-01 10:15:16', 1),
-(49, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-05-01 10:15:30', 1),
-(50, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (1201)\"}', '2023-05-01 10:15:42', 1),
-(51, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (1201)\"}', '2023-05-01 10:15:52', 1),
-(52, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-05-03 21:20:55', 1),
-(53, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-05-03 21:48:29', 1),
-(54, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-05-04 13:47:20', 1),
-(55, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-05-09 14:43:55', 1),
-(56, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-05-09 14:44:19', 1),
-(57, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-05-10 11:09:49', 1),
-(58, 1, 1, 'sp_NewContactUser', 'Se ha producido un error en la consulta: (42S22) Unknown column \'US.Id\' in \'field list\'', '2023-05-10 11:22:44', 1),
-(59, 1, 1, 'sp_NewUser', 'Se ha producido un error en la consulta: (22007) Truncated incorrect datetime value: \'20230510112891\'', '2023-05-10 11:28:01', 1),
-(60, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (909090)\"}', '2023-05-10 11:46:36', 1),
-(61, 1, 1, 'sp_NewContactUser', '{\"response\":false,\"message\":\"Error 0021: Esta cedula ya está registrada (22667607)\"}', '2023-05-10 11:46:51', 1),
-(62, 1, 1, 'sp_NewUser', 'Se ha producido un error en la consulta: (22007) Truncated incorrect datetime value: \'20230510115496\'', '2023-05-10 11:54:06', 1),
-(63, 1, 1, 'sp_NewContactUser', '{\"response\":false,\"message\":\"Error 0021: Esta cedula ya está registrada (22667607)\"}', '2023-05-10 12:00:27', 1),
-(64, 1, 1, 'sp_UpdateContactUser', '{\"response\":false,\"message\":\"Error 0021: Esta cedula ya está registrada (22667607)\"}', '2023-05-10 12:03:43', 1),
-(65, 1, 1, 'sp_UpdateContactUser', '{\"response\":false,\"message\":\"Error 0021: Esta cedula ya está registrada (22667607)\"}', '2023-05-10 12:05:41', 1),
-(66, 1, 1, 'sp_NewClient', 'Se ha producido un error en la consulta: (42S22) La columna \'p_Codigo\' en field list es desconocida', '2023-05-10 15:13:29', 1),
-(67, 1, 1, 'sp_UpdateContactUser', '{\"response\":false,\"message\":\"Error 0021: Esta cedula ya está registrada (17671373)\"}', '2023-05-10 15:28:51', 1),
-(68, 1, 1, 'sp_UpdateUser', 'Se ha producido un error en la consulta: (22007) Truncated incorrect datetime value: \'20230510153293\'', '2023-05-10 15:32:03', 1),
-(69, 1, 1, 'sp_UpdateContactUser', '{\"response\":false,\"message\":\"Error 0021: Esta cedula ya está registrada (17671373)\"}', '2023-05-10 15:32:32', 1),
-(70, 1, 1, 'sp_UpdateContactUser', '{\"response\":false,\"message\":\"Error 0021: Esta cedula ya está registrada (17671373)\"}', '2023-05-10 15:32:41', 1),
-(71, 1, 1, 'sp_UpdateContactUser', '{\"response\":false,\"message\":\"Error 0021: Esta cedula ya está registrada (22667607)\"}', '2023-05-10 15:35:13', 1),
-(72, 1, 1, 'sp_NewClient', '{\"response\":false,\"message\":\"Error 0022: Este socio no existe (1)\"}', '2023-05-10 16:05:27', 1),
-(73, 1, 1, 'sp_NewClient', '{\"response\":false,\"message\":\"Error 0022: Este socio no existe (1)\"}', '2023-05-10 16:06:24', 1),
-(74, 1, 1, 'sp_NewClient', '{\"response\":false,\"message\":\"Error 0022: Este socio no existe (1)\"}', '2023-05-10 16:12:32', 1),
-(75, 1, 1, 'sp_NewClient', 'Se ha producido un error en la consulta: (23000) Column \'Nit\' cannot be null', '2023-05-10 16:20:53', 1),
-(76, 1, 1, 'sp_NewClient', 'Se ha producido un error en la consulta: (23000) Column \'Nit\' cannot be null', '2023-05-10 16:21:39', 1),
-(77, 1, 1, 'sp_NewClient', 'Se ha producido un error en la consulta: (23000) Column \'Nit\' cannot be null', '2023-05-10 16:21:41', 1),
-(78, 1, 1, 'sp_NewClient', 'Se ha producido un error en la consulta: (23000) Column \'Nit\' cannot be null', '2023-05-10 16:22:23', 1),
-(79, 1, 1, 'sp_NewClient', 'Se ha producido un error en la consulta: (23000) Column \'Nit\' cannot be null', '2023-05-10 16:23:42', 1),
-(80, 1, 1, 'sp_NewClient', 'Se ha producido un error en la consulta: (23000) Column \'Nit\' cannot be null', '2023-05-10 16:23:46', 1),
-(81, 1, 1, 'sp_NewClient', 'Se ha producido un error en la consulta: (23000) Column \'Nit\' cannot be null', '2023-05-10 16:25:05', 1),
-(82, 1, 1, 'sp_NewClient', 'Se ha producido un error en la consulta: (23000) Column \'Nit\' cannot be null', '2023-05-10 16:28:40', 1),
-(83, 1, 1, 'sp_NewClient', 'Se ha producido un error en la consulta: (23000) Column \'Nit\' cannot be null', '2023-05-10 16:31:03', 1);
+INSERT INTO `control_errors` (`error_id`, `type_message_id`, `type_object_id`, `affected_object`, `error_message`, `error_date`) VALUES
+(1, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-05 09:39:56'),
+(2, 1, 1, 'sp_InsertLog', 'Ha ocurrido un error en el registro de datos en la bitacora: (23000) Column \'Valor_anterior\' cannot be null', '2023-04-05 09:47:30'),
+(3, 1, 1, 'sp_Login', 'Se ha producido un error en el inicio de sesión: (HY000) Syntax error in JSON text in argument 1 to function \'json_extract\' at position 13', '2023-04-05 09:49:46'),
+(4, 1, 1, 'sp_Login', 'Se ha producido un error en el inicio de sesión: (HY000) Syntax error in JSON text in argument 1 to function \'json_extract\' at position 13', '2023-04-05 09:56:21'),
+(5, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-05 10:04:19'),
+(6, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-05 10:09:50'),
+(7, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-05 13:56:49'),
+(8, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0016: La selección de tabla está vacia ()\"}', '2023-04-10 11:00:10'),
+(9, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-10 11:03:11'),
+(10, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0016: La selección de tabla está vacia ()\"}', '2023-04-10 11:03:45'),
+(11, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0017: La selección de tabla no coincide con ninguna tabla (users2)\"}', '2023-04-10 11:30:14'),
+(12, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0016: La selección de tabla está vacia ()\"}', '2023-04-10 11:30:21'),
+(13, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0017: La selección de tabla no coincide con ninguna tabla (users2)\"}', '2023-04-10 11:35:01'),
+(14, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0017: La selección de tabla no coincide con ninguna tabla (users2)\"}', '2023-04-10 11:35:08'),
+(15, 1, 1, 'sp_QueryPagination', '{\"response\":false,\"message\":\"Error 0016: La selección de tabla está vacia ()\"}', '2023-04-10 11:35:33'),
+(16, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-14 11:04:39'),
+(17, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-14 13:34:24'),
+(18, 1, 1, 'sp_NewUser', 'Se ha producido un error en la consulta: (21S01) El número de columnas no corresponde al número en la línea 1', '2023-04-16 00:01:33'),
+(19, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-04-16 00:12:34'),
+(20, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0011: El ID_CODE(999999) no existe o tiene el acceso denegado\"}', '2023-04-16 00:21:34'),
+(21, 1, 1, 'sp_NewContactUser', '{\"response\":false,\"message\":\"Error 0019: Este usuario no existe (999999)\"}', '2023-04-16 13:07:25'),
+(22, 1, 1, 'sp_NewUser', 'Se ha producido un error en la consulta: (22007) Truncated incorrect datetime value: \'20230416132394\'', '2023-04-16 13:23:04'),
+(23, 1, 1, 'sp_NewUser', 'Se ha producido un error en la consulta: (23000) Column \'Id_usuario\' cannot be null', '2023-04-16 13:29:50'),
+(24, 1, 1, 'sp_NewContactUser', 'Se ha producido un error en la consulta: (23000) Column \'Id_usuario\' cannot be null', '2023-04-16 13:42:16'),
+(25, 1, 1, 'sp_NewUser', 'Se ha producido un error en la consulta: (23000) Cannot add or update a child row: a foreign key constraint fails (`carent-nueva`.`tbl_usuarios`, CONSTRAINT `FK_division_usuario` FOREIGN KEY (`Id_jerarquia_division`) REFERENCES `tbl_usuarios_jerarquia_division` (`Id`))', '2023-04-16 14:42:33'),
+(26, 1, 1, 'sp_NewUser', 'Se ha producido un error en la consulta: (23000) Cannot add or update a child row: a foreign key constraint fails (`carent-nueva`.`tbl_usuarios`, CONSTRAINT `FK_division_usuario` FOREIGN KEY (`Id_jerarquia_division`) REFERENCES `tbl_usuarios_jerarquia_division` (`Id`))', '2023-04-16 14:46:53'),
+(27, 1, 1, 'sp_NewUser', 'Se ha producido un error en la consulta: (22007) Truncated incorrect datetime value: \'20230416144892\'', '2023-04-16 14:48:02'),
+(28, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 15:23:42'),
+(29, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 15:25:33'),
+(30, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 15:26:54'),
+(31, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 15:28:50'),
+(32, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 15:58:02'),
+(33, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:00:01'),
+(34, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:00:16'),
+(35, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:00:30'),
+(36, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:00:55'),
+(37, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:03:02'),
+(38, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:06:55'),
+(39, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:06:57'),
+(40, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:07:29'),
+(41, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:09:55'),
+(42, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:10:37'),
+(43, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:16:48'),
+(44, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:19:17'),
+(45, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-04-16 16:19:22'),
+(46, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-05-01 10:10:22'),
+(47, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-05-01 10:14:29'),
+(48, 1, 1, 'sp_NewContactUser', 'Se ha producido un error en la consulta: (42S22) Unknown column \'UT.Abreviatura\' in \'where clause\'', '2023-05-01 10:15:16'),
+(49, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-05-01 10:15:30'),
+(50, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (1201)\"}', '2023-05-01 10:15:42'),
+(51, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (1201)\"}', '2023-05-01 10:15:52'),
+(52, 1, 1, 'sp_Login', '{\"response\":false,\"message\":\"Error 0013: La contraseña no coincide con la registrada en el sistema\"}', '2023-05-03 21:20:55'),
+(53, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-05-03 21:48:29'),
+(54, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-05-04 13:47:20'),
+(55, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-05-09 14:43:55'),
+(56, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-05-09 14:44:19'),
+(57, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (0001)\"}', '2023-05-10 11:09:49'),
+(58, 1, 1, 'sp_NewContactUser', 'Se ha producido un error en la consulta: (42S22) Unknown column \'US.Id\' in \'field list\'', '2023-05-10 11:22:44'),
+(59, 1, 1, 'sp_NewUser', 'Se ha producido un error en la consulta: (22007) Truncated incorrect datetime value: \'20230510112891\'', '2023-05-10 11:28:01'),
+(60, 1, 1, 'sp_NewUser', '{\"response\":false,\"message\":\"Error 0018: Este usuario ya existe (909090)\"}', '2023-05-10 11:46:36'),
+(61, 1, 1, 'sp_NewContactUser', '{\"response\":false,\"message\":\"Error 0021: Esta cedula ya está registrada (22667607)\"}', '2023-05-10 11:46:51'),
+(62, 1, 1, 'sp_NewUser', 'Se ha producido un error en la consulta: (22007) Truncated incorrect datetime value: \'20230510115496\'', '2023-05-10 11:54:06'),
+(63, 1, 1, 'sp_NewContactUser', '{\"response\":false,\"message\":\"Error 0021: Esta cedula ya está registrada (22667607)\"}', '2023-05-10 12:00:27'),
+(64, 1, 1, 'sp_UpdateContactUser', '{\"response\":false,\"message\":\"Error 0021: Esta cedula ya está registrada (22667607)\"}', '2023-05-10 12:03:43'),
+(65, 1, 1, 'sp_UpdateContactUser', '{\"response\":false,\"message\":\"Error 0021: Esta cedula ya está registrada (22667607)\"}', '2023-05-10 12:05:41'),
+(66, 1, 1, 'sp_NewClient', 'Se ha producido un error en la consulta: (42S22) La columna \'p_Codigo\' en field list es desconocida', '2023-05-10 15:13:29'),
+(67, 1, 1, 'sp_UpdateContactUser', '{\"response\":false,\"message\":\"Error 0021: Esta cedula ya está registrada (17671373)\"}', '2023-05-10 15:28:51'),
+(68, 1, 1, 'sp_UpdateUser', 'Se ha producido un error en la consulta: (22007) Truncated incorrect datetime value: \'20230510153293\'', '2023-05-10 15:32:03'),
+(69, 1, 1, 'sp_UpdateContactUser', '{\"response\":false,\"message\":\"Error 0021: Esta cedula ya está registrada (17671373)\"}', '2023-05-10 15:32:32'),
+(70, 1, 1, 'sp_UpdateContactUser', '{\"response\":false,\"message\":\"Error 0021: Esta cedula ya está registrada (17671373)\"}', '2023-05-10 15:32:41'),
+(71, 1, 1, 'sp_UpdateContactUser', '{\"response\":false,\"message\":\"Error 0021: Esta cedula ya está registrada (22667607)\"}', '2023-05-10 15:35:13'),
+(72, 1, 1, 'sp_NewClient', '{\"response\":false,\"message\":\"Error 0022: Este socio no existe (1)\"}', '2023-05-10 16:05:27'),
+(73, 1, 1, 'sp_NewClient', '{\"response\":false,\"message\":\"Error 0022: Este socio no existe (1)\"}', '2023-05-10 16:06:24'),
+(74, 1, 1, 'sp_NewClient', '{\"response\":false,\"message\":\"Error 0022: Este socio no existe (1)\"}', '2023-05-10 16:12:32'),
+(75, 1, 1, 'sp_NewClient', 'Se ha producido un error en la consulta: (23000) Column \'Nit\' cannot be null', '2023-05-10 16:20:53'),
+(76, 1, 1, 'sp_NewClient', 'Se ha producido un error en la consulta: (23000) Column \'Nit\' cannot be null', '2023-05-10 16:21:39'),
+(77, 1, 1, 'sp_NewClient', 'Se ha producido un error en la consulta: (23000) Column \'Nit\' cannot be null', '2023-05-10 16:21:41'),
+(78, 1, 1, 'sp_NewClient', 'Se ha producido un error en la consulta: (23000) Column \'Nit\' cannot be null', '2023-05-10 16:22:23'),
+(79, 1, 1, 'sp_NewClient', 'Se ha producido un error en la consulta: (23000) Column \'Nit\' cannot be null', '2023-05-10 16:23:42'),
+(80, 1, 1, 'sp_NewClient', 'Se ha producido un error en la consulta: (23000) Column \'Nit\' cannot be null', '2023-05-10 16:23:46'),
+(81, 1, 1, 'sp_NewClient', 'Se ha producido un error en la consulta: (23000) Column \'Nit\' cannot be null', '2023-05-10 16:25:05'),
+(82, 1, 1, 'sp_NewClient', 'Se ha producido un error en la consulta: (23000) Column \'Nit\' cannot be null', '2023-05-10 16:28:40'),
+(83, 1, 1, 'sp_NewClient', 'Se ha producido un error en la consulta: (23000) Column \'Nit\' cannot be null', '2023-05-10 16:31:03'),
+(84, 1, 1, 'sp_UpdateClient', '{\"response\":false,\"message\":\"Error 0024: Este RIF ya esta registrado (J314087754)\"}', '2023-05-13 15:31:10'),
+(85, 1, 1, 'sp_test', '{\"response\":false,\"message\":\"prueba de errores\"}', '2023-05-16 15:29:27'),
+(86, 1, 1, 'sp_login', 'Se ha producido un error en el inicio de sesión: (HY000) Ilegal mezcla de collations (utf8mb4_general_ci,IMPLICIT) y (utf8mb4_unicode_ci,IMPLICIT) para operación \'<>\'', '2023-05-16 16:10:06'),
+(87, 1, 1, 'sp_login', 'Se ha producido un error en el inicio de sesión: (HY000) Ilegal mezcla de collations (utf8mb4_general_ci,IMPLICIT) y (utf8mb4_unicode_ci,IMPLICIT) para operación \'<>\'', '2023-05-16 16:13:00'),
+(88, 1, 1, 'sp_login', 'Se ha producido un error en el inicio de sesión: (HY000) Ilegal mezcla de collations (utf8mb4_general_ci,IMPLICIT) y (utf8mb4_unicode_ci,IMPLICIT) para operación \'<>\'', '2023-05-16 16:26:04'),
+(89, 1, 1, 'sp_login', 'Se ha producido un error en el inicio de sesión: (HY000) Ilegal mezcla de collations (utf8mb4_general_ci,IMPLICIT) y (utf8mb4_unicode_ci,IMPLICIT) para operación \'<>\'', '2023-05-16 16:27:24'),
+(90, 1, 1, 'sp_login', '{\"response\":false,\"message\":\"Error 0009: Password incorrect, insert again\"}', '2023-05-16 16:29:24'),
+(91, 1, 1, 'sp_login', '{\"response\":false,\"message\":\"Error 0011: Insert log has failed\"}', '2023-05-16 16:29:47'),
+(92, 1, 1, 'sp_query_pagination', '{\"response\":false,\"message\":\"Error 0013: Table target does not match any table in the database (a)\"}', '2023-05-16 16:55:30'),
+(93, 1, 1, 'sp_new_clients', 'Se ha producido un error en la consulta: (42S22) La columna \'US.Id\' en field list es desconocida', '2023-05-16 17:47:13'),
+(94, 1, 1, 'sp_new_clients', 'Se ha producido un error en la consulta: (42S22) La columna \'p_servicio_id\' en field list es desconocida', '2023-05-16 17:49:12'),
+(95, 1, 1, 'sp_new_clients', 'Se ha producido un error en la consulta: (23000) La columna \'client_code\' no puede ser nula', '2023-05-16 17:50:33'),
+(96, 1, 1, 'sp_new_clients', '{\"response\":false,\"message\":\"Error 0011: Insert log has failed\"}', '2023-05-16 17:57:31'),
+(97, 1, 1, 'sp_new_clients', '{\"response\":false,\"message\":\"Error 0011: Insert log has failed\"}', '2023-05-16 17:58:01'),
+(98, 1, 1, 'sp_new_clients', '{\"response\":false,\"message\":\"Error 0011: Insert log has failed\"}', '2023-05-16 18:00:45'),
+(99, 1, 1, 'sp_new_clients', '{\"response\":false,\"message\":\"Error 0011: Insert log has failed\"}', '2023-05-16 18:01:18'),
+(100, 1, 1, 'sp_new_clients', '{\"response\":false,\"message\":\"Error 0011: Insert log has failed (Error con el código 23000:Column \'error_message\' cannot be null)\"}', '2023-05-16 18:03:04'),
+(101, 1, 1, 'sp_new_clients', '{\"response\":false,\"message\":\"Error 0011: Insert log has failed (Error con el código 23000:Column \'error_message\' cannot be null)\"}', '2023-05-16 18:04:12'),
+(102, 1, 1, 'sp_new_clients', '{\"response\":false,\"message\":\"Error 0011: Insert log has failed (Error con el código 23000:Column \'error_message\' cannot be null)\"}', '2023-05-16 18:04:16'),
+(103, 1, 1, 'sp_new_clients', '{\"response\":false,\"message\":\"Error 0011: Insert log has failed (Error con el código 23000:Column \'error_message\' cannot be null)\"}', '2023-05-16 18:04:20'),
+(104, 1, 1, 'sp_new_clients', '{\"response\":false,\"message\":\"Error 0011: Insert log has failed (Error con el código 23000:Column \'error_message\' cannot be null)\"}', '2023-05-16 18:04:29'),
+(105, 1, 1, 'sp_new_clients', '{\"response\":false,\"message\":\"Error 0011: Insert log has failed (Error con el código 23000:Column \'error_message\' cannot be null)\"}', '2023-05-16 18:04:33'),
+(106, 1, 1, 'sp_new_clients', '{\"response\":false,\"message\":\"Error 0011: Insert log has failed (Error con el código 23000:Column \'error_message\' cannot be null)\"}', '2023-05-16 18:04:37'),
+(107, 1, 1, 'sp_update_clients', 'Se ha producido un error en la consulta: (42S22) Unknown column \'p_rid\' in \'field list\'', '2023-05-16 19:10:40'),
+(108, 1, 1, 'sp_update_clients', 'Se ha producido un error en la consulta: (42000) PROCEDURE carent-nueva.sp_InsertLog does not exist', '2023-05-16 19:12:38'),
+(109, 1, 1, 'sp_new_users', '{\"response\":false,\"message\":\"Error 0016: This user is already registered (0001)\"}', '2023-05-17 01:16:27'),
+(110, 1, 1, 'sp_new_users', 'Se ha producido un error en la consulta: (22007) Truncated incorrect DOUBLE value: \'127.0.0.1\'', '2023-05-17 01:16:55'),
+(111, 1, 1, 'sp_new_users', 'Se ha producido un error en la consulta: (22007) Truncated incorrect DOUBLE value: \'127.0.0.1\'', '2023-05-17 01:17:28'),
+(112, 1, 1, 'sp_new_users', 'Se ha producido un error en la consulta: (22007) Truncated incorrect datetime value: \'20230517012292\'', '2023-05-17 01:22:02'),
+(113, 1, 1, 'sp_new_users', 'Se ha producido un error en la consulta: (42000) PROCEDURE carent-nueva.sp_InsertLog does not exist', '2023-05-17 01:22:25'),
+(114, 1, 1, 'sp_new_users', '{\"response\":false,\"message\":\"Error 0016: This user is already registered (888888)\"}', '2023-05-17 01:24:40'),
+(115, 1, 1, 'sp_new_contact_users', '{\"response\":false,\"message\":\"Error 0017: This identity is already registered (22667607)\"}', '2023-05-17 01:34:42'),
+(116, 1, 1, 'sp_new_contact_users', '{\"response\":false,\"message\":\"Error 0017: This identity is already registered (22667607)\"}', '2023-05-17 01:35:59'),
+(117, 1, 1, 'sp_new_users', '{\"response\":false,\"message\":\"Error 0016: This user is already registered (0001)\"}', '2023-05-17 01:36:18'),
+(118, 1, 1, 'sp_new_users', 'Se ha producido un error en la consulta: (22007) Truncated incorrect datetime value: \'20230517024798\'', '2023-05-17 02:47:08'),
+(119, 1, 1, 'sp_update_users', 'Se ha producido un error en la consulta: (42S22) Unknown column \'TU.Id\' in \'where clause\'', '2023-05-17 02:49:57'),
+(120, 1, 1, 'sp_update_users', 'Se ha producido un error en la consulta: (42S22) Unknown column \'users.user_id\' in \'where clause\'', '2023-05-17 02:52:29'),
+(121, 1, 1, 'sp_update_users', 'Se ha producido un error en la consulta: (42S22) Unknown column \'users.user_id\' in \'where clause\'', '2023-05-17 02:52:33'),
+(122, 1, 1, 'sp_update_users', 'Se ha producido un error en la consulta: (42S22) Unknown column \'us.partish_id\' in \'field list\'', '2023-05-17 02:53:53'),
+(123, 1, 1, 'sp_update_users', 'Se ha producido un error en la consulta: (42S22) Unknown column \'us.partish_id\' in \'field list\'', '2023-05-17 02:53:57'),
+(124, 1, 1, 'sp_update_contact_users', 'Se ha producido un error en la consulta: (42S22) Unknown column \'UT.Id\' in \'field list\'', '2023-05-17 02:55:31'),
+(125, 1, 1, 'sp_update_contact_users', 'Se ha producido un error en la consulta: (42S22) Unknown column \'UT.Id\' in \'field list\'', '2023-05-17 02:55:35'),
+(126, 1, 1, 'sp_update_contact_users', 'Se ha producido un error en la consulta: (42S22) Unknown column \'US.Id\' in \'field list\'', '2023-05-17 02:56:38'),
+(127, 1, 1, 'sp_update_contact_users', 'Se ha producido un error en la consulta: (42S22) Unknown column \'US.Id\' in \'field list\'', '2023-05-17 02:56:43'),
+(128, 1, 1, 'sp_update_contact_users', 'Se ha producido un error en la consulta: (22007) Incorrect integer value: \'v\' for column `carent-nueva`.`users_identity`.`identity_type_id` at row 1', '2023-05-17 02:57:52'),
+(129, 1, 1, 'sp_update_contact_users', 'Se ha producido un error en la consulta: (22007) Incorrect integer value: \'v\' for column `carent-nueva`.`users_identity`.`identity_type_id` at row 1', '2023-05-17 02:57:56');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tbl_control_error_tipomensaje`
+-- Estructura de tabla para la tabla `control_errors_type_messages`
 --
 
-CREATE TABLE `tbl_control_error_tipomensaje` (
-  `Id` int(11) NOT NULL,
-  `Descripcion` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+CREATE TABLE `control_errors_type_messages` (
+  `type_message_id` int(11) NOT NULL,
+  `message_description` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Volcado de datos para la tabla `tbl_control_error_tipomensaje`
+-- Volcado de datos para la tabla `control_errors_type_messages`
 --
 
-INSERT INTO `tbl_control_error_tipomensaje` (`Id`, `Descripcion`) VALUES
+INSERT INTO `control_errors_type_messages` (`type_message_id`, `message_description`) VALUES
 (1, 'Advertencia'),
 (2, 'Error');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tbl_control_error_tipoobjeto`
+-- Estructura de tabla para la tabla `control_errors_type_object`
 --
 
-CREATE TABLE `tbl_control_error_tipoobjeto` (
-  `Id` int(11) NOT NULL,
-  `NombreObjeto` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+CREATE TABLE `control_errors_type_object` (
+  `type_object_id` int(11) NOT NULL,
+  `object_name` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Volcado de datos para la tabla `tbl_control_error_tipoobjeto`
+-- Volcado de datos para la tabla `control_errors_type_object`
 --
 
-INSERT INTO `tbl_control_error_tipoobjeto` (`Id`, `NombreObjeto`) VALUES
+INSERT INTO `control_errors_type_object` (`type_object_id`, `object_name`) VALUES
 (1, 'Procedimiento Almacenado');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tbl_control_estatus`
+-- Estructura de tabla para la tabla `control_logs`
 --
 
-CREATE TABLE `tbl_control_estatus` (
-  `Id` int(11) NOT NULL,
-  `Descripcion` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+CREATE TABLE `control_logs` (
+  `log_id` int(11) NOT NULL,
+  `action_id` int(11) NOT NULL COMMENT 'Tipo de acción que se realizo usando la nomenclatura CRUD',
+  `log_description` text NOT NULL,
+  `user_responsible_ip` varchar(39) NOT NULL COMMENT 'IPV4 O IPV6 del responsable de la acción realizada.',
+  `user_responsible_id` int(11) NOT NULL,
+  `affected_table` text NOT NULL,
+  `query_sql` text DEFAULT NULL,
+  `old_value` text DEFAULT NULL,
+  `new_value` text DEFAULT NULL,
+  `register_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Volcado de datos para la tabla `tbl_control_estatus`
+-- Volcado de datos para la tabla `control_logs`
 --
 
-INSERT INTO `tbl_control_estatus` (`Id`, `Descripcion`) VALUES
-(1, 'Activo'),
-(2, 'Inactivo'),
-(3, 'De reposo'),
-(4, 'De Vacaciones');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `tbl_control_logs_bitacora`
---
-
-CREATE TABLE `tbl_control_logs_bitacora` (
-  `Id` int(11) NOT NULL,
-  `Id_bitacora_accion` int(11) NOT NULL COMMENT 'Tipo de acción que se realizo usando la nomenclatura CRUD',
-  `Descripcion_accion` text NOT NULL,
-  `Ip_responsable` varchar(39) NOT NULL COMMENT 'IPV4 O IPV6 del responsable de la acción realizada.',
-  `Id_usuario_responsable` int(11) NOT NULL,
-  `Tabla_afectada` text NOT NULL,
-  `Sql_realizado` text DEFAULT NULL,
-  `Valor_anterior` text DEFAULT NULL,
-  `Nuevo_valor` text DEFAULT NULL,
-  `Fecha_Registro` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Volcado de datos para la tabla `tbl_control_logs_bitacora`
---
-
-INSERT INTO `tbl_control_logs_bitacora` (`Id`, `Id_bitacora_accion`, `Descripcion_accion`, `Ip_responsable`, `Id_usuario_responsable`, `Tabla_afectada`, `Sql_realizado`, `Valor_anterior`, `Nuevo_valor`, `Fecha_Registro`) VALUES
+INSERT INTO `control_logs` (`log_id`, `action_id`, `log_description`, `user_responsible_ip`, `user_responsible_id`, `affected_table`, `query_sql`, `old_value`, `new_value`, `register_date`) VALUES
 (1, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-05 09:49:45 WHERE u.Codigo = 0001;', NULL, '{\"fecha_ultimo_login\": \"2023-04-05 09:49:45\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-05 09:49:45'),
 (2, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-05 09:56:21 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-05 09:49:45\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-05 09:56:21\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-05 09:56:21'),
 (3, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-04-05 09:59:32 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-04-05 09:56:21\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-04-05 09:59:32\",\"ultima_ip\": \"127.0.0.1\"}', '2023-04-05 09:59:32'),
@@ -1447,24 +1535,78 @@ INSERT INTO `tbl_control_logs_bitacora` (`Id`, `Id_bitacora_accion`, `Descripcio
 (95, 2, 'updateUser', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE `tbl_usuarios` SET `Codigo`=0001,`Fecha_cambio_clave`=@FechaCambio,`Primer_nombre`=p_Nombre1,`Segundo_nombre`=p_Nombr2,`Primer_apellido`=p_Apellido1,`Segundo_apellido`=p_Apellido2,`Fecha_nacimiento`=p_FechaNacimiento,`Id_jerarquia_cargo`=p_IdCargo,`Id_jerarquia_division`=p_IdDivision,`Id_direccion_parroquia`=p_IdParroquia,`Fecha_ingreso`=p_FechaIngreso,`Fecha_egreso`=p_FechaEgreso,`Id_estatus`=p_IdStatus WHERE `Id` = p_IdUpdateUser', NULL, NULL, '2023-05-10 15:35:36'),
 (96, 2, 'updateUser', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE `tbl_usuarios` SET `Codigo`=0001,`Fecha_cambio_clave`=@FechaCambio,`Primer_nombre`=p_Nombre1,`Segundo_nombre`=p_Nombr2,`Primer_apellido`=p_Apellido1,`Segundo_apellido`=p_Apellido2,`Fecha_nacimiento`=p_FechaNacimiento,`Id_jerarquia_cargo`=p_IdCargo,`Id_jerarquia_division`=p_IdDivision,`Id_direccion_parroquia`=p_IdParroquia,`Fecha_ingreso`=p_FechaIngreso,`Fecha_egreso`=p_FechaEgreso,`Id_estatus`=p_IdStatus WHERE `Id` = p_IdUpdateUser', NULL, NULL, '2023-05-10 15:45:37'),
 (97, 2, 'updateUser', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE `tbl_usuarios` SET `Codigo`=0001,`Fecha_cambio_clave`=@FechaCambio,`Primer_nombre`=p_Nombre1,`Segundo_nombre`=p_Nombr2,`Primer_apellido`=p_Apellido1,`Segundo_apellido`=p_Apellido2,`Fecha_nacimiento`=p_FechaNacimiento,`Id_jerarquia_cargo`=p_IdCargo,`Id_jerarquia_division`=p_IdDivision,`Id_direccion_parroquia`=p_IdParroquia,`Fecha_ingreso`=p_FechaIngreso,`Fecha_egreso`=p_FechaEgreso,`Id_estatus`=p_IdStatus WHERE `Id` = p_IdUpdateUser', NULL, NULL, '2023-05-10 16:04:13'),
-(98, 1, 'createClient', '127.0.0.1', 1, 'tbl_clientes', 'INSERT INTO `tbl_clientes`(`Id_usuario_socio`, `Codigo_cliente`, `Rif`, `Nit`, `Razon_social`, `Id_pais`, `Direccion`, `Telefono_fiscal`, `Pagina_web`, `Email_fiscal`, `Id_cliente_sector`, `Id_cliente_servicio`, `Id_estatus`) VALUES (p_IdSocio,2301,p_Rif,p_Nit,p_RazonSocial,p_IdPais,p_Address,p_TelefonoFiscal,p_PaginaWeb,p_EmailFiscal,p_IdSectorAsociado,p_IdServicioAsociado,1);', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-05-10 16:34:01');
+(98, 1, 'createClient', '127.0.0.1', 1, 'tbl_clientes', 'INSERT INTO `tbl_clientes`(`Id_usuario_socio`, `Codigo_cliente`, `Rif`, `Nit`, `Razon_social`, `Id_pais`, `Direccion`, `Telefono_fiscal`, `Pagina_web`, `Email_fiscal`, `Id_cliente_sector`, `Id_cliente_servicio`, `Id_estatus`) VALUES (p_IdSocio,2301,p_Rif,p_Nit,p_RazonSocial,p_IdPais,p_Address,p_TelefonoFiscal,p_PaginaWeb,p_EmailFiscal,p_IdSectorAsociado,p_IdServicioAsociado,1);', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-05-10 16:34:01'),
+(99, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-05-11 15:59:59 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-05-10 10:03:57\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-05-11 15:59:59\",\"ultima_ip\": \"127.0.0.1\"}', '2023-05-11 15:59:59'),
+(100, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-05-13 09:40:08 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-05-11 15:59:59\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-05-13 09:40:08\",\"ultima_ip\": \"127.0.0.1\"}', '2023-05-13 09:40:08'),
+(101, 2, 'updateUser', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE `tbl_usuarios` SET `Codigo`=0001,`Fecha_cambio_clave`=@FechaCambio,`Primer_nombre`=p_Nombre1,`Segundo_nombre`=p_Nombr2,`Primer_apellido`=p_Apellido1,`Segundo_apellido`=p_Apellido2,`Fecha_nacimiento`=p_FechaNacimiento,`Id_jerarquia_cargo`=p_IdCargo,`Id_jerarquia_division`=p_IdDivision,`Id_direccion_parroquia`=p_IdParroquia,`Fecha_ingreso`=p_FechaIngreso,`Fecha_egreso`=p_FechaEgreso,`Id_estatus`=p_IdStatus WHERE `Id` = p_IdUpdateUser', NULL, NULL, '2023-05-13 12:06:33'),
+(102, 2, 'updateClient', '127.0.0.1', 1, 'tbl_clientes', 'UPDATE `tbl_clientes` SET `Id_usuario_socio`=145,`Rif`=p_Rif,`Nit`=p_Nit,`Razon_social`=p_RazonSocial,`Id_pais`=p_IdPais,`Direccion`=p_Address,`Telefono_fiscal`=p_TelefonoFiscal,`Pagina_web`=p_PaginaWeb,`Email_fiscal`=p_EmailFiscal,`Id_cliente_sector`=p_IdSectorAsociado,`Id_cliente_servicio`=p_IdServicioAsociado,`Id_estatus`=p_IdStatus WHERE `Id` = 255;', NULL, '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-13 14:39:06'),
+(103, 2, 'updateClient', '127.0.0.1', 1, 'tbl_clientes', 'UPDATE `tbl_clientes` SET `Id_usuario_socio`=145,`Rif`=p_Rif,`Nit`=p_Nit,`Razon_social`=p_RazonSocial,`Id_pais`=p_IdPais,`Direccion`=p_Address,`Telefono_fiscal`=p_TelefonoFiscal,`Pagina_web`=p_PaginaWeb,`Email_fiscal`=p_EmailFiscal,`Id_cliente_sector`=p_IdSectorAsociado,`Id_cliente_servicio`=p_IdServicioAsociado,`Id_estatus`=p_IdStatus WHERE `Id` = 255;', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-13 14:47:00'),
+(104, 2, 'updateClient', '127.0.0.1', 1, 'tbl_clientes', 'UPDATE `tbl_clientes` SET `Id_usuario_socio`=145,`Rif`=p_Rif,`Nit`=p_Nit,`Razon_social`=p_RazonSocial,`Id_pais`=p_IdPais,`Direccion`=p_Address,`Telefono_fiscal`=p_TelefonoFiscal,`Pagina_web`=p_PaginaWeb,`Email_fiscal`=p_EmailFiscal,`Id_cliente_sector`=p_IdSectorAsociado,`Id_cliente_servicio`=p_IdServicioAsociado,`Id_estatus`=p_IdStatus WHERE `Id` = 255;', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-13 14:48:48'),
+(105, 2, 'updateClient', '127.0.0.1', 1, 'tbl_clientes', 'UPDATE `tbl_clientes` SET `Id_usuario_socio`=145,`Rif`=p_Rif,`Nit`=p_Nit,`Razon_social`=p_RazonSocial,`Id_pais`=p_IdPais,`Direccion`=p_Address,`Telefono_fiscal`=p_TelefonoFiscal,`Pagina_web`=p_PaginaWeb,`Email_fiscal`=p_EmailFiscal,`Id_cliente_sector`=p_IdSectorAsociado,`Id_cliente_servicio`=p_IdServicioAsociado,`Id_estatus`=p_IdStatus WHERE `Id` = 255;', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-13 14:53:46'),
+(106, 2, 'updateClient', '127.0.0.1', 1, 'tbl_clientes', 'UPDATE `tbl_clientes` SET `Id_usuario_socio`=145,`Rif`=p_Rif,`Nit`=p_Nit,`Razon_social`=p_RazonSocial,`Id_pais`=p_IdPais,`Direccion`=p_Address,`Telefono_fiscal`=p_TelefonoFiscal,`Pagina_web`=p_PaginaWeb,`Email_fiscal`=p_EmailFiscal,`Id_cliente_sector`=p_IdSectorAsociado,`Id_cliente_servicio`=p_IdServicioAsociado,`Id_estatus`=p_IdStatus WHERE `Id` = 255;', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-13 14:57:53');
+INSERT INTO `control_logs` (`log_id`, `action_id`, `log_description`, `user_responsible_ip`, `user_responsible_id`, `affected_table`, `query_sql`, `old_value`, `new_value`, `register_date`) VALUES
+(107, 2, 'updateClient', '127.0.0.1', 1, 'tbl_clientes', 'UPDATE `tbl_clientes` SET `Id_usuario_socio`=145,`Rif`=p_Rif,`Nit`=p_Nit,`Razon_social`=p_RazonSocial,`Id_pais`=p_IdPais,`Direccion`=p_Address,`Telefono_fiscal`=p_TelefonoFiscal,`Pagina_web`=p_PaginaWeb,`Email_fiscal`=p_EmailFiscal,`Id_cliente_sector`=p_IdSectorAsociado,`Id_cliente_servicio`=p_IdServicioAsociado,`Id_estatus`=p_IdStatus WHERE `Id` = 255;', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-13 15:04:06'),
+(108, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-05-13 15:07:32 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-05-13 09:40:08\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-05-13 15:07:32\",\"ultima_ip\": \"127.0.0.1\"}', '2023-05-13 15:07:32'),
+(109, 2, 'updateClient', '127.0.0.1', 1, 'tbl_clientes', 'UPDATE `tbl_clientes` SET `Id_usuario_socio`=145,`Rif`=p_Rif,`Nit`=p_Nit,`Razon_social`=p_RazonSocial,`Id_pais`=p_IdPais,`Direccion`=p_Address,`Telefono_fiscal`=p_TelefonoFiscal,`Pagina_web`=p_PaginaWeb,`Email_fiscal`=p_EmailFiscal,`Id_cliente_sector`=p_IdSectorAsociado,`Id_cliente_servicio`=p_IdServicioAsociado,`Id_estatus`=p_IdStatus WHERE `Id` = 255;', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-13 15:08:09'),
+(110, 2, 'updateClient', '127.0.0.1', 1, 'tbl_clientes', 'UPDATE `tbl_clientes` SET `Id_usuario_socio`=145,`Rif`=p_Rif,`Nit`=p_Nit,`Razon_social`=p_RazonSocial,`Id_pais`=p_IdPais,`Direccion`=p_Address,`Telefono_fiscal`=p_TelefonoFiscal,`Pagina_web`=p_PaginaWeb,`Email_fiscal`=p_EmailFiscal,`Id_cliente_sector`=p_IdSectorAsociado,`Id_cliente_servicio`=p_IdServicioAsociado,`Id_estatus`=p_IdStatus WHERE `Id` = 255;', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-13 15:14:24'),
+(111, 2, 'updateClient', '127.0.0.1', 1, 'tbl_clientes', 'UPDATE `tbl_clientes` SET `Id_usuario_socio`=145,`Rif`=p_Rif,`Nit`=p_Nit,`Razon_social`=p_RazonSocial,`Id_pais`=p_IdPais,`Direccion`=p_Address,`Telefono_fiscal`=p_TelefonoFiscal,`Pagina_web`=p_PaginaWeb,`Email_fiscal`=p_EmailFiscal,`Id_cliente_sector`=p_IdSectorAsociado,`Id_cliente_servicio`=p_IdServicioAsociado,`Id_estatus`=p_IdStatus WHERE `Id` = 255;', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-13 15:16:17'),
+(112, 2, 'updateClient', '127.0.0.1', 1, 'tbl_clientes', 'UPDATE `tbl_clientes` SET `Id_usuario_socio`=145,`Rif`=p_Rif,`Nit`=p_Nit,`Razon_social`=p_RazonSocial,`Id_pais`=p_IdPais,`Direccion`=p_Address,`Telefono_fiscal`=p_TelefonoFiscal,`Pagina_web`=p_PaginaWeb,`Email_fiscal`=p_EmailFiscal,`Id_cliente_sector`=p_IdSectorAsociado,`Id_cliente_servicio`=p_IdServicioAsociado,`Id_estatus`=p_IdStatus WHERE `Id` = 255;', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-13 15:17:04'),
+(113, 2, 'updateClient', '127.0.0.1', 1, 'tbl_clientes', 'UPDATE `tbl_clientes` SET `Id_usuario_socio`=145,`Rif`=p_Rif,`Nit`=p_Nit,`Razon_social`=p_RazonSocial,`Id_pais`=p_IdPais,`Direccion`=p_Address,`Telefono_fiscal`=p_TelefonoFiscal,`Pagina_web`=p_PaginaWeb,`Email_fiscal`=p_EmailFiscal,`Id_cliente_sector`=p_IdSectorAsociado,`Id_cliente_servicio`=p_IdServicioAsociado,`Id_estatus`=p_IdStatus WHERE `Id` = 255;', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-13 15:22:28'),
+(114, 2, 'updateClient', '127.0.0.1', 1, 'tbl_clientes', 'UPDATE `tbl_clientes` SET `Id_usuario_socio`=145,`Rif`=p_Rif,`Nit`=p_Nit,`Razon_social`=p_RazonSocial,`Id_pais`=p_IdPais,`Direccion`=p_Address,`Telefono_fiscal`=p_TelefonoFiscal,`Pagina_web`=p_PaginaWeb,`Email_fiscal`=p_EmailFiscal,`Id_cliente_sector`=p_IdSectorAsociado,`Id_cliente_servicio`=p_IdServicioAsociado,`Id_estatus`=p_IdStatus WHERE `Id` = 255;', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-13 15:25:33'),
+(115, 2, 'updateClient', '127.0.0.1', 1, 'tbl_clientes', 'UPDATE `tbl_clientes` SET `Id_usuario_socio`=145,`Rif`=p_Rif,`Nit`=p_Nit,`Razon_social`=p_RazonSocial,`Id_pais`=p_IdPais,`Direccion`=p_Address,`Telefono_fiscal`=p_TelefonoFiscal,`Pagina_web`=p_PaginaWeb,`Email_fiscal`=p_EmailFiscal,`Id_cliente_sector`=p_IdSectorAsociado,`Id_cliente_servicio`=p_IdServicioAsociado,`Id_estatus`=p_IdStatus WHERE `Id` = 255;', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-13 15:26:21'),
+(116, 2, 'updateClient', '127.0.0.1', 1, 'tbl_clientes', 'UPDATE `tbl_clientes` SET `Id_usuario_socio`=145,`Rif`=p_Rif,`Nit`=p_Nit,`Razon_social`=p_RazonSocial,`Id_pais`=p_IdPais,`Direccion`=p_Address,`Telefono_fiscal`=p_TelefonoFiscal,`Pagina_web`=p_PaginaWeb,`Email_fiscal`=p_EmailFiscal,`Id_cliente_sector`=p_IdSectorAsociado,`Id_cliente_servicio`=p_IdServicioAsociado,`Id_estatus`=p_IdStatus WHERE `Id` = 255;', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-13 15:26:58'),
+(117, 2, 'updateClient', '127.0.0.1', 1, 'tbl_clientes', 'UPDATE `tbl_clientes` SET `Id_usuario_socio`=145,`Rif`=p_Rif,`Nit`=p_Nit,`Razon_social`=p_RazonSocial,`Id_pais`=p_IdPais,`Direccion`=p_Address,`Telefono_fiscal`=p_TelefonoFiscal,`Pagina_web`=p_PaginaWeb,`Email_fiscal`=p_EmailFiscal,`Id_cliente_sector`=p_IdSectorAsociado,`Id_cliente_servicio`=p_IdServicioAsociado,`Id_estatus`=p_IdStatus WHERE `Id` = 255;', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-13 15:30:46'),
+(118, 2, 'updateClient', '127.0.0.1', 1, 'tbl_clientes', 'UPDATE `tbl_clientes` SET `Id_usuario_socio`=146,`Rif`=p_Rif,`Nit`=p_Nit,`Razon_social`=p_RazonSocial,`Id_pais`=p_IdPais,`Direccion`=p_Address,`Telefono_fiscal`=p_TelefonoFiscal,`Pagina_web`=p_PaginaWeb,`Email_fiscal`=p_EmailFiscal,`Id_cliente_sector`=p_IdSectorAsociado,`Id_cliente_servicio`=p_IdServicioAsociado,`Id_estatus`=p_IdStatus WHERE `Id` = 14;', '{\"socio\":\"146\",\r\n                        \"rif\":\"J314087754\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"A.C. CONSULTORES UCAB\",\r\n                        \"pais\":\"240\",\r\n                        \"direccion\":\"Universidad Católica Andrés Bello Centro Loyola, Piso 2, Caracas. Dtto. Capital\",\r\n                        \"telefono\":\"+5822122356047\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"acconsultores@com.ve\",\r\n                        \"sector\":\"2\",\r\n                        \"servicio\":\"2\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"socio\":\"146\",\r\n                        \"rif\":\"J314087754\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"A.C. CONSULTORES UCAB\",\r\n                        \"pais\":\"240\",\r\n                        \"direccion\":\"Universidad Católica Andrés Bello Centro Loyola, Piso 2, Caracas. Dtto. Capital\",\r\n                        \"telefono\":\"+5822122356047\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"acconsultores@com.ve\",\r\n                        \"sector\":\"2\",\r\n                        \"servicio\":\"2\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-13 15:38:33'),
+(119, 2, 'updateClient', '127.0.0.1', 1, 'tbl_clientes', 'UPDATE `tbl_clientes` SET `Id_usuario_socio`=146,`Rif`=p_Rif,`Nit`=p_Nit,`Razon_social`=p_RazonSocial,`Id_pais`=p_IdPais,`Direccion`=p_Address,`Telefono_fiscal`=p_TelefonoFiscal,`Pagina_web`=p_PaginaWeb,`Email_fiscal`=p_EmailFiscal,`Id_cliente_sector`=p_IdSectorAsociado,`Id_cliente_servicio`=p_IdServicioAsociado,`Id_estatus`=p_IdStatus WHERE `Id` = 14;', '{\"socio\":\"146\",\r\n                        \"rif\":\"J314087754\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"A.C. CONSULTORES UCAB\",\r\n                        \"pais\":\"240\",\r\n                        \"direccion\":\"Universidad Católica Andrés Bello Centro Loyola, Piso 2, Caracas. Dtto. Capital\",\r\n                        \"telefono\":\"+5822122356047\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"acconsultores@com.ve\",\r\n                        \"sector\":\"2\",\r\n                        \"servicio\":\"2\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"socio\":\"146\",\r\n                        \"rif\":\"J314087753\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"A.C. CONSULTORES UCAB\",\r\n                        \"pais\":\"240\",\r\n                        \"direccion\":\"Universidad Católica Andrés Bello Centro Loyola, Piso 2, Caracas. Dtto. Capital\",\r\n                        \"telefono\":\"+5822122356047\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"acconsultores@com.ve\",\r\n                        \"sector\":\"2\",\r\n                        \"servicio\":\"2\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-13 15:39:36'),
+(120, 2, 'updateClient', '127.0.0.1', 1, 'tbl_clientes', 'UPDATE `tbl_clientes` SET `Id_usuario_socio`=146,`Rif`=p_Rif,`Nit`=p_Nit,`Razon_social`=p_RazonSocial,`Id_pais`=p_IdPais,`Direccion`=p_Address,`Telefono_fiscal`=p_TelefonoFiscal,`Pagina_web`=p_PaginaWeb,`Email_fiscal`=p_EmailFiscal,`Id_cliente_sector`=p_IdSectorAsociado,`Id_cliente_servicio`=p_IdServicioAsociado,`Id_estatus`=p_IdStatus WHERE `Id` = 14;', '{\"socio\":\"146\",\r\n                        \"rif\":\"J314087753\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"A.C. CONSULTORES UCAB\",\r\n                        \"pais\":\"240\",\r\n                        \"direccion\":\"Universidad Católica Andrés Bello Centro Loyola, Piso 2, Caracas. Dtto. Capital\",\r\n                        \"telefono\":\"+5822122356047\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"acconsultores@com.ve\",\r\n                        \"sector\":\"2\",\r\n                        \"servicio\":\"2\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"socio\":\"146\",\r\n                        \"rif\":\"J314087754\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"A.C. CONSULTORES UCAB\",\r\n                        \"pais\":\"240\",\r\n                        \"direccion\":\"Universidad Católica Andrés Bello Centro Loyola, Piso 2, Caracas. Dtto. Capital\",\r\n                        \"telefono\":\"+5822122356047\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"acconsultores@com.ve\",\r\n                        \"sector\":\"2\",\r\n                        \"servicio\":\"2\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-13 15:39:57'),
+(121, 2, 'updateClient', '127.0.0.1', 1, 'tbl_clientes', 'UPDATE `tbl_clientes` SET `Id_usuario_socio`=145,`Rif`=p_Rif,`Nit`=p_Nit,`Razon_social`=p_RazonSocial,`Id_pais`=p_IdPais,`Direccion`=p_Address,`Telefono_fiscal`=p_TelefonoFiscal,`Pagina_web`=p_PaginaWeb,`Email_fiscal`=p_EmailFiscal,`Id_cliente_sector`=p_IdSectorAsociado,`Id_cliente_servicio`=p_IdServicioAsociado,`Id_estatus`=p_IdStatus WHERE `Id` = 255;', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"socio\":\"145\",\r\n                        \"rif\":\"J13123\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"ASDAS\",\r\n                        \"pais\":\"9\",\r\n                        \"direccion\":\"DIRECCION\",\r\n                        \"telefono\":\"+126812313212\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"asda@adasd.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-13 15:41:10'),
+(122, 2, 'updateClient', '127.0.0.1', 1, 'tbl_clientes', 'UPDATE `tbl_clientes` SET `Id_usuario_socio`=150,`Rif`=p_Rif,`Nit`=p_Nit,`Razon_social`=p_RazonSocial,`Id_pais`=p_IdPais,`Direccion`=p_Address,`Telefono_fiscal`=p_TelefonoFiscal,`Pagina_web`=p_PaginaWeb,`Email_fiscal`=p_EmailFiscal,`Id_cliente_sector`=p_IdSectorAsociado,`Id_cliente_servicio`=p_IdServicioAsociado,`Id_estatus`=p_IdStatus WHERE `Id` = 26;', '{\"socio\":\"150\",\r\n                        \"rif\":\"J000121940\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"AVILA SERVICIOS MEDICOS, C.A.\",\r\n                        \"pais\":\"240\",\r\n                        \"direccion\":\"Sexta Transversal de Altamira con Av.San Juan Bosco, Edif. Clinica Avila Altamira, Caracas.\",\r\n                        \"telefono\":\"+582122081026\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"aviserme@gmail.com\",\r\n                        \"sector\":\"0\",\r\n                        \"servicio\":\"0\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"socio\":\"150\",\r\n                        \"rif\":\"J000121940\",\r\n                        \"nit\":\"0\",\r\n                        \"razon\":\"AVILA SERVICIOS MEDICOS, C.A.\",\r\n                        \"pais\":\"240\",\r\n                        \"direccion\":\"Sexta Transversal de Altamira con Av.San Juan Bosco, Edif. Clinica Avila Altamira, Caracas.\",\r\n                        \"telefono\":\"+582122081026\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"aviserme@gmail.com\",\r\n                        \"sector\":\"2\",\r\n                        \"servicio\":\"4\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-13 17:05:07'),
+(123, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-05-13 23:57:22 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-05-13 15:07:32\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-05-13 23:57:22\",\"ultima_ip\": \"127.0.0.1\"}', '2023-05-13 23:57:22'),
+(124, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-05-14 10:38:16 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-05-13 23:57:22\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-05-14 10:38:16\",\"ultima_ip\": \"127.0.0.1\"}', '2023-05-14 10:38:16'),
+(125, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-05-14 15:41:35 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-05-14 10:38:16\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-05-14 15:41:35\",\"ultima_ip\": \"127.0.0.1\"}', '2023-05-14 15:41:35'),
+(126, 2, 'login', '127.0.0.1', 1, 'tbl_usuarios', 'UPDATE tbl_usuarios u SET u.Fecha_login = 2023-05-15 12:53:01 WHERE u.Codigo = 0001;', '{\"fecha_ultimo_login\": \"2023-05-14 15:41:35\",\"ultima_ip\": \"127.0.0.1\"}', '{\"fecha_ultimo_login\": \"2023-05-15 12:53:01\",\"ultima_ip\": \"127.0.0.1\"}', '2023-05-15 12:53:01'),
+(127, 1, 'test', '127.0.0.1', 1, 'ninguna', 'ningun query', 'pepe', 'papa', '2022-07-01 00:00:00'),
+(128, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-05-16 16:29:46 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-05-15 12:53:01\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-05-16 16:29:46\",\"last_ip\": \"127.0.0.1\"}', '2023-05-16 16:29:46'),
+(129, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-05-16 16:31:14 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-05-16 16:29:46\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-05-16 16:31:14\",\"last_ip\": \"127.0.0.1\"}', '2023-05-16 16:31:14'),
+(130, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-05-16 16:32:18 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-05-16 16:31:14\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-05-16 16:32:18\",\"last_ip\": \"127.0.0.1\"}', '2023-05-16 16:32:18'),
+(131, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-05-16 16:41:47 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-05-16 16:32:18\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-05-16 16:41:47\",\"last_ip\": \"127.0.0.1\"}', '2023-05-16 16:41:47'),
+(132, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-05-16 16:57:53 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-05-16 16:41:47\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-05-16 16:57:53\",\"last_ip\": \"127.0.0.1\"}', '2023-05-16 16:57:53'),
+(133, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-05-16 16:58:31 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-05-16 16:57:53\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-05-16 16:58:31\",\"last_ip\": \"127.0.0.1\"}', '2023-05-16 16:58:31'),
+(134, 1, 'createClient', '127.0.0.1', 1, 'clients', 'INSERT INTO `clients`(`partner_user_id`, `client_code`, `rif`, `nit`, `bussiness_name`, `country_id`, `client_address`, `tax_phone`, `website`, `tax_email`, `sector_id`, `service_id`, `status_id`) VALUES (p_partner_user_id,2298,p_rif,p_nit,p_bussiness_name,p_country_id,p_address,p_tax_phone,p_website,p_tax_email,p_sector_id,p_servicio_id,1);', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-05-16 17:52:01'),
+(135, 1, 'createClient', '127.0.0.1', 1, 'clients', 'INSERT INTO `clients`(`partner_user_id`, `client_code`, `rif`, `nit`, `bussiness_name`, `country_id`, `client_address`, `tax_phone`, `website`, `tax_email`, `sector_id`, `service_id`, `status_id`) VALUES (p_partner_user_id,2313,p_rif,p_nit,p_bussiness_name,p_country_id,p_address,p_tax_phone,p_website,p_tax_email,p_sector_id,p_servicio_id,1);', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-05-16 18:08:14'),
+(136, 2, 'updateClient', '127.0.0.1', 1, 'clients', 'UPDATE `clients` SET `partner_user_id`= 144,`rif`=p_rif,`nit`=p_nit,`bussiness_name`=p_bussiness_name,`country_id`=p_country_id,`client_address`=p_address,`tax_phone`=p_tax_phone,`website`=p_website,`tax_email`=p_tax_email,`sector_id`=p_sector_id,`service_id`=p_service_id,`status_id`=p_status_id WHERE `client_id` = 251;', '{\"socio\":\"144\",\r\n                        \"rif\":\"J123\",\r\n                        \"nit\":\"2568\",\r\n                        \"razon\":\"TESTING\",\r\n                        \"pais\":\"240\",\r\n                        \"direccion\":\"Testing Address\",\r\n                        \"telefono\":\"+584245555555\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"test@testing.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"socio\":\"144\",\r\n                        \"rif\":\"J123\",\r\n                        \"nit\":\"2568\",\r\n                        \"razon\":\"TESTING\",\r\n                        \"pais\":\"240\",\r\n                        \"direccion\":\"Testing Address\",\r\n                        \"telefono\":\"+584245555555\",\r\n                        \"pagina\":\"\",\r\n                        \"email\":\"test@testing.com\",\r\n                        \"sector\":\"1\",\r\n                        \"servicio\":\"1\",\r\n                        \"status\":\"1\",\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-16 19:13:52'),
+(137, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-05-16 22:45:52 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-05-16 16:58:31\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-05-16 22:45:52\",\"last_ip\": \"127.0.0.1\"}', '2023-05-16 22:45:52'),
+(138, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-05-17 01:15:37 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-05-16 22:45:52\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-05-17 01:15:37\",\"last_ip\": \"127.0.0.1\"}', '2023-05-17 01:15:37'),
+(139, 1, 'createUser', '127.0.0.1', 1, 'users', 'INSERT INTO `users`(`user_code`, `password`, `time_change_password`, `first_name`, `second_name`, `first_surname`, `second_surname`, `birthday`, `position_id`, `department_id`, `parish_id`, `admission_date`, `departure_date`, `login_date`, `status_id`)\r\nVALUES(888888,AES_ENCRYPT(p_identity_number,@key),@dateChange,p_first_name,p_second_name,p_first_surname,p_second_surname,p_birthday,p_position_id,p_department_id,p_parish_id,p_admission_date,NULL,NULL,1);', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-05-17 01:27:30'),
+(140, 1, 'createUser', '127.0.0.1', 1, 'users', 'INSERT INTO `users`(`user_code`, `password`, `time_change_password`, `first_name`, `second_name`, `first_surname`, `second_surname`, `birthday`, `position_id`, `department_id`, `parish_id`, `admission_date`, `departure_date`, `login_date`, `status_id`)\r\nVALUES(888888,AES_ENCRYPT(p_identity_number,@key),@dateChange,p_first_name,p_second_name,p_first_surname,p_second_surname,p_birthday,p_position_id,p_department_id,p_parish_id,p_admission_date,NULL,NULL,1);', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-05-17 01:32:59'),
+(141, 1, 'createUser', '127.0.0.1', 1, 'users', 'INSERT INTO `users`(`user_code`, `password`, `time_change_password`, `first_name`, `second_name`, `first_surname`, `second_surname`, `birthday`, `position_id`, `department_id`, `parish_id`, `admission_date`, `departure_date`, `login_date`, `status_id`)\r\nVALUES(888888,AES_ENCRYPT(p_identity_number,@key),@dateChange,p_first_name,p_second_name,p_first_surname,p_second_surname,p_birthday,p_position_id,p_department_id,p_parish_id,p_admission_date,NULL,NULL,1);', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-05-17 01:34:42'),
+(142, 1, 'createUser', '127.0.0.1', 1, 'users', 'INSERT INTO `users`(`user_code`, `password`, `time_change_password`, `first_name`, `second_name`, `first_surname`, `second_surname`, `birthday`, `position_id`, `department_id`, `parish_id`, `admission_date`, `departure_date`, `login_date`, `status_id`)\r\nVALUES(888888,AES_ENCRYPT(p_identity_number,@key),@dateChange,p_first_name,p_second_name,p_first_surname,p_second_surname,p_birthday,p_position_id,p_department_id,p_parish_id,p_admission_date,NULL,NULL,1);', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-05-17 01:35:59'),
+(143, 1, 'createUser', '127.0.0.1', 1, 'users', 'INSERT INTO `users`(`user_code`, `password`, `time_change_password`, `first_name`, `second_name`, `first_surname`, `second_surname`, `birthday`, `position_id`, `department_id`, `parish_id`, `admission_date`, `departure_date`, `login_date`, `status_id`)\r\nVALUES(888888,AES_ENCRYPT(p_identity_number,@key),@dateChange,p_first_name,p_second_name,p_first_surname,p_second_surname,p_birthday,p_position_id,p_department_id,p_parish_id,p_admission_date,NULL,NULL,1);', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-05-17 01:36:28'),
+(144, 1, 'createUser', '127.0.0.1', 1, 'users', 'INSERT INTO `users`(`user_code`, `password`, `time_change_password`, `first_name`, `second_name`, `first_surname`, `second_surname`, `birthday`, `position_id`, `department_id`, `parish_id`, `admission_date`, `departure_date`, `login_date`, `status_id`)\r\nVALUES(888888,AES_ENCRYPT(p_identity_number,@key),@dateChange,p_first_name,p_second_name,p_first_surname,p_second_surname,p_birthday,p_position_id,p_department_id,p_parish_id,p_admission_date,NULL,NULL,1);', '{\"ultima_ip\":\"127.0.0.1\"}', '{\"ultima_ip\":\"127.0.0.1\"}', '2023-05-17 02:47:54'),
+(145, 2, 'updateUser', '127.0.0.1', 1, 'users', 'UPDATE `users` SET `user_code`=888888,`time_change_password`=@dateChange,`first_name`=p_first_name,`second_name`=p_second_name,`first_surname`=p_first_surname,`second_surname`=p_second_surname,`birthday`=p_birthday,`position_id`=p_position_id,`department_id`=p_department_id,`parish_id`=p_parish_id,`admission_date`=p_admission_date,`departure_date`=p_departure_date,`status_id`=p_status_id WHERE `user_id` = p_user_update_id;', NULL, '{\"name\":\"TESTING TESTING 2, TESTING 3 TESTING 4\",\r\n                        \"birthday\":\"1994-01-01\",\r\n                        \"cargo\":17,\r\n                        \"division\":18,\r\n                        \"parroquia\":753,\r\n                        \"fecha_ingreso\":\"2023-05-01\",\r\n                        \"fecha_egreso\":\"2023-05-18\",\r\n                        \"status\":2,\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-17 02:55:31'),
+(146, 2, 'updateUser', '127.0.0.1', 1, 'users', 'UPDATE `users` SET `user_code`=888888,`time_change_password`=@dateChange,`first_name`=p_first_name,`second_name`=p_second_name,`first_surname`=p_first_surname,`second_surname`=p_second_surname,`birthday`=p_birthday,`position_id`=p_position_id,`department_id`=p_department_id,`parish_id`=p_parish_id,`admission_date`=p_admission_date,`departure_date`=p_departure_date,`status_id`=p_status_id WHERE `user_id` = p_user_update_id;', '{\"name\":\"TESTING TESTING 2, TESTING 3 TESTING 4\",\r\n                        \"birthday\":\"1994-01-01\",\r\n                        \"cargo\":17,\r\n                        \"division\":18,\r\n                        \"parroquia\":753,\r\n                        \"fecha_ingreso\":\"2023-05-01\",\r\n                        \"fecha_egreso\":\"2023-05-18\",\r\n                        \"status\":2,\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"name\":\"TESTING TESTING 2, TESTING 3 TESTING 4\",\r\n                        \"birthday\":\"1994-01-01\",\r\n                        \"cargo\":17,\r\n                        \"division\":18,\r\n                        \"parroquia\":753,\r\n                        \"fecha_ingreso\":\"2023-05-01\",\r\n                        \"fecha_egreso\":\"2023-05-18\",\r\n                        \"status\":2,\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-17 02:55:35'),
+(147, 2, 'updateUser', '127.0.0.1', 1, 'users', 'UPDATE `users` SET `user_code`=888888,`time_change_password`=@dateChange,`first_name`=p_first_name,`second_name`=p_second_name,`first_surname`=p_first_surname,`second_surname`=p_second_surname,`birthday`=p_birthday,`position_id`=p_position_id,`department_id`=p_department_id,`parish_id`=p_parish_id,`admission_date`=p_admission_date,`departure_date`=p_departure_date,`status_id`=p_status_id WHERE `user_id` = p_user_update_id;', '{\"name\":\"TESTING TESTING 2, TESTING 3 TESTING 4\",\r\n                        \"birthday\":\"1994-01-01\",\r\n                        \"cargo\":17,\r\n                        \"division\":18,\r\n                        \"parroquia\":753,\r\n                        \"fecha_ingreso\":\"2023-05-01\",\r\n                        \"fecha_egreso\":\"2023-05-18\",\r\n                        \"status\":2,\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"name\":\"TESTING TESTING 2, TESTING 3 TESTING 4\",\r\n                        \"birthday\":\"1994-01-01\",\r\n                        \"cargo\":17,\r\n                        \"division\":18,\r\n                        \"parroquia\":753,\r\n                        \"fecha_ingreso\":\"2023-05-01\",\r\n                        \"fecha_egreso\":\"2023-05-18\",\r\n                        \"status\":2,\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-17 02:56:38'),
+(148, 2, 'updateUser', '127.0.0.1', 1, 'users', 'UPDATE `users` SET `user_code`=888888,`time_change_password`=@dateChange,`first_name`=p_first_name,`second_name`=p_second_name,`first_surname`=p_first_surname,`second_surname`=p_second_surname,`birthday`=p_birthday,`position_id`=p_position_id,`department_id`=p_department_id,`parish_id`=p_parish_id,`admission_date`=p_admission_date,`departure_date`=p_departure_date,`status_id`=p_status_id WHERE `user_id` = p_user_update_id;', '{\"name\":\"TESTING TESTING 2, TESTING 3 TESTING 4\",\r\n                        \"birthday\":\"1994-01-01\",\r\n                        \"cargo\":17,\r\n                        \"division\":18,\r\n                        \"parroquia\":753,\r\n                        \"fecha_ingreso\":\"2023-05-01\",\r\n                        \"fecha_egreso\":\"2023-05-18\",\r\n                        \"status\":2,\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"name\":\"TESTING TESTING 2, TESTING 3 TESTING 4\",\r\n                        \"birthday\":\"1994-01-01\",\r\n                        \"cargo\":17,\r\n                        \"division\":18,\r\n                        \"parroquia\":753,\r\n                        \"fecha_ingreso\":\"2023-05-01\",\r\n                        \"fecha_egreso\":\"2023-05-18\",\r\n                        \"status\":2,\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-17 02:56:43'),
+(149, 2, 'updateUser', '127.0.0.1', 1, 'users', 'UPDATE `users` SET `user_code`=888888,`time_change_password`=@dateChange,`first_name`=p_first_name,`second_name`=p_second_name,`first_surname`=p_first_surname,`second_surname`=p_second_surname,`birthday`=p_birthday,`position_id`=p_position_id,`department_id`=p_department_id,`parish_id`=p_parish_id,`admission_date`=p_admission_date,`departure_date`=p_departure_date,`status_id`=p_status_id WHERE `user_id` = p_user_update_id;', '{\"name\":\"TESTING TESTING 2, TESTING 3 TESTING 4\",\r\n                        \"birthday\":\"1994-01-01\",\r\n                        \"cargo\":17,\r\n                        \"division\":18,\r\n                        \"parroquia\":753,\r\n                        \"fecha_ingreso\":\"2023-05-01\",\r\n                        \"fecha_egreso\":\"2023-05-18\",\r\n                        \"status\":2,\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"name\":\"TESTING TESTING 2, TESTING 3 TESTING 4\",\r\n                        \"birthday\":\"1994-01-01\",\r\n                        \"cargo\":17,\r\n                        \"division\":18,\r\n                        \"parroquia\":753,\r\n                        \"fecha_ingreso\":\"2023-05-01\",\r\n                        \"fecha_egreso\":\"2023-05-18\",\r\n                        \"status\":2,\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-17 02:57:52'),
+(150, 2, 'updateUser', '127.0.0.1', 1, 'users', 'UPDATE `users` SET `user_code`=888888,`time_change_password`=@dateChange,`first_name`=p_first_name,`second_name`=p_second_name,`first_surname`=p_first_surname,`second_surname`=p_second_surname,`birthday`=p_birthday,`position_id`=p_position_id,`department_id`=p_department_id,`parish_id`=p_parish_id,`admission_date`=p_admission_date,`departure_date`=p_departure_date,`status_id`=p_status_id WHERE `user_id` = p_user_update_id;', '{\"name\":\"TESTING TESTING 2, TESTING 3 TESTING 4\",\r\n                        \"birthday\":\"1994-01-01\",\r\n                        \"cargo\":17,\r\n                        \"division\":18,\r\n                        \"parroquia\":753,\r\n                        \"fecha_ingreso\":\"2023-05-01\",\r\n                        \"fecha_egreso\":\"2023-05-18\",\r\n                        \"status\":2,\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"name\":\"TESTING TESTING 2, TESTING 3 TESTING 4\",\r\n                        \"birthday\":\"1994-01-01\",\r\n                        \"cargo\":17,\r\n                        \"division\":18,\r\n                        \"parroquia\":753,\r\n                        \"fecha_ingreso\":\"2023-05-01\",\r\n                        \"fecha_egreso\":\"2023-05-18\",\r\n                        \"status\":2,\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-17 02:57:56'),
+(151, 2, 'updateUser', '127.0.0.1', 1, 'users', 'UPDATE `users` SET `user_code`=888888,`time_change_password`=@dateChange,`first_name`=p_first_name,`second_name`=p_second_name,`first_surname`=p_first_surname,`second_surname`=p_second_surname,`birthday`=p_birthday,`position_id`=p_position_id,`department_id`=p_department_id,`parish_id`=p_parish_id,`admission_date`=p_admission_date,`departure_date`=p_departure_date,`status_id`=p_status_id WHERE `user_id` = p_user_update_id;', '{\"name\":\"TESTING TESTING 2, TESTING 3 TESTING 4\",\r\n                        \"birthday\":\"1994-01-01\",\r\n                        \"cargo\":17,\r\n                        \"division\":18,\r\n                        \"parroquia\":753,\r\n                        \"fecha_ingreso\":\"2023-05-01\",\r\n                        \"fecha_egreso\":\"2023-05-18\",\r\n                        \"status\":2,\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"name\":\"TESTING TESTING 2, TESTING 3 TESTING 4\",\r\n                        \"birthday\":\"1994-01-01\",\r\n                        \"cargo\":17,\r\n                        \"division\":18,\r\n                        \"parroquia\":753,\r\n                        \"fecha_ingreso\":\"2023-05-01\",\r\n                        \"fecha_egreso\":\"2023-05-18\",\r\n                        \"status\":2,\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-17 03:00:28');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tbl_control_logs_bitacora_accion`
+-- Estructura de tabla para la tabla `control_logs_action`
 --
 
-CREATE TABLE `tbl_control_logs_bitacora_accion` (
-  `Id` int(11) NOT NULL,
-  `Accion` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+CREATE TABLE `control_logs_action` (
+  `action_id` int(11) NOT NULL,
+  `action_description` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Volcado de datos para la tabla `tbl_control_logs_bitacora_accion`
+-- Volcado de datos para la tabla `control_logs_action`
 --
 
-INSERT INTO `tbl_control_logs_bitacora_accion` (`Id`, `Accion`) VALUES
+INSERT INTO `control_logs_action` (`action_id`, `action_description`) VALUES
 (1, 'INSERT'),
 (2, 'UPDATE'),
 (3, 'DELETE'),
@@ -1473,54 +1615,55 @@ INSERT INTO `tbl_control_logs_bitacora_accion` (`Id`, `Accion`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tbl_control_tipocargo`
+-- Estructura de tabla para la tabla `control_status`
 --
 
-CREATE TABLE `tbl_control_tipocargo` (
-  `Id` int(11) NOT NULL,
-  `TipoCargo` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+CREATE TABLE `control_status` (
+  `status_id` int(11) NOT NULL,
+  `status_description` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Volcado de datos para la tabla `tbl_control_tipocargo`
+-- Volcado de datos para la tabla `control_status`
 --
 
-INSERT INTO `tbl_control_tipocargo` (`Id`, `TipoCargo`) VALUES
-(1, 'Profesional'),
-(2, 'Administrativo'),
-(3, 'Profesional y Administrativo');
+INSERT INTO `control_status` (`status_id`, `status_description`) VALUES
+(1, 'Activo'),
+(2, 'Inactivo'),
+(3, 'De reposo'),
+(4, 'De Vacaciones');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tbl_usuarios`
+-- Estructura de tabla para la tabla `users`
 --
 
-CREATE TABLE `tbl_usuarios` (
-  `Id` int(11) NOT NULL,
-  `Codigo` varchar(6) DEFAULT NULL,
-  `Clave` blob DEFAULT NULL,
-  `Fecha_cambio_clave` date DEFAULT NULL,
-  `Primer_nombre` varchar(20) DEFAULT NULL,
-  `Segundo_nombre` varchar(20) DEFAULT NULL,
-  `Primer_apellido` varchar(20) DEFAULT NULL,
-  `Segundo_apellido` varchar(20) DEFAULT NULL,
-  `Fecha_nacimiento` date DEFAULT NULL,
-  `Id_jerarquia_cargo` int(11) DEFAULT NULL,
-  `Id_jerarquia_division` int(11) DEFAULT NULL,
-  `Id_direccion_parroquia` int(11) DEFAULT NULL,
-  `Fecha_ingreso` date DEFAULT NULL,
-  `Fecha_egreso` date DEFAULT NULL,
-  `Fecha_login` datetime DEFAULT NULL,
-  `Id_estatus` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL,
+  `user_code` varchar(6) DEFAULT NULL,
+  `password` blob DEFAULT NULL,
+  `time_change_password` date DEFAULT NULL,
+  `first_name` varchar(20) DEFAULT NULL,
+  `second_name` varchar(20) DEFAULT NULL,
+  `first_surname` varchar(20) DEFAULT NULL,
+  `second_surname` varchar(20) DEFAULT NULL,
+  `birthday` date DEFAULT NULL,
+  `position_id` int(11) DEFAULT NULL,
+  `department_id` int(11) DEFAULT NULL,
+  `parish_id` int(11) DEFAULT NULL,
+  `admission_date` date DEFAULT NULL,
+  `departure_date` date DEFAULT NULL,
+  `login_date` datetime DEFAULT NULL,
+  `status_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Volcado de datos para la tabla `tbl_usuarios`
+-- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `tbl_usuarios` (`Id`, `Codigo`, `Clave`, `Fecha_cambio_clave`, `Primer_nombre`, `Segundo_nombre`, `Primer_apellido`, `Segundo_apellido`, `Fecha_nacimiento`, `Id_jerarquia_cargo`, `Id_jerarquia_division`, `Id_direccion_parroquia`, `Fecha_ingreso`, `Fecha_egreso`, `Fecha_login`, `Id_estatus`) VALUES
-(1, '0001', 0x9f824ad4b17be95f20aa30c5eef9d8f6, '2023-05-10', 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '1986-08-05', 16, 16, 1131, '2020-01-01', NULL, '2023-05-10 10:03:57', 1),
+INSERT INTO `users` (`user_id`, `user_code`, `password`, `time_change_password`, `first_name`, `second_name`, `first_surname`, `second_surname`, `birthday`, `position_id`, `department_id`, `parish_id`, `admission_date`, `departure_date`, `login_date`, `status_id`) VALUES
+(1, '0001', 0x9f824ad4b17be95f20aa30c5eef9d8f6, '2023-05-13', 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '1986-08-05', 16, 16, 1131, '2020-01-01', NULL, '2023-05-17 01:15:37', 1),
 (2, '10', 0xcb4dc5daf4d8865eb1bd01d6c898c269, '2023-03-09', 'NATHALIE', 'YAMILET', 'LOPEZ', 'TREJO', '1972-08-20', 17, 1, 1131, '2000-02-21', NULL, '2023-03-08 23:41:42', 1),
 (3, '10092', 0x10e54efb266e50c523273c638cb690c5, '2023-03-09', 'YESENIA', 'BEATRIZ', 'MARTINEZ', 'GALLARDO', '1979-06-01', 15, 1, 1131, '2004-09-01', NULL, '2023-03-07 08:27:55', 1),
 (4, '10141', 0x383155d3ec475bf8ace4b67bf0aaba8d, '2023-03-09', 'JESUS', 'ERASMO', 'PEREZ', 'ERASMO', '1959-11-09', 17, 1, 1131, '2005-02-02', NULL, '2023-02-06 09:52:51', 1),
@@ -1760,344 +1903,26 @@ INSERT INTO `tbl_usuarios` (`Id`, `Codigo`, `Clave`, `Fecha_cambio_clave`, `Prim
 (246, '11621', 0xa679acfe3d0deef0b6ff5b7e553b2b47, '2023-03-09', 'RUBI', 'YABISAY', 'RAMIREZ', 'LOPEZ', '1974-01-06', 6, 1, 647, '2023-02-14', NULL, '2023-03-07 16:06:08', 1),
 (247, '11622', 0x038e973a488134d8436c8bae5b50d66c, '2023-05-04', 'CARLOS', 'EDUARDO', 'NAVAS', 'SALAZAR', '1994-11-22', 39, 13, 647, '2023-02-13', NULL, '2023-04-16 00:16:02', 1),
 (248, '11623', 0x900ddc90e683652dd185b78eb9554e81, '2023-03-09', 'MIRIAM', 'DESIREE', 'HIDALGO', 'BRICEÑO', '1983-07-11', 10, 4, 647, '2023-03-07', '2023-03-07', NULL, 2),
-(249, '123456', 0x0da6f143877920c00c2274201572c754, '2023-05-05', 'ASJKDAJD', '', 'AJSKDAJSD', '', '2023-05-18', 39, 13, 647, '2023-05-04', NULL, NULL, 1),
-(250, '654321', 0x64969d5de20cff513e10c0ed636f392b, '2023-05-04', 'ASDASD', '', 'ASDASDASD', '', '2023-04-10', 39, 13, 647, '2023-05-04', NULL, NULL, 1),
-(251, '989898', 0x2a7fe511cec55c90eaeb031022169e56, '2023-05-04', 'PRUEBA1', '', 'PRUEBA2', '', '2023-01-03', 11, 11, 26, '2023-05-04', NULL, NULL, 1),
-(252, '909090', 0xd1848b9e7c6dac7bdce67de476b78cb1, '2023-05-10', 'CARLOS', '', 'NAVAS', '', '2023-05-11', 0, 0, 0, NULL, NULL, NULL, 1),
-(254, '919191', 0x038e973a488134d8436c8bae5b50d66c, '2023-05-10', 'PEPE', '', 'MARQUEZ', '', '2023-05-24', 0, 0, 0, NULL, NULL, NULL, 1),
-(255, '929292', 0x038e973a488134d8436c8bae5b50d66c, '2023-05-10', 'PEPE', '', 'MARQUEZ', '', '2023-05-03', 0, 0, 0, NULL, NULL, NULL, 1),
-(257, '949494', 0x128d4593b5e6ec69efc50768bd7f9027, '2023-05-10', 'CARLOS', '', 'MARQUEZ', '', '2023-05-04', 0, 0, 0, NULL, NULL, NULL, 1);
+(249, '888888', 0x728d12e8eb7cf46cdda19cc8a037a529, '2023-05-17', 'TESTING', 'TESTING 2', 'TESTING 3', 'TESTING 4', '1994-01-01', 17, 18, 753, '2023-05-01', '2023-05-18', NULL, 2);
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tbl_usuarios_contacto`
+-- Estructura de tabla para la tabla `users_address_municipalities`
 --
 
-CREATE TABLE `tbl_usuarios_contacto` (
-  `Id` int(11) NOT NULL,
-  `Id_usuario` int(11) NOT NULL,
-  `Correo_principal` varchar(255) DEFAULT NULL,
-  `Correo_secundario` varchar(255) DEFAULT NULL,
-  `Telefono_principal` varchar(30) DEFAULT NULL,
-  `Telefono_secundario` varchar(30) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+CREATE TABLE `users_address_municipalities` (
+  `municipality_id` int(11) NOT NULL,
+  `state_id` int(11) NOT NULL,
+  `municipality_name` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Volcado de datos para la tabla `tbl_usuarios_contacto`
+-- Volcado de datos para la tabla `users_address_municipalities`
 --
 
-INSERT INTO `tbl_usuarios_contacto` (`Id`, `Id_usuario`, `Correo_principal`, `Correo_secundario`, `Telefono_principal`, `Telefono_secundario`) VALUES
-(1, 1, 'dmolina101@gmail.com', '', '04244463739', ''),
-(2, 2, 'nathalie.lopez@crowe.com.ve', '', '', ''),
-(3, 3, 'yesenia.martinez@crowe.com.ve', '', '', ''),
-(4, 4, 'jesus.perez@crowe.com.ve', '', '', ''),
-(5, 5, 'carol.lopez@crowe.com.ve', '', '', ''),
-(6, 6, 'luz.fonseca@crowe.com.ve', '', '', ''),
-(7, 7, 'arturo.madriz@crowe.com.ve', '', '', ''),
-(8, 8, 'roman.scott@crowe.com.ve', '', '', ''),
-(9, 9, 'oliver.paez@crowe.com.ve', '', '', ''),
-(10, 10, 'jorge.gonzalez@crowe.com.ve', '', '', ''),
-(11, 11, 'maria.sequeda@crowe.com.ve', '', '', ''),
-(12, 12, 'yodelina.torres@crowe.com.ve', '', '', ''),
-(13, 13, 'katherine.zurita@crowe.com.ve', '', '04241907404', '04243170363'),
-(14, 14, 'mileidis.moreno@crowe.com.ve', '', '04241718118', ''),
-(15, 15, 'francia.medina@crowe.com.ve', '', '04166947046', ''),
-(16, 16, 'astrid.mendoza@crowe.com.ve', '', '04241652571', ''),
-(17, 17, 'maria.tovar@crowe.com.ve', '', '02124829623', '04242473031'),
-(18, 18, 'mariana.brito@crowe.com.ve', '', '04242902167', ''),
-(19, 19, 'belkis.cortina@crowe.com.ve', '', '02124159553', '04164079713'),
-(20, 20, 'lucrecia.silva@crowe.com.ve', '', '04264199217', ''),
-(21, 21, 'normedy.parra@crowe.com.ve', '', '02125241716', '04120125384'),
-(22, 22, 'josvelis.castillo@crowe.com.ve', '', '04148350920', '02123440542'),
-(23, 23, 'luis.russian@crowe.com.ve', '', '04242602227', '02123395206'),
-(24, 24, 'jonathan.azocar@crowe.com.ve', '', '02123774758', '04266373419'),
-(25, 25, 'yerlenis.valderrama@crowe.com.ve', '', '04242950201', ''),
-(26, 26, 'kleiver.corro@crowe.com.ve', '', '02124190028', '04129496868'),
-(27, 27, 'maryuri.barazarte@crowe.com.ve', '', '02122444894', '04241839221'),
-(28, 28, 'pedro.benitez@crowe.com.ve', '', '', ''),
-(29, 29, 'dennys.flores@crowe.com.ve', '', '04160192302', ''),
-(30, 30, 'genesis.marcano@crowe.com.ve', '', '02392482117', '04140209137'),
-(31, 31, 'keilimar.suarez@crowe.com.ve', '', '04169281259', '02127459838'),
-(32, 32, 'johanne.muñoz@crowe.com.ve', '', '04143155147', ''),
-(33, 33, 'alfredo.hernandez@crowe.com.ve', '', '04127116777', ''),
-(34, 34, 'raul.vargas@crowe.com.ve', '', '', ''),
-(35, 35, 'shelcie.paz@crowe.com.ve', '', '02122583241', '04149084285'),
-(36, 36, 'ladymar.morett@crowe.com.ve', '', '02124512556', '04261197245'),
-(37, 37, 'anthony.garcia@crowe.com.ve', '', '04262130363', '04123840786'),
-(38, 38, 'solmary.martinez@crowe.com.ve', '', '02123397992', '04129904281'),
-(39, 39, 'jackeline.ramos@crowe.com.ve', '', '02126412375', '04168233236'),
-(40, 40, 'belkis.vazquez@crowe.com.ve', '', '04262157178', ''),
-(41, 41, 'yuzleibby.maldonado@crowe.com.ve', '', '04242194508', '02128703102'),
-(42, 42, 'giovanni.corredor@crowe.com.ve', '', '04120102693', '02123472038'),
-(43, 43, 'kleiver.cadenas@crowe.com.ve', '', '04143196616', '02122678468'),
-(44, 44, 'ivette.orozco@crowe.com.ve', '', '04242613215', '02124341107'),
-(45, 45, 'zunaya.wilches@crowe.com.ve', '', '04140316013', '02126135612'),
-(46, 46, 'jesus.abraham@crowe.com.ve', '', '02123727075', '04242147829'),
-(47, 47, 'jose.perozo@dominio.com', '', '04262539113', ''),
-(48, 48, 'roberto.villegas@crowe.com.ve', '', '02128703830', '04241762670'),
-(49, 49, 'sandro.mayora@crowe.com.ve', '', '04123675678', '02125163034'),
-(50, 50, 'eduardo.bastos@crowe.com.ve', '', '02129875898', '04241304353'),
-(51, 51, 'vanessa.rojas@crowe.com.ve', '', '04147826035', ''),
-(52, 52, 'carlos.revete@crowe.com.ve', '', '04242591419', ''),
-(53, 53, 'vianney.rugeles@crowe.com.ve', '', '02124434371', '04129987473'),
-(54, 54, 'edwin.burgos@crowe.com.ve', '', '04142871671', ''),
-(55, 55, 'nombre.apellido@dominio.com', '', '02123637192', '04128584022'),
-(56, 56, 'freddy.vargas@crowe.com.ve', '', '04241292285', ''),
-(57, 57, 'yorman.rangel@crowe.com.ve', '', '', ''),
-(58, 58, 'jose.utrera@crowe.com.ve', '', '', ''),
-(59, 59, 'alejandro.lira@crowe.com.ve', '', '02126724819', '04142460103'),
-(60, 60, 'yordalis.echarrys@crowe.com.ve', '', '04122932692', ''),
-(61, 61, 'eliana.ponce@crowe.com.ve', '', '02125761138', '04149113335'),
-(62, 62, 'stefany.gonzalez@crowe.com.ve', '', '04242085444', ''),
-(63, 63, 'naivelys.altuve@crowe.com.ve', '', '04147914010', ''),
-(64, 64, 'gabriela.gil@crowe.com.ve', '', '02126621812', '04262874127'),
-(65, 65, 'orianna.alejos@crowe.com.ve', '', '02126689284', '04263158428'),
-(66, 66, 'marynes.gonzalez@crowe.com.ve', '', '02124929084', '04242628459'),
-(67, 67, 'eligio.mendoza@crowe.com.ve', '', '', ''),
-(68, 68, 'marielvi.oller@crowe.com.ve', '', '', ''),
-(69, 69, 'alba.navia@crowe.com.ve', '', '02127625333', '04242984865'),
-(70, 70, 'nombre.apellido@dominio.com', '', '04141266489', '02128614414'),
-(71, 71, 'yessica.rivas@crowe.com.ve', '', '02128750733', '04242677331'),
-(72, 72, 'nombre.apellido@dominio.com', '', '04142119162', ''),
-(73, 73, 'yda.chirinos@crowe.com.ve', '', '02125159794', '04241360393'),
-(74, 74, 'nombre.apellido@dominio.com', '', '02126149790', '04143260002'),
-(75, 75, 'nombre.apellido@dominio.com', '', '02123243797', '04122493721'),
-(76, 76, 'nombre.apellido@dominio.com', '', '04125746284', ''),
-(77, 77, 'nombre.apellido@dominio.com', '', '04122564514', ''),
-(78, 78, 'nombre.apellido@dominio.com', '', '04142678216', ''),
-(79, 79, 'nahomy.quintero@crowe.com.ve', '', '02127446051', '04241743888'),
-(80, 80, 'maria.espina@crowe.com.ve', '', '0127304196', '04265131381'),
-(81, 81, 'nombre.apellido@dominio.com', '', '04242696996', '04129217899'),
-(82, 82, 'nombre.apellido@dominio.com', '', '04127098992', ''),
-(83, 83, 'glender.cortez@crowe.com.ve', '', '04142190677', '02125321810'),
-(84, 84, 'alberto.evies@crowe.com.ve', '', '02124335180', '04141057605'),
-(85, 85, 'angela.aranea@crowe.com.ve', '', '02125153658', '04263046685'),
-(86, 86, 'arturo.sosa@crowe.com.ve', '', '04241340102', ''),
-(87, 87, 'adrian.perez@crowe.com.ve', '', '02128613428', '04128045133'),
-(88, 88, 'elisa.pasero@crowe.com.ve', '', '04123688968', ''),
-(89, 89, 'omar.marquez@crowe.com.ve', '', '', ''),
-(90, 90, 'angelica.funes@crowe.com.ve', '', '02128583253', '04262905898'),
-(91, 91, 'eslyn.rojas@crowe.com.ve', '', '04243443594', '02128084209'),
-(92, 92, 'carmen.ochoa@crowe.com.ve', '', '04241495523', ''),
-(93, 93, 'laura.rojas@crowe.com.ve', '', '', ''),
-(94, 94, 'nombre.apellido@dominio.com', '', '04242258139', ''),
-(95, 95, 'nombre.apellido@dominio.com', '', '', ''),
-(96, 96, 'nombre.apellido@dominio.com', '', '04169397195', ''),
-(97, 97, 'jose.machado@crowe.com.ve', '', '', ''),
-(98, 98, 'nombre.apellido@dominio.com', '', '', ''),
-(99, 99, 'jennifer.villa@crowe.com.ve', '', '', ''),
-(100, 100, 'anacecilia.castano@crowe.com.ve', '', '02125716504', ''),
-(101, 101, 'amayoisbi.garcia@crowe.com.ve', '', '04127013435', ''),
-(102, 102, 'jennifer.chacon@crowe.com.ve', '', '04125897240', ''),
-(103, 103, 'ignayari.mendoza@crowe.com.ve', '', '04129289923', ''),
-(104, 104, 'reina.fajardo@crowe.com.ve', '', '04164269965', ''),
-(105, 105, 'yolimer.mendoza@crowe.com.ve', '', '04149018276', '02126813348'),
-(106, 106, 'ignayari.mendoza@crowe.com.ve', '', '04129762870', ''),
-(107, 107, 'adriana.guzman@crowe.com.ve', '', '02129412882', '04144549562'),
-(108, 108, 'jose.estaba@crowe.com.ve', '', '02128602803', '04243389487'),
-(109, 109, 'karina.perez@crowe.com.ve', '', '04265920655', ''),
-(110, 110, 'zonny.garcia@crowe.com.ve', '', '04243138868', '02392252293'),
-(111, 111, 'nombre.apellido@dominio.com', '', '04268870548', ''),
-(112, 112, 'nombre.apellido@dominio.com', '', '04262166223', ''),
-(113, 113, 'leonardo.alopez21@gmail.com', '', '04142598750', ''),
-(114, 114, 'josearturo0706@gmail.com', '', '02124818970', '04128259076'),
-(115, 115, 'nombre.apellido@dominio.com', '', '02124518087', '04129576671'),
-(116, 116, 'antonio.reyes@crowe.com.ve', '', '02122425335', '04141626367'),
-(117, 117, 'duvan.pinto@crowe.com.ve', '', '04241842688', ''),
-(118, 118, 'freddy.perdomo@crowe.com.ve', '', '02129766425', '04144466147'),
-(119, 119, 'fernando.rangel@crowe.com.ve', '', '04141782596', ''),
-(120, 120, 'gelen.cardenas@crowe.com.ve', '', '02125767453', '04164654993'),
-(121, 121, 'nombre.apellido@dominio.com', '', '02122373113', ''),
-(122, 122, 'nombre.apellido@dominio.com', '', '02122373113', '04142081976'),
-(123, 123, 'laura.rojas@crowe.com.ve', '', '04169322811', ''),
-(124, 124, 'amelia.diaz@crowe.com.ve', '', '', ''),
-(125, 125, 'emilio.leon@crowe.com.ve', '', '04166084971', '04241180197'),
-(126, 126, 'gustavo.puchi@crowe.com.ve', '', '02124834655', '04122206492'),
-(127, 127, 'alfio.saglimbeni@crowe.com.ve', '', '04168272679', ''),
-(128, 128, 'arianna.matos@crowe.com.ve', '', '02123238208', '04126000531'),
-(129, 129, 'ana.blandin@crowe.com.ve', '', '02124329839', '04241624237'),
-(130, 130, 'oscar.piña@crowe.com.ve', '', '', ''),
-(131, 131, 'nombre.apellido@dominio.com', '', '02128084742', '05247042110'),
-(132, 132, 'duglimar.mendez@crowe.com.ve', '', '04162062192', ''),
-(133, 133, 'sol.viana@crowe.com.ve', '', '02126316797', '04241469101'),
-(134, 134, 'douglas.torrealba@crowe.com.ve', '', '04162094874', '04168000868'),
-(135, 135, 'nombre.apellido@dominio.com', '', '04267528235', '02128715756'),
-(136, 136, 'nombre.apellido@dominio.com', '', '04261396926', ''),
-(137, 137, 'nombre.apellido@dominio.com', '', '04126305629', ''),
-(138, 138, 'nombre.apellido@dominio.com', '', '04162139037', '02124909126'),
-(139, 139, 'nombre.apellido@dominio.com', '', '02124329566', '04168175614'),
-(140, 140, 'fredy.bautista@crowe.com.ve', '', '', ''),
-(141, 141, 'nombre.apellido@dominio.com', '', '', ''),
-(142, 142, 'barbara.zambrano@crowe.com.ve', '', '', ''),
-(143, 143, 'mary.cruz@crowe.com.ve', '', '04249686614', '02869341430'),
-(144, 144, 'sergio.marquez@crowe.com.ve', 'sergiofmarquezt@gmail.com', '04149070900', ''),
-(145, 145, 'nelson.marcano@crowe.com.ve', '', '04120195573', ''),
-(146, 146, 'alfio.saglimbeni@crowe.com.ve', 'smarquezt66@gmail.com', '', ''),
-(147, 147, 'antonio.dugarte@crowe.com.ve', '', '04242265723', ''),
-(148, 148, 'mirnangela.salaya@crowe.com.ve', '', '04241511028', ''),
-(149, 149, 'jose.marquez@crowe.com.ve', '', '04142554850', ''),
-(150, 150, 'freddyperdomo17@gmail.com', '', '', ''),
-(151, 151, 'robison.aranguren@crowe.com.ve', '', '04141349727', ''),
-(152, 152, 'joseecker51@gmail.com', '', '04141017189', '04142638949'),
-(153, 153, 'jhon.rondon@crowe.com.ve', 'eduardobarrera69@gmail.com', '04123186673', ''),
-(154, 154, 'contraloriacrowe@gmail.com', '', '04149070900', '02122350147'),
-(155, 155, 'anapetit04@gmail.com', '', '04149330573', ''),
-(156, 156, 'enrique.chiquito@gmail.com', '', '04122087873', '04265332319'),
-(157, 157, 'suscumleidy@gmail.com', '', '04122935740', '02125814635'),
-(158, 158, 'mary050896@gmail.com', '', '04143253136', '02123424248'),
-(159, 159, 'franklin.pacheco@crowe.com.ve', '', '04241565718', ''),
-(160, 160, 'oriana.graterol@crowe.com.ve', '', '04125717905', '02128629219'),
-(161, 161, 'alfredo.conquista@crowe.com.ve', '', '04241106550', '02124160138'),
-(162, 162, 'wilmeranton65@gmail.com', '', '04143141335', '04241541595'),
-(163, 163, 'freddy.bautista@crowe.com.ve', '', '04141093990', '02129763028'),
-(164, 164, 'iris.escorcha@crowe.com.ve', '', '04264063883', '02123622056'),
-(173, 173, 'carlos.bastidas@crowe.com.ve', 'clbastidas91@gmail.com', '04126394216', ''),
-(174, 174, 'marysabel.dossantos@crowe.com.ve', '', '04265101377', ''),
-(175, 175, 'ivetteorozco1994@gmail.com', '', '04242613215', ''),
-(176, 176, 'winney.barrientos@crowe.com.ve', 'winneyphail18@gmail.com', '04267042706', '04142415947'),
-(177, 177, 'leonela.zambella@crowe.com.ve', 'leonelaz1998@gmail.com', '02124715309', '04242364607'),
-(178, 178, 'juneisy.benitez@crowe.com.ve', 'june.abm@gmail.com', '04122959794', '04264073835'),
-(179, 179, 'yesenia.casares@crowe.com.ve', '', '04241433149', '04127285524'),
-(180, 180, 'oliver.tovar@crowe.com.ve', 'tovaroliver22@gmail.com', '04242721414', ''),
-(181, 181, 'ritcelis.ruiz@crowe.com.ve', '', '04123099563', ''),
-(182, 182, 'jenny.lis@crowe.com.ve', '', '04142063611', '02127631690'),
-(183, 183, 'cesar.diaz@crowe.com.ve', '', '04141136672', ''),
-(184, 184, 'danaleth.hernandez@crowe.com.ve', 'danaleth@gmail.com', '04264157175', '04129629136'),
-(185, 185, 'johanna.trujillo@crowe.com.ve', 'jcrevette_@hotmail.com', '04142862057', ''),
-(186, 186, 'melanie.marquez@crowe.com.ve', 'melaniealexandra.m@gmail.com', '02123697554', '04242608583'),
-(187, 187, 'escarlet.guillen@crowe.com.ve', 'escarletguillen@gmail.com', '04149177892', ''),
-(188, 188, 'morrinsonn@gmail.com', 'morrinsonn@gmail.com', '04241616129', '02125858604'),
-(189, 189, 'gabigabi175@gmail.com', '', '04242779956', ''),
-(190, 190, 'anthoni.freites@gmail.com', '', '04122093659', ''),
-(191, 191, 'layajesus@gmail.com', '', '', ''),
-(192, 192, 'andrea.garcia@crowe.com.ve', '', '04241061875', ''),
-(193, 193, 'oscarrojo999@gmail.com', '', '04141332793', ''),
-(194, 194, 'bolivarsierrajose@gmail.com', '', '', ''),
-(195, 195, 'wilmer.anton@crowe.com.ve', '', '04143141335', ''),
-(196, 196, 'beiker.loyo@crowe.com.ve', '', '04160533153', ''),
-(197, 197, 'pablo.mata@crowe.com.ve', '', '04126390605', '02127145134'),
-(198, 198, 'brandon.rivera@crowe.com.ve', '', '04142580055', '02128585721'),
-(199, 199, 'laura.rojas@crowe.com.ve', '', '04141605224', ''),
-(200, 200, 'juan.peñaloza@crowe.com.ve', '', '04241509619', '02126625836'),
-(201, 201, 'gabriel.rojas@crowe.com.ve', '', '04141354747', ''),
-(202, 202, 'josnely.castillo@crowe.com.ve', '', '04168366572', ''),
-(203, 203, 'christhopher.cabrera@crowe.com.ve', '', '04141862719', ''),
-(204, 204, 'brandon.rivea@crowe.com.ve', 'brandon.rivea@crowe.com.ve', '04142580055', ''),
-(205, 205, 'tomega9120@hotmail.com', 'tomega9120@hotmail.com', '04142466825', '02122413316'),
-(206, 206, 'gabriel.mora@crowe.com.ve', '', '04241479638', ''),
-(207, 207, 'jhon.martinez@crowe.com.ve', '', '04242024245', ''),
-(208, 208, 'keibimoreno@crowehowart.com', '', '04141269931', ''),
-(209, 209, 'deiriana.porta@crowe.com.ve', '', '04241235742', ''),
-(210, 210, 'ignayari.mendoza@crowe.com.ve', 'cardenaslg2000@yahoo.com', '04129601010', ''),
-(211, 211, 'guillermo.loaiza@crowe.com.ve', 'guillermoloaiza2001@gmail.com', '04241365019', ''),
-(212, 212, 'cesar.uban@crowe.com.ve', '', '04149267484', ''),
-(213, 213, 'dinexy.porta@crowe.com.ve', '', '04127377145', ''),
-(214, 214, 'ricardo.leon@crowe.com.ve', '', '04122112830', ''),
-(215, 215, 'keibi.moreno@crowe.com.ve', '', '04141269931', ''),
-(216, 216, 'barbara.betancourt@crowe.com.ve', '', '04126371772', ''),
-(217, 217, 'keiver.avila@crowe.com', '', '04241487560', ''),
-(218, 218, 'katherine.hernandez@crowe.com.ve', '', '04140213336', '02126310289'),
-(219, 219, 'yulimar.diaz@crowe.com.ve', '', '04149077239', ''),
-(220, 220, 'yuri.chacon@crowe.com.ve', '', '04144663156', ''),
-(221, 221, 'josmarly.maldonado@crowe.com.ve', '', '04242791966', ''),
-(222, 222, 'wilber.algueta@crowe.com.ve', '', '04241978449', ''),
-(223, 223, 'jose.castellanos@crowe.com.ve', '', '04129384012', ''),
-(224, 224, 'belkis.florean@crowe.com.ve', '', '04241642116', ''),
-(225, 225, 'keybert.aparicio@crowe.com.ve', '', '04129118289', ''),
-(226, 226, 'douglenis.tabasquez@crowe.com.ve', '', '04241688418', ''),
-(227, 227, 'ivana.guilarte@crowe.com.ve', '', '04142155483', ''),
-(228, 228, 'alejandra.sanchez@crowe.com.ve', '', '04247755090', ''),
-(229, 229, 'jose.hernandez@crowe.com.ve', '', '04242016719', ''),
-(230, 230, 'jose.perozo@crowe.com.ve', '', '04241288112', '04123389072'),
-(231, 231, 'fernando.rangel@crowe.com.ve', '', '04241653758', ''),
-(232, 232, 'angelica.lugo@crowe.com.ve', '', '04125811373', ''),
-(233, 233, 'maria.garcia@crowe.com.ve', '', '04142741686', ''),
-(234, 234, 'jenny.lima@crowe.com.ve', '', '04241603064', '02126932351'),
-(235, 235, 'crisbet.barcelo@crowe.com.ve', '', '04127318638', '02127532952'),
-(236, 236, 'arleanny.marrero@crowe.com.ve', '', '04123351501', ''),
-(237, 237, 'jose.diaz@crowe.com.ve', '', '04242985622', '04149902681'),
-(238, 238, 'orlaimy.muÑoz@gmail.com', '', '04127145942', ''),
-(239, 239, 'josman.fuentes@crowe.com.ve', '', '04142204960', ''),
-(240, 240, 'jorgenis.guerra@crowe.com.ve', '', '04120136708', '02123527361'),
-(241, 241, 'cesar.garcia@crowe.com.ve', '', '04242388485', ''),
-(242, 242, 'mays_krv@gmail.com', '', '04120900323', '02123655132'),
-(243, 243, 'yulitzaesparragoza@hotmail.com', '', '04129974260', ''),
-(244, 244, 'raul.briceño@crowe.com.ve', '', '04142895119', ''),
-(245, 245, 'mary.rojas@crowe.com.ve', '', '04126100692', ''),
-(246, 246, 'rubi.ramirez@crowe.com.ve', '', '04129101603', ''),
-(247, 247, 'carlosnavased@gmail.com', '', '04242813274', ''),
-(248, 248, 'miriam.hidalgo@crowe.com.ve', '', '04125411409', ''),
-(249, 249, 'sajkdaskd@adjksdjasd.com', '', '21893129318', ''),
-(250, 250, 'sakdjasd@dajksdajd.com', '', '10923012391', ''),
-(251, 251, 'casdadasd@cag.com', '', '09302930232', ''),
-(252, 252, 'askdjakdasd@asjdaksda.com', '', '28391238912', ''),
-(253, 254, 'carlos.navas@gmail.com', '', '21831938129', ''),
-(254, 255, 'carlos.navas@gmail.com', '', '12398129381', ''),
-(255, 257, 'dlkadl@coasdas.com', '', '21931209310', '');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `tbl_usuarios_direccion_estado`
---
-
-CREATE TABLE `tbl_usuarios_direccion_estado` (
-  `Id` int(11) NOT NULL,
-  `NombreEstado` text NOT NULL,
-  `Iso3166-2` varchar(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Volcado de datos para la tabla `tbl_usuarios_direccion_estado`
---
-
-INSERT INTO `tbl_usuarios_direccion_estado` (`Id`, `NombreEstado`, `Iso3166-2`) VALUES
-(0, 'Estado no registrado', '0'),
-(1, 'Amazonas', 'VE-X'),
-(2, 'Anzoátegui', 'VE-B'),
-(3, 'Apure', 'VE-C'),
-(4, 'Aragua', 'VE-D'),
-(5, 'Barinas', 'VE-E'),
-(6, 'Bolívar', 'VE-F'),
-(7, 'Carabobo', 'VE-G'),
-(8, 'Cojedes', 'VE-H'),
-(9, 'Delta Amacuro', 'VE-Y'),
-(10, 'Falcón', 'VE-I'),
-(11, 'Guárico', 'VE-J'),
-(12, 'Lara', 'VE-K'),
-(13, 'Mérida', 'VE-L'),
-(14, 'Miranda', 'VE-M'),
-(15, 'Monagas', 'VE-N'),
-(16, 'Nueva Esparta', 'VE-O'),
-(17, 'Portuguesa', 'VE-P'),
-(18, 'Sucre', 'VE-R'),
-(19, 'Táchira', 'VE-S'),
-(20, 'Trujillo', 'VE-T'),
-(21, 'La Guaira', 'VE-W'),
-(22, 'Yaracuy', 'VE-U'),
-(23, 'Zulia', 'VE-V'),
-(24, 'Distrito Capital', 'VE-A'),
-(25, 'Dependencias Federales', 'VE-Z');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `tbl_usuarios_direccion_municipio`
---
-
-CREATE TABLE `tbl_usuarios_direccion_municipio` (
-  `Id` int(11) NOT NULL,
-  `Id_direccion_estado` int(11) NOT NULL,
-  `NombreMunicipio` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Volcado de datos para la tabla `tbl_usuarios_direccion_municipio`
---
-
-INSERT INTO `tbl_usuarios_direccion_municipio` (`Id`, `Id_direccion_estado`, `NombreMunicipio`) VALUES
-(0, 0, 'Municipio no Registrado'),
+INSERT INTO `users_address_municipalities` (`municipality_id`, `state_id`, `municipality_name`) VALUES
+(0, 0, 'Municipality not registered'),
 (1, 1, 'Alto Orinoco'),
 (2, 1, 'Atabapo'),
 (3, 1, 'Atures'),
@@ -2437,21 +2262,21 @@ INSERT INTO `tbl_usuarios_direccion_municipio` (`Id`, `Id_direccion_estado`, `No
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tbl_usuarios_direccion_parroquia`
+-- Estructura de tabla para la tabla `users_address_parishes`
 --
 
-CREATE TABLE `tbl_usuarios_direccion_parroquia` (
-  `Id` int(11) NOT NULL,
-  `Id_direccion_municipio` int(11) NOT NULL,
-  `NombreParroquia` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+CREATE TABLE `users_address_parishes` (
+  `parish_id` int(11) NOT NULL,
+  `municipality_id` int(11) NOT NULL,
+  `parish_name` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Volcado de datos para la tabla `tbl_usuarios_direccion_parroquia`
+-- Volcado de datos para la tabla `users_address_parishes`
 --
 
-INSERT INTO `tbl_usuarios_direccion_parroquia` (`Id`, `Id_direccion_municipio`, `NombreParroquia`) VALUES
-(0, 0, 'Parroquia no registrada'),
+INSERT INTO `users_address_parishes` (`parish_id`, `municipality_id`, `parish_name`) VALUES
+(0, 0, 'Parish not registered'),
 (1, 1, 'Alto Orinoco'),
 (2, 1, 'Huachamacare Acanaña'),
 (3, 1, 'Marawaka Toky Shamanaña'),
@@ -3594,21 +3419,429 @@ INSERT INTO `tbl_usuarios_direccion_parroquia` (`Id`, `Id_direccion_municipio`, 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tbl_usuarios_documentoidentidad`
+-- Estructura de tabla para la tabla `users_address_states`
 --
 
-CREATE TABLE `tbl_usuarios_documentoidentidad` (
-  `Id` int(11) NOT NULL,
-  `Id_usuario` int(11) NOT NULL,
-  `Id_tipo_documento` int(11) NOT NULL,
-  `Descripcion` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+CREATE TABLE `users_address_states` (
+  `state_id` int(11) NOT NULL,
+  `state_name` text NOT NULL,
+  `iso_31662` varchar(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Volcado de datos para la tabla `tbl_usuarios_documentoidentidad`
+-- Volcado de datos para la tabla `users_address_states`
 --
 
-INSERT INTO `tbl_usuarios_documentoidentidad` (`Id`, `Id_usuario`, `Id_tipo_documento`, `Descripcion`) VALUES
+INSERT INTO `users_address_states` (`state_id`, `state_name`, `iso_31662`) VALUES
+(0, 'State not registered', '0'),
+(1, 'Amazonas', 'VE-X'),
+(2, 'Anzoátegui', 'VE-B'),
+(3, 'Apure', 'VE-C'),
+(4, 'Aragua', 'VE-D'),
+(5, 'Barinas', 'VE-E'),
+(6, 'Bolívar', 'VE-F'),
+(7, 'Carabobo', 'VE-G'),
+(8, 'Cojedes', 'VE-H'),
+(9, 'Delta Amacuro', 'VE-Y'),
+(10, 'Falcón', 'VE-I'),
+(11, 'Guárico', 'VE-J'),
+(12, 'Lara', 'VE-K'),
+(13, 'Mérida', 'VE-L'),
+(14, 'Miranda', 'VE-M'),
+(15, 'Monagas', 'VE-N'),
+(16, 'Nueva Esparta', 'VE-O'),
+(17, 'Portuguesa', 'VE-P'),
+(18, 'Sucre', 'VE-R'),
+(19, 'Táchira', 'VE-S'),
+(20, 'Trujillo', 'VE-T'),
+(21, 'La Guaira', 'VE-W'),
+(22, 'Yaracuy', 'VE-U'),
+(23, 'Zulia', 'VE-V'),
+(24, 'Distrito Capital', 'VE-A'),
+(25, 'Dependencias Federales', 'VE-Z');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `users_contact`
+--
+
+CREATE TABLE `users_contact` (
+  `contact_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `primary_email` varchar(255) DEFAULT NULL,
+  `secondary_email` varchar(255) DEFAULT NULL,
+  `primary_phone` varchar(30) DEFAULT NULL,
+  `secondary_phone` varchar(30) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `users_contact`
+--
+
+INSERT INTO `users_contact` (`contact_id`, `user_id`, `primary_email`, `secondary_email`, `primary_phone`, `secondary_phone`) VALUES
+(1, 1, 'dmolina101@gmail.com', '', '04244463739', ''),
+(2, 2, 'nathalie.lopez@crowe.com.ve', '', '', ''),
+(3, 3, 'yesenia.martinez@crowe.com.ve', '', '', ''),
+(4, 4, 'jesus.perez@crowe.com.ve', '', '', ''),
+(5, 5, 'carol.lopez@crowe.com.ve', '', '', ''),
+(6, 6, 'luz.fonseca@crowe.com.ve', '', '', ''),
+(7, 7, 'arturo.madriz@crowe.com.ve', '', '', ''),
+(8, 8, 'roman.scott@crowe.com.ve', '', '', ''),
+(9, 9, 'oliver.paez@crowe.com.ve', '', '', ''),
+(10, 10, 'jorge.gonzalez@crowe.com.ve', '', '', ''),
+(11, 11, 'maria.sequeda@crowe.com.ve', '', '', ''),
+(12, 12, 'yodelina.torres@crowe.com.ve', '', '', ''),
+(13, 13, 'katherine.zurita@crowe.com.ve', '', '04241907404', '04243170363'),
+(14, 14, 'mileidis.moreno@crowe.com.ve', '', '04241718118', ''),
+(15, 15, 'francia.medina@crowe.com.ve', '', '04166947046', ''),
+(16, 16, 'astrid.mendoza@crowe.com.ve', '', '04241652571', ''),
+(17, 17, 'maria.tovar@crowe.com.ve', '', '02124829623', '04242473031'),
+(18, 18, 'mariana.brito@crowe.com.ve', '', '04242902167', ''),
+(19, 19, 'belkis.cortina@crowe.com.ve', '', '02124159553', '04164079713'),
+(20, 20, 'lucrecia.silva@crowe.com.ve', '', '04264199217', ''),
+(21, 21, 'normedy.parra@crowe.com.ve', '', '02125241716', '04120125384'),
+(22, 22, 'josvelis.castillo@crowe.com.ve', '', '04148350920', '02123440542'),
+(23, 23, 'luis.russian@crowe.com.ve', '', '04242602227', '02123395206'),
+(24, 24, 'jonathan.azocar@crowe.com.ve', '', '02123774758', '04266373419'),
+(25, 25, 'yerlenis.valderrama@crowe.com.ve', '', '04242950201', ''),
+(26, 26, 'kleiver.corro@crowe.com.ve', '', '02124190028', '04129496868'),
+(27, 27, 'maryuri.barazarte@crowe.com.ve', '', '02122444894', '04241839221'),
+(28, 28, 'pedro.benitez@crowe.com.ve', '', '', ''),
+(29, 29, 'dennys.flores@crowe.com.ve', '', '04160192302', ''),
+(30, 30, 'genesis.marcano@crowe.com.ve', '', '02392482117', '04140209137'),
+(31, 31, 'keilimar.suarez@crowe.com.ve', '', '04169281259', '02127459838'),
+(32, 32, 'johanne.muñoz@crowe.com.ve', '', '04143155147', ''),
+(33, 33, 'alfredo.hernandez@crowe.com.ve', '', '04127116777', ''),
+(34, 34, 'raul.vargas@crowe.com.ve', '', '', ''),
+(35, 35, 'shelcie.paz@crowe.com.ve', '', '02122583241', '04149084285'),
+(36, 36, 'ladymar.morett@crowe.com.ve', '', '02124512556', '04261197245'),
+(37, 37, 'anthony.garcia@crowe.com.ve', '', '04262130363', '04123840786'),
+(38, 38, 'solmary.martinez@crowe.com.ve', '', '02123397992', '04129904281'),
+(39, 39, 'jackeline.ramos@crowe.com.ve', '', '02126412375', '04168233236'),
+(40, 40, 'belkis.vazquez@crowe.com.ve', '', '04262157178', ''),
+(41, 41, 'yuzleibby.maldonado@crowe.com.ve', '', '04242194508', '02128703102'),
+(42, 42, 'giovanni.corredor@crowe.com.ve', '', '04120102693', '02123472038'),
+(43, 43, 'kleiver.cadenas@crowe.com.ve', '', '04143196616', '02122678468'),
+(44, 44, 'ivette.orozco@crowe.com.ve', '', '04242613215', '02124341107'),
+(45, 45, 'zunaya.wilches@crowe.com.ve', '', '04140316013', '02126135612'),
+(46, 46, 'jesus.abraham@crowe.com.ve', '', '02123727075', '04242147829'),
+(47, 47, 'jose.perozo@dominio.com', '', '04262539113', ''),
+(48, 48, 'roberto.villegas@crowe.com.ve', '', '02128703830', '04241762670'),
+(49, 49, 'sandro.mayora@crowe.com.ve', '', '04123675678', '02125163034'),
+(50, 50, 'eduardo.bastos@crowe.com.ve', '', '02129875898', '04241304353'),
+(51, 51, 'vanessa.rojas@crowe.com.ve', '', '04147826035', ''),
+(52, 52, 'carlos.revete@crowe.com.ve', '', '04242591419', ''),
+(53, 53, 'vianney.rugeles@crowe.com.ve', '', '02124434371', '04129987473'),
+(54, 54, 'edwin.burgos@crowe.com.ve', '', '04142871671', ''),
+(55, 55, 'nombre.apellido@dominio.com', '', '02123637192', '04128584022'),
+(56, 56, 'freddy.vargas@crowe.com.ve', '', '04241292285', ''),
+(57, 57, 'yorman.rangel@crowe.com.ve', '', '', ''),
+(58, 58, 'jose.utrera@crowe.com.ve', '', '', ''),
+(59, 59, 'alejandro.lira@crowe.com.ve', '', '02126724819', '04142460103'),
+(60, 60, 'yordalis.echarrys@crowe.com.ve', '', '04122932692', ''),
+(61, 61, 'eliana.ponce@crowe.com.ve', '', '02125761138', '04149113335'),
+(62, 62, 'stefany.gonzalez@crowe.com.ve', '', '04242085444', ''),
+(63, 63, 'naivelys.altuve@crowe.com.ve', '', '04147914010', ''),
+(64, 64, 'gabriela.gil@crowe.com.ve', '', '02126621812', '04262874127'),
+(65, 65, 'orianna.alejos@crowe.com.ve', '', '02126689284', '04263158428'),
+(66, 66, 'marynes.gonzalez@crowe.com.ve', '', '02124929084', '04242628459'),
+(67, 67, 'eligio.mendoza@crowe.com.ve', '', '', ''),
+(68, 68, 'marielvi.oller@crowe.com.ve', '', '', ''),
+(69, 69, 'alba.navia@crowe.com.ve', '', '02127625333', '04242984865'),
+(70, 70, 'nombre.apellido@dominio.com', '', '04141266489', '02128614414'),
+(71, 71, 'yessica.rivas@crowe.com.ve', '', '02128750733', '04242677331'),
+(72, 72, 'nombre.apellido@dominio.com', '', '04142119162', ''),
+(73, 73, 'yda.chirinos@crowe.com.ve', '', '02125159794', '04241360393'),
+(74, 74, 'nombre.apellido@dominio.com', '', '02126149790', '04143260002'),
+(75, 75, 'nombre.apellido@dominio.com', '', '02123243797', '04122493721'),
+(76, 76, 'nombre.apellido@dominio.com', '', '04125746284', ''),
+(77, 77, 'nombre.apellido@dominio.com', '', '04122564514', ''),
+(78, 78, 'nombre.apellido@dominio.com', '', '04142678216', ''),
+(79, 79, 'nahomy.quintero@crowe.com.ve', '', '02127446051', '04241743888'),
+(80, 80, 'maria.espina@crowe.com.ve', '', '0127304196', '04265131381'),
+(81, 81, 'nombre.apellido@dominio.com', '', '04242696996', '04129217899'),
+(82, 82, 'nombre.apellido@dominio.com', '', '04127098992', ''),
+(83, 83, 'glender.cortez@crowe.com.ve', '', '04142190677', '02125321810'),
+(84, 84, 'alberto.evies@crowe.com.ve', '', '02124335180', '04141057605'),
+(85, 85, 'angela.aranea@crowe.com.ve', '', '02125153658', '04263046685'),
+(86, 86, 'arturo.sosa@crowe.com.ve', '', '04241340102', ''),
+(87, 87, 'adrian.perez@crowe.com.ve', '', '02128613428', '04128045133'),
+(88, 88, 'elisa.pasero@crowe.com.ve', '', '04123688968', ''),
+(89, 89, 'omar.marquez@crowe.com.ve', '', '', ''),
+(90, 90, 'angelica.funes@crowe.com.ve', '', '02128583253', '04262905898'),
+(91, 91, 'eslyn.rojas@crowe.com.ve', '', '04243443594', '02128084209'),
+(92, 92, 'carmen.ochoa@crowe.com.ve', '', '04241495523', ''),
+(93, 93, 'laura.rojas@crowe.com.ve', '', '', ''),
+(94, 94, 'nombre.apellido@dominio.com', '', '04242258139', ''),
+(95, 95, 'nombre.apellido@dominio.com', '', '', ''),
+(96, 96, 'nombre.apellido@dominio.com', '', '04169397195', ''),
+(97, 97, 'jose.machado@crowe.com.ve', '', '', ''),
+(98, 98, 'nombre.apellido@dominio.com', '', '', ''),
+(99, 99, 'jennifer.villa@crowe.com.ve', '', '', ''),
+(100, 100, 'anacecilia.castano@crowe.com.ve', '', '02125716504', ''),
+(101, 101, 'amayoisbi.garcia@crowe.com.ve', '', '04127013435', ''),
+(102, 102, 'jennifer.chacon@crowe.com.ve', '', '04125897240', ''),
+(103, 103, 'ignayari.mendoza@crowe.com.ve', '', '04129289923', ''),
+(104, 104, 'reina.fajardo@crowe.com.ve', '', '04164269965', ''),
+(105, 105, 'yolimer.mendoza@crowe.com.ve', '', '04149018276', '02126813348'),
+(106, 106, 'ignayari.mendoza@crowe.com.ve', '', '04129762870', ''),
+(107, 107, 'adriana.guzman@crowe.com.ve', '', '02129412882', '04144549562'),
+(108, 108, 'jose.estaba@crowe.com.ve', '', '02128602803', '04243389487'),
+(109, 109, 'karina.perez@crowe.com.ve', '', '04265920655', ''),
+(110, 110, 'zonny.garcia@crowe.com.ve', '', '04243138868', '02392252293'),
+(111, 111, 'nombre.apellido@dominio.com', '', '04268870548', ''),
+(112, 112, 'nombre.apellido@dominio.com', '', '04262166223', ''),
+(113, 113, 'leonardo.alopez21@gmail.com', '', '04142598750', ''),
+(114, 114, 'josearturo0706@gmail.com', '', '02124818970', '04128259076'),
+(115, 115, 'nombre.apellido@dominio.com', '', '02124518087', '04129576671'),
+(116, 116, 'antonio.reyes@crowe.com.ve', '', '02122425335', '04141626367'),
+(117, 117, 'duvan.pinto@crowe.com.ve', '', '04241842688', ''),
+(118, 118, 'freddy.perdomo@crowe.com.ve', '', '02129766425', '04144466147'),
+(119, 119, 'fernando.rangel@crowe.com.ve', '', '04141782596', ''),
+(120, 120, 'gelen.cardenas@crowe.com.ve', '', '02125767453', '04164654993'),
+(121, 121, 'nombre.apellido@dominio.com', '', '02122373113', ''),
+(122, 122, 'nombre.apellido@dominio.com', '', '02122373113', '04142081976'),
+(123, 123, 'laura.rojas@crowe.com.ve', '', '04169322811', ''),
+(124, 124, 'amelia.diaz@crowe.com.ve', '', '', ''),
+(125, 125, 'emilio.leon@crowe.com.ve', '', '04166084971', '04241180197'),
+(126, 126, 'gustavo.puchi@crowe.com.ve', '', '02124834655', '04122206492'),
+(127, 127, 'alfio.saglimbeni@crowe.com.ve', '', '04168272679', ''),
+(128, 128, 'arianna.matos@crowe.com.ve', '', '02123238208', '04126000531'),
+(129, 129, 'ana.blandin@crowe.com.ve', '', '02124329839', '04241624237'),
+(130, 130, 'oscar.piña@crowe.com.ve', '', '', ''),
+(131, 131, 'nombre.apellido@dominio.com', '', '02128084742', '05247042110'),
+(132, 132, 'duglimar.mendez@crowe.com.ve', '', '04162062192', ''),
+(133, 133, 'sol.viana@crowe.com.ve', '', '02126316797', '04241469101'),
+(134, 134, 'douglas.torrealba@crowe.com.ve', '', '04162094874', '04168000868'),
+(135, 135, 'nombre.apellido@dominio.com', '', '04267528235', '02128715756'),
+(136, 136, 'nombre.apellido@dominio.com', '', '04261396926', ''),
+(137, 137, 'nombre.apellido@dominio.com', '', '04126305629', ''),
+(138, 138, 'nombre.apellido@dominio.com', '', '04162139037', '02124909126'),
+(139, 139, 'nombre.apellido@dominio.com', '', '02124329566', '04168175614'),
+(140, 140, 'fredy.bautista@crowe.com.ve', '', '', ''),
+(141, 141, 'nombre.apellido@dominio.com', '', '', ''),
+(142, 142, 'barbara.zambrano@crowe.com.ve', '', '', ''),
+(143, 143, 'mary.cruz@crowe.com.ve', '', '04249686614', '02869341430'),
+(144, 144, 'sergio.marquez@crowe.com.ve', 'sergiofmarquezt@gmail.com', '04149070900', ''),
+(145, 145, 'nelson.marcano@crowe.com.ve', '', '04120195573', ''),
+(146, 146, 'alfio.saglimbeni@crowe.com.ve', 'smarquezt66@gmail.com', '', ''),
+(147, 147, 'antonio.dugarte@crowe.com.ve', '', '04242265723', ''),
+(148, 148, 'mirnangela.salaya@crowe.com.ve', '', '04241511028', ''),
+(149, 149, 'jose.marquez@crowe.com.ve', '', '04142554850', ''),
+(150, 150, 'freddyperdomo17@gmail.com', '', '', ''),
+(151, 151, 'robison.aranguren@crowe.com.ve', '', '04141349727', ''),
+(152, 152, 'joseecker51@gmail.com', '', '04141017189', '04142638949'),
+(153, 153, 'jhon.rondon@crowe.com.ve', 'eduardobarrera69@gmail.com', '04123186673', ''),
+(154, 154, 'contraloriacrowe@gmail.com', '', '04149070900', '02122350147'),
+(155, 155, 'anapetit04@gmail.com', '', '04149330573', ''),
+(156, 156, 'enrique.chiquito@gmail.com', '', '04122087873', '04265332319'),
+(157, 157, 'suscumleidy@gmail.com', '', '04122935740', '02125814635'),
+(158, 158, 'mary050896@gmail.com', '', '04143253136', '02123424248'),
+(159, 159, 'franklin.pacheco@crowe.com.ve', '', '04241565718', ''),
+(160, 160, 'oriana.graterol@crowe.com.ve', '', '04125717905', '02128629219'),
+(161, 161, 'alfredo.conquista@crowe.com.ve', '', '04241106550', '02124160138'),
+(162, 162, 'wilmeranton65@gmail.com', '', '04143141335', '04241541595'),
+(163, 163, 'freddy.bautista@crowe.com.ve', '', '04141093990', '02129763028'),
+(164, 164, 'iris.escorcha@crowe.com.ve', '', '04264063883', '02123622056'),
+(173, 173, 'carlos.bastidas@crowe.com.ve', 'clbastidas91@gmail.com', '04126394216', ''),
+(174, 174, 'marysabel.dossantos@crowe.com.ve', '', '04265101377', ''),
+(175, 175, 'ivetteorozco1994@gmail.com', '', '04242613215', ''),
+(176, 176, 'winney.barrientos@crowe.com.ve', 'winneyphail18@gmail.com', '04267042706', '04142415947'),
+(177, 177, 'leonela.zambella@crowe.com.ve', 'leonelaz1998@gmail.com', '02124715309', '04242364607'),
+(178, 178, 'juneisy.benitez@crowe.com.ve', 'june.abm@gmail.com', '04122959794', '04264073835'),
+(179, 179, 'yesenia.casares@crowe.com.ve', '', '04241433149', '04127285524'),
+(180, 180, 'oliver.tovar@crowe.com.ve', 'tovaroliver22@gmail.com', '04242721414', ''),
+(181, 181, 'ritcelis.ruiz@crowe.com.ve', '', '04123099563', ''),
+(182, 182, 'jenny.lis@crowe.com.ve', '', '04142063611', '02127631690'),
+(183, 183, 'cesar.diaz@crowe.com.ve', '', '04141136672', ''),
+(184, 184, 'danaleth.hernandez@crowe.com.ve', 'danaleth@gmail.com', '04264157175', '04129629136'),
+(185, 185, 'johanna.trujillo@crowe.com.ve', 'jcrevette_@hotmail.com', '04142862057', ''),
+(186, 186, 'melanie.marquez@crowe.com.ve', 'melaniealexandra.m@gmail.com', '02123697554', '04242608583'),
+(187, 187, 'escarlet.guillen@crowe.com.ve', 'escarletguillen@gmail.com', '04149177892', ''),
+(188, 188, 'morrinsonn@gmail.com', 'morrinsonn@gmail.com', '04241616129', '02125858604'),
+(189, 189, 'gabigabi175@gmail.com', '', '04242779956', ''),
+(190, 190, 'anthoni.freites@gmail.com', '', '04122093659', ''),
+(191, 191, 'layajesus@gmail.com', '', '', ''),
+(192, 192, 'andrea.garcia@crowe.com.ve', '', '04241061875', ''),
+(193, 193, 'oscarrojo999@gmail.com', '', '04141332793', ''),
+(194, 194, 'bolivarsierrajose@gmail.com', '', '', ''),
+(195, 195, 'wilmer.anton@crowe.com.ve', '', '04143141335', ''),
+(196, 196, 'beiker.loyo@crowe.com.ve', '', '04160533153', ''),
+(197, 197, 'pablo.mata@crowe.com.ve', '', '04126390605', '02127145134'),
+(198, 198, 'brandon.rivera@crowe.com.ve', '', '04142580055', '02128585721'),
+(199, 199, 'laura.rojas@crowe.com.ve', '', '04141605224', ''),
+(200, 200, 'juan.peñaloza@crowe.com.ve', '', '04241509619', '02126625836'),
+(201, 201, 'gabriel.rojas@crowe.com.ve', '', '04141354747', ''),
+(202, 202, 'josnely.castillo@crowe.com.ve', '', '04168366572', ''),
+(203, 203, 'christhopher.cabrera@crowe.com.ve', '', '04141862719', ''),
+(204, 204, 'brandon.rivea@crowe.com.ve', 'brandon.rivea@crowe.com.ve', '04142580055', ''),
+(205, 205, 'tomega9120@hotmail.com', 'tomega9120@hotmail.com', '04142466825', '02122413316'),
+(206, 206, 'gabriel.mora@crowe.com.ve', '', '04241479638', ''),
+(207, 207, 'jhon.martinez@crowe.com.ve', '', '04242024245', ''),
+(208, 208, 'keibimoreno@crowehowart.com', '', '04141269931', ''),
+(209, 209, 'deiriana.porta@crowe.com.ve', '', '04241235742', ''),
+(210, 210, 'ignayari.mendoza@crowe.com.ve', 'cardenaslg2000@yahoo.com', '04129601010', ''),
+(211, 211, 'guillermo.loaiza@crowe.com.ve', 'guillermoloaiza2001@gmail.com', '04241365019', ''),
+(212, 212, 'cesar.uban@crowe.com.ve', '', '04149267484', ''),
+(213, 213, 'dinexy.porta@crowe.com.ve', '', '04127377145', ''),
+(214, 214, 'ricardo.leon@crowe.com.ve', '', '04122112830', ''),
+(215, 215, 'keibi.moreno@crowe.com.ve', '', '04141269931', ''),
+(216, 216, 'barbara.betancourt@crowe.com.ve', '', '04126371772', ''),
+(217, 217, 'keiver.avila@crowe.com', '', '04241487560', ''),
+(218, 218, 'katherine.hernandez@crowe.com.ve', '', '04140213336', '02126310289'),
+(219, 219, 'yulimar.diaz@crowe.com.ve', '', '04149077239', ''),
+(220, 220, 'yuri.chacon@crowe.com.ve', '', '04144663156', ''),
+(221, 221, 'josmarly.maldonado@crowe.com.ve', '', '04242791966', ''),
+(222, 222, 'wilber.algueta@crowe.com.ve', '', '04241978449', ''),
+(223, 223, 'jose.castellanos@crowe.com.ve', '', '04129384012', ''),
+(224, 224, 'belkis.florean@crowe.com.ve', '', '04241642116', ''),
+(225, 225, 'keybert.aparicio@crowe.com.ve', '', '04129118289', ''),
+(226, 226, 'douglenis.tabasquez@crowe.com.ve', '', '04241688418', ''),
+(227, 227, 'ivana.guilarte@crowe.com.ve', '', '04142155483', ''),
+(228, 228, 'alejandra.sanchez@crowe.com.ve', '', '04247755090', ''),
+(229, 229, 'jose.hernandez@crowe.com.ve', '', '04242016719', ''),
+(230, 230, 'jose.perozo@crowe.com.ve', '', '04241288112', '04123389072'),
+(231, 231, 'fernando.rangel@crowe.com.ve', '', '04241653758', ''),
+(232, 232, 'angelica.lugo@crowe.com.ve', '', '04125811373', ''),
+(233, 233, 'maria.garcia@crowe.com.ve', '', '04142741686', ''),
+(234, 234, 'jenny.lima@crowe.com.ve', '', '04241603064', '02126932351'),
+(235, 235, 'crisbet.barcelo@crowe.com.ve', '', '04127318638', '02127532952'),
+(236, 236, 'arleanny.marrero@crowe.com.ve', '', '04123351501', ''),
+(237, 237, 'jose.diaz@crowe.com.ve', '', '04242985622', '04149902681'),
+(238, 238, 'orlaimy.muÑoz@gmail.com', '', '04127145942', ''),
+(239, 239, 'josman.fuentes@crowe.com.ve', '', '04142204960', ''),
+(240, 240, 'jorgenis.guerra@crowe.com.ve', '', '04120136708', '02123527361'),
+(241, 241, 'cesar.garcia@crowe.com.ve', '', '04242388485', ''),
+(242, 242, 'mays_krv@gmail.com', '', '04120900323', '02123655132'),
+(243, 243, 'yulitzaesparragoza@hotmail.com', '', '04129974260', ''),
+(244, 244, 'raul.briceño@crowe.com.ve', '', '04142895119', ''),
+(245, 245, 'mary.rojas@crowe.com.ve', '', '04126100692', ''),
+(246, 246, 'rubi.ramirez@crowe.com.ve', '', '04129101603', ''),
+(247, 247, 'carlosnavased@gmail.com', '', '04242813274', ''),
+(248, 248, 'miriam.hidalgo@crowe.com.ve', '', '04125411409', ''),
+(249, 249, 'testing@testing.com', 'testing2@testing.com', '11111111111', '');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `users_hierarchy_departments`
+--
+
+CREATE TABLE `users_hierarchy_departments` (
+  `department_id` int(11) NOT NULL,
+  `department_name` text NOT NULL,
+  `status_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `users_hierarchy_departments`
+--
+
+INSERT INTO `users_hierarchy_departments` (`department_id`, `department_name`, `status_id`) VALUES
+(0, 'Department not registered', 1),
+(1, 'Auditoría Externa', 1),
+(2, 'Asesoría Tributaria', 1),
+(3, 'Auditoría TI', 1),
+(4, 'Outsourcing', 1),
+(5, 'Consultoria y Auditoría Interna', 1),
+(6, 'Business and Process Consulting', 1),
+(7, 'Administración/Capital Humano', 1),
+(8, 'Administración/Contabilidad', 1),
+(9, 'Administración/Tesorería', 1),
+(10, 'Administración/Contraloría', 1),
+(11, 'Administración/Servicios Generales', 1),
+(12, 'Administración/Edición', 1),
+(13, 'Administración/Soporte Técnico', 1),
+(14, 'Adiestramiento', 1),
+(15, 'Pasantes Inces', 1),
+(16, 'Conapdis', 1),
+(17, 'Legal', 1),
+(18, 'Servicios Profesionales (Puerto Ordaz)', 1),
+(19, 'Administración', 1),
+(20, 'Crowe Anzoátegui (PLC)', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `users_hierarchy_positions`
+--
+
+CREATE TABLE `users_hierarchy_positions` (
+  `position_id` int(11) NOT NULL,
+  `position_name` text NOT NULL,
+  `position_type_id` int(11) NOT NULL,
+  `order` int(11) NOT NULL,
+  `status_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `users_hierarchy_positions`
+--
+
+INSERT INTO `users_hierarchy_positions` (`position_id`, `position_name`, `position_type_id`, `order`, `status_id`) VALUES
+(0, 'Position not registered', 3, 0, 1),
+(1, 'Contratado por horas', 1, 17, 1),
+(2, 'Pasantes', 1, 1, 1),
+(3, 'Asistente I', 1, 2, 1),
+(4, 'Asistente II', 1, 2, 1),
+(5, 'Asistente III', 1, 2, 1),
+(6, 'Semi-Senior I', 1, 3, 1),
+(7, 'Semi-Senior II', 1, 3, 1),
+(8, 'Semi-Senior III', 1, 3, 1),
+(9, 'Senior I', 1, 4, 1),
+(10, 'Senior II', 1, 4, 1),
+(11, 'Senior III', 1, 4, 1),
+(12, 'Supervisor', 3, 5, 1),
+(13, 'Gerente', 3, 6, 1),
+(14, 'Gerente Senior', 3, 6, 1),
+(15, 'Director', 3, 7, 1),
+(16, 'Socio', 3, 9, 1),
+(17, 'Acting Partner', 1, 8, 1),
+(18, 'Asesor Legal', 1, 7, 1),
+(19, 'Asistente de Socios', 2, 10, 1),
+(20, 'Asistente de Gerentes', 2, 10, 1),
+(21, 'Analista', 2, 12, 1),
+(22, 'Chofer', 2, 15, 1),
+(23, 'Supervisor de Mantenimiento', 2, 5, 1),
+(24, 'Operaria de Mantenimiento', 2, 16, 1),
+(25, 'Recepcionista', 2, 11, 1),
+(26, 'Editora', 2, 14, 1),
+(27, 'Analista Senior I', 2, 12, 1),
+(28, 'Analista Senior II', 2, 12, 1),
+(29, 'Analista Senior III', 2, 12, 1),
+(30, 'Editora', 2, 14, 2),
+(31, 'Asistente', 2, 10, 1),
+(32, 'Asistente de Facturación y Cobranza', 2, 10, 1),
+(33, 'Asistente Administrativo', 2, 10, 1),
+(34, 'Soporte Técnico I', 2, 13, 1),
+(35, 'Soporte Técnico II', 2, 13, 1),
+(36, 'Soporte Técnico III', 2, 13, 1),
+(37, 'Mensajero', 2, 15, 1),
+(38, 'Recepcionista', 2, 11, 2),
+(39, 'Pasante', 2, 1, 1),
+(40, 'Trabajador Social', 2, 14, 1),
+(41, 'Pasante Inces', 2, 1, 1),
+(42, 'Asistente de Proyecto', 2, 10, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `users_identity`
+--
+
+CREATE TABLE `users_identity` (
+  `identity_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `identity_type_id` int(11) NOT NULL,
+  `identity_number` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `users_identity`
+--
+
+INSERT INTO `users_identity` (`identity_id`, `user_id`, `identity_type_id`, `identity_number`) VALUES
 (1, 1, 1, '17671373'),
 (2, 2, 1, '10380904'),
 (3, 3, 1, '14451068'),
@@ -3849,542 +4082,511 @@ INSERT INTO `tbl_usuarios_documentoidentidad` (`Id`, `Id_usuario`, `Id_tipo_docu
 (246, 246, 1, '11784700'),
 (247, 247, 1, '22667607'),
 (248, 248, 1, '15759452'),
-(249, 249, 1, '213123123'),
-(250, 250, 1, '213182378127'),
-(251, 251, 1, '2237774'),
-(252, 252, 1, '2328398'),
-(253, 254, 1, '22667607'),
-(254, 255, 1, '22667607'),
-(255, 257, 1, '22667608');
+(249, 249, 1, '111111111111');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tbl_usuarios_documentoidentidad_tipo`
+-- Estructura de tabla para la tabla `users_identity_type`
 --
 
-CREATE TABLE `tbl_usuarios_documentoidentidad_tipo` (
-  `Id` int(11) NOT NULL,
-  `AbreviaturaTipo` varchar(5) NOT NULL,
-  `DescripcionTipo` varchar(20) NOT NULL,
-  `Id_estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+CREATE TABLE `users_identity_type` (
+  `identity_type_id` int(11) NOT NULL,
+  `identity_abbreviation` varchar(5) NOT NULL,
+  `identity_description` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Volcado de datos para la tabla `tbl_usuarios_documentoidentidad_tipo`
+-- Volcado de datos para la tabla `users_identity_type`
 --
 
-INSERT INTO `tbl_usuarios_documentoidentidad_tipo` (`Id`, `AbreviaturaTipo`, `DescripcionTipo`, `Id_estatus`) VALUES
-(1, 'V', 'Cédula Venezolana', 1),
-(2, 'E', 'Cédula Extranjera', 1);
+INSERT INTO `users_identity_type` (`identity_type_id`, `identity_abbreviation`, `identity_description`) VALUES
+(1, 'V', 'Cédula Venezolana'),
+(2, 'E', 'Cédula Extranjera');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tbl_usuarios_jerarquia_cargo`
+-- Estructura de tabla para la tabla `users_position_type`
 --
 
-CREATE TABLE `tbl_usuarios_jerarquia_cargo` (
-  `Id` int(11) NOT NULL,
-  `NombreCargo` text NOT NULL,
-  `Id_TipoCargo` int(11) NOT NULL,
-  `Jerarquia` int(11) NOT NULL,
-  `Id_Estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+CREATE TABLE `users_position_type` (
+  `position_type_id` int(11) NOT NULL,
+  `position_description` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Volcado de datos para la tabla `tbl_usuarios_jerarquia_cargo`
+-- Volcado de datos para la tabla `users_position_type`
 --
 
-INSERT INTO `tbl_usuarios_jerarquia_cargo` (`Id`, `NombreCargo`, `Id_TipoCargo`, `Jerarquia`, `Id_Estatus`) VALUES
-(0, 'Cargo no Registrado', 3, 0, 1),
-(1, 'Contratado por horas', 1, 17, 1),
-(2, 'Pasantes', 1, 1, 1),
-(3, 'Asistente I', 1, 2, 1),
-(4, 'Asistente II', 1, 2, 1),
-(5, 'Asistente III', 1, 2, 1),
-(6, 'Semi-Senior I', 1, 3, 1),
-(7, 'Semi-Senior II', 1, 3, 1),
-(8, 'Semi-Senior III', 1, 3, 1),
-(9, 'Senior I', 1, 4, 1),
-(10, 'Senior II', 1, 4, 1),
-(11, 'Senior III', 1, 4, 1),
-(12, 'Supervisor', 3, 5, 1),
-(13, 'Gerente', 3, 6, 1),
-(14, 'Gerente Senior', 3, 6, 1),
-(15, 'Director', 3, 7, 1),
-(16, 'Socio', 3, 9, 1),
-(17, 'Acting Partner', 1, 8, 1),
-(18, 'Asesor Legal', 1, 7, 1),
-(19, 'Asistente de Socios', 2, 10, 1),
-(20, 'Asistente de Gerentes', 2, 10, 1),
-(21, 'Analista', 2, 12, 1),
-(22, 'Chofer', 2, 15, 1),
-(23, 'Supervisor de Mantenimiento', 2, 5, 1),
-(24, 'Operaria de Mantenimiento', 2, 16, 1),
-(25, 'Recepcionista', 2, 11, 1),
-(26, 'Editora', 2, 14, 1),
-(27, 'Analista Senior I', 2, 12, 1),
-(28, 'Analista Senior II', 2, 12, 1),
-(29, 'Analista Senior III', 2, 12, 1),
-(30, 'Editora', 2, 14, 2),
-(31, 'Asistente', 2, 10, 1),
-(32, 'Asistente de Facturación y Cobranza', 2, 10, 1),
-(33, 'Asistente Administrativo', 2, 10, 1),
-(34, 'Soporte Técnico I', 2, 13, 1),
-(35, 'Soporte Técnico II', 2, 13, 1),
-(36, 'Soporte Técnico III', 2, 13, 1),
-(37, 'Mensajero', 2, 15, 1),
-(38, 'Recepcionista', 2, 11, 2),
-(39, 'Pasante', 2, 1, 1),
-(40, 'Trabajador Social', 2, 14, 1),
-(41, 'Pasante Inces', 2, 1, 1),
-(42, 'Asistente de Proyecto', 2, 10, 1);
+INSERT INTO `users_position_type` (`position_type_id`, `position_description`) VALUES
+(1, 'Profesional'),
+(2, 'Administrativo'),
+(3, 'Profesional y Administrativo');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tbl_usuarios_jerarquia_division`
---
-
-CREATE TABLE `tbl_usuarios_jerarquia_division` (
-  `Id` int(11) NOT NULL,
-  `NombreDivision` text NOT NULL,
-  `Id_Estatus` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Volcado de datos para la tabla `tbl_usuarios_jerarquia_division`
---
-
-INSERT INTO `tbl_usuarios_jerarquia_division` (`Id`, `NombreDivision`, `Id_Estatus`) VALUES
-(0, 'Division no registrada', 1),
-(1, 'Auditoría Externa', 1),
-(2, 'Asesoría Tributaria', 1),
-(3, 'Auditoría TI', 1),
-(4, 'Outsourcing', 1),
-(5, 'Consultoria y Auditoría Interna', 1),
-(6, 'Business and Process Consulting', 1),
-(7, 'Administración/Capital Humano', 1),
-(8, 'Administración/Contabilidad', 1),
-(9, 'Administración/Tesorería', 1),
-(10, 'Administración/Contraloría', 1),
-(11, 'Administración/Servicios Generales', 1),
-(12, 'Administración/Edición', 1),
-(13, 'Administración/Soporte Técnico', 1),
-(14, 'Adiestramiento', 1),
-(15, 'Pasantes Inces', 1),
-(16, 'Conapdis', 1),
-(17, 'Legal', 1),
-(18, 'Servicios Profesionales (Puerto Ordaz)', 1),
-(19, 'Administración', 1),
-(20, 'Crowe Anzoátegui (PLC)', 1);
-
--- --------------------------------------------------------
-
---
--- Estructura Stand-in para la vista `tbl_usuarios_status`
+-- Estructura Stand-in para la vista `vw_clients_status`
 -- (Véase abajo para la vista actual)
 --
-CREATE TABLE `tbl_usuarios_status` (
-`Id` int(11)
-,`Descripcion` text
+CREATE TABLE `vw_clients_status` (
+`status_id` int(11)
+,`status_description` text
 );
 
 -- --------------------------------------------------------
 
 --
--- Estructura para la vista `tbl_clientes_status`
+-- Estructura Stand-in para la vista `vw_users_info`
+-- (Véase abajo para la vista actual)
 --
-DROP TABLE IF EXISTS `tbl_clientes_status`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tbl_clientes_status`  AS SELECT `ce`.`Id` AS `Id`, `ce`.`Descripcion` AS `Descripcion` FROM `tbl_control_estatus` AS `ce` WHERE `ce`.`Id` between 1 and 22  ;
+CREATE TABLE `vw_users_info` (
+`user_id` int(11)
+,`user_code` varchar(6)
+,`status_id` int(11)
+,`first_name` varchar(20)
+,`second_name` varchar(20)
+,`first_surname` varchar(20)
+,`second_surname` varchar(20)
+,`birthday` date
+,`admission_date` date
+,`departure_date` date
+,`identity_abbreviation` varchar(5)
+,`identity_number` varchar(255)
+,`primary_email` varchar(255)
+,`secondary_email` varchar(255)
+,`primary_phone` varchar(30)
+,`secondary_phone` varchar(30)
+,`parish_id` int(11)
+,`municipality_id` int(11)
+,`state_id` int(11)
+,`position_id` int(11)
+,`department_id` int(11)
+);
 
 -- --------------------------------------------------------
 
 --
--- Estructura para la vista `tbl_usuarios_status`
+-- Estructura Stand-in para la vista `vw_users_status`
+-- (Véase abajo para la vista actual)
 --
-DROP TABLE IF EXISTS `tbl_usuarios_status`;
+CREATE TABLE `vw_users_status` (
+`status_id` int(11)
+,`status_description` text
+);
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tbl_usuarios_status`  AS SELECT `cu`.`Id` AS `Id`, `cu`.`Descripcion` AS `Descripcion` FROM `tbl_control_estatus` AS `cu` WHERE `cu`.`Id` between 1 and 4444  ;
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `vw_clients_status`
+--
+DROP TABLE IF EXISTS `vw_clients_status`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_clients_status`  AS SELECT `control_status`.`status_id` AS `status_id`, `control_status`.`status_description` AS `status_description` FROM `control_status` WHERE `control_status`.`status_id` between 1 and 2 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `vw_users_info`
+--
+DROP TABLE IF EXISTS `vw_users_info`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_users_info`  AS SELECT `us`.`user_id` AS `user_id`, `us`.`user_code` AS `user_code`, `us`.`status_id` AS `status_id`, `us`.`first_name` AS `first_name`, `us`.`second_name` AS `second_name`, `us`.`first_surname` AS `first_surname`, `us`.`second_surname` AS `second_surname`, `us`.`birthday` AS `birthday`, `us`.`admission_date` AS `admission_date`, `us`.`departure_date` AS `departure_date`, `ut`.`identity_abbreviation` AS `identity_abbreviation`, `ui`.`identity_number` AS `identity_number`, `uc`.`primary_email` AS `primary_email`, `uc`.`secondary_email` AS `secondary_email`, `uc`.`primary_phone` AS `primary_phone`, `uc`.`secondary_phone` AS `secondary_phone`, `us`.`parish_id` AS `parish_id`, `um`.`municipality_id` AS `municipality_id`, `uas`.`state_id` AS `state_id`, `us`.`position_id` AS `position_id`, `us`.`department_id` AS `department_id` FROM ((((((`users` `us` join `users_identity` `ui` on(`ui`.`user_id` = `us`.`user_id`)) join `users_identity_type` `ut` on(`ut`.`identity_type_id` = `ui`.`identity_type_id`)) join `users_contact` `uc` on(`uc`.`user_id` = `us`.`user_id`)) join `users_address_parishes` `up` on(`up`.`parish_id` = `us`.`parish_id`)) join `users_address_municipalities` `um` on(`um`.`municipality_id` = `up`.`municipality_id`)) join `users_address_states` `uas` on(`uas`.`state_id` = `um`.`state_id`)) ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `vw_users_status`
+--
+DROP TABLE IF EXISTS `vw_users_status`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_users_status`  AS SELECT `control_status`.`status_id` AS `status_id`, `control_status`.`status_description` AS `status_description` FROM `control_status` WHERE `control_status`.`status_id` between 1 and 4 ;
 
 --
 -- Índices para tablas volcadas
 --
 
 --
--- Indices de la tabla `tbl_clientes`
+-- Indices de la tabla `clients`
 --
-ALTER TABLE `tbl_clientes`
-  ADD PRIMARY KEY (`Id`),
-  ADD KEY `FK_cliente_socio` (`Id_usuario_socio`),
-  ADD KEY `FK_cliente_pais` (`Id_pais`),
-  ADD KEY `FK_cliente_sector` (`Id_cliente_sector`),
-  ADD KEY `FK_cliente_estatus` (`Id_estatus`),
-  ADD KEY `FK_cliente_servicio` (`Id_cliente_servicio`);
+ALTER TABLE `clients`
+  ADD PRIMARY KEY (`client_id`),
+  ADD KEY `FK_clients_countries_id` (`country_id`),
+  ADD KEY `FK_clients_sectors_id` (`sector_id`),
+  ADD KEY `FK_clients_partner_users_id` (`partner_user_id`),
+  ADD KEY `FK_clients_services_id` (`service_id`),
+  ADD KEY `FK_clients_status_id` (`status_id`);
 
 --
--- Indices de la tabla `tbl_clientes_direccion_pais`
+-- Indices de la tabla `clients_countries`
 --
-ALTER TABLE `tbl_clientes_direccion_pais`
-  ADD PRIMARY KEY (`Id`);
+ALTER TABLE `clients_countries`
+  ADD PRIMARY KEY (`country_id`);
 
 --
--- Indices de la tabla `tbl_clientes_sector`
+-- Indices de la tabla `clients_sectors`
 --
-ALTER TABLE `tbl_clientes_sector`
-  ADD PRIMARY KEY (`Id`),
-  ADD KEY `FK_sector_estatus` (`Id_estatus`);
+ALTER TABLE `clients_sectors`
+  ADD PRIMARY KEY (`sector_id`),
+  ADD KEY `FK_sector_status_id` (`status_id`);
 
 --
--- Indices de la tabla `tbl_clientes_servicios`
+-- Indices de la tabla `clients_services`
 --
-ALTER TABLE `tbl_clientes_servicios`
-  ADD PRIMARY KEY (`Id`),
-  ADD KEY `FK_clientes_estatus` (`Id_estatus`);
+ALTER TABLE `clients_services`
+  ADD PRIMARY KEY (`service_id`),
+  ADD KEY `FK_services_status_id` (`status_id`);
 
 --
--- Indices de la tabla `tbl_control_encryptkey`
+-- Indices de la tabla `control_encrypts`
 --
-ALTER TABLE `tbl_control_encryptkey`
-  ADD PRIMARY KEY (`Id`),
-  ADD KEY `FK_encrypt_status` (`Id_estatus`);
+ALTER TABLE `control_encrypts`
+  ADD PRIMARY KEY (`encrypt_id`),
+  ADD KEY `FK_encrypt_status` (`status_id`) USING BTREE;
 
 --
--- Indices de la tabla `tbl_control_error`
+-- Indices de la tabla `control_errors`
 --
-ALTER TABLE `tbl_control_error`
-  ADD PRIMARY KEY (`Id`),
-  ADD KEY `FK_error_tipomensaje` (`Id_error_tipomensaje`),
-  ADD KEY `FK_error_tipoobjeto` (`Id_error_tipoobjeto`),
-  ADD KEY `FK_error_estatus` (`Id_estatus`);
+ALTER TABLE `control_errors`
+  ADD PRIMARY KEY (`error_id`),
+  ADD KEY `FK_errors_type_message_id` (`type_message_id`),
+  ADD KEY `FK_errors_type_object_id` (`type_object_id`);
 
 --
--- Indices de la tabla `tbl_control_error_tipomensaje`
+-- Indices de la tabla `control_errors_type_messages`
 --
-ALTER TABLE `tbl_control_error_tipomensaje`
-  ADD PRIMARY KEY (`Id`);
+ALTER TABLE `control_errors_type_messages`
+  ADD PRIMARY KEY (`type_message_id`);
 
 --
--- Indices de la tabla `tbl_control_error_tipoobjeto`
+-- Indices de la tabla `control_errors_type_object`
 --
-ALTER TABLE `tbl_control_error_tipoobjeto`
-  ADD PRIMARY KEY (`Id`);
+ALTER TABLE `control_errors_type_object`
+  ADD PRIMARY KEY (`type_object_id`);
 
 --
--- Indices de la tabla `tbl_control_estatus`
+-- Indices de la tabla `control_logs`
 --
-ALTER TABLE `tbl_control_estatus`
-  ADD PRIMARY KEY (`Id`);
+ALTER TABLE `control_logs`
+  ADD PRIMARY KEY (`log_id`),
+  ADD KEY `FK_logs_action_id` (`action_id`);
 
 --
--- Indices de la tabla `tbl_control_logs_bitacora`
+-- Indices de la tabla `control_logs_action`
 --
-ALTER TABLE `tbl_control_logs_bitacora`
-  ADD PRIMARY KEY (`Id`);
+ALTER TABLE `control_logs_action`
+  ADD PRIMARY KEY (`action_id`);
 
 --
--- Indices de la tabla `tbl_control_logs_bitacora_accion`
+-- Indices de la tabla `control_status`
 --
-ALTER TABLE `tbl_control_logs_bitacora_accion`
-  ADD PRIMARY KEY (`Id`);
+ALTER TABLE `control_status`
+  ADD PRIMARY KEY (`status_id`);
 
 --
--- Indices de la tabla `tbl_control_tipocargo`
+-- Indices de la tabla `users`
 --
-ALTER TABLE `tbl_control_tipocargo`
-  ADD PRIMARY KEY (`Id`);
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`user_id`),
+  ADD KEY `FK_department_users_id` (`department_id`),
+  ADD KEY `FK_parish_users_id` (`parish_id`),
+  ADD KEY `FK_position_users_id` (`position_id`),
+  ADD KEY `FK_status_users_id` (`status_id`);
 
 --
--- Indices de la tabla `tbl_usuarios`
+-- Indices de la tabla `users_address_municipalities`
 --
-ALTER TABLE `tbl_usuarios`
-  ADD PRIMARY KEY (`Id`),
-  ADD KEY `FK_cargo_usuario` (`Id_jerarquia_cargo`),
-  ADD KEY `FK_division_usuario` (`Id_jerarquia_division`),
-  ADD KEY `FK_parroquia_usuario` (`Id_direccion_parroquia`),
-  ADD KEY `FK_estado_usuario` (`Id_estatus`);
+ALTER TABLE `users_address_municipalities`
+  ADD PRIMARY KEY (`municipality_id`),
+  ADD KEY `FK_municipality_state_id` (`state_id`);
 
 --
--- Indices de la tabla `tbl_usuarios_contacto`
+-- Indices de la tabla `users_address_parishes`
 --
-ALTER TABLE `tbl_usuarios_contacto`
-  ADD PRIMARY KEY (`Id`),
-  ADD KEY `FK_contacto_usuario` (`Id_usuario`);
+ALTER TABLE `users_address_parishes`
+  ADD PRIMARY KEY (`parish_id`),
+  ADD KEY `FK_parish_municipality_id` (`municipality_id`);
 
 --
--- Indices de la tabla `tbl_usuarios_direccion_estado`
+-- Indices de la tabla `users_address_states`
 --
-ALTER TABLE `tbl_usuarios_direccion_estado`
-  ADD PRIMARY KEY (`Id`);
+ALTER TABLE `users_address_states`
+  ADD PRIMARY KEY (`state_id`);
 
 --
--- Indices de la tabla `tbl_usuarios_direccion_municipio`
+-- Indices de la tabla `users_contact`
 --
-ALTER TABLE `tbl_usuarios_direccion_municipio`
-  ADD PRIMARY KEY (`Id`),
-  ADD KEY `FK_municipio_estado` (`Id_direccion_estado`);
+ALTER TABLE `users_contact`
+  ADD PRIMARY KEY (`contact_id`),
+  ADD KEY `FK_contact_users_id` (`user_id`);
 
 --
--- Indices de la tabla `tbl_usuarios_direccion_parroquia`
+-- Indices de la tabla `users_hierarchy_departments`
 --
-ALTER TABLE `tbl_usuarios_direccion_parroquia`
-  ADD PRIMARY KEY (`Id`),
-  ADD KEY `FK_parroquia_municipio` (`Id_direccion_municipio`);
+ALTER TABLE `users_hierarchy_departments`
+  ADD PRIMARY KEY (`department_id`),
+  ADD KEY `FK_department_status_id` (`status_id`);
 
 --
--- Indices de la tabla `tbl_usuarios_documentoidentidad`
+-- Indices de la tabla `users_hierarchy_positions`
 --
-ALTER TABLE `tbl_usuarios_documentoidentidad`
-  ADD PRIMARY KEY (`Id`),
-  ADD KEY `FK_usuario_documento` (`Id_usuario`),
-  ADD KEY `FK_tipo_documento` (`Id_tipo_documento`);
+ALTER TABLE `users_hierarchy_positions`
+  ADD PRIMARY KEY (`position_id`),
+  ADD KEY `FK_position_type_id` (`position_type_id`),
+  ADD KEY `FK_position_status_id` (`status_id`);
 
 --
--- Indices de la tabla `tbl_usuarios_documentoidentidad_tipo`
+-- Indices de la tabla `users_identity`
 --
-ALTER TABLE `tbl_usuarios_documentoidentidad_tipo`
-  ADD PRIMARY KEY (`Id`),
-  ADD KEY `FK_tipo_estatus` (`Id_estatus`);
+ALTER TABLE `users_identity`
+  ADD PRIMARY KEY (`identity_id`),
+  ADD KEY `FK_identity_users_id` (`user_id`),
+  ADD KEY `FK_identity_type_id` (`identity_type_id`);
 
 --
--- Indices de la tabla `tbl_usuarios_jerarquia_cargo`
+-- Indices de la tabla `users_identity_type`
 --
-ALTER TABLE `tbl_usuarios_jerarquia_cargo`
-  ADD PRIMARY KEY (`Id`),
-  ADD KEY `FK_usuarios_tipo_cargo` (`Id_TipoCargo`),
-  ADD KEY `FK_usuarios_cargo_estado` (`Id_Estatus`);
+ALTER TABLE `users_identity_type`
+  ADD PRIMARY KEY (`identity_type_id`);
 
 --
--- Indices de la tabla `tbl_usuarios_jerarquia_division`
+-- Indices de la tabla `users_position_type`
 --
-ALTER TABLE `tbl_usuarios_jerarquia_division`
-  ADD PRIMARY KEY (`Id`),
-  ADD KEY `FK_usuarios_division_estado` (`Id_Estatus`);
+ALTER TABLE `users_position_type`
+  ADD PRIMARY KEY (`position_type_id`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT de la tabla `tbl_clientes`
+-- AUTO_INCREMENT de la tabla `clients`
 --
-ALTER TABLE `tbl_clientes`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=256;
+ALTER TABLE `clients`
+  MODIFY `client_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=252;
 
 --
--- AUTO_INCREMENT de la tabla `tbl_clientes_direccion_pais`
+-- AUTO_INCREMENT de la tabla `clients_countries`
 --
-ALTER TABLE `tbl_clientes_direccion_pais`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=247;
+ALTER TABLE `clients_countries`
+  MODIFY `country_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=247;
 
 --
--- AUTO_INCREMENT de la tabla `tbl_clientes_sector`
+-- AUTO_INCREMENT de la tabla `clients_sectors`
 --
-ALTER TABLE `tbl_clientes_sector`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `clients_sectors`
+  MODIFY `sector_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT de la tabla `tbl_clientes_servicios`
+-- AUTO_INCREMENT de la tabla `clients_services`
 --
-ALTER TABLE `tbl_clientes_servicios`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+ALTER TABLE `clients_services`
+  MODIFY `service_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
--- AUTO_INCREMENT de la tabla `tbl_control_encryptkey`
+-- AUTO_INCREMENT de la tabla `control_encrypts`
 --
-ALTER TABLE `tbl_control_encryptkey`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+ALTER TABLE `control_encrypts`
+  MODIFY `encrypt_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT de la tabla `tbl_control_error`
+-- AUTO_INCREMENT de la tabla `control_errors`
 --
-ALTER TABLE `tbl_control_error`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
+ALTER TABLE `control_errors`
+  MODIFY `error_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=130;
 
 --
--- AUTO_INCREMENT de la tabla `tbl_control_error_tipomensaje`
+-- AUTO_INCREMENT de la tabla `control_errors_type_messages`
 --
-ALTER TABLE `tbl_control_error_tipomensaje`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `control_errors_type_messages`
+  MODIFY `type_message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de la tabla `tbl_control_error_tipoobjeto`
+-- AUTO_INCREMENT de la tabla `control_errors_type_object`
 --
-ALTER TABLE `tbl_control_error_tipoobjeto`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+ALTER TABLE `control_errors_type_object`
+  MODIFY `type_object_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT de la tabla `tbl_control_estatus`
+-- AUTO_INCREMENT de la tabla `control_logs`
 --
-ALTER TABLE `tbl_control_estatus`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+ALTER TABLE `control_logs`
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=152;
 
 --
--- AUTO_INCREMENT de la tabla `tbl_control_logs_bitacora`
+-- AUTO_INCREMENT de la tabla `control_logs_action`
 --
-ALTER TABLE `tbl_control_logs_bitacora`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
+ALTER TABLE `control_logs_action`
+  MODIFY `action_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT de la tabla `tbl_control_logs_bitacora_accion`
+-- AUTO_INCREMENT de la tabla `control_status`
 --
-ALTER TABLE `tbl_control_logs_bitacora_accion`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+ALTER TABLE `control_status`
+  MODIFY `status_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT de la tabla `tbl_control_tipocargo`
+-- AUTO_INCREMENT de la tabla `users`
 --
-ALTER TABLE `tbl_control_tipocargo`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `users`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=250;
 
 --
--- AUTO_INCREMENT de la tabla `tbl_usuarios`
+-- AUTO_INCREMENT de la tabla `users_address_municipalities`
 --
-ALTER TABLE `tbl_usuarios`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=258;
+ALTER TABLE `users_address_municipalities`
+  MODIFY `municipality_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=463;
 
 --
--- AUTO_INCREMENT de la tabla `tbl_usuarios_contacto`
+-- AUTO_INCREMENT de la tabla `users_address_parishes`
 --
-ALTER TABLE `tbl_usuarios_contacto`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=256;
+ALTER TABLE `users_address_parishes`
+  MODIFY `parish_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1139;
 
 --
--- AUTO_INCREMENT de la tabla `tbl_usuarios_direccion_estado`
+-- AUTO_INCREMENT de la tabla `users_address_states`
 --
-ALTER TABLE `tbl_usuarios_direccion_estado`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+ALTER TABLE `users_address_states`
+  MODIFY `state_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
--- AUTO_INCREMENT de la tabla `tbl_usuarios_direccion_municipio`
+-- AUTO_INCREMENT de la tabla `users_contact`
 --
-ALTER TABLE `tbl_usuarios_direccion_municipio`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=463;
+ALTER TABLE `users_contact`
+  MODIFY `contact_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=250;
 
 --
--- AUTO_INCREMENT de la tabla `tbl_usuarios_direccion_parroquia`
+-- AUTO_INCREMENT de la tabla `users_hierarchy_departments`
 --
-ALTER TABLE `tbl_usuarios_direccion_parroquia`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1139;
+ALTER TABLE `users_hierarchy_departments`
+  MODIFY `department_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- AUTO_INCREMENT de la tabla `tbl_usuarios_documentoidentidad`
+-- AUTO_INCREMENT de la tabla `users_hierarchy_positions`
 --
-ALTER TABLE `tbl_usuarios_documentoidentidad`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=256;
+ALTER TABLE `users_hierarchy_positions`
+  MODIFY `position_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
--- AUTO_INCREMENT de la tabla `tbl_usuarios_documentoidentidad_tipo`
+-- AUTO_INCREMENT de la tabla `users_identity`
 --
-ALTER TABLE `tbl_usuarios_documentoidentidad_tipo`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `users_identity`
+  MODIFY `identity_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=250;
 
 --
--- AUTO_INCREMENT de la tabla `tbl_usuarios_jerarquia_cargo`
+-- AUTO_INCREMENT de la tabla `users_identity_type`
 --
-ALTER TABLE `tbl_usuarios_jerarquia_cargo`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+ALTER TABLE `users_identity_type`
+  MODIFY `identity_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de la tabla `tbl_usuarios_jerarquia_division`
+-- AUTO_INCREMENT de la tabla `users_position_type`
 --
-ALTER TABLE `tbl_usuarios_jerarquia_division`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+ALTER TABLE `users_position_type`
+  MODIFY `position_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas
 --
 
 --
--- Filtros para la tabla `tbl_clientes`
+-- Filtros para la tabla `clients`
 --
-ALTER TABLE `tbl_clientes`
-  ADD CONSTRAINT `FK_cliente_estatus` FOREIGN KEY (`Id_estatus`) REFERENCES `tbl_control_estatus` (`Id`),
-  ADD CONSTRAINT `FK_cliente_pais` FOREIGN KEY (`Id_pais`) REFERENCES `tbl_clientes_direccion_pais` (`Id`),
-  ADD CONSTRAINT `FK_cliente_sector` FOREIGN KEY (`Id_cliente_sector`) REFERENCES `tbl_clientes_sector` (`Id`),
-  ADD CONSTRAINT `FK_cliente_servicio` FOREIGN KEY (`Id_cliente_servicio`) REFERENCES `tbl_clientes_servicios` (`Id`),
-  ADD CONSTRAINT `FK_cliente_socio` FOREIGN KEY (`Id_usuario_socio`) REFERENCES `tbl_usuarios` (`Id`);
+ALTER TABLE `clients`
+  ADD CONSTRAINT `FK_clients_countries_id` FOREIGN KEY (`country_id`) REFERENCES `clients_countries` (`country_id`),
+  ADD CONSTRAINT `FK_clients_partner_users_id` FOREIGN KEY (`partner_user_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `FK_clients_sectors_id` FOREIGN KEY (`sector_id`) REFERENCES `clients_sectors` (`sector_id`),
+  ADD CONSTRAINT `FK_clients_services_id` FOREIGN KEY (`service_id`) REFERENCES `clients_services` (`service_id`),
+  ADD CONSTRAINT `FK_clients_status_id` FOREIGN KEY (`status_id`) REFERENCES `control_status` (`status_id`);
 
 --
--- Filtros para la tabla `tbl_clientes_sector`
+-- Filtros para la tabla `clients_sectors`
 --
-ALTER TABLE `tbl_clientes_sector`
-  ADD CONSTRAINT `FK_sector_estatus` FOREIGN KEY (`Id_estatus`) REFERENCES `tbl_control_estatus` (`Id`);
+ALTER TABLE `clients_sectors`
+  ADD CONSTRAINT `FK_sector_status_id` FOREIGN KEY (`status_id`) REFERENCES `control_status` (`status_id`);
 
 --
--- Filtros para la tabla `tbl_clientes_servicios`
+-- Filtros para la tabla `clients_services`
 --
-ALTER TABLE `tbl_clientes_servicios`
-  ADD CONSTRAINT `FK_clientes_estatus` FOREIGN KEY (`Id_estatus`) REFERENCES `tbl_control_estatus` (`Id`);
+ALTER TABLE `clients_services`
+  ADD CONSTRAINT `FK_services_status_id` FOREIGN KEY (`status_id`) REFERENCES `control_status` (`status_id`);
 
 --
--- Filtros para la tabla `tbl_control_encryptkey`
+-- Filtros para la tabla `control_encrypts`
 --
-ALTER TABLE `tbl_control_encryptkey`
-  ADD CONSTRAINT `FK_encrypt_status` FOREIGN KEY (`Id_estatus`) REFERENCES `tbl_control_estatus` (`Id`);
+ALTER TABLE `control_encrypts`
+  ADD CONSTRAINT `FK_encrypt_status` FOREIGN KEY (`status_id`) REFERENCES `control_status` (`status_id`);
 
 --
--- Filtros para la tabla `tbl_control_error`
+-- Filtros para la tabla `control_errors`
 --
-ALTER TABLE `tbl_control_error`
-  ADD CONSTRAINT `FK_error_estatus` FOREIGN KEY (`Id_estatus`) REFERENCES `tbl_control_estatus` (`Id`),
-  ADD CONSTRAINT `FK_error_tipomensaje` FOREIGN KEY (`Id_error_tipomensaje`) REFERENCES `tbl_control_error_tipomensaje` (`Id`),
-  ADD CONSTRAINT `FK_error_tipoobjeto` FOREIGN KEY (`Id_error_tipoobjeto`) REFERENCES `tbl_control_error_tipoobjeto` (`Id`);
+ALTER TABLE `control_errors`
+  ADD CONSTRAINT `FK_error_tipomensaje` FOREIGN KEY (`type_message_id`) REFERENCES `control_errors_type_messages` (`type_message_id`),
+  ADD CONSTRAINT `FK_error_tipoobjeto` FOREIGN KEY (`type_object_id`) REFERENCES `control_errors_type_object` (`type_object_id`),
+  ADD CONSTRAINT `FK_errors_type_message_id` FOREIGN KEY (`type_message_id`) REFERENCES `control_errors_type_messages` (`type_message_id`),
+  ADD CONSTRAINT `FK_errors_type_object_id` FOREIGN KEY (`type_object_id`) REFERENCES `control_errors_type_object` (`type_object_id`);
 
 --
--- Filtros para la tabla `tbl_usuarios`
+-- Filtros para la tabla `control_logs`
 --
-ALTER TABLE `tbl_usuarios`
-  ADD CONSTRAINT `FK_cargo_usuario` FOREIGN KEY (`Id_jerarquia_cargo`) REFERENCES `tbl_usuarios_jerarquia_cargo` (`Id`),
-  ADD CONSTRAINT `FK_division_usuario` FOREIGN KEY (`Id_jerarquia_division`) REFERENCES `tbl_usuarios_jerarquia_division` (`Id`),
-  ADD CONSTRAINT `FK_estado_usuario` FOREIGN KEY (`Id_estatus`) REFERENCES `tbl_control_estatus` (`Id`),
-  ADD CONSTRAINT `FK_parroquia_usuario` FOREIGN KEY (`Id_direccion_parroquia`) REFERENCES `tbl_usuarios_direccion_parroquia` (`Id`);
+ALTER TABLE `control_logs`
+  ADD CONSTRAINT `FK_logs_action_id` FOREIGN KEY (`action_id`) REFERENCES `control_logs_action` (`action_id`);
 
 --
--- Filtros para la tabla `tbl_usuarios_contacto`
+-- Filtros para la tabla `users`
 --
-ALTER TABLE `tbl_usuarios_contacto`
-  ADD CONSTRAINT `FK_contacto_usuario` FOREIGN KEY (`Id_usuario`) REFERENCES `tbl_usuarios` (`Id`);
+ALTER TABLE `users`
+  ADD CONSTRAINT `FK_department_users_id` FOREIGN KEY (`department_id`) REFERENCES `users_hierarchy_departments` (`department_id`),
+  ADD CONSTRAINT `FK_parish_users_id` FOREIGN KEY (`parish_id`) REFERENCES `users_address_parishes` (`parish_id`),
+  ADD CONSTRAINT `FK_position_users_id` FOREIGN KEY (`position_id`) REFERENCES `users_hierarchy_positions` (`position_id`),
+  ADD CONSTRAINT `FK_status_users_id` FOREIGN KEY (`status_id`) REFERENCES `control_status` (`status_id`);
 
 --
--- Filtros para la tabla `tbl_usuarios_direccion_municipio`
+-- Filtros para la tabla `users_address_municipalities`
 --
-ALTER TABLE `tbl_usuarios_direccion_municipio`
-  ADD CONSTRAINT `FK_municipio_estado` FOREIGN KEY (`Id_direccion_estado`) REFERENCES `tbl_usuarios_direccion_estado` (`Id`);
+ALTER TABLE `users_address_municipalities`
+  ADD CONSTRAINT `FK_municipality_state_id` FOREIGN KEY (`state_id`) REFERENCES `users_address_states` (`state_id`),
+  ADD CONSTRAINT `FK_municipio_estado` FOREIGN KEY (`state_id`) REFERENCES `users_address_states` (`state_id`);
 
 --
--- Filtros para la tabla `tbl_usuarios_direccion_parroquia`
+-- Filtros para la tabla `users_address_parishes`
 --
-ALTER TABLE `tbl_usuarios_direccion_parroquia`
-  ADD CONSTRAINT `FK_parroquia_municipio` FOREIGN KEY (`Id_direccion_municipio`) REFERENCES `tbl_usuarios_direccion_municipio` (`Id`);
+ALTER TABLE `users_address_parishes`
+  ADD CONSTRAINT `FK_parish_municipality_id` FOREIGN KEY (`municipality_id`) REFERENCES `users_address_municipalities` (`municipality_id`),
+  ADD CONSTRAINT `FK_parroquia_municipio` FOREIGN KEY (`municipality_id`) REFERENCES `users_address_municipalities` (`municipality_id`);
 
 --
--- Filtros para la tabla `tbl_usuarios_documentoidentidad`
+-- Filtros para la tabla `users_contact`
 --
-ALTER TABLE `tbl_usuarios_documentoidentidad`
-  ADD CONSTRAINT `FK_tipo_documento` FOREIGN KEY (`Id_tipo_documento`) REFERENCES `tbl_usuarios_documentoidentidad_tipo` (`Id`),
-  ADD CONSTRAINT `FK_usuario_documento` FOREIGN KEY (`Id_usuario`) REFERENCES `tbl_usuarios` (`Id`);
+ALTER TABLE `users_contact`
+  ADD CONSTRAINT `FK_contact_users_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `FK_contacto_usuario` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 
 --
--- Filtros para la tabla `tbl_usuarios_documentoidentidad_tipo`
+-- Filtros para la tabla `users_hierarchy_departments`
 --
-ALTER TABLE `tbl_usuarios_documentoidentidad_tipo`
-  ADD CONSTRAINT `FK_tipo_estatus` FOREIGN KEY (`Id_estatus`) REFERENCES `tbl_control_estatus` (`Id`);
+ALTER TABLE `users_hierarchy_departments`
+  ADD CONSTRAINT `FK_department_status_id` FOREIGN KEY (`status_id`) REFERENCES `control_status` (`status_id`),
+  ADD CONSTRAINT `FK_usuarios_division_estado` FOREIGN KEY (`status_id`) REFERENCES `control_status` (`status_id`);
 
 --
--- Filtros para la tabla `tbl_usuarios_jerarquia_cargo`
+-- Filtros para la tabla `users_hierarchy_positions`
 --
-ALTER TABLE `tbl_usuarios_jerarquia_cargo`
-  ADD CONSTRAINT `FK_usuarios_cargo_estado` FOREIGN KEY (`Id_Estatus`) REFERENCES `tbl_control_estatus` (`Id`),
-  ADD CONSTRAINT `FK_usuarios_tipo_cargo` FOREIGN KEY (`Id_TipoCargo`) REFERENCES `tbl_control_tipocargo` (`Id`);
+ALTER TABLE `users_hierarchy_positions`
+  ADD CONSTRAINT `FK_position_status_id` FOREIGN KEY (`status_id`) REFERENCES `control_status` (`status_id`),
+  ADD CONSTRAINT `FK_position_type_id` FOREIGN KEY (`position_type_id`) REFERENCES `users_position_type` (`position_type_id`),
+  ADD CONSTRAINT `FK_usuarios_cargo_estado` FOREIGN KEY (`status_id`) REFERENCES `control_status` (`status_id`),
+  ADD CONSTRAINT `FK_usuarios_tipo_cargo` FOREIGN KEY (`position_type_id`) REFERENCES `users_position_type` (`position_type_id`);
 
 --
--- Filtros para la tabla `tbl_usuarios_jerarquia_division`
+-- Filtros para la tabla `users_identity`
 --
-ALTER TABLE `tbl_usuarios_jerarquia_division`
-  ADD CONSTRAINT `FK_usuarios_division_estado` FOREIGN KEY (`Id_Estatus`) REFERENCES `tbl_control_estatus` (`Id`);
+ALTER TABLE `users_identity`
+  ADD CONSTRAINT `FK_identity_type_id` FOREIGN KEY (`identity_type_id`) REFERENCES `users_identity_type` (`identity_type_id`),
+  ADD CONSTRAINT `FK_identity_users_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
+  ADD CONSTRAINT `FK_tipo_documento` FOREIGN KEY (`identity_type_id`) REFERENCES `users_identity_type` (`identity_type_id`),
+  ADD CONSTRAINT `FK_usuario_documento` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

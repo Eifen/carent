@@ -113,7 +113,7 @@ const clientsControl = createApp ({
             ? this.paramsDTOEdit.IdStatus = null
             : this.paramsDTOEdit.IdStatus = dataParams.Status
 
-            this.paramsDTOEdit.IdClient = this.updateModel.Id
+            this.paramsDTOEdit.IdClient = this.updateModel.client_id
 
             //Una vez haya terminado de verificar validateNivel2
             this.paramsDTOEdit = { ...this.paramsDTOEdit, ...this.paramsDTOClients }

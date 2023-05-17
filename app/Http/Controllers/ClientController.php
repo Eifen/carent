@@ -20,7 +20,7 @@ class ClientController extends Controller
     public function index(Request $request)
     {
         //Corroboraros que exista un usuario
-        if (Session::has('idUsuario')) $this->permitControl = true;
+        if (Session::has('userId')) $this->permitControl = true;
 
         return view('index')->with("Session",$this->permitControl);
     }
@@ -88,7 +88,7 @@ class ClientController extends Controller
             strtolower($dataClient->input('client')['EmailFiscal']),
             $dataClient->input('client')['IdSector'],
             $dataClient->input('client')['IdServicio'],
-            Session::get('idUsuario'),
+            Session::get('userId'),
             ConfigController::GetIpUser()
         );
 

@@ -7,11 +7,11 @@
         <select class="form-select" v-model="scope.inputEstadoSelect" title="StateSelect">
           <option v-for="(select, cursor) in scope.stateData"
             :key="cursor"
-            :value="select.Id"
-            :selected="select.Id == 0"
-            :disabled="select.Id == 0">
-            <span v-if="select.Id != 0">{{ select.NombreEstado }}</span>
-            <span v-if="select.Id == 0">Seleccione el Estado</span>
+            :value="select.state_id"
+            :selected="select.state_id == 0"
+            :disabled="select.state_id == 0">
+            <span v-if="select.state_id != 0">{{ select.state_name }}</span>
+            <span v-if="select.state_id == 0">Seleccione el Estado</span>
           </option>
         </select>
       </div>
@@ -26,10 +26,10 @@
           <option value=0 selected disabled>Seleccione el Municipio</option>
           <option v-for="(select, cursor) in scope.municipality.select"
             :key="cursor"
-            :value="select.Id"
-            :selected="select.Id == 0"
-            :disabled="select.Id == 0">
-            <span v-if="select.Id != 0">{{ select.NombreMunicipio }}</span>
+            :value="select.municipality_id"
+            :selected="select.municipality_id == 0"
+            :disabled="select.municipality_id == 0">
+            <span v-if="select.municipality_id != 0">{{ select.municipality_name}}</span>
           </option>
         </select>
       </div>
@@ -44,10 +44,10 @@
           <option value=0 selected disabled>Seleccione la Parroquia</option>
           <option v-for="(select, cursor) in scope.parish.select"
             :key="cursor"
-            :value="select.Id"
-            :selected="select.Id == 0"
-            :disabled="select.Id == 0">
-            <span v-if="select.Id != 0">{{ select.NombreParroquia }}</span>
+            :value="select.parish_id"
+            :selected="select.parish_id == 0"
+            :disabled="select.parish_id == 0">
+            <span v-if="select.parish_id != 0">{{ select.parish_name }}</span>
           </option>
         </select>
       </div>
@@ -59,11 +59,11 @@
         <select class="form-select" v-model="scope.inputDivisionSelect" title="DivisionSelect">
           <option v-for="(select, cursor) in scope.divisionData"
             :key="cursor"
-            :value="select.Id"
-            :selected="select.Id == 0"
-            :disabled="select.Id == 0">
-            <span v-if="select.Id != 0">{{ select.NombreDivision }}</span>
-            <span v-if="select.Id == 0">Seleccione la División</span>
+            :value="select.department_id"
+            :selected="select.department_id == 0"
+            :disabled="select.department_id == 0">
+            <span v-if="select.department_id != 0">{{ select.department_name }}</span>
+            <span v-if="select.department_id == 0">Seleccione la División</span>
           </option>
         </select>
       </div>
@@ -77,11 +77,11 @@
           v-model="scope.inputCargoSelect">
           <option v-for="(select, cursor) in scope.cargoData"
             :key="cursor"
-            :value="select.Id"
-            :selected="select.Id == 0"
-            :disabled="select.Id == 0">
-            <span v-if="select.Id != 0">{{ select.NombreCargo }}</span>
-            <span v-if="select.Id == 0">Seleccione el Cargo</span>
+            :value="select.position_id"
+            :selected="select.position_id == 0"
+            :disabled="select.position_id == 0">
+            <span v-if="select.position_id != 0">{{ select.position_name }}</span>
+            <span v-if="select.position_id == 0">Seleccione el Cargo</span>
           </option>
         </select>
       </div>

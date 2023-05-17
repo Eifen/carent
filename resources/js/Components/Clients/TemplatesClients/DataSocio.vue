@@ -9,9 +9,9 @@
           <option value=0 disabled selected>Seleccione el Socio encargado</option>
           <option v-for="(select, cursor) in scope.dataSelect.socio"
             :key="cursor"
-            :value="select.Id">
-            <span v-if="select.Id != 0">{{ select.Primer_nombre + " " + select.Segundo_nombre + " " +
-                                        select.Primer_apellido + " " + select.Segundo_apellido }}</span>
+            :value="select.user_id">
+            <span v-if="select.user_id != 0">{{ select.first_name + " " + select.second_name + " " +
+                                        select.first_surname + " " + select.second_surname }}</span>
           </option>
         </select>
       </div>
@@ -24,8 +24,8 @@
           <option value="0" selected disabled>Seleccione el status</option>
           <option v-for="(select, cursor) in scope.dataSelect.status"
             :key="cursor"
-            :value="select.Id">
-            {{ select.Descripcion }}
+            :value="select.status_id">
+            {{ select.status_description }}
           </option>
         </select>
       </div>

@@ -8,11 +8,11 @@
                 v-model="scope.inputPaisSelect">
                     <option v-for="(select, cursor) in scope.dataSelect.paises"
                     :key="cursor"
-                    :value="select.Id"
-                    :disabled="select.Id == 0"
-                    :selected="select.Id == 0">
-                        <span v-if="select.Id != 0">{{ select.Nombre_pais }}</span>
-                        <span v-if="select.Id == 0">Seleccione el Pais</span>
+                    :value="select.country_id"
+                    :disabled="select.country_id == 0"
+                    :selected="select.country_id == 0">
+                        <span v-if="select.country_id != 0">{{ select.country_name }}</span>
+                        <span v-if="select.country_id == 0">Seleccione el Pais</span>
                     </option>
                 </select>
             </div>
@@ -104,14 +104,14 @@
                 <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
                 {{ scope.messages.error.webError }}
             </div>
-        </div>        
+        </div>
     </fieldset>
 </template>
 
 <script>
 import FontAwesome from "@/Components/FontAwesome/FontAwesome.vue";
 export default {
-    props:{ 
+    props:{
         scope: Object, //Hereda la data del padre
         isEdit: Boolean //Hereda el isEdit del padre
     },

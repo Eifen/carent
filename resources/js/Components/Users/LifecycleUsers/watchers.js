@@ -8,27 +8,27 @@ export const userWatchers =
     watch: {
         //Watch para el update
         dataEdit(newEdit) {
-            this.inputFirstname = newEdit.Primer_nombre
-            this.inputSecondname = newEdit.Segundo_nombre
-            this.inputLastname = newEdit.Primer_Apellido
-            this.inputLastSecondname = newEdit.Segundo_apellido
-            this.inputSelect = newEdit.AbreviaturaTipo + "-" + newEdit.Cedula
-            this.inputDocumentoSelect = newEdit.AbreviaturaTipo
-            this.inputBirthday = newEdit.Fecha_nacimiento === null ? "" : newEdit.Fecha_nacimiento
-            this.inputCode = newEdit.Codigo
-            this.inputFirstEmail = newEdit.Correo_principal
-            this.inputSecondEmail = newEdit.Correo_secundario
-            this.inputFirstPhone = newEdit.Telefono_principal
-            this.inputSecondPhone = newEdit.Telefono_secundario
-            this.inputStatusSelect = newEdit.StatusId
+            this.inputFirstname = newEdit.first_name
+            this.inputSecondname = newEdit.second_name
+            this.inputLastname = newEdit.first_surname
+            this.inputLastSecondname = newEdit.second_surname
+            this.inputSelect = newEdit.identity_abbreviation + "-" + newEdit.identity_number
+            this.inputDocumentoSelect = newEdit.identity_abbreviation
+            this.inputBirthday = newEdit.birthday === null ? "" : newEdit.birthday
+            this.inputCode = newEdit.user_code
+            this.inputFirstEmail = newEdit.primary_email
+            this.inputSecondEmail = newEdit.secondary_email
+            this.inputFirstPhone = newEdit.primary_phone
+            this.inputSecondPhone = newEdit.secondary_phone
+            this.inputStatusSelect = newEdit.status_id
             //Activamos la casilla de empleado
-            this.inputEstadoSelect = newEdit.EstadoId
-            this.inputMunicipioSelect = newEdit.MunicipioId
-            this.inputParroquiaSelect = newEdit.ParroquiaId
-            this.inputDivisionSelect = newEdit.DivisionId
-            this.inputCargoSelect = newEdit.CargoId
-            this.inputIngreso = newEdit.Fecha_ingreso === null ? "" : newEdit.Fecha_ingreso
-            this.inputEgreso = newEdit.Fecha_egreso === null ? "" : newEdit.Fecha_egreso
+            this.inputEstadoSelect = newEdit.state_id
+            this.inputMunicipioSelect = newEdit.municipality_id
+            this.inputParroquiaSelect = newEdit.parish_id
+            this.inputDivisionSelect = newEdit.department_id
+            this.inputCargoSelect = newEdit.position_id
+            this.inputIngreso = newEdit.admission_date === null ? "" : newEdit.admission_date
+            this.inputEgreso = newEdit.departure_date === null ? "" : newEdit.departure_date
         },
         //Nombres
         inputFirstname(newString) { this.validateString(this.limitString.NAME, newString, 'inputFirstname', 'firstnameError', [true, 'firstnameValid']) },
@@ -86,11 +86,11 @@ export const userWatchers =
         //Activamos de Inputs Watchers
         inputEstadoSelect(getEstado) {
             //Consultamos los municipios
-            this.municipality.select = this.municipality.init.filter((municipality) => { return municipality.Id_direccion_estado === getEstado })
+            this.municipality.select = this.municipality.init.filter((municipality) => { return municipality.state_id === getEstado })
         },
         inputMunicipioSelect(getMunicipio) {
             //Consultamos las parroquias
-            this.parish.select = this.parish.init.filter((parish) => { return parish.Id_direccion_municipio === getMunicipio })
+            this.parish.select = this.parish.init.filter((parish) => { return parish.municipality_id === getMunicipio })
         },
         //Watch del submitButton
         submitButton: {

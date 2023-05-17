@@ -13,7 +13,7 @@ class LoginModel extends Model
      */
     public static function VerificarLogin($DataLogin)
     {
-        DB::select('call sp_Login(?,?,?,@response)', $DataLogin);
+        DB::select('call sp_login(?,?,?,@response)', $DataLogin);
         $GetResponse = DB::select('SELECT @response as JsonLoginData');
         $ResponseJson = json_decode($GetResponse[0]->JsonLoginData, true);
 
@@ -25,9 +25,9 @@ class LoginModel extends Model
      */
     public static function GetEncryptKey()
     {
-        $initEncrypt = DB::select('SELECT `EncryptKey`, `EncryptIv` FROM `tbl_control_encryptkey` WHERE `Id_estatus` = ? LIMIT 1', [1]);
-        $getKey = $initEncrypt[0]->EncryptKey;
-        $getIv = $initEncrypt[0]->EncryptIv;
+        $initEncrypt = DB::table('control_encrypts')->where('status_id','=',1)->get(['encrypt_key','encrypt_iv']);
+        $getKey = $initEncrypt[0]->encrypt_key;
+        $getIv = $initEncrypt[0]->encrypt_iv;
 
         return array("key" => $getKey, "iv" => $getIv);
     }

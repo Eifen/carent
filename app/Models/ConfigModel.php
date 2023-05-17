@@ -39,7 +39,7 @@ class ConfigModel extends Model
      */
     public function GetAll($tableTarget)
     {
-        DB::select('CALL sp_QueryPagination(?,@jsonResponse)', [$tableTarget]);
+        DB::select('CALL sp_query_pagination(?,@jsonResponse)', [$tableTarget]);
         $GetReponse = DB::select('SELECT @jsonResponse as JsonDataTable');
         $Response = json_decode($GetReponse[0]-> JsonDataTable,true);
         return $Response;
@@ -54,9 +54,9 @@ class ConfigModel extends Model
     {
         switch ($tableReference) {
             case 'usuarios':
-                return DB::table('tbl_usuarios_status')->get();
+                return DB::table('vw_users_status')->get();
             case 'clientes':
-                return DB::table('tbl_clientes_status')->get();
+                return DB::table('vw_clients_status')->get();
         }
     }
 }

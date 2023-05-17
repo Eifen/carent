@@ -89,8 +89,8 @@
           <option value="0" selected disabled>Seleccione el status</option>
           <option v-for="(select, cursor) in scope.statusData"
             :key="cursor"
-            :value="select.Id">
-            {{ select.Descripcion }}
+            :value="select.status_id">
+            {{ select.status_description }}
           </option>
         </select>
       </div>

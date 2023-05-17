@@ -8,22 +8,22 @@ export const clientWatchers =
         //Watch para el update
         dataEdit(newEdit) {
             //Obtenemos el codigo del pais
-            const selectPaisCode = this.dataSelect.paises.find((pais) => { return pais.Id == newEdit.Id_pais })
+            const selectPaisCode = this.dataSelect.paises.find((pais) => { return pais.country_id == newEdit.country_id })
             //Formateamos el telefono ([1] numero de telefono)
-            const DTOTelefono = newEdit.Telefono_fiscal.split(selectPaisCode.Codigo_telf);
+            const DTOTelefono = newEdit.tax_phone.split(selectPaisCode.phone_code);
             //Asignamos la data
-            this.inputSocioSelect = newEdit.Id_usuario_socio;
-            this.inputSectorSelect = newEdit.Id_cliente_sector;
-            this.inputServicioSelect = newEdit.Id_cliente_servicio;
-            this.inputPaisSelect = newEdit.Id_pais;
-            this.inputStatusSelect = newEdit.Id_estatus;
-            this.inputNit = newEdit.Nit;
-            this.inputRif = newEdit.Rif;
-            this.inputTelefono = `+${selectPaisCode.Codigo_telf}-${DTOTelefono[1]}`;
-            this.inputRazonSocial = newEdit.Razon_social;
-            this.inputDireccion = newEdit.Direccion;
-            this.inputFirstEmail = newEdit.Email_fiscal;
-            this.inputWeb = newEdit.Pagina_web;
+            this.inputSocioSelect = newEdit.partner_user_id;
+            this.inputSectorSelect = newEdit.sector_id;
+            this.inputServicioSelect = newEdit.service_id;
+            this.inputPaisSelect = newEdit.country_id;
+            this.inputStatusSelect = newEdit.status_id;
+            this.inputNit = newEdit.nit;
+            this.inputRif = newEdit.rif;
+            this.inputTelefono = `+${selectPaisCode.phone_code}-${DTOTelefono[1]}`;
+            this.inputRazonSocial = newEdit.bussiness_name;
+            this.inputDireccion = newEdit.client_address;
+            this.inputFirstEmail = newEdit.tax_email;
+            this.inputWeb = newEdit.website;
         },
         //Select Paises
         inputPaisSelect(newValue)
@@ -33,10 +33,10 @@ export const clientWatchers =
                 this.submitButton.paisesValid = true;
                 //Interamos la data de paises para colocar el código númerico en el campo de telefono
                 const selectPais = this.dataSelect.paises.find((pais) => {
-                    return pais.Id == this.inputPaisSelect
+                    return pais.country_id == this.inputPaisSelect
                 });
                 //En caso de que estemos en crear cliente, añadiremos el codigo del pais
-                if (!this.isEdit) this.inputTelefono = `+${selectPais.Codigo_telf}-`;
+                if (!this.isEdit) this.inputTelefono = `+${selectPais.phone_code}-`;
             }else{ this.submitButton.paisesValid = false }
         },
         //Razon Social
@@ -116,8 +116,8 @@ export const clientWatchers =
                 {
                     //Guardamos el codigo del pais
                     contCode = this.dataSelect.paises.find((pais) => {
-                        return pais.Codigo_telf === validatePhone.message[2]
-                    }).Codigo_telf;
+                        return pais.phone_code === validatePhone.message[2]
+                    }).phone_code;
                     if(contCode == 0) this.inputTelefono = oldValue;
                 }
                 //Pasamos las validaciones

@@ -27,7 +27,7 @@ const clientsIndex = createApp ({
             clientsData: [], //Array de Objetos clientes
             paginationLength: 50, //Tamaño máximo de registros por página
             maxPagination: 0, //Define el tamaño total de páginas
-            tableTarget: 'tbl_clientes',
+            tableTarget: 'clients',
         }
     },
     created()

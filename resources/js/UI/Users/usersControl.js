@@ -128,7 +128,7 @@ const createUser = createApp({
             : this.paramDTOEdit.DateEgreso = Data.DateEgreso;
 
             //Pasamos el Id del usuario
-            this.paramDTOEdit.IdUser = this.updateModel.Id;
+            this.paramDTOEdit.IdUser = this.updateModel.user_id;
 
             //Unimos el array user en edit
             this.paramDTOEdit = { ...this.paramDTOEdit, ...this.paramDTOUser}

@@ -68,11 +68,11 @@
                 v-model="scope.inputSectorSelect">
                     <option v-for="(select, cursor) in scope.dataSelect.sectores"
                     :key="cursor"
-                    :value="select.Id"
-                    :disabled="select.Id == 0"
-                    :selected="select.Id == 0">
-                        <span v-if="select.Id != 0">{{ select.Nombre_sector }}</span>
-                        <span v-if="select.Id == 0">Seleccione el Sector</span>
+                    :value="select.sector_id"
+                    :disabled="select.sector_id == 0"
+                    :selected="select.sector_id == 0">
+                        <span v-if="select.sector_id != 0">{{ select.sector_name }}</span>
+                        <span v-if="select.sector_id == 0">Seleccione el Sector</span>
                     </option>
                 </select>
             </div>
@@ -85,11 +85,11 @@
                 v-model="scope.inputServicioSelect">
                     <option v-for="(select, cursor) in scope.dataSelect.servicios"
                     :key="cursor"
-                    :value="select.Id"
-                    :disabled="select.Id == 0"
-                    :selected="select.Id == 0">
-                        <span v-if="select.Id != 0">{{ select.Nombre_servicio }}</span>
-                        <span v-if="select.Id == 0">Seleccione el Servicio</span>
+                    :value="select.service_id"
+                    :disabled="select.service_id == 0"
+                    :selected="select.service_id == 0">
+                        <span v-if="select.service_id != 0">{{ select.service_name }}</span>
+                        <span v-if="select.service_id == 0">Seleccione el Servicio</span>
                     </option>
                 </select>
             </div>

@@ -25,7 +25,7 @@ const usersApp = createApp ({
             },
             lengthColumns: 50,
             maxLengthPagination: 0, //Controlan la páginación
-            tableTarget: "tbl_usuarios",
+            tableTarget: "users",
             usersData: [] //Proxy que almacena los datos del select
         }
     },
