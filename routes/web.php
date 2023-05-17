@@ -63,4 +63,6 @@ Route::prefix('/')->group(function(){
             Route::post('/updateClient',[ClientController::class,'ClientControl']);
         });
     });
+    //Proyectos
+    //TODO: Empezar proyectos
 });
