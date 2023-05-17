@@ -176,7 +176,7 @@ Ejemplo
 Clients, Users
 ```
 
-- [x] Para nombrar variables, métodos, propiedades o props , rutas(urls) usar  `Lower Camel Case`.
+- [x] Para nombrar variables, métodos, propiedades o props usar  `Lower Camel Case`.
 
 Ejemplo
 ```
@@ -184,6 +184,12 @@ clientList = () => {}
 const alertData = ref()
 function getClients() {}
 $response, $clientsList
+```
+- [x] Para las rutas(urls) usar `Kebab Case`.
+
+Ejemplo
+```
+www.example.com/this-is/a-nice/url-name
 ```
 
 - [x] Los métodos deben tener nombres de verbos o frases verbales como postPayment, deletePage o save.
