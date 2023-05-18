@@ -147,7 +147,7 @@ class ProyectoModel extends Model
     function crearProyecto($NuevoProyecto, $Divisiones){
 
       //Insertamos el nuevo proyecto
-      $InsertNuevoProyecto = DB::select('call sp_control_proyect(?,?,?,?,?,?,?,?,?,?,?,?,@respuesta)', $NuevoProyecto);
+      $InsertNuevoProyecto = DB::select('call sp_create_project(?,?,?,?,?,?,?,?,?,?,?,?,@respuesta)', $NuevoProyecto);
       //$idProyecto = DB::table('tbl_proyecto')->insertGetId($data);
 
       //Transformamos el JSON a un Array

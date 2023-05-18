@@ -152,13 +152,25 @@ CREATE PROCEDURE `sp_update_client`(
     
 	IF @v_Request = \"true\" THEN
     
-		SET p_Response = CONCAT('{\"message\": \"Cliente: ',p_RazonSocial,' actualizado con exito\", \"response\": true}');
+		SET p_Response = CONCAT('
+			{
+				\"message\": \"Cliente: ',p_RazonSocial,' actualizado con exito\", 
+				\"response\": true
+			}
+		');
+
 		COMMIT; #Guardamos Cambio
         
 	ELSE
     
 		#Error en caso de fallo al upgradear
-		SET p_Response = CONCAT('{\"message\": \"Error al actualizar. Mensaje: ',@v_Message,'. Id: ',p_IdSocio,'\", \"response\": false}');
+		SET p_Response = CONCAT('
+			{
+				\"message\": \"Error al actualizar. Mensaje: ',@v_Message,'. Id: ',p_IdSocio,'\", 
+				\"response\": false
+			}
+		');
+		
 		ROLLBACK;
         
 	END IF;

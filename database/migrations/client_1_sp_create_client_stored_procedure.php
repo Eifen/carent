@@ -178,12 +178,26 @@ CREATE PROCEDURE `sp_create_client`(
 	SET @v_Request = JSON_UNQUOTE(JSON_EXTRACT(@response,'$.response'));
     
 	IF @v_Request = \"true\" THEN
-		SET p_Response = CONCAT('{\"message\": \"Se ha creado el cliente: ', p_RazonSocial,' con exito\", \"response\": true}');
+
+		SET p_Response = CONCAT('
+			{
+				\"message\": \"Se ha creado el cliente: ', p_RazonSocial,' con exito\", 
+				\"response\": true
+			}
+		');
+		
 		COMMIT; #Guardamos Cambio
+
 	ELSE
 		#Error en caso de fallo al upgradear
-		SET p_Response = '{\"message\": \"Ocurrió un error al momento de registrar la Actualización\", \"response\": false}';
+		SET p_Response = '
+			{
+				\"message\": \"Ocurrió un error al momento de registrar la Actualización\", 
+				\"response\": false
+			}';
+
 		ROLLBACK;
+
 	END IF;
     
 END;";
