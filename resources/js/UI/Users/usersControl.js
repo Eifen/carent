@@ -1,15 +1,3 @@
-import { createApp } from 'vue/dist/vue.esm-bundler';
-import FontAwesome from '../../Components/FontAwesome/FontAwesome.vue';
-import Loading from '../../Components/Loading.vue';
-import FormUsers from '../../Components/Users/FormUsers.vue';
-import Calendar from '../../Components/Calendar.vue';
-import { UsersControl } from '../../Models/UserModel';
-import axios from "axios";
-import { Validate } from '../../Models/ValidateModel';
-import { AXIOSINTERVAL, NOTIFYINTERVAL } from '../../app';
-
-//Toastify
-import { toast } from 'vue3-toastify';
 
 const createUser = createApp({
     data(){

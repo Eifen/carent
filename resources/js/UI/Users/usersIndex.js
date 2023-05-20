@@ -1,10 +1,3 @@
-import { createApp } from 'vue/dist/vue.esm-bundler';
-import FontAwesome from '../../Components/FontAwesome/FontAwesome.vue';
-import Loading from '../../Components/Loading.vue';
-import ListingCrud from '../../Components/ListingCrud.vue';
-import axios from 'axios';
-import { AXIOSINTERVAL } from '../../app';
-
 const usersApp = createApp ({
     data(){
         return{
