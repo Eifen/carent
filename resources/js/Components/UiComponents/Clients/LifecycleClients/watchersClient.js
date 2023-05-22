@@ -58,7 +58,14 @@ export const clientWatchers =
                 "validInput": [true, 'direccionValid']})
         },
         //Pagina Web
-        inputWeb(newValue){ this.validateString(this.LimitString.WEB,newValue,'inputWeb','webError',[false,'']) },
+        inputWeb(newValue){
+            this.validateString({
+                "limitString": this.LimitString.WEB,
+                "stringToValidate": newValue,
+                "varInput":'inputWeb',
+                "varError": 'webError',
+                "validInput": [false,'']})
+        },
         //Correo electronico
         inputFirstEmail(newValue)
         {

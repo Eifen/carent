@@ -34,9 +34,9 @@ import { clientWatchers } from '@/Components/UiComponents/Clients/LifecycleClien
 import { clientMethods } from '@/Components/UiComponents/Clients/LifecycleClients/methodsClient.js'
 
 //Templates
-import DataSocio from '@/Components/UiComponents/Clients/TemplatesClients/DataSocio.vue';
-import DataCliente from '@/Components/UiComponents/Clients/TemplatesClients/DataCliente.vue';
-import DataContactCliente from '@/Components/UiComponents/Clients/TemplatesClients/DataContactCliente.vue';
+import DataSocio from '@/Components/UiComponents/Clients/TemplatesClients/ClientSocio.vue';
+import DataCliente from '@/Components/UiComponents/Clients/TemplatesClients/ClientPrincipal.vue';
+import DataContactCliente from '@/Components/UiComponents/Clients/TemplatesClients/ClientContact.vue';
 
 //librerias
 import FontAwesome from "@/Components/FontAwesome/FontAwesome.vue";

@@ -47,9 +47,9 @@ import { mountedMixin } from "@/Components/UiComponents/Users/LifecycleUsers/mou
 import { userMethods } from "@/Components/UiComponents/Users/LifecycleUsers/methodsUser.js";
 import { userWatchers } from "@/Components/UiComponents/Users/LifecycleUsers/watchersUser.js";
 //Templates
-import DataPrincipal from "@/Components/UiComponents/Users/TemplatesUsers/DataPrincipal.vue";
-import DataContact from "@/Components/UiComponents/Users/TemplatesUsers/DataContact.vue";
-import DataEmpleado from "@/Components/UiComponents/Users/TemplatesUsers/DataEmpleado.vue";
+import DataPrincipal from "@/Components/UiComponents/Users/TemplatesUsers/UserPrincipal.vue";
+import DataContact from "@/Components/UiComponents/Users/TemplatesUsers/UserContact.vue";
+import DataEmpleado from "@/Components/UiComponents/Users/TemplatesUsers/UserEmpleado.vue";
 //Config Global
 import { classConfig, dataMixin, methodsGlobalMixin } from "../UiComponentsConfig";
 

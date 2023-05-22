@@ -18,74 +18,90 @@ export const userMethods = {
             this.inputSelect = `${this.getTargetTypeDocument}-`
         },
         /**
-         * Metodo que valida las distintas fechas
-         * @param {Date} dateToValidate Fecha en formato 'YYYY-mm-dd'
-         * @param {String} varInput indica la variable que se usa como v-model
-         * @param {String} varError Indica la variable donde se almacena el error del v-model
-         * @param {[Boolean,String]} validInput Tupla [boolean,string] que indica si es un campo obligatorio, y cual es su
-         * variable de validación.
+         * Metodo que valida los watchers de tipo String
+         * @param {Object} dateFilter Object  JSON con el siguiente formato:
+         * {
+         * @prop1
+         * "dateToValidate": Fecha en formato 'YYYY-mm-dd',
+         * @prop2
+         * "varInput": indica la variable que se usa como v-model,
+         * @prop3
+         * "varError": Indica la variable donde se almacena el error del v-model,
+         * @prop4
+         * "validInput": Tupla [boolean,string] que indica si es un campo obligatorio, y cual es su variable de validación. }
          */
-        validateDate(dateToValidate,varInput,varError,validInput){
+        validateDate(dateFilter){
             try {
-                const validate = Validate.Date(dateToValidate)
-                if(!validate.response && dateToValidate.length >= 10) throw validate.message;
+                const validate = Validate.Date(dateFilter.dateToValidate)
+                if(!validate.response && dateFilter.dateToValidate.length >= 10) throw validate.message;
                 //Pasa las validaciones
-                if(this[varInput].length == 0 || this[varInput].length <= 10) this.messages.form[varError] = '';
-                if(validInput[0] && validate.response) this.submitButton[validInput[1]] = true;
+                if(this[dateFilter.varInput].length == 0 || this[dateFilter.varInput].length <= 10) this.messages.form[dateFilter.varError] = '';
+                if(dateFilter.validInput[0] && validate.response) this.submitButton[dateFilter.validInput[1]] = true;
                 //Desactivamos las banderas
-                if((this[varInput].length == 0 && validInput[0]) || (this[varInput].length < 10 && validInput[0])) this.messages.form[varError] = '';
+                if((this[dateFilter.varInput].length == 0 && dateFilter.validInput[0]) || (this[dateFilter.varInput].length < 10 && dateFilter.validInput[0])) this.messages.form[dateFilter.varError] = '';
             } catch (error) {
-                if(validInput[0]) this.submitButton[validInput[1]] = false;
-                this.messages.form[varError] = Exceptions.CatchWarning(error)
+                if(dateFilter.validInput[0]) this.submitButton[dateFilter.validInput[1]] = false;
+                this.messages.form[dateFilter.varError] = Exceptions.CatchWarning(error)
             }
         },
         /**
-         * Metodo que valida los distintos correos
-         * @param {String} emailToValidate El correo en formato string a validar
-         * @param {String} varInput indica la variable que se usa como v-model
-         * @param {String} varError Indica la variable donde se almacena el error del v-model
-         * @param {[Boolean,String]} validInput Tupla [boolean,string] que indica si es un campo obligatorio, y cual es su
-         * variable de validación.*/
-        validateEmail(emailToValidate,varInput,varError,validInput){
+         * Metodo que valida los watchers de tipo String
+         * @param {Object} emailFilter Object  JSON con el siguiente formato:
+         * {
+         * @prop1
+         * "emailToValidate": El correo en formato string a validar,
+         * @prop2
+         * "varInput": indica la variable que se usa como v-model,
+         * @prop3
+         * "varError": Indica la variable donde se almacena el error del v-model,
+         * @prop4
+         * "validInput": Tupla [boolean,string] que indica si es un campo obligatorio, y cual es su variable de validación. }
+         */
+        validateEmail(emailFilter){
             try{
-                const validate = Validate.Email(emailToValidate);
-                if(!validate.response && this[varInput].length > 0) throw validate.message;
+                const validate = Validate.Email(emailFilter.emailToValidate);
+                if(!validate.response && this[emailFilter.varInput].length > 0) throw validate.message;
                 //Passamos las validaciones
-                if(this[varInput].length == 0 || validate.response) this.messages.form[varError] = ''
-                if(validate.response && validInput[0]) this.submitButton[validInput[1]] = true;
+                if(this[emailFilter.varInput].length == 0 || validate.response) this.messages.form[emailFilter.varError] = ''
+                if(validate.response && emailFilter.validInput[0]) this.submitButton[emailFilter.validInput[1]] = true;
                 //Desactivamos la bandera
-                if(this[varInput] == 0 && validInput[0]) this.submitButton[validInput[1]] = false;
+                if(this[emailFilter.varInput] == 0 && emailFilter.validInput[0]) this.submitButton[emailFilter.validInput[1]] = false;
             }catch (error){
                 //Desactivamos las banderas
-                if(validInput[0]) this.submitButton[validInput[1]] = false;
-                this.messages.form[varError] = Exceptions.CatchWarning(error)
+                if(emailFilter.validInput[0]) this.submitButton[emailFilter.validInput[1]] = false;
+                this.messages.form[emailFilter.varError] = Exceptions.CatchWarning(error)
             }
         },
         /**
-         * Metodo que valida los números telefonicos
-         * @param {String} phoneToValidate numero de telefono en formato (0000)-1112222
-         * @param {String} phoneOldValue valor anterior antes del cambio en el v-model
-         * @param {String} varInput indica la variable que se usa como v-model
-         * @param {[Boolean,String]} validInput Tupla [boolean,string] que indica si es un campo obligatorio, y cual es su
-         * variable de validación.
+         * Metodo que valida los watchers de tipo String
+         * @param {Object} phoneFilter Object  JSON con el siguiente formato:
+         * {
+         * @prop1
+         * "phoneToValidate": numero de telefono en formato (0000)-1112222,
+         * @prop2
+         * "phoneOldValue": valor anterior antes del cambio en el v-model,
+         * @prop3
+         * "varInput": indica la variable que se usa como v-model,
+         * @prop4
+         * "validInput": Tupla [boolean,string] que indica si es un campo obligatorio, y cual es su variable de validación. }
          */
-        validatePhone(phoneToValidate,phoneOldValue,varInput,validInput){
+        validatePhone(phoneFilter){
             try {
                 //Transformamos el numero a un formato 00001112222
-                const phoneDTO = phoneToValidate.replace('(','').replace(')','').replace(/-/g,'');
+                const phoneDTO = phoneFilter.phoneToValidate.replace('(','').replace(')','').replace(/-/g,'');
                 const validate = Validate.Phone(phoneDTO)
                 if(!validate.response) throw validate.message;
                 //Pasamos las validaciones, creando el formato del número
                 if(validate.response){
-                    this[varInput] = validate.message
-                    if(validInput[0] && this[varInput].length == 15) this.submitButton[validInput[1]] = true;
+                    this[phoneFilter.varInput] = validate.message
+                    if(phoneFilter.validInput[0] && this[phoneFilter.varInput].length == 15) this.submitButton[phoneFilter.validInput[1]] = true;
                 }
                 //Desactivamos la bandera
-                if((validInput[0] && this[varInput].length == 0) || (validInput[0] && this[varInput].length != 15)) this.submitButton[validInput[1]] = false;
+                if((phoneFilter.validInput[0] && this[phoneFilter.varInput].length == 0) || (phoneFilter.validInput[0] && this[phoneFilter.varInput].length != 15)) this.submitButton[phoneFilter.validInput[1]] = false;
             } catch (error) {
                 //Desactivamos las banderas
-                if(validInput[0]) this.submitButton[validInput[1]] = false;
-                this[varInput] = phoneOldValue; //Volvemos al valor anterior
+                if(phoneFilter.validInput[0]) this.submitButton[phoneFilter.validInput[1]] = false;
+                this[phoneFilter.varInput] = phoneFilter.phoneOldValue; //Volvemos al valor anterior
             }
         },
         /**
