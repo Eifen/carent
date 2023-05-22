@@ -6,6 +6,7 @@ use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\URL;
 
 /*
@@ -64,5 +65,7 @@ Route::prefix('/')->group(function(){
         });
     });
     //Proyectos
-    //TODO: Empezar proyectos
+    Route::prefix('/projects')->group(function() {
+        Route::get('/',[ProjectController::class, 'index'])->name('projects');
+    });
 });

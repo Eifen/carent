@@ -67,5 +67,8 @@
             @endif
         @endif
         {{-- Redirección de rutas para Proyectos --}}
+        @if (Request::url() === URL::route('projects'))
+            @include('UI.Projects.ProjectIndex')
+        @endif
     </section>
 @endsection
