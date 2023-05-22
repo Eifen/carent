@@ -1,13 +1,7 @@
 import { createApp } from 'vue/dist/vue.esm-bundler';
-import FontAwesome from '../../Components/FontAwesome/FontAwesome.vue';
-import Loading from '../../Components/Loading.vue';
-import FormClients from '../../Components/Clients/FormClients.vue';
+import FormClients from '../../Components/UiComponents/Clients/FormClients.vue';
+import { componentsUI, methodsUI,CrudUi } from '../UIConfig';
 import { Validate } from '../../Models/ValidateModel';
-import axios from 'axios';
-import { AXIOSINTERVAL, NOTIFYINTERVAL } from '../../app';
-
-//Toastify
-import { toast } from 'vue3-toastify';
 
 const clientsControl = createApp ({
     data(){
@@ -37,19 +31,6 @@ const clientsControl = createApp ({
         }
     },
     methods:{
-        /** Metodo que retorna a la página principal de clientes */
-        returnClients(){ window.location.href = "/clientes" },
-        /**
-         * Metodo que prepara la data a actualizar de clientes
-         * @param {*} clientDTO Obtiene los parametros de la sesion de clientes temporal antes de eliminarla
-         */
-        prepareUpdate(clientDTO){
-            this.updateModel = clientDTO
-            //Una vez asignado, eliminamos la sesion
-            axios.put('/clientes/deleteUpdateData')
-            .then(request =>{})
-            .catch(error => { console.error(error) });
-        },
         /**
          * Metodo que crea un nuevo cliente
          * @param {*} dataParams Recibe la data que proviene de formulario
@@ -59,31 +40,14 @@ const clientsControl = createApp ({
             this.paramsDTOClients = dataParams
             //Validacion de campos opcionales
             this.validateNivel2(dataParams)
-            axios.post('/clientes/create/newClient',{
+
+            //AXIOS Create Client
+            const paramsToPost = {
                 "client": JSON.parse(JSON.stringify(this.paramsDTOClients)),
-                "isEdit": false})
-            .then(request => {
-                if(request.status === 200 && !request.data.response) throw request.data.message;
-                //Pasamos las validaciones
-                toast.success(request.data.message, {
-                    position:toast.POSITION.TOP_LEFT,
-                    autoClose:true
-                })
-
-                //Redirigimos
-                setTimeout(() => {
-                    window.location.href = "/clientes";
-                }, AXIOSINTERVAL + 200);
-            })
-            .catch(error => {
-                toast.error(error, {
-                    position: toast.POSITION.TOP_LEFT,
-                    autoClose: NOTIFYINTERVAL
-                })
-
-                //Desactivamos el boton
-                this.isClick = false;
-            })
+                "isEdit": false
+            }
+            const routesSelfDTO = { "post": "/clientes/create/newClient", "redirect": "/clientes", "self":this }
+            CrudUi.controlCrud(routesSelfDTO,paramsToPost)
         },
         /**
          * Actualiza un cliente
@@ -118,33 +82,13 @@ const clientsControl = createApp ({
             //Una vez haya terminado de verificar validateNivel2
             this.paramsDTOEdit = { ...this.paramsDTOEdit, ...this.paramsDTOClients }
 
-            //Conexion axios post update
-            axios.post('/clientes/update/updateClient',{
+            //AXIOS Update Client
+            const paramsToPost = {
                 "client": JSON.parse(JSON.stringify(this.paramsDTOEdit)),
-                "isEdit": true})
-            .then(request => {
-                if(request.status === 200 && !request.data.response) throw request.data.message;
-                //Pasamos las validaciones
-                toast.success(request.data.message, {
-                    position:toast.POSITION.TOP_LEFT,
-                    autoClose:true
-                })
-
-                //Redirigimos
-                setTimeout(() => {
-                    window.location.href = "/clientes";
-                }, AXIOSINTERVAL + 200);
-            })
-            .catch(error => {
-                toast.error(error, {
-                    position: toast.POSITION.TOP_LEFT,
-                    autoClose: NOTIFYINTERVAL
-                })
-
-                console.error(error)
-                //Desactivamos el boton
-                this.isClick = false;
-            })
+                "isEdit": true
+            }
+            const routesSelfDTO = { "post": "/clientes/update/updateClient", "redirect": "/clientes", "self":this }
+            CrudUi.controlCrud(routesSelfDTO,paramsToPost)
         },
         /**
          * Espacio de validaciones para campos no obligatorios
@@ -166,14 +110,13 @@ const clientsControl = createApp ({
             : this.paramsDTOClients.PaginaWeb = dataToValidate.PaginaWeb;
         }
     },
-    computed:{},
-    watch:{},
+    components: { FormClients },
     mounted(){
         setTimeout(() => {
             this.isMounted = true;
         }, 300);
     },
-    components: { FontAwesome, Loading, FormClients }
+    mixins: [ componentsUI,methodsUI ]
 });
 
 if(document.getElementById('create-client') !== null || document.getElementById('update-client') !== null)

@@ -18,9 +18,9 @@
       <!-- Mensajes de error en Email -->
       <div
         :class="scope.formClass.failureValidation"
-        v-if="scope.messages.form.firstemailError != ''">
+        v-if="scope.messages.error.firstemailError != ''">
         <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
-        {{ scope.messages.form.firstemailError }}
+        {{ scope.messages.error.firstemailError }}
       </div>
     </div>
 
@@ -41,9 +41,9 @@
       </div>
       <!-- Mensajes de error en Email -->
       <div :class="scope.formClass.failureValidation"
-        v-if="scope.messages.form.secondemailError != ''">
+        v-if="scope.messages.error.secondemailError != ''">
         <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
-        {{ scope.messages.form.secondemailError }}
+        {{ scope.messages.error.secondemailError }}
       </div>
     </div>
 

@@ -1,25 +1,16 @@
 import { createApp } from 'vue/dist/vue.esm-bundler';
-import FontAwesome from '../../Components/FontAwesome/FontAwesome.vue';
-import Loading from '../../Components/Loading.vue';
-import FormUsers from '../../Components/Users/FormUsers.vue';
-import Calendar from '../../Components/Calendar.vue';
+import FormUsers from '../../Components/UiComponents/Users/FormUsers.vue';
+import { CrudUi, componentsUI, methodsUI } from '../UIConfig';
 import { UsersControl } from '../../Models/UserModel';
-import axios from "axios";
 import { Validate } from '../../Models/ValidateModel';
-import { AXIOSINTERVAL, NOTIFYINTERVAL } from '../../app';
-
-//Toastify
-import { toast } from 'vue3-toastify';
 
 const createUser = createApp({
     data(){
         return{
             isMounted: false,
-            isMountedEdit: false, //Controla la carga del formulario de update
             encryptKey: '', //Llave del encrypt
             encryptIv: '', //Vector del encrypt
-            isCreateClick: false, //Controla el boton de crear usuario
-            isEditClick: false, //Controla el boton de edit usuario
+            isClick: false, //Controla el boton de usuario
             updateModel: {},
             paramDTOUser:
             {
@@ -62,55 +53,22 @@ const createUser = createApp({
     },
     methods:{
         /**
-         * Metodo que redirecciona a la pantalla anterior
-         */
-        redirectView(){ window.location.href = "/usuarios" },
-        /**
          * Metodo que registra un nuevo usuario
          * @param {*} Data Almacena la data inicial del usuario
          */
         newUser(Data){
 
-            this.isCreateClick = true;
+            this.isClick = true;
             this.validateNivel2(Data);
             //Solicitamos al controlador
-            axios.post('/usuarios/create/newUser',{
+            const paramsToPost = {
                 "user": JSON.parse(JSON.stringify(this.paramDTOUser)),
                 "contact": JSON.parse(JSON.stringify(this.paramDTONewContact)),
                 "document": JSON.parse(JSON.stringify(this.paramDTONewDocument)),
-                "isEdit": false})
-            .then(request => {
-                if(request.status === 200 && !request.data.response) throw request.data.message;
-                toast.success(request.data.message, {
-                    position: toast.POSITION.TOP_LEFT,
-                    autoClose: false
-                });
-
-                setTimeout(() => {
-                    window.location.href = "/usuarios";
-                }, AXIOSINTERVAL + 200);
-
-            }).catch(error => {
-                toast.error(error, {
-                    position: toast.POSITION.TOP_LEFT,
-                    autoClose:NOTIFYINTERVAL
-                });
-
-                this.isCreateClick = false;
-            })
-        },
-        /**
-         * Metodo que actualiza el data model para actualizar usuarios
-         * @param {*} dataUser Datos del usuario a actualizar
-         */
-        prepareUpdate(dataUser){
-            this.updateModel = dataUser;
-            //Una vez almacenada, eliminamos su valor en la sessión para que sea de unico uso
-            axios.put('deleteUpdateData')
-            .then(request => {})
-            .catch(error => {
-                console.error(error);
-            })
+                "isEdit": false
+            }
+            const routesSelfDTO = { "post": "/usuarios/create/newUser", "redirect": "/usuarios", "self":this }
+            CrudUi.controlCrud(routesSelfDTO,paramsToPost)
         },
         /**
          * Metodo que actualiza un usuario
@@ -118,7 +76,7 @@ const createUser = createApp({
          */
         updateUser(Data)
         {
-            this.isEditClick = true;
+            this.isClick = true;
             this.validateNivel2(Data);
 
             //Validaciones unicas para edit
@@ -134,32 +92,14 @@ const createUser = createApp({
             this.paramDTOEdit = { ...this.paramDTOEdit, ...this.paramDTOUser}
 
             //Conexión AXIOS Update User
-            axios.post('/usuarios/update/updateUser',{
+            const paramsToPost = {
                 "user": JSON.parse(JSON.stringify(this.paramDTOEdit)),
                 "contact": JSON.parse(JSON.stringify(this.paramDTONewContact)),
                 "document": JSON.parse(JSON.stringify(this.paramDTONewDocument)),
-                "isEdit": true})
-            .then(request =>
-                {
-                    if(request.status === 200 && !request.data.response) throw request.data.message;
-                    toast.success(request.data.message, {
-                        position: toast.POSITION.TOP_LEFT,
-                        autoClose: false
-                    });
-
-                    setTimeout(() => {
-                        window.location.href = "/usuarios";
-                    }, AXIOSINTERVAL + 200);
-                })
-            .catch(error =>
-                {
-                    toast.error(error, {
-                        position: toast.POSITION.TOP_LEFT,
-                        autoClose:NOTIFYINTERVAL
-                    });
-
-                    this.isEditClick = false;
-                })
+                "isEdit": true
+            }
+            const routesSelfDTO = { "post": "/usuarios/update/updateUser", "redirect": "/usuarios", "self":this }
+            CrudUi.controlCrud(routesSelfDTO,paramsToPost)
         },
         /**
          * Reformatea el telefono quitando los caracteres "()" y "-"
@@ -244,7 +184,8 @@ const createUser = createApp({
             this.encryptIv = encryptIv;
         }
     },
-    components: { FontAwesome, Loading, FormUsers, Calendar }
+    components: { FormUsers },
+    mixins: [ componentsUI, methodsUI ]
 });
 
 if(document.getElementById('create-users') !== null || document.getElementById('update-user') !== null)

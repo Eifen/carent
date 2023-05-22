@@ -1,5 +1,4 @@
 //Importamos las librerias
-import axios from "axios";
 import CryptoJS from "crypto-js";
 /**
  * Clase enfocada en almacenar Metodos de control de usuarios para el Carent

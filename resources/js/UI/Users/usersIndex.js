@@ -1,9 +1,5 @@
 import { createApp } from 'vue/dist/vue.esm-bundler';
-import FontAwesome from '../../Components/FontAwesome/FontAwesome.vue';
-import Loading from '../../Components/Loading.vue';
-import ListingCrud from '../../Components/ListingCrud.vue';
-import axios from 'axios';
-import { AXIOSINTERVAL } from '../../app';
+import { componentsUI, methodsUI, watchUI, CrudUi } from '../UIConfig';
 
 const usersApp = createApp ({
     data(){
@@ -26,76 +22,35 @@ const usersApp = createApp ({
             lengthColumns: 50,
             maxLengthPagination: 0, //Controlan la páginación
             tableTarget: "users",
-            usersData: [] //Proxy que almacena los datos del select
+            listData: [] //Object que almacena la data de los usuarios a mostrar en la lista
         }
     },
     //Ante de montar, consultamos el tamaño máximo de la páginación
     created(){
-        const limitData =
-        {
-            "table": this.tableTarget,
-            "lengthPage": this.lengthColumns
-        }
-
-        axios.post('/usuarios/limitPag',limitData)
-        .then(request =>
-            {
-                if(request.status !== 200) throw request.data;
-                //Si no  inicializa el error, procedemos a asignar las variables
-                setTimeout(() => {this.maxLengthPagination = Math.ceil(request.data);}, AXIOSINTERVAL);
-            })
-        .catch(error =>
-            {
-                console.error(error)
-            })
+        const paginationDTO = { "table": this.tableTarget, "lengthPage": this.lengthColumns }
+        const routeDTO = { "route": '/usuarios/limitPag', "self": this }
+        //Hacemos el llamado al método estatico
+        CrudUi.limitPagData(routeDTO,paginationDTO)
     },
-    mounted()
-    {
-        //Cargamos toda la data
-        axios.post('/usuarios/allUsers')
-        .then(request => {
-
-            if(request.status === 200 && !request.data.response) throw request.data.message;
-            //Si no se activa la exceptión, asignamos el objeto
-            setTimeout(() => {
-                this.usersData = request.data.message;
-            }, AXIOSINTERVAL);
-        })
-        .catch(error => {
-            console.error(error);
-        })
-    },
+    mounted(){ CrudUi.getTable('/usuarios/allUsers',this) },
     methods:{
-        //Metodos encargados de convertir el proxy a formato JSON
-        dataParse(){ if(this.isMounted) return JSON.parse(JSON.stringify(this.usersData)); },
-        titleParse(){ if(this.isMounted) return JSON.parse(JSON.stringify(this.usersColumn)); },
-        searchParse(){ if(this.isMounted) return JSON.parse(JSON.stringify(this.selectSearch)); },
         //Metodo dedicados a las configuraciones de la tabla
         editUsuarios(idUsuario){
             //Seccionamos el ID y luego lo pasamos al controlador
-            const paramsDTO = { "codigoSQL": this.usersData[idUsuario].codigo };
-
-            axios.post('/usuarios/update/loadingUser',paramsDTO)
-            .then(request => {
-                //Verificamos que la data de respuesta no este vacia
-                if(request.status === 200 && request.data === '') throw request;
-                //Redireccionamos
-                window.location.href = "/usuarios/update"
-            })
-            .catch(error => {
-                console.error(error);
-            })
-         },
-        permisosUsuarios(idUsuario){ console.log(this.usersData[idUsuario]) },
+            const paramsDTO = { "codigoSQL": this.listData[idUsuario].codigo };
+            const routesDTO = { "post": '/usuarios/update/loadingUser', "redirect": "/usuarios/update"}
+            //Llamamos al método Static que hace la consulta Axios
+            CrudUi.enableEdit(routesDTO, paramsDTO);
+        },
+        permisosUsuarios(idUsuario){ console.log(this.listData[idUsuario]) },
         crearUsuario(){ window.location.href = "/usuarios/create" }
 
     },
-    computed:{},
     watch:{
         //Si carga los usuarios desactivamos el login
-        usersData(){ this.isMounted = true; } //Desactivamos el loading
+        listData(){ this.isMounted = true; } //Desactivamos el loading
     },
-    components: { FontAwesome, Loading, ListingCrud }
+    mixins: [ componentsUI, methodsUI, watchUI ]
 });
 
 if(document.getElementById('section-users') !== null)

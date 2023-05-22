@@ -30,7 +30,7 @@
             <!-- Submit Button. Que permanece inactivo mientras que no se hayan llegano todos los datos requeridos -->
             <div :class="formClass.button"
             :id="[!submitButton.isValid ? formClass.disableButton : isClick ? formClass.disableButton : null]"
-            @click="DTOEmit()">
+            @click="userEmit()">
                 <span v-if="isEdit & !isClick">{{ messages.buttonEdit }}</span>
                 <span v-else-if="!isEdit & !isClick">{{ messages.buttonCreate }}</span>
                 <span v-else-if="isClick"><font-awesome string-icon="fa-solid fa-spinner" is-spin></font-awesome></span>
@@ -42,15 +42,16 @@
 <script>
 import Calendar from "@/Components/Calendar.vue";
 import FontAwesome from "@/Components/FontAwesome/FontAwesome.vue";
-import { createdMixin } from "@/Components/Users/LifecycleUsers/created.js";
-import { mountedMixin } from "@/Components/Users/LifecycleUsers/mounted.js";
-import { userMethods } from "@/Components/Users/LifecycleUsers/methods.js";
-import { userWatchers } from "@/Components/Users/LifecycleUsers/watchers.js";
+import { createdMixin } from "@/Components/UiComponents/Users/LifecycleUsers/createdUser.js";
+import { mountedMixin } from "@/Components/UiComponents/Users/LifecycleUsers/mountedUser.js";
+import { userMethods } from "@/Components/UiComponents/Users/LifecycleUsers/methodsUser.js";
+import { userWatchers } from "@/Components/UiComponents/Users/LifecycleUsers/watchersUser.js";
 //Templates
-import DataPrincipal from "@/Components/Users/TemplatesUsers/DataPrincipal.vue";
-import DataContact from "@/Components/Users/TemplatesUsers/DataContact.vue";
-import DataEmpleado from "@/Components/Users/TemplatesUsers/DataEmpleado.vue";
-
+import DataPrincipal from "@/Components/UiComponents/Users/TemplatesUsers/UserPrincipal.vue";
+import DataContact from "@/Components/UiComponents/Users/TemplatesUsers/UserContact.vue";
+import DataEmpleado from "@/Components/UiComponents/Users/TemplatesUsers/UserEmpleado.vue";
+//Config Global
+import { classConfig, dataMixin, methodsGlobalMixin } from "../UiComponentsConfig";
 
 export default {
     props:{
@@ -60,21 +61,6 @@ export default {
     },
     data(){
         return{
-            formClass:
-            {
-                container: 'dashboard-form-container',
-                form:'',
-                legend: '',
-                fieldset: '',
-                button: '',
-                disableButton: '',
-                successValidation: 'form-SuccessInput',
-                failureValidation: 'form-ErrorInput',
-                requiredTitle: '',
-                requiredField: '',
-                select: 'form-select-container',
-                empleadoFieldset: '',
-            },
             messages:{
                 titleCreate: 'Estas creando a un nuevo usuario',
                 titleEdit: 'Estas modificando al usuario',
@@ -82,7 +68,7 @@ export default {
                 empleado: 'Datos para el empleado',
                 buttonEdit: 'Actualizar usuario',
                 buttonCreate: 'Crear usuario',
-                form: {
+                error: {
                     birthdayError: '',
                     firstnameError: '',
                     secondnameError: '',
@@ -150,11 +136,11 @@ export default {
         }
     },
     components: { Calendar, FontAwesome, DataPrincipal, DataContact, DataEmpleado },
-    created() { createdMixin(this) },
+    created() { classConfig(this); createdMixin(this) },
     mounted() { mountedMixin(this) },
     //Propiedad computada encarga de pasar toda la data como parametro,
     computed: { DTOData(){ return this.$data } },
     //Insertamos los methods y los watchers
-    mixins: [userMethods, userWatchers],
+    mixins: [userMethods, userWatchers, dataMixin, methodsGlobalMixin],
 }
 </script>

@@ -4,15 +4,6 @@
  */
 export const createdMixin = (self) =>
 {
-        //Asignamos las clases
-        self.formClass.form = self.formClass.container + '-form'
-        self.formClass.legend = self.formClass.form + "-legends"
-        self.formClass.fieldset = self.formClass.form + "-fieldset"
-        self.formClass.button = self.formClass.form + "-button"
-        self.formClass.disableButton = self.formClass.button + "-disable"
-        self.formClass.requiredTitle = self.formClass.form + "-title"
-        self.formClass.requiredField = self.formClass.requiredTitle + "-field"
-
         //Axios Request
         axios.post('/usuarios/getParamsInit')
         .then(request => {

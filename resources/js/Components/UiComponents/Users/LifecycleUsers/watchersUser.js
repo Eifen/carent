@@ -31,21 +31,91 @@ export const userWatchers =
             this.inputEgreso = newEdit.departure_date === null ? "" : newEdit.departure_date
         },
         //Nombres
-        inputFirstname(newString) { this.validateString(this.limitString.NAME, newString, 'inputFirstname', 'firstnameError', [true, 'firstnameValid']) },
-        inputSecondname(newString) { this.validateString(this.limitString.NAME, newString, 'inputSecondname', 'secondnameError', [false, '']) },
+        inputFirstname(newString) {
+            this.validateString({
+                "limitString": this.limitString.NAME,
+                "stringToValidate": newString,
+                "varInput":'inputFirstname',
+                "varError": 'firstnameError',
+                "validInput": [true, 'firstnameValid']})
+        },
+        inputSecondname(newString) {
+            this.validateString({
+                "limitString": this.limitString.NAME,
+                "stringToValidate": newString,
+                "varInput":'inputSecondname',
+                "varError": 'secondnameError',
+                "validInput": [false, '']})
+        },
         //Apellidos
-        inputLastname(newString) { this.validateString(this.limitString.NAME, newString, 'inputLastname', 'lastnameError', [true, 'lastnameValid']) },
-        inputLastSecondname(newString) { this.validateString(this.limitString.NAME, newString, 'inputLastSecondname', 'lastsecondnameError', [false, '']) },
+        inputLastname(newString) {
+            this.validateString({
+                "limitString": this.limitString.NAME,
+                "stringToValidate": newString,
+                "varInput":'inputLastname',
+                "varError": 'lastnameError',
+                "validInput": [true, 'lastnameValid']})
+        },
+        inputLastSecondname(newString) {
+            this.validateString({
+                "limitString": this.limitString.NAME,
+                "stringToValidate": newString,
+                "varInput":'inputLastSecondname',
+                "varError": 'lastsecondnameError',
+                "validInput": [false, '']})
+        },
         //Fechas
-        inputBirthday(newDate) { this.validateDate(newDate,'inputBirthday', 'birthdayError',[true,'birthdayValid']) },
-        inputIngreso(newDate) { this.validateDate(newDate,'inputIngreso', 'ingresoError',[false,'']) },
-        inputEgreso(newDate) { this.validateDate(newDate,'inputEgreso', 'egresoError',[false,'']) },
+        inputBirthday(newDate) {
+            this.validateDate({
+                "dateToValidate": newDate,
+                "varInput": 'inputBirthday',
+                "varError": 'birthdayError',
+                "validInput": [true,'birthdayValid']})
+        },
+        inputIngreso(newDate) {
+            this.validateDate({
+                "dateToValidate": newDate,
+                "varInput": 'inputIngreso',
+                "varError": 'ingresoError',
+                "validInput": [false,'']})
+        },
+        inputEgreso(newDate) {
+            this.validateDate({
+                "dateToValidate": newDate,
+                "varInput": 'inputEgreso',
+                "varError": 'egresoError',
+                "validInput": [false,'']})
+        },
         //Emails.
-        inputFirstEmail(newEmail) { this.validateEmail(newEmail,'inputFirstEmail','firstemailError', [true,'firstemailValid']) },
-        inputSecondEmail(newEmail) { this.validateEmail(newEmail,'inputSecondEmail','secondemailError', [false,'']) },
+        inputFirstEmail(newEmail) {
+            this.validateEmail({
+                "emailToValidate": newEmail,
+                "varInput": 'inputFirstEmail',
+                "varError": 'firstemailError',
+                "validInput": [true,'firstemailValid']})
+        },
+        inputSecondEmail(newEmail) {
+            this.validateEmail({
+                "emailToValidate": newEmail,
+                "varInput": 'inputSecondEmail',
+                "varError": 'secondemailError',
+                "validInput": [false,'']})
+        },
         //Telefonos
-        inputFirstPhone(newPhone,oldPhone) { this.validatePhone(newPhone,oldPhone,'inputFirstPhone',[true,'firstphoneValid']) },
-        inputSecondPhone(newPhone,oldPhone) { this.validatePhone(newPhone,oldPhone,'inputSecondPhone',[false,'']) },
+        inputFirstPhone(newPhone,oldPhone) {
+            this.validatePhone({
+                "phoneToValidate": newPhone,
+                "phoneOldValue": oldPhone,
+                "varInput": 'inputFirstPhone',
+                "validInput": [true,'firstphoneValid']})
+        },
+        inputSecondPhone(newPhone,oldPhone) {
+            this.validatePhone({
+                "phoneToValidate": newPhone,
+                "phoneOldValue": oldPhone,
+                "varInput": 'inputSecondPhone',
+                "validInput": [false,'']})
+        },
         //Watch del documento de identidad
         inputSelect(newSelect, oldSelect) {
             try {
