@@ -1,10 +1,5 @@
 import { createApp } from 'vue/dist/vue.esm-bundler';
-import FontAwesome from '../../Components/FontAwesome/FontAwesome.vue';
-import { Exceptions } from '../../Excepciones/Excepciones';
-import Loading from '../../Components/Loading.vue';
-import ListingCrud from '../../Components/ListingCrud.vue';
-import axios from 'axios';
-import { AXIOSINTERVAL } from '../../app';
+import { componentsUI, methodsUI, watchUI, CrudUi } from '../UIConfig';
 
 const clientsIndex = createApp ({
     data(){
@@ -24,72 +19,34 @@ const clientsIndex = createApp ({
                 "select3":"Razon social",
                 "select4":"Correo"
             },
-            clientsData: [], //Array de Objetos clientes
-            paginationLength: 50, //Tamaño máximo de registros por página
-            maxPagination: 0, //Define el tamaño total de páginas
+            listData: [], //Object que almacena la data de los clientes a mostrar en la lista
+            lengthColumns: 50, //Tamaño máximo de registros por página
+            maxLengthPagination: 0, //Define el tamaño total de páginas
             tableTarget: 'clients',
         }
     },
     created()
     {
-        const paginationDTO = { "table": this.tableTarget, "lengthPage": this.paginationLength }
-
-        axios.post('/clientes/limitPag',paginationDTO)
-        .then(request => {
-            if(request.status !== 200) throw request.data;
-            //Si pasa la data, asignamos a maxPagination
-            setTimeout( () => { this.maxPagination = Math.ceil(request.data); }, AXIOSINTERVAL)
-
-        })
-        .catch(error => {
-            console.error(error);
-        })
+        const paginationDTO = { "table": this.tableTarget, "lengthPage": this.lengthColumns }
+        const routeDTO = { "route": '/clientes/limitPag', "self": this }
+        //Hacemos el llamado al método estatico
+        CrudUi.limitPagData(routeDTO,paginationDTO)
     },
-    mounted()
-    {
-        //Cargamos la data de usuarios
-        axios.post('/clientes/allClients')
-        .then(request => {
-            if(request.status === 200 && !request.data.response) throw request.data.message;
-            //Si la respuesta es verdadera pasamos la data
-            setTimeout(() => {
-                this.clientsData = request.data.message;
-            }, AXIOSINTERVAL);
-        })
-        .catch(error => {
-            console.error(error);
-        })
-    },
+    mounted(){ CrudUi.getTable('/clientes/allClients',this) },
     methods:{
-        /**
-         * Metodo que convierte los objetos de la data en formato JSON
-         * @param {*} objectToConvert Almacena el formato del objeto a convertir
-         */
-        clientParse(objectToConvert){ if(this.isMounted) return JSON.parse(JSON.stringify(objectToConvert)) },
         /**
          * Metodo que crea una instancia en Sessión para pasarla temporalmente a un formulario de actualización
          * @param {*} idClient Almacena la ID seleccionada de la lista de clientes
          */
         editClient(idClient){
-            const paramsDTO = { "codigoSQL": this.clientsData[idClient].codigo }
-
-            axios.post('/clientes/update/loadingClient',paramsDTO)
-            .then(request => {
-                if (request.status === 200 && request.data === '') throw request;
-                //Pasamos las validaciones
-                window.location.href = "/clientes/update"
-            })
-            .catch(error =>{
-                console.error(error)
-            })
+            const paramsDTO = { "codigoSQL": this.listData[idClient].codigo }
+            const routesDTO = { "post": '/clientes/update/loadingClient', "redirect": "/clientes/update"}
+            //Llamamos al método Static que hace la consulta Axios
+            CrudUi.enableEdit(routesDTO, paramsDTO);
         },
         createClient(){ window.location.href = "/clientes/create" }
     },
-    computed:{},
-    watch:{
-        clientsData() { this.isMounted = true }
-    },
-    components: { FontAwesome, Loading, ListingCrud }
+    mixins: [ componentsUI, methodsUI, watchUI ]
 });
 
 if(document.getElementById('section-clients') !== null)

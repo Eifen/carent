@@ -104,9 +104,9 @@
       </div>
       <!-- Mensajes de error en fecha -->
       <div :class="scope.formClass.failureValidation"
-        v-if="scope.messages.form.ingresoError != ''">
+        v-if="scope.messages.error.ingresoError != ''">
         <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
-        {{ scope.messages.form.ingresoError }}
+        {{ scope.messages.error.ingresoError }}
       </div>
     </div>
     <!-- Fecha de egreso. Solo para el edit -->
@@ -127,9 +127,9 @@
       </div>
       <!-- Mensajes de error en fecha -->
       <div :class="scope.formClass.failureValidation"
-        v-if="scope.messages.form.egresoError != ''">
+        v-if="scope.messages.error.egresoError != ''">
         <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
-        {{ scope.messages.form.egresoError }}
+        {{ scope.messages.error.egresoError }}
       </div>
     </div>
   </fieldset>

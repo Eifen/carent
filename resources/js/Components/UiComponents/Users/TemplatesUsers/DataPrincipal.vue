@@ -17,9 +17,9 @@
       </div>
       <!-- Mensajes de error en Nombre-->
       <div :class="scope.formClass.failureValidation"
-        v-if="scope.messages.form.firstnameError != ''">
+        v-if="scope.messages.error.firstnameError != ''">
         <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
-        {{ scope.messages.form.firstnameError }}
+        {{ scope.messages.error.firstnameError }}
       </div>
     </div>
 
@@ -41,9 +41,9 @@
       <!-- Mensajes de error en Segundo Nombre -->
       <div
         :class="scope.formClass.failureValidation"
-        v-if="scope.messages.form.secondnameError != ''">
+        v-if="scope.messages.error.secondnameError != ''">
         <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
-        {{ scope.messages.form.secondnameError }}
+        {{ scope.messages.error.secondnameError }}
       </div>
     </div>
 
@@ -64,9 +64,9 @@
       </div>
       <!-- Mensajes de error en Apellido -->
       <div :class="scope.formClass.failureValidation"
-        v-if="scope.messages.form.lastnameError != ''">
+        v-if="scope.messages.error.lastnameError != ''">
         <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
-        {{ scope.messages.form.lastnameError }}
+        {{ scope.messages.error.lastnameError }}
       </div>
     </div>
 
@@ -87,9 +87,9 @@
       </div>
       <!-- Mensajes de error en Segundo Apellido -->
       <div :class="scope.formClass.failureValidation"
-        v-if="scope.messages.form.lastsecondnameError != ''">
+        v-if="scope.messages.error.lastsecondnameError != ''">
         <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
-        {{ scope.messages.form.lastsecondnameError }}
+        {{ scope.messages.error.lastsecondnameError }}
       </div>
     </div>
 
@@ -123,9 +123,9 @@
       </div>
       <!-- Mensajes de error en Documento Identidad -->
       <div :class="scope.formClass.failureValidation"
-        v-if="scope.messages.form.documentError != ''">
+        v-if="scope.messages.error.documentError != ''">
         <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
-        {{ scope.messages.form.documentError }}
+        {{ scope.messages.error.documentError }}
       </div>
     </div>
 
@@ -148,9 +148,9 @@
       </div>
       <!-- Mensajes de error en fecha -->
       <div :class="scope.formClass.failureValidation"
-        v-if="scope.messages.form.birthdayError != ''">
+        v-if="scope.messages.error.birthdayError != ''">
         <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
-        {{ scope.messages.form.birthdayError }}
+        {{ scope.messages.error.birthdayError }}
       </div>
     </div>
 

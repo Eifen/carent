@@ -1,3 +1,9 @@
+import { createApp } from 'vue/dist/vue.esm-bundler';
+import FontAwesome from '../Components/FontAwesome/FontAwesome.vue';
+import { Exceptions } from '../Excepciones/Excepciones';
+import { UsersControl } from '../Models/UserModel';
+import { AXIOSINTERVAL } from '../app';
+
 const loginApp = createApp ({
     data(){
         return {

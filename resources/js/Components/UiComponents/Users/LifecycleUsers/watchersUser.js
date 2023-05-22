@@ -31,11 +31,39 @@ export const userWatchers =
             this.inputEgreso = newEdit.departure_date === null ? "" : newEdit.departure_date
         },
         //Nombres
-        inputFirstname(newString) { this.validateString(this.limitString.NAME, newString, 'inputFirstname', 'firstnameError', [true, 'firstnameValid']) },
-        inputSecondname(newString) { this.validateString(this.limitString.NAME, newString, 'inputSecondname', 'secondnameError', [false, '']) },
+        inputFirstname(newString) {
+            this.validateString({
+                "limitString": this.limitString.NAME,
+                "stringToValidate": newString,
+                "varInput":'inputFirstname',
+                "varError": 'firstnameError',
+                "validInput": [true, 'firstnameValid']})
+        },
+        inputSecondname(newString) {
+            this.validateString({
+                "limitString": this.limitString.NAME,
+                "stringToValidate": newString,
+                "varInput":'inputSecondname',
+                "varError": 'secondnameError',
+                "validInput": [false, '']})
+        },
         //Apellidos
-        inputLastname(newString) { this.validateString(this.limitString.NAME, newString, 'inputLastname', 'lastnameError', [true, 'lastnameValid']) },
-        inputLastSecondname(newString) { this.validateString(this.limitString.NAME, newString, 'inputLastSecondname', 'lastsecondnameError', [false, '']) },
+        inputLastname(newString) {
+            this.validateString({
+                "limitString": this.limitString.NAME,
+                "stringToValidate": newString,
+                "varInput":'inputLastname',
+                "varError": 'lastnameError',
+                "validInput": [true, 'lastnameValid']})
+        },
+        inputLastSecondname(newString) {
+            this.validateString({
+                "limitString": this.limitString.NAME,
+                "stringToValidate": newString,
+                "varInput":'inputLastSecondname',
+                "varError": 'lastsecondnameError',
+                "validInput": [false, '']})
+        },
         //Fechas
         inputBirthday(newDate) { this.validateDate(newDate,'inputBirthday', 'birthdayError',[true,'birthdayValid']) },
         inputIngreso(newDate) { this.validateDate(newDate,'inputIngreso', 'ingresoError',[false,'']) },

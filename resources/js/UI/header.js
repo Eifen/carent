@@ -1,3 +1,6 @@
+import { createApp } from 'vue/dist/vue.esm-bundler';
+import FontAwesome from '../Components/FontAwesome/FontAwesome.vue';
+
 const navApp = createApp ({
     data(){
         return {

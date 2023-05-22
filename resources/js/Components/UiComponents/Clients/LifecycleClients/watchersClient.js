@@ -40,9 +40,23 @@ export const clientWatchers =
             }else{ this.submitButton.paisesValid = false }
         },
         //Razon Social
-        inputRazonSocial(newValue){ this.validateString(this.LimitString.NAME,newValue,'inputRazonSocial','razonSocialError',[true,'razonSocialValid']) },
+        inputRazonSocial(newValue){
+            this.validateString({
+                "limitString": this.LimitString.NAME,
+                "stringToValidate": newValue,
+                "varInput":'inputRazonSocial',
+                "varError": 'razonSocialError',
+                "validInput": [true, 'razonSocialValid']})
+        },
         //Direccion
-        inputDireccion(newValue){ this.validateString(this.LimitString.DIR,newValue,'inputDireccion','direccionError',[true,'direccionValid']) },
+        inputDireccion(newValue){
+            this.validateString({
+                "limitString": this.LimitString.DIR,
+                "stringToValidate": newValue,
+                "varInput":'inputDireccion',
+                "varError": 'direccionError',
+                "validInput": [true, 'direccionValid']})
+        },
         //Pagina Web
         inputWeb(newValue){ this.validateString(this.LimitString.WEB,newValue,'inputWeb','webError',[false,'']) },
         //Correo electronico

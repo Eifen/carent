@@ -16,7 +16,7 @@
             <div :class="formClass.button"
             :id="[!submitButton.isValid ? formClass.disableButton : isClick ? formClass.disableButton : null]"
             v-if="inputSocioSelect != 0"
-            @click="ClientEmit()">
+            @click="clientEmit()">
                 <span v-if="isEdit & !isClick">{{ messages.buttonEdit }}</span>
                 <span v-else-if="!isEdit & !isClick">{{ messages.buttonCreate }}</span>
                 <span v-else-if="isClick"><font-awesome string-icon="fa-solid fa-spinner" is-spin></font-awesome></span>
@@ -28,18 +28,21 @@
 <script>
 //Espacio de importaciones
 //Hooks
-import { createdMixin } from '@/Components/Clients/LifecycleClients/created.js'
-import { mountedMixin } from '@/Components/Clients/LifecycleClients/mounted.js'
-import { clientWatchers } from '@/Components/Clients/LifecycleClients/watchers.js'
-import { clientMethods } from '@/Components/Clients/LifecycleClients/methods.js'
+import { createdMixin } from '@/Components/UiComponents/Clients/LifecycleClients/createdClient.js'
+import { mountedMixin } from '@/Components/UiComponents/Clients/LifecycleClients/mountedClient.js'
+import { clientWatchers } from '@/Components/UiComponents/Clients/LifecycleClients/watchersClient.js'
+import { clientMethods } from '@/Components/UiComponents/Clients/LifecycleClients/methodsClient.js'
 
 //Templates
-import DataSocio from '@/Components/Clients/TemplatesClients/DataSocio.vue';
-import DataCliente from '@/Components/Clients/TemplatesClients/DataCliente.vue';
-import DataContactCliente from '@/Components/Clients/TemplatesClients/DataContactCliente.vue';
+import DataSocio from '@/Components/UiComponents/Clients/TemplatesClients/DataSocio.vue';
+import DataCliente from '@/Components/UiComponents/Clients/TemplatesClients/DataCliente.vue';
+import DataContactCliente from '@/Components/UiComponents/Clients/TemplatesClients/DataContactCliente.vue';
 
 //librerias
 import FontAwesome from "@/Components/FontAwesome/FontAwesome.vue";
+
+//Config Global
+import { classConfig, dataMixin, methodsGlobalMixin } from "../UiComponentsConfig";
 
 export default {
     props:{
@@ -50,21 +53,6 @@ export default {
     data()
     {
         return {
-            formClass:
-            {
-                container: 'dashboard-form-container',
-                form:'',
-                legend: '',
-                fieldset: '',
-                button: '',
-                disableButton: '',
-                successValidation: 'form-SuccessInput',
-                failureValidation: 'form-ErrorInput',
-                requiredTitle: '',
-                requiredField: '',
-                select: 'form-select-container',
-                empleadoFieldset: '',
-            }, //Controla los estilos del formulario
             messages:
             {
                 titleEdit: "Estas modificando un cliente",
@@ -121,10 +109,10 @@ export default {
         }
     },
     //Ciclo de Vida
-    created() { createdMixin(this) },
+    created() { classConfig(this); createdMixin(this) },
     mounted() { mountedMixin(this) },
     computed: { DTOData(){ return this.$data }}, //Metodo computado que envia la data a sus hijos a través de propiedades
     components: { FontAwesome, DataSocio, DataCliente, DataContactCliente },
-    mixins: [ clientWatchers, clientMethods ]
+    mixins: [ clientWatchers, clientMethods, dataMixin, methodsGlobalMixin ]
 }
 </script>
