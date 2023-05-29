@@ -68,8 +68,55 @@ class TotalHorasCargModel extends Model
 
           foreach ($cargos as $key => $item) {
 
-            if(!isset($item->id)){
-              $item = json_decode($item);
+                #Ref Hora Empleado
+                $ReferenciaTotal = $this->rangoFechasUsers[$cursorUser][$division]["horasRef"];
+
+                $Cargo = $this->Cargos($usuario->id_cargo);
+
+                #Definimos la cargabilidad
+
+                $Division = $this->Divisiones([$usuario->id_division]);
+                $Cargabilidad = $this->DivisionCargabilidad($Cargo->id, $Division[0]->id_tipo);
+                $CargabilidadAdmin = 100 - optional($Cargabilidad)->porcentaje;
+                $GroupCargo = $this->GroupCargo($Cargo->id);
+
+		        #Porcentaje proyectos
+		        $PerProyecto = ($HorasProy * 100) / ($HorasProy != 0 && $ReferenciaTotal != 0 ? $ReferenciaTotal : 1);
+                $ExcesoPerProy = ($PerProyecto > optional($Cargabilidad)->porcentaje ? ($PerProyecto - optional($Cargabilidad)->porcentaje) : 0);
+
+                #Porcentaje Administrativo
+                $PerAdmon = ($HorasAdmon * 100) / ($HorasAdmon != 0 && $ReferenciaTotal != 0 ? $ReferenciaTotal : 1);
+                $ExcesoPerAdmon = ($PerAdmon > $CargabilidadAdmin ? ($PerAdmon - $CargabilidadAdmin) : 0);
+
+
+                #Porcentaje total
+                $PerTotal = ($HoraTotal * 100) / ($HoraTotal != 0 && $ReferenciaTotal != 0 ? $ReferenciaTotal : 1);
+
+                #Array Reporte
+                $reportDTO[$cursorUser][$division] = array(
+                    "id"=> $usuario->id,
+                    "nombre"=> $NombreCompleto,
+                    "usuario_cargo" => $Cargo->descripcion,
+                    "usuario_division" => $this->Divisiones([$usuario->id_division])[0]->descripcion,
+                    'total_horas_cargables' => $HorasProy,
+                    'porcen_horas_cargables' => $PerProyecto,
+                    'total_horas_no_cargables' => $HorasAdmon,
+                    'porcen_horas_no_cargables' => $PerAdmon,
+                    'total_horas' => $HoraTotal,
+                    'porcen_carga_total' => ($PerTotal > 100 ? 100 : $PerTotal),
+                    'total_exceso_proyectos' => $ReferenciaTotal * ($ExcesoPerProy / 100),
+                    'exceso_per_proyectos' => $ExcesoPerProy,
+                    'total_exceso_administrativo' => $ReferenciaTotal * ($ExcesoPerAdmon / 100),
+                    'exceso_per_administrativo' => $ExcesoPerAdmon,
+                    'fecha_desde' => $this->rangoFechasUsers[$cursorUser][$division]["fecha_desde"],
+                    'fecha_hasta' => $this->rangoFechasUsers[$cursorUser][$division]["fecha_hasta"],
+                    'ref_usuario_total' => $ReferenciaTotal,
+                    'fecha_ingreso' => ($usuario->fecha_ingreso === null ? $usuario->fecha_ingreso : date('Y-m-d',strtotime($usuario->fecha_ingreso))),
+                    'fecha_egreso' => ($usuario->fecha_egreso === null ? $usuario->fecha_egreso : date('Y-m-d',strtotime($usuario->fecha_egreso))),
+                    'orden' => $Cargo->orden,
+                    'eficiencia' => (optional($Cargabilidad)->porcentaje <= $PerProyecto  ? true : false),
+                    'grupo_nivel' => (optional($GroupCargo)->nivel_group)
+                );
             }
 
             array_push($idsCargo, $item->id);

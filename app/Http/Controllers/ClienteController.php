@@ -40,7 +40,11 @@ class ClienteController extends Controller
     $paises = $modelo->paises();
     if (!empty($codigoCliente)) {
       $codigo = $codigoCliente->codigo + 1;
-      $response = array("response" => true, "codigo" => $codigo, "paises" => $paises);
+      $response = array("response" => true,
+                        "codigo" => $codigo,
+                        "paises" => $paises,
+                        "servicios" => $servicios,
+                        "sectores" => $sectores);
     }else{
       $response = array("response" => false, "message" => "No se encontraron resultados");
     }
@@ -169,6 +173,9 @@ class ClienteController extends Controller
     $infoCliente = $modelo->detalleClienteModificar($id_cliente);
     $estatus = $modelo->estatusCliente();
     $paises = $modelo->paises();
+    $servicios = $modelo->servicios();
+    $sectores = $modelo->sectores();
+
 
     if(!empty($infoCliente)){
       $response = array("response" => true,
@@ -181,9 +188,9 @@ class ClienteController extends Controller
     return $response;
   }
 
-  function modificarCliente(Request $request){
+    function UpdateClientData(Request $request){
 
-    $modelo = new ClienteModel();
+        $model = new ClienteModel();
 
     $parametros = array(
       $request->input("idCliente"),
@@ -200,24 +207,25 @@ class ClienteController extends Controller
       $request->input("estatus")
     );
 
-    $response = $modelo->modificarCliente($parametros);
+        $response = $model->UpdateClientData($parametros);
 
-    if($response["response"]){
+        if($response["response"]){
 
-      $parametros = [
-        "accion" => 'Modificación del cliente: '. $request->input("codigoCliente"),
-        "direccion_ip" => $request->session()->get('usuario_ip'),
-        "fecha" => date("Y-m-d H:i:s"),
-        "tabla" => 'tbl_cliente',
-        "usuario_id" => $request->session()->get('usuario_id')
-      ];
+            $params = [
+                "accion" => 'Modificación del cliente: '. $request->input("codigoCliente"),
+                "direccion_ip" => $request->session()->get('usuario_ip'),
+                "fecha" => date("Y-m-d H:i:s"),
+                "tabla" => 'tbl_cliente',
+                "usuario_id" => $request->session()->get('usuario_id')
+            ];
 
-      $modeloAudit = new AuditoriaLogModel();
-      $modeloAudit->logs_auditoria($parametros);
+            $model = new AuditoriaLogModel();
+            $model->logs_auditoria($params);
+
+        }
+
+        return $response;
 
     }
 
-    return $response;
-
-  }
 }

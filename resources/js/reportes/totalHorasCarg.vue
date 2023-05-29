@@ -453,8 +453,33 @@
         },
         registroTabla: function(datos){
 
-          const registros = [];
-          datos.forEach((item, i) => {
+          for (const division in datos) {
+            for (const user in datos[division]) {
+              const data = {
+                nombre: datos[division][user].nombre,
+                usuario_cargo: datos[division][user].usuario_cargo,
+                nivel: datos[division][user].grupo_nivel,
+                usuario_division: datos[division][user].usuario_division,
+                eficiencia: (datos[division][user].eficiencia ? "E" : "DE"),
+                total_horas_cargables: datos[division][user].total_horas_cargables,
+                porcen_horas_cargables: parseFloat(datos[division][user].porcen_horas_cargables.toFixed(2)).toLocaleString("es-ES") + "%",
+                total_horas_no_cargables: datos[division][user].total_horas_no_cargables,
+                porcen_horas_no_cargables: parseFloat(datos[division][user].porcen_horas_no_cargables.toFixed(2)).toLocaleString("es-ES") + "%",
+                total_horas: datos[division][user].total_horas,
+                porcen_carga_total: parseFloat(datos[division][user].porcen_carga_total.toFixed(2)).toLocaleString("es-ES") + "%",
+                total_horas_exceso_admin: parseFloat(datos[division][user].total_exceso_administrativo.toFixed(0)).toLocaleString("es-ES"),
+                porcen_exceso_admin: parseFloat(datos[division][user].exceso_per_administrativo.toFixed(2)).toLocaleString("es-ES") + "%",
+                total_horas_exceso_proy: parseFloat(datos[division][user].total_exceso_proyectos.toFixed(0)).toLocaleString("es-ES"),
+                porcen_exceso_proy: parseFloat(datos[division][user].exceso_per_proyectos.toFixed(2)).toLocaleString("es-ES") + "%",
+                ref_usuario_total: datos[division][user].ref_usuario_total,
+                fecha_ingreso: datos[division][user].fecha_ingreso,
+                fecha_egreso: datos[division][user].fecha_egreso,
+                orden: datos[division][user].orden,
+                //Si es verdadero colocamos un check, falso un cross
+                //Fecha del intervalo
+                fecha_desde: datos[division][user].fecha_desde,
+                fecha_hasta: datos[division][user].fecha_hasta
+              }
 
             const data = {
               numero: (i + 1),
