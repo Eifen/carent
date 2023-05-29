@@ -146,7 +146,9 @@ class ProyectoModel extends Model
 
     function crearProyecto($descripcion,$cliente,$socio,$socioCalidad,$gerente,$fechaContratacion,$divisiones,$estatus,$id_moneda,$monto,$empresa){
 
-      DB::beginTransaction();
+      //Insertamos el nuevo proyecto
+      $InsertNuevoProyecto = DB::select('call sp_create_project(?,?,?,?,?,?,?,?,?,?,?,?,@respuesta)', $NuevoProyecto);
+      //$idProyecto = DB::table('tbl_proyecto')->insertGetId($data);
 
       $data = array("descripcion" => $descripcion,
                     "id_cliente" => $cliente,
@@ -183,7 +185,6 @@ class ProyectoModel extends Model
 
         $client = DB::select('SELECT c.razon_social FROM tbl_cliente c WHERE c.id = '.$cliente.'');
 
-        DB::commit();
         return array(
           "cliente" => $client[0]->razon_social,
           "response" => true,
@@ -192,7 +193,6 @@ class ProyectoModel extends Model
 
       }else{
 
-        DB::rollBack();
         return array("response" => false, "message" => "Error al tratar de crear el proyecto.");
 
       }
