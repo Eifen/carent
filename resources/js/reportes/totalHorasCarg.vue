@@ -25,7 +25,7 @@
           id="group-divisiones">
           <multiselect :clear-on-select="false"
                        :disabled="formFiltro.campos.divisiones.disabled"
-                       :multiple="true"
+                       :multiple="false"
                        :options="formFiltro.campos.divisiones.listado"
                        :preserve-search="true"
                        :show-labels="false"
@@ -124,7 +124,7 @@
       </b-form>
     </b-col>
 
-    <b-col cols="12">
+    <b-col cols="12" v-if="tabla.registros.length != 0">
       <b-row align-h="end" v-cloak v-if="formFiltro.mostrar">
         <b-col cols="12" md="6" lg="4">
           <b-card class="text-left card-horas">
@@ -175,8 +175,9 @@
                  :variante="tabla.alert.variante">
           </alert>
         </template>
-        <template v-slot:cell(numero)="data">
-          <b>{{ data.item.numero }}</b>
+        <template v-slot:cell(e)="data">
+           <i v-if="data.item.eficiencia == 'E'" class="fas fa-check" style="color: #40d44a;"></i>
+           <i v-if="data.item.eficiencia == 'DE'" class="fas fa-times" style="color: #ce122e;"></i>
         </template>
         <template v-slot:custom-foot v-if="tabla.registros.length > 0">
           <b-tr>
@@ -349,38 +350,14 @@
 
         axios.get('/dataRepTotalHorasCarg')
         .then(function (response) {
-
           if(response.status === 200 && response.data.response === true){
 
-            self.tabla.encabezado = [
-              { key: 'numero', label: '#' },
-              { key: 'nombre', label: 'Empleado' },
-              { key: 'total_horas_cargables', label: 'Total horas cargables' },
-              //{ key: 'porcen_horas_cargables', label: '% Horas Clientes' },
-              { key: 'porcen_carga_cliente', label: '% Carga cliente' },
-              { key: 'total_horas_no_cargables', label: 'Horas no cargables' },
-              //{ key: 'porcen_horas_no_cargables', label: '% Horas No Cargables' },
-              { key: 'porcen_carga_no_cliente', label: '% Carga no cliente' },
-              { key: 'total_horas', label: 'Total horas' },
-              { key: 'porcen_carga_total', label: '% Carga total (Ref: '+parseInt(response.data.totales[0].maximo_horas)+' Horas)' },
-              //{ key: 'exceso', label: 'Exceso' },
-              { key: 'exceso_cargables', label: 'Exceso carga cliente' },
-              { key: 'exceso_no_cargables', label: 'Exceso carga no cliente' },
-
-            ];
-
-            self.tabla.registros = self.registroTabla(response.data.totales);
-
-            if(response.data.totales.length === 0){
-
-              let mensaje = "No hay carga de hora de los empleados";
+            let mensaje = "Si quiere un reporte de todas las divisiones y nombres solo coloque el intervalo de fechas.";
               self.mostrarAlert(self.tabla.alert, true, "warning", mensaje, false, false, 0);
 
-            }
-
-            self.maximo_horas = parseInt(response.data.totales[0].maximo_horas);
+            self.maximo_horas = parseInt(response.data.maximo_horas);
             self.formFiltro.campos.cargos.listado = response.data.cargos;
-            self.formFiltro.campos.divisiones.listado = response.data.divisiones;        
+            self.formFiltro.campos.divisiones.listado = response.data.divisiones;
 
             self.tabla.paginador.paginar = response.data.paginar;
             self.tabla.paginador.numPaginas = 1;
@@ -451,7 +428,9 @@
           self.tabla.paginador.pagina = ((self.tabla.paginador.pagina + 1) > self.tabla.paginador.max) ? self.tabla.paginador.pagina : (self.tabla.paginador.pagina + 1);
           self.buscar();
         },
-        registroTabla: function(datos){
+        registroTabla(datos){
+          let registros = [];
+          let contadorRegistros = 1
 
           for (const division in datos) {
             for (const user in datos[division]) {
@@ -481,26 +460,26 @@
                 fecha_hasta: datos[division][user].fecha_hasta
               }
 
-            const data = {
-              numero: (i + 1),
-              nombre: item.nombre,
-              total_horas_cargables: item.total_horas_cargables,
-              //porcen_horas_cargables: item.porcen_horas_cargables,
-              porcen_carga_cliente: item.porcen_carga_cliente,
-              total_horas_no_cargables: item.total_horas_no_cargables,
-              //porcen_horas_no_cargables: item.porcen_horas_no_cargables,
-              porcen_carga_no_cliente: item.porcen_carga_no_cliente,
-              total_horas: item.total_horas,
-              porcen_carga_total: item.porcen_carga_total,
-              //exceso: item.exceso,
-              exceso_cargables: item.exceso_cargables,
-              exceso_no_cargables: item.exceso_no_cargables
-            };
+              registros.push(data);
 
-            registros.push(data);
+              contadorRegistros++;
+            }
+          }
 
-          });
+          //TODO orden jerarquia
+          registros.sort((ordenA,ordenB) =>
+          {
+            switch (true) {
+                //Son de la misma division pero el primero es mayor que el segundo
+                case (ordenA.orden > ordenB.orden) && (ordenA.usuario_division === ordenB.usuario_division):
+                    return 1;
+                //Son de la misma division pero el primero es mayor que el segundo
+                case (ordenA.orden < ordenB.orden) && (ordenA.usuario_division === ordenB.usuario_division):
+                    return -1;
+            }
 
+            return 0;
+          })
           return registros;
 
         },
@@ -533,31 +512,10 @@
           self.formFiltro.btn.limpiarFiltro.disabled = true;
 
           //Evaluamos como filtraremos la division
-          if(self.formFiltro.campos.divisiones.value.length === 0 && self.formFiltro.campos.divisiones.listado.length > 1){
-            var param_divisiones = null;
-          }else if(self.formFiltro.campos.divisiones.value.length > 0){
-            var param_divisiones = self.formFiltro.campos.divisiones.value;
-          }else if(self.formFiltro.campos.divisiones.value.length === 0 && self.formFiltro.campos.divisiones.listado.length === 1){
-            var param_divisiones = self.formFiltro.campos.divisiones.listado[0].id;
-          }else{
-            var param_divisiones = null;
-          }
-
-          //Evaluamos como filtraremos los cargos
-          if(self.formFiltro.campos.cargos.value.length === 0 && self.formFiltro.campos.cargos.listado.length > 1){
-            var param_cargos = null;
-          }else if(self.formFiltro.campos.cargos.value.length > 0){
-
-            var param_cargos = [];
-            self.formFiltro.campos.cargos.value.forEach((cargo, index) => {
-              param_cargos.push({id: cargo.id});
-            });
-
-          }else if(self.formFiltro.campos.cargos.value.length === 0 && self.formFiltro.campos.cargos.listado.length === 1){
-            var param_cargos = self.formFiltro.campos.cargos.listado[0].id;
-          }else{
-            var param_cargos = null;
-          }
+          var param_divisiones = (self.formFiltro.campos.divisiones.value !== null
+                                  ? [ self.formFiltro.campos.divisiones.value.id ]
+                                  : 0);
+          if(typeof param_divisiones[0] === 'undefined') param_divisiones = 0;
 
           //Evaluamos como filtraremos el cargo
           var param_cargos = (self.formFiltro.campos.cargos.value !== null
@@ -594,24 +552,34 @@
             self.formFiltro.btn.limpiarFiltro.disabled = false;
 
             // Se le asigna los valores a las variables
-            self.maximo_horas = parseInt(response.data.totales[0].maximo_horas);
+            self.maximo_horas = parseInt(response.data.maximo_horas);
             self.tabla.paginador.numPaginas = response.data.paginas;
             self.tabla.paginador.max = parseInt(response.data.paginas);
 
             self.tabla.encabezado = [
-              { key: 'numero', label: '#' },
-              { key: 'nombre', label: 'Empleado' },
-              { key: 'total_horas_cargables', label: 'Horas Clientes' },
-              //{ key: 'porcen_horas_cargables', label: '% Horas Clientes' },
-              { key: 'porcen_carga_cliente', label: '% Cargabilidad A Clientes' },
-              { key: 'total_horas_no_cargables', label: 'Horas No Cargables' },
-              //{ key: 'porcen_horas_no_cargables', label: '% Horas No Cargables' },
-              { key: 'porcen_carga_no_cliente', label: '% Cargabilidad No Clientes' },
-              { key: 'total_horas', label: 'Total Horas Cargadas' },
-              { key: 'porcen_carga_total', label: '% Carga total (Ref: '+parseInt(response.data.totales[0].maximo_horas)+' Horas)' },
-              //{ key: 'exceso', label: 'Exceso' },
-              { key: 'exceso_cargables', label: 'Exceso carga cliente' },
-              { key: 'exceso_no_cargables', label: 'Exceso carga no cliente' },
+              { key: 'nombre', label: 'Nombre y Apellido' },
+              { key: 'usuario_cargo', label: "Cargo"},
+              { key: 'usuario_division', label: "Division"},
+              'e',
+              //Proyectos
+              { key: 'total_horas_cargables', label: 'Horas Proy' },
+              { key: 'porcen_horas_cargables', label: '% Proy' },
+              //Administrativos
+              { key: 'total_horas_no_cargables', label: 'Horas Admon' },
+              { key: 'porcen_horas_no_cargables', label: '% Horas Admon' },
+              //Total Horas
+              { key: 'total_horas', label: 'Total horas' },
+              { key: 'porcen_carga_total', label: '% Carga total' },
+              //Exceso
+              { key: 'porcen_exceso_admin', label: '% Exceso Admon'},
+              { key: 'porcen_exceso_proy', label: '% Exceso Proy'},
+              { key: 'ref_usuario_total', label: 'Ref Total'},
+              //Exceso
+              //{ key: 'exceso_cargables', label: 'Exceso carga cliente' },
+              //{ key: 'exceso_no_cargables', label: 'Exceso carga no cliente' },
+              //Fecha
+              { key: 'fecha_ingreso', label: 'Fecha Ingreso'},
+              { key: 'fecha_egreso', label: 'Fecha Egreso'}
 
             ];
 
@@ -627,7 +595,7 @@
 
             if(response.data.totales.length === 0){
 
-              let mensaje = "No hay carga de hora de los empleados";
+              let mensaje = "No existen registro de horas para este filtrado";
               self.mostrarAlert(self.tabla.alert, true, "warning", mensaje, false, false, 0);
 
             }
@@ -639,7 +607,7 @@
             self.formFiltro.campos.empleado.disabled = false;
             self.formFiltro.campos.fechaDesde.disabled = false;
             self.formFiltro.campos.fechaHasta.disabled = false;
-            
+
             self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlInit;
             self.formFiltro.btn.filtrar.disabled = false;
             self.formFiltro.btn.limpiarFiltro.html = self.formFiltro.btn.limpiarFiltro.htmlInit;
