@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class ConfigModel extends Model
 {
@@ -39,10 +40,12 @@ class ConfigModel extends Model
      */
     public function GetAll($tableTarget)
     {
-        DB::select('CALL sp_query_pagination(?,@jsonResponse)', [$tableTarget]);
-        $GetReponse = DB::select('SELECT @jsonResponse as JsonDataTable');
-        $Response = json_decode($GetReponse[0]-> JsonDataTable,true);
-        return $Response;
+        if(!DB::table('vw_'.$tableTarget.'_preview')->exists()){
+            return array("response"=>false,"message"=>'Error 0012: table target is empty ('.'vw_'.$tableTarget.'_preview'.')');
+        }
+        //Si la tabla existe procede a traerlo
+        $getSQL = DB::table('vw_'.$tableTarget.'_preview')->get();
+        return array("response"=>true,"message"=>$getSQL);
     }
 
     /**

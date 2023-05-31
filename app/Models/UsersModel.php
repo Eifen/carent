@@ -85,7 +85,7 @@ class UsersModel extends Model
      */
     public static function PrepareDataUpdate($codigo)
     {
-        $getUser = DB::table('vw_users_info')
+        $getUser = DB::table('vw_users_update')
         ->where("user_code","=",$codigo)
         ->first();
 

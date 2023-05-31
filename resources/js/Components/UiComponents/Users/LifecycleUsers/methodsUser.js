@@ -35,13 +35,13 @@ export const userMethods = {
                 const validate = Validate.Date(dateFilter.dateToValidate)
                 if(!validate.response && dateFilter.dateToValidate.length >= 10) throw validate.message;
                 //Pasa las validaciones
-                if(this[dateFilter.varInput].length == 0 || this[dateFilter.varInput].length <= 10) this.messages.form[dateFilter.varError] = '';
+                if(this[dateFilter.varInput].length == 0 || this[dateFilter.varInput].length <= 10) this.messages.error[dateFilter.varError] = '';
                 if(dateFilter.validInput[0] && validate.response) this.submitButton[dateFilter.validInput[1]] = true;
                 //Desactivamos las banderas
-                if((this[dateFilter.varInput].length == 0 && dateFilter.validInput[0]) || (this[dateFilter.varInput].length < 10 && dateFilter.validInput[0])) this.messages.form[dateFilter.varError] = '';
+                if((this[dateFilter.varInput].length == 0 && dateFilter.validInput[0]) || (this[dateFilter.varInput].length < 10 && dateFilter.validInput[0])) this.messages.error[dateFilter.varError] = '';
             } catch (error) {
                 if(dateFilter.validInput[0]) this.submitButton[dateFilter.validInput[1]] = false;
-                this.messages.form[dateFilter.varError] = Exceptions.CatchWarning(error)
+                this.messages.error[dateFilter.varError] = Exceptions.CatchWarning(error)
             }
         },
         /**
@@ -62,14 +62,14 @@ export const userMethods = {
                 const validate = Validate.Email(emailFilter.emailToValidate);
                 if(!validate.response && this[emailFilter.varInput].length > 0) throw validate.message;
                 //Passamos las validaciones
-                if(this[emailFilter.varInput].length == 0 || validate.response) this.messages.form[emailFilter.varError] = ''
+                if(this[emailFilter.varInput].length == 0 || validate.response) this.messages.error[emailFilter.varError] = ''
                 if(validate.response && emailFilter.validInput[0]) this.submitButton[emailFilter.validInput[1]] = true;
                 //Desactivamos la bandera
                 if(this[emailFilter.varInput] == 0 && emailFilter.validInput[0]) this.submitButton[emailFilter.validInput[1]] = false;
             }catch (error){
                 //Desactivamos las banderas
                 if(emailFilter.validInput[0]) this.submitButton[emailFilter.validInput[1]] = false;
-                this.messages.form[emailFilter.varError] = Exceptions.CatchWarning(error)
+                this.messages.error[emailFilter.varError] = Exceptions.CatchWarning(error)
             }
         },
         /**

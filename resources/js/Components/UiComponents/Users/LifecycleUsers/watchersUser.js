@@ -123,7 +123,7 @@ export const userWatchers =
                 const verifyFormat = Validate.FormatDocument(valueDTO);
                 //Luego de validar transformamos de nuevo la data
                 if (!verifyFormat.response) throw verifyFormat.message;
-                if (this.inputSelect.length > 2) this.messages.form.documentError = '';
+                if (this.inputSelect.length > 2) this.messages.error.documentError = '';
 
                 valueDTO.length > 14
                     ? this.inputSelect = oldSelect
@@ -135,11 +135,11 @@ export const userWatchers =
                 //Reestructuramos el formato en un funcion se activo el evento change o no
                 this.inputSelect = this.getTargetTypeDocument != ''
                     ? `${this.getTargetTypeDocument}-`
-                    : `${this.dataEdit.AbreviaturaTipo}-`;
+                    : `${this.dataEdit.identity_abbreviation}-`;
                 //Desactivamos la bandera
                 this.submitButton.documentValid = false;
                 //Pasamos el error
-                this.messages.form.documentError = Exceptions.CatchWarning(errorMessage);
+                this.messages.error.documentError = Exceptions.CatchWarning(errorMessage);
             }
         },
         //Codigo de usuario
