@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-05-2023 a las 09:01:24
--- Versión del servidor: 10.4.25-MariaDB
--- Versión de PHP: 8.1.10
+-- Tiempo de generación: 31-05-2023 a las 21:32:32
+-- Versión del servidor: 10.4.28-MariaDB
+-- Versión de PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -326,50 +326,6 @@ END IF;
 SET p_json_response = CONCAT('{"response":true,"message":"User ',p_user_code,' created succesfully"}');
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_query_pagination` (IN `table_target` TEXT, OUT `p_json_response` TEXT)   query_select: BEGIN
-DECLARE v_customMessage TEXT;
-DECLARE v_customError CONDITION FOR SQLSTATE '45000';
-DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
-	BEGIN
-    	GET DIAGNOSTICS CONDITION 1 @code = RETURNED_SQLSTATE, @error_msj = MESSAGE_TEXT;
-        ROLLBACK;
-        SET v_customMessage = CONCAT("Se ha producido un error en la consulta: (",@code,") ",@error_msj);
-        #Guardamos el error
-        CALL sp_sql_exceptions(1,1,"sp_query_pagination",v_customMessage,@responseError);
-        SET p_json_response = (SELECT @responseError);
-    END;
-DECLARE EXIT HANDLER FOR v_customError
-	BEGIN
-    	#Guardamos el error
-        CALL sp_sql_exceptions(1,1,"sp_query_pagination",v_customMessage,@responseError);
-        SET p_json_response = (SELECT @responseError);
-    END;
-#Validaciones Custom
-IF table_target = "" OR table_target is NULL THEN
-	SET v_customMessage = CONCAT('{"response":false,"message":"Error 0012: table target is empty (',table_target,')"}');
-    SIGNAL SQLSTATE '45000'; #Activamos el error
-END IF;
-
-#Validaciones para los Select
-IF table_target = 'users' THEN
-	#Creamos un JSON CON la informacion de la consulta
-	SET @jsonSelect = (SELECT CONCAT("[",GROUP_CONCAT('{"codigo":"',us.user_code,'","cedula":"',ui.identity_number,'","nombre":"',CONCAT(us.first_name," ",us.second_name," ",us.first_surname," ",us.second_surname),'","correo":"',uc.primary_email,'","estatus":',us.status_id,'}'),"]") FROM users us INNER JOIN users_identity ui ON ui.user_id = us.user_id INNER JOIN users_contact uc ON uc.user_id = us.user_id);
-    SET p_json_response = CONCAT('{"response":true,"message":',@jsonSelect,'}');
-    LEAVE query_select;
-END IF;
-
-IF table_target = 'clients' THEN
-	#Creamos un JSON con la información de la consulta
-    SET @jsonSelect = (SELECT CONCAT("[",GROUP_CONCAT('{"codigo":"',cs.client_code,'","socio encargado":"',CONCAT(us.first_name," ",us.second_name," ",us.first_surname," ",us.second_surname),'","razon social":"',cs.bussiness_name,'","correo":"',cs.tax_email,'","estatus":',us.status_id,'}'),"]") FROM clients cs INNER JOIN users us ON us.user_id = cs.partner_user_id);
-    SET p_json_response = CONCAT('{"response":true,"message":',@jsonSelect,'}');
-    LEAVE query_select;
-END IF;
-
-#Si no entra en ninguna condición
-SET v_customMessage = CONCAT('{"response":false,"message":"Error 0013: Table target does not match any table in the database (',table_target,')"}');
-SIGNAL SQLSTATE '45000'; #Activamos el error
-END$$
-
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_sql_exceptions` (IN `p_type_object_id` INT, IN `p_type_message_id` INT, IN `p_affected_object` VARCHAR(255), IN `p_error_message` TEXT, OUT `p_error_response` TEXT)   BEGIN
 DECLARE v_customErrorMessage TEXT;
 DECLARE v_customError CONDITION FOR SQLSTATE '45000';
@@ -679,7 +635,7 @@ CREATE TABLE `clients` (
   `sector_id` int(11) NOT NULL,
   `service_id` int(11) NOT NULL,
   `status_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `clients`
@@ -895,7 +851,7 @@ CREATE TABLE `clients_countries` (
   `country_name` varchar(300) NOT NULL,
   `iso3` varchar(300) NOT NULL,
   `phone_code` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `clients_countries`
@@ -1160,7 +1116,7 @@ CREATE TABLE `clients_sectors` (
   `sector_id` int(11) NOT NULL,
   `sector_name` varchar(255) NOT NULL,
   `status_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `clients_sectors`
@@ -1182,7 +1138,7 @@ CREATE TABLE `clients_services` (
   `service_id` int(11) NOT NULL,
   `service_name` varchar(255) NOT NULL,
   `status_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `clients_services`
@@ -1218,7 +1174,7 @@ CREATE TABLE `control_encrypts` (
   `encrypt_key` mediumtext NOT NULL,
   `encrypt_iv` mediumtext NOT NULL,
   `status_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `control_encrypts`
@@ -1240,7 +1196,7 @@ CREATE TABLE `control_errors` (
   `affected_object` varchar(50) NOT NULL,
   `error_message` text NOT NULL,
   `error_date` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `control_errors`
@@ -1386,7 +1342,7 @@ INSERT INTO `control_errors` (`error_id`, `type_message_id`, `type_object_id`, `
 CREATE TABLE `control_errors_type_messages` (
   `type_message_id` int(11) NOT NULL,
   `message_description` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `control_errors_type_messages`
@@ -1405,7 +1361,7 @@ INSERT INTO `control_errors_type_messages` (`type_message_id`, `message_descript
 CREATE TABLE `control_errors_type_object` (
   `type_object_id` int(11) NOT NULL,
   `object_name` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `control_errors_type_object`
@@ -1431,7 +1387,7 @@ CREATE TABLE `control_logs` (
   `old_value` text DEFAULT NULL,
   `new_value` text DEFAULT NULL,
   `register_date` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `control_logs`
@@ -1589,7 +1545,8 @@ INSERT INTO `control_logs` (`log_id`, `action_id`, `log_description`, `user_resp
 (148, 2, 'updateUser', '127.0.0.1', 1, 'users', 'UPDATE `users` SET `user_code`=888888,`time_change_password`=@dateChange,`first_name`=p_first_name,`second_name`=p_second_name,`first_surname`=p_first_surname,`second_surname`=p_second_surname,`birthday`=p_birthday,`position_id`=p_position_id,`department_id`=p_department_id,`parish_id`=p_parish_id,`admission_date`=p_admission_date,`departure_date`=p_departure_date,`status_id`=p_status_id WHERE `user_id` = p_user_update_id;', '{\"name\":\"TESTING TESTING 2, TESTING 3 TESTING 4\",\r\n                        \"birthday\":\"1994-01-01\",\r\n                        \"cargo\":17,\r\n                        \"division\":18,\r\n                        \"parroquia\":753,\r\n                        \"fecha_ingreso\":\"2023-05-01\",\r\n                        \"fecha_egreso\":\"2023-05-18\",\r\n                        \"status\":2,\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"name\":\"TESTING TESTING 2, TESTING 3 TESTING 4\",\r\n                        \"birthday\":\"1994-01-01\",\r\n                        \"cargo\":17,\r\n                        \"division\":18,\r\n                        \"parroquia\":753,\r\n                        \"fecha_ingreso\":\"2023-05-01\",\r\n                        \"fecha_egreso\":\"2023-05-18\",\r\n                        \"status\":2,\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-17 02:56:43'),
 (149, 2, 'updateUser', '127.0.0.1', 1, 'users', 'UPDATE `users` SET `user_code`=888888,`time_change_password`=@dateChange,`first_name`=p_first_name,`second_name`=p_second_name,`first_surname`=p_first_surname,`second_surname`=p_second_surname,`birthday`=p_birthday,`position_id`=p_position_id,`department_id`=p_department_id,`parish_id`=p_parish_id,`admission_date`=p_admission_date,`departure_date`=p_departure_date,`status_id`=p_status_id WHERE `user_id` = p_user_update_id;', '{\"name\":\"TESTING TESTING 2, TESTING 3 TESTING 4\",\r\n                        \"birthday\":\"1994-01-01\",\r\n                        \"cargo\":17,\r\n                        \"division\":18,\r\n                        \"parroquia\":753,\r\n                        \"fecha_ingreso\":\"2023-05-01\",\r\n                        \"fecha_egreso\":\"2023-05-18\",\r\n                        \"status\":2,\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"name\":\"TESTING TESTING 2, TESTING 3 TESTING 4\",\r\n                        \"birthday\":\"1994-01-01\",\r\n                        \"cargo\":17,\r\n                        \"division\":18,\r\n                        \"parroquia\":753,\r\n                        \"fecha_ingreso\":\"2023-05-01\",\r\n                        \"fecha_egreso\":\"2023-05-18\",\r\n                        \"status\":2,\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-17 02:57:52'),
 (150, 2, 'updateUser', '127.0.0.1', 1, 'users', 'UPDATE `users` SET `user_code`=888888,`time_change_password`=@dateChange,`first_name`=p_first_name,`second_name`=p_second_name,`first_surname`=p_first_surname,`second_surname`=p_second_surname,`birthday`=p_birthday,`position_id`=p_position_id,`department_id`=p_department_id,`parish_id`=p_parish_id,`admission_date`=p_admission_date,`departure_date`=p_departure_date,`status_id`=p_status_id WHERE `user_id` = p_user_update_id;', '{\"name\":\"TESTING TESTING 2, TESTING 3 TESTING 4\",\r\n                        \"birthday\":\"1994-01-01\",\r\n                        \"cargo\":17,\r\n                        \"division\":18,\r\n                        \"parroquia\":753,\r\n                        \"fecha_ingreso\":\"2023-05-01\",\r\n                        \"fecha_egreso\":\"2023-05-18\",\r\n                        \"status\":2,\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"name\":\"TESTING TESTING 2, TESTING 3 TESTING 4\",\r\n                        \"birthday\":\"1994-01-01\",\r\n                        \"cargo\":17,\r\n                        \"division\":18,\r\n                        \"parroquia\":753,\r\n                        \"fecha_ingreso\":\"2023-05-01\",\r\n                        \"fecha_egreso\":\"2023-05-18\",\r\n                        \"status\":2,\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-17 02:57:56'),
-(151, 2, 'updateUser', '127.0.0.1', 1, 'users', 'UPDATE `users` SET `user_code`=888888,`time_change_password`=@dateChange,`first_name`=p_first_name,`second_name`=p_second_name,`first_surname`=p_first_surname,`second_surname`=p_second_surname,`birthday`=p_birthday,`position_id`=p_position_id,`department_id`=p_department_id,`parish_id`=p_parish_id,`admission_date`=p_admission_date,`departure_date`=p_departure_date,`status_id`=p_status_id WHERE `user_id` = p_user_update_id;', '{\"name\":\"TESTING TESTING 2, TESTING 3 TESTING 4\",\r\n                        \"birthday\":\"1994-01-01\",\r\n                        \"cargo\":17,\r\n                        \"division\":18,\r\n                        \"parroquia\":753,\r\n                        \"fecha_ingreso\":\"2023-05-01\",\r\n                        \"fecha_egreso\":\"2023-05-18\",\r\n                        \"status\":2,\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"name\":\"TESTING TESTING 2, TESTING 3 TESTING 4\",\r\n                        \"birthday\":\"1994-01-01\",\r\n                        \"cargo\":17,\r\n                        \"division\":18,\r\n                        \"parroquia\":753,\r\n                        \"fecha_ingreso\":\"2023-05-01\",\r\n                        \"fecha_egreso\":\"2023-05-18\",\r\n                        \"status\":2,\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-17 03:00:28');
+(151, 2, 'updateUser', '127.0.0.1', 1, 'users', 'UPDATE `users` SET `user_code`=888888,`time_change_password`=@dateChange,`first_name`=p_first_name,`second_name`=p_second_name,`first_surname`=p_first_surname,`second_surname`=p_second_surname,`birthday`=p_birthday,`position_id`=p_position_id,`department_id`=p_department_id,`parish_id`=p_parish_id,`admission_date`=p_admission_date,`departure_date`=p_departure_date,`status_id`=p_status_id WHERE `user_id` = p_user_update_id;', '{\"name\":\"TESTING TESTING 2, TESTING 3 TESTING 4\",\r\n                        \"birthday\":\"1994-01-01\",\r\n                        \"cargo\":17,\r\n                        \"division\":18,\r\n                        \"parroquia\":753,\r\n                        \"fecha_ingreso\":\"2023-05-01\",\r\n                        \"fecha_egreso\":\"2023-05-18\",\r\n                        \"status\":2,\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '{\"name\":\"TESTING TESTING 2, TESTING 3 TESTING 4\",\r\n                        \"birthday\":\"1994-01-01\",\r\n                        \"cargo\":17,\r\n                        \"division\":18,\r\n                        \"parroquia\":753,\r\n                        \"fecha_ingreso\":\"2023-05-01\",\r\n                        \"fecha_egreso\":\"2023-05-18\",\r\n                        \"status\":2,\r\n                        \"ultima_ip\":\"127.0.0.1\"}', '2023-05-17 03:00:28'),
+(152, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-05-31 11:53:04 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-05-17 01:15:37\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-05-31 11:53:04\",\"last_ip\": \"127.0.0.1\"}', '2023-05-31 11:53:04');
 
 -- --------------------------------------------------------
 
@@ -1600,7 +1557,7 @@ INSERT INTO `control_logs` (`log_id`, `action_id`, `log_description`, `user_resp
 CREATE TABLE `control_logs_action` (
   `action_id` int(11) NOT NULL,
   `action_description` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `control_logs_action`
@@ -1621,7 +1578,7 @@ INSERT INTO `control_logs_action` (`action_id`, `action_description`) VALUES
 CREATE TABLE `control_status` (
   `status_id` int(11) NOT NULL,
   `status_description` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `control_status`
@@ -1656,14 +1613,14 @@ CREATE TABLE `users` (
   `departure_date` date DEFAULT NULL,
   `login_date` datetime DEFAULT NULL,
   `status_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `users`
 --
 
 INSERT INTO `users` (`user_id`, `user_code`, `password`, `time_change_password`, `first_name`, `second_name`, `first_surname`, `second_surname`, `birthday`, `position_id`, `department_id`, `parish_id`, `admission_date`, `departure_date`, `login_date`, `status_id`) VALUES
-(1, '0001', 0x9f824ad4b17be95f20aa30c5eef9d8f6, '2023-05-13', 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '1986-08-05', 16, 16, 1131, '2020-01-01', NULL, '2023-05-17 01:15:37', 1),
+(1, '0001', 0x9f824ad4b17be95f20aa30c5eef9d8f6, '2023-05-13', 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '1986-08-05', 16, 16, 1131, '2020-01-01', NULL, '2023-05-31 11:53:04', 1),
 (2, '10', 0xcb4dc5daf4d8865eb1bd01d6c898c269, '2023-03-09', 'NATHALIE', 'YAMILET', 'LOPEZ', 'TREJO', '1972-08-20', 17, 1, 1131, '2000-02-21', NULL, '2023-03-08 23:41:42', 1),
 (3, '10092', 0x10e54efb266e50c523273c638cb690c5, '2023-03-09', 'YESENIA', 'BEATRIZ', 'MARTINEZ', 'GALLARDO', '1979-06-01', 15, 1, 1131, '2004-09-01', NULL, '2023-03-07 08:27:55', 1),
 (4, '10141', 0x383155d3ec475bf8ace4b67bf0aaba8d, '2023-03-09', 'JESUS', 'ERASMO', 'PEREZ', 'ERASMO', '1959-11-09', 17, 1, 1131, '2005-02-02', NULL, '2023-02-06 09:52:51', 1),
@@ -1915,7 +1872,7 @@ CREATE TABLE `users_address_municipalities` (
   `municipality_id` int(11) NOT NULL,
   `state_id` int(11) NOT NULL,
   `municipality_name` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `users_address_municipalities`
@@ -2269,7 +2226,7 @@ CREATE TABLE `users_address_parishes` (
   `parish_id` int(11) NOT NULL,
   `municipality_id` int(11) NOT NULL,
   `parish_name` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `users_address_parishes`
@@ -3426,7 +3383,7 @@ CREATE TABLE `users_address_states` (
   `state_id` int(11) NOT NULL,
   `state_name` text NOT NULL,
   `iso_31662` varchar(4) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `users_address_states`
@@ -3473,7 +3430,7 @@ CREATE TABLE `users_contact` (
   `secondary_email` varchar(255) DEFAULT NULL,
   `primary_phone` varchar(30) DEFAULT NULL,
   `secondary_phone` varchar(30) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `users_contact`
@@ -3732,7 +3689,7 @@ CREATE TABLE `users_hierarchy_departments` (
   `department_id` int(11) NOT NULL,
   `department_name` text NOT NULL,
   `status_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `users_hierarchy_departments`
@@ -3773,7 +3730,7 @@ CREATE TABLE `users_hierarchy_positions` (
   `position_type_id` int(11) NOT NULL,
   `order` int(11) NOT NULL,
   `status_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `users_hierarchy_positions`
@@ -3835,7 +3792,7 @@ CREATE TABLE `users_identity` (
   `user_id` int(11) NOT NULL,
   `identity_type_id` int(11) NOT NULL,
   `identity_number` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `users_identity`
@@ -4094,7 +4051,7 @@ CREATE TABLE `users_identity_type` (
   `identity_type_id` int(11) NOT NULL,
   `identity_abbreviation` varchar(5) NOT NULL,
   `identity_description` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `users_identity_type`
@@ -4113,7 +4070,7 @@ INSERT INTO `users_identity_type` (`identity_type_id`, `identity_abbreviation`, 
 CREATE TABLE `users_position_type` (
   `position_type_id` int(11) NOT NULL,
   `position_description` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `users_position_type`
@@ -4123,6 +4080,20 @@ INSERT INTO `users_position_type` (`position_type_id`, `position_description`) V
 (1, 'Profesional'),
 (2, 'Administrativo'),
 (3, 'Profesional y Administrativo');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `vw_clients_preview`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `vw_clients_preview` (
+`codigo` int(11)
+,`socio encargado` varchar(83)
+,`razon social` varchar(500)
+,`correo` varchar(100)
+,`estatus` int(11)
+);
 
 -- --------------------------------------------------------
 
@@ -4138,10 +4109,35 @@ CREATE TABLE `vw_clients_status` (
 -- --------------------------------------------------------
 
 --
--- Estructura Stand-in para la vista `vw_users_info`
+-- Estructura Stand-in para la vista `vw_users_preview`
 -- (Véase abajo para la vista actual)
 --
-CREATE TABLE `vw_users_info` (
+CREATE TABLE `vw_users_preview` (
+`codigo` varchar(6)
+,`cedula` varchar(255)
+,`nombre` varchar(83)
+,`correo` varchar(255)
+,`estatus` int(11)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `vw_users_status`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `vw_users_status` (
+`status_id` int(11)
+,`status_description` text
+);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura Stand-in para la vista `vw_users_update`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `vw_users_update` (
 `user_id` int(11)
 ,`user_code` varchar(6)
 ,`status_id` int(11)
@@ -4168,13 +4164,11 @@ CREATE TABLE `vw_users_info` (
 -- --------------------------------------------------------
 
 --
--- Estructura Stand-in para la vista `vw_users_status`
--- (Véase abajo para la vista actual)
+-- Estructura para la vista `vw_clients_preview`
 --
-CREATE TABLE `vw_users_status` (
-`status_id` int(11)
-,`status_description` text
-);
+DROP TABLE IF EXISTS `vw_clients_preview`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_clients_preview`  AS SELECT `cs`.`client_code` AS `codigo`, concat(`us`.`first_name`,' ',`us`.`second_name`,' ',`us`.`first_surname`,' ',`us`.`second_surname`) AS `socio encargado`, `cs`.`bussiness_name` AS `razon social`, `cs`.`tax_email` AS `correo`, `us`.`status_id` AS `estatus` FROM (`clients` `cs` join `users` `us` on(`cs`.`partner_user_id` = `us`.`user_id`)) ;
 
 -- --------------------------------------------------------
 
@@ -4188,11 +4182,11 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
--- Estructura para la vista `vw_users_info`
+-- Estructura para la vista `vw_users_preview`
 --
-DROP TABLE IF EXISTS `vw_users_info`;
+DROP TABLE IF EXISTS `vw_users_preview`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_users_info`  AS SELECT `us`.`user_id` AS `user_id`, `us`.`user_code` AS `user_code`, `us`.`status_id` AS `status_id`, `us`.`first_name` AS `first_name`, `us`.`second_name` AS `second_name`, `us`.`first_surname` AS `first_surname`, `us`.`second_surname` AS `second_surname`, `us`.`birthday` AS `birthday`, `us`.`admission_date` AS `admission_date`, `us`.`departure_date` AS `departure_date`, `ut`.`identity_abbreviation` AS `identity_abbreviation`, `ui`.`identity_number` AS `identity_number`, `uc`.`primary_email` AS `primary_email`, `uc`.`secondary_email` AS `secondary_email`, `uc`.`primary_phone` AS `primary_phone`, `uc`.`secondary_phone` AS `secondary_phone`, `us`.`parish_id` AS `parish_id`, `um`.`municipality_id` AS `municipality_id`, `uas`.`state_id` AS `state_id`, `us`.`position_id` AS `position_id`, `us`.`department_id` AS `department_id` FROM ((((((`users` `us` join `users_identity` `ui` on(`ui`.`user_id` = `us`.`user_id`)) join `users_identity_type` `ut` on(`ut`.`identity_type_id` = `ui`.`identity_type_id`)) join `users_contact` `uc` on(`uc`.`user_id` = `us`.`user_id`)) join `users_address_parishes` `up` on(`up`.`parish_id` = `us`.`parish_id`)) join `users_address_municipalities` `um` on(`um`.`municipality_id` = `up`.`municipality_id`)) join `users_address_states` `uas` on(`uas`.`state_id` = `um`.`state_id`)) ;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_users_preview`  AS SELECT `us`.`user_code` AS `codigo`, `ui`.`identity_number` AS `cedula`, concat(`us`.`first_name`,' ',`us`.`second_name`,' ',`us`.`first_surname`,' ',`us`.`second_surname`) AS `nombre`, `uc`.`primary_email` AS `correo`, `us`.`status_id` AS `estatus` FROM ((`users` `us` join `users_identity` `ui` on(`ui`.`user_id` = `us`.`user_id`)) join `users_contact` `uc` on(`uc`.`user_id` = `us`.`user_id`)) ;
 
 -- --------------------------------------------------------
 
@@ -4202,6 +4196,15 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 DROP TABLE IF EXISTS `vw_users_status`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_users_status`  AS SELECT `control_status`.`status_id` AS `status_id`, `control_status`.`status_description` AS `status_description` FROM `control_status` WHERE `control_status`.`status_id` between 1 and 4 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura para la vista `vw_users_update`
+--
+DROP TABLE IF EXISTS `vw_users_update`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `vw_users_update`  AS SELECT `us`.`user_id` AS `user_id`, `us`.`user_code` AS `user_code`, `us`.`status_id` AS `status_id`, `us`.`first_name` AS `first_name`, `us`.`second_name` AS `second_name`, `us`.`first_surname` AS `first_surname`, `us`.`second_surname` AS `second_surname`, `us`.`birthday` AS `birthday`, `us`.`admission_date` AS `admission_date`, `us`.`departure_date` AS `departure_date`, `ut`.`identity_abbreviation` AS `identity_abbreviation`, `ui`.`identity_number` AS `identity_number`, `uc`.`primary_email` AS `primary_email`, `uc`.`secondary_email` AS `secondary_email`, `uc`.`primary_phone` AS `primary_phone`, `uc`.`secondary_phone` AS `secondary_phone`, `us`.`parish_id` AS `parish_id`, `um`.`municipality_id` AS `municipality_id`, `uas`.`state_id` AS `state_id`, `us`.`position_id` AS `position_id`, `us`.`department_id` AS `department_id` FROM ((((((`users` `us` join `users_identity` `ui` on(`ui`.`user_id` = `us`.`user_id`)) join `users_identity_type` `ut` on(`ut`.`identity_type_id` = `ui`.`identity_type_id`)) join `users_contact` `uc` on(`uc`.`user_id` = `us`.`user_id`)) join `users_address_parishes` `up` on(`up`.`parish_id` = `us`.`parish_id`)) join `users_address_municipalities` `um` on(`um`.`municipality_id` = `up`.`municipality_id`)) join `users_address_states` `uas` on(`uas`.`state_id` = `um`.`state_id`)) ;
 
 --
 -- Índices para tablas volcadas
@@ -4412,7 +4415,7 @@ ALTER TABLE `control_errors_type_object`
 -- AUTO_INCREMENT de la tabla `control_logs`
 --
 ALTER TABLE `control_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=152;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=153;
 
 --
 -- AUTO_INCREMENT de la tabla `control_logs_action`
