@@ -1,4 +1,4 @@
-require('bootstrap');
+import 'bootstrap';
 import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap-vue/node_modules/bootstrap/dist/css/bootstrap.css';

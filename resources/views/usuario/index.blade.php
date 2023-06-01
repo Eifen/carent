@@ -8,7 +8,7 @@
         <meta name="robots" content="{{ env('META_ROBOT') }}">
 
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
-        <link href="{{ mix('/css/usuario.css') }}" rel="stylesheet" type="text/css">
+        @vite('resources/css/usuario.css')
 
     </head>
     <body>
@@ -19,7 +19,7 @@
           <listing-users></listing-users/>
       </div>
 
-      <script src="{{ mix('/js/usuario.js') }}"></script>
+      @vite('resources/js/usuario.js')
 
     </body>
 </html>

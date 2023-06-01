@@ -1,11 +1,14 @@
-require('bootstrap');
+import 'bootstrap';
 import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
-window.zenscroll = require('zenscroll');
-window.axios = require('axios');
-window.AutoNumeric = require('autonumeric');
+import zenscroll from 'zenscroll';
+window.zenscroll = zenscroll;
+import axios from 'axios';
+window.axios = axios;
+import AutoNumeric from 'autonumeric';
+window.AutoNumeric = AutoNumeric;
 import VueTheMask from 'vue-the-mask';
 const CryptoJS = require("crypto-js");
 const AES = require("crypto-js/aes");

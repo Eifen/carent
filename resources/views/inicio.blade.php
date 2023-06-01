@@ -8,8 +8,8 @@
 
         <title>.: CARENT :. | Inicio</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
-        <link href="{{ mix('/css/fontawesome-free-5.12.0.css') }}" rel="stylesheet" type="text/css">
-        <link href="{{ mix('/css/inicio.css') }}" rel="stylesheet" type="text/css">
+        @vite('resources/css/fontawesome-free-5.12.0.css')
+        @vite('resources/css/inicio.css')
 
     </head>
     <body>
@@ -25,7 +25,7 @@
 
       </b-container>
 
-      <script src="{{ mix('/js/inicio.js') }}"></script>
+      @vite('resources/js/inicio.js')
 
     </body>
 

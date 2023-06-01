@@ -9,8 +9,8 @@
 
         <title>.: CARENT :.</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
-        <link href="{{ mix('/css/fontawesome-free-5.12.0.css') }}" rel="stylesheet" type="text/css">
-        <link href="{{ mix('/css/modificarProyecto.css') }}" rel="stylesheet" type="text/css">
+        @vite('resources/css/fontawesome-free-5.12.0.css')
+        @vite('resources/css/modificarProyecto.css')
 
     </head>
     <body>
@@ -696,6 +696,6 @@
         </b-modal>
 
       </div>
-      <script src="{{ mix('/js/modificarProyecto.js') }}"></script>
+      @vite('resources/js/modificarProyecto.js')
     </body>
 </html>

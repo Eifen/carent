@@ -1,12 +1,15 @@
-require('bootstrap');
+import 'bootstrap';
 import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap-vue/node_modules/bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import 'vue2-timepicker/dist/VueTimepicker.css'
-window.zenscroll = require('zenscroll');
-window.axios = require('axios');
-window.AutoNumeric = require('autonumeric');
+import zenscroll from 'zenscroll';
+window.zenscroll = zenscroll;
+import axios from 'axios';
+window.axios = axios;
+import AutoNumeric from 'autonumeric';
+window.AutoNumeric = AutoNumeric;
 import VueTheMask from 'vue-the-mask';
 import VueTimepicker from 'vue2-timepicker'
 import Datepicker from 'vuejs-datepicker';

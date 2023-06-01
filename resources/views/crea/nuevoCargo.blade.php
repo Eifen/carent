@@ -7,8 +7,8 @@
         <meta name="robots" content="{{ env('META_ROBOT') }}">
         <title>.: CARENT :.</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
-        <link href="{{ mix('/css/fontawesome-free-5.12.0.css') }}" rel="stylesheet" type="text/css">
-        <link href="{{ mix('/css/nuevoCargo.css') }}" rel="stylesheet" type="text/css">
+        @vite('resources/css/fontawesome-free-5.12.0.css')
+        @vite('resources/css/nuevoCargo.css')
     </head>
     <body>
       <div id="nuevoCargo" class="container-fluid">
@@ -58,6 +58,6 @@
           </div>
         </div>
       </div>
-      <script src="{{ mix('/js/nuevoCargo.js') }}"></script>
+      @vite('resources/js/nuevoCargo.js')
     </body>
 </html>

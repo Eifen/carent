@@ -1,12 +1,16 @@
-require('bootstrap');
+import 'bootstrap';
 import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap-vue/node_modules/bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
-window.axios = require('axios');
-window.AutoNumeric = require('autonumeric');
-window.zenscroll = require('zenscroll');
-window.$ = require('jquery');
+import axios from 'axios';
+window.axios = axios;
+import AutoNumeric from 'autonumeric';
+window.AutoNumeric = AutoNumeric;
+import zenscroll from 'zenscroll';
+window.zenscroll = zenscroll;
+import $ from 'jquery';
+window.$ = $;
 var self;
 
 Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);

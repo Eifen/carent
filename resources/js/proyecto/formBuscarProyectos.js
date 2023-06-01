@@ -1,11 +1,14 @@
-require('bootstrap');
+import 'bootstrap';
 import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap-vue/node_modules/bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
-window.zenscroll = require('zenscroll');
-window.axios = require('axios');
-window.AutoNumeric = require('autonumeric');
+import zenscroll from 'zenscroll';
+window.zenscroll = zenscroll;
+import axios from 'axios';
+window.axios = axios;
+import AutoNumeric from 'autonumeric';
+window.AutoNumeric = AutoNumeric;
 import Multiselect from 'vue-multiselect';
 import VueNumeric from 'vue-numeric';
 import 'vue-multiselect/dist/vue-multiselect.min.css';

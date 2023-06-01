@@ -142,7 +142,7 @@
     import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
     window.$ = require('jquery');
     import axios from 'axios';
-    import menuItem from './itemMenuPrincipal';
+    import menuItem from './itemMenuPrincipal.vue';
     var self;
 
     Vue.use(BootstrapVue);
