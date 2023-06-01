@@ -9,8 +9,8 @@
 
         <title>.: CARENT :.</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
-        <link href="{{ mix('/css/fontawesome-free-5.12.0.css') }}" rel="stylesheet" type="text/css">
-        <link href="{{ mix('/css/nuevoProyecto.css') }}" rel="stylesheet" type="text/css">
+        @vite('resources/css/fontawesome-free-5.12.0.css')
+        @vite('resources/css/nuevoProyecto.css')
 
     </head>
     <body>
@@ -430,7 +430,7 @@
 
       </b-container>
 
-      <script src="{{ mix('/js/nuevoProyecto.js') }}"></script>
+      @vite('resources/js/nuevoProyecto.js')
 
     </body>
 </html>

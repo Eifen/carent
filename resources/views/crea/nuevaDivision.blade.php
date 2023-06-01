@@ -9,8 +9,8 @@
 
         <title>.: CARENT :.</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
-        <link href="{{ mix('/css/fontawesome-free-5.12.0.css') }}" rel="stylesheet" type="text/css">
-        <link href="{{ mix('/css/nuevaDivision.css') }}" rel="stylesheet" type="text/css">
+        @vite('resources/css/fontawesome-free-5.12.0.css')
+        @vite('resources/css/nuevaDivision.css')
     </head>
     <body>
 
@@ -64,6 +64,6 @@
         </div>
 
       </div>
-      <script src="{{ mix('/js/nuevaDivision.js') }}"></script>
+      @vite('resources/js/nuevaDivision.js')
     </body>
 </html>

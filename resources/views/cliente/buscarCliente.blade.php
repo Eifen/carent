@@ -9,8 +9,8 @@
 
         <title>.: CARENT :.</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
-        <link href="{{ mix('/css/fontawesome-free-5.12.0.css') }}" rel="stylesheet" type="text/css">
-        <link href="{{ mix('/css/buscarCliente.css') }}" rel="stylesheet" type="text/css">
+        @vite('resources/css/fontawesome-free-5.12.0.css')
+        @vite('resources/css/buscarCliente.css')
 
     </head>
     <body>
@@ -165,7 +165,7 @@
 
       </div>
 
-      <script src="{{ mix('/js/buscarCliente.js') }}"></script>
+      @vite('resources/js/buscarCliente.js')
 
     </body>
 </html>
