@@ -33,7 +33,7 @@ php artisan serve
 
 - [x] Para compilar las librerias de JS:
 ```
-npm run watch
+npm run dev
 ```
 
 🚨🚨🚨 **Nota:** Actualmente la aplicación del CARENT posee tareas programada y para ello debemos tener en cuenta o constatar de que en la carpetería de la aplicación exista <b>app/Console/Commands</b> así como el archivo <b>EmpleadoSinCargarHorasCargables.php</b> dentro de ella.
