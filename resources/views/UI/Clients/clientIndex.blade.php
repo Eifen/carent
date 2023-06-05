@@ -4,7 +4,6 @@
     :title-object="proxyToJson(clientsColumns)"
     :pagination-lenght="maxLengthPagination"
     :pagination-limit="lengthColumns"
-    {{-- TODO: Cargar la data de clientes --}}
     :table-info="proxyToJson(listData)"
     title-table="clientes"
     button-title="cliente"

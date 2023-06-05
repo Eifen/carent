@@ -1,10 +1,9 @@
 import { createApp } from 'vue/dist/vue.esm-bundler';
-import { componentsUI, methodsUI, watchUI, CrudUi } from '../UIConfig';
+import { componentsUI, methodsUI, watchUI, CrudUi, dataUI } from '../UIConfig';
 
 const clientsIndex = createApp ({
     data(){
         return {
-            isMounted: false, //Controla el estado del loading y del listingCrud
             clientsColumns: {
                 "column1":"Código",
                 "column2":"Socio encargado",
@@ -19,18 +18,13 @@ const clientsIndex = createApp ({
                 "select3":"Razon social",
                 "select4":"Correo"
             },
-            listData: [], //Object que almacena la data de los clientes a mostrar en la lista
-            lengthColumns: 50, //Tamaño máximo de registros por página
-            maxLengthPagination: 0, //Define el tamaño total de páginas
             tableTarget: 'clients',
         }
     },
     created()
     {
-        const paginationDTO = { "table": this.tableTarget, "lengthPage": this.lengthColumns }
-        const routeDTO = { "route": '/clientes/limitPag', "self": this }
         //Hacemos el llamado al método estatico
-        CrudUi.limitPagData(routeDTO,paginationDTO)
+        CrudUi.limitPagData(this,this.tableTarget,this.lengthColumns)
     },
     mounted(){ CrudUi.getTable('/clientes/allClients',this) },
     methods:{
@@ -46,7 +40,7 @@ const clientsIndex = createApp ({
         },
         createClient(){ window.location.href = "/clientes/create" }
     },
-    mixins: [ componentsUI, methodsUI, watchUI ]
+    mixins: [ componentsUI, methodsUI, watchUI, dataUI ]
 });
 
 if(document.getElementById('section-clients') !== null)

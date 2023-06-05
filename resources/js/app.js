@@ -12,3 +12,5 @@ import './UI/Users/usersControl';
 //Clientes
 import './UI/Clients/clientsIndex';
 import './UI/Clients/clientsControl';
+//Proyectos
+import './UI/Projects/ProjectIndex';

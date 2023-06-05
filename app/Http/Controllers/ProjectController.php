@@ -23,5 +23,15 @@ class ProjectController extends Controller
         if (Session::has('userId')) $this->permitControl = true;
 
         return view('index')->with("Session",$this->permitControl);
-    }   
+    }
+    
+    /**
+     * Metodo que se encarga de devolver una vista de los proyectos activos e inactivos
+     */
+    public function getAllProjects()
+    {
+        $this->modelInstance = new ConfigModel();
+        $allData = $this->modelInstance->GetAll('projects');
+        return response($allData,200);
+    }
 }

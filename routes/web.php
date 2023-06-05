@@ -26,10 +26,10 @@ Route::prefix('/')->group(function(){
     Route::get('/', [LoginController::class,'index']);
     Route::post('/login',[LoginController::class,'Login']);
     Route::get('/logout',[LoginController::class,'Logout']);
+    Route::post('/limit-pag',[ConfigController::class,'LimitPag']);
     //Usuarios
     Route::prefix('/usuarios')->group(function(){
         Route::get('/',[UsersController::class,'index'])->name('users');
-        Route::post('/limitPag',[ConfigController::class,'LimitPag']);
         Route::post('/allUsers',[UsersController::class,'GetAllUser']);
         Route::post('/getParamsInit',[UsersController::class,'GetInitData']); //Parametros iniciales
         Route::put('/deleteUpdateData',[UsersController::class,'DeleteDataUpdate']); //Elimina la Session['dataUpdate']
@@ -48,7 +48,6 @@ Route::prefix('/')->group(function(){
     //Clientes
     Route::prefix('/clientes')->group(function(){
         Route::get('/',[ClientController::class,'index'])->name('clients');
-        Route::post('/limitPag',[ConfigController::class,'LimitPag']);
         Route::post('/allClients',[ClientController::class,'GetAllClients']);
         Route::post('/getParamsInits',[ClientController::class,'GetInitData']); //Parametros iniciales
         Route::put('/deleteUpdateData',[ClientController::class,'DeleteClientUpdate']); //Elimina la Session['clientUpdate']
@@ -67,5 +66,6 @@ Route::prefix('/')->group(function(){
     //Proyectos
     Route::prefix('/projects')->group(function() {
         Route::get('/',[ProjectController::class, 'index'])->name('projects');
+        Route::post('/all-projects',[ProjectController::class,'getAllProjects']);
     });
 });

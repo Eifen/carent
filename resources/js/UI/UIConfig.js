@@ -9,6 +9,13 @@ import { AXIOSINTERVAL, NOTIFYINTERVAL } from '../app';
 import { toast } from 'vue3-toastify';
 
 //Variables globales de UI
+export const dataUI = { data(){ 
+    return {
+        isMounted: false, //Desactiva el loading cuando carga el componente
+        lengthColumns: 50,
+        maxLengthPagination: 0, //Controlan la páginación
+        listData: [] //Object que almacena la data de los usuarios a mostrar en la lista
+    }} }
 export const componentsUI = { components: { FontAwesome, Loading, ListingCrud, Calendar } }
 export const methodsUI = {
     methods: {
@@ -47,26 +54,23 @@ export const watchUI = {
 export class CrudUi
 {
     /**
-     * Metodo que se encarga de calcular el limite de paginas en la información del Crud
-     * @param {Object} routeData Objeto que debe contener una propiedad route con la URL del request POST,
-     * y otra propiedad self; que se encarga de heredar del padre el contenido de Data()
-     * @param {Object} params Indica los parametros que se deben pasar por post al sistema, en el siguiente formato
-     * { table: "tableNameTarget", lengthPage: numberMaxPerPage }
+     * Metodo que se encarga de calcular el limite de paginas en la información del Crud. Va en el created
+     * @param {Object} self Hereda la data() del padre
      */
-    static limitPagData(routeData, params)
+    static limitPagData(self,tableTarget,lengthPage)
     {
-        axios.post(routeData.route,params)
+        axios.post('/limit-pag',{"table":tableTarget,"lengthPage":lengthPage})
         .then(request =>
             {
                 if(request.status !== 200) throw request.data;
                 //Debe existir una variable llamada maxLengthPagination en aquellos componentes que usen este metodo
-                setTimeout(() => {routeData.self.maxLengthPagination = Math.ceil(request.data);}, AXIOSINTERVAL);
+                setTimeout(() => {self.maxLengthPagination = Math.ceil(request.data);}, AXIOSINTERVAL);
             })
         .catch(error => { console.error(error) })
     }
 
     /**
-     * Metodo que se encarga de traer del modelo toda la información de la tabla seleccionada en función de su ruta
+     * Metodo que se encarga de traer del modelo toda la información de la tabla seleccionada en función de su ruta. Va en el mounted
      * @param {String} route Almacena la URL que debe hacer request Axios
      * @param {Object} self Hereda el metodo data() del componente padre
      */
@@ -85,7 +89,7 @@ export class CrudUi
     }
 
     /**
-     * Metodo que se encarga de crear un espacio Session en memoria para actualizar una tabla
+     * Metodo que se encarga de crear un espacio Session en memoria para actualizar una tabla. Es parte de un metodo
      * @param {Object} routes Objeto con el siguiente formato { post: "routeRequest", redirect: "routeToRedirect"}
      * @param {Object} params Parametros que almacena el filtro a realizar (Sea por codigo, Id, entre otras)
      * Debe estar contenido en una propiedad JSON de nombre { "codigoSql": valueToFilter }

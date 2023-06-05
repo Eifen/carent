@@ -1,10 +1,9 @@
 import { createApp } from 'vue/dist/vue.esm-bundler';
-import { componentsUI, methodsUI, watchUI, CrudUi } from '../UIConfig';
+import { componentsUI, methodsUI, watchUI, CrudUi, dataUI } from '../UIConfig';
 
 const usersApp = createApp ({
     data(){
         return{
-            isMounted: false, //Desactiva el loading cuando carga el componente
             usersColumn: {
                 "column1": "Código",
                 "column2": "Cédula",
@@ -19,18 +18,13 @@ const usersApp = createApp ({
                 "select3": "Cedula",
                 "select4": "Correo"
             },
-            lengthColumns: 50,
-            maxLengthPagination: 0, //Controlan la páginación
             tableTarget: "users",
-            listData: [] //Object que almacena la data de los usuarios a mostrar en la lista
         }
     },
     //Ante de montar, consultamos el tamaño máximo de la páginación
     created(){
-        const paginationDTO = { "table": this.tableTarget, "lengthPage": this.lengthColumns }
-        const routeDTO = { "route": '/usuarios/limitPag', "self": this }
         //Hacemos el llamado al método estatico
-        CrudUi.limitPagData(routeDTO,paginationDTO)
+        CrudUi.limitPagData(this,this.tableTarget,this.lengthColumns)
     },
     mounted(){ CrudUi.getTable('/usuarios/allUsers',this) },
     methods:{
@@ -50,7 +44,7 @@ const usersApp = createApp ({
         //Si carga los usuarios desactivamos el login
         listData(){ this.isMounted = true; } //Desactivamos el loading
     },
-    mixins: [ componentsUI, methodsUI, watchUI ]
+    mixins: [ componentsUI, methodsUI, watchUI, dataUI ]
 });
 
 if(document.getElementById('section-users') !== null)
