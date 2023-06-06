@@ -3,12 +3,16 @@ import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap-vue/node_modules/bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import '@fortawesome/fontawesome-free/js/all.js';
 var self;
 
-Vue.component('menu-principal', require('./components/menuPrincipal.vue').default);
-Vue.component('loading',require('./components/loading.vue').default);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
+
+import loading from './components/loading.vue'
+import menuPrincipal from './components/menuPrincipal.vue'
+Vue.component('loading', loading)
+Vue.component('menu-principal', menuPrincipal)
 
 new Vue({
 
@@ -19,12 +23,8 @@ new Vue({
   beforeCreate: function(){
     self = this;
   },
-  created: function () {},
   mounted: function () {
     self.loading = false;
-  },
-  updated: function () {},
-  methods:{
-  }// Fin methods
+  }
 
 });

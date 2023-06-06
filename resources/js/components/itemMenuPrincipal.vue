@@ -28,12 +28,7 @@
       hasSubmenu: Boolean,
       submenus: [Object,Array],
       url: String
-    },
-    beforeCreate: function(){},
-    created: function(){},
-    mounted: function() {},
-    updated: function(){},
-    methods: {}
+    }
   }
 
 </script>

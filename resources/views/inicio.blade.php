@@ -8,8 +8,7 @@
 
         <title>.: CARENT :. | Inicio</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
-        @vite('resources/css/fontawesome-free-5.12.0.css')
-        @vite('resources/css/inicio.css')
+        @vite('resources/less/inicio.less')
 
     </head>
     <body>

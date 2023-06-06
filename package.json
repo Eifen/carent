@@ -1,10 +1,6 @@
 {
     "private": true,
     "scripts": {
-        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "watch": "npm run dev -- --watch",
-        "watch-poll": "npm run dev -- --watch-poll",
-        "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
         "dev": "vite",
         "build": "vite build"
     },
