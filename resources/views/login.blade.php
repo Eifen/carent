@@ -8,8 +8,7 @@
 
         <title>.: CARENT :.</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
-        @vite('resources/css/fontawesome-free-5.12.0.css')
-        @vite('resources/css/login.css')
+        @vite('resources/less/login.less')
 
     </head>
     <body>
@@ -44,7 +43,7 @@
                         placeholder="Código de usuario"
                         ref="codigoUsuario"
                         type="text"
-                        v-model="$v.formLogin.campos.codigoUsuario.value.$model"></b-form-input>
+                        v-model="v$.formLogin.campos.codigoUsuario.value.$model"></b-form-input>
                     </b-input-group>
                   </b-form-group>
                   <b-form-group
@@ -64,7 +63,7 @@
                         id="clave"
                         placeholder="Contraseña"
                         ref="clave"
-                        v-model="$v.formLogin.campos.clave.value.$model">
+                        v-model="v$.formLogin.campos.clave.value.$model">
                       </b-form-input>
                       <b-input-group-append is-text>
                         <b-icon @click="verClave" :icon="formLogin.campos.clave.iconShowPass.icon"></b-icon>
@@ -141,7 +140,7 @@
                     placeholder="Código de usuario"
                     ref="codigoUsuarioR"
                     type="text"
-                    v-model="$v.formRecovery.campos.codigoUsuario.value.$model"></b-form-input>
+                    v-model="v$.formRecovery.campos.codigoUsuario.value.$model"></b-form-input>
                 </b-input-group>
               </b-form-group>
             </b-form>

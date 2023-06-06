@@ -1,17 +1,3 @@
-<style scoped lang="less">
-
-.alert{
-  margin-bottom: 0px;
-  width: 100%;
-
-  .progress{
-    margin-top: 10px;
-  }
-
-}
-
-</style>
-
 <template>
 
   <b-alert
@@ -45,7 +31,7 @@
 
 <script>
 
-  export default {
+  export default{
       props:{
         contador: Boolean,
         iconoCerrar: Boolean,
@@ -78,3 +64,17 @@
   }
 
 </script>
+
+<style scoped lang="less">
+
+.alert{
+  margin-bottom: 0px;
+  width: 100%;
+
+  .progress{
+    margin-top: 10px;
+  }
+
+}
+
+</style>

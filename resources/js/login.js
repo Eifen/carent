@@ -1,23 +1,29 @@
 import 'bootstrap';
 import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
-//import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/node_modules/bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import zenscroll from 'zenscroll';
 import axios from 'axios';
 import AutoNumeric from 'autonumeric';
+
 import Vuelidate from 'vuelidate';
-import { required, minLength, minValue } from 'vuelidate/lib/validators';
-const CryptoJS = require("crypto-js");
-const AES = require("crypto-js/aes");
+import { helpers, required } from '@vuelidate/validators'
+import { useVuelidate } from '@vuelidate/core'
+
+import CryptoJS from 'crypto-js'
+//const CryptoJS = require("crypto-js");
+//const AES = require("crypto-js/aes");
 var self;
 
-Vue.component('loading',require('./components/loading.vue').default);
-Vue.component('alert',require('./components/alert.vue').default);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons)
 Vue.use(Vuelidate);
+
+import alert from './components/alert.vue'
+import loading from './components/loading.vue'
+Vue.component('alert', alert)
+Vue.component('loading', loading)
 
 new Vue({
 
@@ -41,14 +47,14 @@ new Vue({
           disabled: true,
           html: "",
           htmlInit: "Olvidé mi contraseña",
-          htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
+          htmlLoading: 'Recuperando',
           show: true
         },
         submit:{
           disabled: true,
           html: "",
           htmlInit: "Entrar",
-          htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
+          htmlLoading: 'Validando',
           show:true
         }
       },
@@ -89,7 +95,7 @@ new Vue({
           disabled: true,
           html: "",
           htmlInit: "Recuperar Contraseña",
-          htmlLoading: '<i class="fas fa-cog fa-spin"></i>',
+          htmlLoading: 'Validando',
           show: true
         }
       },
@@ -105,37 +111,48 @@ new Vue({
     },
     loading: true
   },
-  validations: {
-    formLogin: {
-      campos: {
-        codigoUsuario: {
-          value: {
-            required
-          }
-        },
-        clave: {
-          value: {
-            required
+  setup: () => ({ 
+    v$: useVuelidate() 
+  }),
+  validations() {
+    return {
+      formLogin: {
+        campos: {
+          codigoUsuario: {
+            value: {
+              required: helpers.withMessage(
+                'Este campo es requerido',
+                required
+              )
+            }
+          },
+          clave: {
+            value: {
+              required: helpers.withMessage(
+                'Este campo es requerido',
+                required
+              )
+            }
           }
         }
-      }
-    },
-    formRecovery: {
-      campos: {
-        codigoUsuario: {
-          value: {
-            required
+      },
+      formRecovery: {
+        campos: {
+          codigoUsuario: {
+            value: {
+              required: helpers.withMessage(
+                'Este campo es requerido',
+                required
+              )
+            }
           }
         }
       }
     }
   },
   beforeCreate: function(){
-
     self = this;
-
   },
-  created: function () {},
   mounted: function () {
 
     try {
@@ -263,21 +280,19 @@ new Vue({
       for(var i = 0; i <= (arrayCampos.length - 1); i++){
 
         let indice = arrayCampos[i];
-        const campo = self.$v.formRecovery.campos[indice].value;
+        const campo = self.v$.formRecovery.campos[indice].value;
         campo.$touch();
 
         if(campo.$invalid){
 
           self.formRecovery.campos[indice].state = false;
-          const valorCampo = self.$v.formRecovery.campos[indice].value.$model;
 
-          const arrayParams = Object.keys(campo.$params);
+          const arrayParams = Object.keys(campo.$errors);
           for(var j = 0; j <= (arrayParams.length - 1); j++){
-
-            let mensajeError = self.validadorMensajes(arrayParams[j], campo);
-            self.formRecovery.campos[indice].invalidFeedback = mensajeError.mensaje;
-
-            if(!mensajeError.respuesta){
+           
+            self.formRecovery.campos[indice].invalidFeedback = campo.$errors[j].$message;
+            
+            if(!campo.$errors[j].$response){
               break
             }
 
@@ -380,7 +395,7 @@ new Vue({
       var formValido = true;
 
       self.mostrarAlert(self.formLogin.alert);
-
+      
       Object.keys(self.formLogin.campos).forEach((indice, i) => {
 
         if(self.formLogin.campos[indice].hasOwnProperty("state")){
@@ -392,26 +407,23 @@ new Vue({
         }
 
       });
-
+      
       const arrayCampos = Object.keys(self.formLogin.campos);
       for(var i = 0; i <= (arrayCampos.length - 1); i++){
-
+        
         let indice = arrayCampos[i];
-        const campo = self.$v.formLogin.campos[indice].value;
+        const campo = self.v$.formLogin.campos[indice].value;
         campo.$touch();
-
         if(campo.$invalid){
 
           self.formLogin.campos[indice].state = false;
-          const valorCampo = self.$v.formLogin.campos[indice].value.$model;
-
-          const arrayParams = Object.keys(campo.$params);
+         
+          const arrayParams = Object.keys(campo.$errors);
           for(var j = 0; j <= (arrayParams.length - 1); j++){
-
-            let mensajeError = self.validadorMensajes(arrayParams[j], campo);
-            self.formLogin.campos[indice].invalidFeedback = mensajeError.mensaje;
-
-            if(!mensajeError.respuesta){
+           
+            self.formLogin.campos[indice].invalidFeedback = campo.$errors[j].$message;
+            
+            if(!campo.$errors[j].$response){
               break
             }
 
@@ -424,7 +436,7 @@ new Vue({
         }
 
       }
-
+      
       if(formValido){
 
         //Obtenemos valores

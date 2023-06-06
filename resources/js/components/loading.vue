@@ -51,14 +51,10 @@
 
 <script>
 
-  export default {
+  export default{
       props:{
         loading: Boolean
-      },
-      beforeCreate: function(){},
-      mounted: function(){},
-      updated: function(){},
-      methods: {}
+      }
   }
 
 </script>
