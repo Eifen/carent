@@ -37,7 +37,7 @@
         <thead :class="tableClass.thead">
           <tr>
             <!-- Table Object -->
-            <th scope="col" v-for="(title, cursor) in titleObject" :key="cursor">
+            <th scope="col" align="center" valign="middle" v-for="(title, cursor) in titleObject" :key="cursor">
               <span v-if="cursor != 'settings'">{{ title }}</span>
               <span v-else></span>
             </th>
@@ -186,10 +186,10 @@ export default {
     searchData(dataInput) {
         //Filtramos el array en función al select, lo cual actualizará automaticamente
         let dataListDTO = this.tableInfo
-
         for (const columnToSearch in dataInput) {
             dataListDTO = dataListDTO.filter(data => {
-                return data[columnToSearch].toLowerCase().includes(dataInput[columnToSearch])
+                console.log(data,columnToSearch,dataInput)
+                return data[columnToSearch].toString().toLowerCase().includes(dataInput[columnToSearch])
                 })
         }
 

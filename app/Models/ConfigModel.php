@@ -50,16 +50,36 @@ class ConfigModel extends Model
 
     /**
      * Metodo que retorna los status en función al tipo de tabla
-     * @param string $tableReference Tabla a la que se hace referencia
+     * @param string $tableReference Tabla a la que se hace referencia. Default null
      * @return array Devuelve un array con la información del status
      */
-    public static function GetAllStatus($tableReference)
+    public static function GetAllStatus($tableReference = null)
     {
         switch ($tableReference) {
             case 'usuarios':
                 return DB::table('vw_users_status')->get();
-            case 'clientes':
-                return DB::table('vw_clients_status')->get();
+            default:
+                return DB::table('vw_control_status_all')->get();
         }
+    }
+
+    /**
+     * Metodo que retorna un array asociativo de todas las divisiones
+     * No recibe parametros
+     */
+    public static function getAllDepartments(){
+        return DB::table('users_hierarchy_departments')
+        ->where('status_id','=',1)
+        ->get(['department_id','department_name']);
+    }
+
+    /**
+     * Metodo que retorna un array asociativo de todos los cargos
+     * No recibe parametros
+     */
+    public static function getAllPosition(){
+        return DB::table(('users_hierarchy_positions'))
+        ->where("status_id","=",1)
+        ->get(['position_id','position_name']);
     }
 }

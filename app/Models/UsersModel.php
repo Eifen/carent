@@ -52,32 +52,7 @@ class UsersModel extends Model
         ->get(['parish_id','parish_name','municipality_id']);
         return $getParish;
     }
-
-    /**
-     * Metodo que devuelve todas las divisiones
-     * @return Array info de las divisiones
-     */
-    public static function GetAllDivision()
-    {
-        $getDivision = DB::table(('users_hierarchy_departments'))
-        ->where("status_id","=",1)
-        ->get(['department_id','department_name']);
-        return $getDivision;
-    }
-
-    /**
-     * Metodo que devuelve todas los cargos
-     * @return Array info de los cargos
-     */
-    public static function GetAllCargo()
-    {
-        $getCargo = DB::table(('users_hierarchy_positions'))
-        ->where("status_id","=",1)
-        ->get(['position_id','position_name']);
-        return $getCargo;
-        //[0] = Id, [1] = Descripcion
-    }
-
+    
     /**
      * Metodo que devuelve los datos del usuario
      * @param Int $codigo: Almacena el codigo del usuario

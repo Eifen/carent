@@ -22,6 +22,8 @@ use Illuminate\Support\Facades\URL;
 
 //Ruta principal de inicio de sesion
 Route::prefix('/')->group(function(){
+    //Control Process
+    Route::post('/get-info-select',[ConfigController::class,'getInfoSelect']);
     //Login
     Route::get('/', [LoginController::class,'index']);
     Route::post('/login',[LoginController::class,'Login']);

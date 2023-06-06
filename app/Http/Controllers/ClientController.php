@@ -48,7 +48,7 @@ class ClientController extends Controller
             "dataSectores" => ClientModel::GetAllSectores(1),
             "dataServicios" => ClientModel::GetAllServicios(1),
             "dataPaises" => ClientModel::GetAllPaises(),
-            "dataStatus" => ConfigModel::GetAllStatus('clientes')
+            "dataStatus" => ConfigModel::GetAllStatus()
         ];
 
         return response($paramsInit,200);

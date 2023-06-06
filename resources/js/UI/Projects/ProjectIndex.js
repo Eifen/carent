@@ -20,7 +20,7 @@ const projectsIndex = createApp({
                 "select1": "Proyecto",
                 "select2": "Cliente",
                 "select3": "Estatus",
-                "select4": "Divisiones"
+                "select4": "Gerente"
             },
             tableTarget: "projects"
         }
