@@ -3,6 +3,7 @@ import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap-vue/node_modules/bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import '@fortawesome/fontawesome-free/js/all.js';
 import zenscroll from 'zenscroll';
 import axios from 'axios';
 import AutoNumeric from 'autonumeric';
@@ -12,8 +13,6 @@ import { helpers, required } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
 
 import CryptoJS from 'crypto-js'
-//const CryptoJS = require("crypto-js");
-//const AES = require("crypto-js/aes");
 var self;
 
 Vue.use(BootstrapVue);
@@ -47,14 +46,14 @@ new Vue({
           disabled: true,
           html: "",
           htmlInit: "Olvidé mi contraseña",
-          htmlLoading: 'Recuperando',
+          htmlLoading: "<i class='fas fa-cog fa-spin'></i>",
           show: true
         },
         submit:{
           disabled: true,
           html: "",
           htmlInit: "Entrar",
-          htmlLoading: 'Validando',
+          htmlLoading: "<i class='fas fa-cog fa-spin'></i>",
           show:true
         }
       },
