@@ -8,6 +8,7 @@
     title-table="proyectos"
     button-title="proyecto"
     :select-search="proxyToJson(selectSearch)"
-    {{-- @createButton="createClient()"
+    @createButton="createProject()"
+    {{--
     @columns1target="editClient"--}}></listing-crud>
 </div>

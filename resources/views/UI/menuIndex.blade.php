@@ -70,5 +70,9 @@
         @if (Request::url() === URL::route('projects'))
             @include('UI.Projects.ProjectIndex')
         @endif
+
+        @if (Request::url() === URL::route('createProject'))
+            @include('UI.Projects.ProjectCreate')
+        @endif
     </section>
 @endsection

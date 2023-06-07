@@ -34,4 +34,18 @@ class ProjectController extends Controller
         $allData = $this->modelInstance->GetAll('projects');
         return response($allData,200);
     }
+
+    /**
+     * Metodo que se encarga se llenar las listas del formulario de proyectos
+     * @return Response Retorna un formato JSON con informacion de las listas
+     */
+    public function getInitData(){
+        $projectParams = [
+            "currencies" => ConfigModel::getAllDataStatusControl('control_currencies'),
+            "companies" => ConfigModel:: getAllDataStatusControl('control_companies'),
+            "departments" => ConfigModel::getAllDataStatusControl('users_hierarchy_departments')
+        ];
+
+        return response($projectParams,200);
+    }
 }

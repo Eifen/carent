@@ -1,0 +1,108 @@
+<template inline-template>
+    <div :class="formClass.container">
+        <form :class="formClass.form">
+            <div :class="formClass.button" @click="$emit('return-view')">Regresar</div>
+            <!-- Data Principal -->
+            <legend :class="formClass.legend" v-text="isEdit ? messages.titleEdit: messages.titleCreate"></legend>
+            <div :class="formClass.requiredTitle">Campos Obligatorios (<span :class="formClass.requiredField">*</span>)</div>
+            <!-- Datos principales de Proyecto -->
+            <!-- Datos de participantes del proyecto -->
+            <legend :class="formClass.legend" v-text="messages.contact"></legend>
+            <!-- TODO datos de participantes -->
+            <!-- Datos para values del proyecto -->
+            <legend :class="formClass.legend" v-text="messages.values"></legend>
+            <!-- Datos para distribucion de divisiones -->
+            <legend :class="formClass.legend" v-text="messages.addiontalInfo"></legend>
+            <!-- Submit Button. Que permanece inactivo mientras que no se hayan llegano todos los datos requeridos -->
+            <div :class="formClass.button"
+            :id="[!submitButton.isValid ? formClass.disableButton : isClick ? formClass.disableButton : null]"
+            @click="userEmit()">
+                <span v-if="isEdit & !isClick">{{ messages.buttonEdit }}</span>
+                <span v-else-if="!isEdit & !isClick">{{ messages.buttonCreate }}</span>
+                <span v-else-if="isClick"><font-awesome string-icon="fa-solid fa-spinner" is-spin></font-awesome></span>
+            </div>
+        </form>
+    </div>
+</template>
+
+<script>
+import Calendar from "@/Components/Calendar.vue";
+import FontAwesome from "@/Components/FontAwesome/FontAwesome.vue";
+import { createdMixin } from "@/Components/UiComponents/Projects/LifecycleProjects/CreatedProject.js";
+import { mountedMixin } from "@/Components/UiComponents/Projects/LifecycleProjects/MountedProject.js";
+import { projectMethods } from "@/Components/UiComponents/Projects/LifecycleProjects/MethodsProject.js";
+import { projectWatchers } from "@/Components/UiComponents/Projects/LifecycleProjects/WatchersProject.js";
+//Templates
+
+//Config Global
+import { classConfig, dataMixin, methodsGlobalMixin } from "../UiComponentsConfig";
+
+export default {
+    props:{
+        isEdit: Boolean, //Define si el formulario es de edición o de creación
+        isClick: Boolean, //Controla el estado del boton
+        dataEdit: Object, //Almacena la data para update
+    },
+    data(){
+        return{
+            messages:{
+                titleCreate: 'Estas creando a un nuevo proyecto',
+                titleEdit: 'Estas modificando al proyecto',
+                contact: 'Datos de distribución del proyecto',
+                values: 'Gestión de costos',
+                addiontalInfo: 'Distribución de horas',
+                buttonEdit: 'Actualizar proyecto',
+                buttonCreate: 'Crear proyecto',
+                error: {
+                    hiringDateError: '',
+                    projectDescriptionError: '',
+                    clientAssociatedError: '',
+                    statusError: '',
+                    partnerError: '',
+                    qualityPartnerError: '',
+                    managerError: '',
+                    currenciesError: '',
+                    valueError:'',
+                    companiesError:'',
+                    departmentsError:'',
+                    hoursAssignedError: '',
+                } //Control de errores de cada uno de los campos
+            },
+            inputWatchers: [], //Array que almacena todos los watcher
+
+            //Espacio dedicado a variables de data en la base de datos
+            dataSelect:
+            {
+                currencies: [], //Data de las monedas activas
+                companies: [], //Data de las empresas activas
+                departments: [], //Data de las divisiones activas
+            },
+            //Espacio reservado para el control del Create / Edit
+            submitButton: {
+                hiringDateValid: false,
+                projectDescriptionValid: false,
+                clientAssociatedValid: false,
+                statusValid: false,
+                partnerValid: false,
+                qualityPartnerValid: false,
+                managerValid: false,
+                currenciesValid: false,
+                valueValid: false,
+                companiesValid: false,
+                departmentsValid: false,
+                hoursAssignedValid: false,
+                isValid: false //Gestiona si cumple todos los campos requeridos
+            },
+            //Constantes
+            limitString: { NAME: 20 }
+        }
+    },
+    components: { Calendar, FontAwesome, DataPrincipal, DataContact, DataEmpleado },
+    created() { classConfig(this); createdMixin(this) },
+    mounted() { mountedMixin(this) },
+    //Propiedad computada encarga de pasar toda la data como parametro,
+    computed: { DTOData(){ return this.$data } },
+    //Insertamos los methods y los watchers
+    mixins: [projectMethods, projectWatchers, dataMixin, methodsGlobalMixin],
+}
+</script>

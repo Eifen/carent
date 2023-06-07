@@ -64,22 +64,13 @@ class ConfigModel extends Model
     }
 
     /**
-     * Metodo que retorna un array asociativo de todas las divisiones
-     * No recibe parametros
+     * Metodo que abstrae y retorna un array asociativo de la tabla seleccionada.
+     * Debe existir una columna de control de estados (status_id) en la tabla seleccionada
+     * @param String $tableReference: Captura la tabla seleccionada
      */
-    public static function getAllDepartments(){
-        return DB::table('users_hierarchy_departments')
-        ->where('status_id','=',1)
-        ->get(['department_id','department_name']);
-    }
-
-    /**
-     * Metodo que retorna un array asociativo de todos los cargos
-     * No recibe parametros
-     */
-    public static function getAllPosition(){
-        return DB::table(('users_hierarchy_positions'))
-        ->where("status_id","=",1)
-        ->get(['position_id','position_name']);
+    public static function getAllDataStatusControl($tableReference){
+        return DB::table($tableReference)
+        ->where("status_id",'=',1)
+        ->get();
     }
 }

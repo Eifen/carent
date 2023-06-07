@@ -7,7 +7,7 @@ const navApp = createApp ({
             open: false, //Define el estado del toggle
             hamburgerMenu: "", //Define el estilo del menu mobile
             backgrounColor: "#fff",
-            controlDropdown: { style:"" }
+            controlDropdown: { "account": {style:""}, "projects": {style:""} }
         }
     },
     methods:
@@ -20,11 +20,19 @@ const navApp = createApp ({
             ? this.hamburgerMenu = "left:0%"
             : this.hamburgerMenu = "left: 100%"
         },
-        openDropDown(){
-            this.controlDropdown.style = `transform:scale(1);font-size: 1em;background: ${this.backgrounColor};`
+        /**
+         * Metodo que abre los menu modales del navbar
+         * @param {*} navTarget En que parte del nav esta direccionado
+         */
+        openDropDown(navTarget){
+            this.controlDropdown[navTarget].style = `transform:scale(1);font-size: 1em;background: ${this.backgrounColor};`
         },
-        closeDropDown() {
-            this.controlDropdown.style = "transform:scale(0);font-size: 0em;background:none;"
+        /**
+         * Metodo que cierra los menu modales del navbar
+         * @param {*} navTarget En que parte del nav esta direccionado
+         */
+        closeDropDown(navTarget) {
+            this.controlDropdown[navTarget].style = "transform:scale(0);font-size: 0em;background:none;"
         }
     },
     computed:{},

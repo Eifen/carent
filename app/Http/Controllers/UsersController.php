@@ -63,8 +63,8 @@ class UsersController extends Controller
         $dataInit = [
             "tiposDocumento" => UsersModel::TypeDocument(),
             "statesUsuario" =>  UsersModel::GetAllState(),
-            "divisiones" => ConfigModel::getAllDepartments(),
-            "cargos" => ConfigModel::getAllPosition(),
+            "divisiones" => ConfigModel::getAllDataStatusControl('users_hierarchy_departments'),
+            "cargos" => ConfigModel::getAllDataStatusControl('users_hierarchy_positions'),
             "statusUsuario" => ConfigModel::GetAllStatus('usuarios'),
             "municipalityUsuario" => UsersModel::GetMunicipality(),
             "parishUsuario" => UsersModel::GetParish()

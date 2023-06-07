@@ -69,5 +69,10 @@ Route::prefix('/')->group(function(){
     Route::prefix('/projects')->group(function() {
         Route::get('/',[ProjectController::class, 'index'])->name('projects');
         Route::post('/all-projects',[ProjectController::class,'getAllProjects']);
+        Route::post('/get-params-inits',[ProjectController::class,'getInitData']);
+        //Create
+        Route::prefix('/create')->group(function(){
+            Route::get('/',[ProjectController::class,'index'])->name('createProject');
+        });
     });
 });

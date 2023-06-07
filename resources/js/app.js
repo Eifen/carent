@@ -14,3 +14,4 @@ import './UI/Clients/clientsIndex';
 import './UI/Clients/clientsControl';
 //Proyectos
 import './UI/Projects/ProjectIndex';
+import './UI/Projects/ProjectControl';

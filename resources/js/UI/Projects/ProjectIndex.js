@@ -30,6 +30,9 @@ const projectsIndex = createApp({
         CrudUi.limitPagData(this,this.tableTarget,this.lengthColumns)
     },
     mounted(){ CrudUi.getTable('/projects/all-projects',this) },
+    methods: {
+        createProject(){ window.location.href = "/projects/create" }
+    },
     mixins: [componentsUI, methodsUI, watchUI, dataUI]
 });
 
