@@ -43,7 +43,9 @@ class ProjectController extends Controller
         $projectParams = [
             "currencies" => ConfigModel::getAllDataStatusControl('control_currencies'),
             "companies" => ConfigModel:: getAllDataStatusControl('control_companies'),
-            "departments" => ConfigModel::getAllDataStatusControl('users_hierarchy_departments')
+            "departments" => ConfigModel::getAllDataStatusControl('users_hierarchy_departments'),
+            "clients" => ConfigModel::getAllDataStatusControl('clients'),
+            "status" => ConfigModel::GetAllStatus()
         ];
 
         return response($projectParams,200);

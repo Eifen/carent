@@ -5,7 +5,7 @@
             <!-- Data Principal -->
             <legend :class="formClass.legend" v-text="isEdit ? messages.titleEdit: messages.titleCreate"></legend>
             <div :class="formClass.requiredTitle">Campos Obligatorios (<span :class="formClass.requiredField">*</span>)</div>
-            <!-- Datos principales de Proyecto -->
+            <project-principal :scope="DTOData"></project-principal>
             <!-- Datos de participantes del proyecto -->
             <legend :class="formClass.legend" v-text="messages.contact"></legend>
             <!-- TODO datos de participantes -->
@@ -33,7 +33,7 @@ import { mountedMixin } from "@/Components/UiComponents/Projects/LifecycleProjec
 import { projectMethods } from "@/Components/UiComponents/Projects/LifecycleProjects/MethodsProject.js";
 import { projectWatchers } from "@/Components/UiComponents/Projects/LifecycleProjects/WatchersProject.js";
 //Templates
-
+import ProjectPrincipal from "@/Components/UiComponents/Projects/TemplatesProjects/ProjectPrincipal.vue"
 //Config Global
 import { classConfig, dataMixin, methodsGlobalMixin } from "../UiComponentsConfig";
 
@@ -69,6 +69,9 @@ export default {
                 } //Control de errores de cada uno de los campos
             },
             inputWatchers: [], //Array que almacena todos los watcher
+            inputStatusSelect: 0, //Posicion del estado del proyecto
+            inputProjectDescription: '', //String que de la descripcion del proyecto
+            inputClientAssociated: '', //String que almacena la información del cliente asociado
 
             //Espacio dedicado a variables de data en la base de datos
             dataSelect:
@@ -76,6 +79,8 @@ export default {
                 currencies: [], //Data de las monedas activas
                 companies: [], //Data de las empresas activas
                 departments: [], //Data de las divisiones activas
+                clients: [], //Data de los clientes activos
+                status: [] //Data de los estados disponibles a proyectos
             },
             //Espacio reservado para el control del Create / Edit
             submitButton: {
@@ -94,10 +99,10 @@ export default {
                 isValid: false //Gestiona si cumple todos los campos requeridos
             },
             //Constantes
-            limitString: { NAME: 20 }
+            LimitString: { DESCRIPTION: 20 }
         }
     },
-    components: { Calendar, FontAwesome, DataPrincipal, DataContact, DataEmpleado },
+    components: { Calendar, FontAwesome, ProjectPrincipal },
     created() { classConfig(this); createdMixin(this) },
     mounted() { mountedMixin(this) },
     //Propiedad computada encarga de pasar toda la data como parametro,

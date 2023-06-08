@@ -1,5 +1,5 @@
 import { createApp } from 'vue/dist/vue.esm-bundler';
-import FormClients from '../../Components/UiComponents/Clients/FormClients.vue';
+import FormProjects from '../../Components/UiComponents/Projects/FormProjects.vue'
 import { componentsUI, methodsUI,CrudUi } from '../UIConfig';
 import { Validate } from '../../Models/ValidateModel';
 
@@ -110,7 +110,7 @@ const clientsControl = createApp ({
             : this.paramsDTOClients.PaginaWeb = dataToValidate.PaginaWeb;
         }
     },
-    components: { FormClients },
+    components: { FormProjects },
     mounted(){
         setTimeout(() => {
             this.isMounted = true;

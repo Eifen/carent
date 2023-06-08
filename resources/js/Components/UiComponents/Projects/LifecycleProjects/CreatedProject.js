@@ -7,7 +7,11 @@ export const createdMixin = (self) => {
     axios.post('/projects/get-params-inits')
     .then(request => {
         //Asignamos a los select correspondientes
-        
+        self.dataSelect.currencies = request.data.currencies;
+        self.dataSelect.companies = request.data.companies;
+        self.dataSelect.departments = request.data.departments;
+        self.dataSelect.status = request.data.status;
+        self.dataSelect.clients = request.data.clients;
     })
     .catch(error => { console.error(error) })
 }

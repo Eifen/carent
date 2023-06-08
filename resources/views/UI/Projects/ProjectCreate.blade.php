@@ -1,7 +1,7 @@
 <div id="create-project">
     <loading :active="!isMounted"></loading>
-    <form-clients v-if="isMounted"
+    <form-projects v-if="isMounted"
     :is-click="isClick"
-    @return-view="redirectView('/clientes')"
-    @submit-form="newClient"></form-clients>
+    @return-view="redirectView('/projects')"
+    {{-- @submit-form="newClient"--}}></form-projects>
 </div>
