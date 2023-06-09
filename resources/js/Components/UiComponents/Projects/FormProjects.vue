@@ -5,7 +5,8 @@
             <!-- Data Principal -->
             <legend :class="formClass.legend" v-text="isEdit ? messages.titleEdit: messages.titleCreate"></legend>
             <div :class="formClass.requiredTitle">Campos Obligatorios (<span :class="formClass.requiredField">*</span>)</div>
-            <project-principal :scope="DTOData"></project-principal>
+            <project-principal :scope="DTOData"
+            @transfer-ref="emitTransfer"></project-principal>
             <!-- Datos de participantes del proyecto -->
             <legend :class="formClass.legend" v-text="messages.contact"></legend>
             <!-- TODO datos de participantes -->
@@ -99,7 +100,11 @@ export default {
                 isValid: false //Gestiona si cumple todos los campos requeridos
             },
             //Constantes
-            LimitString: { DESCRIPTION: 20 }
+            LimitString: { DESCRIPTION: 20 },
+            dropDownControl: {
+                "clients": {noInput: false, ref:'clientAssociated'}
+            }, //Define si se ha ingresado data en los campos de clientes, socios, gerente
+            childsEmits
         }
     },
     components: { Calendar, FontAwesome, ProjectPrincipal },
@@ -107,6 +112,12 @@ export default {
     mounted() { mountedMixin(this) },
     //Propiedad computada encarga de pasar toda la data como parametro,
     computed: { DTOData(){ return this.$data } },
+    methods: { 
+        emitTransfer(childRefs){
+            this.$refs = childRefs;
+            console.log(this.$refs)
+        }
+    },
     //Insertamos los methods y los watchers
     mixins: [projectMethods, projectWatchers, dataMixin, methodsGlobalMixin],
 }

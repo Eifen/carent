@@ -21,8 +21,8 @@ export const projectWatchers =
                 "varError": 'projectDescriptionError',
                 "validInput": [true, 'projectDescriptionValid']})
         },
-        inputClientAssociated(searchCliente){
-            console.log(searchCliente)
+        inputClientAssociated(){
+            this.listControl(this.dropDownControl.clients.ref,'clients')
         }
     }
 }

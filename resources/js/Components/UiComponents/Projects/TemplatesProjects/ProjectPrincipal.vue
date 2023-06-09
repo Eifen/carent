@@ -23,11 +23,14 @@
                 <span class="input-group-text" id="basic-addon2">
                     <font-awesome string-icon="fa-solid fa-user"></font-awesome>
                 </span>
-                <input type="text" class="form-control" placeholder="Ejemplo: Mc Donalds" id="clientAssociated"
+                <input type="text" :ref="scope.dropDownControl.clients.ref" class="form-control" placeholder="Ejemplo: Mc Donalds" id="clientAssociated"
                     aria-describedby="basic-addon2" v-model="scope.inputClientAssociated"/>
                 <dropdown-select :stringToSearch="scope.inputClientAssociated"
-                :objectResult="scope.dataSelect.clients"
-                columnToSearch="bussiness_name"></dropdown-select>
+                :arrayObjectResult="scope.dataSelect.clients"
+                columnToSearch="bussiness_name"
+                :controlList="scope.dropDownControl.clients.noInput"
+                noDataMessage="No se encontró ningún cliente"
+                @complete-input="autoCompleteClient"></dropdown-select>
             </div>
             <!-- Mensajes de error en Nombre-->
             <div :class="scope.formClass.failureValidation" v-if="scope.messages.error.clientAssociatedError != ''">
@@ -56,6 +59,20 @@ export default {
     props: {
         scope: Object, //Hereda la data del padre
         isEdit: Boolean //Cambia la información en caso de edit
+    },
+    emits: ['transfer-ref'],
+    methods: {
+        /**
+         * Metodo que autocompleta el campo
+         * @param {String} stringToAutoComplete String que se va a autorrellenar
+         */
+        autoCompleteClient(stringToAutoComplete){
+            this.scope.inputClientAssociated = stringToAutoComplete
+            this.scope.dropDownControl.clients.noInput = false
+        }
+    },
+    mounted() {
+        this.$emit('transfer-ref',this.$refs)
     },
     components: { FontAwesome, DropdownSelect }
 };

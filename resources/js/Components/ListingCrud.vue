@@ -188,7 +188,6 @@ export default {
         let dataListDTO = this.tableInfo
         for (const columnToSearch in dataInput) {
             dataListDTO = dataListDTO.filter(data => {
-                console.log(data,columnToSearch,dataInput)
                 return data[columnToSearch].toString().toLowerCase().includes(dataInput[columnToSearch])
                 })
         }
