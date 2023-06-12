@@ -51,7 +51,7 @@ import DataPrincipal from "@/Components/UiComponents/Users/TemplatesUsers/UserPr
 import DataContact from "@/Components/UiComponents/Users/TemplatesUsers/UserContact.vue";
 import DataEmpleado from "@/Components/UiComponents/Users/TemplatesUsers/UserEmpleado.vue";
 //Config Global
-import { classConfig, dataMixin, methodsGlobalMixin } from "../UiComponentsConfig";
+import { classConfig, dataMixin, methodsGlobalMixin, watchersGlobalMixin } from "../UiComponentsConfig";
 
 export default {
     props:{
@@ -141,6 +141,6 @@ export default {
     //Propiedad computada encarga de pasar toda la data como parametro,
     computed: { DTOData(){ return this.$data } },
     //Insertamos los methods y los watchers
-    mixins: [userMethods, userWatchers, dataMixin, methodsGlobalMixin],
+    mixins: [userMethods, userWatchers, dataMixin, methodsGlobalMixin,watchersGlobalMixin],
 }
 </script>

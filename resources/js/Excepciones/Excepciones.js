@@ -46,6 +46,10 @@ export class Exceptions
             //Init Rif
             case 'NoInitRif':
                 return "El rif debe iniciar con: V, E, P, G, J o C"
+
+            //Valor no correspondido en tabla
+            case 'NoRefFound':
+                return "El dato proporcionado no coincide con ningún valor de la tabla"
         }
     }
 }

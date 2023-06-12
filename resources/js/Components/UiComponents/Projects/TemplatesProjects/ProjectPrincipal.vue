@@ -29,7 +29,6 @@
                 :arrayObjectResult="scope.dataSelect.clients"
                 columnToSearch="bussiness_name"
                 :controlList="scope.dropDownControl.clients.noInput"
-                noDataMessage="No se encontró ningún cliente"
                 @complete-input="autoCompleteClient"></dropdown-select>
             </div>
             <!-- Mensajes de error en Nombre-->

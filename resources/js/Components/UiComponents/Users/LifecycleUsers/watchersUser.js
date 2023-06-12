@@ -161,21 +161,6 @@ export const userWatchers =
         inputMunicipioSelect(getMunicipio) {
             //Consultamos las parroquias
             this.parish.select = this.parish.init.filter((parish) => { return parish.municipality_id === getMunicipio })
-        },
-        //Watch del submitButton
-        submitButton: {
-            deep: true,
-            handler(checkValid) {
-                let contValid = 0; //Contador que define cuantos valores estan validos
-                for (const field in checkValid) {
-                    if (field.toString() != 'isValid' && checkValid[field] === true) contValid++;
-                }
-
-                //Activamos o desactivamos el estilado del boton
-                if (contValid == (Object.keys(checkValid).length - 1)) {
-                    this.submitButton.isValid = true;
-                } else { this.submitButton.isValid = false }
-            }
         }
     }
 }

@@ -6,9 +6,11 @@
             <legend :class="formClass.legend" v-text="isEdit ? messages.titleEdit: messages.titleCreate"></legend>
             <div :class="formClass.requiredTitle">Campos Obligatorios (<span :class="formClass.requiredField">*</span>)</div>
             <project-principal :scope="DTOData"
-            @transfer-ref="emitTransfer"></project-principal>
+            @transfer-ref="emitTransfer($event,'principal')"></project-principal>
             <!-- Datos de participantes del proyecto -->
             <legend :class="formClass.legend" v-text="messages.contact"></legend>
+            <project-distribution :scope="DTOData"
+            @transfer-ref="emitTransfer($event,'distribution')"></project-distribution>
             <!-- TODO datos de participantes -->
             <!-- Datos para values del proyecto -->
             <legend :class="formClass.legend" v-text="messages.values"></legend>
@@ -35,8 +37,9 @@ import { projectMethods } from "@/Components/UiComponents/Projects/LifecycleProj
 import { projectWatchers } from "@/Components/UiComponents/Projects/LifecycleProjects/WatchersProject.js";
 //Templates
 import ProjectPrincipal from "@/Components/UiComponents/Projects/TemplatesProjects/ProjectPrincipal.vue"
+import ProjectDistribution from "@/Components/UiComponents/Projects/TemplatesProjects/ProjectDistribution.vue";
 //Config Global
-import { classConfig, dataMixin, methodsGlobalMixin } from "../UiComponentsConfig";
+import { classConfig, dataMixin, methodsGlobalMixin, watchersGlobalMixin } from "../UiComponentsConfig";
 
 export default {
     props:{
@@ -73,6 +76,9 @@ export default {
             inputStatusSelect: 0, //Posicion del estado del proyecto
             inputProjectDescription: '', //String que de la descripcion del proyecto
             inputClientAssociated: '', //String que almacena la información del cliente asociado
+            inputManagerAssociated: '', //String que almacena la información del manager asociado
+            inputPartnerAssociated: '', //String que almacena la información del socio asociado
+            inputQualityPartnerAssociated: '', //String que almacena la información del socio de calidad asociado
 
             //Espacio dedicado a variables de data en la base de datos
             dataSelect:
@@ -81,7 +87,9 @@ export default {
                 companies: [], //Data de las empresas activas
                 departments: [], //Data de las divisiones activas
                 clients: [], //Data de los clientes activos
-                status: [] //Data de los estados disponibles a proyectos
+                partners: [], //Data de los socios activos
+                managers: [], //Data de los gerentes activos
+                status: [], //Data de los estados disponibles a proyectos
             },
             //Espacio reservado para el control del Create / Edit
             submitButton: {
@@ -100,25 +108,35 @@ export default {
                 isValid: false //Gestiona si cumple todos los campos requeridos
             },
             //Constantes
-            LimitString: { DESCRIPTION: 20 },
+            LimitString: { DESCRIPTION: 20, NAME: 50 },
             dropDownControl: {
-                "clients": {noInput: false, ref:'clientAssociated'}
+                "clients": {noInput: false, ref:'clientAssociated'},
+                "manager": {noInput: false, ref:'managerAssociated'},
+                "partner": {noInput: false, ref:'partnerAssociated'},
+                "qualityPartner": {noInput: false, ref:'qualityPartnerAssociated'}
             }, //Define si se ha ingresado data en los campos de clientes, socios, gerente
-            childsEmits
+            childsRefs: {
+                "principal": {},
+                "distribution": {},
+            }, //Almacena la informacion de los refs hijos
         }
     },
-    components: { Calendar, FontAwesome, ProjectPrincipal },
+    components: { Calendar, FontAwesome, ProjectPrincipal, ProjectDistribution },
     created() { classConfig(this); createdMixin(this) },
     mounted() { mountedMixin(this) },
     //Propiedad computada encarga de pasar toda la data como parametro,
     computed: { DTOData(){ return this.$data } },
     methods: { 
-        emitTransfer(childRefs){
-            this.$refs = childRefs;
-            console.log(this.$refs)
+        /**
+         * Metodo que almacena las Refs de los componentes hijo
+         * @param {Object} childRefsEmit almacena los ref que vienen desde el emit
+         * @param {String} targetRef Le indica al padre a que refs pertenece
+         */
+        emitTransfer(childRefsEmit,targetRef){
+            this.childsRefs[targetRef] = childRefsEmit;
         }
     },
     //Insertamos los methods y los watchers
-    mixins: [projectMethods, projectWatchers, dataMixin, methodsGlobalMixin],
+    mixins: [projectMethods, projectWatchers, dataMixin, methodsGlobalMixin, watchersGlobalMixin],
 }
 </script>

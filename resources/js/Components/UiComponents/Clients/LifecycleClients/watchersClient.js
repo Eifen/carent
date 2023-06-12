@@ -152,21 +152,5 @@ export const clientWatchers =
                 this.submitButton.telefonoValid = false;
             }
         },
-        //Deep Watchers
-        submitButton: {
-            deep:true,
-            handler(checkValid)
-            {
-                let contValid = 0; //Contar cada vez que la propiedad sea true
-                for(const field in checkValid){
-                    if(field.toString() != 'isValid' && checkValid[field] === true) contValid++;
-                }
-
-                //Revisamos que contenga toda la data
-                if(contValid == Object.keys(checkValid).length -1){
-                    this.submitButton.isValid = true
-                }else{ this.submitButton.isValid = false }
-            }
-        }
     }
 }

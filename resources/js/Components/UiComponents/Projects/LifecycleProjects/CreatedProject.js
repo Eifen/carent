@@ -12,6 +12,8 @@ export const createdMixin = (self) => {
         self.dataSelect.departments = request.data.departments;
         self.dataSelect.status = request.data.status;
         self.dataSelect.clients = request.data.clients;
+        self.dataSelect.partners = request.data.partners;
+        self.dataSelect.managers = request.data.managers;
     })
     .catch(error => { console.error(error) })
 }

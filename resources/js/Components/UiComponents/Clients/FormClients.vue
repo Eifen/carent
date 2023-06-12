@@ -42,7 +42,7 @@ import DataContactCliente from '@/Components/UiComponents/Clients/TemplatesClien
 import FontAwesome from "@/Components/FontAwesome/FontAwesome.vue";
 
 //Config Global
-import { classConfig, dataMixin, methodsGlobalMixin } from "../UiComponentsConfig";
+import { classConfig, dataMixin, methodsGlobalMixin, watchersGlobalMixin } from "../UiComponentsConfig";
 
 export default {
     props:{
@@ -113,6 +113,6 @@ export default {
     mounted() { mountedMixin(this) },
     computed: { DTOData(){ return this.$data }}, //Metodo computado que envia la data a sus hijos a través de propiedades
     components: { FontAwesome, DataSocio, DataCliente, DataContactCliente },
-    mixins: [ clientWatchers, clientMethods, dataMixin, methodsGlobalMixin ]
+    mixins: [ clientWatchers, clientMethods, dataMixin, methodsGlobalMixin, watchersGlobalMixin ]
 }
 </script>
