@@ -8,8 +8,7 @@
 
         <title>.: CARENT :.</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
-        @vite('resources/css/fontawesome-free-5.12.0.css')
-        @vite('resources/css/cambiarClave.css')
+        @vite('resources/less/cambiarClave.less')
 
     </head>
     <body>
@@ -45,7 +44,7 @@
                     id="claveActual"
                     placeholder="Contraseña Actual"
                     ref="claveActual"
-                    v-model="$v.formCambiarClave.campos.claveActual.value.$model">
+                    v-model="v$.formCambiarClave.campos.claveActual.value.$model">
                   </b-form-input>
                   <b-input-group-append is-text>
                     <b-icon @click="verClave(formCambiarClave.campos.claveActual)" :icon="formCambiarClave.campos.claveActual.iconShowPass.icon"></b-icon>
@@ -66,7 +65,7 @@
                     id="nuevaClave"
                     placeholder="Nueva Contraseña"
                     ref="nuevaClave"
-                    v-model="$v.formCambiarClave.campos.nuevaClave.value.$model">
+                    v-model="v$.formCambiarClave.campos.nuevaClave.value.$model">
                   </b-form-input>
                   <b-input-group-append is-text>
                     <b-icon @click="verClave(formCambiarClave.campos.nuevaClave)" :icon="formCambiarClave.campos.nuevaClave.iconShowPass.icon"></b-icon>
@@ -88,7 +87,7 @@
                     id="repetirNuevaClave"
                     placeholder="Repite la Nueva Contraseña"
                     ref="repetirNuevaClave"
-                    v-model="$v.formCambiarClave.campos.repetirNuevaClave.value.$model">
+                    v-model="v$.formCambiarClave.campos.repetirNuevaClave.value.$model">
                   </b-form-input>
                   <b-input-group-append is-text>
                     <b-icon @click="verClave(formCambiarClave.campos.repetirNuevaClave)" :icon="formCambiarClave.campos.repetirNuevaClave.iconShowPass.icon"></b-icon>

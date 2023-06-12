@@ -3,17 +3,21 @@ import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap-vue/node_modules/bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import '@fortawesome/fontawesome-free/js/all.js';
 import zenscroll from 'zenscroll';
 import axios from 'axios';
 import Vuelidate from 'vuelidate';
-import { required, minLength, sameAs } from 'vuelidate/lib/validators';
-const CryptoJS = require("crypto-js");
-const AES = require("crypto-js/aes");
+import {  minLength, helpers, required, sameAs } from '@vuelidate/validators';
+import { useVuelidate } from '@vuelidate/core'
+import CryptoJS from 'crypto-js'
 var self;
 
-Vue.component('menu-principal', require('./components/menuPrincipal.vue').default);
-Vue.component('loading',require('./components/loading.vue').default);
-Vue.component('alert',require('./components/alert.vue').default);
+import alert from './components/alert.vue'
+import loading from './components/loading.vue'
+import menuPrincipal from './components/menuPrincipal.vue'
+Vue.component('menu-principal', menuPrincipal);
+Vue.component('loading', loading);
+Vue.component('alert', alert);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 Vue.use(Vuelidate);
@@ -88,26 +92,49 @@ var app = new Vue({
     },
     loading: true
   },
-  validations: {
-    formCambiarClave: {
-      campos: {
-        claveActual: {
-          value: {
-            required
-          }
-        },
-        nuevaClave: {
-          value: {
-            minLength: minLength(8),
-            required
-          }
-        },
-        repetirNuevaClave: {
-          value: {
-            required,
-            igualA: sameAs(function(){ return this.formCambiarClave.campos.nuevaClave.value;}),
-            noIgualA: function(){
-              return (this.formCambiarClave.campos.nuevaClave.value === this.formCambiarClave.campos.claveActual.value) ? false : true;
+  setup: () => ({ 
+    v$: useVuelidate() 
+  }),
+  validations() {
+    return {
+      formCambiarClave: {
+        campos: {
+          claveActual: {
+            value: {
+              required: helpers.withMessage(
+                'Este campo es requerido',
+                required
+              )
+            }
+          },
+          nuevaClave: {
+            value: {
+              minLength: helpers.withMessage(
+                'Este campo debe tener al menos 8 caracteres',
+                minLength(8)
+              ),
+              required: helpers.withMessage(
+                'Este campo es requerido',
+                required
+              )
+            }
+          },
+          repetirNuevaClave: {
+            value: {
+              required: helpers.withMessage(
+                'Este campo es requerido',
+                required
+              ),
+              sameAsNuevaClave: helpers.withMessage(
+                'La contraseña no es igual a la anterior',
+                sameAs(this.formCambiarClave.campos.nuevaClave.value)
+              ),
+              noIgualA: helpers.withMessage(
+                'La nueva contraseña no puede ser igual a la actual',
+                function(){
+                  return (this.formCambiarClave.campos.nuevaClave.value === this.formCambiarClave.campos.claveActual.value) ? false : true;
+                }
+              )
             }
           }
         }
@@ -199,21 +226,24 @@ var app = new Vue({
       for(var i = 0; i <= (arrayCampos.length - 1); i++){
 
         let indice = arrayCampos[i];
-        const campo = self.$v.formCambiarClave.campos[indice].value;
+        const campo = self.v$.formCambiarClave.campos[indice].value;
         campo.$touch();
 
         if(campo.$invalid){
 
           self.formCambiarClave.campos[indice].state = false;
-          const valorCampo = self.$v.formCambiarClave.campos[indice].value.$model;
 
-          const arrayParams = Object.keys(campo.$params);
+          const arrayParams = Object.keys(campo.$errors);
           for(var j = 0; j <= (arrayParams.length - 1); j++){
 
-            let mensajeError = self.validadorMensajes(arrayParams[j], campo);
-            self.formCambiarClave.campos[indice].invalidFeedback = mensajeError.mensaje;
+            self.formCambiarClave.campos[indice].invalidFeedback = campo.$errors[j].$message;
 
-            if(!mensajeError.respuesta){
+            if(indice === "repetirNuevaClave"){
+              console.log(indice)
+              console.log(campo.$errors)
+            }
+           
+            if(!campo.$errors[j].$response){
               break
             }
 
@@ -295,31 +325,6 @@ var app = new Vue({
         });
 
       }// Fin if
-
-    },
-    validadorMensajes: function(indice,campo){
-
-      var mensaje,
-          respuesta = true;
-
-      if(!campo[indice] && indice === "required"){
-        mensaje = "Este campo es requerido!";
-        respuesta = false;
-      }else if(!campo[indice] && indice === "igualA"){
-        mensaje = "El valor debe ser igual al campo anterior";
-        respuesta = false;
-      }else if(!campo[indice] && indice === "noIgualA"){
-        mensaje = "La nueva contraseña no debe ser a la actual";
-        respuesta = false;
-      }else if(!campo[indice] && indice === "minLength"){
-        let minChar = campo.$params[indice].min;
-        mensaje = "Debe contener al menos "+minChar+" caracteres!";
-        respuesta = false;
-      }else{
-        mensaje = "";
-      }
-
-      return {mensaje:mensaje, respuesta:respuesta};
 
     },
     verClave: function(campo){
