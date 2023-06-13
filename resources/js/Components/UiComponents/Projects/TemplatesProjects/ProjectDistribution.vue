@@ -62,18 +62,67 @@
                 <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
                 {{ scope.messages.error.qualityPartnerError }}
             </div>
-        </div>                    
+        </div>
+        <!-- Tipo de moneda-->
+        <div class="mb-3">
+            <label for="Currencies">Monto en: <span :class="scope.formClass.requiredField">*</span></label>
+            <div class="input-group">
+                <select class="form-select" v-model="scope.inputCurrenciesSelect" title="CurrenciesSelect">
+                    <option value=0 selected disabled>Seleccione una opción</option>
+                    <option v-for="(select, cursor) in scope.dataSelect.currencies" :key="cursor" :value="select.currency_id">
+                        {{ select.currency_name }}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <!-- Tipo de Empresa-->
+        <div class="mb-3">
+            <label for="Companies">Empresa: <span :class="scope.formClass.requiredField">*</span></label>
+            <div class="input-group">
+                <select class="form-select" v-model="scope.inputCompaniesSelect" title="CompaniesSelect">
+                    <option value=0 selected disabled>Seleccione una opción</option>
+                    <option v-for="(select, cursor) in scope.dataSelect.companies" :key="cursor" :value="select.company_id">
+                        {{ select.company_name }}
+                    </option>
+                </select>
+            </div>
+        </div>
+    <!-- Fecha de contratacion -->
+    <div class="mb-3">
+      <label for="hiringDate">Fecha de contratación
+        <span :class="scope.formClass.requiredField">*</span></label>
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Ejemplo: 1990-02-18"
+          id="hiringDate"
+          aria-describedby="basic-addon6"
+          v-model="scope.inputHiringDate"
+          disabled/>
+        <span class="input-group-text" id="basic-addon6">
+          <calendar @to-input="insertHiringDate"></calendar>
+        </span>
+      </div>
+      <!-- Mensajes de error en fecha -->
+      <div :class="scope.formClass.failureValidation"
+        v-if="scope.messages.error.hiringDateError != ''">
+        <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
+        {{ scope.messages.error.hiringDateError }}
+      </div>
+    </div>                     
     </fieldset>
 </template>
 <script>
 import FontAwesome from '@/Components/FontAwesome/FontAwesome.vue';
 import DropdownSelect from '@/Components/DropdownSelect.vue';
+import Calendar from "@/Components/Calendar.vue";
 export default {
     props: {
         scope: Object, //Hereda la data del padre
         isEdit: Boolean //Cambia la información en caso de edit
     },
-    emits: ['transfer-ref'],
+    emits: ['transfer-ref','active-hiring'],
     methods: {
         /**
          * Metodo que autocompleta el campo
@@ -85,11 +134,16 @@ export default {
             //Aplicamos el autollenado y cerramos el dropdown
             this.scope[inputTarget] = stringToAutoComplete
             this.scope.dropDownControl[columnTarget].noInput = false
-        }
+        },
+        /**
+         * Metodo que guarda la informacion de la fecha
+         * @param {*} valueCalendar String de tipado date en formato US que dictamina la fecha
+         */
+        insertHiringDate(valueCalendar){ this.$emit('active-hiring',valueCalendar) }
     },
     mounted() {
         this.$emit('transfer-ref',this.$refs)
     },
-    components: { FontAwesome, DropdownSelect }
+    components: { FontAwesome, DropdownSelect,Calendar }
 };
 </script>

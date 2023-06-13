@@ -14,7 +14,6 @@ export const projectMethods =
          * @param {String} refsInfo Direcciona al Refs del componente hijo ubicado en la variable childsRefs, ejemplo "principal"
          */
         listControl(refsInfo,inputTarget){
-            console.log(this.childsRefs)
             //Controla el estado de la lista
             if(this.childsRefs[refsInfo.objectRef][refsInfo.nameRef] !== document.activeElement){
                 this.dropDownControl[inputTarget].noInput = false //Lo desactiva si el input pierde el focus
@@ -43,6 +42,23 @@ export const projectMethods =
             }catch (errorMessage){
                 this.submitButton[objectTarget.inputValid] = false
                 this.messages.error[objectTarget.errorInput] = Exceptions.CatchWarning(errorMessage)
+            }
+        },
+        //Insertado de fecha
+        insertDate(dateDTO) { this.inputHiringDate = `${dateDTO.year}-${dateDTO.month}-${dateDTO.day}`; },
+        /**
+         * Metodo que se encarga sumar las horas totales del proyecto
+         * @param {*} infoDepartments Objeto donde esta almacenada la informacion de las divisiones
+         */
+        totalHours(infoDepartments){
+            this.inputHoursAssigned = 0 //Reiniciamos el contador
+            //Recorremos el arrray y sumamos en el v-model de horas totales
+            for (let cursorDeparment = 0; cursorDeparment < infoDepartments.length; cursorDeparment++) {
+                const numberValid = new RegExp('^([0-9]*)$');
+                const testNumber = numberValid.test(infoDepartments[cursorDeparment].hoursAssigned)
+                //Si es un numero, sumamos
+                if(testNumber && infoDepartments[cursorDeparment].hoursAssigned.length != 0) 
+                    this.inputHoursAssigned = parseInt(this.inputHoursAssigned) + parseInt(infoDepartments[cursorDeparment].hoursAssigned); 
             }
         }
     },

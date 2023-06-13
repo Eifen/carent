@@ -18,7 +18,7 @@ class ProjectModel extends Model
         return DB::table('users')
             ->whereIn('position_id', $positionsArray)
             ->where([['status_id', '=', $status]])
-            ->select(DB::raw('CONCAT(first_name," ",second_name," ",first_surname," ",second_surname) AS user_name'))
-            ->get(['user_id', 'position_id', 'department_id']);
+            ->select(DB::raw('CONCAT(first_name," ",second_name," ",first_surname," ",second_surname) AS user_name'),'user_id','position_id','department_id')
+            ->get();
     }
 }

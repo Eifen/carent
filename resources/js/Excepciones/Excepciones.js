@@ -50,6 +50,10 @@ export class Exceptions
             //Valor no correspondido en tabla
             case 'NoRefFound':
                 return "El dato proporcionado no coincide con ningún valor de la tabla"
+            
+            //Horas faltantes
+            case 'MissingHour':
+                return "Falta colocar horas en una de las divisiones";
         }
     }
 }

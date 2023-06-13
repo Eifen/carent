@@ -19,33 +19,6 @@ export const userMethods = {
         },
         /**
          * Metodo que valida los watchers de tipo String
-         * @param {Object} dateFilter Object  JSON con el siguiente formato:
-         * {
-         * @prop1
-         * "dateToValidate": Fecha en formato 'YYYY-mm-dd',
-         * @prop2
-         * "varInput": indica la variable que se usa como v-model,
-         * @prop3
-         * "varError": Indica la variable donde se almacena el error del v-model,
-         * @prop4
-         * "validInput": Tupla [boolean,string] que indica si es un campo obligatorio, y cual es su variable de validación. }
-         */
-        validateDate(dateFilter){
-            try {
-                const validate = Validate.Date(dateFilter.dateToValidate)
-                if(!validate.response && dateFilter.dateToValidate.length >= 10) throw validate.message;
-                //Pasa las validaciones
-                if(this[dateFilter.varInput].length == 0 || this[dateFilter.varInput].length <= 10) this.messages.error[dateFilter.varError] = '';
-                if(dateFilter.validInput[0] && validate.response) this.submitButton[dateFilter.validInput[1]] = true;
-                //Desactivamos las banderas
-                if((this[dateFilter.varInput].length == 0 && dateFilter.validInput[0]) || (this[dateFilter.varInput].length < 10 && dateFilter.validInput[0])) this.messages.error[dateFilter.varError] = '';
-            } catch (error) {
-                if(dateFilter.validInput[0]) this.submitButton[dateFilter.validInput[1]] = false;
-                this.messages.error[dateFilter.varError] = Exceptions.CatchWarning(error)
-            }
-        },
-        /**
-         * Metodo que valida los watchers de tipo String
          * @param {Object} emailFilter Object  JSON con el siguiente formato:
          * {
          * @prop1

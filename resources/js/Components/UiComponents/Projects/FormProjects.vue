@@ -10,12 +10,15 @@
             <!-- Datos de participantes del proyecto -->
             <legend :class="formClass.legend" v-text="messages.contact"></legend>
             <project-distribution :scope="DTOData"
-            @transfer-ref="emitTransfer($event,'distribution')"></project-distribution>
-            <!-- TODO datos de participantes -->
-            <!-- Datos para values del proyecto -->
-            <legend :class="formClass.legend" v-text="messages.values"></legend>
+            @transfer-ref="emitTransfer($event,'distribution')"
+            @active-hiring="insertDate"></project-distribution>
             <!-- Datos para distribucion de divisiones -->
             <legend :class="formClass.legend" v-text="messages.addiontalInfo"></legend>
+            <project-departments :scope="DTOData"
+            @transfer-ref="emitTransfer($event,'departments')"></project-departments>
+            <!-- Distribucion de divisiones -->
+            <project-managers :scope="DTOData"
+            @total-hours="totalHours"></project-managers>
             <!-- Submit Button. Que permanece inactivo mientras que no se hayan llegano todos los datos requeridos -->
             <div :class="formClass.button"
             :id="[!submitButton.isValid ? formClass.disableButton : isClick ? formClass.disableButton : null]"
@@ -38,6 +41,9 @@ import { projectWatchers } from "@/Components/UiComponents/Projects/LifecyclePro
 //Templates
 import ProjectPrincipal from "@/Components/UiComponents/Projects/TemplatesProjects/ProjectPrincipal.vue"
 import ProjectDistribution from "@/Components/UiComponents/Projects/TemplatesProjects/ProjectDistribution.vue";
+import ProjectDepartments from "@/Components/UiComponents/Projects/TemplatesProjects/ProjectDepartments.vue";
+import ProjectManagers from "@/Components/UiComponents/Projects/TemplatesProjects/ProjectManagers.vue";
+
 //Config Global
 import { classConfig, dataMixin, methodsGlobalMixin, watchersGlobalMixin } from "../UiComponentsConfig";
 
@@ -53,7 +59,6 @@ export default {
                 titleCreate: 'Estas creando a un nuevo proyecto',
                 titleEdit: 'Estas modificando al proyecto',
                 contact: 'Datos de distribución del proyecto',
-                values: 'Gestión de costos',
                 addiontalInfo: 'Distribución de horas',
                 buttonEdit: 'Actualizar proyecto',
                 buttonCreate: 'Crear proyecto',
@@ -61,24 +66,26 @@ export default {
                     hiringDateError: '',
                     projectDescriptionError: '',
                     clientAssociatedError: '',
-                    statusError: '',
                     partnerError: '',
                     qualityPartnerError: '',
                     managerError: '',
-                    currenciesError: '',
                     valueError:'',
-                    companiesError:'',
-                    departmentsError:'',
                     hoursAssignedError: '',
                 } //Control de errores de cada uno de los campos
             },
             inputWatchers: [], //Array que almacena todos los watcher
             inputStatusSelect: 0, //Posicion del estado del proyecto
+            inputCurrenciesSelect: 0, //Select del tipo de moneda
+            inputCompaniesSelect: 0, //Select del tipo de empresa
             inputProjectDescription: '', //String que de la descripcion del proyecto
             inputClientAssociated: '', //String que almacena la información del cliente asociado
             inputManagerAssociated: '', //String que almacena la información del manager asociado
             inputPartnerAssociated: '', //String que almacena la información del socio asociado
             inputQualityPartnerAssociated: '', //String que almacena la información del socio de calidad asociado
+            inputHiringDate: '', //Fecha de contratacion
+            inputValue: Number(0).toLocaleString('de-DE'), //Monto del proyecto
+            inputDepartments: [], //Array que almacena los valores del multiselect
+            inputHoursAssigned: Number(0).toLocaleString('de-DE'), //Horas totales asignadas
 
             //Espacio dedicado a variables de data en la base de datos
             dataSelect:
@@ -89,6 +96,7 @@ export default {
                 clients: [], //Data de los clientes activos
                 partners: [], //Data de los socios activos
                 managers: [], //Data de los gerentes activos
+                managersPerDepartment: [], //Almacena la estructura de la carga de horas. DTO
                 status: [], //Data de los estados disponibles a proyectos
             },
             //Espacio reservado para el control del Create / Edit
@@ -118,10 +126,11 @@ export default {
             childsRefs: {
                 "principal": {},
                 "distribution": {},
+                "departments": {}
             }, //Almacena la informacion de los refs hijos
         }
     },
-    components: { Calendar, FontAwesome, ProjectPrincipal, ProjectDistribution },
+    components: { Calendar, FontAwesome, ProjectPrincipal, ProjectDistribution, ProjectDepartments, ProjectManagers },
     created() { classConfig(this); createdMixin(this) },
     mounted() { mountedMixin(this) },
     //Propiedad computada encarga de pasar toda la data como parametro,

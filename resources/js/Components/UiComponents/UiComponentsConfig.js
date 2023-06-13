@@ -47,9 +47,8 @@ export const watchersGlobalMixin =
     }
 }
 
-export const methodsGlobalMixin =
-{
-    methods:{
+export const methodsGlobalMixin = {
+    methods: {
         /**
          * Metodo que valida los watchers de tipo String
          * @param {Object} stringFilter Object  JSON con el siguiente formato:
@@ -65,23 +64,87 @@ export const methodsGlobalMixin =
          * @prop5
          * "validInput": Tupla [boolean,string] que indica si es un campo obligatorio, y cual es su variable de validación. }
          */
-        validateString(stringFilter){
+        validateString(stringFilter) {
             try {
-                const validate = Validate.String(stringFilter.stringToValidate,stringFilter.limitString)
-                if(!validate.response) throw validate.message;
+                const validate = Validate.String(
+                    stringFilter.stringToValidate,
+                    stringFilter.limitString
+                );
+                if (!validate.response) throw validate.message;
                 //Si pasa las validaciones activamos la bandera
-                if(this[stringFilter.varInput].length <= stringFilter.limitString) this.messages.error[stringFilter.varError] = '';
-                if(stringFilter.validInput[0] && validate.response) this.submitButton[stringFilter.validInput[1]] = true;
+                if (
+                    this[stringFilter.varInput].length <=
+                    stringFilter.limitString
+                )
+                    this.messages.error[stringFilter.varError] = "";
+                if (stringFilter.validInput[0] && validate.response)
+                    this.submitButton[stringFilter.validInput[1]] = true;
                 //Desactivamos la bandera si el valor es 0 o mayor al limite
-                if((stringFilter.validInput[0] && this[stringFilter.varInput].length == 0) || (stringFilter.validInput[0] && this[stringFilter.varInput].length > stringFilter.limitString)) this.submitButton[stringFilter.validInput[1]] = false;
+                if (
+                    (stringFilter.validInput[0] &&
+                        this[stringFilter.varInput].length == 0) ||
+                    (stringFilter.validInput[0] &&
+                        this[stringFilter.varInput].length >
+                            stringFilter.limitString)
+                )
+                    this.submitButton[stringFilter.validInput[1]] = false;
             } catch (error) {
                 //Desactivamos su bandera en caso de que sea un valor obligatorio
-                if(stringFilter.validInput[0]) this.submitButton[stringFilter.validInput[1]] = false;
-                this.messages.error[stringFilter.varError] = Exceptions.CatchWarning(error) + stringFilter.stringToValidate.length + `(${stringFilter.limitString})`;
+                if (stringFilter.validInput[0])
+                    this.submitButton[stringFilter.validInput[1]] = false;
+                this.messages.error[stringFilter.varError] =
+                    Exceptions.CatchWarning(error) +
+                    stringFilter.stringToValidate.length +
+                    `(${stringFilter.limitString})`;
+            }
+        },
+        /**
+         * Funcion que activa los watchers en el sistema
+         * @param {Array} watcherArray Array de objetos que almacena los watcher globales
+         */
+        activateWatchers(watcherArray) {
+            //Registramos los Watch
+            for (let cursorWatcher = 0;cursorWatcher < watcherArray.length;cursorWatcher++) {
+                const propiedades = watcherArray[cursorWatcher].propiedades;
+
+                //Una vez registrada la fila actual, hacemos un for en su estructura de objeto
+                for (let cursorPropiedad = 0;cursorPropiedad < propiedades.length;cursorPropiedad++) {
+                    const propiedad = propiedades[cursorPropiedad];
+
+                    //Una vez capturamos la propiedades, registramos su watcher
+                    this.$watch(propiedad, watcherArray[cursorWatcher].watch);
+                }
+            }
+        },
+        /**
+         * Metodo que valida los watchers de tipo String
+         * @param {Object} dateFilter Object  JSON con el siguiente formato:
+         * {
+         * @prop1
+         * "dateToValidate": Fecha en formato 'YYYY-mm-dd',
+         * @prop2
+         * "varInput": indica la variable que se usa como v-model,
+         * @prop3
+         * "varError": Indica la variable donde se almacena el error del v-model,
+         * @prop4
+         * "validInput": Tupla [boolean,string] que indica si es un campo obligatorio, y cual es su variable de validación. }
+         */
+        validateDate(dateFilter){
+            try {
+                const validate = Validate.Date(dateFilter.dateToValidate)
+                if(!validate.response && dateFilter.dateToValidate.length >= 10) throw validate.message;
+                //Pasa las validaciones
+                if(this[dateFilter.varInput].length == 0 || this[dateFilter.varInput].length <= 10) this.messages.error[dateFilter.varError] = '';
+                if(dateFilter.validInput[0] && validate.response) this.submitButton[dateFilter.validInput[1]] = true;
+                //Desactivamos las banderas
+                if((this[dateFilter.varInput].length == 0 && dateFilter.validInput[0]) || (this[dateFilter.varInput].length < 10 && dateFilter.validInput[0])) this.messages.error[dateFilter.varError] = '';
+            } catch (error) {
+                if(dateFilter.validInput[0]) this.submitButton[dateFilter.validInput[1]] = false;
+                this.messages.error[dateFilter.varError] = Exceptions.CatchWarning(error)
             }
         }
-    }
-}
+    },
+};
 
 /**
  * Funcion que se encarga de asignar las clases del formulario

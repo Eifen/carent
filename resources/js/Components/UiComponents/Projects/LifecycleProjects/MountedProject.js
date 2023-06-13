@@ -4,5 +4,6 @@
  */
 export const mountedMixin = (self) => 
 {
-
+    //Activamos los watchers
+    self.activateWatchers(self.inputWatchers)
 }

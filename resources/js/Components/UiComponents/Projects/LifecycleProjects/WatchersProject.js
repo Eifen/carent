@@ -5,14 +5,35 @@ export const projectWatchers =
 {
     watch: 
     {
-        inputStatusSelect(actualTarget){
-            //Verificamos que la seleccion de status del proyecto sea correcta
-            if(actualTarget >= 1){
-                this.submitButton.statusValid = true
-            }else{
-                this.submitButton.statusValid = false
+        //Monto
+        inputValue(newValue){
+            try {
+                const formatNumber = newValue.replace(/\./g,"").replace(',',".")
+                const numberValid = Validate.Number(formatNumber);
+                //Verificamos si es un numero
+                if(!numberValid.response) throw numberValid.message;
+                //Si cumple con la condicion de numero decimal cambiamos el formato y activamos
+                //el control del boton
+                if(numberValid.response)
+                {
+                    this.inputValue = Number(formatNumber).toLocaleString('de-DE');
+                    this.submitButton.valueValid = true
+                    this.messages.error.valueError = ''                    
+                }
+            } catch (errorMessage) {
+                this.submitButton.valueValid = false
+                this.messages.error.valueError = Exceptions.CatchWarning(errorMessage)
             }
         },
+        //Fechas
+        inputHiringDate(newDate) {
+            this.validateDate({
+                "dateToValidate": newDate,
+                "varInput": 'inputHiringDate',
+                "varError": 'hiringDateError',
+                "validInput": [true,'hiringDateValid']})
+        },
+        //Nombres y Descripciones
         inputProjectDescription(newString){
             this.validateString({
                 "limitString": this.LimitString.DESCRIPTION,
@@ -100,7 +121,7 @@ export const projectWatchers =
                 "stringToValidate": searchQualityPartner,
                 "varInput":"inputQualityPartnerAssociated",
                 "varError": 'qualityPartnerError',
-                "validInput": [true, 'partnerValid']
+                "validInput": [true, 'qualityPartnerValid']
             })
             //Luego verificamos si corresponde a un dato en la tabla
             this.validateTable({
@@ -108,6 +129,69 @@ export const projectWatchers =
                 column:'user_name',
                 inputValid:'qualityPartnerValid',
                 errorInput:'qualityPartnerError'},searchQualityPartner)
-        },             
+        },
+        inputDepartments(targetDepartment){
+            if(targetDepartment.length > 0) this.submitButton.departmentsValid = true;
+            if(targetDepartment.length <= 0) this.submitButton.departmentsValid = false;
+            //Cargamos el array de transferencia para la estructura de horas
+            for (let cursorDeparment = 0; cursorDeparment < targetDepartment.length; cursorDeparment++) {
+                //Solo cargamos si no existe esa posicion en el DTO
+                //Ubicamos el indice del array
+                const indexDepartment = this.dataSelect.departments.map((object) => object.value).indexOf(targetDepartment[cursorDeparment]);
+                //Estructuramos el objeto de departamentos
+                const departmentDTO = 
+                { 
+                    "departmentId": targetDepartment[cursorDeparment],
+                    "departmentName": this.dataSelect.departments[indexDepartment].label,
+                    "managersDepartment": this.dataSelect.managers.filter(
+                        (colums) => {
+                            return colums.department_id
+                                .toString()
+                                .includes(
+                                    targetDepartment[cursorDeparment].toString()
+                                );
+                        }),
+                    "hoursAssigned": 0,
+                    "selectManager": 0,
+                };
+                //Cargamos una nueva fila
+                if (cursorDeparment in this.dataSelect.managersPerDepartment === false) 
+                    this.dataSelect.managersPerDepartment.push(departmentDTO);
+                //En caso de que exista un cambio de division. Sobreeescribimos
+                if (this.dataSelect.managersPerDepartment[cursorDeparment].departmentId != targetDepartment[cursorDeparment]) 
+                    this.dataSelect.managersPerDepartment[cursorDeparment] = departmentDTO;
+            }
+        },
+        //Watcher para horas asignadas
+        inputHoursAssigned(){
+            let hoursCount = 0 //Cuenta el numero de divisiones con horas asignadas
+            let departmentCount = 0 //Cuenta el numero de divisiones con gerente seleccionado
+            //Hacemos un recorrido de todo el array de divisiones. Para activar la bandera debe existir division seleccionada y hora > 0
+            for (let cursorDeparment = 0; cursorDeparment < this.inputDepartments.length; cursorDeparment++) {
+                //Gerentes
+                if(this.dataSelect.managersPerDepartment[cursorDeparment].selectManager != 0) departmentCount++;
+                if(this.dataSelect.managersPerDepartment[cursorDeparment].selectManager == 0) departmentCount--;
+                //Horas
+                if(this.dataSelect.managersPerDepartment[cursorDeparment].hoursAssigned != 0) hoursCount++;
+                if(this.dataSelect.managersPerDepartment[cursorDeparment].hoursAssigned == 0) hoursCount--;
+            }
+
+            //Validacion para horas y gerentes
+            try {
+                if(hoursCount != this.inputDepartments.length) throw 'MissingHour';
+                if(departmentCount != this.inputDepartments.length) this.submitButton.departmentsValid = false;
+
+                //Paso las validaciones
+                if(hoursCount == this.inputDepartments.length) {
+                    this.messages.error.hoursAssignedError = ''
+                    this.submitButton.hoursAssignedValid = true;
+                }
+                if(departmentCount == this.inputDepartments.length) this.submitButton.departmentsValid = true;
+            } catch (errorMessage) {
+                //Mostramos el error
+                this.messages.error.hoursAssignedError = Exceptions.CatchWarning(errorMessage)
+                this.submitButton.hoursAssignedValid = false;               
+            }
+        }
     }
 }
