@@ -4,6 +4,43 @@ export const projectMethods =
     methods: 
     {
         /**
+        * Metodo que envia la data del formulario  al componente padre
+        */
+        projectEmit() {
+            //Almacenamos los indices de cada valor
+            const indexTable = {
+                client: this.dataSelect.clients.map(object => object.bussiness_name).indexOf(this.inputClientAssociated),
+                manager: this.dataSelect.managers.map(object => object.user_name).indexOf(this.inputManagerAssociated),
+                partner: this.dataSelect.partners.map(object => object.user_name).indexOf(this.inputPartnerAssociated),
+                qualityPartner: this.dataSelect.partners.map(object => object.user_name).indexOf(this.inputQualityPartnerAssociated),
+            }
+            //Pasamos los parametros a analizar
+            let paramsToEmit =
+            {
+                "projectDescription": this.inputProjectDescription,
+                "clientId": this.dataSelect.clients[indexTable.client].client_id,
+                "statusId": this.inputStatusSelect,
+                "managerId": this.dataSelect.managers[indexTable.manager].user_name,
+                "partnerId": this.dataSelect.partners[indexTable.partner].user_name,
+                "qualityPartnerId": this.dataSelect.partners[indexTable.qualityPartner].user_name,
+                "currencyId": this.inputCurrenciesSelect,
+                "companyId": this.inputCompaniesSelect,
+                "hiringDate": this.inputHiringDate,
+                "departments": this.dataSelect.managersPerDepartment,
+                "projectValue": this.inputValue,
+            }
+
+            //Preparamos los parametros de update en caso de actualizar
+            let paramsToUpdate =
+            {
+                "Status": this.inputStatusSelect
+            }
+
+            //Si estamos en edición, unimos los dos objetos
+            if (this.isEdit) paramsToEmit = { ...paramsToEmit, ...paramsToUpdate }
+            this.$emit('submit-form', paramsToEmit);
+        },
+        /**
          * Metodo que controla el estado de la lista
          * @param {Object} refTarget Objeto que captura la informacion del input, debe tener las siguientes propiedades
          * @property {String} nameRef Nombre del ref a que se hace referencia
@@ -60,6 +97,6 @@ export const projectMethods =
                 if(testNumber && infoDepartments[cursorDeparment].hoursAssigned.length != 0) 
                     this.inputHoursAssigned = parseInt(this.inputHoursAssigned) + parseInt(infoDepartments[cursorDeparment].hoursAssigned); 
             }
-        }
+        },
     },
 }

@@ -9,19 +9,19 @@ const clientsControl = createApp ({
             isMounted: false, //Controla el estado del componente
             isClick: false, //Controla el estado del boton
             updateModel: {}, //Objeto encargado de inicializar la data del edit
-            paramsDTOClients:
+            paramsDTOProjects:
             {
-                "IdSocio": 0,
-                "IdSector": 0,
-                "IdServicio": 0,
-                "IdPais": 0,
-                "Nit": 0,
-                "Rif": '',
-                "Telefono": '',
-                "RazonSocial": '',
-                "Direccion":'',
-                "EmailFiscal": '',
-                "PaginaWeb": '',
+                "projectDescription": '',
+                "clientId": 0,
+                "statusId": 0,
+                "managerId": 0,
+                "partnerId": 0,
+                "qualityPartnerId": 0,
+                "currencyId": 0,
+                "companyId": 0,
+                "hiringDate": '',
+                "departments": [],
+                "projectValue": 0
             }, //Objeto para el create
             paramsDTOEdit:
             {
@@ -35,18 +35,15 @@ const clientsControl = createApp ({
          * Metodo que crea un nuevo cliente
          * @param {*} dataParams Recibe la data que proviene de formulario
          */
-        newClient(dataParams){
-            this.isClick = true;
-            this.paramsDTOClients = dataParams
-            //Validacion de campos opcionales
-            this.validateNivel2(dataParams)
-
-            //AXIOS Create Client
+        newProject(dataParams){
+            // this.isClick = true;
+            this.paramsDTOProjects = dataParams
+            // //AXIOS Create Project
             const paramsToPost = {
-                "client": JSON.parse(JSON.stringify(this.paramsDTOClients)),
+                "project": JSON.parse(JSON.stringify(this.paramsDTOProjects)),
                 "isEdit": false
             }
-            const routesSelfDTO = { "post": "/clientes/create/newClient", "redirect": "/clientes", "self":this }
+            const routesSelfDTO = { "post": "/projects/create/newProject", "redirect": "/projects", "self":this }
             CrudUi.controlCrud(routesSelfDTO,paramsToPost)
         },
         /**

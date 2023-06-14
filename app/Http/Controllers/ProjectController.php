@@ -54,4 +54,53 @@ class ProjectController extends Controller
 
         return response($projectParams, 200);
     }
+
+    /**
+     * Metodo que crea o actualiza un cliente
+     * @param Request $dataProject Variable en formato request que recibe la data recibida por POST
+     * @return Array Retorna un array en formato response
+     */
+    public function projectControl(Request $dataProject)
+    {
+        $paramsEdit = array(); #Inicializacion de array de edición
+
+        //Fecha de ingreso null o vacia
+        $hiringDate = $dataProject->input('project')['hiringDate'] != null || $dataProject->input('project')['hiringDate'] != ''
+                        ? date("Y-m-d",strtotime($dataProject->input('project')['hiringDate']))
+                        : null;
+        //Pasamos la data
+        $paramsToControl = array(
+            $dataProject->input('project')['projectDescription'],
+            $dataProject->input('project')['clientId'],
+            $dataProject->input('project')['statusId'],
+            $dataProject->input('project')['managerId'],
+            $dataProject->input('project')['partnerId'],
+            $dataProject->input('project')['qualityPartnerId'],
+            $dataProject->input('project')['currencyId'],
+            $dataProject->input('project')['companyId'],
+            $hiringDate,
+            $dataProject->input('project')['departments'],
+            $dataProject->input('project')['projectValue'],
+            Session::get('userId'),
+            ConfigController::GetIpUser()
+        );
+
+        if($dataProject->input('isEdit'))
+        {
+            $paramsEdit = array(
+                $dataProject->input('project')['IdClient'],
+                $dataProject->input('project')['IdStatus']
+            );
+
+            //Unimos ambos array
+            $paramsToControl = array_merge($paramsToControl,$paramsEdit);
+        }
+
+        $dataProject->input('isEdit')
+        ? $ResponseProject = ProjectModel::controlProjects($paramsToControl,'update')
+        : $ResponseProject = ProjectModel::controlProjects($paramsToControl,'create');
+
+        //Retornamos la data
+        return response($ResponseProject,200);
+    }
 }

@@ -35,6 +35,7 @@ export const projectWatchers =
         },
         //Nombres y Descripciones
         inputProjectDescription(newString){
+            this.inputProjectDescription = newString.toUpperCase()
             this.validateString({
                 "limitString": this.LimitString.DESCRIPTION,
                 "stringToValidate": newString,

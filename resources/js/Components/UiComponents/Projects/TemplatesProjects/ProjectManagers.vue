@@ -25,7 +25,7 @@
             </div>
         </div>
         <!-- Horas asignadas -->
-        <div class="mb-3">
+        <div class="mb-3" v-if="scope.dataSelect.managersPerDepartment[cursor].selectManager != 0">
             <label for="Hours">Horas asignadas <span :class="scope.formClass.requiredField">*</span></label>
             <div class="input-group">
                 <span class="input-group-text" id="basic-addon8">

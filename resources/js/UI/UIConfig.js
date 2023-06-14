@@ -131,6 +131,7 @@ export class CrudUi
                     autoClose:NOTIFYINTERVAL
                 });
 
+                console.error(error)
                 routesSelf.self.isClick = false;
             })
     }
