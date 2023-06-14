@@ -3,22 +3,22 @@ import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import '@fortawesome/fontawesome-free/js/all.js';
 import zenscroll from 'zenscroll';
-window.zenscroll = zenscroll;
 import axios from 'axios';
-window.axios = axios;
 import AutoNumeric from 'autonumeric';
-window.AutoNumeric = AutoNumeric;
 import VueTheMask from 'vue-the-mask';
-const CryptoJS = require("crypto-js");
-const AES = require("crypto-js/aes");
+import CryptoJS from 'crypto-js'
 import { Datetime } from 'vue-datetime';
 import 'vue-datetime/dist/vue-datetime.css';
+import $ from 'jquery'
 var self;
 
 Vue.use(VueTheMask);
-Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
-Vue.component('loading',require('../components/loading.vue').default);
+import loading from '../components/loading.vue'
+import menuPrincipal from '../components/menuPrincipal.vue'
+Vue.component('menu-principal', menuPrincipal);
+Vue.component('loading', loading);
 Vue.component('datetime', Datetime);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
@@ -200,7 +200,8 @@ new Vue({
       modifyValueOnWheel: false
     });
 
-    $('[data-toggle="tooltip"]').tooltip();
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
   },
   updated: function () {},

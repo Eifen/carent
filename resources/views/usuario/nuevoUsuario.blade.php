@@ -9,8 +9,7 @@
 
         <title>.: CARENT :.</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
-        @vite('resources/css/fontawesome-free-5.12.0.css')
-        @vite('resources/css/nuevoUsuario.css')
+        @vite('resources/less/usuario/nuevoUsuario.less')
 
     </head>
     <body>
@@ -345,7 +344,7 @@
 
       </div>
 
-      @vite('resources/js/nuevoUsuario.js')
+      @vite('resources/js/usuario/nuevoUsuario.js')
 
     </body>
 </html>
