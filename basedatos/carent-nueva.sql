@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-06-2023 a las 21:43:23
+-- Tiempo de generación: 15-06-2023 a las 15:33:22
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -262,6 +262,64 @@ INSERT INTO `users_identity`(`user_id`, `identity_type_id`, `identity_number`) V
 
 #Devolvemos el response si no hay ningun SQL Error
 SET p_json_response = CONCAT('{"response":true,"message":"Contact users registered succesfully ',p_user_code,'"}');
+END$$
+
+CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `sp_new_projects` (IN `p_description` TEXT, IN `p_client_id` INT, IN `p_status_id` INT, IN `p_manager_id` INT, IN `p_partner_id` INT, IN `p_quality_partner_id` INT, IN `p_currency_id` INT, IN `p_company_id` INT, IN `p_hiring_date` DATE, IN `p_project_value` DECIMAL(25,2), IN `p_user_id` INT, IN `p_user_ip` VARCHAR(255), OUT `p_json_response` TEXT)   BEGIN
+DECLARE v_customMessage TEXT;
+DECLARE v_customError CONDITION FOR SQLSTATE '45000';
+DECLARE EXIT HANDLER FOR SQLEXCEPTION, SQLWARNING
+	BEGIN
+    	GET DIAGNOSTICS CONDITION 1 @code = RETURNED_SQLSTATE, @error_msj = MESSAGE_TEXT;
+        ROLLBACK;
+        SET v_customMessage = CONCAT("Se ha producido un error en la consulta: (",@code,") ",@error_msj);
+        #Guardamos el error
+        CALL sp_sql_exceptions(1,1,"sp_new_projects",v_customMessage,@responseError);
+        SET p_json_response = (SELECT @responseError);
+    END;
+DECLARE EXIT HANDLER FOR v_customError
+	BEGIN
+    	#Guardamos el error
+        CALL sp_sql_exceptions(1,1,"sp_new_projects",v_customMessage,@responseError);
+        SET p_json_response = (SELECT @responseError);
+    END;
+#Validacion del Cliente
+SET @isExist = (SELECT COUNT(cs.client_id) FROM clients cs WHERE cs.client_id = p_client_id LIMIT 1);
+IF @isExist = 0 THEN
+	SET v_customMessage = CONCAT('{"response":false,"message":"Error 0016: client does not exist (',p_client_id,')"}');
+    #Activamos el error
+    SIGNAL SQLSTATE '45000';
+END IF;
+
+#Capturamos el ultimo login del usuario quien esta registrando el nuevo proyecto
+SET @lastInsert = (SELECT MAX(cl2.log_id) FROM control_logs cl2 WHERE cl2.user_responsible_id = p_user_id 
+                   AND cl2.log_description LIKE "createProject%" LIMIT 1); #Almacena el ultimo insert de creacion de Proyecto
+SET @lastLogin = (SELECT us.login_date FROM users us WHERE us.user_id = p_user_id LIMIT 1); #Almacena la ultima fecha de login
+SET @lastIp = (SELECT IFNULL(cl.user_responsible_ip,"0.0.0.0") FROM control_logs cl WHERE cl.log_id = @lastInsert); #Almacena la ultima IP
+
+#Si existe el usuario socio, procedemos a crear al cliente
+SET @dateNow = (SELECT SYSDATE());
+
+#Acomodamos el ultimo valor y el nuevo
+SET @lastValue = CONCAT('{"ultima_ip":"',@lastIp,'"}');
+SET @newValue = CONCAT('{"ultima_ip":"',p_user_ip,'"}');
+
+#Creamos el nuevo proyecto
+INSERT INTO `projects`(`project_description`, `client_id`, `partner_id`, `quality_partner_id`, `manager_id`, `hiring_date`, `project_value`, `currency_id`, `company_id`, `status_id`) VALUES (p_description,p_client_id,p_partner_id,p_quality_partner_id,p_manager_id,p_hiring_date,p_project_value,p_currency_id,p_company_id,p_status_id);
+
+SET @querySql = CONCAT('INSERT INTO `projects`(`project_description`, `client_id`, `partner_id`, `quality_partner_id`, `manager_id`, `hiring_date`, `project_value`, `currency_id`, `company_id`, `status_id`) VALUES (p_description,',p_client_id,',p_partner_id,p_quality_partner_id,p_manager_id,p_hiring_date,p_project_value,p_currency_id,p_company_id,p_status_id);');
+
+CALL sp_insert_logs(1,"createProject",p_user_ip,p_user_id,"projects",@querySql,@lastValue,@newValue,@dateNow,@jsonResponse);
+#Extraemos el JSON a una variable
+SET @responseJson = JSON_UNQUOTE(JSON_EXTRACT(@jsonResponse,'$.response'));
+
+#Verificamos si registró efectivamente en la bitacora
+IF @responseJson != "true" THEN
+	SET v_customMessage = CONCAT('{"response":false,"message":"Error 0011: Insert log has failed (',JSON_UNQUOTE(JSON_EXTRACT(@jsonResponse,'$.message')),')"}');
+    SIGNAL SQLSTATE '45000'; #Si no ha podido registrar nada, dispara el error
+END IF;
+
+#Si paso toda las validaciones
+SET p_json_response = CONCAT('{"response":true,"message":"Project ',p_description,' has been created."}');
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_new_users` (IN `p_first_name` VARCHAR(20), IN `p_second_name` VARCHAR(20), IN `p_first_surname` VARCHAR(20), IN `p_second_surname` VARCHAR(20), IN `p_user_code` VARCHAR(6), IN `p_birthday` DATE, IN `p_admission_date` DATE, IN `p_identity_number` VARCHAR(255), IN `p_parish_id` INT, IN `p_position_id` INT, IN `p_department_id` INT, IN `p_user_id` INT, IN `p_user_ip` VARCHAR(39), OUT `p_json_response` TEXT)   BEGIN
@@ -1601,7 +1659,19 @@ INSERT INTO `control_logs` (`log_id`, `action_id`, `log_description`, `user_resp
 (154, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-06-05 14:19:45 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-06-05 11:23:30\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-06-05 14:19:45\",\"last_ip\": \"127.0.0.1\"}', '2023-06-05 14:19:45'),
 (155, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-06-05 15:09:18 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-06-05 14:19:45\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-06-05 15:09:18\",\"last_ip\": \"127.0.0.1\"}', '2023-06-05 15:09:18'),
 (156, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-06-05 15:26:05 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-06-05 15:09:18\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-06-05 15:26:05\",\"last_ip\": \"127.0.0.1\"}', '2023-06-05 15:26:05'),
-(157, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-06-06 10:34:48 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-06-05 15:26:05\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-06-06 10:34:48\",\"last_ip\": \"127.0.0.1\"}', '2023-06-06 10:34:48');
+(157, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-06-06 10:34:48 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-06-05 15:26:05\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-06-06 10:34:48\",\"last_ip\": \"127.0.0.1\"}', '2023-06-06 10:34:48'),
+(158, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-06-07 09:30:24 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-06-06 10:34:48\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-06-07 09:30:24\",\"last_ip\": \"127.0.0.1\"}', '2023-06-07 09:30:24'),
+(159, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-06-08 09:49:08 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-06-07 09:30:24\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-06-08 09:49:08\",\"last_ip\": \"127.0.0.1\"}', '2023-06-08 09:49:08'),
+(160, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-06-08 13:15:15 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-06-08 09:49:08\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-06-08 13:15:15\",\"last_ip\": \"127.0.0.1\"}', '2023-06-08 13:15:15'),
+(161, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-06-08 14:57:56 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-06-08 13:15:15\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-06-08 14:57:56\",\"last_ip\": \"127.0.0.1\"}', '2023-06-08 14:57:56'),
+(162, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-06-09 09:35:18 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-06-08 14:57:56\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-06-09 09:35:18\",\"last_ip\": \"127.0.0.1\"}', '2023-06-09 09:35:18'),
+(163, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-06-09 15:56:27 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-06-09 09:35:18\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-06-09 15:56:27\",\"last_ip\": \"127.0.0.1\"}', '2023-06-09 15:56:27'),
+(164, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-06-12 09:42:12 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-06-09 15:56:27\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-06-12 09:42:12\",\"last_ip\": \"127.0.0.1\"}', '2023-06-12 09:42:12');
+INSERT INTO `control_logs` (`log_id`, `action_id`, `log_description`, `user_responsible_ip`, `user_responsible_id`, `affected_table`, `query_sql`, `old_value`, `new_value`, `register_date`) VALUES
+(165, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-06-13 08:57:02 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-06-12 09:42:12\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-06-13 08:57:02\",\"last_ip\": \"127.0.0.1\"}', '2023-06-13 08:57:02'),
+(166, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-06-14 10:36:36 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-06-13 08:57:02\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-06-14 10:36:36\",\"last_ip\": \"127.0.0.1\"}', '2023-06-14 10:36:36'),
+(167, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-06-14 17:00:00 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-06-14 10:36:36\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-06-14 17:00:00\",\"last_ip\": \"127.0.0.1\"}', '2023-06-14 17:00:00'),
+(168, 2, 'login', '127.0.0.1', 1, 'users', 'UPDATE users u SET u.login_date = 2023-06-14 17:19:27 WHERE u.user_code = 0001;', '{\"date_last_login\": \"2023-06-14 17:00:00\",\"last_ip\": \"127.0.0.1\"}', '{\"date_last_login\": \"2023-06-14 17:19:27\",\"last_ip\": \"127.0.0.1\"}', '2023-06-14 17:19:27');
 
 -- --------------------------------------------------------
 
@@ -2831,7 +2901,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `user_code`, `password`, `time_change_password`, `first_name`, `second_name`, `first_surname`, `second_surname`, `birthday`, `position_id`, `department_id`, `parish_id`, `admission_date`, `departure_date`, `login_date`, `status_id`) VALUES
-(1, '0001', 0x9f824ad4b17be95f20aa30c5eef9d8f6, '2023-05-13', 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '1986-08-05', 16, 16, 1131, '2020-01-01', NULL, '2023-06-06 10:34:48', 1),
+(1, '0001', 0x9f824ad4b17be95f20aa30c5eef9d8f6, '2023-05-13', 'DAVID', 'LEONARDO', 'MOLINA', 'RUÍZ', '1986-08-05', 16, 16, 1131, '2020-01-01', NULL, '2023-06-14 17:19:27', 1),
 (2, '10', 0xcb4dc5daf4d8865eb1bd01d6c898c269, '2023-03-09', 'NATHALIE', 'YAMILET', 'LOPEZ', 'TREJO', '1972-08-20', 17, 1, 1131, '2000-02-21', NULL, '2023-03-08 23:41:42', 1),
 (3, '10092', 0x10e54efb266e50c523273c638cb690c5, '2023-03-09', 'YESENIA', 'BEATRIZ', 'MARTINEZ', 'GALLARDO', '1979-06-01', 15, 1, 1131, '2004-09-01', NULL, '2023-03-07 08:27:55', 1),
 (4, '10141', 0x383155d3ec475bf8ace4b67bf0aaba8d, '2023-03-09', 'JESUS', 'ERASMO', 'PEREZ', 'ERASMO', '1959-11-09', 17, 1, 1131, '2005-02-02', NULL, '2023-02-06 09:52:51', 1),
@@ -5708,7 +5778,7 @@ ALTER TABLE `control_errors_type_object`
 -- AUTO_INCREMENT de la tabla `control_logs`
 --
 ALTER TABLE `control_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=158;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=169;
 
 --
 -- AUTO_INCREMENT de la tabla `control_logs_action`
