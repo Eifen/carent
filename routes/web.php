@@ -41,6 +41,7 @@ Route::get('/divisiones', 'UsuarioController@divisiones');
 Route::get('/cargos', 'UsuarioController@cargos');
 Route::post('/crearUsuario', 'UsuarioController@crearUsuario');
 Route::get('/formBuscarUsuario', function() {return view('usuario/buscarUsuario');});
+Route::get('/buscarUsuarios', 'UsuarioController@buscarUsuarios');
 Route::get('/detalleUsuario', 'UsuarioController@detalleUsuario');
 Route::get('/formModificarUsuario/{idUsuario}', 'UsuarioController@formModificarUsuario')->middleware('usuario.session')->where('idUsuario', '[0-9]+');//Validamos que solo pase números*/
 Route::get('/detalleUsuarioModificar', 'UsuarioController@detalleUsuarioModificar');

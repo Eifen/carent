@@ -3,18 +3,17 @@ import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import '@fortawesome/fontawesome-free/js/all.js';
 import axios from 'axios';
-window.axios = axios;
 import AutoNumeric from 'autonumeric';
-window.AutoNumeric = AutoNumeric;
-import zenscroll from 'zenscroll';
-window.zenscroll = zenscroll;
+import zenscroll from 'zenscroll';;
 import $ from 'jquery';
-window.$ = $;
 var self;
 
-Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
-Vue.component('loading',require('../components/loading.vue').default);
+import loading from '../components/loading.vue'
+import menuPrincipal from '../components/menuPrincipal.vue'
+Vue.component('menu-principal', menuPrincipal);
+Vue.component('loading', loading);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 
@@ -38,6 +37,12 @@ new Vue({
       select: {
         disabled:false,
         value: ""
+      },
+      paginador: {
+        numPages: 0,
+        page: 1,
+        paginate: 100,
+        resultsFrom: 0
       }
     },
     loading: true,
@@ -99,7 +104,9 @@ new Vue({
 
         let parametros = {
           buscarPor: self.formSearch.select.value,
-          dato: self.formSearch.inputSearch.value
+          dato: self.formSearch.inputSearch.value,
+          paginate: self.formSearch.paginador.paginate,
+          searchFrom: self.formSearch.paginador.resultsFrom
         };
 
         axios.get('/buscarUsuarios', {params: parametros})
@@ -109,9 +116,9 @@ new Vue({
           self.formSearch.submit.disabled = false;
 
           if(response.status === 200 && response.data.response === true){
-
+    
             self.usuarios.mostrar = true;
-            self.usuarios.registros = response.data.usuarios;
+            self.usuarios.registros = response.data.users;
             self.permisoActualizar = response.data.permisoActualizar;
 
           }else{
@@ -191,6 +198,7 @@ new Vue({
     },
     mostrarDetalleUsuario: function(idUsuario,e){
 
+      console.log("SAPE")
       self.detalleUsuario.error = false;
       $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
 
