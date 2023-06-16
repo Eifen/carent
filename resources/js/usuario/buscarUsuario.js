@@ -3,6 +3,7 @@ import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import * as bootstrap from 'bootstrap'
 import '@fortawesome/fontawesome-free/js/all.js';
 import axios from 'axios';
 import AutoNumeric from 'autonumeric';
@@ -198,7 +199,6 @@ new Vue({
     },
     mostrarDetalleUsuario: function(idUsuario,e){
 
-      console.log("SAPE")
       self.detalleUsuario.error = false;
       $(e.target).removeClass("fa-search-plus").addClass("fa-cog fa-spin");
 
@@ -206,14 +206,17 @@ new Vue({
         idUsuario: idUsuario
       };
 
+      const instanceModal = new bootstrap.Modal('#modal-detalle-usuario');
+
       axios.get('/detalleUsuario', {params: parametros})
       .then(function (response) {
+
+        
 
         if(response.status === 200 && response.data.response === true){
 
           self.detalleUsuario.data = response.data.info;
-
-          $('#modal-detalle-usuario').modal("show");
+          instanceModal.show()
           $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
 
         }else{
@@ -226,7 +229,7 @@ new Vue({
       .catch(error => {
 
         self.detalleUsuario.error = true;
-        $('#modal-detalle-usuario').modal("show");
+        instanceModal.show()
         $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
 
       });
@@ -243,6 +246,8 @@ new Vue({
         idUsuario: idUsuario
       };
 
+      const instanceModal = new bootstrap.Modal('#modal-asignar-menu');
+
       axios.get('/detalleMenu', {params: parametros})
       .then(function (response) {
 
@@ -253,7 +258,7 @@ new Vue({
           self.infoMenUsu = response.data.infoMenUsu;
           self.comboMenus = response.data.infoMenus;
 
-          $('#modal-asignar-menu').modal("show");
+          instanceModal.show()
           $(e.target).removeClass("fa-cog fa-spin").addClass("fa-user-edit");
 
         }else{
@@ -266,7 +271,7 @@ new Vue({
       .catch(error => {
 
         self.detalleUsuario.error = true;
-        $('#modal-asignar-menu').modal("show");
+        instanceModal.show()
         $(e.target).removeClass("fa-cog fa-spin").addClass("fa-user-edit");
 
       });
@@ -286,7 +291,7 @@ new Vue({
 
       axios.get('/menuUsuario', {params: parametros})
       .then(function (response) {
-
+        
         if(response.status === 200 && response.data.response === true){
 
           self.comboMenus = response.data.infoMenus;

@@ -76,7 +76,9 @@
                   <td>@{{ usuario.correo_principal }}</td>
                   <td>@{{ usuario.estatus }}</td>
                   <td>
-                    <i class="fas fa-search-plus" v-on:click="mostrarDetalleUsuario(usuario.id, $event)"></i>
+                    <span @click="mostrarDetalleUsuario(usuario.id, $event)">
+                      <i class="fas fa-search-plus"></i>
+                    </span>
                   </td>
                   <td v-if="permisoActualizar">
                     <a v-bind:href="'/formModificarUsuario/'+usuario.id" target="_self">
@@ -84,7 +86,9 @@
                     </a>
                   </td>
                   <td>
-                    <i class="fas fa-user-edit" v-on:click="mostrarDetalleMenu(usuario.id, $event)"></i>
+                    <span @click="mostrarDetalleMenu(usuario.id, $event)">
+                      <i class="fas fa-user-edit"></i>
+                    </span>
                   </td>
                 </tr>
               </tbody>
@@ -97,12 +101,12 @@
 
         </div>
 
-        <div id="modal-detalle-usuario" class="modal fade" tabindex="-1" role="dialog" v-cloak>
+        <div id="modal-detalle-usuario" class="modal fade" tabindex="-1" role="dialog" v-cloak ref="modal-detalle-usuario">
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
                 <h4>Detalle del Usuario</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
@@ -209,7 +213,7 @@
               </div>
               <div class="modal-footer">
                 <button class="btn"
-                        data-dismiss="modal"
+                        data-bs-dismiss="modal"
                         type="button">Ok</button>
               </div>
             </div>
@@ -221,7 +225,7 @@
             <div class="modal-content">
               <div class="modal-header">
                 <h4>Asignar los Menus</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
@@ -263,7 +267,7 @@
               </div>
               <div class="modal-footer">
                 <button class="btn"
-                        data-dismiss="modal"
+                        data-bs-dismiss="modal"
                         type="button">Ok</button>
               </div>
             </div>
