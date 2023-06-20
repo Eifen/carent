@@ -1,7 +1,7 @@
 <template lang="">
     <!-- Carga de horas -->
     <span class="badge text-bg-info" v-if="scope.inputDepartments.length != 0">Indique la cantidad de horas por división</span>
-    <fieldset :class="scope.formClass.fieldset" 
+    <fieldset :class="scope.formClass.fieldset"
     v-if="scope.inputDepartments.length != 0"
     v-for="(select,cursor) in scope.inputDepartments.length"
     :key="cursor">
@@ -37,14 +37,19 @@
                 id="Hours"
                 aria-describedby="basic-addon8"
                 v-model="scope.dataSelect.managersPerDepartment[cursor].hoursAssigned"
-                @input="$emit('total-hours',scope.dataSelect.managersPerDepartment)"
-                :disabled="isEdit ? true : false"/>
+                @input="$emit('total-hours',scope.dataSelect.managersPerDepartment)"/>
+                <span class="input-group-text" id="basic-addon11" v-if="isEdit">
+                    <project-additional-modal
+                    modal-title="Horas Adicionales"
+                    id-modal="additionalHours"></project-additional-modal>
+                </span>
             </div>
-        </div>   
+        </div>
     </fieldset>
 </template>
 <script>
 import FontAwesome from '@/Components/FontAwesome/FontAwesome.vue';
+import ProjectAdditionalModal from '@/Components/UiComponents/Projects/TemplatesProjects/ProjectAdditionalModal.vue';
 
 export default {
     props: {
@@ -53,6 +58,6 @@ export default {
     },
     emits: ['total-hours'],
     methods: {},
-    components: { FontAwesome }
+    components: { FontAwesome, ProjectAdditionalModal }
 };
 </script>

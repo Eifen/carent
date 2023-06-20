@@ -30,7 +30,8 @@
             <!-- Submit Button. Que permanece inactivo mientras que no se hayan llegano todos los datos requeridos -->
             <div :class="formClass.button"
             :id="[!submitButton.isValid ? formClass.disableButton : isClick ? formClass.disableButton : null]"
-            @click="userEmit()">
+            @click="userEmit()"
+            v-if="submitButton.isValid">
                 <span v-if="isEdit & !isClick">{{ messages.buttonEdit }}</span>
                 <span v-else-if="!isEdit & !isClick">{{ messages.buttonCreate }}</span>
                 <span v-else-if="isClick"><font-awesome string-icon="fa-solid fa-spinner" is-spin></font-awesome></span>

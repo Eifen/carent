@@ -56,7 +56,19 @@ class ProjectController extends Controller
     }
 
     /**
-     * Metodo que crea o actualiza un cliente
+     * Metodo que hace un llamao al control para traer la data de un proyecto por su codigo
+     * @param Request $projectUpdate almacena el objeto pasado por parametro POST a la solicitud
+     * @return Response Retorna un objeto responde con status 200 si logra crear existosamente la sesión
+     */
+    public function projectPerCode(Request $projectUpdate)
+    {
+        //Creamos una instancia de sesión temporal
+        Session::put("projectUpdate", ProjectModel::getProjectInfo($projectUpdate->input('codigoSQL')));
+        return response("User Loaded", 200);
+    }
+
+    /**
+     * Metodo que crea o actualiza un Proyecto
      * @param Request $dataProject Variable en formato request que recibe la data recibida por POST
      * @return Array Retorna un array en formato response
      */
@@ -66,41 +78,48 @@ class ProjectController extends Controller
 
         //Fecha de ingreso null o vacia
         $hiringDate = $dataProject->input('project')['hiringDate'] != null || $dataProject->input('project')['hiringDate'] != ''
-                        ? date("Y-m-d",strtotime($dataProject->input('project')['hiringDate']))
-                        : null;
+            ? date("Y-m-d", strtotime($dataProject->input('project')['hiringDate']))
+            : null;
         //Pasamos la data
         $paramsToControl = array(
-            $dataProject->input('project')['projectDescription'],
-            $dataProject->input('project')['clientId'],
-            $dataProject->input('project')['statusId'],
-            $dataProject->input('project')['managerId'],
-            $dataProject->input('project')['partnerId'],
-            $dataProject->input('project')['qualityPartnerId'],
-            $dataProject->input('project')['currencyId'],
-            $dataProject->input('project')['companyId'],
-            $hiringDate,
-            $dataProject->input('project')['departments'],
-            $dataProject->input('project')['projectValue'],
-            Session::get('userId'),
-            ConfigController::GetIpUser()
+            "departments" => $dataProject->input('project')['departments'],
+            "project" =>  array(
+                $dataProject->input('project')['projectDescription'],
+                $dataProject->input('project')['clientId'],
+                $dataProject->input('project')['statusId'],
+                $dataProject->input('project')['managerId'],
+                $dataProject->input('project')['partnerId'],
+                $dataProject->input('project')['qualityPartnerId'],
+                $dataProject->input('project')['currencyId'],
+                $dataProject->input('project')['companyId'],
+                $hiringDate,
+                $dataProject->input('project')['projectValue'],
+                Session::get('userId'),
+                ConfigController::GetIpUser()
+            )
         );
 
-        if($dataProject->input('isEdit'))
-        {
+        if ($dataProject->input('isEdit')) {
             $paramsEdit = array(
                 $dataProject->input('project')['IdClient'],
                 $dataProject->input('project')['IdStatus']
             );
 
             //Unimos ambos array
-            $paramsToControl = array_merge($paramsToControl,$paramsEdit);
+            $paramsToControl = array_merge($paramsToControl, $paramsEdit);
         }
 
         $dataProject->input('isEdit')
-        ? $ResponseProject = ProjectModel::controlProjects($paramsToControl,'update')
-        : $ResponseProject = ProjectModel::controlProjects($paramsToControl,'create');
+            ? $ResponseProject = ProjectModel::controlProjects($paramsToControl, 'update')
+            : $ResponseProject = ProjectModel::controlProjects($paramsToControl, 'create');
 
         //Retornamos la data
-        return response($ResponseProject,200);
+        return response($ResponseProject, 200);
+    }
+
+    /** Metodo que elimina la sesión temporal de clientUpdate */
+    public function deleteProjectUpdate()
+    {
+        if (Session::has('projectUpdate')) Session::forget('projectUpdate');
     }
 }

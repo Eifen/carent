@@ -74,5 +74,16 @@
         @if (Request::url() === URL::route('createProject'))
             @include('UI.Projects.ProjectCreate')
         @endif
+
+        @if (Request::url() === URL::route('updateProject'))
+            @if (Session::has('projectUpdate'))
+                @include('UI.Projects.ProjectUpdate')
+            @else
+                @php
+                    header('Location: /projects');
+                    exit();
+                @endphp
+            @endif
+        @endif
     </section>
 @endsection

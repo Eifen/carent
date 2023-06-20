@@ -15,13 +15,16 @@
             <!-- Datos para distribucion de divisiones -->
             <legend :class="formClass.legend" v-text="messages.addiontalInfo"></legend>
             <project-departments :scope="DTOData"
-            @transfer-ref="emitTransfer($event,'departments')"></project-departments>
+            @transfer-ref="emitTransfer($event,'departments')"
+            :is-edit="isEdit"></project-departments>
             <!-- Distribucion de divisiones -->
             <project-managers :scope="DTOData"
-            @total-hours="totalHours"></project-managers>
+            @total-hours="totalHours"
+            :is-edit="isEdit"></project-managers>
             <!-- Submit Button. Que permanece inactivo mientras que no se hayan llegano todos los datos requeridos -->
             <div :class="formClass.button"
             :id="[!submitButton.isValid ? formClass.disableButton : isClick ? formClass.disableButton : null]"
+            v-if="submitButton.isValid"
             @click="projectEmit()">
                 <span v-if="isEdit & !isClick">{{ messages.buttonEdit }}</span>
                 <span v-else-if="!isEdit & !isClick">{{ messages.buttonCreate }}</span>
@@ -116,7 +119,7 @@ export default {
                 isValid: false //Gestiona si cumple todos los campos requeridos
             },
             //Constantes
-            LimitString: { DESCRIPTION: 20, NAME: 50 },
+            LimitString: { DESCRIPTION: 200, NAME: 50 },
             dropDownControl: {
                 "clients": {noInput: false, ref:'clientAssociated'},
                 "manager": {noInput: false, ref:'managerAssociated'},
@@ -135,7 +138,7 @@ export default {
     mounted() { mountedMixin(this) },
     //Propiedad computada encarga de pasar toda la data como parametro,
     computed: { DTOData(){ return this.$data } },
-    methods: { 
+    methods: {
         /**
          * Metodo que almacena las Refs de los componentes hijo
          * @param {Object} childRefsEmit almacena los ref que vienen desde el emit

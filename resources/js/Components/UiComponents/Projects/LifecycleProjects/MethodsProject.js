@@ -1,44 +1,52 @@
-import { Exceptions } from "@/Excepciones/Excepciones"
-export const projectMethods = 
-{
-    methods: 
-    {
+import { Exceptions } from "@/Excepciones/Excepciones";
+export const projectMethods = {
+    methods: {
         /**
-        * Metodo que envia la data del formulario  al componente padre
-        */
+         * Metodo que envia la data del formulario  al componente padre
+         */
         projectEmit() {
             //Almacenamos los indices de cada valor
             const indexTable = {
-                client: this.dataSelect.clients.map(object => object.bussiness_name).indexOf(this.inputClientAssociated),
-                manager: this.dataSelect.managers.map(object => object.user_name).indexOf(this.inputManagerAssociated),
-                partner: this.dataSelect.partners.map(object => object.user_name).indexOf(this.inputPartnerAssociated),
-                qualityPartner: this.dataSelect.partners.map(object => object.user_name).indexOf(this.inputQualityPartnerAssociated),
-            }
+                client: this.dataSelect.clients
+                    .map((object) => object.bussiness_name)
+                    .indexOf(this.inputClientAssociated),
+                manager: this.dataSelect.managers
+                    .map((object) => object.user_name)
+                    .indexOf(this.inputManagerAssociated),
+                partner: this.dataSelect.partners
+                    .map((object) => object.user_name)
+                    .indexOf(this.inputPartnerAssociated),
+                qualityPartner: this.dataSelect.partners
+                    .map((object) => object.user_name)
+                    .indexOf(this.inputQualityPartnerAssociated),
+            };
             //Pasamos los parametros a analizar
-            let paramsToEmit =
-            {
-                "projectDescription": this.inputProjectDescription,
-                "clientId": this.dataSelect.clients[indexTable.client].client_id,
-                "statusId": this.inputStatusSelect,
-                "managerId": this.dataSelect.managers[indexTable.manager].user_name,
-                "partnerId": this.dataSelect.partners[indexTable.partner].user_name,
-                "qualityPartnerId": this.dataSelect.partners[indexTable.qualityPartner].user_name,
-                "currencyId": this.inputCurrenciesSelect,
-                "companyId": this.inputCompaniesSelect,
-                "hiringDate": this.inputHiringDate,
-                "departments": this.dataSelect.managersPerDepartment,
-                "projectValue": this.inputValue,
-            }
+            let paramsToEmit = {
+                projectDescription: this.inputProjectDescription,
+                clientId: this.dataSelect.clients[indexTable.client].client_id,
+                statusId: this.inputStatusSelect,
+                managerId: this.dataSelect.managers[indexTable.manager].user_id,
+                partnerId: this.dataSelect.partners[indexTable.partner].user_id,
+                qualityPartnerId:
+                    this.dataSelect.partners[indexTable.qualityPartner].user_id,
+                currencyId: this.inputCurrenciesSelect,
+                companyId: this.inputCompaniesSelect,
+                hiringDate: this.inputHiringDate,
+                departments: this.dataSelect.managersPerDepartment,
+                projectValue: this.inputValue
+                    .replace(/\./, "")
+                    .replace(/,/, "."),
+            };
 
             //Preparamos los parametros de update en caso de actualizar
-            let paramsToUpdate =
-            {
-                "Status": this.inputStatusSelect
-            }
+            let paramsToUpdate = {
+                Status: this.inputStatusSelect,
+            };
 
             //Si estamos en edición, unimos los dos objetos
-            if (this.isEdit) paramsToEmit = { ...paramsToEmit, ...paramsToUpdate }
-            this.$emit('submit-form', paramsToEmit);
+            if (this.isEdit)
+                paramsToEmit = { ...paramsToEmit, ...paramsToUpdate };
+            this.$emit("submit-form", paramsToEmit);
         },
         /**
          * Metodo que controla el estado de la lista
@@ -50,13 +58,17 @@ export const projectMethods =
          * Puede ser cliente, socio, gerente, entre otros
          * @param {String} refsInfo Direcciona al Refs del componente hijo ubicado en la variable childsRefs, ejemplo "principal"
          */
-        listControl(refsInfo,inputTarget){
+        listControl(refsInfo, inputTarget) {
             //Controla el estado de la lista
-            if(this.childsRefs[refsInfo.objectRef][refsInfo.nameRef] !== document.activeElement){
-                this.dropDownControl[inputTarget].noInput = false //Lo desactiva si el input pierde el focus
-            }else{
-                this.dropDownControl[inputTarget].noInput = true //Lo activa si el input tiene focus y no esta vacio
-                if(this[refsInfo.inputRef].length == 0) this.dropDownControl[inputTarget].noInput = false //Desactiva si input esta vacio
+            if (
+                this.childsRefs[refsInfo.objectRef][refsInfo.nameRef] !==
+                document.activeElement
+            ) {
+                this.dropDownControl[inputTarget].noInput = false; //Lo desactiva si el input pierde el focus
+            } else {
+                this.dropDownControl[inputTarget].noInput = true; //Lo activa si el input tiene focus y no esta vacio
+                if (this[refsInfo.inputRef].length == 0)
+                    this.dropDownControl[inputTarget].noInput = false; //Desactiva si input esta vacio
             }
         },
         /**
@@ -68,35 +80,58 @@ export const projectMethods =
          * @property {String} errorInput: Variable que controla el mensaje de error
          * @param {String} valueToCompare Captura la informacion del string a comparar
          */
-        validateTable(objectTarget, valueToCompare){
-            try{
-                const infoDTO = this.dataSelect[objectTarget.table].filter(columns => { 
-                    return columns[objectTarget.column].toString().toLowerCase().includes(valueToCompare.toString().toLowerCase())})
+        validateTable(objectTarget, valueToCompare) {
+            try {
+                const infoDTO = this.dataSelect[objectTarget.table].filter(
+                    (columns) => {
+                        return columns[objectTarget.column]
+                            .toString()
+                            .toLowerCase()
+                            .includes(valueToCompare.toString().toLowerCase());
+                    }
+                );
                 //Si no pertenece, error
-                if(infoDTO.length == 0) throw 'NoRefFound';
+                if (infoDTO.length == 0) throw "NoRefFound";
                 //En caso que pertezca, desactivamos el mensaje de error
-                if(infoDTO.length != 0) this.messages.error[objectTarget.errorInput] = '';
-            }catch (errorMessage){
-                this.submitButton[objectTarget.inputValid] = false
-                this.messages.error[objectTarget.errorInput] = Exceptions.CatchWarning(errorMessage)
+                if (infoDTO.length != 0)
+                    this.messages.error[objectTarget.errorInput] = "";
+            } catch (errorMessage) {
+                this.submitButton[objectTarget.inputValid] = false;
+                this.messages.error[objectTarget.errorInput] =
+                    Exceptions.CatchWarning(errorMessage);
             }
         },
         //Insertado de fecha
-        insertDate(dateDTO) { this.inputHiringDate = `${dateDTO.year}-${dateDTO.month}-${dateDTO.day}`; },
+        insertDate(dateDTO) {
+            this.inputHiringDate = `${dateDTO.year}-${dateDTO.month}-${dateDTO.day}`;
+        },
         /**
          * Metodo que se encarga sumar las horas totales del proyecto
          * @param {*} infoDepartments Objeto donde esta almacenada la informacion de las divisiones
          */
-        totalHours(infoDepartments){
-            this.inputHoursAssigned = 0 //Reiniciamos el contador
+        totalHours(infoDepartments) {
+            this.inputHoursAssigned = 0; //Reiniciamos el contador
             //Recorremos el arrray y sumamos en el v-model de horas totales
-            for (let cursorDeparment = 0; cursorDeparment < infoDepartments.length; cursorDeparment++) {
-                const numberValid = new RegExp('^([0-9]*)$');
-                const testNumber = numberValid.test(infoDepartments[cursorDeparment].hoursAssigned)
+            for (
+                let cursorDeparment = 0;
+                cursorDeparment < infoDepartments.length;
+                cursorDeparment++
+            ) {
+                const numberValid = new RegExp("^([0-9]*)$");
+                const testNumber = numberValid.test(
+                    infoDepartments[cursorDeparment].hoursAssigned
+                );
                 //Si es un numero, sumamos
-                if(testNumber && infoDepartments[cursorDeparment].hoursAssigned.length != 0) 
-                    this.inputHoursAssigned = parseInt(this.inputHoursAssigned) + parseInt(infoDepartments[cursorDeparment].hoursAssigned); 
+                if (
+                    testNumber &&
+                    infoDepartments[cursorDeparment].hoursAssigned.length != 0
+                )
+                    this.inputHoursAssigned =
+                        parseInt(this.inputHoursAssigned) +
+                        parseInt(
+                            infoDepartments[cursorDeparment].hoursAssigned
+                        );
             }
         },
     },
-}
+};

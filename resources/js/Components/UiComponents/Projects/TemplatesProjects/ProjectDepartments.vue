@@ -12,8 +12,12 @@
                 class="form-control"
                 id="Value"
                 aria-describedby="basic-addon7"
-                v-model="scope.inputValue"
-                :disabled="isEdit ? true : false"/>
+                v-model="scope.inputValue"/>
+                <span class="input-group-text" id="basic-addon10" v-if="isEdit">
+                    <project-additional-modal
+                    modal-title="Montos Adicionales"
+                    id-modal="additionalValues"></project-additional-modal>
+                </span>
             </div>
             <!-- Mensajes de error en Nombre-->
             <div :class="scope.formClass.failureValidation" v-if="scope.messages.error.valueError != ''">
@@ -63,6 +67,7 @@
 import FontAwesome from '@/Components/FontAwesome/FontAwesome.vue';
 import DropdownSelect from '@/Components/DropdownSelect.vue';
 import Multiselect from '@vueform/multiselect'
+import ProjectAdditionalModal from '@/Components/UiComponents/Projects/TemplatesProjects/ProjectAdditionalModal.vue';
 
 export default {
     props: {
@@ -83,6 +88,6 @@ export default {
     mounted() {
         this.$emit('transfer-ref',this.$refs)
     },
-    components: { FontAwesome, DropdownSelect, Multiselect }
+    components: { FontAwesome, DropdownSelect, Multiselect, ProjectAdditionalModal }
 };
 </script>

@@ -76,9 +76,9 @@
                 <div v-for="(setting, cursor) in titleObject.settings"
                   :key="cursor">
                   <!-- Separamos los select en base al objeto suministrado (Deben tener el mismo formato) -->
-                  <span class="aLink" @click="$emit('columns1target',(actualIndex + controlTable.minLength))"
+                  <span class="aLink" @click="$emit('columns1target',(controlTable.data[actualIndex + controlTable.minLength].codigo))"
                   v-if="cursor == 'columnS1'">{{setting}}</span>
-                  <span class="aLink" @click="$emit('columns2target',(actualIndex + controlTable.minLength))"
+                  <span class="aLink" @click="$emit('columns2target',(controlTable.data[actualIndex + controlTable.minLength].codigo))"
                   v-if="cursor == 'columnS2'">{{setting}}</span>
                 </div>
               </div>

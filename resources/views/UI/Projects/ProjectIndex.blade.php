@@ -9,6 +9,5 @@
     button-title="proyecto"
     :select-search="proxyToJson(selectSearch)"
     @createButton="createProject()"
-    {{--
-    @columns1target="editClient"--}}></listing-crud>
+    @columns1target="editProject"></listing-crud>
 </div>
