@@ -8,6 +8,7 @@
     title-table="proyectos"
     button-title="proyecto"
     :select-search="proxyToJson(selectSearch)"
+    view-pagination
     @createButton="createProject()"
     @columns1target="editProject"></listing-crud>
 </div>

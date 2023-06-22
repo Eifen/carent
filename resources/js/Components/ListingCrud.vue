@@ -1,9 +1,9 @@
 <template>
   <div :class="listClass">
     <div :class="tableClass.title">{{ titleTable }}</div>
-    <div :class="tableClass.create" @click="$emit('createbutton')">Crear {{ buttonTitle }}</div>
+    <div :class="tableClass.create" v-if="viewPagination" @click="$emit('createbutton')">Crear {{ buttonTitle }}</div>
     <!-- Búsqueda de datos en tiempo real -->
-    <pagination :scope="DTOData" :columns-search="selectSearch"
+    <pagination v-if="viewPagination" :scope="DTOData" :columns-search="selectSearch"
     @search-data="searchData"></pagination>
     <!-- =====================================================================
         Paginacion
@@ -105,6 +105,7 @@ export default {
     titleTable: String, //Titulo de la tabla
     buttonTitle: String, //Titulo del boton de crear
     selectSearch: Object, //Objeto que almaneca los select de búsqueda
+    viewPagination: Boolean, // Boolean que se encarga de definir si ver la paginacion o no
   },
   data() {
     return {

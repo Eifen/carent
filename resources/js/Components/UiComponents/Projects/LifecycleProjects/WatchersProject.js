@@ -20,7 +20,6 @@ export const projectWatchers = {
                     .map((object) => object.user_id)
                     .indexOf(newEdit.project.manager_id),
             };
-            console.log(newEdit, "papa", indexDTO);
             //Distribuimos la informacion
             this.inputStatusSelect = newEdit.project.status_id; //Posicion del estado del proyecto
             this.inputCurrenciesSelect = newEdit.project.currency_id; //Select del tipo de moneda
@@ -38,6 +37,38 @@ export const projectWatchers = {
             this.inputValue = Number(
                 newEdit.project.project_value
             ).toLocaleString("de-DE"); //Monto del proyecto
+            this.dataSelect.additionalHours = newEdit.additionalHours;
+            this.dataSelect.additionalValues = newEdit.additionalValue;
+
+            //Cargamos la informacion de las horas totales adicionales y montos
+            for (
+                let countProject = 0;
+                countProject < newEdit.additionalHours.length;
+                countProject++
+            ) {
+                this.inputAdditionalHours = Number(
+                    parseInt(this.inputAdditionalHours) +
+                        parseInt(
+                            newEdit.additionalHours[countProject]
+                                .additional_hour
+                        )
+                ).toLocaleString("de-DE");
+            }
+
+            //Montos
+            for (
+                let countProject = 0;
+                countProject < newEdit.additionalValue.length;
+                countProject++
+            ) {
+                this.inputAdditionalValue = Number(
+                    parseFloat(this.inputAdditionalValue) +
+                        parseFloat(
+                            newEdit.additionalValue[countProject]
+                                .aditional_project_value
+                        )
+                ).toLocaleString("de-DE");
+            }
 
             //Cargamos la informacion de los departamentos
             for (

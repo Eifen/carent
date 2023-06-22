@@ -89,6 +89,8 @@ export default {
             inputValue: Number(0).toLocaleString('de-DE'), //Monto del proyecto
             inputDepartments: [], //Array que almacena los valores del multiselect
             inputHoursAssigned: Number(0).toLocaleString('de-DE'), //Horas totales asignadas
+            inputAdditionalHours: Number(0).toLocaleString('de-DE'), //Horas adicionales
+            inputAdditionalValue: Number(0).toLocaleString('de-DE'), //Montos adicionales
 
             //Espacio dedicado a variables de data en la base de datos
             dataSelect:
@@ -101,6 +103,8 @@ export default {
                 managers: [], //Data de los gerentes activos
                 managersPerDepartment: [], //Almacena la estructura de la carga de horas. DTO
                 status: [], //Data de los estados disponibles a proyectos
+                additionalHours: [], //Array que almacena las horas adicionales de un proyecto
+                additionalValues: [], //Array que almacena los montos adicionales de un proyecto
             },
             //Espacio reservado para el control del Create / Edit
             submitButton: {

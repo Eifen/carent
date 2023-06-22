@@ -8,6 +8,7 @@
     title-table="usuarios"
     button-title="usuario"
     v-if="isMounted"
+    view-pagination
     @columnS1Target="editUsuarios"
     @columnS2Target="permisosUsuarios"
     @createButton="crearUsuario()"></listing-crud>
