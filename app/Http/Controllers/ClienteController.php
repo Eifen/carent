@@ -38,6 +38,8 @@ class ClienteController extends Controller
     $modelo = new ClienteModel();
     $codigoCliente = $modelo->codigoCliente();
     $paises = $modelo->paises();
+    $servicios = $modelo->servicios();
+    $sectores = $modelo->sectores();
     if (!empty($codigoCliente)) {
       $codigo = $codigoCliente->codigo + 1;
       $response = array("response" => true,
