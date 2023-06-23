@@ -3,21 +3,26 @@ import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap-vue/node_modules/bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import '@fortawesome/fontawesome-free/js/all.js';
 import zenscroll from 'zenscroll';
 import axios from 'axios';
 import Vuelidate from 'vuelidate';
-import AutoNumeric from 'autonumeric';
+import { helpers, required } from '@vuelidate/validators'
+import { useVuelidate } from '@vuelidate/core'
 import VueNumeric from 'vue-numeric';
-import { required, requiredIf, maxLength, minLength } from 'vuelidate/lib/validators';
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import VueTheMask from 'vue-the-mask';
 var self;
 
-Vue.component('loading',require('../components/loading.vue').default);
-Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
-Vue.component('alert',require('../components/alert.vue').default);
-Vue.component('confirm',require('../components/confirm.vue').default);
+import alert from '../components/alert.vue'
+import confirm from '../components/confirm.vue'
+import loading from '../components/loading.vue'
+import menuPrincipal from '../components/menuPrincipal.vue'
+Vue.component('menu-principal', menuPrincipal);
+Vue.component('loading', loading);
+Vue.component('alert',alert);
+Vue.component('confirm',confirm);
 Vue.component("v-select", vSelect);
 Vue.use(VueTheMask);
 Vue.use(BootstrapVue);
@@ -205,6 +210,9 @@ new Vue({
       },
     },
   },
+  setup: () => ({ 
+    v$: useVuelidate() 
+  }),
   validations: {
     form:{
       campos:{
@@ -304,7 +312,6 @@ new Vue({
 
 
   },
-  created: function () {},
   mounted: function () {
     self.$refs["modal-detalle-usuario"].$on('shown', () => {
       self.formFiltro.btn.filtrar.html = self.formFiltro.btn.filtrar.htmlLoading;
@@ -324,8 +331,6 @@ new Vue({
       self.mostrarAlertForm(self.modalDetalleUsuario.alert);
     });
   },
-
-  updated: function () {},
   methods:{
 
     buscar: function(e){
@@ -456,13 +461,13 @@ new Vue({
       for(var i = 0; i <= (arrayCampos.length - 1); i++){
 
         let indice = arrayCampos[i];
-        const campo = self.$v.form.campos[indice];
+        const campo = self.v$.form.campos[indice];
         campo.$touch();
 
         if(campo.$invalid){
 
           self.form.camposAtributos[indice].state = false;
-          const valorCampo = self.$v.form.campos[indice].$model;
+          const valorCampo = self.v$.form.campos[indice].$model;
 
           const arrayParams = Object.keys(campo.$params);
           for(var j = 0; j <= (arrayParams.length - 1); j++){

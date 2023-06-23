@@ -180,7 +180,6 @@ new Vue({
     });
 
   },
-  created: function () {},
   mounted: function () {
 
     new AutoNumeric('#codigoUsuario', {
@@ -204,7 +203,6 @@ new Vue({
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
   },
-  updated: function () {},
   methods:{
 
     municipios: function(){

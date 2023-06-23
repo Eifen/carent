@@ -8,8 +8,7 @@
 
         <title>.: CARENT :.</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
-        @vite('resources/css/fontawesome-free-5.12.0.css')
-        @vite('resources/css/nuevoCliente.css')
+        @vite('resources/less/cliente/nuevoCliente.less')
 
     </head>
     <body>
@@ -76,7 +75,7 @@
                   ref="codigoUsuario"
                   size="sm"
                   type="text"
-                  v-model="$v.form.campos.codigoUsuario.$model"></b-form-input>
+                  v-model="v$.form.campos.codigoUsuario.$model"></b-form-input>
               </b-form-group>
               <b-form-group
                 :invalid-feedback="form.camposAtributos.nombre.invalidFeedback"
@@ -95,7 +94,7 @@
                   ref="nombre"
                   size="sm"
                   type="text"
-                  v-model="$v.form.campos.nombre.$model"></b-form-input>
+                  v-model="v$.form.campos.nombre.$model"></b-form-input>
               </b-form-group>
               <b-form-group class="col-12">
                 <h5>Datos del Clientes</h5>
@@ -117,7 +116,7 @@
                   ref="codigoCliente"
                   size="sm"
                   type="text"
-                  v-model="$v.form.campos.codigoCliente.$model"></b-form-input>
+                  v-model="v$.form.campos.codigoCliente.$model"></b-form-input>
               </b-form-group>
               <b-form-group
                 :invalid-feedback="form.camposAtributos.rif.invalidFeedback"
@@ -137,7 +136,7 @@
                   ref="rif"
                   size="sm"
                   type="text"
-                  v-model="$v.form.campos.rif.$model"></the-mask>
+                  v-model="v$.form.campos.rif.$model"></the-mask>
               </b-form-group>
               <b-form-group
                 :invalid-feedback="form.camposAtributos.razon_social.invalidFeedback"
@@ -156,7 +155,7 @@
                   ref="razon_social"
                   size="sm"
                   type="text"
-                  v-model="$v.form.campos.razon_social.$model"></b-form-input>
+                  v-model="v$.form.campos.razon_social.$model"></b-form-input>
               </b-form-group>
               <b-form-group
                 :invalid-feedback="form.camposAtributos.direccion.invalidFeedback"
@@ -175,7 +174,7 @@
                   ref="direccion"
                   size="sm"
                   type="text"
-                  v-model="$v.form.campos.direccion.$model"></b-form-textarea>
+                  v-model="v$.form.campos.direccion.$model"></b-form-textarea>
               </b-form-group>
               <b-form-group
                 :invalid-feedback="form.camposAtributos.pais.invalidFeedback"
@@ -194,7 +193,7 @@
                   id="pais"
                   ref="pais"
                   size="sm"
-                  v-model="$v.form.campos.pais.$model">
+                  v-model="v$.form.campos.pais.$model">
                   <template v-slot:first>
                     <option :value="null" disabled="true">Seleccione una opción</option>
                   </template>
@@ -218,7 +217,7 @@
                   ref="telefono_fiscal"
                   size="sm"
                   type="text"
-                  v-model="$v.form.campos.telefono_fiscal.$model"></b-form-input>
+                  v-model="v$.form.campos.telefono_fiscal.$model"></b-form-input>
               </b-form-group>
               <b-form-group
                 :invalid-feedback="form.camposAtributos.pagina_web.invalidFeedback"
@@ -237,7 +236,7 @@
                   ref="pagina_web"
                   size="sm"
                   type="text"
-                  v-model="$v.form.campos.pagina_web.$model"></b-form-input>
+                  v-model="v$.form.campos.pagina_web.$model"></b-form-input>
               </b-form-group>
               <b-form-group
                 :invalid-feedback="form.camposAtributos.email_fiscal.invalidFeedback"
@@ -256,7 +255,7 @@
                   ref="email_fiscal"
                   size="sm"
                   type="email"
-                  v-model="$v.form.campos.email_fiscal.$model"></b-form-input>
+                  v-model="v$.form.campos.email_fiscal.$model"></b-form-input>
               </b-form-group>
               <b-form-group class="col-12">
                 <alert :contador="form.alert.contador"
@@ -361,6 +360,6 @@
           </b-table>
         </b-modal>
       </b-container>
-      @vite('resources/js/nuevoCliente.js')
+      @vite('resources/js/cliente/nuevoCliente.js')
     </body>
 </html>
