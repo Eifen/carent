@@ -185,6 +185,11 @@ class ClienteModel extends Model
       return $paises;
   }
 
+  function servicios(){
+    $paises = DB::select('SELECT ser.ServicioId, ser.NombreServicio FROM tbl_servicio ser WHERE ser.EstadoServicio = 1');
+    return $paises;
+  }
+
   function buscarCliente($codigo){
 
     $cliente = DB::select('SELECT id,
