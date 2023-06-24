@@ -428,6 +428,6 @@
           </b-table>
         </b-modal>
       </b-container>
-      <script src="{{ mix('/js/nuevoCliente.js') }}"></script>
+      @vite('resources/js/cliente/nuevoCliente.js')
     </body>
 </html>
