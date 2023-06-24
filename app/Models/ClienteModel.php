@@ -190,6 +190,11 @@ class ClienteModel extends Model
     return $paises;
   }
 
+  function sectores(){
+    $sector = DB::select('SELECT sec.SectorId, sec.SectorNombre FROM tbl_sector sec WHERE sec.SectorEstado = 1');
+    return $sector;
+  }
+
   function buscarCliente($codigo){
 
     $cliente = DB::select('SELECT id,

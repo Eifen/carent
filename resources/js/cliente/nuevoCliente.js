@@ -217,33 +217,61 @@ new Vue({
     form:{
       campos:{
         codigoCliente: {
-          required
+          required: helpers.withMessage(
+            'Este campo es requerido',
+            required
+          )
         },
         codigoUsuario: {
-          required
+          required: helpers.withMessage(
+            'Este campo es requerido',
+            required
+          )
         },
         nombre: {
-          required
+          required: helpers.withMessage(
+            'Este campo es requerido',
+            required
+          )
         },
         rif: {
-          required
+          required: helpers.withMessage(
+            'Este campo es requerido',
+            required
+          )
         },
         razon_social: {
-          required
+          required: helpers.withMessage(
+            'Este campo es requerido',
+            required
+          )
         },
         direccion: {
-          required
+          required: helpers.withMessage(
+            'Este campo es requerido',
+            required
+          )
         },
         pais: {
-          required
+          required: helpers.withMessage(
+            'Este campo es requerido',
+            required
+          )
         },
         telefono_fiscal: {
-          required
+          required: helpers.withMessage(
+            'Este campo es requerido',
+            required
+          )
         },
         pagina_web: {
+          optinal: (value) => !helpers.req(value) || value.includes('cool')
         },
         email_fiscal: {
-          required
+          required: helpers.withMessage(
+            'Este campo es requerido',
+            required
+          )
         },
       },
     }
@@ -458,24 +486,23 @@ new Vue({
       });
 
       const arrayCampos = Object.keys(self.form.campos);
+
       for(var i = 0; i <= (arrayCampos.length - 1); i++){
 
         let indice = arrayCampos[i];
         const campo = self.v$.form.campos[indice];
         campo.$touch();
-
+       
         if(campo.$invalid){
 
           self.form.camposAtributos[indice].state = false;
-          const valorCampo = self.v$.form.campos[indice].$model;
 
-          const arrayParams = Object.keys(campo.$params);
+          const arrayParams = Object.keys(campo.$errors);
           for(var j = 0; j <= (arrayParams.length - 1); j++){
-
-            let mensajeError = self.validadorMensajes(arrayParams[j], campo);
-            self.form.camposAtributos[indice].invalidFeedback = mensajeError.mensaje;
-
-            if(!mensajeError.respuesta){
+           
+            self.form.camposAtributos[indice].invalidFeedback = campo.$errors[j].$message;
+            
+            if(!campo.$errors[j].$response){
               break
             }
 

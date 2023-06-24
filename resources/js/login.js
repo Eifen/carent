@@ -235,7 +235,6 @@ new Vue({
     }
 
   },
-  updated: function () {},
   methods:{
 
     encriptar: function(valor, encryptionKey, encryptionIv){
