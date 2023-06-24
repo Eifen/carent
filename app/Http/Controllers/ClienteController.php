@@ -93,46 +93,49 @@ class ClienteController extends Controller
       return $response;
     }
 
-  function crearCliente(Request $request){
+    function crearCliente(Request $request){
 
-    $modelo = new ClienteModel();
-    $codigoCliente = (int) $request->input("codigoCliente");
-    $pais = $request->input("pais");
-
-    $parametros = array(
-        session("usuario_id"),
-        $request->input("idUsuario"),
-        $codigoCliente,
-        $request->input("rif"),
-        $request->input("razon_social"),
-        $request->input("pais"),
-        $request->input("direccion"),
-        $request->input("telefono_fiscal"),
-        $request->input("pagina_web"),
-        $request->input("email_fiscal"),
-        session("usuario_ip")
-    );
-
-    $response = $modelo->crearCliente($parametros);
-
-    if($response["response"]){
-
-      $parametros = [
-        "accion" => 'Registro del cliente codigo: '.$codigoCliente,
-        "direccion_ip" => $request->session()->get('usuario_ip'),
-        "fecha" => date("Y-m-d H:i:s"),
-        "tabla" => 'tbl_cliente',
-        "usuario_id" => $request->session()->get('usuario_id')
-      ];
-
-      $modeloAudit = new AuditoriaLogModel();
-      $modeloAudit->logs_auditoria($parametros);
-
+      $modelo = new ClienteModel();
+      $codigoCliente = (int) $request->input("codigoCliente");
+      $pais = $request->input("pais");
+  
+      $parametros = array(
+          session("usuario_id"),
+          $request->input("idUsuario"),
+          $codigoCliente,
+          $request->input("rif"),
+          (int) $request->input("nit"),
+          $request->input("razon_social"),
+          $request->input("pais"),
+          $request->input("direccion"),
+          $request->input("telefono_fiscal"),
+          (string) $request->input("pagina_web"),
+          $request->input("email_fiscal"),
+          $request->input("sector"),
+          $request->input("servicios"),
+          session("usuario_ip")
+      );
+  
+      $response = $modelo->crearCliente($parametros);
+  
+      if($response["response"]){
+  
+        $parametros = [
+          "accion" => 'Registro del cliente codigo: '.$codigoCliente,
+          "direccion_ip" => $request->session()->get('usuario_ip'),
+          "fecha" => date("Y-m-d H:i:s"),
+          "tabla" => 'tbl_cliente',
+          "usuario_id" => $request->session()->get('usuario_id')
+        ];
+  
+        $modeloAudit = new AuditoriaLogModel();
+        $modeloAudit->logs_auditoria($parametros);
+  
+      }
+  
+      return $response;
+  
     }
-
-    return $response;
-
-  }
 
   function buscarClientes(Request $request){
 
