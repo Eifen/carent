@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 
 class ProjectModel extends Model
 {
+    private static $lastAssignedId = []; #Captura el ultimo ID de los departamentos asignados
+    private static $lastInsertId = 0; #Se asigna al momento de sacar el last_insert del $lastAssignedId[]
     /**
      * Metodo que se encarga de abstraer de la base de dato todos los managers, o socios activos
      * @param int $status Que estado debe tener el usuario para el retorno
@@ -33,18 +35,22 @@ class ProjectModel extends Model
         return array(
             "project" => DB::table('projects')->where('project_id', '=', $projectId)->first(),
             "departments" => DB::table('projects_departments_assigned')->where('project_id', "=", $projectId)->get(),
+            //Montos adicionales
             "additionalValue" => DB::table('projects_additional_value')
                 ->where([
                     ['project_id', '=', $projectId],
                     ['status_id', '=', 1]
                 ])->get(),
+            "lastValue" => DB::table('projects_additional_value')->orderBy('value_id', 'desc')->value('value_id'),
+            //Horas adicionales
             "additionalHours" => DB::table('projects_additional_hours')
                 ->join('projects_departments_assigned', 'projects_additional_hours.department_assigned_id', '=', 'projects_departments_assigned.department_assigned_id')
                 ->where([
                     ['projects_departments_assigned.project_id', '=', $projectId],
                     ['projects_additional_hours.status_id', '=', 1]
                 ])
-                ->get()
+                ->get(),
+            "lastHour" => DB::table('projects_additional_hours')->orderBy('hours_id', 'desc')->value('hours_id')
         );
     }
 
@@ -58,6 +64,13 @@ class ProjectModel extends Model
     {
         //Separamos el array
         $paramsToProcedure = $dataRequest["project"];
+        //Añadimos el projectId si estamos actualizando
+        if ($typeControl == 'update') {
+            array_push($paramsToProcedure, $dataRequest["projectId"]);
+            $valuesArray = $dataRequest["additionalValues"]; //Corresponse a los montos adicionales
+            $hoursArray = $dataRequest["additionalHours"]; //Corresponse a las horas adicionales
+        }
+
         $managersArray = $dataRequest["departments"]; //Corresponde a los departamentos
 
         //Separamos el tipo de proceso
@@ -66,7 +79,7 @@ class ProjectModel extends Model
                 DB::select('call sp_new_projects(?,?,?,?,?,?,?,?,?,?,?,?,@response)', $paramsToProcedure);
                 break;
             case 'update':
-                DB::select('call sp_update_projects(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,@response)', $paramsToProcedure);
+                DB::select('call sp_update_projects(?,?,?,?,?,?,?,?,?,?,?,?,?,@response)', $paramsToProcedure);
                 break;
         }
         //Capturamos el JSON
@@ -90,6 +103,163 @@ class ProjectModel extends Model
             }
         }
 
+        //Update
+        if ($response['response'] && $typeControl == 'update') {
+            # Departamentos
+            self::prepareDepartmentUpdate($managersArray, $dataRequest["projectId"]);
+
+            #Montos adicionales
+            self::prepareValuesUpdate($valuesArray, $dataRequest["projectId"]);
+
+            #Horas adicionales
+            self::prepareHoursUpdate($hoursArray, $dataRequest["projectId"]);
+        }
+
         return $response;
+    }
+
+    /**
+     * Metodo que configura la fecha en formato YYYY-mm-dd
+     * @param String $dateToConver Captura la fecha en formato String
+     * @return Date Retorna la fecha en formato YYYY-mm-dd o null en caso de string vacio o null
+     */
+    private static function convertDate($dateToConver)
+    {
+        return $dateToConver != null || $dateToConver != ''
+            ? date("Y-m-d", strtotime($dateToConver))
+            : null;
+    }
+
+    /**
+     * Metodo que se encarga de actualizar la información de los departamentos
+     * @param array $managersArray captura la información sobre las divisiones sumnistradas por el frontEnd
+     * @param int $projectId captura el id del proyecto a modificar
+     */
+    private  static function prepareDepartmentUpdate($managersArray, $projectId)
+    {
+        //Abstraemos de la base de datos los departamentos asignados
+        $departmentsAssigned = DB::table('projects_departments_assigned')
+            ->where('project_id', '=', $projectId)
+            ->get();
+        foreach ($managersArray as $posicion => $department) {
+            //recorremos el array de la base de datos
+            if (isset($departmentsAssigned[$posicion])) {
+                $idDepartmentAssigned = $departmentsAssigned[$posicion]->department_assigned_id; #Capturamos el id de esa fila
+                #Si existe la fila, actualizamos en la base de datos
+                DB::table('projects_departments_assigned')
+                    ->where('department_assigned_id', '=', $idDepartmentAssigned)
+                    ->update([
+                        "department_id" => $department['departmentId'],
+                        "project_id" => $projectId,
+                        "manager_id" => $department['selectManager'],
+                        "hours_assigned" => $department['hoursAssigned']
+                    ]);
+            } else {
+                #Si no existe, hacemos un insert en la base de datos
+                array_push(self::$lastAssignedId, array(
+                    "department_id" => $department['departmentId'],
+                    "last_insert" => DB::table('projects_departments_assigned')
+                        ->insertGetId([
+                            "department_id" => $department['departmentId'],
+                            "project_id" => $projectId,
+                            "manager_id" => $department['selectManager'],
+                            "hours_assigned" => $department['hoursAssigned']
+                        ])
+                ));
+            }
+        }
+
+        //Elimina los campos mayores al tamaño del array de la solictud es decir $managersArray.length < BDDArray.length
+        if (count($managersArray) < count($departmentsAssigned)) {
+            foreach ($departmentsAssigned as $cursor => $department) {
+                #Si el cursor supera al tamaño del array del request, borra el registro de la BDD
+                if (($cursor + 1) > count($managersArray)) {
+                    DB::table('projects_departments_assigned')
+                        ->where('department_assigned_id', '=', $department->department_assigned_id)
+                        ->delete();
+                }
+            }
+        }
+    }
+
+    /**
+     * Metodo que controla la actualizacion de montos adicionales
+     * @param array $valuesArray Captura un array de los cambios sobre los montos adicionales
+     * @param int $projectId Id del proyecto al cual hace referencia
+     */
+    private static function prepareValuesUpdate($valuesArray, $projectId)
+    {
+        $valuesAdditional = DB::table('projects_additional_value')
+            ->where('project_id', '=', $projectId)
+            ->get();
+        //Procedemos a recorrer la informacion
+        foreach ($valuesArray as $posicion2 => $value) {
+            # Verificamos que exista la fila
+            if (isset($valuesAdditional[$posicion2])) {
+                $idValueAssigned = $valuesAdditional[$posicion2]->value_id; #Capturamos la fila
+                #Si el status es inactivo, lo elimina de la tabla. Si es activo, no actualiza la tabla
+                if ($value["status_id"] === 2) {
+                    DB::table('projects_additional_value')
+                        ->where('value_id', '=', $idValueAssigned)
+                        ->delete();
+                }
+            } else {
+                #Si no existe, la insertamos, unicamente los valores activos
+                if ($value["status_id"] === 1) {
+                    DB::table('projects_additional_value')
+                        ->insert([
+                            "project_id" => $projectId,
+                            "aditional_project_value" => $value["aditional_project_value"],
+                            "register_date" => self::convertDate($value["register_date"]),
+                            "status_id" => 1
+                        ]);
+                }
+            }
+        }
+    }
+    /**
+     * Metodo que controla el proceso de actualizacion de horas adicionales
+     * @param $hoursArray Captura el array de los cambios realizados para horas adicionales
+     * @param $projectId Id del proyecto al que se hace referencia
+     */
+    private static function prepareHoursUpdate($hoursArray, $projectId)
+    {
+        $hoursAdditional = DB::table('projects_additional_hours')
+            ->join('projects_departments_assigned', 'projects_additional_hours.department_assigned_id', '=', 'projects_departments_assigned.department_assigned_id')
+            ->where('projects_departments_assigned.project_id', '=', $projectId)
+            ->get();
+        //Procedemos a recorrer la informacion
+        foreach ($hoursArray as $posicion3 => $hour) {
+            // Buscamos el último departamento asignado que coincida con el id del departamento de la hora actual
+            $lastDepartmentAssigned = array_filter(self::$lastAssignedId, function ($departmentAssigned) use ($hour) {
+                return $departmentAssigned["department_id"] === $hour["department_id"];
+            });
+            // Si lo encontramos, asignamos el valor de last_insert a self::$lastInsertId
+            if (!empty($lastDepartmentAssigned)) {
+                self::$lastInsertId = reset($lastDepartmentAssigned)["last_insert"];
+            }
+
+            # Verificamos que exista la fila
+            if (isset($hoursAdditional[$posicion3])) {
+                $idHourAssigned = $hoursAdditional[$posicion3]->hours_id; #Capturamos la fila
+                #Si el status es inactivo, lo elimina de la tabla. Si es activo, no actualiza la tabla
+                if ($hour["status_id"] === 2) {
+                    DB::table('projects_additional_hours')
+                        ->where('hours_id', '=', $idHourAssigned)
+                        ->delete();
+                }
+            } else {
+                #Si no existe, la insertamos, unicamente los valores activos
+                if ($hour["status_id"] === 1) {
+                    DB::table('projects_additional_hours')
+                        ->insert([
+                            "department_assigned_id" => self::$lastInsertId,
+                            "additional_hour" => $hour["additional_hour"],
+                            "register_date" => self::convertDate($hour["register_date"]),
+                            "status_id" => 1
+                        ]);
+                }
+            }
+        }
     }
 }

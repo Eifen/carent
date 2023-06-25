@@ -37,38 +37,18 @@ export const projectWatchers = {
             this.inputValue = Number(
                 newEdit.project.project_value
             ).toLocaleString("de-DE"); //Monto del proyecto
+            //Horas y montos adicionales
             this.dataSelect.additionalHours = newEdit.additionalHours;
             this.dataSelect.additionalValues = newEdit.additionalValue;
+            //Ultimos valores de tablas de horas y montos adicionales
+            this.lastValueId = newEdit.lastValue;
+            this.lastHoursId = newEdit.lastHour;
+
+            //Almacenamos el ID del proyecto
+            this.projectId = newEdit.project.project_id;
 
             //Cargamos la informacion de las horas totales adicionales y montos
-            for (
-                let countProject = 0;
-                countProject < newEdit.additionalHours.length;
-                countProject++
-            ) {
-                this.inputAdditionalHours = Number(
-                    parseInt(this.inputAdditionalHours) +
-                        parseInt(
-                            newEdit.additionalHours[countProject]
-                                .additional_hour
-                        )
-                ).toLocaleString("de-DE");
-            }
-
-            //Montos
-            for (
-                let countProject = 0;
-                countProject < newEdit.additionalValue.length;
-                countProject++
-            ) {
-                this.inputAdditionalValue = Number(
-                    parseFloat(this.inputAdditionalValue) +
-                        parseFloat(
-                            newEdit.additionalValue[countProject]
-                                .aditional_project_value
-                        )
-                ).toLocaleString("de-DE");
-            }
+            this.asignHoursValue(newEdit);
 
             //Cargamos la informacion de los departamentos
             for (
@@ -282,16 +262,12 @@ export const projectWatchers = {
             if (targetDepartment.length <= 0)
                 this.submitButton.departmentsValid = false;
             //Cargamos el array de transferencia para la estructura de horas
-            for (
-                let cursorDeparment = 0;
-                cursorDeparment < targetDepartment.length;
-                cursorDeparment++
-            ) {
+            targetDepartment.forEach((departmentId, cursorDeparment) => {
                 //Solo cargamos si no existe esa posicion en el DTO
                 //Ubicamos el indice del array
                 const indexDepartment = this.dataSelect.departments
                     .map((object) => object.value)
-                    .indexOf(targetDepartment[cursorDeparment]);
+                    .indexOf(departmentId);
                 //Estructuramos el objeto de departamentos
                 const departmentDTO = {
                     departmentId: targetDepartment[cursorDeparment],
@@ -309,6 +285,9 @@ export const projectWatchers = {
                     hoursAssigned: 0,
                     selectManager: 0,
                 };
+                //Sumamos a un valor vacio para activar la validación del campo de horas totales
+                this.inputHoursAssigned =
+                    parseInt(this.inputHoursAssigned) + " ";
                 //Cargamos una nueva fila
                 if (
                     cursorDeparment in this.dataSelect.managersPerDepartment ===
@@ -322,7 +301,7 @@ export const projectWatchers = {
                 )
                     this.dataSelect.managersPerDepartment[cursorDeparment] =
                         departmentDTO;
-            }
+            });
         },
         //Watcher para horas asignadas
         inputHoursAssigned() {
@@ -377,6 +356,29 @@ export const projectWatchers = {
                 this.messages.error.hoursAssignedError =
                     Exceptions.CatchWarning(errorMessage);
                 this.submitButton.hoursAssignedValid = false;
+            }
+        },
+        //Watcher para campo de valores adicionales
+        additionalInput(newValue, oldValue) {
+            //Verificamos si es un número
+            try {
+                const validNumber = Validate.Number(newValue);
+                if (!validNumber.response) throw validNumber.message;
+                if (newValue.length === 0) this.additionalInput = 0;
+            } catch (error) {
+                let countDot = 1; //Contador que cuenta los puntos que tiene el string
+                //Volvemos al valor anterior en caso de fallo
+                if (newValue.includes(".")) {
+                    countDot--;
+                }
+                //Volvemos al valor anterior solo en caso que no exista un solo .
+                if (countDot === 0) {
+                    if (!Validate.Number(newValue.replace(/\./, "")).response) {
+                        this.additionalInput = oldValue;
+                    }
+                } else if (countDot !== 0) {
+                    this.additionalInput = oldValue;
+                }
             }
         },
     },

@@ -6,7 +6,7 @@ const clientsIndex = createApp({
         return {
             clientsColumns: {
                 column1: "Código",
-                column2: "Socio encargado",
+                column2: "Socio",
                 column3: "Razon social",
                 column4: "Correo electrónico",
                 column5: "Estatus",
@@ -14,7 +14,7 @@ const clientsIndex = createApp({
             },
             selectSearch: {
                 select1: "Codigo",
-                select2: "Socio encargado",
+                select2: "Socio",
                 select3: "Razon social",
                 select4: "Correo",
             },

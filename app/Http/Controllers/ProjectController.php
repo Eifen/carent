@@ -101,8 +101,9 @@ class ProjectController extends Controller
 
         if ($dataProject->input('isEdit')) {
             $paramsEdit = array(
-                $dataProject->input('project')['IdClient'],
-                $dataProject->input('project')['IdStatus']
+                "projectId" => $dataProject->input('project')['projectId'],
+                "additionalHours" => $dataProject->input('project')['additionalHours'],
+                "additionalValues" => $dataProject->input('project')['additionalValues']
             );
 
             //Unimos ambos array

@@ -20,6 +20,12 @@ export const projectMethods = {
                     .map((object) => object.user_name)
                     .indexOf(this.inputQualityPartnerAssociated),
             };
+            //Configuramos los departamentos
+            let departmentDTO = [];
+            this.inputDepartments.forEach((department, cursor) => {
+                departmentDTO[cursor] =
+                    this.dataSelect.managersPerDepartment[cursor];
+            });
             //Pasamos los parametros a analizar
             let paramsToEmit = {
                 projectDescription: this.inputProjectDescription,
@@ -32,7 +38,7 @@ export const projectMethods = {
                 currencyId: this.inputCurrenciesSelect,
                 companyId: this.inputCompaniesSelect,
                 hiringDate: this.inputHiringDate,
-                departments: this.dataSelect.managersPerDepartment,
+                departments: departmentDTO,
                 projectValue: this.inputValue
                     .replace(/\./, "")
                     .replace(/,/, "."),
@@ -40,7 +46,9 @@ export const projectMethods = {
 
             //Preparamos los parametros de update en caso de actualizar
             let paramsToUpdate = {
-                Status: this.inputStatusSelect,
+                projectId: this.projectId,
+                additionalHours: this.dataSelect.additionalHours,
+                additionalValues: this.dataSelect.additionalValues,
             };
 
             //Si estamos en edición, unimos los dos objetos
@@ -131,6 +139,97 @@ export const projectMethods = {
                         parseInt(
                             infoDepartments[cursorDeparment].hoursAssigned
                         );
+            }
+        },
+        /**
+         * Metodo que captura el evento emitido por el componente hijo del modal
+         * @prop {Object} paramsCatch Objeto que recibe de la emicion de los componentes hijos, tienen estas propiedades
+         * @prop {array} arrayToAssign Captura la información del array usado para el modal
+         * @prop {String} arrayTarget String que direcciona a que array del dataSelect hace referencia
+         * @prop {String[]} refs Array de referencia que indica el nombre de cada propiedad
+         */
+        reAsignInfo(paramsCatch) {
+            let objectDTO = {}; //Objeto que se inicializa antes de insertar en cada fila del asignDTO
+
+            //Creamos las propiedades del objeto
+            paramsCatch.arrayToAssign.forEach((object, cursor) => {
+                const objectValues = Object.values(object); //Crea un array de los valores del objeto
+
+                //Creamos las nuevas propiedades del objeto
+                paramsCatch.refs.forEach((ref, cursorRef) => {
+                    Object.defineProperty(objectDTO, ref, {
+                        value: objectValues[cursorRef],
+                        writable: true,
+                        configurable: true,
+                        enumerable: true,
+                    });
+                });
+
+                //Buscamos si el array coincide en el codigo
+                const findIndex = this.dataSelect[
+                    paramsCatch.arrayTarget
+                ].findIndex(
+                    (object) =>
+                        object[paramsCatch.refs[0]] ===
+                        objectDTO[paramsCatch.refs[0]]
+                );
+                //Si encuentra el indice, reemplazamos, caso contrario insertamos
+                if (findIndex !== -1) {
+                    this.dataSelect[paramsCatch.arrayTarget][findIndex] =
+                        objectDTO;
+                } else if (findIndex === -1) {
+                    this.dataSelect[paramsCatch.arrayTarget].push(objectDTO);
+                }
+
+                //Reinicializamos el objecto
+                objectDTO = {};
+            });
+            //Calculamos el total de montos y / o horas adicionales
+            this.asignHoursValue({
+                additionalHours: this.dataSelect.additionalHours,
+                additionalValue: this.dataSelect.additionalValues,
+            });
+        },
+        /**
+         * Metodo que se encarga de sumar el total de horas y montos adicionales que esten ACTIVOS (status_id / estatus = 1)
+         * @param {Object} newEdit recibe el objeto que tiene contenido horas y montos adicionales en sus propiedades
+         */
+        asignHoursValue(newEdit) {
+            //Reinicializamos los input
+            this.inputAdditionalHours = 0;
+            this.inputAdditionalValue = 0;
+
+            for (
+                let countProject = 0;
+                countProject < newEdit.additionalHours.length;
+                countProject++
+            ) {
+                if (newEdit.additionalHours[countProject].status_id === 1) {
+                    this.inputAdditionalHours = Number(
+                        parseInt(this.inputAdditionalHours) +
+                            parseInt(
+                                newEdit.additionalHours[countProject]
+                                    .additional_hour
+                            )
+                    ).toLocaleString("de-DE");
+                }
+            }
+
+            //Montos
+            for (
+                let countProject = 0;
+                countProject < newEdit.additionalValue.length;
+                countProject++
+            ) {
+                if (newEdit.additionalValue[countProject].status_id === 1) {
+                    this.inputAdditionalValue = Number(
+                        parseFloat(this.inputAdditionalValue) +
+                            parseFloat(
+                                newEdit.additionalValue[countProject]
+                                    .aditional_project_value
+                            )
+                    ).toLocaleString("de-DE");
+                }
             }
         },
     },

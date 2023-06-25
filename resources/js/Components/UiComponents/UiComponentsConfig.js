@@ -1,51 +1,52 @@
 import { Validate } from "@/Models/ValidateModel";
 import { Exceptions } from "@/Excepciones/Excepciones";
 
-export const dataMixin =
-{
+export const dataMixin = {
     data() {
         return {
-            formClass:
-            {
-                container: 'dashboard-form-container',
-                form: '',
-                legend: '',
-                fieldset: '',
-                button: '',
-                disableButton: '',
-                successValidation: 'form-SuccessInput',
-                failureValidation: 'form-ErrorInput',
-                requiredTitle: '',
-                requiredField: '',
-                select: 'form-select-container',
-                empleadoFieldset: '',
+            formClass: {
+                container: "dashboard-form-container",
+                form: "",
+                legend: "",
+                fieldset: "",
+                button: "",
+                disableButton: "",
+                successValidation: "form-SuccessInput",
+                failureValidation: "form-ErrorInput",
+                requiredTitle: "",
+                requiredField: "",
+                select: "form-select-container",
+                empleadoFieldset: "",
             }, //Controla los estilos del formulario
-        }
-    }
-}
+        };
+    },
+};
 
-export const watchersGlobalMixin = 
-{
+export const watchersGlobalMixin = {
     watch: {
         //Deep Watchers
         submitButton: {
-            deep:true,
-            handler(checkValid)
-            {
-                console.log(checkValid)
+            deep: true,
+            handler(checkValid) {
                 let contValid = 0; //Contar cada vez que la propiedad sea true
-                for(const field in checkValid){
-                    if(field.toString() != 'isValid' && checkValid[field] === true) contValid++;
+                for (const field in checkValid) {
+                    if (
+                        field.toString() != "isValid" &&
+                        checkValid[field] === true
+                    )
+                        contValid++;
                 }
 
                 //Revisamos que contenga toda la data
-                if(contValid == Object.keys(checkValid).length -1){
-                    this.submitButton.isValid = true
-                }else{ this.submitButton.isValid = false }
-            }
-        }
-    }
-}
+                if (contValid == Object.keys(checkValid).length - 1) {
+                    this.submitButton.isValid = true;
+                } else {
+                    this.submitButton.isValid = false;
+                }
+            },
+        },
+    },
+};
 
 export const methodsGlobalMixin = {
     methods: {
@@ -104,11 +105,19 @@ export const methodsGlobalMixin = {
          */
         activateWatchers(watcherArray) {
             //Registramos los Watch
-            for (let cursorWatcher = 0;cursorWatcher < watcherArray.length;cursorWatcher++) {
+            for (
+                let cursorWatcher = 0;
+                cursorWatcher < watcherArray.length;
+                cursorWatcher++
+            ) {
                 const propiedades = watcherArray[cursorWatcher].propiedades;
 
                 //Una vez registrada la fila actual, hacemos un for en su estructura de objeto
-                for (let cursorPropiedad = 0;cursorPropiedad < propiedades.length;cursorPropiedad++) {
+                for (
+                    let cursorPropiedad = 0;
+                    cursorPropiedad < propiedades.length;
+                    cursorPropiedad++
+                ) {
                     const propiedad = propiedades[cursorPropiedad];
 
                     //Una vez capturamos la propiedades, registramos su watcher
@@ -129,20 +138,37 @@ export const methodsGlobalMixin = {
          * @prop4
          * "validInput": Tupla [boolean,string] que indica si es un campo obligatorio, y cual es su variable de validación. }
          */
-        validateDate(dateFilter){
+        validateDate(dateFilter) {
             try {
-                const validate = Validate.Date(dateFilter.dateToValidate)
-                if(!validate.response && dateFilter.dateToValidate.length >= 10) throw validate.message;
+                const validate = Validate.Date(dateFilter.dateToValidate);
+                if (
+                    !validate.response &&
+                    dateFilter.dateToValidate.length >= 10
+                )
+                    throw validate.message;
                 //Pasa las validaciones
-                if(this[dateFilter.varInput].length == 0 || this[dateFilter.varInput].length <= 10) this.messages.error[dateFilter.varError] = '';
-                if(dateFilter.validInput[0] && validate.response) this.submitButton[dateFilter.validInput[1]] = true;
+                if (
+                    this[dateFilter.varInput].length == 0 ||
+                    this[dateFilter.varInput].length <= 10
+                )
+                    this.messages.error[dateFilter.varError] = "";
+                if (dateFilter.validInput[0] && validate.response)
+                    this.submitButton[dateFilter.validInput[1]] = true;
                 //Desactivamos las banderas
-                if((this[dateFilter.varInput].length == 0 && dateFilter.validInput[0]) || (this[dateFilter.varInput].length < 10 && dateFilter.validInput[0])) this.messages.error[dateFilter.varError] = '';
+                if (
+                    (this[dateFilter.varInput].length == 0 &&
+                        dateFilter.validInput[0]) ||
+                    (this[dateFilter.varInput].length < 10 &&
+                        dateFilter.validInput[0])
+                )
+                    this.messages.error[dateFilter.varError] = "";
             } catch (error) {
-                if(dateFilter.validInput[0]) this.submitButton[dateFilter.validInput[1]] = false;
-                this.messages.error[dateFilter.varError] = Exceptions.CatchWarning(error)
+                if (dateFilter.validInput[0])
+                    this.submitButton[dateFilter.validInput[1]] = false;
+                this.messages.error[dateFilter.varError] =
+                    Exceptions.CatchWarning(error);
             }
-        }
+        },
     },
 };
 
@@ -152,11 +178,11 @@ export const methodsGlobalMixin = {
  */
 export const classConfig = (scope) => {
     //Asignamos las clases
-    scope.formClass.form = scope.formClass.container + '-form'
-    scope.formClass.legend = scope.formClass.form + "-legends"
-    scope.formClass.fieldset = scope.formClass.form + "-fieldset"
-    scope.formClass.button = scope.formClass.form + "-button"
-    scope.formClass.disableButton = scope.formClass.button + "-disable"
-    scope.formClass.requiredTitle = scope.formClass.form + "-title"
-    scope.formClass.requiredField = scope.formClass.requiredTitle + "-field"
-}
+    scope.formClass.form = scope.formClass.container + "-form";
+    scope.formClass.legend = scope.formClass.form + "-legends";
+    scope.formClass.fieldset = scope.formClass.form + "-fieldset";
+    scope.formClass.button = scope.formClass.form + "-button";
+    scope.formClass.disableButton = scope.formClass.button + "-disable";
+    scope.formClass.requiredTitle = scope.formClass.form + "-title";
+    scope.formClass.requiredField = scope.formClass.requiredTitle + "-field";
+};

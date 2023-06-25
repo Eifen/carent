@@ -5,6 +5,6 @@
     is-edit
     :data-edit="updateModel"
     @return-view="redirectView('/projects')"
-    @submit-form="updateClient"
+    @submit-form="updateProject"
     @init-project="prepareUpdate({{ json_encode(Session::get('projectUpdate')) }}, '/projects/delete-update-data')"></form-projects>
 </div>

@@ -74,7 +74,7 @@ Route::prefix('/')->group(function () {
         //Create
         Route::prefix('/create')->group(function () {
             Route::get('/', [ProjectController::class, 'index'])->name('createProject');
-            Route::post('/newProject', [ProjectController::class, 'projectControl']);
+            Route::post('/new-project', [ProjectController::class, 'projectControl']);
         });
         //Update
         Route::prefix('/update')->group(function () {
