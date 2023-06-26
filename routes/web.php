@@ -27,7 +27,7 @@ Route::prefix('/')->group(function () {
     //Login
     Route::get('/', [LoginController::class, 'index']);
     Route::post('/login', [LoginController::class, 'Login']);
-    Route::get('/logout', [LoginController::class, 'Logout']);
+    Route::get('/logout', [LoginController::class, 'Logout'])->name('logout');
     Route::post('/limit-pag', [ConfigController::class, 'LimitPag']);
     //Usuarios
     Route::prefix('/usuarios')->group(function () {
@@ -81,6 +81,14 @@ Route::prefix('/')->group(function () {
             Route::get('/', [ProjectController::class, 'index'])->name('updateProject');
             Route::post('/loading-project', [ProjectController::class, 'projectPerCode']);
             Route::post('/update-project', [ProjectController::class, 'projectControl']);
+        });
+        //Assign
+        Route::prefix('/assign')->group(function () {
+            Route::get('/', [ProjectController::class, 'index'])->name('assign');
+            Route::post('/assign-users', [ProjectController::class, 'usersPerDepartment']);
+            Route::post('/assign-projects', [ProjectController::class, 'getAllAssignProject']);
+            Route::post('/re-assign-data', [ProjectController::class, 'reAssignUsers']); //Elimina la Session['usersAssign'] luego de reasignar
+            Route::post('/update-asign-projects', [ProjectController::class, 'updateAsign']);
         });
     });
 });

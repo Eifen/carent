@@ -8,7 +8,9 @@
     title-table="usuarios"
     button-title="usuario"
     v-if="isMounted"
-    view-pagination
+    not-found-message="No existen usuarios registrados"
+    view-create
+    view-search
     @columnS1Target="editUsuarios"
     @columnS2Target="permisosUsuarios"
     @createButton="crearUsuario()"></listing-crud>

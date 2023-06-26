@@ -1,9 +1,9 @@
 <template>
-    <div :class="listClass">
+    <div :class="listClass" v-if="tableInfo.length != 0">
         <div :class="tableClass.title">{{ titleTable }}</div>
-        <div :class="tableClass.create" v-if="viewPagination" @click="$emit('createbutton')">Crear {{ buttonTitle }}</div>
+        <div :class="tableClass.create" v-if="viewCreate" @click="$emit('createbutton')">Crear {{ buttonTitle }}</div>
         <!-- Búsqueda de datos en tiempo real -->
-        <pagination v-if="viewPagination" :scope="DTOData" :columns-search="selectSearch" @search-data="searchData">
+        <pagination v-if="viewSearch" :scope="DTOData" :columns-search="selectSearch" @search-data="searchData">
         </pagination>
         <!-- =====================================================================
         Paginacion
@@ -31,7 +31,8 @@
                 <thead :class="tableClass.thead">
                     <tr>
                         <!-- Table Object -->
-                        <th scope="col" align="center" valign="middle" v-for="(title, cursor) in titleObject" :key="cursor">
+                        <th scope="col" style="text-align:left" valign="middle" v-for="(title, cursor) in titleObject"
+                            :key="cursor">
                             <span v-if="cursor != 'settings'">{{ title }}</span>
                             <span v-else></span>
                         </th>
@@ -85,6 +86,10 @@
             </table>
         </div>
     </div>
+    <div :class="listClass" v-else>
+        <div :class="tableClass.create" v-if="viewCreate" @click="$emit('createbutton')">Crear {{ buttonTitle }}</div>
+        <div class="badge bg-warning text-dark" :class="tableClass.title">{{ notFoundMessage }}</div>
+    </div>
 </template>
 
 <script>
@@ -101,8 +106,10 @@ export default {
         tableInfo: Array, //Array Objeto que almacena el resultado de la tabla
         titleTable: String, //Titulo de la tabla
         buttonTitle: String, //Titulo del boton de crear
+        notFoundMessage: String, //Mensaje en caso que no encuentre valores iniciales en la tabla
         selectSearch: Object, //Objeto que almaneca los select de búsqueda
-        viewPagination: Boolean, // Boolean que se encarga de definir si ver la paginacion o no
+        viewCreate: Boolean, // Boolean que se encarga de definir si ver el boton de crear
+        viewSearch: Boolean, // Boolean que se encarga de definir si ver el sistema de búsqueda
     },
     data() {
         return {

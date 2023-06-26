@@ -15,3 +15,6 @@ import "./UI/Clients/clientsControl";
 //Proyectos
 import "./UI/Projects/ProjectIndex";
 import "./UI/Projects/ProjectControl";
+//Asignación de proyectos
+import "./UI/Projects/ProjectAssign/AssignIndex";
+import "./UI/Projects/ProjectAssign/AssignModal";

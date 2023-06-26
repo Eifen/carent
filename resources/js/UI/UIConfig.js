@@ -3,6 +3,7 @@ import FontAwesome from "../Components/FontAwesome/FontAwesome.vue";
 import Loading from "../Components/Loading.vue";
 import ListingCrud from "../Components/ListingCrud.vue";
 import Calendar from "../Components/Calendar.vue";
+
 import axios from "axios";
 import { AXIOSINTERVAL, NOTIFYINTERVAL } from "../app";
 //Toastify
@@ -101,6 +102,14 @@ export class CrudUi {
                 //Si no se activa la exceptión, asignamos el objeto
                 setTimeout(() => {
                     self.listData = request.data.message;
+                    console.log(self.listData);
+                    //Preparamos la paginación en función del tamaño del array resultante
+                    if (self.listData.length < 50) {
+                        self.lengthColumns = self.listData.length;
+                    }
+                    self.maxLengthPagination = Math.ceil(
+                        self.listData.length / self.lengthColumns
+                    );
                 }, AXIOSINTERVAL);
             })
             .catch((error) => {

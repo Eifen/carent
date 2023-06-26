@@ -17,7 +17,7 @@
                     <listing-crud :title-table="tableModalTitle" :title-object="modalColumns"
                         :pagination-lenght="paginationLenght" :pagination-limit="paginationLimit" :table-info="listInfo"
                         :key="componentReload" @columns1target="crudAdditional($event, 'delete')"
-                        @columns2target="crudAdditional($event, 'update')"></listing-crud>
+                        @columns2target="crudAdditional($event, 'update')" :not-found-message="errorMessage"></listing-crud>
                     <div class="input-group">
                         <span class="input-group-text" id="basic-addon13">
                             {{ tableModalInsert }}
@@ -42,7 +42,6 @@
 <script>
 import FontAwesome from "@/Components/FontAwesome/FontAwesome.vue";
 import ListingCrud from "@/Components/ListingCrud.vue";
-import { Validate } from "@/Models/ValidateModel";
 
 export default {
     props: {
@@ -54,6 +53,7 @@ export default {
         scopeModal: Object, //Hereda el data del componente principal
         modalColumns: Object, //Define el objeto para el valor de las columnas
         listInfo: Array, //Captura la lista informativa para el componente listing crud
+        errorMessage: String, //String en caso de que no existan valores en las tablas
     },
     emits: ["save-changes", "asign-list", "update-modal", "prepare-save"],
     data() {

@@ -85,5 +85,10 @@
                 @endphp
             @endif
         @endif
+
+        {{-- Redirección de rutas para Asignación de proyectos --}}
+        @if (Request::url() === URL::route('assign'))
+            @include('UI.Projects.ProjectAssign.assignIndex')
+        @endif
     </section>
 @endsection

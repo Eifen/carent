@@ -44,6 +44,7 @@
                         :last-id-table="scope.lastHoursId" :modal-columns="modalColumns" :scope-modal="scope"
                         @asign-list="asignHourList(scope.dataSelect.managersPerDepartment[cursor].departmentId)"
                         :list-info="scope.listInfoToUpdate" @update-modal="updateHourModal($event)"
+                        error-message="No posee horas adicionales"
                         @prepare-save="prepareInfoTransfer"></project-additional-modal>
                 </span>
             </div>

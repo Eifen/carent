@@ -8,7 +8,9 @@
     title-table="proyectos"
     button-title="proyecto"
     :select-search="proxyToJson(selectSearch)"
-    view-pagination
+    not-found-message="No existen proyectos creados"
+    view-create
+    view-search
     @createButton="createProject()"
     @columns1target="editProject"></listing-crud>
 </div>

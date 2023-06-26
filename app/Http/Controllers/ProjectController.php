@@ -37,6 +37,30 @@ class ProjectController extends Controller
     }
 
     /**
+     * Metodo que devuelve una vista de todos los proyectos asignados por el usuario actual
+     */
+    public function getAllAssignProject()
+    {
+        $this->modelInstance = new ConfigModel();
+        $allAssignData = $this->modelInstance->GetAll('projects_assign');
+        //Filtramos la información dependiendo del id del usuario. Primero convertimos la collection a un array
+        $arrayMessageDTO = $allAssignData["message"]->toArray();
+        $allAssignData["message"] = array_filter($arrayMessageDTO, function ($assignUser) {
+            return $assignUser->gerente_asignado === Session::get('userId');
+        });
+        //Filtramos nuevamente, quitando la columnna gerente_asignado
+        $allAssignData["message"] = array_map(function ($column) {
+            //Desactivamos la propiedad gerente_asociado y retornamos
+            unset($column->gerente_asignado);
+            return $column;
+        }, $allAssignData["message"]);
+
+        //Reindexamos y convertimos nuevamente a una collección
+        $allAssignData["message"] = collect(array_values($allAssignData["message"]));
+        return response($allAssignData, 200);
+    }
+
+    /**
      * Metodo que se encarga se llenar las listas del formulario de proyectos
      * @return Response Retorna un formato JSON con informacion de las listas
      */
@@ -122,5 +146,40 @@ class ProjectController extends Controller
     public function deleteProjectUpdate()
     {
         if (Session::has('projectUpdate')) Session::forget('projectUpdate');
+    }
+
+    /** Metodo que retorna la Session['usersAssign'] al request y luego elimina la session */
+    public function reAssignUsers()
+    {
+        if (Session::has('usersAssign')) {
+            $getSession = Session::get('usersAssign');
+            //Eliminamos la session
+            Session::forget('usersAssign');
+            return response($getSession, 200);
+        };
+    }
+
+    /**
+     * Metodo que devuelve a la vista los usuarios por departamento
+     * @param Request $assignProject Captura los parametros enviados mediante la solicitud
+     * @return Response Retorna la información en formato request proxy
+     */
+    public function usersPerDepartment(Request $assignProject)
+    {
+        Session::put('usersAssign', ProjectModel::getUserPerDepartment($assignProject->input('department')));
+        return response("Success", 200);
+    }
+
+    /**
+     * Metodo que actualiza los valores en la asignación de proyectos
+     * @param Request $assignUpdate se encarga de leer los parametros enviados por el request
+     * @return Response Retorna un mensaje de exito o fallo respectivamente
+     */
+    public function updateAsign(Request $assignUpdate)
+    {
+        $getHoursUsers = $assignUpdate->input('infoAsign');
+        $getDepartmentAssignId = $assignUpdate->input('departmentAssignedId');
+
+        return response(ProjectModel::updateAsignHours($getHoursUsers, $getDepartmentAssignId), 200);
     }
 }

@@ -120,26 +120,28 @@ export const projectMethods = {
         totalHours(infoDepartments) {
             this.inputHoursAssigned = 0; //Reiniciamos el contador
             //Recorremos el arrray y sumamos en el v-model de horas totales
-            for (
-                let cursorDeparment = 0;
-                cursorDeparment < infoDepartments.length;
-                cursorDeparment++
-            ) {
+            infoDepartments.forEach((department, cursor) => {
                 const numberValid = new RegExp("^([0-9]*)$");
                 const testNumber = numberValid.test(
-                    infoDepartments[cursorDeparment].hoursAssigned
+                    department["hoursAssigned"]
                 );
+
                 //Si es un numero, sumamos
-                if (
-                    testNumber &&
-                    infoDepartments[cursorDeparment].hoursAssigned.length != 0
-                )
+                if (testNumber && department["hoursAssigned"].length != 0) {
                     this.inputHoursAssigned =
                         parseInt(this.inputHoursAssigned) +
-                        parseInt(
-                            infoDepartments[cursorDeparment].hoursAssigned
-                        );
-            }
+                        parseInt(department["hoursAssigned"]);
+                }
+
+                //Si no es un numero, limpiamos
+                if (!testNumber) {
+                    department["hoursAssigned"] = "";
+                    //Mostramos el error
+                    this.messages.error.hoursAssignedError =
+                        Exceptions.CatchWarning("MissingHour");
+                    this.submitButton.hoursAssignedValid = false;
+                }
+            });
         },
         /**
          * Metodo que captura el evento emitido por el componente hijo del modal

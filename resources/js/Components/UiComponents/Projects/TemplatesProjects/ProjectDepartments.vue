@@ -15,7 +15,8 @@
                         table-modal-title="Lista de montos" table-modal-insert="Agregar monto adicional"
                         :last-id-table="scope.lastValueId" :scope-modal="scope" :modal-columns="modalColumns"
                         :list-info="scope.listInfoToUpdate" @asign-list="asignValueList(scope.projectId)"
-                        @update-modal="updateValueModal" @prepare-save="prepareInfoTransfer"></project-additional-modal>
+                        error-message="No posee montos adicionales" @update-modal="updateValueModal"
+                        @prepare-save="prepareInfoTransfer"></project-additional-modal>
                 </span>
             </div>
             <!-- Mensajes de error en Nombre-->

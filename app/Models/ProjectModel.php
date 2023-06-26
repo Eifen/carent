@@ -25,6 +25,57 @@ class ProjectModel extends Model
     }
 
     /**
+     * Metodo que devuelve una lista de todos los usuarios por departamento de acuerdo al id del departamento asignado
+     * @param Int $departmentAssignedId Captura el id del departamento asignado en la tabla projects_departments_assigned
+     */
+    public static function getUserPerDepartment($departmentAssignedId)
+    {
+        $getDepartmentId = DB::table('projects_departments_assigned')
+            ->where('department_assigned_id', '=', $departmentAssignedId)
+            ->first();
+
+        //Devolvemos los usuarios asignados al departamento. Con cargo menor a supervisor y el gerente asignado a esa division
+        #Usuarios
+        $getUsers = DB::table('users')
+            ->where('department_id', '=', $getDepartmentId->department_id)
+            ->select(DB::raw('CONCAT(first_name," ",second_name," ",first_surname," ",second_surname) AS user_name'), 'user_id', 'position_id', 'department_id')
+            ->get();
+
+        #Proyecto
+        $getProject = DB::table("projects")
+            ->join('projects_departments_assigned', 'projects.project_id', '=', 'projects_departments_assigned.project_id')
+            ->join('clients', 'projects.client_id', '=', 'clients.client_id')
+            ->where('projects_departments_assigned.department_assigned_id', '=', $departmentAssignedId)
+            ->first();
+
+        #Proyecto Analista
+        $getAnalyst = DB::table("projects_users_assigned")
+            ->join('users', 'users.user_id', '=', 'projects_users_assigned.user_id')
+            ->where([
+                ["department_assigned_id", "=", $departmentAssignedId],
+                ["users.department_id", "=", $getDepartmentId->department_id]
+            ])
+            ->select(
+                DB::raw('CONCAT(users.first_name," ",users.second_name," ",users.first_surname," ",users.second_surname) AS user_name'),
+                'projects_users_assigned.user_assigned_id',
+                'projects_users_assigned.project_id',
+                'projects_users_assigned.department_assigned_id',
+                'projects_users_assigned.user_id',
+                'projects_users_assigned.assigned_hours',
+                'projects_users_assigned.status_id'
+            )
+            ->get();
+
+        #Acoplamos la informacion en un array asociativo
+        $prepareInfo = array(
+            "users" => $getUsers,
+            "project" => $getProject,
+            "analyst" => $getAnalyst
+        );
+        return $prepareInfo;
+    }
+
+    /**
      * Metodo que se encarga de abstraer de la base de datos toda la informacion del proyecto, gerentes asignados, horas adicionales y montos adicionales
      * @param int $projectId El ID del proyecto, en la vista seria el codigo
      * @return array Retorna un array asociativo donde cada fila es respectivamente: info del proyecto, departaments, horas adicionales y montons adicionales
@@ -261,5 +312,49 @@ class ProjectModel extends Model
                 }
             }
         }
+    }
+
+    /**
+     * Metodo que se encarga de actualizar los valores en la tabla projects_users_assigned
+     * @param $asignArray almacena el array configurado en el frontEnd
+     * @param $departmentAssignedId Captura el id del departamento asignado (department_assigned_id)
+     */
+    public static function updateAsignHours($asignArray, $departmentAssignedId)
+    {
+        $assignHoursUsers = DB::table('projects_users_assigned')
+            ->where('department_assigned_id', '=', $departmentAssignedId)
+            ->get();
+        //Obtenemos el codigo del proyecto
+        $getProjectId = $assignHoursUsers[0]->project_id;
+        //Procedemos a recorrer la informacion
+        foreach ($asignArray as $posicion2 => $value) {
+            # Verificamos que exista la fila
+            if (isset($assignHoursUsers[$posicion2])) {
+                $idHoursAssigned = $assignHoursUsers[$posicion2]->user_assigned_id; #Capturamos la fila
+                #Solo actualiza si hoursAssigned es distinto de 0
+                if ($value["hoursAssigned"] !== 0) {
+                    DB::table('projects_users_assigned')
+                        ->where('user_assigned_id', '=', $idHoursAssigned)
+                        ->update([
+                            "user_id" => $value["idUser"],
+                            "assigned_hours" => $value["hoursAssigned"]
+                        ]);
+                }
+            } else {
+                #Si no existe, la insertamos, unicamente las horas mayores a 0
+                if ($value["hoursAssigned"] !== 0) {
+                    DB::table('projects_users_assigned')
+                        ->insert([
+                            "project_id" => $getProjectId,
+                            "department_assigned_id" => $departmentAssignedId,
+                            "user_id" => $value["idUser"],
+                            "assigned_hours" => $value["hoursAssigned"],
+                            "status_id" => 1
+                        ]);
+                }
+            }
+        }
+
+        return array("response" => true, "message" => "Horas asignadas existosamente");
     }
 }

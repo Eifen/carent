@@ -261,47 +261,53 @@ export const projectWatchers = {
                 this.submitButton.departmentsValid = true;
             if (targetDepartment.length <= 0)
                 this.submitButton.departmentsValid = false;
-            //Cargamos el array de transferencia para la estructura de horas
-            targetDepartment.forEach((departmentId, cursorDeparment) => {
-                //Solo cargamos si no existe esa posicion en el DTO
-                //Ubicamos el indice del array
-                const indexDepartment = this.dataSelect.departments
+            //Inicialmente creamos una copia del array
+            const copyManager = this.dataSelect.managersPerDepartment;
+            //Vaciamos el array
+            this.dataSelect.managersPerDepartment = [];
+
+            //Recorremos el nuevo multiSelect
+            targetDepartment.forEach((departmentSelect) => {
+                //Obtenemos el indice del usuario por departamento
+                const getIndex = this.dataSelect.departments
                     .map((object) => object.value)
-                    .indexOf(departmentId);
-                //Estructuramos el objeto de departamentos
-                const departmentDTO = {
-                    departmentId: targetDepartment[cursorDeparment],
-                    departmentName:
-                        this.dataSelect.departments[indexDepartment].label,
-                    managersDepartment: this.dataSelect.managers.filter(
-                        (colums) => {
-                            return colums.department_id
-                                .toString()
-                                .includes(
-                                    targetDepartment[cursorDeparment].toString()
-                                );
-                        }
-                    ),
-                    hoursAssigned: 0,
-                    selectManager: 0,
-                };
+                    .indexOf(departmentSelect);
+
+                //Obtenemos el indice de la copia
+                const getCopyIndex = copyManager
+                    .map((object) => object.departmentId)
+                    .indexOf(departmentSelect);
                 //Sumamos a un valor vacio para activar la validación del campo de horas totales
                 this.inputHoursAssigned =
                     parseInt(this.inputHoursAssigned) + " ";
-                //Cargamos una nueva fila
-                if (
-                    cursorDeparment in this.dataSelect.managersPerDepartment ===
-                    false
-                )
-                    this.dataSelect.managersPerDepartment.push(departmentDTO);
-                //En caso de que exista un cambio de division. Sobreeescribimos
-                if (
-                    this.dataSelect.managersPerDepartment[cursorDeparment]
-                        .departmentId != targetDepartment[cursorDeparment]
-                )
-                    this.dataSelect.managersPerDepartment[cursorDeparment] =
-                        departmentDTO;
+
+                //Si existe el indice, hacemos push de esa posicion de la copia. Caso contrario hacemos push con nuevos valores
+                if (getCopyIndex !== -1) {
+                    this.dataSelect.managersPerDepartment.push(
+                        copyManager[getCopyIndex]
+                    );
+                } else {
+                    this.dataSelect.managersPerDepartment.push({
+                        departmentId: departmentSelect,
+                        departmentName:
+                            this.dataSelect.departments[getIndex].label,
+                        managersDepartment: this.dataSelect.managers.filter(
+                            (colums) => {
+                                return colums.department_id
+                                    .toString()
+                                    .includes(departmentSelect.toString());
+                            }
+                        ),
+                        hoursAssigned: "",
+                        selectManager: 0,
+                    });
+                    //Desactivamos la validacion de horas
+                    this.submitButton.hoursAssignedValid = false;
+                }
             });
+
+            //Ejecutamos el conteo de horas
+            this.totalHours(this.dataSelect.managersPerDepartment);
         },
         //Watcher para horas asignadas
         inputHoursAssigned() {
@@ -327,12 +333,16 @@ export const projectWatchers = {
                 //Horas
                 if (
                     this.dataSelect.managersPerDepartment[cursorDeparment]
-                        .hoursAssigned != 0
+                        .hoursAssigned != 0 &&
+                    this.dataSelect.managersPerDepartment[cursorDeparment]
+                        .hoursAssigned != ""
                 )
                     hoursCount++;
                 if (
                     this.dataSelect.managersPerDepartment[cursorDeparment]
-                        .hoursAssigned == 0
+                        .hoursAssigned == 0 ||
+                    this.dataSelect.managersPerDepartment[cursorDeparment]
+                        .hoursAssigned == ""
                 )
                     hoursCount--;
             }

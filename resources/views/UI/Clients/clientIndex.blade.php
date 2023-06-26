@@ -8,7 +8,9 @@
     title-table="clientes"
     button-title="cliente"
     :select-search="proxyToJson(selectSearch)"
-    view-pagination
+    not-found-message="No hay clientes creados"
+    view-create
+    view-search
     @createButton="createClient()"
     @columns1target="editClient"></listing-crud>
 </div>
