@@ -61,6 +61,14 @@ class ProjectController extends Controller
     }
 
     /**
+     * Metodo que abstrae todas las horas por cargar del usuario actual, además de los conceptos de horas administrativas
+     */
+    public function prepareRegisterHours()
+    {
+        return ProjectModel::getRegisterHoursInfo(Session::get('userId'));
+    }
+
+    /**
      * Metodo que se encarga se llenar las listas del formulario de proyectos
      * @return Response Retorna un formato JSON con informacion de las listas
      */

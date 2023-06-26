@@ -30,7 +30,7 @@
     <section class="dashboard">
         {{-- Redireccion de rutas para Usuarios --}}
         @if (Request::url() === URL::route('users'))
-          @include('UI.Users.userIndex')
+            @include('UI.Users.userIndex')
         @endif
 
         @if (Request::url() === URL::route('createUser'))
@@ -40,7 +40,8 @@
         @if (Request::url() === URL::route('updateUser'))
             @if (Session::has('dataUpdate'))
                 @include('UI.Users.userUpdate')
-            @else {{--Redirecciona si dataUpdate no existe--}}
+            @else
+                {{-- Redirecciona si dataUpdate no existe --}}
                 @php
                     header('Location: /usuarios');
                     exit();
@@ -57,7 +58,7 @@
         @endif
 
         @if (Request::url() === URL::route('updateClient'))
-            @if(Session::has('clientUpdate'))
+            @if (Session::has('clientUpdate'))
                 @include('UI.Clients.clientUpdate')
             @else
                 @php
@@ -89,6 +90,11 @@
         {{-- Redirección de rutas para Asignación de proyectos --}}
         @if (Request::url() === URL::route('assign'))
             @include('UI.Projects.ProjectAssign.assignIndex')
+        @endif
+
+        {{-- Redirección de rutas para Carga de Horas --}}
+        @if (Request::url() === URL::route('register'))
+            @include('UI.Projects.ProjectRegister.registerIndex')
         @endif
     </section>
 @endsection

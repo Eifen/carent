@@ -18,3 +18,5 @@ import "./UI/Projects/ProjectControl";
 //Asignación de proyectos
 import "./UI/Projects/ProjectAssign/AssignIndex";
 import "./UI/Projects/ProjectAssign/AssignModal";
+//Registro de Horas
+import "./UI/Projects/ProjectRegister/RegisterIndex";

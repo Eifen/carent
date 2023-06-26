@@ -25,6 +25,28 @@ class ProjectModel extends Model
     }
 
     /**
+     * Metodo que prepara la información para la grilla de control de horas
+     * @param Int $userId EL id del usaurio
+     */
+    public static function getRegisterHoursInfo($userId)
+    {
+        //Horas asignadas al usuario actual (El que inicio sesion)
+        $getUsersAsign = DB::table('projects_users_assigned')
+            ->join("projects_departments_assigned", "projects_departments_assigned.department_assigned_id", "=", "projects_users_assigned.department_assigned_id")
+            ->join("projects", "projects.project_id", "=", "projects_users_assigned.project_id")
+            ->join("clients", "clients.client_id", "=", "projects.client_id")
+            ->where("projects_users_assigned.user_id", "=", $userId)
+            ->get();
+
+        //Conceptos de horas administrativas con status 1
+        $getConceptHour = DB::table('control_concept_admin_hours')
+            ->where("status_id", "=", 1)
+            ->get();
+
+        return array("hoursPerCharge" => $getUsersAsign, "conceptHour" => $getConceptHour);
+    }
+
+    /**
      * Metodo que devuelve una lista de todos los usuarios por departamento de acuerdo al id del departamento asignado
      * @param Int $departmentAssignedId Captura el id del departamento asignado en la tabla projects_departments_assigned
      */
