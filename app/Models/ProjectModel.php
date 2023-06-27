@@ -379,4 +379,30 @@ class ProjectModel extends Model
 
         return array("response" => true, "message" => "Horas asignadas existosamente");
     }
+
+    /**
+     * Metodo que se encarga de devolver la información de las horas cargadas en el sistema, en funcion de un intervalo de fechas
+     * @param Array $dateInfo Array asociativo donde la primera posicion almacena la fecha inicial y la ultima la final
+     * El nombre de las llaves es respectivamente user_id, register_date
+     */
+    public static function getAllLoadHours($dateInfo)
+    {
+        $getLastIndex = count($dateInfo) - 1;
+        //Acomodamos las fechas antes de enviar al procedimiento almacenado
+        $startDay = $dateInfo[0]["register_date"];
+        $endDay = $dateInfo[$getLastIndex]["register_date"];
+        $userId = $dateInfo[0]["user_id"];
+
+        //Hora a proyectos
+        $getProjectsHours = DB::select('call sp_get_hours(?,?,?,?)', [$userId, $startDay, $endDay, 1]);
+
+        //Horas administrativas
+        $getAdminHours = DB::select('call sp_get_hours(?,?,?,?)', [$userId, $startDay, $endDay, 2]);
+
+        return array(
+            "date_interval" => $dateInfo,
+            "projects_hours" => $getProjectsHours,
+            "admin_hours" => $getAdminHours
+        );
+    }
 }

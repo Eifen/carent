@@ -94,6 +94,7 @@ Route::prefix('/')->group(function () {
         Route::prefix('/register-hours')->group(function () {
             Route::get('/', [ProjectController::class, 'index'])->name('register');
             Route::post('/prepare-register', [ProjectController::class, 'prepareRegisterHours']);
+            Route::post('/get-load-hours', [ProjectController::class, 'getLoadHours']);
         });
     });
 });

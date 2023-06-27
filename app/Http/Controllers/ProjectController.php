@@ -69,6 +69,34 @@ class ProjectController extends Controller
     }
 
     /**
+     * Metodo que recibe una solicitud a través de un parametro
+     * @return Response retorna un objeto de respuesta donde data corresponde a la información de fechas asociada a horas cargadas
+     */
+    public function getLoadHours(Request $userInfoDate)
+    {
+        $getDateInfo = $userInfoDate->input('request');
+        $prepareQuery = array(); //Array que se llenara luego de acomodar las fechas
+
+        //Hacemos un ciclo para acomodar la información
+        foreach ($getDateInfo as $cursor => $row) {
+            $getDate = $row["registerDate"]; #Fecha almacenada
+            $numberOfDay = intval(date('N', strtotime($getDate)));
+
+            //Si la fecha no corresponde a un sabado o domingo, lo asigna al nuevo array
+            if ($numberOfDay != 6 && $numberOfDay != 7) {
+                $prepareQuery[$cursor] = array(
+                    "user_id" => $row["userId"],
+                    "register_date" => date('Y-m-d', strtotime($getDate)),
+                    "day_of_week" => $numberOfDay - 1
+                );
+            }
+        }
+
+        //Retornamos informacion de horas
+        return response(ProjectModel::getAllLoadHours(array_values($prepareQuery)), 200);
+    }
+
+    /**
      * Metodo que se encarga se llenar las listas del formulario de proyectos
      * @return Response Retorna un formato JSON con informacion de las listas
      */
