@@ -2,7 +2,7 @@
     <loading :active="!isMounted"></loading>
     <div :class="listClass" v-if="isMounted" v-cloak>
         <div class="list-container-title register-hour-title" v-cloak>
-            Carga de Horas semana
+            Carga de Horas semanal
             <legend class="dashboad-form-container-form-legends">Campos Obligatorios <span
                     class="dashboard-form-container-form-title-field">*</span></legend>
         </div>
@@ -48,9 +48,9 @@
             <table class="table table-hover table-bordered">
                 <thead class="list-container-table-thead">
                     <tr>
-                        <th scope="col" class="col-sm-6 col-md-4 col-lg-2">Proyecto</th>
-                        <th scope="col" class="col-sm-6 col-md-4 col-lg-2" v-for="(day,cursor) in listDayData"
-                            :key="cursor">
+                        <th scope="col" class="col-sm-5 col-md-3 col-lg-1" valign="middle">Proyecto</th>
+                        <th scope="col" class="col-sm-5 col-md-3 col-lg-1" valign="middle"
+                            v-for="(day,cursor) in listDayData" :key="cursor">
                             @{{ day.name }} <br> (@{{ day.date }})
                         </th>
                     </tr>

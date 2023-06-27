@@ -19,13 +19,11 @@ export const weeksFromDateMethod = {
             // Calcular la fecha del primer dia del mes
             let firstDayOfWeek = new Date(firstDayOfMonth);
 
-            if (
-                firstDayOfWeek.getDay() === 0 ||
-                firstDayOfWeek.getDay() === 6
-            ) {
+            console.log(firstDayOfWeek);
+            if (firstDayOfWeek.getDay() !== 1) {
                 //Movemos al lunes si el mes inicia un sabado o domingo
                 while (firstDayOfWeek.getDay() !== 1) {
-                    firstDayOfWeek.setDate(firstDayOfWeek.getDay() + 1);
+                    firstDayOfWeek.setDate(firstDayOfWeek.getDate() - 1);
                 }
             }
 

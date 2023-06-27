@@ -9,13 +9,15 @@ export const hoursForWeeksMethod = {
         hoursWeeksDistribution(dateCompare, loadProjectHours, loadAdminHours) {
             this.listDayData = [];
             //Distribuimos los días de la semana
-            console.log(dateCompare);
+            console.log(dateCompare, loadProjectHours, loadAdminHours);
             dateCompare.forEach((day) => {
                 this.listDayData.push({
                     name: this.dayNames[day["day_of_week"]],
                     date: day["register_date"],
                 });
             });
+            //Asignamos las horas a proyectos
+            this.projectAssociatedToCharge.forEach((project) => {});
         },
     },
 };

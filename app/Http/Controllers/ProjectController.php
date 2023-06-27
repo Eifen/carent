@@ -78,18 +78,16 @@ class ProjectController extends Controller
         $prepareQuery = array(); //Array que se llenara luego de acomodar las fechas
 
         //Hacemos un ciclo para acomodar la información
-        foreach ($getDateInfo as $cursor => $row) {
+        foreach ($getDateInfo as $cursor => $row) { #?
             $getDate = $row["registerDate"]; #Fecha almacenada
-            $numberOfDay = intval(date('N', strtotime($getDate)));
+            $numberOfDay = intval(date('N', strtotime($getDate))); #?
 
             //Si la fecha no corresponde a un sabado o domingo, lo asigna al nuevo array
-            if ($numberOfDay != 6 && $numberOfDay != 7) {
-                $prepareQuery[$cursor] = array(
-                    "user_id" => $row["userId"],
-                    "register_date" => date('Y-m-d', strtotime($getDate)),
-                    "day_of_week" => $numberOfDay - 1
-                );
-            }
+            $prepareQuery[$cursor] = array(
+                "user_id" => $row["userId"],
+                "register_date" => date('Y-m-d', strtotime($getDate)),
+                "day_of_week" => $numberOfDay - 1
+            );
         }
 
         //Retornamos informacion de horas
