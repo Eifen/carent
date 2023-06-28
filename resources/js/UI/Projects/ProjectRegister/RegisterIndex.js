@@ -36,7 +36,7 @@ const registerApp = createApp({
                 "Domingo",
             ],
             yearInitial: 2023, //Año inicial para el select
-            monthInitial: 5, //Mes en valor numerico inicial (Julio, para 2023) para el año inicial
+            monthInitial: 0, //Mes en valor numerico inicial (Julio, para 2023) para el año inicial
             isSelectRange: false, //Variable que se coloca en true cuando se selecciona el mes, semana y año del rango de fechas
             //Inputs del registro
             inputMonthSelect: 0, //Selector de meses
@@ -53,7 +53,6 @@ const registerApp = createApp({
                 },
             ], //Opciones de las semanas
             inputYearOptions: ["Seleccione un año"], //Opciones de los años
-            prepareDateRequest: [], //Array que se encarga de acomodar la información para consultar en la base de datos
             listDayData: [], //Array que distribuye la fecha a lo largo de los theads
             listProjectHourData: [], //Array que desglosa las horas a proyectos
             listAdminHourData: [], //Array que desglosa las horas administrativas
@@ -85,35 +84,17 @@ const registerApp = createApp({
     methods: {
         /**
          * Metodo que se encarga se acomodar la fecha para una solicitud a la base de datos
-         * @param {Object} dateInfo Objeto que almacena la informacion del startDate, endDate, year, y month actual
+         * @param {Object} dateInfo Objeto que almacena la informacion del startDate, endDate, year, startMonth y endMonth seleccionado
          */
         prepareRequest(dateInfo) {
-            //Cargamos el array luego de limpiarlo
-            this.prepareDateRequest = [];
-            for (
-                let day = dateInfo["startDay"];
-                day <= dateInfo["endDay"];
-                day++
-            ) {
-                //Acomodamos el mes y día a formato ingles (01,02,03,...,09,10,...,)
-                const monthFormat =
-                    dateInfo["month"] < 10
-                        ? `0${dateInfo["month"] + 1}`
-                        : dateInfo["month"] + 1;
-                const dayFormat = day < 10 ? `0${day}` : day;
-                this.prepareDateRequest.push({
-                    userId: this.projectAssociatedToCharge[0].user_id, //Captura el id del usuario que inicio sesion
-                    registerDate: `${dateInfo["year"]}-${monthFormat}-${dayFormat}`, //Fecha en formato ingles (Y-m-d)
-                });
-            }
-
             //Pasamos la información a la base de datos
             axios
                 .post("/projects/register-hours/get-load-hours", {
-                    request: this.prepareDateRequest,
+                    request: JSON.parse(JSON.stringify(dateInfo)),
                 })
                 .then((request) => {
                     //Distribuimos la informacion
+                    console.log(request.data);
                     this.hoursWeeksDistribution(
                         request.data["date_interval"],
                         request.data["projects_hours"],
@@ -135,21 +116,37 @@ const registerApp = createApp({
         inputYearSelect(catchSelectYear) {
             //Detectamos el año y procedemos a cargar los meses
             this.prepareMonth(this.inputYearOptions[catchSelectYear]);
+
+            //Reiniciamos el selector de meses
+            this.inputMonthSelect = 0;
         },
         inputMonthSelect(catchSelectMonth) {
             //Detectamos el mes y procedemos a cargar las semanas
+            this.isSelectRange = false;
+
+            this.inputWeekOptions = [
+                {
+                    startDay: 0,
+                    endDay: 0,
+                    month: 0,
+                    message: "Seleccione una semana",
+                },
+            ]; // Limpiamos la opcion de semanas para que no se solapen
             const getIndexMonth = this.monthNames.indexOf(
                 this.inputMonthOptions[catchSelectMonth]
             );
 
-            this.prepareWeek(getIndexMonth);
+            //Reiniciamos el selector de semana
+            this.inputWeekSelect = 0;
+            if (this.inputMonthSelect != 0) this.prepareWeek(getIndexMonth);
         },
         inputWeekSelect(catchSelectWeek) {
             //Si ya estaba activo el calendario, lo desactivamos
             this.isSelectRange = false;
             console.log(this.inputWeekOptions[catchSelectWeek]);
-            //Una vez seleccionada la semana, acomodamos la informacion
-            this.prepareRequest(this.inputWeekOptions[catchSelectWeek]);
+            //Una vez seleccionada la semana, enviando la informacion de la semana al request
+            if (this.inputWeekSelect != 0)
+                this.prepareRequest(this.inputWeekOptions[catchSelectWeek]);
         },
     },
     mixins: [

@@ -90,11 +90,15 @@ Route::prefix('/')->group(function () {
             Route::post('/re-assign-data', [ProjectController::class, 'reAssignUsers']); //Elimina la Session['usersAssign'] luego de reasignar
             Route::post('/update-asign-projects', [ProjectController::class, 'updateAsign']);
         });
-        //Registrar Horas
+        //Register
         Route::prefix('/register-hours')->group(function () {
             Route::get('/', [ProjectController::class, 'index'])->name('register');
             Route::post('/prepare-register', [ProjectController::class, 'prepareRegisterHours']);
             Route::post('/get-load-hours', [ProjectController::class, 'getLoadHours']);
+        });
+        //Close Projects
+        Route::prefix('/close-projects')->group(function () {
+            Route::get('/', [ProjectController::class, 'index'])->name('closeProjects');
         });
     });
 });

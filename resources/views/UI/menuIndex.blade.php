@@ -96,5 +96,10 @@
         @if (Request::url() === URL::route('register'))
             @include('UI.Projects.ProjectRegister.registerIndex')
         @endif
+
+        {{-- Redireccion de rutas para cierre de proyectos --}}
+        @if (Request::url() === URL::route('closeProjects'))
+            @include('UI.Projects.ProjectClose.CloseIndex')
+        @endif
     </section>
 @endsection
