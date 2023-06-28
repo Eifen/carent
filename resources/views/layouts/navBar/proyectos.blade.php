@@ -9,7 +9,6 @@
         <div class="header-nav-links-item-dropdown-content"><a href="{{ URL::route('assign') }}">Asignacion de
                 proyectos</a></div>
         <div class="header-nav-links-item-dropdown-content"><a href="/projects/register-hours">Carga de horas</a></div>
-        <div class="header-nav-links-item-dropdown-content"><a href="/projects/close-projects">Cierre de proyectos</a>
-        </div>
     </div>
+</div>
 </div>
