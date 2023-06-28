@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\ProjectModel;
 use App\Models\ClientModel;
 use App\Models\ConfigModel;
+use DateInterval;
+use DateTime;
 use Illuminate\Support\Facades\Session;
 
 class ProjectController extends Controller
@@ -78,20 +80,25 @@ class ProjectController extends Controller
         $prepareQuery = array(); //Array que se llenara luego de acomodar las fechas
 
         //Hacemos un ciclo para acomodar la información
-        foreach ($getDateInfo as $cursor => $row) { #?
-            $getDate = $row["registerDate"]; #Fecha almacenada
-            $numberOfDay = intval(date('N', strtotime($getDate))); #?
+        $getInitDate = new DateTime($getDateInfo["initDateRange"]); #Fecha de inicio almacenada
+        $getEndDate = new DateTime($getDateInfo["finishDateRange"]); #Fecha de fin almacenada
 
-            //Si la fecha no corresponde a un sabado o domingo, lo asigna al nuevo array
-            $prepareQuery[$cursor] = array(
-                "user_id" => $row["userId"],
-                "register_date" => date('Y-m-d', strtotime($getDate)),
+        $dateCount = $getInitDate; #Variable que se encarga de alternar la fecha entre dos intervalos
+        while ($dateCount <= $getEndDate) {
+            $numberOfDay = intval(date('N', strtotime($dateCount->format('Y-m-d')))); #?
+
+            //Mientras la fecha inicial no iguale a la final, agregara un nuevo valor al array
+            array_push($prepareQuery, array(
+                "user_id" => $getDateInfo["userId"],
+                "register_date" => $dateCount->format('Y-m-d'),
                 "day_of_week" => $numberOfDay - 1
-            );
+            ));
+
+            $dateCount->add(new DateInterval('P1D'));
         }
 
         //Retornamos informacion de horas
-        return response(ProjectModel::getAllLoadHours(array_values($prepareQuery)), 200);
+        return response(ProjectModel::getAllLoadHours($prepareQuery), 200);
     }
 
     /**

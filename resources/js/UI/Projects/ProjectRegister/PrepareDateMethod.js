@@ -20,7 +20,9 @@ export const preparDateMethod = {
          */
         prepareMonth(yearSelected) {
             //Obtenemos el mes actual
-            let getActualMonth = new Date().getMonth();
+            const getActualYear = new Date().getFullYear();
+            let getActualMonth =
+                yearSelected === getActualYear ? new Date().getMonth() : 11;
             //Si el año seleccionado es el inicial, llenara a partir del mes inicial (Julio); caso contrario desde Enero
             const indexMonth =
                 yearSelected === this.yearInitial ? this.monthInitial : 0;
@@ -44,19 +46,21 @@ export const preparDateMethod = {
             let limitWeek = []; //Almacena el array por semanas
             let lastDay = new Date(
                 this.inputYearOptions[this.inputYearSelect],
-                getActualMonth,
+                monthIndex + 1,
                 0
             ); //Almacena el ultimo dia del mes
             let startDate = new Date(
                 this.inputYearOptions[this.inputYearSelect],
-                getActualMonth,
+                monthIndex,
                 1
             ); //Intervalos inicial
             let endDate = new Date(
                 this.inputYearOptions[this.inputYearSelect],
-                getActualMonth,
-                lastDay.getDate() - 1
+                monthIndex,
+                lastDay.getDate()
             ); //Intervalo final
+
+            console.log(lastDay, startDate);
 
             //Comparamos si el mes actual coincide con el mes capturado. Caso correcto, procedemos a sacar el día de la semana
             if (getActualMonth === monthIndex) {
@@ -75,19 +79,9 @@ export const preparDateMethod = {
                 limitWeek = this.getWeeksFromDateRange(startDate, endDate);
             }
 
-            //Recorremos el array
+            //Recorremos el array y asignamos la semana
             limitWeek.forEach((week) => {
-                this.inputWeekOptions.push({
-                    startDay: week.startDate.getDate(),
-                    endDay: week.endDate.getDate(),
-                    month: week.startDate.getMonth(),
-                    year: week.startDate.getFullYear(),
-                    message: `${
-                        week.number
-                    }: desde el ${week.startDate.getDate()} al ${week.endDate.getDate()} de ${
-                        this.monthNames[week.startDate.getMonth()]
-                    }`,
-                });
+                this.inputWeekOptions.push(week);
             });
 
             console.log(this.inputWeekOptions);
