@@ -1,7 +1,10 @@
 <template>
     <div>
-        <Multiselect v-model="selectModel" :mode="selectMode" :close-on-select="true" :searchable="true"
-            :placeholder="placeholderMessage" openDirection="top" :options="listOptions"></Multiselect>
+        <select class="form-select" v-model="inputConceptSelect" title="ConceptSelect">
+            <option value=0 disabled>Seleccione el concepto</option>
+        </select>
+        <textarea type="text" class="form-control" placeholder="Direccion del cliente" id="direccion"
+            aria-describedby="basic-addon4"></textarea>
     </div>
 </template>
 <script>

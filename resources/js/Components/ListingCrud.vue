@@ -31,8 +31,8 @@
                 <thead :class="tableClass.thead">
                     <tr>
                         <!-- Table Object -->
-                        <th scope="col" style="text-align:left" valign="middle" v-for="(title, cursor) in titleObject"
-                            :key="cursor">
+                        <th scope="col" class="col-sm-5 col-md-3 col-lg-1" style="text-align:left" valign="middle"
+                            v-for="(title, cursor) in titleObject" :key="cursor">
                             <span v-if="cursor != 'settings'">{{ title }}</span>
                             <span v-else></span>
                         </th>
@@ -44,7 +44,8 @@
                         :class="[actualIndex === controlTable.active.index ? controlTable.active.class : null]"
                         @click="controlTable.active.index = actualIndex">
                         <!-- Recorremos el array de datos -->
-                        <td v-for="(columnData, cursorTable) in controlTable.data[actualIndex + controlTable.minLength]"
+                        <td class="col-sm-5 col-md-3 col-lg-1"
+                            v-for="(columnData, cursorTable) in controlTable.data[actualIndex + controlTable.minLength]"
                             :key="cursorTable">
                             <span v-if="cursorTable == 'estatus' && columnData == 1"
                                 class="badge text-bg-success">activo</span>

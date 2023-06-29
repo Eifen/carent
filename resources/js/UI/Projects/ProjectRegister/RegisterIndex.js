@@ -5,6 +5,10 @@ import { preparDateMethod } from "./PrepareDateMethod";
 import { weeksFromDateMethod } from "./WeeksFromDateMethod";
 import { hoursForWeeksMethod } from "./HoursForWeeksMethod";
 
+//Componentes dedicados
+import Multiselect from "@vueform/multiselect";
+import LoadHours from "@/Components/LoadHours.vue";
+
 const registerApp = createApp({
     data() {
         return {
@@ -42,6 +46,7 @@ const registerApp = createApp({
             inputMonthSelect: 0, //Selector de meses
             inputWeekSelect: 0, //Selector de semana
             inputYearSelect: 0, //Selector de año
+            inputProjectSelect: [], //Selector de proyectos
             //Options de los select
             inputMonthOptions: ["Seleccione un mes"], //Opciones de los meses
             inputWeekOptions: [
@@ -52,10 +57,14 @@ const registerApp = createApp({
                     message: "Seleccione una semana",
                 },
             ], //Opciones de las semanas
+            inputProjectsMultiSelect: [],
             inputYearOptions: ["Seleccione un año"], //Opciones de los años
             listDayData: [], //Array que distribuye la fecha a lo largo de los theads
             listProjectHourData: [], //Array que desglosa las horas a proyectos
             listAdminHourData: [], //Array que desglosa las horas administrativas
+            //Informacion de la grilla a mostrar
+            gridProjectInfo: [], //Array encargada de mostrar las horas a proyectos seleccionada
+            gridAdminInfo: [], //Array encargada de mostrar las horas administrativas seleccionadas
         };
     },
     created() {
@@ -156,6 +165,7 @@ const registerApp = createApp({
         weeksFromDateMethod,
         hoursForWeeksMethod,
     ],
+    components: { Multiselect, LoadHours },
 });
 
 if (document.getElementById("hour-register") !== null) {

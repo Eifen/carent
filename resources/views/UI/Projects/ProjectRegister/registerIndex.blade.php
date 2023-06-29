@@ -43,7 +43,17 @@
                 </select>
             </div>
         </div>
-        <div class="table-responsive list-container-table" v-if="isSelectRange" v-cloak>
+        {{-- Selector de proyectos --}}
+        <div class="mb-3 register-hour-select-project" v-if="isSelectRange">
+            <label for="Weeks">Proyectos asignados para cargar
+                <span class="dashboard-form-container-form-title-field">*</span></label>
+            <!-- Select Users -->
+            <Multiselect v-model="inputProjectSelect" mode="tags" :close-on-select="true" :searchable="true"
+                placeholder="Seleccione o escriba que proyectos desea cargar" openDirection="top"
+                :options="inputProjectsMultiSelect">
+            </Multiselect>
+        </div>
+        <div class="table-responsive list-container-table" v-if="inputProjectSelect.length != 0" v-cloak>
             {{-- Proyectos --}}
             <table class="table table-hover table-bordered">
                 <thead class="list-container-table-thead">
@@ -56,9 +66,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(project,position) in projectAssociatedToCharge" :key="position">
+                    <tr v-for="(project,position) in gridProjectInfo" :key="position">
                         <td scope="row">
-                            @{{ project.project_description.toUpperCase() }} PARA @{{ project.bussiness_name.toUpperCase() }}
+                            @{{ project.description.toUpperCase() }}
+                        </td>
+                        <td scope="row" align="center" valign="middle" v-for="(day,cursor) in listDayData"
+                            :key="cursor">
+                            {{-- Carga de horas --}}
+                            <load-hours></load-hours>
                         </td>
                     </tr>
                 </tbody>
@@ -67,12 +82,11 @@
             <table class="table table-hover table-bordered">
                 <thead class="list-container-table-thead">
                     <tr>
-                        <th scope="col" class="col-sm-6 col-md-4 col-lg-2">Concepto</th>
-                        <th scope="col" class="col-sm-6 col-md-4 col-lg-2">Lunes</th>
-                        <th scope="col" class="col-sm-6 col-md-4 col-lg-2">Martes</th>
-                        <th scope="col" class="col-sm-6 col-md-4 col-lg-2">Miércoles</th>
-                        <th scope="col" class="col-sm-6 col-md-4 col-lg-2">Jueves</th>
-                        <th scope="col" class="col-sm-6 col-md-4 col-lg-2">Viernes</th>
+                        <th scope="col" class="col-sm-5 col-md-3 col-lg-1" valign="middle">Administrativo</th>
+                        <th scope="col" class="col-sm-5 col-md-3 col-lg-1" valign="middle"
+                            v-for="(day,cursor) in listDayData" :key="cursor">
+                            @{{ day.name }} <br> (@{{ day.date }})
+                        </th>
                     </tr>
                 <tbody>
                     <tr>
@@ -94,12 +108,12 @@
                 </thead>
                 <tfoot>
                     <tr>
-                        <td scope="row" class="col-sm-6 col-md-4 col-lg-2">Total Horas</td>
-                        <td scope="row" class="col-sm-6 col-md-4 col-lg-2">0</td>
-                        <td scope="row" class="col-sm-6 col-md-4 col-lg-2">0</td>
-                        <td scope="row" class="col-sm-6 col-md-4 col-lg-2">0</td>
-                        <td scope="row" class="col-sm-6 col-md-4 col-lg-2">0</td>
-                        <td scope="row" class="col-sm-6 col-md-4 col-lg-2">0</td>
+                        <td scope="row" class="col-sm-5 col-md-3 col-lg-1">Total Horas</td>
+                        <td scope="row" class="col-sm-5 col-md-3 col-lg-1">0</td>
+                        <td scope="row" class="col-sm-5 col-md-3 col-lg-1">0</td>
+                        <td scope="row" class="col-sm-5 col-md-3 col-lg-1">0</td>
+                        <td scope="row" class="col-sm-5 col-md-3 col-lg-1">0</td>
+                        <td scope="row" class="col-sm-5 col-md-3 col-lg-1">0</td>
                     </tr>
                 </tfoot>
             </table>

@@ -31,7 +31,7 @@ input[type="password"]::-ms-reveal{ display: none;}
 //Estilo predeterminado para todos los contenedores
 .styleContainer{
     background: @Container-Color;
-    width: min(100%,64rem);
+    width: min(100%,70rem);
     margin: 0 auto;
     margin-top: 50px;
     border-radius: 5px;
@@ -109,6 +109,11 @@ input[type="password"]::-ms-reveal{ display: none;}
     background-color: inherit;
 
     &:focus{ box-shadow: none;}
+}
+
+//Acomodar el multiselect tag
+.multiselect-tag{
+    white-space: normal;
 }
 
 /*Imports a los estilos*/
