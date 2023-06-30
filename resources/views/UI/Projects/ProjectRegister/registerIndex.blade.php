@@ -78,6 +78,9 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+        {{-- Administrativo --}}
+        <div class="table-responsive list-container-table-2" v-if="inputProjectSelect.length != 0" v-cloak>
             {{-- Administrativo --}}
             <table class="table table-hover table-bordered">
                 <thead class="list-container-table-thead">
@@ -109,11 +112,8 @@
                 <tfoot>
                     <tr>
                         <td scope="row" class="col-sm-5 col-md-3 col-lg-1">Total Horas</td>
-                        <td scope="row" class="col-sm-5 col-md-3 col-lg-1">0</td>
-                        <td scope="row" class="col-sm-5 col-md-3 col-lg-1">0</td>
-                        <td scope="row" class="col-sm-5 col-md-3 col-lg-1">0</td>
-                        <td scope="row" class="col-sm-5 col-md-3 col-lg-1">0</td>
-                        <td scope="row" class="col-sm-5 col-md-3 col-lg-1">0</td>
+                        <td scope="row" class="col-sm-5 col-md-3 col-lg-1" v-for="(day,cursor) in listDayData"
+                            :key="cursor">0</td>
                     </tr>
                 </tfoot>
             </table>

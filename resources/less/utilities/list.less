@@ -83,32 +83,13 @@
     //Tabla
     &-table{
         grid-area: 4 / 1 / 5 / 7;
+        .tableFormat();
+    }
 
-        &-thead{
-            background: @Thead-Color;
-            color: @Text-Thead-Color;
-            text-align: center;
-        }
-
-        & td, & tr { height: 20px;}
-        //Td para los setting
-        & tbody .list-container-table-setting-container{
-            position: relative;
-
-            &-modal{
-                background: none;
-                width: 12rem;
-                position: absolute;
-                top: -20px; right: 30px;
-                z-index: 1;
-                padding: 8px;
-                border-radius: 5px;
-                border: solid 1px @Shadow-Hover-Color;
-                font-size: 0.9em;
-                font-weight: bolder;
-                transform: scale(0);
-                transition: transform 0.5s ease-in-out;
-            }
-        }
+    //Tabla2
+    &-table-2{
+        grid-area: 5 / 1 / 6 / 7;
+        margin-top: 5rem;
+        .tableFormat();
     }
 }
