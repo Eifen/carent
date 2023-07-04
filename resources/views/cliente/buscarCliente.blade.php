@@ -9,8 +9,7 @@
 
         <title>.: CARENT :.</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
-        @vite('resources/css/fontawesome-free-5.12.0.css')
-        @vite('resources/css/buscarCliente.css')
+        @vite('resources/less/cliente/buscarCliente.less')
 
     </head>
     <body>
@@ -70,7 +69,9 @@
                   <td>@{{ cliente.razon_social }}</td>
                   <td>@{{ cliente.email_fiscal }}</td>
                   <td>
-                    <i class="fas fa-search-plus" v-on:click="mostrarDetalleCliente(cliente.id, $event)"></i><!-- Se invoca el metodo mostrarDetalleCliente de buscarCliente.js y abre una modal -->
+                    <span @click="mostrarDetalleCliente(cliente.id, $event)">
+                      <i class="fas fa-search-plus"></i><!-- Se invoca el metodo mostrarDetalleCliente de buscarCliente.js y abre una modal -->
+                    </span>
                   </td>
                   <td v-if="permisoActualizar">
                     <a v-bind:href="'/formModificarCliente/'+cliente.id" target="_self">
@@ -86,7 +87,7 @@
             <div class="alert alert-warning text-center" v-html="alert.message"></div>
           </div>
         </div>
-        <div id="modal-detalle-cliente" class="modal fade" tabindex="-1" role="dialog" v-cloak>
+        <div id="modal-detalle-cliente" class="modal fade" tabindex="-1" role="dialog" v-cloak ref="modal-detalle-cliente">
           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -155,8 +156,8 @@
                 </form>
               </div>
               <div class="modal-footer">
-                <button class="btn btn-primary"
-                        data-dismiss="modal"
+                  <button class="btn btn-primary"
+                        data-bs-dismiss="modal"
                         type="button">Ok</button>
               </div>
             </div>
@@ -165,7 +166,7 @@
 
       </div>
 
-      @vite('resources/js/buscarCliente.js')
+      @vite('resources/js/cliente/buscarCliente.js')
 
     </body>
 </html>

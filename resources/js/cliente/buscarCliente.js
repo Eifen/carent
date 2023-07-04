@@ -3,18 +3,18 @@ import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap-vue/node_modules/bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import * as bootstrap from 'bootstrap'
+import '@fortawesome/fontawesome-free/js/all.js';
 import axios from 'axios';
-window.axios = axios;
 import AutoNumeric from 'autonumeric';
-window.AutoNumeric = AutoNumeric;
 import zenscroll from 'zenscroll';
-window.zenscroll = zenscroll;
 import $ from 'jquery';
-window.$ = $;
 var self;
 
-Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
-Vue.component('loading',require('../components/loading.vue').default);
+import loading from '../components/loading.vue'
+import menuPrincipal from '../components/menuPrincipal.vue'
+Vue.component('menu-principal', menuPrincipal);
+Vue.component('loading', loading);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 
@@ -182,6 +182,9 @@ new Vue({
       let parametros = {
         idCliente: idCliente
       };
+
+      const instanceModal = new bootstrap.Modal('#modal-detalle-cliente');
+
       //Se utiliza el metodo get y se envia al clienteController y se envian los parametros
       axios.get('/detalleCliente', {params: parametros})
       .then(function (response) {
@@ -190,7 +193,7 @@ new Vue({
 
           self.detalleCliente.data = response.data.info;
 
-          $('#modal-detalle-cliente').modal("show");
+          instanceModal.show();
           $(e.target).removeClass("fa-cog fa-spin").addClass("fa-search-plus");
 
         }else{
