@@ -6,7 +6,6 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 import * as bootstrap from 'bootstrap'
 import '@fortawesome/fontawesome-free/js/all.js';
 import axios from 'axios';
-import AutoNumeric from 'autonumeric';
 import zenscroll from 'zenscroll';
 import $ from 'jquery';
 var self;

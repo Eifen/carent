@@ -186,6 +186,8 @@ class ClienteController extends Controller
       $response = array("response" => true,
                         "info" => $infoCliente,
                         "paises" => $paises,
+                        "servicios" => $servicios,
+                        "sectores" => $sectores,
                         "estatus" => $estatus);
     }else{
       $response = array("response" => false, "message" => "No se encontraron resultados");
@@ -209,7 +211,10 @@ class ClienteController extends Controller
       $request->input("telefono_fiscal"),
       (string) $request->input("pagina_web"),
       strtolower($request->input("email_fiscal")),
-      $request->input("estatus")
+      session("usuario_ip"),
+      $request->input("estatus"),
+      $request->input("sector"),
+      $request->input("servicio")
     );
 
         $response = $model->UpdateClientData($parametros);

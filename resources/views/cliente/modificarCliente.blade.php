@@ -9,8 +9,7 @@
 
         <title>.: CARENT :.</title>
         <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
-        @vite('resources/css/fontawesome-free-5.12.0.css')
-        @vite('resources/css/modificarCliente.css')
+        @vite('resources/less/cliente/modificarCliente.less')
 
     </head>
     <body>
@@ -63,7 +62,7 @@
                         v-html="formSearch.submit.html"
                         v-on:click="buscar"></button>
               </div>
-              <div id="modal-detalle-usuario" class="modal fade" tabindex="-1" role="dialog" v-cloak>
+              <div id="modal-detalle-usuario" class="modal fade" tabindex="-1" role="dialog" v-cloak ref="modal-detalle-usuario">
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                   <div class="modal-content">
                     <table class="table">
@@ -82,7 +81,9 @@
                           <td>@{{ usuario.cedula }}</td>
                           <td>@{{ usuario.nombre }}</td>
                           <td>
-                            <i class="fas fa-check-square" data-dismiss="modal" v-on:click="SelecionarUsuario(usuario.id, $event)"></i>
+                            <span data-bs-dismiss="modal" @click="SelecionarUsuario(usuario.id, $event)">
+                              <i class="fas fa-check-square"></i>
+                            </span>
                           </td>
                         </tr>
                       </tbody>
@@ -173,6 +174,32 @@
                 </select>
                 <small id="estadoHelp" class="form-text text-muted">Estatus del usuario</small>
                 <div class="mensaje"></div>
+              </div>
+              <div class="form-group col-12 col-sm-6">
+                <label for="sector">Sector<span class="campo-obligatorio">*</span></label>
+                <v-select @input="sector"
+                :options="comboSector"
+                          label="SectorNombre"                          
+                          id="sector"
+                          v-model="form.sector.value"
+                          v-bind:data-validar="form.sector.validar"
+                          v-bind:disable="form.sector.disable"
+                          placeholder="Seleccione..."
+                          :clearable="false"
+                          type="text"></v-select>
+              </div>
+              <div class="form-group col-12 col-sm-6">
+                <label for="servicio">Servicio<span class="campo-obligatorio">*</span></label>
+                <v-select @input="servicio"
+                :options="comboServicios"
+                          label="NombreServicio"                          
+                          id="servicio"
+                          v-model="form.servicio.value"
+                          v-bind:data-validar="form.servicio.validar"
+                          v-bind:disable="form.servicio.disable"
+                          placeholder="Seleccione..."
+                          :clearable="false"
+                          type="text"></v-select>
               </div>
             </form>
             <h5>Dirección Fiscal</h5>
@@ -269,7 +296,7 @@
 
       </div>
 
-      @vite('resources/js/modificarCliente.js')
+      @vite('resources/js/cliente/modificarCliente.js')
 
     </body>
 </html>

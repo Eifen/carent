@@ -3,22 +3,23 @@ import Vue from 'vue';
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 import 'bootstrap-vue/node_modules/bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import * as bootstrap from 'bootstrap'
+import '@fortawesome/fontawesome-free/js/all.js';
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import zenscroll from 'zenscroll';
-window.zenscroll = zenscroll;
 import axios from 'axios';
-window.axios = axios;
 import AutoNumeric from 'autonumeric';
-window.AutoNumeric = AutoNumeric;
 import VueTheMask from 'vue-the-mask';
-const CryptoJS = require("crypto-js");
-const AES = require("crypto-js/aes");
+import $ from 'jquery';
 var self;
 
+import loading from '../components/loading.vue'
+import menuPrincipal from '../components/menuPrincipal.vue'
+
 Vue.use(VueTheMask);
-Vue.component('menu-principal', require('../components/menuPrincipal.vue').default);
-Vue.component('loading',require('../components/loading.vue').default);
+Vue.component('menu-principal', menuPrincipal);
+Vue.component('loading', loading);
 Vue.component("v-select", vSelect);
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
@@ -55,6 +56,8 @@ const datosIniciales = () => {
                  detalleUsuario: response.data.info,
                  estatus: response.data.estatus,
                  paises: response.data.paises,
+                 servicios: response.data.servicios,
+                 sectores: response.data.sectores,
                  response: true
                });
 
@@ -94,6 +97,8 @@ new Vue({
       message: "",
       show: false
     },
+    comboServicios:[],
+    comboSector: [],
     comboEstatus: [],
     comboPaises: [],
     refreshForm: false,
@@ -139,6 +144,16 @@ new Vue({
       estatus:{
         disabled: false,
         value: ""
+      },
+      sector:{
+        disabled: false,
+        validar: true,
+        value: ""
+      },
+      servicio:{
+        disabled: false,
+        validar: true,
+        value: ""
       }
     },
       alert:{
@@ -174,7 +189,9 @@ new Vue({
     },
     loading: true,
     dataInicial: false,
-    id_pais: ""
+    id_pais: "",
+    id_sector: 0,
+    id_servicio: 0,
   },
 
   beforeCreate: async function(){
@@ -197,6 +214,10 @@ new Vue({
         self.form.pais.value = dataInit.infoClie.pais;
         self.id_pais = dataInit.infoClie.id_pais;
         self.form.direccion.value = dataInit.infoClie.direccion;
+        self.form.sector.value = dataInit.infoClie.sector;
+        self.id_sector = dataInit.infoClie.SectorAsociado;
+        self.id_servicio = dataInit.infoClie.ServicioAsociado;
+        self.form.servicio.value = dataInit.infoClie.servicio;
 
         self.form.telefono_fiscal.value = dataInit.infoClie.telefono_fiscal;
         self.form.pagina_web.value = dataInit.infoClie.pagina_web;
@@ -204,6 +225,8 @@ new Vue({
         self.form.estatus.value = dataInit.infoClie.id_estatus;
         self.comboEstatus = dataInit.estatus;
         self.comboPaises = dataInit.paises;
+        self.comboSector = dataInit.sectores;
+        self.comboServicios = dataInit.servicios;
         self.loading = false;
 
       }else{
@@ -237,7 +260,7 @@ new Vue({
         AutoNumeric.getAutoNumericElement("#nit").set(self.form.nit.value);
 
 
-        var indices = ["rif","nit","razon_social","pais","direccion","telefono_fiscal","pagina_web","email_fiscal","estatus"];
+        var indices = ["rif","nit","razon_social","pais","direccion","telefono_fiscal","pagina_web","email_fiscal","estatus","sector","servicio"];
 
         indices.forEach(function(indiceObjecto, indice) {
           self.form[indiceObjecto].disabled = false;
@@ -266,19 +289,21 @@ new Vue({
           buscarPor: self.formSearch.select.value,
           dato: self.formSearch.inputSearch.value
         };
+
+        const instanceModal = new bootstrap.Modal('#modal-detalle-usuario');
+
         //Se utiliza el metodo get para su busqueda y se envian con los parametros
         axios.get('/buscarUsuariosS', {params: parametros})
         .then(function (response) {
 
           self.formSearch.submit.html = 'Buscar';
           self.formSearch.submit.disabled = false;
-
+      
           if(response.status === 200 && response.data.response === true){
-
+            
             self.usuarios.mostrar = true;
             self.usuarios.registros = response.data.usuarios;
-            $('#modal-detalle-usuario').modal("show");
-
+            instanceModal.show();
 
           }else{
 
@@ -312,7 +337,7 @@ new Vue({
         });
 
       }else{
-
+      
         $(".inputSearch").parent().find(".mensaje").html("Campo requerido").addClass("invalid-feedback");
         $(".inputSearch").addClass("error");
         zenscroll.toY($(".inputSearch").offset().top - 100);
@@ -340,7 +365,7 @@ new Vue({
     },
 
     evaluarCampo: function(id, e){
-
+      
       if(e.target.type === 'text'){
         self.formSearch[id].value = (e.target.value.trim() === "") ? "" : $(e.target).val();
       }
@@ -382,7 +407,7 @@ new Vue({
       .catch(error => {
 
         self.detalleUsuario.error = true;
-        $('#modal-detalle-usuario').modal("show");
+        self.$refs['modal-detalle-usuario'].show();
         $(e.target).removeClass("fa-check-square").addClass("fa-cog fa-spin");
 
       });
@@ -395,6 +420,14 @@ new Vue({
       self.form.telefono_fiscal.disabled = false;
       self.id_pais = self.form.pais.value.id;
       self.form.telefono_fiscal.value = self.form.pais.value.codigo_telf;
+    },
+
+    sector: function(){
+      self.id_sector = self.form.sector.value.SectorId
+    },
+
+    servicio: function(){
+      self.id_servicio = self.form.servicio.value.ServicioId
     },
 
     valuesForm: function(e){
@@ -462,7 +495,9 @@ new Vue({
           telefono_fiscal: self.form.telefono_fiscal.value,
           pagina_web: self.form.pagina_web.value,
           email_fiscal: self.form.email_fiscal.value,
-          estatus: self.form.estatus.value
+          estatus: self.form.estatus.value,
+          sector: self.id_sector,
+          servicio: self.id_servicio
         }
 
         self.submitActualizar.content = '<i class="fas fa-cog fa-spin"></i>';
@@ -477,7 +512,7 @@ new Vue({
 
           if(response.status === 200 && response.data.response === true){
 
-            var indices = ["rif","nit","razon_social","pais","direccion","telefono_fiscal","pagina_web","email_fiscal","estatus"];
+            var indices = ["rif","nit","razon_social","pais","direccion","telefono_fiscal","pagina_web","email_fiscal","estatus","sector","servicio"];
 
             indices.forEach(function(indiceObjecto, indice) {
               self.form[indiceObjecto].disabled = false;
@@ -502,7 +537,7 @@ new Vue({
         })
         .catch(error => {
 
-          var indices = ["rif","nit","razon_social","pais","direccion","telefono_fiscal","pagina_web","email_fiscal","estatus"];
+          var indices = ["rif","nit","razon_social","pais","direccion","telefono_fiscal","pagina_web","email_fiscal","estatus","sector","servicio"];
 
           indices.forEach(function(indiceObjecto, indice) {
             self.form[indiceObjecto].disabled = false;
