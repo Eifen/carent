@@ -129,6 +129,14 @@
                     <label>Nombre o Razón Social</label>
                     <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.razon_social">
                   </div>
+                  <div class="form-group col-12 col-sm-6">
+                    <label>Servicio Asociado</label>
+                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.servicio">
+                  </div>
+                  <div class="form-group col-12 col-sm-6">
+                    <label>Sector Asociado</label>
+                    <input class="form-control" type="text" disabled v-bind:value="detalleCliente.data.sector">
+                  </div>
                 </form>
                 <h5 v-if="!detalleCliente.error">Dirección Fiscal</h5>
                 <form class="row" v-if="!detalleCliente.error">

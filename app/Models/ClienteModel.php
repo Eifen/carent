@@ -316,20 +316,23 @@ class ClienteModel extends Model
 
   function detalleCliente($id_cliente){
 
-    $info = DB::select('SELECT id,
-                                id_usuario_socio,
-                                (SELECT codigo FROM tbl_usuario WHERE id_usuario_socio = id) codigoU,
-                                (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE id_usuario_socio = id) nombre,
-                                codigo,
-                                rif,
-                                razon_social,
-                                direccion,
-                                telefono_fiscal,
-                                pagina_web,
-                                email_fiscal,
-                                (SELECT pa.nombre FROM tbl_paises pa WHERE pa.id = id_pais) pais
-                          FROM tbl_cliente
-                          WHERE id = '.$id_cliente.'
+    $info = DB::select('SELECT cli.id,
+                                cli.id_usuario_socio,
+                                (SELECT u.codigo FROM tbl_usuario u WHERE u.id = cli.id_usuario_socio) AS  codigoU,
+                                (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE u.id = cli.id_usuario_socio) AS nombre,
+                                cli.codigo,
+                                cli.rif,
+                                cli.nit,
+                                cli.razon_social,
+                                cli.direccion,
+                                cli.telefono_fiscal,
+                                cli.pagina_web,
+                                cli.email_fiscal,
+                                (SELECT pa.nombre FROM tbl_paises pa WHERE pa.id = cli.id_pais) AS pais,
+                                (SELECT sec.SectorNombre FROM tbl_sector sec WHERE sec.SectorId = cli.SectorAsociado) AS sector,
+                                (SELECT ser.NombreServicio FROM tbl_servicio ser WHERE ser.ServicioId = cli.ServicioAsociado) AS servicio
+                          FROM tbl_cliente cli
+                          WHERE cli.id = '.$id_cliente.'
                         ');
     if(count($info) > 0)
     {
@@ -341,27 +344,24 @@ class ClienteModel extends Model
 
   function detalleFactCliente($id_proyecto, $id_cliente){
 
-    $info = DB::select('SELECT  id,
-                                ciudad_factura,
-                                avenida_calle_factura,
-                                edificio_quinta_factura,
-                                piso_factura,
-                                numero_factura,
-                                telefono_factura,
-                                fax_factura,
-                                email_factura,
-                                id_parroquia_factura,
-                                 (SELECT id
-                                  FROM tbl_municipios
-                                  WHERE id = (SELECT id_municipio FROM tbl_parroquias WHERE id =id_parroquia_factura)) id_municipio_factura,
-                                 (SELECT id
-                                  FROM tbl_estados
-                                  WHERE id = (SELECT id_estado
-                                                FROM tbl_municipios
-                                                WHERE id = (SELECT id_municipio FROM tbl_parroquias WHERE id = id_parroquia_factura))) id_estado_factura
-                          FROM tbl_cliente_facturacion
-                          WHERE id_cliente = '.$id_cliente.'
-                          AND id_proyecto = '.$id_proyecto.'');
+    $info = DB::select('SELECT cli.id,
+                                cli.id_usuario_socio,
+                                (SELECT u.codigo FROM tbl_usuario u WHERE u.id = cli.id_usuario_socio) AS  codigoU,
+                                (SELECT CONCAT(u.nombre_1," ",u.nombre_2," ",u.apellido_1," ",u.apellido_2) FROM tbl_usuario u WHERE u.id = cli.id_usuario_socio) AS nombre,
+                                cli.codigo,
+                                cli.rif,
+                                cli.nit,
+                                cli.razon_social,
+                                cli.direccion,
+                                cli.telefono_fiscal,
+                                cli.pagina_web,
+                                cli.email_fiscal,
+                                (SELECT pa.nombre FROM tbl_paises pa WHERE pa.id = cli.id_pais) AS pais,
+                                (SELECT sec.SectorNombre FROM tbl_sector sec WHERE sec.SectorId = cli.SectorAsociado) AS sector,
+                                (SELECT ser.NombreServicio FROM tbl_servicio ser WHERE ser.ServicioId = cli.ServicioAsociado) AS servicio
+                          FROM tbl_cliente cli
+                          WHERE cli.id = '.$id_cliente.'
+                        ');
 
     if(count($info) > 0){
       return $info[0];
