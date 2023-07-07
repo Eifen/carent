@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class ConfigModel extends Model
 {
@@ -39,24 +40,37 @@ class ConfigModel extends Model
      */
     public function GetAll($tableTarget)
     {
-        DB::select('CALL sp_QueryPagination(?,@jsonResponse)', [$tableTarget]);
-        $GetReponse = DB::select('SELECT @jsonResponse as JsonDataTable');
-        $Response = json_decode($GetReponse[0]-> JsonDataTable,true);
-        return $Response;
+        if(!DB::table('vw_'.$tableTarget.'_preview')->exists()){
+            return array("response"=>false,"message"=>'Error 0012: table target is empty ('.'vw_'.$tableTarget.'_preview'.')');
+        }
+        //Si la tabla existe procede a traerlo
+        $getSQL = DB::table('vw_'.$tableTarget.'_preview')->get();
+        return array("response"=>true,"message"=>$getSQL);
     }
 
     /**
      * Metodo que retorna los status en función al tipo de tabla
-     * @param string $tableReference Tabla a la que se hace referencia
+     * @param string $tableReference Tabla a la que se hace referencia. Default null
      * @return array Devuelve un array con la información del status
      */
-    public static function GetAllStatus($tableReference)
+    public static function GetAllStatus($tableReference = null)
     {
         switch ($tableReference) {
             case 'usuarios':
-                return DB::table('tbl_usuarios_status')->get();
-            case 'clientes':
-                return DB::table('tbl_clientes_status')->get();
+                return DB::table('vw_users_status')->get();
+            default:
+                return DB::table('vw_control_status_all')->get();
         }
+    }
+
+    /**
+     * Metodo que abstrae y retorna un array asociativo de la tabla seleccionada.
+     * Debe existir una columna de control de estados (status_id) en la tabla seleccionada
+     * @param String $tableReference: Captura la tabla seleccionada
+     */
+    public static function getAllDataStatusControl($tableReference){
+        return DB::table($tableReference)
+        ->where("status_id",'=',1)
+        ->get();
     }
 }

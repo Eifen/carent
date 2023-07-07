@@ -14,21 +14,21 @@ class ClientModel extends Model
      */
     static public function GetAllSocios($Status)
     {
-        return DB::table('tbl_usuarios')
-        ->whereIn('Id_jerarquia_cargo',[16,17])
-        ->where('Id_estatus','=',$Status)
-        ->get(['Id','Primer_nombre','Segundo_nombre','Primer_apellido','Segundo_apellido']);
+        return DB::table('users')
+        ->whereIn('position_id',[16,17])
+        ->where('status_id','=',$Status)
+        ->get(['user_id','first_name','second_name','first_surname','second_surname']);
     }
-    
+
     /**
      * Metodo que devuelve todos los sectores activos. Campo Id y Nombre_sector
      * @param int $Status Captura el tipo de estatus
      * @return Array Retorna un array de todos los sectores
      */
     static public function GetAllSectores($Status){
-        return DB::table('tbl_clientes_sector')
-        ->where('Id_estatus',$Status)
-        ->get(['Id','Nombre_sector']);
+        return DB::table('clients_sectors')
+        ->where('status_id',$Status)
+        ->get(['sector_id','sector_name']);
     }
 
     /**
@@ -37,9 +37,9 @@ class ClientModel extends Model
      * @return Array Retorna un array de todos los servicios
      */
     static public function GetAllServicios($Status){
-        return DB::table('tbl_clientes_servicios')
-        ->where('Id_estatus',$Status)
-        ->get(['Id','Nombre_servicio']);
+        return DB::table('clients_services')
+        ->where('status_id',$Status)
+        ->get(['service_id','service_name']);
     }
 
     /**
@@ -48,7 +48,18 @@ class ClientModel extends Model
      */
     static public function GetAllPaises()
     {
-        return DB::table('tbl_clientes_direccion_pais')->get();
+        return DB::table('clients_countries')->get();
+    }
+
+    /**
+     * Metodo que obtiene la data de un cliente por su codigo
+     * @param int $codeClient Recibe el codigo para usar como filtro
+     * @return Array retorna un array asociativo con la información del cliente
+     */
+    static public function GetClientsPerCode($codeClient){
+        return DB::table('clients')
+        ->where('client_code','=',$codeClient)
+        ->first();
     }
 
     /**
@@ -62,7 +73,10 @@ class ClientModel extends Model
         //Separamos el tipo de proceso
         switch ($typeControl) {
             case 'create':
-                DB::select('call sp_NewClient(?,?,?,?,?,?,?,?,?,?,?,?,?,@response)',$dataRequest);
+                DB::select('call sp_new_clients(?,?,?,?,?,?,?,?,?,?,?,?,?,@response)',$dataRequest);
+                break;
+            case 'update':
+                DB::select('call sp_update_clients(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,@response)',$dataRequest);
                 break;
         }
 

@@ -59,4 +59,19 @@ class ConfigController extends Controller
 
         return $DecryptData;
     }
+
+    /**
+     * Metodo que envia a la vista la informacion de filtrado en multiselect
+     * @param Request $params Almacena la informacion de la tabla que se va a obtener el status
+     * @return Response Retorna un objeto JSON con la informacion de cada campo
+    */
+    public static function getInfoSelect(Request $params){
+        $tableTarget = $params->input('table_target') != '' ? $params->input('table_target') : null;
+        $arrayInfo = [
+            "status"=>ConfigModel::GetAllStatus($tableTarget)
+        ];
+
+        return response($arrayInfo,200);
+    }
+
 }

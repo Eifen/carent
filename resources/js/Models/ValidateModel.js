@@ -82,7 +82,7 @@ export class Validate
      */
     static Number(numberData)
     {
-        const numberFormat = new RegExp('^([0-9]*)+$');
+        const numberFormat = new RegExp('^[0-9]+(\.[0-9]+)?$');
         if(numberFormat.test(numberData)) return {"response":true,"message":"Success"};
         return {"response":false, "message":"IsNotNumber"}
     }

@@ -20,7 +20,7 @@ class ClientController extends Controller
     public function index(Request $request)
     {
         //Corroboraros que exista un usuario
-        if (Session::has('idUsuario')) $this->permitControl = true;
+        if (Session::has('userId')) $this->permitControl = true;
 
         return view('index')->with("Session",$this->permitControl);
     }
@@ -48,10 +48,22 @@ class ClientController extends Controller
             "dataSectores" => ClientModel::GetAllSectores(1),
             "dataServicios" => ClientModel::GetAllServicios(1),
             "dataPaises" => ClientModel::GetAllPaises(),
-            "dataStatus" => ConfigModel::GetAllStatus('clientes')
+            "dataStatus" => ConfigModel::GetAllStatus()
         ];
 
         return response($paramsInit,200);
+    }
+
+    /**
+     * Metodo que hace un llamao al control para traer la data de un cliente por su codigo
+     * @param Request $clientUpdate almacena el objeto pasado por parametro POST a la solicitud
+     * @return Response Retorna un objeto responde con status 200 si logra crear existosamente la sesión
+     */
+    public function ClientPerCode(Request $clientUpdate)
+    {
+        //Creamos una instancia de sesión temporal
+        Session::put("clientUpdate",ClientModel::GetClientsPerCode($clientUpdate->input('codigoSQL')));
+        return response("User Loaded",200);
     }
 
     /**
@@ -76,15 +88,29 @@ class ClientController extends Controller
             strtolower($dataClient->input('client')['EmailFiscal']),
             $dataClient->input('client')['IdSector'],
             $dataClient->input('client')['IdServicio'],
-            Session::get('idUsuario'),
+            Session::get('userId'),
             ConfigController::GetIpUser()
         );
 
+        if($dataClient->input('isEdit'))
+        {
+            $paramsEdit = array(
+                $dataClient->input('client')['IdClient'],
+                $dataClient->input('client')['IdStatus']
+            );
+
+            //Unimos ambos array
+            $paramsToControl = array_merge($paramsToControl,$paramsEdit);
+        }
+
         $dataClient->input('isEdit')
-        ? null
+        ? $ResponseClient = ClientModel::ControlClients($paramsToControl,'update')
         : $ResponseClient = ClientModel::ControlClients($paramsToControl,'create');
 
         //Retornamos la data
         return response($ResponseClient,200);
     }
+
+    /** Metodo que elimina la sesión temporal de clientUpdate */
+    public function DeleteClientUpdate() { if(Session::has('clientUpdate')) Session::forget('clientUpdate'); }
 }

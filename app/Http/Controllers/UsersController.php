@@ -20,7 +20,7 @@ class UsersController extends Controller
     public function index(Request $request)
     {
         //Enviamos la data dependiendo del estado de la sesión
-        if($request->session()->has('idUsuario')){ $this->permitControl = true; }
+        if($request->session()->has('userId')){ $this->permitControl = true; }
 
         return view('index')->with('Session',$this->permitControl);
     }
@@ -61,10 +61,10 @@ class UsersController extends Controller
     public function GetInitData()
     {
         $dataInit = [
-            "tiposDocumento" => UsersModel::TypeDocument(1),
+            "tiposDocumento" => UsersModel::TypeDocument(),
             "statesUsuario" =>  UsersModel::GetAllState(),
-            "divisiones" => UsersModel::GetAllDivision(),
-            "cargos" => UsersModel::GetAllCargo(),
+            "divisiones" => ConfigModel::getAllDataStatusControl('users_hierarchy_departments'),
+            "cargos" => ConfigModel::getAllDataStatusControl('users_hierarchy_positions'),
             "statusUsuario" => ConfigModel::GetAllStatus('usuarios'),
             "municipalityUsuario" => UsersModel::GetMunicipality(),
             "parishUsuario" => UsersModel::GetParish()
@@ -98,7 +98,7 @@ class UsersController extends Controller
             $dataUser->input('user')['IdParish'],
             $dataUser->input('user')['IdCargo'],
             $dataUser->input('user')['IdDivision'],
-            Session::get('idUsuario'),
+            Session::get('userId'),
             ConfigController::GetIpUser()
         );
 

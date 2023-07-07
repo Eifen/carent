@@ -1,1 +1,1 @@
-<a class="header-nav-links-item-link" href="/usuarios/#01">Usuarios</a>
+<a class="header-nav-links-item-link" href="{{URL::route('users')}}">Usuarios</a>

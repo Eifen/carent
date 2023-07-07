@@ -3,8 +3,8 @@
 @Container-Color: #fff;
 @Shadow-Hover-Color: #6c757d;
 @Text-Color: #000;
-@Thead-Color: #000;
-@Text-Thead-Color: #e9ecef;
+@Thead-Color: #091f40;
+@Text-Thead-Color: #fff;
 @Button-Color: #3490dc;
 @Button-Select-Color: #fd7e14;
 @Sucess-Submit-Color: #38c172;
@@ -31,7 +31,7 @@ input[type="password"]::-ms-reveal{ display: none;}
 //Estilo predeterminado para todos los contenedores
 .styleContainer{
     background: @Container-Color;
-    width: min(100%,64rem);
+    width: min(100%,70rem);
     margin: 0 auto;
     margin-top: 50px;
     border-radius: 5px;
@@ -58,6 +58,8 @@ input[type="password"]::-ms-reveal{ display: none;}
     box-shadow: 0em 0.3em 0.3em @Shadow-Hover-Color;
     transition: background 0.5s ease-in, border 0.5s ease-in;
     padding: 5px;
+    white-space: pre-line;
+    word-wrap: break-word;
     cursor: pointer;
     &:hover{
         background: @Button-Select-Color;
@@ -88,13 +90,15 @@ input[type="password"]::-ms-reveal{ display: none;}
 
 //Mensajes de Error
 .form-ErrorInput{
-    font-size: .6em;
+    font-size: .8em;
+    font-weight: bolder;
     color: @Failure-Submit-Color
 }
 
 //Login correcto
 .form-SuccessInput{
-    font-size: .6em;
+    font-size: .8em;
+    font-weight: bolder;
     color: @Sucess-Submit-Color
 }
 
@@ -107,8 +111,45 @@ input[type="password"]::-ms-reveal{ display: none;}
     &:focus{ box-shadow: none;}
 }
 
+//Acomodar el multiselect tag
+.multiselect-tag{
+    white-space: normal;
+}
+
+//CSS para columnas internas en table
+.tableFormat{
+    &-thead{
+        background: @Thead-Color;
+        color: @Text-Thead-Color;
+        text-align: center;
+    }
+
+    & td, & tr { height: 20px;}
+    //Td para los setting
+    & tbody .list-container-table-setting-container{
+        position: relative;
+
+        &-modal{
+            background: none;
+            width: 12rem;
+            position: absolute;
+            top: -20px; right: 30px;
+            z-index: 1;
+            padding: 8px;
+            border-radius: 5px;
+            border: solid 1px @Shadow-Hover-Color;
+            font-size: 0.9em;
+            font-weight: bolder;
+            transform: scale(0);
+            transition: transform 0.5s ease-in-out;
+        }
+    }
+
+}
+
 /*Imports a los estilos*/
 @import 'vue3-toastify/dist/index.css';
+@import '@vueform/multiselect/themes/default.css';
 //Layouts
 @import 'layouts/login.less';
 @import 'layouts/dashboard.less';
@@ -117,3 +158,5 @@ input[type="password"]::-ms-reveal{ display: none;}
 //Miscelaneos
 @import 'utilities/loading.less';
 @import 'utilities/list.less';
+@import 'utilities/DropdownSelect.less';
+@import 'utilities/RegisterHour.less';
