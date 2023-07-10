@@ -45,15 +45,15 @@
         </div>
         {{-- Selector de proyectos --}}
         <div class="mb-3 register-hour-select-project" v-if="isSelectRange">
-            <label for="Weeks">Proyectos asignados para cargar
-                <span class="dashboard-form-container-form-title-field">*</span></label>
-            <!-- Select Users -->
+            <label for="Weeks">Proyectos asignados para cargar</label>
+            <!-- Select Projects -->
             <Multiselect v-model="inputProjectSelect" mode="tags" :close-on-select="true" :searchable="true"
                 placeholder="Seleccione o escriba que proyectos desea cargar" openDirection="top"
-                :options="inputProjectsMultiSelect">
+                :options="inputProjectsMultiSelect" autocomplete="nope">
             </Multiselect>
         </div>
-        <div class="table-responsive list-container-table" v-if="inputProjectSelect.length != 0" v-cloak>
+        <div class="table-responsive list-container-table" v-if="inputProjectSelect.length != 0 && isSelectRange"
+            v-cloak>
             {{-- Proyectos --}}
             <table class="table table-hover table-bordered">
                 <thead class="list-container-table-thead">
@@ -73,14 +73,28 @@
                         <td scope="row" align="center" valign="middle" v-for="(day,cursor) in listDayData"
                             :key="cursor">
                             {{-- Carga de horas --}}
-                            <load-hours></load-hours>
+                            <load-hours :associated-load-project="project.projectAssignedId"
+                                :info-assigned-project="listProjectHourData" :associated-day="day.date"
+                                :key="listProjectHourData" load-ref="project"
+                                @register-hour="registerDay($event,project.projectAssignedId)">
+                            </load-hours>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
+        {{-- Selector de administracion --}}
+        <div class="mb-3 register-hour-select-admin" v-if="isSelectRange">
+            <label for="Weeks">Horas administrativas a cargar</label>
+            <!-- Select Admin -->
+            <Multiselect v-model="inputAdminSelect" mode="tags" :close-on-select="true" :searchable="true"
+                placeholder="Seleccione o escriba que horas administrativas desea cargar" openDirection="top"
+                :options="inputAdminMultiSelect" autocomplete="nope">
+            </Multiselect>
+        </div>
         {{-- Administrativo --}}
-        <div class="table-responsive list-container-table-2" v-if="inputProjectSelect.length != 0" v-cloak>
+        <div class="table-responsive list-container-table-2" v-if="inputAdminSelect.length != 0 && isSelectRange"
+            v-cloak>
             {{-- Administrativo --}}
             <table class="table table-hover table-bordered">
                 <thead class="list-container-table-thead">
@@ -92,30 +106,22 @@
                         </th>
                     </tr>
                 <tbody>
-                    <tr>
+                    <tr v-for="(admin,position) in gridAdminInfo" :key="position">
                         <td scope="row">
-                            <div class="mb-3">
-                                <div class="input-group">
-                                    <select class="form-select" v-model="inputConceptSelect" title="ConceptSelect">
-                                        <option value=0 disabled>Seleccione el concepto</option>
-                                        <option v-for="(concept,position) in conceptHourArray" :key="position"
-                                            :value="concept.admin_hours_id">
-                                            <span>@{{ concept.concept_description }}</span>
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
+                            @{{ admin.description.toUpperCase() }}
+                        </td>
+                        <td scope="row" align="center" valign="middle" v-for="(day,cursor) in listDayData"
+                            :key="cursor">
+                            {{-- Carga de horas --}}
+                            <load-hours :associated-load-project="admin.adminHourId"
+                                :info-assigned-project="listAdminHourData" :associated-day="day.date"
+                                :key="listAdminHourData" load-ref="admin"
+                                @register-hour="registerAdminDay($event,admin.adminHourId)">
+                            </load-hours>
                         </td>
                     </tr>
                 </tbody>
                 </thead>
-                <tfoot>
-                    <tr>
-                        <td scope="row" class="col-sm-5 col-md-3 col-lg-1">Total Horas</td>
-                        <td scope="row" class="col-sm-5 col-md-3 col-lg-1" v-for="(day,cursor) in listDayData"
-                            :key="cursor">0</td>
-                    </tr>
-                </tfoot>
             </table>
         </div>
     </div>
