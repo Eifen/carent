@@ -39,7 +39,7 @@ const registerApp = createApp({
                 "Sabado",
                 "Domingo",
             ],
-            yearInitial: 2023, //Año inicial para el select
+            yearInitial: 2022, //Año inicial para el select
             monthInitial: 0, //Mes en valor numerico inicial (Julio, para 2023) para el año inicial
             isSelectRange: false, //Variable que se coloca en true cuando se selecciona el mes, semana y año del rango de fechas
             //Inputs del registro
@@ -47,6 +47,7 @@ const registerApp = createApp({
             inputWeekSelect: 0, //Selector de semana
             inputYearSelect: 0, //Selector de año
             inputProjectSelect: [], //Selector de proyectos
+            inputAdminSelect: [], //Selector de conceptos administrativos
             //Options de los select
             inputMonthOptions: ["Seleccione un mes"], //Opciones de los meses
             inputWeekOptions: [
@@ -57,7 +58,8 @@ const registerApp = createApp({
                     message: "Seleccione una semana",
                 },
             ], //Opciones de las semanas
-            inputProjectsMultiSelect: [],
+            inputProjectsMultiSelect: [], //Multi select de horas a proyectos
+            inputAdminMultiSelect: [], //Multi select de conceptos de horas administrativas
             inputYearOptions: ["Seleccione un año"], //Opciones de los años
             listDayData: [], //Array que distribuye la fecha a lo largo de los theads
             listProjectHourData: [], //Array que desglosa las horas a proyectos
@@ -118,6 +120,41 @@ const registerApp = createApp({
                 .catch((error) => {
                     console.error(error);
                 });
+        },
+        /**
+         * Metodo que registra una hora de proyecto en la base de datos
+         * @param {*} childParam Captura una tupla donde [0] es la hora registrada y [1] es la observacion
+         * @param {*} projectAssignedId Se trata del id del proyecto seleccionado y asignado para cargar
+         */
+        registerDay(childParam, projectAssignedId) {
+            //TODO
+            console.log(
+                childParam,
+                projectAssignedId,
+                this.gridProjectInfo,
+                this.listProjectHourData
+            );
+            //TODO Enviar a un nuevo controlador la siguiente informacion
+            /**
+             * La tupla del childParam
+             * El ID del proyecto asignado
+             * hoursLoad del array this.gridProjectInfo
+             * envia todo el array this.listProjectHourData
+             */
+        },
+        /**
+         * Metodo que registra una hora administrativa en la base de datos
+         * @param {*} childParam Captura una tupla donde [0] es la hora registrada y [1] es la observacion
+         * @param {*} adminAssignedId Se trata del id del concepto seleccionado y asignado para cargar
+         */
+        registerAdminDay(childParam, adminAssignedId) {
+            //TODO
+            console.log(
+                childParam,
+                adminAssignedId,
+                this.gridAdminInfo,
+                this.listAdminHourData
+            );
         },
     },
     computed: {},

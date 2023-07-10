@@ -390,17 +390,14 @@ class ProjectModel extends Model
      */
     public static function getAllLoadHours($dateInfo)
     {
-        $getLastIndex = count($dateInfo) - 1;
-        //Acomodamos las fechas antes de enviar al procedimiento almacenado
-        $startDay = $dateInfo[0]["register_date"];
-        $endDay = $dateInfo[$getLastIndex]["register_date"];
+        //Capturamos el Id del usuario
         $userId = $dateInfo[0]["user_id"];
 
         //Hora a proyectos
-        $getProjectsHours = DB::select('call sp_get_hours(?,?,?,?)', [$userId, $startDay, $endDay, 1]);
+        $getProjectsHours = DB::select('call sp_get_hours(?,?)', [$userId, 1]);
 
         //Horas administrativas
-        $getAdminHours = DB::select('call sp_get_hours(?,?,?,?)', [$userId, $startDay, $endDay, 2]);
+        $getAdminHours = DB::select('call sp_get_hours(?,?)', [$userId, 2]);
 
         return array(
             "date_interval" => $dateInfo,

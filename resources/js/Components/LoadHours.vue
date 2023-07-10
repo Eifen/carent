@@ -1,23 +1,33 @@
 <template>
     <div>
-        <select class="form-select" v-model="inputHourSelected" title="ConceptSelect">
+        <select class="form-select" v-model="inputHourSelected" title="ConceptSelect" autocomplete="nope">
             <option v-for="(hour, cursor) in limitHours" :key="cursor" :value="cursor" :selected="cursor == 0"
                 :disabled="cursor == 0">{{
                     hour.label }}</option>
         </select>
-        <textarea type="text" rows="5" class="form-control register-hour-select-hours" placeholder="Direccion del cliente"
-            id="direccion" aria-describedby="basic-addon4"></textarea>
+        <textarea type="text" rows="5" class="form-control register-hour-select-hours" placeholder="Observaciones"
+            id="observation" aria-describedby="basic-addon4" autocomplete="nope" v-model="inputObservation"></textarea>
+        <!-- Mensajes de error en Observaciones-->
+        <div class="form-ErrorInput" v-if="inputObservationError != ''">
+            <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
+            {{ inputObservationError }}
+        </div>
+        <div class="register-hour-check" v-if="inputObservation.length >= 7" @click="registerHour(inputHourSelected)">
+            <font-awesome string-icon="fa-solid fa-check"></font-awesome>
+        </div>
     </div>
 </template>
 <script>
 import Multiselect from "@vueform/multiselect";
+import FontAwesome from "@/Components/FontAwesome/FontAwesome.vue";
 export default {
     props: {
-        selectModel: Array, //Variable del v-model
-        selectMode: String, //mode del multiSelect
-        placeholderMessage: String, //Información del select
-        listOptions: Array, //Opciones del multiSelect
+        associatedLoadProject: Number, //Almacena el valor del id del la hora cargada
+        infoAssignedProject: Array, //Array que almacena la información de carga de horas por día
+        associatedDay: String, //Día seleccionado
+        loadRef: String, //Texto que almacena el tipo de carga, project o admin
     },
+    emits: ['register-hour'],
     data() {
         return {
             limitHours: [{
@@ -27,6 +37,9 @@ export default {
             intervalHours: 1 / 2, //Determina el intervalo entre horas en fracciones
             maximumHours: 11, // Multiplicador de horas
             inputHourSelected: 0, //Controla el seleccionador de la hora
+            inputObservation: "", //Controla el input de las observaciones
+            inputObservationError: "", //Controla el input de errores de observaciones
+            errorMessageObservation: "minimo 7 caracteres", //Mensaje de error para el tamaño minimo de las observaciones
         }
     },
     created() {
@@ -39,11 +52,88 @@ export default {
             //Agregamos la fraccion
             this.limitHours.push({
                 value: fraccionCount,
-                label: `${Math.trunc(fraccionCount).toString().padStart(2, '0')}:${hourFraccion.toString().padStart(2, '0')}`
+                label: `${Math.trunc(fraccionCount).toString().padStart(2, '0')}:${hourFraccion.toString().padStart(2, '0')}`,
+                day: this.associatedDay
             })
 
         }
     },
-    components: { Multiselect }
+    beforeMount() {
+        //Asignamos los valores por defecto
+        //Hora por defecto. Debemos mapear la información para saber si coincide en funcion de la referencia
+        switch (this.loadRef.toLowerCase()) {
+            //Administrador
+            case 'admin':
+                this.loadAdmin();
+                break;
+
+            //Proyectos
+            case 'project':
+                this.loadProjects();
+                break;
+        }
+    },
+    methods: {
+        /**
+         * Metodo de inicializacion que configura las horas cargables a proyectos
+         */
+        loadProjects() {
+            const indexAssigned = this.infoAssignedProject.map(assigned => { return assigned.user_assigned_id }).indexOf(this.associatedLoadProject);
+            if (indexAssigned != -1) {
+                //Si coincide asignamos la informacion de la hora cargada
+                this.infoAssignedProject.forEach(assigned => {
+                    //La fecha y el id de la asignacion deben coincidir para poder cargar el valor
+                    if (assigned["register_date"] === this.associatedDay && assigned["user_assigned_id"] === this.associatedLoadProject) {
+                        //Mapeamos el limite de horas y asignamos
+                        const indexLimit = this.limitHours.map(hours => { return hours.value }).indexOf(assigned["register_hour"])
+                        this.inputHourSelected = indexLimit
+                        //Observacion por defecto
+                        this.inputObservation = assigned["project_load_observation"]
+                    }
+                })
+            }
+        },
+        /**
+         * Metodo de inicializacion que configura las horas cargables a conceptos administrativos
+         */
+        loadAdmin() {
+            const indexAssigned = this.infoAssignedProject.map(assigned => { return assigned.admin_hours_id }).indexOf(this.associatedLoadProject);
+            if (indexAssigned != -1) {
+                //Si coincide asignamos la informacion de la hora cargada
+                this.infoAssignedProject.forEach(assigned => {
+                    //La fecha y el id de la asignacion deben coincidir para poder cargar el valor
+                    if (assigned["register_date"] === this.associatedDay && assigned["admin_hours_id"] === this.associatedLoadProject) {
+                        //Mapeamos el limite de horas y asignamos
+                        const indexLimit = this.limitHours.map(hours => { return hours.value }).indexOf(assigned["register_hour"])
+                        this.inputHourSelected = indexLimit
+                        //Observacion por defecto
+                        this.inputObservation = assigned["admin_load_observation"]
+                    }
+                })
+            }
+        },
+        /**
+         * Metodo que se encarga de realizar un emit al padre para cargar la hora
+         * @param {*} idHourSelected El id del selector de horas
+         * Retorna una tupla donde [0] son las horas, y [1] las observacion
+         */
+        registerHour(idHourSelected) {
+            this.$emit('register-hour', [this.limitHours[idHourSelected], this.inputObservation])
+        }
+    },
+    watch: {
+        inputObservation(newObservation) {
+            try {
+                //Registramos el error
+                if (newObservation.length < 7) throw this.errorMessageObservation
+                //Si pasa la validaciones borramos los errores
+                if (newObservation.length >= 7) this.inputObservationError = "";
+            } catch (error) {
+                //Mostramos el error
+                this.inputObservationError = error
+            }
+        }
+    },
+    components: { Multiselect, FontAwesome }
 }
 </script>
