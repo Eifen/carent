@@ -75,7 +75,7 @@
                             {{-- Carga de horas --}}
                             <load-hours :associated-load-project="project.projectAssignedId"
                                 :info-assigned-project="listProjectHourData" :associated-day="day.date"
-                                :key="listProjectHourData" load-ref="project"
+                                :is-charged="onCharged" :key="listProjectHourData" load-ref="project"
                                 @register-hour="registerDay($event,project.projectAssignedId)">
                             </load-hours>
                         </td>

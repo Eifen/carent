@@ -12,7 +12,8 @@
             <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
             {{ inputObservationError }}
         </div>
-        <div class="register-hour-check" v-if="inputObservation.length >= 7" @click="registerHour(inputHourSelected)">
+        <div class="register-hour-check" v-if="inputObservation.length >= 7 && !isCharged"
+            @click="registerHour(inputHourSelected)">
             <font-awesome string-icon="fa-solid fa-check"></font-awesome>
         </div>
     </div>
@@ -26,6 +27,7 @@ export default {
         infoAssignedProject: Array, //Array que almacena la información de carga de horas por día
         associatedDay: String, //Día seleccionado
         loadRef: String, //Texto que almacena el tipo de carga, project o admin
+        isCharged: Boolean, //Control del boton
     },
     emits: ['register-hour'],
     data() {
@@ -35,7 +37,7 @@ export default {
                 label: "Hora trabajada"
             }], // Array que muestra las horas en un intervalo de 0.30 a 11 horas
             intervalHours: 1 / 2, //Determina el intervalo entre horas en fracciones
-            maximumHours: 11, // Multiplicador de horas
+            maximumHours: 12, // Multiplicador de horas
             inputHourSelected: 0, //Controla el seleccionador de la hora
             inputObservation: "", //Controla el input de las observaciones
             inputObservationError: "", //Controla el input de errores de observaciones
@@ -85,7 +87,7 @@ export default {
                     //La fecha y el id de la asignacion deben coincidir para poder cargar el valor
                     if (assigned["register_date"] === this.associatedDay && assigned["user_assigned_id"] === this.associatedLoadProject) {
                         //Mapeamos el limite de horas y asignamos
-                        const indexLimit = this.limitHours.map(hours => { return hours.value }).indexOf(assigned["register_hour"])
+                        const indexLimit = this.limitHours.map(hours => { return hours.value }).indexOf(parseFloat(assigned["register_hour"]))
                         this.inputHourSelected = indexLimit
                         //Observacion por defecto
                         this.inputObservation = assigned["project_load_observation"]

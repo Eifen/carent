@@ -56,9 +56,7 @@ const assignApp = createApp({
                 .post("/projects/assign/assign-users", {
                     department: departmentAssignedId,
                 })
-                .then((request) => {
-                    console.log(request.data);
-                })
+                .then((request) => {})
                 .catch((error) => {
                     console.error(error);
                 });

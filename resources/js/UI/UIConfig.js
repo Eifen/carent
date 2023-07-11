@@ -102,7 +102,6 @@ export class CrudUi {
                 //Si no se activa la exceptión, asignamos el objeto
                 setTimeout(() => {
                     self.listData = request.data.message;
-                    console.log(self.listData);
                     //Preparamos la paginación en función del tamaño del array resultante
                     if (self.listData.length < 50) {
                         self.lengthColumns = self.listData.length;

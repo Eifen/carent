@@ -74,7 +74,6 @@ export const weeksFromDateMethod = {
                 });
 
                 // Mover la fecha a la siguiente semana
-                console.log(firstDayOfWeek);
                 const intervalDate =
                     firstDayOfWeek.getDay() === 0 ? 7 : firstDayOfWeek.getDay();
                 //Si es domingo resta 7, caso contrario resta el dia
@@ -82,13 +81,10 @@ export const weeksFromDateMethod = {
                 firstDayOfWeek.setDate(
                     firstDayOfWeek.getDate() + (7 - intervalDate) + 1
                 );
-                console.log(firstDayOfWeek);
 
                 // Incrementar el número de semana
                 weekNumber++;
             }
-
-            console.log(weeks);
             return weeks;
         },
     },

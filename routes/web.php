@@ -6,6 +6,7 @@ use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\HoursController;
 use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\URL;
 
@@ -95,6 +96,8 @@ Route::prefix('/')->group(function () {
             Route::get('/', [ProjectController::class, 'index'])->name('register');
             Route::post('/prepare-register', [ProjectController::class, 'prepareRegisterHours']);
             Route::post('/get-load-hours', [ProjectController::class, 'getLoadHours']);
+            Route::post('/add-hour', [HoursController::class, 'prepareAddHour']);
+            Route::post('/add-admin-hour', [HoursController::class, 'prepareAddAdminHour']);
         });
         //Close Projects
         Route::prefix('/close-projects')->group(function () {

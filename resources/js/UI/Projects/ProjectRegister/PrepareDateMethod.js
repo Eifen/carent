@@ -60,8 +60,6 @@ export const preparDateMethod = {
                 lastDay.getDate()
             ); //Intervalo final
 
-            console.log(lastDay, startDate);
-
             //Comparamos si el mes actual coincide con el mes capturado. Caso correcto, procedemos a sacar el día de la semana
             if (getActualMonth === monthIndex) {
                 //Calculamos la semana en funcion del año y el mes
@@ -83,8 +81,6 @@ export const preparDateMethod = {
             limitWeek.forEach((week) => {
                 this.inputWeekOptions.push(week);
             });
-
-            console.log(this.inputWeekOptions);
         },
     },
 };

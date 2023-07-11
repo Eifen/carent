@@ -1,6 +1,6 @@
 import { createApp } from "vue/dist/vue.esm-bundler";
 import { componentsUI, dataUI, CrudUi } from "../../UIConfig";
-import { AXIOSINTERVAL } from "../../../app";
+import { AXIOSINTERVAL, NOTIFYINTERVAL } from "../../../app";
 import { preparDateMethod } from "./PrepareDateMethod";
 import { weeksFromDateMethod } from "./WeeksFromDateMethod";
 import { hoursForWeeksMethod } from "./HoursForWeeksMethod";
@@ -9,9 +9,13 @@ import { hoursForWeeksMethod } from "./HoursForWeeksMethod";
 import Multiselect from "@vueform/multiselect";
 import LoadHours from "@/Components/LoadHours.vue";
 
+//Toastify
+import { toast } from "vue3-toastify";
+
 const registerApp = createApp({
     data() {
         return {
+            onCharged: false, // Controla el estado del boton de agregar hora
             projectAssociatedToCharge: [], //Array que almacena los proyectos por cargar
             conceptHourArray: [], //Array que almacena los conceptos de horas administrativas
             listClass: "", //Controla la clase del contenedor de la lista
@@ -82,8 +86,6 @@ const registerApp = createApp({
                 this.conceptHourArray = request.data["conceptHour"];
 
                 setTimeout(() => {
-                    console.log(this.projectAssociatedToCharge);
-                    console.log(this.conceptHourArray);
                     this.isMounted = true;
                 }, AXIOSINTERVAL);
             })
@@ -105,7 +107,6 @@ const registerApp = createApp({
                 })
                 .then((request) => {
                     //Distribuimos la informacion
-                    console.log(request.data);
                     this.hoursWeeksDistribution(
                         request.data["date_interval"],
                         request.data["projects_hours"],
@@ -127,6 +128,7 @@ const registerApp = createApp({
          * @param {*} projectAssignedId Se trata del id del proyecto seleccionado y asignado para cargar
          */
         registerDay(childParam, projectAssignedId) {
+            this.onCharged = true;
             //TODO
             console.log(
                 childParam,
@@ -134,13 +136,44 @@ const registerApp = createApp({
                 this.gridProjectInfo,
                 this.listProjectHourData
             );
-            //TODO Enviar a un nuevo controlador la siguiente informacion
-            /**
-             * La tupla del childParam
-             * El ID del proyecto asignado
-             * hoursLoad del array this.gridProjectInfo
-             * envia todo el array this.listProjectHourData
-             */
+
+            const prepareDay = {
+                selectInfo: childParam, //Datos de los input del dia
+                assignedId: projectAssignedId, //Id del proyecto asignado por cargar
+                multiSelectProjectInfo: this.gridProjectInfo, //Informacion de los proyectos seleccionados y sus horas cargadas
+                listHour: this.listProjectHourData, //Lista de los proyectos donde el usuario ha cargado horas
+            };
+
+            axios
+                .post("/projects/register-hours/add-hour", prepareDay)
+                .then((request) => {
+                    //Verificamos que el response no sea falso
+                    if (request.status === 200 && !request.data.response)
+                        throw request.data.message;
+                    console.log(request);
+                    this.listProjectHourData = request.data.message;
+                    //Mensaje de confirmacion
+                    toast.success("Hora registrada exitosamente", {
+                        position: toast.POSITION.TOP_LEFT,
+                        autoClose: NOTIFYINTERVAL,
+                    });
+
+                    setTimeout(() => {
+                        this.onCharged = false;
+                    }, AXIOSINTERVAL);
+                })
+                .catch((errorMessage) => {
+                    console.log(errorMessage);
+                    toast.error(errorMessage.error, {
+                        position: toast.POSITION.TOP_LEFT,
+                        autoClose: NOTIFYINTERVAL,
+                    });
+
+                    setTimeout(() => {
+                        this.listProjectHourData = errorMessage.newList;
+                        this.onCharged = false;
+                    }, AXIOSINTERVAL);
+                });
         },
         /**
          * Metodo que registra una hora administrativa en la base de datos
@@ -155,6 +188,47 @@ const registerApp = createApp({
                 this.gridAdminInfo,
                 this.listAdminHourData
             );
+
+            //Preparar dia administrativo
+            const prepareAdminDay = {
+                selectInfo: childParam, //Datos de los input del dia
+                assignedId: adminAssignedId, //Id del admin asignado por cargar
+                listHour: this.listAdminHourData, //Lista de los conceptos donde el usuario ha cargado horas
+            };
+
+            axios
+                .post(
+                    "/projects/register-hours/add-admin-hour",
+                    prepareAdminDay
+                )
+                .then((request) => {
+                    //Verificamos que el response no sea falso
+                    if (request.status === 200 && !request.data.response)
+                        throw request.data.message;
+                    console.log(request);
+                    // this.listAdminHourData = request.data.message;
+                    // //Mensaje de confirmacion
+                    // toast.success("Hora registrada exitosamente", {
+                    //     position: toast.POSITION.TOP_LEFT,
+                    //     autoClose: NOTIFYINTERVAL,
+                    // });
+
+                    // setTimeout(() => {
+                    //     this.onCharged = false;
+                    // }, AXIOSINTERVAL);
+                })
+                .catch((errorMessage) => {
+                    console.log(errorMessage);
+                    toast.error(errorMessage.error, {
+                        position: toast.POSITION.TOP_LEFT,
+                        autoClose: NOTIFYINTERVAL,
+                    });
+
+                    setTimeout(() => {
+                        this.listAdminHourData = errorMessage.newList;
+                        this.onCharged = false;
+                    }, AXIOSINTERVAL);
+                });
         },
     },
     computed: {},
@@ -189,7 +263,6 @@ const registerApp = createApp({
         inputWeekSelect(catchSelectWeek) {
             //Si ya estaba activo el calendario, lo desactivamos
             this.isSelectRange = false;
-            console.log(this.inputWeekOptions[catchSelectWeek]);
             //Una vez seleccionada la semana, enviando la informacion de la semana al request
             if (this.inputWeekSelect != 0)
                 this.prepareRequest(this.inputWeekOptions[catchSelectWeek]);

@@ -54,7 +54,8 @@ export const hoursForWeeksMethod = {
             this.listProjectHourData.forEach((project) => {
                 if (project.user_assigned_id === projectAssignedId) {
                     //Solo sumamos si la id coincide
-                    countProject = countProject + project.register_hour;
+                    countProject =
+                        countProject + parseFloat(project.register_hour);
                 }
             });
 
@@ -96,8 +97,6 @@ export const hoursForWeeksMethod = {
                 //Limpiamos el contador
                 hoursLoad = 0;
             });
-
-            console.log(this.gridProjectInfo);
         },
         /**
          * Watcher que se encarga de capturar los cambios en el selector de horas administrativas
@@ -122,8 +121,6 @@ export const hoursForWeeksMethod = {
                             .concept_description, //Nombre del concepto
                 });
             });
-
-            console.log(this.gridAdminInfo);
         },
     },
 };

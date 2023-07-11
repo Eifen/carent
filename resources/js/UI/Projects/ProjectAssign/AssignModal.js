@@ -207,7 +207,6 @@ const modalApp = createApp({
         },
         missinHours(misingHour) {
             try {
-                console.log(misingHour);
                 //Configuramos el numero en funcion si es un valor negativo o positivo
                 const numberDTO =
                     misingHour < 0
