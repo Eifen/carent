@@ -205,17 +205,16 @@ const registerApp = createApp({
                     //Verificamos que el response no sea falso
                     if (request.status === 200 && !request.data.response)
                         throw request.data.message;
-                    console.log(request);
-                    // this.listAdminHourData = request.data.message;
-                    // //Mensaje de confirmacion
-                    // toast.success("Hora registrada exitosamente", {
-                    //     position: toast.POSITION.TOP_LEFT,
-                    //     autoClose: NOTIFYINTERVAL,
-                    // });
+                    this.listAdminHourData = request.data.message;
+                    //Mensaje de confirmacion
+                    toast.success("Hora registrada exitosamente", {
+                        position: toast.POSITION.TOP_LEFT,
+                        autoClose: NOTIFYINTERVAL,
+                    });
 
-                    // setTimeout(() => {
-                    //     this.onCharged = false;
-                    // }, AXIOSINTERVAL);
+                    setTimeout(() => {
+                        this.onCharged = false;
+                    }, AXIOSINTERVAL);
                 })
                 .catch((errorMessage) => {
                     console.log(errorMessage);

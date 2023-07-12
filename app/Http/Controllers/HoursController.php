@@ -62,7 +62,7 @@ class HoursController extends Controller
             "register_hour" => $hourValue,
             "project_load_observation" => $registerRequest->input("selectInfo")[1], //La posicion [1] corresponde a la observacion
             "user_assigned_id" => $this->projectAssignedId,
-            "status_load_id" => 1
+            "status_load_id" => 2 //
         );
 
         //Enviamos la informacion
@@ -93,12 +93,23 @@ class HoursController extends Controller
             if ($hourCharged["user_id"] == $userId && $hourCharged["register_date"] == $date && $hourCharged["admin_hours_id"] == $this->adminAssignedId) {
                 //Tiene hora cargada en el dia
                 $getHourCharged = $hourCharged["register_hour"];
-                $getLoadId = $hourCharged["project_hour_id"];
+                $getLoadId = $hourCharged["admin_hour_id"];
             }
         }
-        return response(array(
-            "response" => true,
-            "message" => $this->adminAssignedId
-        ), 200);
+
+        //Preparamos la informacion
+        $prepareHourInf = array(
+            "user_id" => $userId,
+            "register_date" => $date,
+            "register_hour" => $hourValue,
+            "admin_load_observation" => $registerRequest->input("selectInfo")[1], //La posicion [1] corresponde a la observacion
+            "admin_hours_id" => $this->adminAssignedId,
+            "status_load_id" => 1 //Si hay cambios o se inserta una nueva hora, su estado sera por aprobar
+        );
+
+        //Enviamos la informacion
+        $response = HoursModel::addAdminHour($prepareHourInf, $getLoadId);
+
+        return response($response, 200);
     }
 }

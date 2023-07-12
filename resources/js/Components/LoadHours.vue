@@ -106,7 +106,7 @@ export default {
                     //La fecha y el id de la asignacion deben coincidir para poder cargar el valor
                     if (assigned["register_date"] === this.associatedDay && assigned["admin_hours_id"] === this.associatedLoadProject) {
                         //Mapeamos el limite de horas y asignamos
-                        const indexLimit = this.limitHours.map(hours => { return hours.value }).indexOf(assigned["register_hour"])
+                        const indexLimit = this.limitHours.map(hours => { return hours.value }).indexOf(parseFloat(assigned["register_hour"]))
                         this.inputHourSelected = indexLimit
                         //Observacion por defecto
                         this.inputObservation = assigned["admin_load_observation"]
