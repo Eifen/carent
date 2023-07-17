@@ -8,7 +8,7 @@
     <!-- Modal -->
     <div class="modal fade" id="projectInfoModal" tabindex="-1">
         <loading :active="previewProjectInfo === null"></loading>
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content" v-if="previewProjectInfo !== null">
                 <div class="modal-header">
                     <h5 class="modal-title">@{{ previewProjectInfo.project.project_description }}</h5>
@@ -29,7 +29,6 @@
                         <div class="modal-preview-thead" for="thead-additionalValue">Montos totales adicionales</div>
                         <div class="modal-preview-thead" for="thead-department">División</div>
                         <div class="modal-preview-thead" for="thead-managerDepartment">Gerente</div>
-                        <div class="modal-preview-thead" for="thead-progress">Progreso del proyecto</div>
                         {{-- Cuerpo del encabezado --}}
                         <div class="modal-preview-tbody" for="tbody-partner">@{{ previewProjectInfo.project.partner_name }}</div>
                         <div class="modal-preview-tbody" for="tbody-client">@{{ previewProjectInfo.project.bussiness_name }}</div>
@@ -46,6 +45,20 @@
                             <div v-for="(department,position) in previewProjectInfo.departments" :key="position">
                                 <span>@{{ department.department_name }}</span>
                                 <span>@{{ department.manager_department_name }}</span>
+                            </div>
+                        </div>
+                        {{-- Progreso del proyecto --}}
+                        <div class="modal-preview-tbody" for="tbody-progress">
+                            <div v-for="(progress,position) in progressBarInfo" :key="position">
+                                <span class="modal-preview-thead" id="progress-title">@{{ progress.department_name }}</span>
+                                <span class="badge text-bg-light" id="progress-load">Horas cargadas:
+                                    @{{ progress.loadHour }}</span>
+                                <span class="badge text-bg-light" id="progress-estimated">Horas estimadas:
+                                    @{{ progress.estimatedHour }}</span>
+                                <div class="progress" role="progressbar">
+                                    <div :class="progress.class" :style="progress.style">@{{ progress.percent }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

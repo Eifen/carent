@@ -57,5 +57,112 @@ export const projectInfoMethods = {
             //Retornamos el resultante
             return countAdditional;
         },
+        /**
+         * Metodo que configura el array de objetos de la barra de progreso
+         * @param {Object} hoursResponse Recibe el objeto resultante desde el request de Axios
+         */
+        showProgressHours(hoursResponse) {
+            let classBar = ""; //Variable que almacena la clase de la barra
+            this.progressBarInfo = [];
+            //Recorremos el array de departamentos, divisiones, areas
+            hoursResponse.departments.forEach((department) => {
+                const getLoadHour = this.showLoadHours(
+                    department.department_id
+                ); //Horas cargadas
+                const getEstimatedHour = this.showEstimatedHours(
+                    department.hours_assigned,
+                    department.department_id
+                ); //Horas estimadas
+                //Calculamos el porcentaje
+                const percentBar = this.getPercentHour(
+                    getLoadHour,
+                    getEstimatedHour
+                );
+                //Representamos el tipo de barra
+                switch (true) {
+                    //Entre 0 y 25 %
+                    case percentBar > 0 && percentBar <= 25:
+                        classBar = "progress-bar bg-danger text-dark";
+                        break;
+
+                    //Entre 25 y 75 %
+                    case percentBar > 25 && percentBar <= 75:
+                        classBar = "progress-bar bg-warning text-dark";
+                        break;
+
+                    //Entre 75 y 100%
+                    case percentBar > 75 && percentBar <= 100:
+                        classBar = "progress-bar bg-success text-dark";
+                        break;
+                }
+                //Cargamos el array
+                this.progressBarInfo.push({
+                    class: classBar,
+                    style: `width: ${percentBar}%`,
+                    percent: `${percentBar}%`,
+                    department_id: department.department_id,
+                    department_name: department.department_name,
+                    loadHour: getLoadHour,
+                    estimatedHour: getEstimatedHour,
+                });
+            });
+        },
+        /**
+         * Metodo que se encarga de mostrar las horas cargadas por division
+         * @param {int} departmentId El id del departmento
+         * @return {int} Devuelve un valor entero de las horas cargadas hasta el momento
+         */
+        showLoadHours(departmentId) {
+            const findIndex = this.previewProjectInfo.projectsHours
+                .map((hour) => hour.department_id)
+                .indexOf(departmentId);
+
+            //Retornamos el valor de la hora en funcion del indice
+            if (findIndex != -1) {
+                return this.previewProjectInfo.projectsHours[findIndex]
+                    .total_hours; //Si encuentra es porque se han cargado horas
+            } else {
+                return 0; //Si no encuentra nada es porque no se han cargado horas
+            }
+        },
+        /**
+         * Metodo que se encarga de mostrar las horas totales por division
+         * @param {int} assignedHour Hora asignada
+         * @param {int} departmentId Id del departamento
+         */
+        showEstimatedHours(assignedHour, departmentId) {
+            let additionalCount = 0;
+            //Nos aseguramos que el array de horas adicionales no este vacio
+            try {
+                if (this.previewProjectInfo.additionalHours.length == 0)
+                    throw "EmptyArray";
+                //Si pasa la validacion sumamos las horas por departamento
+                this.previewProjectInfo.additionalHours.forEach((hour) => {
+                    additionalCount =
+                        additionalCount +
+                        (hour.department_id === departmentId
+                            ? hour["additional_hour"]
+                            : 0);
+                });
+
+                //Retornamos la suma
+                return assignedHour + additionalCount;
+            } catch (error) {
+                //Si no tiene valores horas adicionales solo retornamos la hora
+                return assignedHour;
+            }
+        },
+
+        /**
+         * Metodo que calcula el porcentaje de la barra
+         * @param {int} loadHour Hora cargada
+         * @param {int} estimatedHour Hora estimada
+         */
+        getPercentHour(loadHour, estimatedHour) {
+            //Hacemos la division
+            const getPercent =
+                (parseFloat(loadHour) * 100) / parseFloat(estimatedHour);
+            return getPercent >= 100 ? 100 : getPercent.toFixed(0);
+        },
     },
 };

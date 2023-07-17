@@ -8,7 +8,7 @@
     <!-- Modal -->
     <div class="modal fade" id="clientInfoModal" tabindex="-1">
         <loading :active="previewClientInfo === null"></loading>
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content" v-if="previewClientInfo !== null">
                 <div class="modal-header">
                     <h5 class="modal-title">@{{ previewClientInfo.bussiness_name }}</h5>

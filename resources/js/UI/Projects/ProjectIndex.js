@@ -34,7 +34,16 @@ const projectsIndex = createApp({
             tableTarget: "projects",
             controlProjectModal: {}, //Controla el modal para proyectos
             previewProjectInfo: null, //Array informativo del proyecto
-            previewAllLoadHours: [], //Almacena la información de todas las horas a proyectos cargadas en el sistema
+            /** Objeto que controla el pogreso de la barra
+             * class: clase de la barra
+             * style: controla la anchura de la barra
+             * percent: define el porcentaje de la barra
+             * department_id: departamento asignado
+             * department_name: nombre del departamento asignado
+             * loadHour: Hora cargada
+             * estimatedHour: Hora estimada
+             */
+            progressBarInfo: [],
         };
     },
     created() {
@@ -80,6 +89,8 @@ const projectsIndex = createApp({
                 .then((request) => {
                     this.previewProjectInfo = request.data;
                     console.log(this.previewProjectInfo);
+                    //Asignamos las horas estimadas y cargadas por proyecto
+                    this.showProgressHours(this.previewProjectInfo);
                 })
                 .catch((error) => {
                     console.error(error);

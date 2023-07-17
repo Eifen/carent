@@ -1,6 +1,6 @@
 .modal-preview{
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%,10rem),1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%,20rem),1fr));
     grid-auto-flow: dense;
     gap: 10px 2px;
 
@@ -90,10 +90,6 @@
         //Gerente
         &[for="thead-managerDepartment"]{
             grid-area: 15 / 2 / 16 / 3;
-        }
-        //Progreso del proyecto
-        &[for="thead-progress"]{
-            grid-area: 17 / 1 / 18 / 3;
         }
     }
 
@@ -190,6 +186,46 @@
                 margin-bottom: 10px;
                 border-bottom: solid 2px @Thead-Color;
                 &:last-child{ margin-bottom: 0px; border-bottom: none;}
+            }
+        }
+        //Barra de progreso
+        &[for="tbody-progress"]{
+            grid-area: 17 / 1 / 17 / 3;
+
+            & div{
+                display: grid;
+                grid-template-columns: repeat(5,1fr);
+                gap: 10px 2px;
+                align-items: center;
+                margin-bottom: 10px;
+                border-bottom: solid 2px @Thead-Color;
+                &:last-child{ margin-bottom: 0px; border-bottom: none;}
+
+                //Nombre de la division
+                & span[id$="title"]{
+                    grid-area: 1 / 1 / 2 / 6;
+                }
+
+                //Horas cargadas
+                & span[id$="load"]{
+                    grid-area: 2 / 1 / 3 / 3;
+                    font-size: 0.9em;
+                }
+
+                //Horas estimadas
+                & span[id$="estimated"]{
+                    grid-area: 2 / 4 / 3 / 6;
+                    font-size: 0.9em;
+                }
+
+                //Barra de progreso
+                & div[class="progress"]{
+                    grid-area: 3 / 1 / 4 / 6;
+                    display: flex;
+                    border-radius: 0px;
+                    font-size: 0.9em;
+                    font-weight: bolder;
+                }
             }
         }
     }
