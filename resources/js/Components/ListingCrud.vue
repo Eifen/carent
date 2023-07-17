@@ -79,6 +79,9 @@
                                     <span class="aLink"
                                         @click="$emit('columns2target', (controlTable.data[actualIndex + controlTable.minLength].codigo))"
                                         v-if="cursor == 'columnS2'">{{ setting }}</span>
+                                    <span class="aLink"
+                                        @click="$emit('columns3target', (controlTable.data[actualIndex + controlTable.minLength].codigo))"
+                                        v-if="cursor == 'columnS3'">{{ setting }}</span>
                                 </div>
                             </div>
                         </td>

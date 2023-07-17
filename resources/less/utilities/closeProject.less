@@ -1,0 +1,246 @@
+// //NOTA: REVISAR QUE EL AUTOFILL ME GENERE COLUMNAS AUTOMATICAMEMNTE
+// //NOTA: REVISAR EL RESPONSIVE SE CUMPLA
+// // width: min(50%,70rem);
+// // grid-template-columns: repeat(auto-fill, minmax(min(100%,15rem), 2fr));
+
+
+.close-title, .close-subtitle{
+    text-align: center;
+    padding: 10px;
+}
+
+//Estilos del contenedor padre
+.close-project{
+    display:grid;
+    background-color:#bbbbbb;
+    width: 90%;
+    margin: 20px auto;
+    padding: 20px;
+    align-items: center; //PORQUE NO ME HEREDAN LOS HIJOS ESTO
+    justify-content: center;
+    grid-template-columns: repeat(9,1fr);
+&-border{
+    border-width: 2px 2px 2px 2px;
+    border-color: black;
+    border-style: solid;
+}
+&-date{
+    display:grid;
+    //background-color: paleturquoise;
+    color:black;
+    align-items: center;
+    justify-content: center;
+    grid-area: 1 / 8 / 2 / 10;
+    grid-template-columns: 1fr 1fr;
+    //grid-template-rows: 1frb;
+// #data-time {
+//     grid-column: 1 / 2;
+// }
+}
+&-label{
+    background-color: #091f40;
+    color:white;
+    text-align: center;
+    padding: 5px;
+    border-width: 2px 0px 0px 2px;
+    border-color: black;
+    border-style: solid;
+    // &:last-child{
+    //     border-right: 2px;
+    // }
+}
+
+#data-info{ //CAMBIADO
+    // grid-column: span 9; //AGREGADO
+    // grid-row: 2 / 3; //AGREGADO
+    grid-area: 2 / span 9 / 3;
+    background-color: #091f40;
+}
+#value-proposed{ //CAMBIADO
+    // grid-column: span 9; //AGREGADO
+    // grid-row: 4 / 5; //AGREGADO
+    grid-area: 4 / span 9 / 5;
+    background-color: #091f40;
+}
+#additional-billing{
+    grid-area: 6 / span 9 / 7;
+    background-color: #091f40;
+}
+#final-value-executed{
+    grid-area: 8 / span 9 / 9;
+    background-color: #091f40;
+}
+#value-charged{
+    grid-area: 10 / 1 / 11 / 5;
+    background-color: #091f40;
+}
+#additional-billing-table{
+    grid-area: 13 / span 4 / 14;
+    background-color: #091f40;
+}
+#hours-unit{
+    grid-area: 10 / 5 / 11 / 10;
+    background-color: #091f40;
+}
+
+&-info{
+    display:grid;
+    //background-color: orange;
+    color:black;
+    align-items: center;
+    justify-content: center;
+    grid-area: 3 / 1 / 4 / 10;
+    grid-template-columns: 3fr 3fr 3fr;
+
+
+    div {
+        grid-row: 1 / 2;
+        text-align: center;
+        padding: 5px;
+        // border: solid 2px rgb(0, 0, 0);
+    }
+
+    div[for="project-name"], #project-name{
+        //background-color: purple;
+        // border-width: 2px 2px 0px 0px;
+        // border-color: black;
+        // border-style: solid;
+        // border-bottom: none;
+        grid-column: 1 / 2;
+    }
+
+    div[for="client-name"], #client-name{
+        //background-color: blueviolet;
+        //border: solid 2px rgb(0, 0, 0);
+        // border-width: 2px 2px 0px 0px;
+        // border-color: black;
+        // border-style: solid;
+        //arriba derecha abajo izquierda
+        // border-style: solid;
+        grid-column: 2 / 3;
+    }
+
+    div[for="partner-name"], #partner-name{
+        grid-column: 3 / 4; //AGREGADO
+    }
+}
+
+&-value{
+    display:grid;
+    //background-color: greenyellow;
+    color:black;
+    align-items: center;
+    justify-content: center;
+    //border: solid 2px rgb(0, 0, 0);
+    grid-area: 5 / 1 / 6 / 10;
+    grid-template-columns: repeat(5, 1fr);
+    div {
+        grid-row: 1 / 2;
+        text-align: center;
+        padding: 5px;
+    }
+
+    div[for="division-name"], #division-name{
+        //ackground-color: purple;
+        grid-column: 1 / 2;
+    }
+
+    div[for="value-hours"], #value-hours{
+        //background-color: blueviolet;
+        grid-column: 2 / 3;
+    }
+
+    div[for="value-estimated-hours"], #value-estimated-hours{
+        grid-column: 3 / 4; //AGREGADO
+    }
+
+    div[for="value-rate"], #value-rate{
+        grid-column: 4 / 5; //AGREGADO
+    }
+
+    div[for="value-expense"], #value-expense{
+        grid-column: 5 / 6; //AGREGADO
+    }
+}
+&-billing{
+    display:grid;
+    //background-color: greenyellow;
+    color:black;
+    align-items: center;
+    justify-content: center;
+    grid-area: 7 / 1 / 8 / 10;
+    grid-template-columns: repeat(3, 1fr);
+    div {
+        grid-row: 1 / 2;
+        text-align: center;
+        padding: 5px;
+    }
+
+    div[for="hours-billing"], #hours-billing{
+        //background-color: purple;
+        grid-column: 1 / 2;
+    }
+
+    div[for="hours-additional-billin"], #hours-additional-billin{
+        //background-color: blueviolet;
+        grid-column: 2 / 3;
+    }
+
+    div[for="value-billing"], #value-billing{
+        grid-column: 3 / 4; //AGREGADO
+    }
+}
+&-executed{
+    display:grid;
+    //background-color: greenyellow;
+    color:black;
+    align-items: center;
+    justify-content: center;
+    grid-area: 9 / 1 / 10 / 11;
+    grid-template-columns: repeat(3, 1fr);
+    div {
+        grid-row: 1 / 2;
+        text-align: center;
+        padding: 5px;
+    }
+
+    div[for="hours-executed"], #hours-executed{
+        //background-color: purple;
+        grid-column: 1 / 2;
+    }
+
+    div[for="rate-executed"], #rate-executed{
+        //background-color: blueviolet;
+        grid-column: 2 / 3;
+    }
+
+    div[for="expense-executed"], #expense-executed{
+        grid-column: 3 / 4; //AGREGADO
+    }
+}
+&-general{
+    display:grid;
+    align-items: start;
+    grid-area: 11 / 1 / 12 / 10;
+    grid-template-columns: repeat(2,1fr);
+}
+&-value-collected{
+    //background-color: rgb(236, 159, 204);
+    color:black;
+    grid-area: 1 / 1 / 2 / 2;
+    //align-self: baseline;
+    & table{
+        & th{ text-align: center}
+    }}
+&-unit-hours{
+    //background-color: rgb(62, 146, 135);
+    color:black;
+    grid-area: 1 / 2 / 2 / 3;
+    & table{
+    & th{ text-align: center}
+}}
+}
+   .close-project-button{
+        .buttonCRUD();
+    }
+

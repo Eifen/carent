@@ -99,7 +99,15 @@
 
         {{-- Redireccion de rutas para cierre de proyectos --}}
         @if (Request::url() === URL::route('closeProjects'))
-            @include('UI.Projects.ProjectClose.CloseIndex')
+            @if (Session::has('closeProject'))
+                @include('UI.Projects.ProjectClose.CloseIndex')
+            @else
+                @php
+                    header('Location: /projects');
+                    exit();
+                @endphp
+            @endif
         @endif
+
     </section>
 @endsection

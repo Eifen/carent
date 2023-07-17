@@ -234,4 +234,15 @@ class ProjectController extends Controller
         $projectId = $projectRequest->input("project_id");
         return response(ProjectModel::getProjectInfo($projectId));
     }
+
+    public function sessionCloseProjects(Request $closeProject)
+    {
+        //EL primer parametro de Axio es la ruta y la segunda un objeto json, La propiedad del input se almacena en$projectCloseId
+        $projectCloseId = $closeProject->input("project_id");
+        Session::put(
+            'closeProject',
+            ProjectModel::getProjectInfo($projectCloseId)
+        );
+        return response('Load Completed', 200);
+    }
 }
