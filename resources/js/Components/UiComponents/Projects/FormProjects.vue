@@ -80,6 +80,7 @@ export default {
                     managerError: "",
                     valueError: "",
                     hoursAssignedError: "",
+                    averageRateError: "",
                 }, //Control de errores de cada uno de los campos
             },
             inputWatchers: [], //Array que almacena todos los watcher
@@ -93,6 +94,7 @@ export default {
             inputQualityPartnerAssociated: "", //String que almacena la información del socio de calidad asociado
             inputHiringDate: "", //Fecha de contratacion
             inputValue: Number(0).toLocaleString("de-DE"), //Monto del proyecto
+            inputAverageRate: Number(0).toLocaleString("de-DE"), //Tasa promedio
             inputDepartments: [], //Array que almacena los valores del multiselect
             inputHoursAssigned: Number(0).toLocaleString("de-DE"), //Horas totales asignadas
             inputAdditionalHours: Number(0).toLocaleString("de-DE"), //Horas adicionales
@@ -103,6 +105,7 @@ export default {
             listInfoToUpdate: [], //Objeto de transferencia para el crud de las horas
             listInfoToCancel: [], //Objeto de transferencia para cancelar operaciones
             additionalInput: 0, //Input que se encuentra en el modal de valores adicionales
+            controlAverage: Number(0).toLocaleString("de-DE"), //Almacena el cambio de la tasa de un proyecto
 
             //Espacio dedicado a variables de data en la base de datos
             dataSelect: {
@@ -131,6 +134,7 @@ export default {
                 companiesValid: false,
                 departmentsValid: false,
                 hoursAssignedValid: false,
+                averageRateValid: false,
                 isValid: false, //Gestiona si cumple todos los campos requeridos
             },
             //Constantes

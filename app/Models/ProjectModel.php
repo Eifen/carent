@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 
 class ProjectModel extends Model
 {
-    private static $lastAssignedId = []; #Captura el ultimo ID de los departamentos asignados
     private static $lastInsertId = 0; #Se asigna al momento de sacar el last_insert del $lastAssignedId[]
     /**
      * Metodo que se encarga de abstraer de la base de dato todos los managers, o socios activos
@@ -109,8 +108,8 @@ class ProjectModel extends Model
     {
         //Estructuramos el array para el response con la informacion del proyecto
         return array(
-            "project" => DB::table('projects')->where('project_id', '=', $projectId)->first(),
-            "departments" => DB::table('projects_departments_assigned')->where('project_id', "=", $projectId)->get(),
+            "project" => DB::table('vw_projects_update')->where('project_id', '=', $projectId)->first(),
+            "departments" => DB::select('call sp_get_project_departments(?)', [$projectId]),
             //Montos adicionales
             "additionalValue" => DB::table('projects_additional_value')
                 ->where([
@@ -126,7 +125,8 @@ class ProjectModel extends Model
                     ['projects_additional_hours.status_id', '=', 1]
                 ])
                 ->get(),
-            "lastHour" => DB::table('projects_additional_hours')->orderBy('hours_id', 'desc')->value('hours_id')
+            "lastHour" => DB::table('projects_additional_hours')->orderBy('hours_id', 'desc')->value('hours_id'),
+            "projectsHours" => DB::select('call sp_get_projects_hours(?)', [$projectId])
         );
     }
 
@@ -152,10 +152,10 @@ class ProjectModel extends Model
         //Separamos el tipo de proceso
         switch ($typeControl) {
             case 'create':
-                DB::select('call sp_new_projects(?,?,?,?,?,?,?,?,?,?,?,?,@response)', $paramsToProcedure);
+                DB::select('call sp_new_projects(?,?,?,?,?,?,?,?,?,?,?,?,?,@response)', $paramsToProcedure);
                 break;
             case 'update':
-                DB::select('call sp_update_projects(?,?,?,?,?,?,?,?,?,?,?,?,?,@response)', $paramsToProcedure);
+                DB::select('call sp_update_projects(?,?,?,?,?,?,?,?,?,?,?,?,?,?,@response)', $paramsToProcedure);
                 break;
         }
         //Capturamos el JSON
@@ -232,16 +232,13 @@ class ProjectModel extends Model
                     ]);
             } else {
                 #Si no existe, hacemos un insert en la base de datos
-                array_push(self::$lastAssignedId, array(
-                    "department_id" => $department['departmentId'],
-                    "last_insert" => DB::table('projects_departments_assigned')
-                        ->insertGetId([
-                            "department_id" => $department['departmentId'],
-                            "project_id" => $projectId,
-                            "manager_id" => $department['selectManager'],
-                            "hours_assigned" => $department['hoursAssigned']
-                        ])
-                ));
+                DB::table('projects_departments_assigned')
+                    ->insertGetId([
+                        "department_id" => $department['departmentId'],
+                        "project_id" => $projectId,
+                        "manager_id" => $department['selectManager'],
+                        "hours_assigned" => $department['hoursAssigned']
+                    ]);
             }
         }
 
@@ -307,12 +304,10 @@ class ProjectModel extends Model
         //Procedemos a recorrer la informacion
         foreach ($hoursArray as $posicion3 => $hour) {
             // Buscamos el último departamento asignado que coincida con el id del departamento de la hora actual
-            $lastDepartmentAssigned = array_filter(self::$lastAssignedId, function ($departmentAssigned) use ($hour) {
-                return $departmentAssigned["department_id"] === $hour["department_id"];
-            });
+            $lastDepartmentAssigned = DB::select('call sp_last_department_assigned(?,?)', [$hour["department_id"], $projectId]);
             // Si lo encontramos, asignamos el valor de last_insert a self::$lastInsertId
             if (!empty($lastDepartmentAssigned)) {
-                self::$lastInsertId = reset($lastDepartmentAssigned)["last_insert"];
+                self::$lastInsertId = $lastDepartmentAssigned[0]->last_insert;
             }
 
             # Verificamos que exista la fila
@@ -350,7 +345,10 @@ class ProjectModel extends Model
             ->where('department_assigned_id', '=', $departmentAssignedId)
             ->get();
         //Obtenemos el codigo del proyecto
-        $getProjectId = $assignHoursUsers[0]->project_id;
+        $assignDepartmentHours = DB::table('projects_departments_assigned')
+            ->where('department_assigned_id', '=', $departmentAssignedId)
+            ->get();
+        $getProjectId = $assignDepartmentHours[0]->project_id;
         //Procedemos a recorrer la informacion
         foreach ($asignArray as $posicion2 => $value) {
             # Verificamos que exista la fila
@@ -388,7 +386,7 @@ class ProjectModel extends Model
      * @param Array $dateInfo Array asociativo donde la primera posicion almacena la fecha inicial y la ultima la final
      * El nombre de las llaves es respectivamente user_id, register_date
      */
-    public static function getAllLoadHours($dateInfo)
+    public static function getLoadHoursPerId($dateInfo)
     {
         //Capturamos el Id del usuario
         $userId = $dateInfo[0]["user_id"];

@@ -1,5 +1,8 @@
 import { createApp } from "vue/dist/vue.esm-bundler";
 import { componentsUI, methodsUI, watchUI, CrudUi, dataUI } from "../UIConfig";
+//Bootstrap
+import * as bootstrap from "bootstrap";
+import { AXIOSINTERVAL } from "../../app";
 
 const clientsIndex = createApp({
     data() {
@@ -10,7 +13,10 @@ const clientsIndex = createApp({
                 column3: "Razon social",
                 column4: "Correo electrónico",
                 column5: "Estatus",
-                settings: { columnS1: "Editar" },
+                settings: {
+                    columnS1: "Editar",
+                    columnS2: "Información del cliente",
+                },
             },
             selectSearch: {
                 select1: "Codigo",
@@ -19,6 +25,8 @@ const clientsIndex = createApp({
                 select4: "Correo",
             },
             tableTarget: "clients",
+            controlClientModal: {}, //Propiedad que controla el modal de la información de clientes
+            previewClientInfo: null, //Almacena la informacion del cliente seleccionado para sus vista preeliminar
         };
     },
     created() {
@@ -27,6 +35,11 @@ const clientsIndex = createApp({
     },
     mounted() {
         CrudUi.getTable("/clientes/allClients", this);
+        //Configuramos el modal
+        this.controlClientModal = new bootstrap.Modal(
+            document.getElementById("clientInfoModal"),
+            { keyboard: false, backdrop: "static" }
+        );
     },
     methods: {
         /**
@@ -44,6 +57,25 @@ const clientsIndex = createApp({
         },
         createClient() {
             window.location.href = "/clientes/create";
+        },
+        /**
+         * Metodo que recibe el codigo del cliente para mostrar información detallada del mismo
+         * @param {int} idClient
+         */
+        clientInfo(idClient) {
+            //Reiniciamos el preview
+            this.previewClientInfo = null;
+            //Abrimos el modal
+            this.controlClientModal.show();
+            //Cargamos su información
+            axios
+                .post("/clientes/info-client", { client_code: idClient })
+                .then((request) => {
+                    this.previewClientInfo = request.data[0];
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
         },
     },
     mixins: [componentsUI, methodsUI, watchUI, dataUI],

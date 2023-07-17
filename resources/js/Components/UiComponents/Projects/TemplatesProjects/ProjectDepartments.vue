@@ -53,6 +53,23 @@
                 {{ scope.messages.error.hoursAssignedError }}
             </div>
         </div>
+        <!-- Tasa promedio -->
+        <div class="mb-3" v-if="scope.inputValue != 0 && scope.inputHoursAssigned != 0">
+            <label for="AverageRate">Tasa Promedio
+                <span :class="scope.formClass.requiredField">*</span></label>
+            <div class="input-group">
+                <span class="input-group-text" id="basic-addon14">
+                    <font-awesome string-icon="fa-solid fa-hashtag"></font-awesome>
+                </span>
+                <input type="text" class="form-control" id="AverageRate" aria-describedby="basic-addon14"
+                    v-model="scope.inputAverageRate" :disabled="true" />
+            </div>
+            <!-- Mensajes de error en Nombre-->
+            <div :class="scope.formClass.failureValidation" v-if="scope.messages.error.averageRateError != ''">
+                <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
+                {{ scope.messages.error.averageRateError }}
+            </div>
+        </div>
         <!-- Horas adicionales -->
         <div class="mb-3" v-if="scope.dataSelect.additionalHours.length > 0">
             <label for="HoursAdditional">Horas Adicionales</label>

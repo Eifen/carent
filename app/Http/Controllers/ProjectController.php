@@ -74,7 +74,7 @@ class ProjectController extends Controller
      * Metodo que recibe una solicitud a través de un parametro
      * @return Response retorna un objeto de respuesta donde data corresponde a la información de fechas asociada a horas cargadas
      */
-    public function getLoadHours(Request $userInfoDate)
+    public function prepareLoadHoursPerId(Request $userInfoDate)
     {
         $getDateInfo = $userInfoDate->input('request');
         $prepareQuery = array(); //Array que se llenara luego de acomodar las fechas
@@ -89,7 +89,7 @@ class ProjectController extends Controller
 
             //Mientras la fecha inicial no iguale a la final, agregara un nuevo valor al array
             array_push($prepareQuery, array(
-                "user_id" => $getDateInfo["userId"],
+                "user_id" => Session::get('userId'),
                 "register_date" => $dateCount->format('Y-m-d'),
                 "day_of_week" => $numberOfDay - 1
             ));
@@ -98,7 +98,7 @@ class ProjectController extends Controller
         }
 
         //Retornamos informacion de horas
-        return response(ProjectModel::getAllLoadHours($prepareQuery), 200);
+        return response(ProjectModel::getLoadHoursPerId($prepareQuery), 200);
     }
 
     /**
@@ -159,6 +159,7 @@ class ProjectController extends Controller
                 $dataProject->input('project')['companyId'],
                 $hiringDate,
                 $dataProject->input('project')['projectValue'],
+                $dataProject->input('project')['averageRate'],
                 Session::get('userId'),
                 ConfigController::GetIpUser()
             )
@@ -222,5 +223,15 @@ class ProjectController extends Controller
         $getDepartmentAssignId = $assignUpdate->input('departmentAssignedId');
 
         return response(ProjectModel::updateAsignHours($getHoursUsers, $getDepartmentAssignId), 200);
+    }
+
+    /**
+     * Metodo que devuelve la información preeliminar del proyecto
+     * @param Request $projectRequest Almacena los parametros enviados por axios en ProjectIndex.js
+     */
+    public function prepareInfoProject(Request $projectRequest)
+    {
+        $projectId = $projectRequest->input("project_id");
+        return response(ProjectModel::getProjectInfo($projectId));
     }
 }

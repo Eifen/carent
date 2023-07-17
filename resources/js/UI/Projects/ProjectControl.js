@@ -20,6 +20,7 @@ const clientsControl = createApp({
                 hiringDate: "",
                 departments: [],
                 projectValue: 0,
+                averageRate: 0,
             }, //Objeto para el create
             paramsDTOEdit: {
                 projectId: 0,

@@ -1,0 +1,196 @@
+.modal-preview{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%,10rem),1fr));
+    grid-auto-flow: dense;
+    gap: 10px 2px;
+
+    //Encabezados
+    &-thead{
+        background: @Thead-Color;
+        color: @Text-Thead-Color;
+        font-weight: bolder;
+        padding: 5px;
+        text-align: center;
+        //Socio
+        &[for="thead-partner"]{
+            grid-area: 1 / 1 / 2 / 3 ;
+        }
+        //Direccion
+        &[for="thead-address"],&[for="thead-client"]{
+            grid-area: 3 / 1 / 4 / 3;
+        }
+        /*=================================================
+        * CLIENTES
+        *==================================================
+        */
+        //Rif
+        &[for="thead-rif"]{
+            grid-area: 5 / 1 / 6 / 2;
+        }
+        //Nit
+        &[for="thead-nit"]{
+            grid-area: 5 / 2 / 6 / 3;
+        }
+        //Pais
+        &[for="thead-country"]{
+            grid-area: 7 / 1 / 8 / 2;
+        }
+        //Telefono
+        &[for="thead-phone"]{
+            grid-area: 7 / 2 / 8 / 3;
+        }
+        //Sector
+        &[for="thead-sector"]{
+            grid-area: 9 / 1 / 10 / 2;
+        }
+        //Servicio
+        &[for="thead-service"]{
+            grid-area: 9 / 2 / 10 / 3;
+        }
+        /*=================================================
+        * PROYECTOS
+        *==================================================
+        */
+        //Gerente del proyecto
+        &[for="thead-manager"]{
+            grid-area: 5 / 1 / 6 / 3;
+        }
+        //Socio de calidad
+        &[for="thead-quality"]{
+            grid-area: 7 / 1 / 8 / 3;
+        }
+        //Fecha de contratacion
+        &[for="thead-hiring"]{
+            grid-area: 9 / 1 / 10 / 2;
+        }
+        //Monto del proyecto
+        &[for="thead-pValue"]{
+            grid-area: 9 / 2 / 10 / 3;
+        }
+        //Horas asignadas
+        &[for="thead-hoursAssigned"]{
+            grid-area: 11 / 1 / 12 / 2;
+        }
+        //Tasa promedio
+        &[for="thead-averageRate"]{
+            grid-area: 11 / 2 / 12 / 3;
+        }
+        //Horas adicionales totales
+        &[for="thead-additionalHours"]{
+            grid-area: 13 / 1 / 14 / 2;
+        }
+        //Montos adicionales totales
+        &[for="thead-additionalValue"]{
+            grid-area: 13 / 2 / 14 / 3;
+        }
+        //Departamento
+        &[for="thead-department"]{
+            grid-area: 15 / 1 / 16 / 2;
+        }
+        //Gerente
+        &[for="thead-managerDepartment"]{
+            grid-area: 15 / 2 / 16 / 3;
+        }
+        //Progreso del proyecto
+        &[for="thead-progress"]{
+            grid-area: 17 / 1 / 18 / 3;
+        }
+    }
+
+    //Contenido
+    &-tbody{
+        text-align: center;
+        //Socio
+        &[for="tbody-partner"]{
+            grid-area: 2 / 1 / 3 / 3;
+        }
+        //Direccion
+        &[for="tbody-address"],&[for="tbody-client"]{
+            grid-area: 4 / 1 / 5 / 3;
+        }
+        /*=================================================
+        * CLIENTES
+        *==================================================
+        */
+        //Rif
+        &[for="tbody-rif"]{
+            grid-area: 6 / 1 / 7 / 2;
+        }
+        //Nit
+        &[for="tbody-nit"]{
+            grid-area: 6 / 2 / 7 / 3;
+        }
+        //Pais
+        &[for="tbody-country"]{
+            grid-area: 8 / 1 / 9 / 2;
+        }
+        //Telefono
+        &[for="tbody-phone"]{
+            grid-area: 8 / 2 / 9 / 3;
+        }
+        //Sector
+        &[for="tbody-sector"]{
+            grid-area: 10 / 1 / 11 / 2;
+        }
+        //Servicio
+        &[for="tbody-service"]{
+            grid-area: 10 / 2 / 11 / 3;
+        }
+        //Text align para algunos campos
+        &[for="tbody-partner"],&[for="tbody-address"],&[for="tbody-client"],&[for="tbody-manager"],&[for="tbody-quality"]{
+            text-align: left;
+        }
+        /*=================================================
+        * PROYECTOS
+        *==================================================
+        */
+        //Gerente del proyecto
+        &[for="tbody-manager"]{
+            grid-area: 6 / 1 / 7 / 3;
+        }
+        //Socio de calidad
+        &[for="tbody-quality"]{
+            grid-area: 8 / 1 / 9 / 3;
+        }
+        //Fecha de contratacion
+        &[for="tbody-hiring"]{
+            grid-area: 10 / 1 / 11 / 2;
+        }
+        //Monto del proyecto
+        &[for="tbody-pValue"]{
+            grid-area: 10 / 2 / 11 / 3;
+        }
+        //Horas asignadas
+        &[for="tbody-hoursAssigned"]{
+            grid-area: 12 / 1 / 13 / 2;
+        }
+        //Tasa promedio
+        &[for="tbody-averageRate"]{
+            grid-area: 12 / 2 / 13 / 3;
+        }
+        //Horas adicionales totales
+        &[for="tbody-additionalHours"]{
+            grid-area: 14 / 1 / 15 / 2;
+        }
+        //Montos adicionales totales
+        &[for="tbody-additionalValue"]{
+            grid-area: 14 / 2 / 15 / 3;
+        }
+        //Departamentos asignados
+        &[for="tbody-departments"]{
+            grid-area: 16 / 1 / 17 / 3;
+            //Configuramos un grid interno para distribuir gerente y division
+            & div{
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0px 2px;
+                align-items: center;
+                text-align: left;
+                padding: 5px;
+                margin-bottom: 10px;
+                border-bottom: solid 2px @Thead-Color;
+                &:last-child{ margin-bottom: 0px; border-bottom: none;}
+            }
+        }
+    }
+}

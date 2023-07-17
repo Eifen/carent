@@ -43,7 +43,8 @@
                         table-modal-title="Lista de horas" table-modal-insert="Agregar hora adicional"
                         :last-id-table="scope.lastHoursId" :modal-columns="modalColumns" :scope-modal="scope"
                         @asign-list="asignHourList(scope.dataSelect.managersPerDepartment[cursor].departmentId)"
-                        :list-info="scope.listInfoToUpdate" @update-modal="updateHourModal($event)"
+                        :list-info="scope.listInfoToUpdate"
+                        @update-modal="updateHourModal($event, scope.dataSelect.managersPerDepartment[cursor].departmentId)"
                         error-message="No posee horas adicionales"
                         @prepare-save="prepareInfoTransfer"></project-additional-modal>
                 </span>
@@ -114,12 +115,13 @@ export default {
         /**
          * Metodo que añade una nueva fila al modal de horas
          * @param {*} lastValueId Almacena el siguiente id de horas adicionales
+         * @param {int} departmentId Almacena el id del departamento, area, division seleccionada
          */
-        updateHourModal(lastHourId) {
+        updateHourModal(lastHourId, departmentId) {
             this.scope.listInfoToUpdate.push({
                 codigo: lastHourId,
                 monto: parseInt(this.scope.additionalInput),
-                division: this.lastDepartmentId,
+                division: departmentId,
                 fecha: new Date(Date.now()).toISOString().substring(0, 10), //Formato de fecha YYYY-mm-dd,
                 estatus: 1
             })

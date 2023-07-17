@@ -64,7 +64,6 @@ export const weeksFromDateMethod = {
 
                 //Lo asociamos al array de objetos a devolver
                 weeks.push({
-                    userId: this.projectAssociatedToCharge[0].user_id,
                     initDateRange: `${initYear}-${initMonth}-${initDay}`,
                     finishDateRange: `${endYear}-${endMonth}-${endDay}`,
                     //Modificamos el mensaje para el select de semana

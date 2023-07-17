@@ -1,7 +1,6 @@
 <template>
     <span>
-        <font-awesome string-icon="fa-solid fa-plus" class="aLink" data-bs-toggle="modal" :data-bs-target="'#' + nameModal"
-            @click="$emit('asign-list')"></font-awesome>
+        <font-awesome string-icon="fa-solid fa-plus" class="aLink" @click="openModal()"></font-awesome>
     </span>
     <!-- Modal -->
     <div class="modal" tabindex="-1" :id="nameModal">
@@ -42,6 +41,7 @@
 <script>
 import FontAwesome from "@/Components/FontAwesome/FontAwesome.vue";
 import ListingCrud from "@/Components/ListingCrud.vue";
+import * as bootstrap from 'bootstrap';
 
 export default {
     props: {
@@ -69,13 +69,7 @@ export default {
         this.lastIdDTO = this.lastIdTable;
     },
     mounted() {
-        this.controlModal = document.getElementById(this.nameModal);
-        //Incializamos el listener
-        this.controlModal.addEventListener("shown.bs.modal", this.openModal);
-    },
-    beforeUnmount() {
-        //Removemos el listener
-        window.removeEventListener("show.bs.modal", this.openModal);
+        this.controlModal = new bootstrap.Modal(document.getElementById(this.nameModal), { keyboard: false, backdrop: "static" });
     },
     methods: {
         /**
@@ -83,7 +77,8 @@ export default {
          * No recibe parametros
          */
         openModal() {
-            this.controlModal.focus();
+            this.controlModal.show();
+            this.$emit('asign-list');
         },
         /**
          * Metodo que activa o inactiva una fila

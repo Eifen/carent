@@ -104,8 +104,9 @@ export const projectWatchers = {
                     .replace(/\./g, "")
                     .replace(",", ".");
                 const numberValid = Validate.Number(formatNumber);
-                //Verificamos si es un numero
+                //Verificamos si es un numero mayor a 0
                 if (!numberValid.response) throw numberValid.message;
+                if (newValue <= 0) throw "IsNotNumber";
                 //Si cumple con la condicion de numero decimal cambiamos el formato y activamos
                 //el control del boton
                 if (numberValid.response) {
@@ -113,6 +114,15 @@ export const projectWatchers = {
                         Number(formatNumber).toLocaleString("de-DE");
                     this.submitButton.valueValid = true;
                     this.messages.error.valueError = "";
+                    //Calculamos la nueva tasa promedio unicamente si el campo de horas es valido
+                    if (this.submitButton.hoursAssignedValid === true) {
+                        this.controlAverage = this.calculateAverageRate(
+                            formatNumber,
+                            this.inputHoursAssigned
+                        );
+                        //Asignamos el resultado al campo correspondiente
+                        this.inputAverageRate = this.controlAverage;
+                    }
                 }
             } catch (errorMessage) {
                 this.submitButton.valueValid = false;
@@ -358,6 +368,17 @@ export const projectWatchers = {
                 if (hoursCount == this.inputDepartments.length) {
                     this.messages.error.hoursAssignedError = "";
                     this.submitButton.hoursAssignedValid = true;
+                    //Calculamos la nueva tasa promedio unicamente si el campo de monto es valido
+                    if (this.submitButton.valueValid === true) {
+                        this.controlAverage = this.calculateAverageRate(
+                            this.inputValue
+                                .replace(/\./g, "")
+                                .replace(",", "."),
+                            this.inputHoursAssigned
+                        );
+                        //Asignamos el resultado
+                        this.inputAverageRate = this.controlAverage;
+                    }
                 }
                 if (departmentCount == this.inputDepartments.length)
                     this.submitButton.departmentsValid = true;
@@ -389,6 +410,24 @@ export const projectWatchers = {
                 } else if (countDot !== 0) {
                     this.additionalInput = oldValue;
                 }
+            }
+        },
+        //Tasa promedio
+        inputAverageRate(newAverage) {
+            try {
+                //Validamos que el campo coincida con el almacenado en controlAverage
+                if (newAverage !== this.controlAverage)
+                    throw "El valor no coincide con el calculado";
+
+                //Si pasa las validaciones
+                if (newAverage === this.controlAverage) {
+                    //Activamos la bandera
+                    this.submitButton.averageRateValid = true;
+                    this.messages.error.averageRateError = "";
+                }
+            } catch (errorMessage) {
+                this.messages.error.averageRateError = errorMessage;
+                this.submitButton.averageRateValid = false;
             }
         },
     },

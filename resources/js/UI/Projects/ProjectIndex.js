@@ -1,5 +1,9 @@
 import { createApp } from "vue";
 import { CrudUi, componentsUI, dataUI, methodsUI, watchUI } from "../UIConfig";
+import { projectInfoMethods } from "./ProjectInfoMethods";
+//Bootstrap
+import * as bootstrap from "bootstrap";
+import axios from "axios";
 
 //TODO Realizar proceso para projectos
 const projectsIndex = createApp({
@@ -14,7 +18,10 @@ const projectsIndex = createApp({
                 column6: "Socio",
                 column7: "Gerente",
                 column8: "Estatus",
-                settings: { columnS1: "Editar" },
+                settings: {
+                    columnS1: "Editar",
+                    columnS2: "Avance del proyecto",
+                },
             },
             selectSearch: {
                 select1: "Codigo",
@@ -25,6 +32,9 @@ const projectsIndex = createApp({
                 select6: "Estatus",
             },
             tableTarget: "projects",
+            controlProjectModal: {}, //Controla el modal para proyectos
+            previewProjectInfo: null, //Array informativo del proyecto
+            previewAllLoadHours: [], //Almacena la información de todas las horas a proyectos cargadas en el sistema
         };
     },
     created() {
@@ -33,6 +43,11 @@ const projectsIndex = createApp({
     },
     mounted() {
         CrudUi.getTable("/projects/all-projects", this);
+        //Control del modal
+        this.controlProjectModal = new bootstrap.Modal(
+            document.getElementById("projectInfoModal"),
+            { keyboard: false, backdrop: true }
+        );
     },
     methods: {
         createProject() {
@@ -51,8 +66,27 @@ const projectsIndex = createApp({
             //Llamamos al método Static que hace la consulta Axios
             CrudUi.enableEdit(routesDTO, paramsDTO);
         },
+        /**
+         * Metodo que abre el modal y carga la información completa del proyecto
+         * @param {int} idProject Corresponde al id del proyecto
+         */
+        infoProject(idProject) {
+            //Reiniciamos la informacion
+            this.previewProjectInfo = null;
+            this.controlProjectModal.show();
+            //Cargamos la información
+            axios
+                .post("/projects/info-project", { project_id: idProject })
+                .then((request) => {
+                    this.previewProjectInfo = request.data;
+                    console.log(this.previewProjectInfo);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        },
     },
-    mixins: [componentsUI, methodsUI, watchUI, dataUI],
+    mixins: [componentsUI, methodsUI, watchUI, dataUI, projectInfoMethods],
 });
 
 if (document.getElementById("section-projects") !== null) {

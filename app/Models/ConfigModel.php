@@ -19,8 +19,7 @@ class ConfigModel extends Model
         //Capturamos la cantidad de registros actuales
         $getLimit = DB::select("SELECT COUNT(LAST_INSERT_ID()) AS maxID FROM $tableToGet");
 
-        if(is_array($getLimit))
-        {
+        if (is_array($getLimit)) {
             return array(
                 "response" => true,
                 "data" => $getLimit[0]->maxID
@@ -40,12 +39,12 @@ class ConfigModel extends Model
      */
     public function GetAll($tableTarget)
     {
-        if(!DB::table('vw_'.$tableTarget.'_preview')->exists()){
-            return array("response"=>false,"message"=>'Error 0012: table target is empty ('.'vw_'.$tableTarget.'_preview'.')');
+        if (!DB::table('vw_' . $tableTarget . '_preview')->exists()) {
+            return array("response" => false, "message" => 'Error 0012: table target is empty (' . 'vw_' . $tableTarget . '_preview' . ')');
         }
         //Si la tabla existe procede a traerlo
-        $getSQL = DB::table('vw_'.$tableTarget.'_preview')->get();
-        return array("response"=>true,"message"=>$getSQL);
+        $getSQL = DB::table('vw_' . $tableTarget . '_preview')->get();
+        return array("response" => true, "message" => $getSQL);
     }
 
     /**
@@ -68,9 +67,10 @@ class ConfigModel extends Model
      * Debe existir una columna de control de estados (status_id) en la tabla seleccionada
      * @param String $tableReference: Captura la tabla seleccionada
      */
-    public static function getAllDataStatusControl($tableReference){
+    public static function getAllDataStatusControl($tableReference)
+    {
         return DB::table($tableReference)
-        ->where("status_id",'=',1)
-        ->get();
+            ->where("status_id", '=', 1)
+            ->get();
     }
 }

@@ -147,7 +147,7 @@ export class CrudUi {
             .post(routesSelf.post, params)
             .then((request) => {
                 if (request.status === 200 && !request.data.response)
-                    throw request.data;
+                    throw request.data.message;
                 toast.success(request.data.message, {
                     position: toast.POSITION.TOP_LEFT,
                     autoClose: false,

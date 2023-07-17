@@ -129,14 +129,7 @@ const registerApp = createApp({
          */
         registerDay(childParam, projectAssignedId) {
             this.onCharged = true;
-            //TODO
-            console.log(
-                childParam,
-                projectAssignedId,
-                this.gridProjectInfo,
-                this.listProjectHourData
-            );
-
+            //Preparamos la informacion a enviar
             const prepareDay = {
                 selectInfo: childParam, //Datos de los input del dia
                 assignedId: projectAssignedId, //Id del proyecto asignado por cargar
@@ -150,7 +143,6 @@ const registerApp = createApp({
                     //Verificamos que el response no sea falso
                     if (request.status === 200 && !request.data.response)
                         throw request.data.message;
-                    console.log(request);
                     this.listProjectHourData = request.data.message;
                     //Mensaje de confirmacion
                     toast.success("Hora registrada exitosamente", {
@@ -163,7 +155,7 @@ const registerApp = createApp({
                     }, AXIOSINTERVAL);
                 })
                 .catch((errorMessage) => {
-                    console.log(errorMessage);
+                    console.error(errorMessage);
                     toast.error(errorMessage.error, {
                         position: toast.POSITION.TOP_LEFT,
                         autoClose: NOTIFYINTERVAL,
@@ -181,14 +173,6 @@ const registerApp = createApp({
          * @param {*} adminAssignedId Se trata del id del concepto seleccionado y asignado para cargar
          */
         registerAdminDay(childParam, adminAssignedId) {
-            //TODO
-            console.log(
-                childParam,
-                adminAssignedId,
-                this.gridAdminInfo,
-                this.listAdminHourData
-            );
-
             //Preparar dia administrativo
             const prepareAdminDay = {
                 selectInfo: childParam, //Datos de los input del dia
@@ -217,7 +201,7 @@ const registerApp = createApp({
                     }, AXIOSINTERVAL);
                 })
                 .catch((errorMessage) => {
-                    console.log(errorMessage);
+                    console.error(errorMessage);
                     toast.error(errorMessage.error, {
                         position: toast.POSITION.TOP_LEFT,
                         autoClose: NOTIFYINTERVAL,

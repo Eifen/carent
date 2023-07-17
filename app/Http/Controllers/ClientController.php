@@ -22,7 +22,7 @@ class ClientController extends Controller
         //Corroboraros que exista un usuario
         if (Session::has('userId')) $this->permitControl = true;
 
-        return view('index')->with("Session",$this->permitControl);
+        return view('index')->with("Session", $this->permitControl);
     }
 
     /**
@@ -34,7 +34,7 @@ class ClientController extends Controller
         $this->modelInstance = new ConfigModel();
         $allData = $this->modelInstance->GetAll('clients');
 
-        return response($allData,200);
+        return response($allData, 200);
     }
 
     /**
@@ -51,7 +51,7 @@ class ClientController extends Controller
             "dataStatus" => ConfigModel::GetAllStatus()
         ];
 
-        return response($paramsInit,200);
+        return response($paramsInit, 200);
     }
 
     /**
@@ -62,8 +62,8 @@ class ClientController extends Controller
     public function ClientPerCode(Request $clientUpdate)
     {
         //Creamos una instancia de sesión temporal
-        Session::put("clientUpdate",ClientModel::GetClientsPerCode($clientUpdate->input('codigoSQL')));
-        return response("User Loaded",200);
+        Session::put("clientUpdate", ClientModel::GetClientsPerCode($clientUpdate->input('codigoSQL')));
+        return response("User Loaded", 200);
     }
 
     /**
@@ -92,25 +92,37 @@ class ClientController extends Controller
             ConfigController::GetIpUser()
         );
 
-        if($dataClient->input('isEdit'))
-        {
+        if ($dataClient->input('isEdit')) {
             $paramsEdit = array(
                 $dataClient->input('client')['IdClient'],
                 $dataClient->input('client')['IdStatus']
             );
 
             //Unimos ambos array
-            $paramsToControl = array_merge($paramsToControl,$paramsEdit);
+            $paramsToControl = array_merge($paramsToControl, $paramsEdit);
         }
 
         $dataClient->input('isEdit')
-        ? $ResponseClient = ClientModel::ControlClients($paramsToControl,'update')
-        : $ResponseClient = ClientModel::ControlClients($paramsToControl,'create');
+            ? $ResponseClient = ClientModel::ControlClients($paramsToControl, 'update')
+            : $ResponseClient = ClientModel::ControlClients($paramsToControl, 'create');
 
         //Retornamos la data
-        return response($ResponseClient,200);
+        return response($ResponseClient, 200);
     }
 
     /** Metodo que elimina la sesión temporal de clientUpdate */
-    public function DeleteClientUpdate() { if(Session::has('clientUpdate')) Session::forget('clientUpdate'); }
+    public function DeleteClientUpdate()
+    {
+        if (Session::has('clientUpdate')) Session::forget('clientUpdate');
+    }
+    /**
+     * Metodo que obtiene la información preeliminar de un cliente
+     * @param Request $clientRequest recibe los parametros enviados desde el clientsIndex.js
+     * @return Response Retorna la información del client en formato response
+     */
+    public function prepareInfoClient(Request $clientRequest)
+    {
+        $clientCode = $clientRequest->input('client_code');
+        return response(ClientModel::getInfoClient($clientCode), 200);
+    }
 }

@@ -42,6 +42,9 @@ export const projectMethods = {
                 projectValue: this.inputValue
                     .replace(/\./, "")
                     .replace(/,/, "."),
+                averageRate: this.inputAverageRate
+                    .replace(/\./, "")
+                    .replace(/,/, "."),
             };
 
             //Preparamos los parametros de update en caso de actualizar
@@ -201,38 +204,44 @@ export const projectMethods = {
             this.inputAdditionalHours = 0;
             this.inputAdditionalValue = 0;
 
-            for (
-                let countProject = 0;
-                countProject < newEdit.additionalHours.length;
-                countProject++
-            ) {
-                if (newEdit.additionalHours[countProject].status_id === 1) {
-                    this.inputAdditionalHours = Number(
+            //Horas
+            if (newEdit.additionalHours.length != 0) {
+                newEdit.additionalHours.forEach((hour) => {
+                    const additionalHourSum =
                         parseInt(this.inputAdditionalHours) +
-                            parseInt(
-                                newEdit.additionalHours[countProject]
-                                    .additional_hour
-                            )
-                    ).toLocaleString("de-DE");
-                }
+                        parseInt(hour["additional_hour"]);
+                    this.inputAdditionalHours = additionalHourSum;
+                });
             }
 
             //Montos
-            for (
-                let countProject = 0;
-                countProject < newEdit.additionalValue.length;
-                countProject++
-            ) {
-                if (newEdit.additionalValue[countProject].status_id === 1) {
-                    this.inputAdditionalValue = Number(
+            if (newEdit.additionalValue.length != 0) {
+                newEdit.additionalValue.forEach((value) => {
+                    const additionalValueSum =
                         parseFloat(this.inputAdditionalValue) +
-                            parseFloat(
-                                newEdit.additionalValue[countProject]
-                                    .aditional_project_value
-                            )
-                    ).toLocaleString("de-DE");
-                }
+                        parseFloat(value["aditional_project_value"]);
+                    this.inputAdditionalValue = additionalValueSum;
+                });
             }
+
+            //Formateamos
+            this.inputAdditionalHours = Number(
+                this.inputAdditionalHours
+            ).toLocaleString("de-DE");
+            this.inputAdditionalValue = Number(
+                this.inputAdditionalValue
+            ).toLocaleString("de-DE");
+        },
+        /**
+         * Metodo que calcula la tasa promedio del proyecto
+         * @param {float} projectValue Monto del proyecto
+         * @param {int} totalHours horas totales del proyecto
+         * @return {float} Retorna un valor númerico correspondiente a la tasa promedio
+         */
+        calculateAverageRate(projectValue, totalHours) {
+            return Number(projectValue / totalHours)
+                .toFixed(2)
+                .toLocaleString("de-DE");
         },
     },
 };

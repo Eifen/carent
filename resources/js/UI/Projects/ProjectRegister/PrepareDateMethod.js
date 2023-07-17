@@ -19,6 +19,8 @@ export const preparDateMethod = {
          * @param {*} yearSelected Año seleccionado
          */
         prepareMonth(yearSelected) {
+            //Limpiamos los meses
+            this.inputMonthOptions = [];
             //Obtenemos el mes actual
             const getActualYear = new Date().getFullYear();
             let getActualMonth =

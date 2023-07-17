@@ -64,6 +64,9 @@ export const createdMixin = (self) => {
                 }
             }
 
+            //Cambiamos el estado del monto para que muestre un mensaje de error
+            self.inputValue = "";
+
             //Revisamos si edit existe
             if (self.isEdit) self.$emit("init-project");
         })
