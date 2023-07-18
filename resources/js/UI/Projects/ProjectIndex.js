@@ -21,6 +21,7 @@ const projectsIndex = createApp({
                 settings: {
                     columnS1: "Editar",
                     columnS2: "Avance del proyecto",
+                    columnS3: "Cierre de proyecto",
                 },
             },
             selectSearch: {
@@ -75,6 +76,16 @@ const projectsIndex = createApp({
             //Llamamos al método Static que hace la consulta Axios
             CrudUi.enableEdit(routesDTO, paramsDTO);
         },
+        closeProject(idProject) {
+            const paramsDTO = { codigoSQL: idProject };
+            const routesDTO = {
+                post: "/projects/close/prepare-info",
+                redirect: "/projects/close",
+            };
+            //Llamamos al método Static que hace la consulta Axios
+            CrudUi.enableEdit(routesDTO, paramsDTO);
+        },
+
         /**
          * Metodo que abre el modal y carga la información completa del proyecto
          * @param {int} idProject Corresponde al id del proyecto

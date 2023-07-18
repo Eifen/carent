@@ -4,7 +4,7 @@
         :pagination-limit="lengthColumns" :table-info="proxyToJson(listData)" title-table="proyectos"
         button-title="proyecto" :select-search="proxyToJson(selectSearch)"
         not-found-message="No existen proyectos creados" view-create view-search @createButton="createProject()"
-        @columns1target="editProject" @columns2target="infoProject"></listing-crud>
+        @columns1target="editProject" @columns2target="infoProject" @columns3target="closeProject"></listing-crud>
     <!-- Modal -->
     <div class="modal fade" id="projectInfoModal" tabindex="-1">
         <loading :active="previewProjectInfo === null"></loading>
