@@ -14,52 +14,56 @@
             <div class="close-project-label" id="value-charged">Valores Realizados Cobrados</div>
             <div class="close-project-label" id="hours-unit">Horas por Unidad</div>
             <div class="close-project-info">
-                <div class="close-project-border" for="project-name">Nombre del Proyecto</div>
-                <input type="text" v-model="project.name" class="form-control" id="project-name"
-                    placeholder="Escribe el nombre del proyecto">
-                <div for="client-name">Nombre del Cliente</div>
-                <input type="text" v-model="project.client" class="form-control" id="client-name"
-                    placeholder="Escribe el nombre del cliente">
-
-                <div for="partner-name">Nombre del Socio a Cargo</div>
-                <input type="text" v-model="project.partner" class="form-control" id="partner-name"
-                    placeholder="Escribe el nombre del socio a cargo">
+                <span id="project-name">
+                    <div for="project-name">Nombre del Proyecto</div>
+                    {{ project.name }}
+                </span>
+                <span id="client-name">
+                    <div for="client-name">Nombre del Cliente</div>
+                    {{ project.client }}
+                </span>
+                <span id="partner-name">
+                    <div for="partner-name">Nombre del Socio a Cargo</div>
+                    {{ project.partner }}
+                </span>
             </div>
             <div class="close-project-value">
-                <div for="division-name">División</div>
-                <input type="text" class="form-control" id="division-name" placeholder="Escribe el nombre de la division">
-
-                <div for="value-hours">Horas</div>
-                <input type="text" class="form-control" id="value-hours" placeholder="Horas">
-
-                <div for="value-estimated-hours">Horas Estimadas</div>
-                <input type="text" class="form-control" id="value-estimated-hours" placeholder="Horas Estimadas">
-
-                <div for="value-rate">Tasa Promedio</div>
-                <input type="text" class="form-control" id="value-rate" placeholder="Horas Estimadas">
-
-                <div for="value-expense">Gastos</div>
-                <input type="text" class="form-control" id="value-expense" placeholder="Horas Estimadas">
+                <span id="value-hours">
+                    <div for="value-hours">Horas Estimadas</div>
+                    {{ project.hoursEstimated }}
+                </span>
+                <span id="value-estimated-hours">
+                    <div for="value-hours">Honorarios Estimados </div>
+                    {{ project.valueEstimated }}
+                </span>
+                <span id="value-rate">
+                    <div for="value-rate">Tasa Promedio </div>
+                    {{ project.average }}
+                </span>
+                <!-- <div for="value-expense">Gastos Estimados</div>
+                <input type="text" class="form-control" id="value-expense" placeholder="Horas Estimadas"> -->
             </div>
+
             <div class="close-project-billing">
-                <div for="hours-billing">Horas</div>
-                <input type="text" class="form-control" id="hours-billing" placeholder="Horas">
+                <div for="hours-billing">Horas Adicionales</div>
+                <input type="text" v-model="project.additionalHour" class="form-control" id="hours-billing"
+                    placeholder="Horas">
 
-                <div for="hours-additional-billing">Horarios Adicionales</div>
-                <input type="text" class="form-control" id="hours-additional-billing" placeholder="Horas Adicionales">
-
-                <div for="value-billing">Gastos</div>
-                <input type="text" class="form-control" id="value-billing" placeholder="Gastos">
+                <div for="hours-additional-billing">Honorarios Adicionales</div>
+                <input type="text" v-model="project.hoursExtra" class="form-control" id="hours-additional-billing"
+                    placeholder="Horas Adicionales">
+                <!-- <div for="value-billing">Gastos Adicionales</div>
+                <input type="text" class="form-control" id="value-billing" placeholder="Gastos"> -->
             </div>
             <div class="close-project-executed">
-                <div for="hours-executed">Horas</div>
-                <input type="text" class="form-control" id="hours-executed" placeholder="Horas">
+                <div for="hours-executed">Horas Reales</div>
+                <input type="text" v-model="project.hoursReal" class="form-control" id="hours-executed" placeholder="Horas">
 
-                <div for="rate-executed">Tasa Promedio</div>
+                <div for="rate-executed">Tasa Promedio Final</div>
                 <input type="text" class="form-control" id="rate-executed" placeholder="Horas Adicionales">
 
-                <div for="expense-executed">Gastos</div>
-                <input type="text" class="form-control" id="expense-executed" placeholder="Gastos">
+                <!-- <div for="expense-executed">Gastos Reales</div>
+                <input type="text" class="form-control" id="expense-executed" placeholder="Gastos"> -->
             </div>
 
             <div class="close-project-general table-responsive">
@@ -69,7 +73,7 @@
                             <tr>
                                 <th class="col-sm-4 col-lg-4"></th>
                                 <th class="col-sm-4 col-lg-4"> Horarios Reales USD</th>
-                                <th class="col-sm-4 col-lg-4">Gastos USD</th>
+                                <!-- <th class="col-sm-4 col-lg-4">Gastos USD</th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -77,8 +81,8 @@
                                 <td class="col-sm-4 col-lg-4"></td>
                                 <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control” placeholder=“Horas”>
                                 </td>
-                                <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control” placeholder=“Gastos”>
-                                </td>
+                                <!-- <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control” placeholder=“Gastos”>
+                                </td> -->
                             </tr>
                         </tbody>
                         <tfoot>
@@ -87,9 +91,9 @@
                                 <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control”
                                         placeholder=“Horas-Totales”>
                                 </td>
-                                <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control”
+                                <!-- <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control”
                                         placeholder=“Gastos-Totales”>
-                                </td>
+                                </td> -->
                             </tr>
                         </tfoot>
                     </table>
@@ -104,24 +108,24 @@
                                 <td class="col-sm-4 col-lg-4"></td>
                                 <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control” placeholder=“Horas”>
                                 </td>
-                                <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control” placeholder=“Gastos”>
+                                <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control” placeholder=“Horas”>
                                 </td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr>
                                 <td class="col-sm-4 col-lg-4"> Total B</td>
-                                <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control” placeholder=“Horas”>
+                                <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control” placeholder=“Total”>
                                 </td>
-                                <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control” placeholder=“Horas”>
+                                <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control” placeholder=“Total”>
                                 </td>
 
                             </tr>
                             <tr>
                                 <td class="col-sm-4 col-lg-4"> Total A+B</td>
-                                <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control” placeholder=“Gastos”>
+                                <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control” placeholder=“Total”>
                                 </td>
-                                <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control” placeholder=“Gastos”>
+                                <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control” placeholder=“Total”>
                                 </td>
                             </tr>
                         </tfoot>
@@ -249,7 +253,8 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <th class="col-sm-2 col-lg-2">Valor monetario sin facturar(con base propuesta original)</th>
+                                <th class="col-sm-2 col-lg-2">Valor monetario sin facturar(con base propuesta original)
+                                </th>
                                 <th class="col-sm-2 col-lg-2"><input type=“text” class=“form-control” placeholder=“Horas”
                                         size="14"></th>
                             </tr>
@@ -266,7 +271,8 @@
                                         size="14"></th>
                             </tr>
                             <tr>
-                                <th class="col-sm-2 col-lg-2">Valor Monetario (beneficiario) en gastos por recuperar</th>
+                                <th class="col-sm-2 col-lg-2">Valor Monetario (beneficiario) en gastos por recuperar
+                                </th>
                                 <th class="col-sm-2 col-lg-2"><input type=“text” class=“form-control” placeholder=“Horas”
                                         size="14"></th>
                             </tr>
@@ -330,6 +336,11 @@
 import DropdownSelect from "@/Components/DropdownSelect.vue";
 
 export default {
+
+    props: {
+        loadInitial: Object, //almacena el objeto para cargar la informacion del proyectos antes de que se cargue el componente
+        active: Boolean //Controla la activacion o desactivacion del componente
+    },
     data() {
         return {
             dataSelect: [],
@@ -338,23 +349,25 @@ export default {
                 'name': '',
                 'client': '',
                 'partner': '',
+
+                'hoursEstimated': 0,
+                'valueEstimated': 0,
+                'average': 0,
+
+                'additionalHour': 0,
+                'hoursExtra': 0,
+                'hoursReal': 0,
             },
             closeproject: 'NIRVANA',
             projectclose: true,
         }
     },
-    mounted() {
 
-        axios.post('close-projects/get-data-close-project')
-            .then(request => {
-                // if (request.status !== 200) throw request;
-                console.log(request)
-            })
-            .catch(error => {
-                console.error(error);
-            });
-        this.getInfoProject(100)
-    },
+    emits: [
+        'load-view'
+    ],
+
+    //La informacion debe cargar apenas abre el componente
     //Metodo(variable)
     methods: {
 
@@ -362,8 +375,6 @@ export default {
             //Axios
             axios.post('close-projects/get-data-close-project-exp', { id: infoProjectMethods })
                 .then(request => {
-
-
                 })
                 .catch(error => {
                     console.error(error);
@@ -371,13 +382,33 @@ export default {
         },
     },
     computed: {},
-    watch: {},
+    watch: {
+        loadInitial() {
+            console.log(this.loadInitial)
+            this.project.name = this.loadInitial.project.project_description
+            this.project.client = this.loadInitial.project.bussiness_name
+            this.project.partner = this.loadInitial.project.partner_name
+            this.project.valueEstimated = parseFloat(this.loadInitial.project.project_value)
+            this.project.average = parseFloat(this.loadInitial.project.average_rate)
+            //Sumatoria de las horas totales
+            this.loadInitial.departments.forEach(department => {
+                this.project.hoursEstimated = parseInt(department.hours_assigned) + parseInt(this.project.hoursEstimated)
+            })
+            this.loadInitial.additionalHours.forEach(department => {
+                this.project.additionalHour = parseInt(department.additional_hour) + parseInt(this.project.additionalHour)
+            })
+            this.loadInitial.additionalValue.forEach(department => {
+                this.project.hoursExtra = parseFloat(department.aditional_project_value) + parseFloat(this.project.hoursExtra)
+            })
+            this.loadInitial.projectsHours.forEach(department => {
+                this.project.hoursReal = parseFloat(department.total_hours) + parseFloat(this.project.hoursReal)
+            })
+        },
+        active(newActive) {
+            if (newActive) this.$emit('load-view')
+        }
+    },
     components: { DropdownSelect },
-    props:
-
-    {
-        active: Boolean
-    }
 }
 </script>
 

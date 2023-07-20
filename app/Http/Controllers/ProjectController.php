@@ -184,10 +184,11 @@ class ProjectController extends Controller
         return response($ResponseProject, 200);
     }
 
-    /** Metodo que elimina la sesión temporal de clientUpdate */
+    /** Metodo que elimina la sesión temporal*/
     public function deleteProjectUpdate()
     {
         if (Session::has('projectUpdate')) Session::forget('projectUpdate');
+        if (Session::has('closeProject')) Session::forget('closeProject');
     }
 
     /** Metodo que retorna la Session['usersAssign'] al request y luego elimina la session */
@@ -238,7 +239,7 @@ class ProjectController extends Controller
     public function sessionCloseProjects(Request $closeProject)
     {
         //EL primer parametro de Axio es la ruta y la segunda un objeto json, La propiedad del input se almacena en$projectCloseId
-        $projectCloseId = $closeProject->input("project_id");
+        $projectCloseId = $closeProject->input("codigoSQL");
         Session::put(
             'closeProject',
             ProjectModel::getProjectInfo($projectCloseId)

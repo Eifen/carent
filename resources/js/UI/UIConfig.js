@@ -34,12 +34,13 @@ export const methodsUI = {
                 return JSON.parse(JSON.stringify(objectToConvert));
         },
         /**
-         * Metodo que prepara la data a actualizar de una tabla
+         * Metodo que prepara la data a actualizar de una tabla. Debe existir una propiedad en data() llamada updateModel
          * @param {Object} listDTO Obtiene los parametros de la sesion de la ruta objetivo temporal antes de eliminarla
          * @param {String} route Almacena en un string la URL donde se ejecutara el request PUT
          */
         prepareUpdate(listDTO, route) {
             this.updateModel = listDTO;
+
             //Una vez asignado, eliminamos la sesion
             axios
                 .put(route)
