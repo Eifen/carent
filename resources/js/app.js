@@ -21,3 +21,5 @@ import "./UI/Projects/ProjectAssign/AssignModal";
 //Registro de Horas
 import "./UI/Projects/ProjectRegister/RegisterIndex";
 import "./UI/Projects/ProjectClose/CloseIndex";
+//Validacion de horas
+import "./UI/Projects/ProjectValidate/ProjectValidateIndex";

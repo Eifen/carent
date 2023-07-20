@@ -88,10 +88,12 @@ Route::prefix('/')->group(function () {
         //Assign
         Route::prefix('/assign')->group(function () {
             Route::get('/', [ProjectController::class, 'index'])->name('assign');
+            Route::get('/validate', [ProjectController::class, 'index'])->name('validate');
             Route::post('/assign-users', [ProjectController::class, 'usersPerDepartment']);
             Route::post('/assign-projects', [ProjectController::class, 'getAllAssignProject']);
             Route::post('/re-assign-data', [ProjectController::class, 'reAssignUsers']); //Elimina la Session['usersAssign'] luego de reasignar
             Route::post('/update-asign-projects', [ProjectController::class, 'updateAsign']);
+            Route::post('/all-admin-hours', [ProjectController::class, 'allAdminHours']); //Devuelve todos las horas administrativas en formato del preview
         });
         //Register
         Route::prefix('/register-hours')->group(function () {

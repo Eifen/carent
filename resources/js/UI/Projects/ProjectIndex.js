@@ -99,7 +99,6 @@ const projectsIndex = createApp({
                 .post("/projects/info-project", { project_id: idProject })
                 .then((request) => {
                     this.previewProjectInfo = request.data;
-                    console.log(this.previewProjectInfo);
                     //Asignamos las horas estimadas y cargadas por proyecto
                     this.showProgressHours(this.previewProjectInfo);
                 })

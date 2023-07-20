@@ -92,6 +92,11 @@
             @include('UI.Projects.ProjectAssign.assignIndex')
         @endif
 
+        {{-- Redireccion para validacion de horas administrativas cargadas --}}
+        @if (Request::url() === URL::route('validate'))
+            @include('UI.Projects.ProjectValidate.validateIndex')
+        @endif
+
         {{-- Redirección de rutas para Carga de Horas --}}
         @if (Request::url() === URL::route('register'))
             @include('UI.Projects.ProjectRegister.registerIndex')

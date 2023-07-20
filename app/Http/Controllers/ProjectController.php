@@ -39,6 +39,39 @@ class ProjectController extends Controller
     }
 
     /**
+     * Metodo que se encarga de devolver el formato de las horas administrativas
+     */
+    public function allAdminHours()
+    {
+        $this->modelInstance = new ConfigModel();
+        $getAdminHours = $this->modelInstance->GetAll('projects_admin');
+        //Filtramos la información del departamento del usuario. Para devolver las de sus division
+        $arrayDTO = $getAdminHours["message"]->toArray();
+        $getAdminHours["message"] = array_filter($arrayDTO, function ($adminHour) {
+            //Condiciones especiales de visualizacio para usuarios
+            switch (Session::get('userId')) {
+                    //Root o administrador
+                case 1:
+                    return true;
+                    //Por defecto solo retorna las horas de ese departamento sin importar el tipo de concepto
+                default:
+                    return $adminHour->department_id === Session::get('departmentId');
+            }
+        });
+
+        //Quitamos las propiedades resultantes
+        $getAdminHours["message"] = array_map(function ($column) {
+            //Desactivamos las columnas innecesarias
+            unset($column->department_id);
+            return $column;
+        }, $getAdminHours["message"]);
+
+        //Reindexamos y convertimos nuevamente a una colleccion
+        $getAdminHours["message"] = collect(array_values($getAdminHours["message"]));
+        return response($getAdminHours, 200);
+    }
+
+    /**
      * Metodo que devuelve una vista de todos los proyectos asignados por el usuario actual
      */
     public function getAllAssignProject()

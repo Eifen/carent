@@ -57,6 +57,9 @@ class ConfigModel extends Model
         switch ($tableReference) {
             case 'usuarios':
                 return DB::table('vw_users_status')->get();
+            case 'adminHours':
+                return DB::table('vw_load_admin_status')->get();
+                //Si el valor de entrada es '' el sistema colocara null y se ira directamente al default
             default:
                 return DB::table('vw_control_status_all')->get();
         }

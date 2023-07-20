@@ -3,7 +3,8 @@
         <div :class="tableClass.title">{{ titleTable }}</div>
         <div :class="tableClass.create" v-if="viewCreate" @click="$emit('createbutton')">Crear {{ buttonTitle }}</div>
         <!-- Búsqueda de datos en tiempo real -->
-        <pagination v-if="viewSearch" :scope="DTOData" :columns-search="selectSearch" @search-data="searchData">
+        <pagination v-if="viewSearch" :scope="DTOData" :columns-search="selectSearch" :catch-status-table="statusTable"
+            @search-data="searchData">
         </pagination>
         <!-- =====================================================================
         Paginacion
@@ -109,6 +110,8 @@ export default {
         paginationLimit: Number, // El Tamaño máximo de cada página
         tableInfo: Array, //Array Objeto que almacena el resultado de la tabla
         titleTable: String, //Titulo de la tabla
+        statusTable: String, //Indica que tipo de condicion usara para los status, si se quiere los status generales no llamar esta propiedad
+        //para mas informacion sobre su valor revisar getAllStatus del ConfigModel.php
         buttonTitle: String, //Titulo del boton de crear
         notFoundMessage: String, //Mensaje en caso que no encuentre valores iniciales en la tabla
         selectSearch: Object, //Objeto que almaneca los select de búsqueda
@@ -197,7 +200,7 @@ export default {
             let dataListDTO = this.tableInfo
             for (const columnToSearch in dataInput) {
                 dataListDTO = dataListDTO.filter(data => {
-                    return data[columnToSearch].toString().toLowerCase().includes(dataInput[columnToSearch])
+                    return data[columnToSearch].toString().toLowerCase().includes(dataInput[columnToSearch].toString().toLowerCase())
                 })
             }
 
