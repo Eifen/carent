@@ -63,15 +63,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr v-for="billing in project.billingValue">
                                 <td class="col-sm-4 col-lg-4" align="center"></td>
-                                <td class="col-sm-4 col-lg-4" align="center">ABCD</td>
+                                <td class="col-sm-4 col-lg-4" align="center">{{ billing }}</td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr>
                                 <th class="col-sm-4 col-lg-4"> Total A </th>
-                                <td class="col-sm-4 col-lg-4" align="center">HOLA</td>
+                                <td class="col-sm-4 col-lg-4" align="center">{{ totalRealFees }}</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -111,13 +111,14 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <!-- Divisiones diversas -->
                             <tr v-for="(department, position) in project.tableUnitHours" :key="position">
                                 <th class="col-sm-2 col-lg-2" align="center">{{ department.department_name }}</th>
                                 <td class="col-sm-2 col-lg-2" align="center">{{ department.hours_assigned }}</td>
                                 <td class="col-sm-2 col-lg-2" align="center">{{ getRealHours(department.department_id) }}
                                 </td>
                                 <td class="col-sm-2 col-lg-2" align="center">
-                                    {{ department.hours_assigned - getRealHours(department.department_id) }}</td>
+                                    {{ (department.hours_assigned - getRealHours(department.department_id)) * -1 }}</td>
                             </tr>
                         </tbody>
                         <tfoot>
@@ -125,7 +126,9 @@
                                 <th class="col-sm-1 col-lg-1" align="center"> Totales </th>
                                 <td class="col-sm-1 col-lg-1" align="center">{{ totalHoursAssigned }}</td>
                                 <td class="col-sm-1 col-lg-1" align="center">{{ totalRealHours }}</td>
-                                <td class="col-sm-1 col-lg-1" align="center">{{ totalRealHours - totalHoursAssigned }}</td>
+                                <td class="col-sm-1 col-lg-1" align="center">{{ (totalHoursAssigned - totalRealHours) * -1
+                                }}
+                                </td>
                             </tr>
                         </tfoot>
                     </table>
@@ -162,28 +165,24 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <th class="col-sm-2 col-lg-2">Valor monetario sin facturar(con base propuesta original)
+                                <th class="col-sm-6 col-lg-6">Valor monetario sin facturar(con base propuesta original)
                                 </th>
-                                <th class="col-sm-2 col-lg-2"><input type=“text” class=“form-control” placeholder=“Horas”
-                                        size="14"></th>
+                                <td class="col-sm-6 col-lg-6" align="center">Valor</td>
                             </tr>
                             <tr>
-                                <th class="col-sm-2 col-lg-2">Valor Monetario adicional facturado</th>
-                                <th class="col-sm-2 col-lg-2"><input type=“text” class=“form-control” placeholder=“Horas”
-                                        size="14"></th>
+                                <th class="col-sm-6 col-lg-6">Valor Monetario adicional facturado</th>
+                                <td class="col-sm-6 col-lg-6" align="center">Valor</td>
                             </tr>
                             <tr>
-                                <th class="col-sm-2 col-lg-2">Valor monetario(defecit para cubrir exceso de horas) o
+                                <th class="col-sm-6 col-lg-6">Valor monetario(deficit para cubrir exceso de horas) o
                                     excedente
                                 </th>
-                                <th class="col-sm-2 col-lg-2"><input type=“text” class=“form-control” placeholder=“Horas”
-                                        size="14"></th>
+                                <td class="col-sm-6 col-lg-6" align="center">Valor</td>
                             </tr>
                             <tr>
-                                <th class="col-sm-2 col-lg-2">Valor Monetario (beneficiario) en gastos por recuperar
+                                <th class="col-sm-6 col-lg-6">Valor Monetario (beneficiario) en gastos por recuperar
                                 </th>
-                                <th class="col-sm-2 col-lg-2"><input type=“text” class=“form-control” placeholder=“Horas”
-                                        size="14"></th>
+                                <td class="col-sm-6 col-lg-6" align="center">Valor</td>
                             </tr>
                         </tbody>
                         <tfoot>
@@ -212,9 +211,9 @@
                             </tr>
                             <tr>
                                 <th class="col-sm-2 col-lg-2"> Porcentaje de Ejecucion</th>
-                                <td class="col-sm-2 col-lg-2" align="center">{{ ((project.hoursReal /
-                                    project.hoursEstimated) /
-                                    100) }}</td>
+                                <td class="col-sm-2 col-lg-2" align="center">{{ (((project.hoursReal /
+                                    project.hoursEstimated) *
+                                    100)).toFixed(3) }}</td>
                                 <td class="col-sm-2 col-lg-2" align="center">{{ project.rateExecuted === 0 ? 0 :
                                     (project.average / project.rateExecuted) / 100 }}</td>
                             </tr>
@@ -292,6 +291,7 @@ export default {
                 'tableUnitHours': [],
                 'tableRealHours': [],
                 'message': '',
+                'billingValue': [],
                 // 'difference' : [],
             },
             message:
@@ -354,6 +354,9 @@ export default {
         },
         totalRealHours() {
             return this.project.tableRealHours.reduce((total, department) => total + parseFloat(department.total_hours), 0);
+        },
+        totalRealFees() {
+            return this.project.billingValue.reduce((total, billingValue) => total + parseFloat(billingValue), 0);
         }
     },
 
@@ -397,6 +400,13 @@ export default {
             this.project.tableUnitHours = this.loadInitial.departments
             //Horas reales de horas por unidad
             this.project.tableRealHours = this.loadInitial.projectsHours
+            //Honorarios reales USD
+            //Push ingresa un valor en la ultima fila del array
+            //el valor de arriba es la propiedad que aparece en el objeto del controlador, esta en el console.log en este caso es billings
+            //valor de abajo es el nombre del valor que le asigno a data
+            this.loadInitial.billings.forEach(department => {
+                this.project.billingValue.push(parseFloat(department.billing_value))
+            })
 
         },
 
