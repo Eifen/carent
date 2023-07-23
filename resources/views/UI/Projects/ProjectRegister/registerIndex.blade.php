@@ -67,11 +67,11 @@
                 </thead>
                 <tbody>
                     <tr v-if="gridProjectInfo.length != 0" v-for="(project,position) in gridProjectInfo"
-                        :key="position">
+                        :key="project.hoursDiff">
                         <td scope="row">
-                            @{{ project.description.toUpperCase() }} <br>
+                            @{{ project.clientName.toUpperCase() }}: @{{ project.description.toUpperCase() }}<br>
                             <span v-if="project.hoursAssigned - project.hoursLoad != 0" class="badge bg-info text-dark">
-                                @{{ project.hoursAssigned - project.hoursLoad }} horas por cargar</span>
+                                @{{ project.hoursDiff }} horas por cargar</span>
                         </td>
                         <td scope="row" align="center" valign="middle" v-for="(day,cursor) in listDayData"
                             :key="cursor">

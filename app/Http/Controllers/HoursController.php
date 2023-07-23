@@ -60,7 +60,7 @@ class HoursController extends Controller
         );
 
         //Calculamos la nueva diferencia
-        $totalDiff = $arrayProjectInfoDTO[$positionProjectInfo]["hoursAssigned"] - $totalHours;
+        $totalDiff = ($arrayProjectInfoDTO[$positionProjectInfo]["hoursDiff"] + $getLoadInfo[0]) - $hourValue;
 
         //Enviamos la informacion
         $response = array(

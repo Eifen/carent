@@ -19,6 +19,11 @@ export const registerDayMethods = {
                 listHour: this.listProjectHourData, //Lista de los proyectos donde el usuario ha cargado horas
             };
 
+            //Obtenemos el indice del proyecto
+            const getIndex = this.gridProjectInfo
+                .map((object) => object.projectAssignedId)
+                .indexOf(projectAssignedId);
+
             axios
                 .post("/projects/register-hours/add-hour", prepareDay)
                 .then((request) => {
@@ -35,9 +40,7 @@ export const registerDayMethods = {
 
                     setTimeout(() => {
                         this.onCharged = false;
-                        const getIndex = this.gridProjectInfo
-                            .map((object) => object.projectAssignedId)
-                            .indexOf(projectAssignedId);
+                        //Restamos o sumamos la hora a la nueva diferencia
                         if (getIndex != -1) {
                             this.gridProjectInfo[getIndex].hoursDiff =
                                 request.data.message["hour_diff"];
@@ -72,6 +75,12 @@ export const registerDayMethods = {
                 loadId: loadAssignedId,
                 listHour: this.listProjectHourData, //Lista de los proyectos donde el usuario ha cargado horas
             };
+
+            //Obtenemos el indice del proyecto
+            const getIndex = this.gridProjectInfo
+                .map((object) => object.projectAssignedId)
+                .indexOf(loadAssignedId);
+
             axios
                 .post("/projects/register-hours/delete-hour", prepareDay)
                 .then((request) => {
@@ -87,6 +96,12 @@ export const registerDayMethods = {
 
                     setTimeout(() => {
                         this.onCharged = false;
+                        //Sumamos la hora a la nueva diferencia
+                        if (getIndex != -1) {
+                            this.gridProjectInfo[getIndex].hoursDiff =
+                                this.gridProjectInfo[getIndex].hoursDiff +
+                                childParam[0]["value"];
+                        }
                     }, AXIOSINTERVAL);
                 })
                 .catch((errorMessage) => {

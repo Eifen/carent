@@ -86,6 +86,9 @@ export const hoursForWeeksMethod = {
                     //Cargamos la informacion de la grilla
                     this.gridProjectInfo.push({
                         projectAssignedId: select, //El Id del proyecto asignado
+                        clientName:
+                            this.projectAssociatedToCharge[getProjectIndex]
+                                .bussiness_name, // Cliente asociado al proyecto
                         hoursAssigned:
                             this.projectAssociatedToCharge[getProjectIndex]
                                 .assigned_hours, //Horas totales asignadas
