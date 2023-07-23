@@ -1,3 +1,17 @@
+.forDivLabel{
+    background: @Label-Color;
+    grid-row: 1 / 2;
+    text-align: center;
+    padding: 5px;
+}
+
+.configTh{
+    table{ thead{ tr{ th{
+        background: @Label-Color;
+        text-align: center;
+    } } } }
+}
+
 .close-title, .close-subtitle{
     text-align: center;
     padding: 10px;
@@ -33,15 +47,16 @@
     color:@Text-Thead-Color;
     text-align: center;
     padding: 5px;
+
 }
 //Pertenece a todos los titulos principales de la tabla
 #data-info{ grid-area: 2 / span 5 / 3 }
 #value-proposed{ grid-area: 4 / span 5 / 5 }
 #additional-billing{ grid-area: 6 / span 5 / 7}
 #final-value-executed{ grid-area: 8 / span 5 / 9}
-
-// #value-charged{ grid-area: 10 / 1 / 11 / 3}
-#hours-unit{grid-area: 10 / 1/ 11 / 9}
+#value-realized-charged{grid-area: 10 / 1 / 11/ 2}
+#hours-unit{grid-area: 10 / 2 / 11 / 6}
+// #management-comments{grid-area: 28 / span 5 / 29}
 
 &-info{
     display:grid;
@@ -52,12 +67,7 @@
     grid-area: 3 / 1 / 4 / 6;
     grid-template-columns: repeat(3,1fr);
     column-gap: 3px;
-    div {
-        background: @Label-Color;
-        text-align: center;
-        padding: 5px;
-        grid-row: 1 / 2;
-    }
+    div { .forDivLabel(); }
     div[for="project-name"], #project-name{grid-column: 1 / 2}
     div[for="client-name"], #client-name{grid-column: 2 / 3}
     div[for="partner-name"], #partner-name{grid-column: 3 / 4}
@@ -72,12 +82,7 @@
     grid-area: 5 / 1 / 6 / 10;
     column-gap: 3px;
     grid-template-columns: repeat(3, 1fr);
-    div {
-        background: @Label-Color;
-        text-align: center;
-        padding: 5px;
-        grid-row: 1 / 2;
-    }
+    div { .forDivLabel(); }
     div[for="value-hours"], #value-hours{grid-column: 1 / 2;}
     div[for="value-estimated-hours"], #value-estimated-hours{grid-column: 2 / 3;}
     div[for="value-rate"], #value-rate{grid-column: 3 / 4;}
@@ -109,27 +114,34 @@
     grid-area: 9 / 1 / 10 / 11;
     column-gap: 3px;
     grid-template-columns: repeat(2, 1fr);
-    div {
-        background: @Label-Color;
-        grid-row: 1 / 2;
-    }
+    div { .forDivLabel(); }
     div[for="hours-executed"], #hours-executed{grid-column: 1 / 2}
     div[for="rate-executed"], #rate-executed{grid-column: 2 / 3}
 }
-&-general{
-    display:grid;
-    align-items: start;
-    grid-area: 11 / 1 / 12 / 10;
-    grid-template-columns: repeat(2,1fr);
+&-realized-values-charged{
+    align-self: start;
+    grid-area: 11 / 1 / 12 / 2;
+    .table-responsive{ .configTh();}
 }
-// &-value-collected{
-//     //background-color: rgb(236, 159, 204);
-//     color:black;
-//     grid-area: 1 / 1 / 2 / 2;
-//     //align-self: baseline;
-//     & table{
-//         & th{ text-align: center}
-//     }}
+&-hours-per-unit{
+    align-self: start;
+    grid-area: 11 / 2 / 12 / 6;
+    .table-responsive{ .configTh(); }
+}
+
+&-text-area{
+    grid-area: 12 / span 5 / 13;
+    & div{
+        padding: 15px;
+        width: 100%;
+    }
+    & textarea{
+        width: 100%;
+    }
+    //Selector de atributo
+    & div[id="management-comments"]{ padding: 5px;}
+}
+
 &-unit-hours{
     //background-color: rgb(62, 146, 135);
     color:black;
