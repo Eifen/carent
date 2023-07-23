@@ -79,8 +79,8 @@ const projectsIndex = createApp({
         closeProject(idProject) {
             const paramsDTO = { codigoSQL: idProject };
             const routesDTO = {
-                post: "/projects/close/prepare-info",
-                redirect: "/projects/close",
+                post: "/projects/closure/prepare-info",
+                redirect: "/projects/closure",
             };
             //Llamamos al método Static que hace la consulta Axios
             CrudUi.enableEdit(routesDTO, paramsDTO);

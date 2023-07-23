@@ -104,7 +104,7 @@ Route::prefix('/')->group(function () {
             Route::post('/add-admin-hour', [HoursController::class, 'prepareAddAdminHour']);
         });
         //Close Projects
-        Route::prefix('/close')->group(function () {
+        Route::prefix('/closure')->group(function () {
             Route::get('/', [ProjectController::class, 'index'])->name('closeProjects');
             Route::post('/prepare-info', [ProjectController::class, 'sessionCloseProjects']);
         });

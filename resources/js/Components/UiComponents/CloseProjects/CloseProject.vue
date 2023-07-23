@@ -12,7 +12,8 @@
             <div class="close-project-label" id="additional-billing">Facturación Adicional</div>
             <div class="close-project-label" id="final-value-executed">Valores Finales Ejecutados</div>
             <div class="close-project-label" id="hours-unit">Horas por Unidad</div>
-            <!-- <div class="close-project-label" id="management-comments">Comentarios de la Gerencia</div> -->
+            <div class="close-project-label" id="value-realized-charged">Valores realizados Cobrados</div>
+            <!-- Datos -->
             <div class="close-project-info">
                 <!-- Label  -->
                 <div for="project-name">Nombre del Proyecto</div>
@@ -23,6 +24,7 @@
                 <span id="client-name">{{ project.client }}</span>
                 <span id="partner-name">{{ project.partner }}</span>
             </div>
+            <!-- valores propuesta -->
             <div class="close-project-value">
                 <!-- Label -->
                 <div for="value-hours">Horas Estimadas</div>
@@ -33,6 +35,7 @@
                 <span id="value-estimated-hours">{{ project.valueEstimated }}</span>
                 <span id="value-rate">{{ project.average }}</span>
             </div>
+            <!-- Facturacion Adicional -->
             <div class="close-project-billing">
                 <!-- Label -->
                 <div for="hours-billing"> Horas Adicionales </div>
@@ -41,77 +44,63 @@
                 <span id="hours-billing">{{ project.additionalHour }}</span>
                 <span id="hours-additional-billing">{{ project.valueExtra }}</span>
             </div>
+            <!-- Valores finales ejecutados -->
             <div class="close-project-executed">
-                 <!-- Label -->
+                <!-- Label -->
                 <div for="hours-executed"> Horas Reales </div>
                 <div for="rate-executed"> Tasa Promedio Final </div>
                 <!-- Contenido del label -->
-                <span id="hours-executed">{{project.hoursReal}}</span>
-                <span id="rate-executed">{{project.rateExecuted}}</span>
+                <span id="hours-executed">{{ project.hoursReal }}</span>
+                <span id="rate-executed">{{ project.rateExecuted }}</span>
             </div>
-            <div class="close-project-general table-responsive">
-                <div class="close-project-value-collected table-responsive">
-                    <div class="close-project-label">Valores Realizados Cobrados</div>
+            <!-- Valores realizados cobrados -->
+            <div class="close-project-realized-values-charged">
+                <div class="table-responsive">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th class="col-sm-4 col-lg-4"></th>
-                                <th class="col-sm-4 col-lg-4"> Horarios Reales USD</th>
+                                <th class="col-sm-4 col-lg-4" colspan="2"> Horarios Reales USD</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="col-sm-4 col-lg-4"></td>
-                                <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control” placeholder=“Horas”>
-                                </td>
+                                <td class="col-sm-4 col-lg-4" align="center"></td>
+                                <td class="col-sm-4 col-lg-4" align="center">ABCD</td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td class="col-sm-4 col-lg-4"> Total A </td>
-                                <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control”
-                                        placeholder=“Horas-Totales”>
-                                </td>
+                                <th class="col-sm-4 col-lg-4"> Total A </th>
+                                <td class="col-sm-4 col-lg-4" align="center">HOLA</td>
                             </tr>
                         </tfoot>
                     </table>
+                    <!-- Facturacion adicional -->
                     <div class="close-project-label">Facturación Adicional</div>
                     <table class="table">
-                        <thead>
-                            <tr>
-                            </tr>
-                        </thead>
                         <tbody>
                             <tr>
-                                <td class="col-sm-4 col-lg-4"></td>
-                                <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control” placeholder=“Horas”>
-                                </td>
-                                <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control” placeholder=“Horas”>
-                                </td>
+                                <td class="col-sm-4 col-lg-4" align="center"></td>
+                                <td class="col-sm-4 col-lg-4" align="center">ABDC</td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td class="col-sm-4 col-lg-4"> Total B</td>
-                                <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control” placeholder=“Total”>
-                                </td>
-                                <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control” placeholder=“Total”>
-                                </td>
+                                <th class="col-sm-4 col-lg-4">Total B</th>
+                                <td class="col-sm-4 col-lg-4" align="center">EFGH</td>
 
                             </tr>
                             <tr>
-                                <td class="col-sm-4 col-lg-4"> Total A+B</td>
-                                <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control” placeholder=“Total”>
-                                </td>
-                                <td class="col-sm-4 col-lg-4"><input type=“text” class=“form-control” placeholder=“Total”>
-                                </td>
+                                <th class="col-sm-4 col-lg-4"> Total A+B</th>
+                                <td class="col-sm-4 col-lg-4" align="center">Total</td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
-                 <div class="close-project-additional table-responsive">
-                </div>
-                <div class="close-project-unit-hours table-responsive">
+            </div>
+            <!-- Horas Por unidad -->
+            <div class="close-project-hours-per-unit">
+                <div class="table-responsive">
                     <table class="table">
                         <thead>
                             <tr>
@@ -123,22 +112,25 @@
                         </thead>
                         <tbody>
                             <tr v-for="(department, position) in project.tableUnitHours" :key="position">
-                                <th class="col-sm-2 col-lg-2" align="center">{{department.department_name}}</th>
-                                <td class="col-sm-2 col-lg-2" align="center">{{department.hours_assigned}}</td>
-                                <td class="col-sm-2 col-lg-2" align="center">{{getRealHours(department.department_id)}}</td>
-                                <td class="col-sm-2 col-lg-2" align="center">{{department.hours_assigned-getRealHours(department.department_id)}}</td>
+                                <th class="col-sm-2 col-lg-2" align="center">{{ department.department_name }}</th>
+                                <td class="col-sm-2 col-lg-2" align="center">{{ department.hours_assigned }}</td>
+                                <td class="col-sm-2 col-lg-2" align="center">{{ getRealHours(department.department_id) }}
+                                </td>
+                                <td class="col-sm-2 col-lg-2" align="center">
+                                    {{ department.hours_assigned - getRealHours(department.department_id) }}</td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr>
                                 <th class="col-sm-1 col-lg-1" align="center"> Totales </th>
-                                <td class="col-sm-1 col-lg-1" align="center">{{totalHoursAssigned}}</td>
-                                <td class="col-sm-1 col-lg-1" align="center">{{totalRealHours}}</td>
-                                <td class="col-sm-1 col-lg-1" align="center">{{totalRealHours-totalHoursAssigned}}</td>
+                                <td class="col-sm-1 col-lg-1" align="center">{{ totalHoursAssigned }}</td>
+                                <td class="col-sm-1 col-lg-1" align="center">{{ totalRealHours }}</td>
+                                <td class="col-sm-1 col-lg-1" align="center">{{ totalRealHours - totalHoursAssigned }}</td>
                             </tr>
                         </tfoot>
                     </table>
-                    <div class="close-project-label">Facturación Adicional al Presupuesto Base</div>
+                    <!-- Facturacion adicional al presupuesto base -->
+                    <div class="close-project-label"> Facturación Adicional al Presupuesto Base</div>
                     <table class="table">
                         <thead>
                             <tr>
@@ -150,19 +142,21 @@
                         <tbody>
                             <tr>
                                 <th class="col-sm-2 col-lg-2">Exceso de Horas por Facturar</th>
-                                <td class="col-sm-2 col-lg-2" align="center">{{(totalHoursAssigned-totalRealHours)*-1}}</td>
-                                <td class="col-sm-2 col-lg-2" align="center">{{project.average}}</td>
+                                <td class="col-sm-2 col-lg-2" align="center">{{ (totalHoursAssigned - totalRealHours) * -1
+                                }}</td>
+                                <td class="col-sm-2 col-lg-2" align="center">{{ project.average }}</td>
                             </tr>
                             <tr>
                                 <th class="col-sm-2 col-lg-2">Valor Monetario a recuperar HP exceso de horas</th>
                                 <td class="col-sm-2 col-lg-2" align="center">
-                                    {{((totalHoursAssigned-totalRealHours)*-1)*project.average}}</td>
+                                    {{ ((totalHoursAssigned - totalRealHours) * -1) * project.average }}</td>
                             </tr>
                         </tbody>
                         <tfoot>
                         </tfoot>
                     </table>
-                    <div class="close-project-label">Valor Monetario Facturado o Pendiente en USD</div>
+                    <!-- Valor monetario facturado o pendiente en USD -->
+                    <div class="close-project-label"> Valor monetario facturado o pendiente en USD</div>
                     <table class="table">
                         <thead>
                         </thead>
@@ -195,7 +189,8 @@
                         <tfoot>
                         </tfoot>
                     </table>
-                    <div class="close-project-label">Facturación Adicional al Presupuesto Base</div>
+                    <!-- Facturación Real del Presupuesto Base -->
+                    <div class="close-project-label"> Facturación Real del Presupuesto Base</div>
                     <table class="table">
                         <thead>
                             <tr>
@@ -207,39 +202,62 @@
                         <tbody>
                             <tr>
                                 <th class="col-sm-2 col-lg-2">Horas Cargadas al CARENT(Maestro de Trabajo)</th>
-                                <td class="col-sm-2 col-lg-2" align="center">{{project.hoursEstimated}}</td>
-                                <td class="col-sm-2 col-lg-2" align="center">{{project.average}}</td>
+                                <td class="col-sm-2 col-lg-2" align="center">{{ project.hoursEstimated }}</td>
+                                <td class="col-sm-2 col-lg-2" align="center">{{ project.average }}</td>
                             </tr>
                             <tr>
                                 <th class="col-sm-2 col-lg-2">Horas Reales Cargadas al CARENT</th>
-                                <td class="col-sm-2 col-lg-2" align="center">{{project.hoursReal}}</td>
-                                <td class="col-sm-2 col-lg-2" align="center">{{project.rateExecuted}}</td>
+                                <td class="col-sm-2 col-lg-2" align="center">{{ project.hoursReal }}</td>
+                                <td class="col-sm-2 col-lg-2" align="center">{{ project.rateExecuted }}</td>
                             </tr>
                             <tr>
                                 <th class="col-sm-2 col-lg-2"> Porcentaje de Ejecucion</th>
-                                <td class="col-sm-2 col-lg-2" align="center">{{((project.hoursReal/project.hoursEstimated) / 100)}}</td>
-                                <td class="col-sm-2 col-lg-2" align="center">{{project.rateExecuted === 0 ? 0 :
-                                (project.average / project.rateExecuted) / 100}}</td>
+                                <td class="col-sm-2 col-lg-2" align="center">{{ ((project.hoursReal /
+                                    project.hoursEstimated) /
+                                    100) }}</td>
+                                <td class="col-sm-2 col-lg-2" align="center">{{ project.rateExecuted === 0 ? 0 :
+                                    (project.average / project.rateExecuted) / 100 }}</td>
                             </tr>
                             <tr>
                                 <th class="col-sm-2 col-lg-2"> (Defecit) Eficiencia de Horas </th>
-                                <td class="col-sm-2 col-lg-2" align="center">{{project.hoursEstimated-project.hoursReal}}</td>
+                                <td class="col-sm-2 col-lg-2" align="center">{{ project.hoursEstimated - project.hoursReal
+                                }}
+                                </td>
                             </tr>
                         </tbody>
                         <tfoot>
                         </tfoot>
                     </table>
-
                 </div>
-                <div class="close-project-text">
-                <div for="first-comment"> 1 Si este Contrato posee Finanza, generar las acciones con el Área....
-                <textarea v-model="message" rows="2" cols="120"></textarea>
-
-                <button type="button" class="close-project-button">Enviar</button>
             </div>
+            <!-- Comentarios -->
+            <div class="close-project-text-area">
+                <div class="close-project-label" id="management-comments">Comentarios de la Gerencia</div>
+                <div for="first-comment"> 1-Si este Contrato posee Fianza, generar las acciones con el Área Legal de La
+                    Firma para su finiquito. Detallar:
+                </div>
+                <textarea v-model="message.first" rows="2" cols="120"></textarea>
+                <div for="second-comment"> 2-Si la ejecución del Proyecto en cuato a: Horas, Honorarios y Gastos,
+                    estuvieron por encima de lo planificado. Cuáles fueron los motivos y las acciones tomadas para:
+                </div>
+                <textarea v-model="message.second" rows="2" cols="120"></textarea>
+                <div for="third-comment"> 2.2-Recuperar la inversión en exceso ante el Cliente si fuese su
+                    responsabilidad.
+                    Detallar: </div>
+                <textarea v-model="message.third" rows="2" cols="120"></textarea>
+                <div for="fourth-comment"> 2.3-Si fuese responsabilidad del Equipo en la Planificación y/o ejecución
+                    del Trabajo. Detallar:
+                </div>
+                <textarea v-model="message.fourth" rows="2" cols="120"></textarea>
+                <div for="fifth-comment"> 2.4-Otras acciones. Detallar:</div>
+                <textarea v-model="message.fifth" rows="2" cols="120"></textarea>
+                <div for="sixth-comment"> 3-Si hay Facturas pendientes, mayores a sesenta (60) días.
+                    Explique el porque de esa situación, el plan de Recuperación en USD y posible fecha en el Corto
+                    Plazo.
+                    Detallar:
+                </div>
+                <textarea v-model="six" rows="2" cols="120"></textarea>
             </div>
-            </div>
-
         </div>
     </div>
 </template>
@@ -270,12 +288,22 @@ export default {
                 'additionalHour': 0,
                 'valueExtra': 0,
                 'hoursReal': 0,
-                'rateExecuted' : 0,
-                'tableUnitHours' : [],
-                'tableRealHours' : [],
+                'rateExecuted': 0,
+                'tableUnitHours': [],
+                'tableRealHours': [],
                 'message': '',
                 // 'difference' : [],
             },
+            message:
+            {
+                'first': '',
+                'second': '',
+                'third': '',
+                'fourth': '',
+                'fifth': '',
+                'six': '',
+            },
+
             closeproject: 'NIRVANA',
             projectclose: true,
         }
@@ -303,11 +331,11 @@ export default {
          * @param {int} departmentId captura el id del departamento
          */
 
-        getRealHours(departmentId){
-            const key=this.project.tableRealHours.map(returnDepartment => {
+        getRealHours(departmentId) {
+            const key = this.project.tableRealHours.map(returnDepartment => {
                 return returnDepartment.department_id
             }).indexOf(departmentId)
-            return key===-1 ? 0 : parseFloat(this.project.tableRealHours[key].total_hours)
+            return key === -1 ? 0 : parseFloat(this.project.tableRealHours[key].total_hours)
             //key es el cursor que busca en el array vacio de project.tableRealHours que asigne en la data
             //mapea en el department_id que es la columna y para eso retorno un nuevo valor llamado returnDepartment
             //indexOf ubica la posicion especifica del array ya que no hay forma de saberlo
@@ -322,25 +350,29 @@ export default {
     // totalHoursAssigned se actualizará automáticamente para reflejar el nuevo valor total.
     computed: {
         totalHoursAssigned() {
-        return this.project.tableUnitHours.reduce((total, department) => total + department.hours_assigned, 0);
-    },
+            return this.project.tableUnitHours.reduce((total, department) => total + department.hours_assigned, 0);
+        },
         totalRealHours() {
-        return this.project.tableRealHours.reduce((total, department) => total + parseFloat(department.total_hours), 0);
-    }
+            return this.project.tableRealHours.reduce((total, department) => total + parseFloat(department.total_hours), 0);
+        }
     },
 
 
     watch: {
         loadInitial() {
             console.log(this.loadInitial)
+            //Nommbre del proyecto
             this.project.name = this.loadInitial.project.project_description
+            //Nommbre del cliente
             this.project.client = this.loadInitial.project.bussiness_name
+            //Nommbre del socio a cargo
             this.project.partner = this.loadInitial.project.partner_name
             //horas estimadas de valores propuesta
             this.project.valueEstimated = parseFloat(this.loadInitial.project.project_value)
-             //Sumatoria de las honorarios estimadas
+            //Sumatoria de las honorarios estimadas
             this.loadInitial.departments.forEach(department => {
-            this.project.hoursEstimated = parseInt(department.hours_assigned) + parseInt(this.project.hoursEstimated)})
+                this.project.hoursEstimated = parseInt(department.hours_assigned) + parseInt(this.project.hoursEstimated)
+            })
             //Tasa promedio de valores propuesta
             this.project.average = parseFloat(this.loadInitial.project.average_rate)
 
@@ -357,9 +389,9 @@ export default {
                 this.project.hoursReal = parseFloat(department.total_hours) + parseFloat(this.project.hoursReal)
             })
             //Tasa promedio final colocar dos decimales
-            if (this.project.hoursReal === 0) {this.project.rateExecuted = 0;}
+            if (this.project.hoursReal === 0) { this.project.rateExecuted = 0; }
             else {
-            this.project.rateExecuted = ((this.project.valueEstimated + this.project.valueExtra) / this.project.hoursReal).toFixed(3);
+                this.project.rateExecuted = ((this.project.valueEstimated + this.project.valueExtra) / this.project.hoursReal).toFixed(3);
             }
             //Horas estimadas de horas por unidad
             this.project.tableUnitHours = this.loadInitial.departments
