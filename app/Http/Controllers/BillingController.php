@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use App\Models\ConfigModel;
 
 class BillingController extends Controller
 {
@@ -20,5 +21,15 @@ class BillingController extends Controller
         if (Session::has('userId')) $this->permitControl = true;
 
         return view('index')->with("Session", $this->permitControl);
+    }
+
+    /**
+     * Metodo que se encarga de devolver una vista de los proyectos activos e inactivos para a vista de billings
+     */
+    public function getProjectBillings()
+    {
+        $this->modelInstance = new ConfigModel();
+        $allData = $this->modelInstance->GetAll('billings');
+        return response($allData, 200);
     }
 }

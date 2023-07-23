@@ -116,7 +116,7 @@
 
         {{-- Redireccion de ruta para facturacion --}}
         @if (Request::url() === URL::route('billing'))
-            @include('UI.Billings.BillingIndex');
+            @include('UI.Billings.BillingIndex')
         @endif
 
     </section>
