@@ -23,3 +23,6 @@ import "./UI/Projects/ProjectRegister/RegisterIndex";
 import "./UI/Projects/ProjectClose/CloseIndex";
 //Validacion de horas
 import "./UI/Projects/ProjectValidate/ProjectValidateIndex";
+//Facturacion
+import "./UI/Billings/BillingIndex";
+import "./UI/Billings/BillingControl";

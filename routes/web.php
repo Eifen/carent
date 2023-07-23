@@ -111,9 +111,17 @@ Route::prefix('/')->group(function () {
             Route::get('/', [ProjectController::class, 'index'])->name('closeProjects');
             Route::post('/prepare-info', [ProjectController::class, 'sessionCloseProjects']);
         });
-        //Billings
-        Route::prefix('/billing')->group(function () {
-            Route::get('/', [BillingController::class, 'index'])->name('billing');
+    });
+    //Billings
+    Route::prefix('/billings')->group(function () {
+        Route::get('/', [BillingController::class, 'index'])->name('billing');
+        Route::post('/all-projects', [BillingController::class, 'getProjectBillings']);
+        Route::post('/loading-project', [BillingController::class, 'billingPerProject']);
+        Route::put('/delete-update-data', [BillingController::class, 'deleteBillingInfo']);
+
+        //Control billing
+        Route::prefix('/control')->group(function () {
+            Route::get('/', [BillingController::class, 'index'])->name('controlBilling');
         });
     });
 });

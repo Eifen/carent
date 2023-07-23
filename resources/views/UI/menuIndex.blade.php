@@ -116,8 +116,19 @@
 
         {{-- Redireccion de ruta para facturacion --}}
         @if (Request::url() === URL::route('billing'))
-            @include('UI.Billings.BillingIndex');
+            @include('UI.Billings.BillingIndex')
         @endif
 
+        {{-- Redireccion de ruta para control de factura --}}
+        @if (Request::url() === URL::route('controlBilling'))
+            @if (Session::has('billingProject'))
+                @include('UI.Billings.BillingControl')
+            @else
+                @php
+                    header('Location: /billings');
+                    exit();
+                @endphp
+            @endif
+        @endif
     </section>
 @endsection
