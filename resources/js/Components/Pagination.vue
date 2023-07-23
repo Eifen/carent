@@ -3,9 +3,20 @@
         <div class="input-group mb-3" v-for="(columnName, cursor) in columnsSearch" :key="cursor">
             <span class="input-group-text" id="basic-addon1">{{ columnName }} </span>
             <!-- Representa el nombre de cada campo a buscar-->
-            <input v-if="columnName != 'Estatus'" type="text" class="form-control" :aria-label="columnName"
-                aria-describedby="basic-addon1" :placeholder="'Ingrese ' + columnName"
-                @input="emitInputSearch($event, columnName)" />
+            <input v-if="columnName != 'Estatus' && columnName != 'Fecha desde' && columnName != 'Fecha hasta'" type="text"
+                class="form-control" :aria-label="columnName" aria-describedby="basic-addon1"
+                :placeholder="'Ingrese ' + columnName" @input="emitInputSearch($event, columnName)" />
+            <!-- Fechas  -->
+            <input v-if="columnName == 'Fecha desde'" type="text" class="form-control" placeholder="Ejemplo: 1990-02-18"
+                id="birthday" aria-describedby="basic-addon1" v-model="inputDateStart" />
+            <span v-if="columnName == 'Fecha desde'" class="input-group-text" id="basic-addon2">
+                <calendar @to-input="emitDateSearch($event, 'start')"></calendar>
+            </span>
+            <input v-if="columnName == 'Fecha hasta'" type="text" class="form-control" placeholder="Ejemplo: 1990-02-18"
+                id="birthday" aria-describedby="basic-addon1" v-model="inputDateEnd" />
+            <span v-if="columnName == 'Fecha hasta'" class="input-group-text" id="basic-addon2">
+                <calendar @to-input="emitDateSearch($event, 'end')"></calendar>
+            </span>
             <!-- Campos multiples -->
             <!-- Status -->
             <Multiselect v-if="columnName == 'Estatus'" v-model="multiSelectStatus" :options="multiSelectList.status"
@@ -18,6 +29,8 @@
 <script>
 //Importar multiselect
 import Multiselect from '@vueform/multiselect'
+import Calendar from "@/Components/Calendar.vue";
+
 
 export default {
     props: {
@@ -32,6 +45,8 @@ export default {
             multiSelectList: {
                 "status": []
             }, //Almacena la informacion de los campos con multiselect
+            inputDateStart: '', //Almacena la fecha desde
+            inputDateEnd: '', //Almacena la fecha hasta
             dtoSelectStatus: [] //Objeto de transferencia que almacena la estructura de la tabla status
         }
     },
@@ -84,9 +99,49 @@ export default {
             }
             //Llamamos al evento personalizado
             this.$emit('search-data', this.fieldsInput)
+        },
+        emitDateSearch(dateTarget, dateType) {
+            switch (dateType) {
+                case 'start':
+                    this.inputDateStart = `${dateTarget.year}-${dateTarget.month}-${dateTarget.day}`
+                    break;
+                case 'end':
+                    this.inputDateEnd = `${dateTarget.year}-${dateTarget.month}-${dateTarget.day}`
+                    break;
+            }
         }
     },
-    components: { Multiselect }
+    watch: {
+        //Detecta los cambios en el input
+        inputDateStart(newDate, oldDate) {
+            const starDate = this.inputDateStart.length != 0 ? new Date(newDate) : new Date('2020-03-01');
+            const endDate = this.inputDateEnd.length != 0 ? new Date(this.inputDateEnd) : new Date()
+            console.log(endDate)
+            //Hacemos el emit unicamente si el valor es menor que la fecha hasta, o la fecha hasta esta vacia
+            if (starDate.getTime() <= endDate.getTime()) {
+                this.fieldsInput["fecha_desde"] = starDate;
+                this.fieldsInput["fecha_hasta"] = endDate;
+                //Llamamos al evento personalizado
+                this.$emit('search-data', this.fieldsInput);
+            } else {
+                this.inputDateStart = oldDate
+            }
+        },
+        inputDateEnd(newDate, oldDate) {
+            const endDate = this.inputDateEnd.length != 0 ? new Date(newDate) : new Date();
+            const starDate = this.inputDateStart.length != 0 ? new Date(this.inputDateStart) : new Date('2020-03-01')
+            //Hacemos el emit unicamente si el valor es mayor que la fecha desde, o la fecha desde esta vacia
+            if (starDate.getTime() <= endDate.getTime()) {
+                this.fieldsInput["fecha_hasta"] = endDate;
+                this.fieldsInput["fecha_desde"] = starDate;
+                //Llamamos al evento personalizado
+                this.$emit('search-data', this.fieldsInput);
+            } else {
+                this.inputDateEnd = oldDate
+            }
+        }
+    },
+    components: { Multiselect, Calendar }
 };
 </script>
 

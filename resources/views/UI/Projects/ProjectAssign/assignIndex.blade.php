@@ -37,6 +37,11 @@
                     <div class="mb-3">
                         <label for="hoursAssigned">@{{ hoursAssigned }}</label>
                     </div>
+                    {{-- Horas adicionales --}}
+                    <legend class="dashboad-form-container-form-legends">Horas adicionales</legend>
+                    <div class="mb-3">
+                        <label for="hoursAssigned">@{{ additionalHours }}</label>
+                    </div>
                     <!-- Usuarios -->
                     <legend class="dashboad-form-container-form-legends">Usuarios a asignar <span
                             class="dashboard-form-container-form-title-field">*</span></legend>

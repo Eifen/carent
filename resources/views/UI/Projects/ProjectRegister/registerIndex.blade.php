@@ -66,12 +66,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(project,position) in gridProjectInfo" :key="position">
+                    <tr v-if="gridProjectInfo.length != 0" v-for="(project,position) in gridProjectInfo"
+                        :key="position">
                         <td scope="row">
                             @{{ project.description.toUpperCase() }} <br>
                             <span v-if="project.hoursAssigned - project.hoursLoad != 0" class="badge bg-info text-dark">
                                 @{{ project.hoursAssigned - project.hoursLoad }} horas por cargar</span>
-                            <span v-else class="badge bg-warning text-dark"> @{{ project.hoursAssigned - project.hoursLoad }} horas por
+                            <span v-else class="badge bg-warning text-dark"> @{{ project.hoursDiff }} horas por
                                 cargar</span>
                         </td>
                         <td scope="row" align="center" valign="middle" v-for="(day,cursor) in listDayData"
@@ -80,7 +81,8 @@
                             <load-hours :associated-load-project="project.projectAssignedId"
                                 :info-assigned-project="listProjectHourData" :associated-day="day.date"
                                 :is-charged="onCharged" :key="listProjectHourData" load-ref="project"
-                                @register-hour="registerDay($event,project.projectAssignedId)">
+                                @register-hour="registerDay($event,project.projectAssignedId)"
+                                @unregister-hour="unRegisterDay($event,project.projectAssignedId)">
                             </load-hours>
                         </td>
                     </tr>
@@ -119,8 +121,9 @@
                             {{-- Carga de horas --}}
                             <load-hours :associated-load-project="admin.adminHourId"
                                 :info-assigned-project="listAdminHourData" :associated-day="day.date"
-                                :key="listAdminHourData" load-ref="admin"
-                                @register-hour="registerAdminDay($event,admin.adminHourId)">
+                                :is-charged="onCharged" :key="listAdminHourData" load-ref="admin"
+                                @register-hour="registerAdminDay($event,admin.adminHourId)"
+                                @unregister-hour="unRegisterAdminDay($event,admin.adminHourId)">
                             </load-hours>
                         </td>
                     </tr>

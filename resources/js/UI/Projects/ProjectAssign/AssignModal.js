@@ -13,6 +13,7 @@ const modalApp = createApp({
             projectName: "", //Nombre del proyecto seleccionado
             clientName: "", //Nombre del cliente asociado
             hoursAssigned: 0, //Horas asignadas
+            additionalHours: 0, //Horas adicionales
             //Espacio reservado para los inputs
             inputUsersAssigned: [], //Almacena la información del multiselect
             usersPerDepartment: [
@@ -72,7 +73,14 @@ const modalApp = createApp({
                         request.data["project"]["project_description"];
                     this.hoursAssigned =
                         request.data["project"]["hours_assigned"];
-                    this.missinHours = this.hoursAssigned;
+                    //Horas adicionales
+                    this.additionalHours = request.data["additional"].reduce(
+                        (countTotal, department) =>
+                            countTotal + department.additional_hour,
+                        0
+                    );
+                    this.missinHours =
+                        this.hoursAssigned + this.additionalHours;
                     //Informacion del cliente
                     this.clientName = request.data["project"]["bussiness_name"];
                     //Capturamos el id del departamento asignado
@@ -135,7 +143,7 @@ const modalApp = createApp({
          */
         totalHours(inputEvent = null) {
             //Reasignamos las horas totales
-            this.missinHours = this.hoursAssigned;
+            this.missinHours = this.hoursAssigned + this.additionalHours;
             //Calculamos las nuevas horas
             this.managerUserAssigned.forEach((userAssigned) => {
                 //Verificamos que cada input coincida con un numero
