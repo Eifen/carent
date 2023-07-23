@@ -59,8 +59,17 @@ class HoursController extends Controller
             "status_load_id" => 2 //
         );
 
+        //Calculamos la nueva diferencia
+        $totalDiff = $arrayProjectInfoDTO[$positionProjectInfo]["hoursAssigned"] - $totalHours;
+
         //Enviamos la informacion
-        $response = HoursModel::addHour($prepareHourInfo, $getLoadInfo[1]);
+        $response = array(
+            "response" => true,
+            "message" => array(
+                "hour_diff" => $totalDiff,
+                "hours_response" => HoursModel::addHour($prepareHourInfo, $getLoadInfo[1])
+            )
+        );
 
         return response($response, 200);
     }

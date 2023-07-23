@@ -25,7 +25,8 @@ export const registerDayMethods = {
                     //Verificamos que el response no sea falso
                     if (request.status === 200 && !request.data.response)
                         throw request.data.message;
-                    this.listProjectHourData = request.data.message;
+                    this.listProjectHourData =
+                        request.data.message["hours_response"].message;
                     //Mensaje de confirmacion
                     toast.success("Hora registrada exitosamente", {
                         position: toast.POSITION.TOP_LEFT,
@@ -34,6 +35,13 @@ export const registerDayMethods = {
 
                     setTimeout(() => {
                         this.onCharged = false;
+                        const getIndex = this.gridProjectInfo
+                            .map((object) => object.projectAssignedId)
+                            .indexOf(projectAssignedId);
+                        if (getIndex != -1) {
+                            this.gridProjectInfo[getIndex].hoursDiff =
+                                request.data.message["hour_diff"];
+                        }
                     }, AXIOSINTERVAL);
                 })
                 .catch((errorMessage) => {
