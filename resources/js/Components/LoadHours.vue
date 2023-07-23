@@ -16,6 +16,10 @@
             @click="registerHour(inputHourSelected)">
             <font-awesome string-icon="fa-solid fa-check"></font-awesome>
         </div>
+        <div class="register-hour-uncheck" v-if="inputObservation.length >= 7 && !isCharged"
+            @click="unRegisterHour(inputHourSelected)">
+            <font-awesome string-icon="fa-solid fa-xmark"></font-awesome>
+        </div>
     </div>
 </template>
 <script>
@@ -29,7 +33,7 @@ export default {
         loadRef: String, //Texto que almacena el tipo de carga, project o admin
         isCharged: Boolean, //Control del boton
     },
-    emits: ['register-hour'],
+    emits: ['register-hour', 'unregister-hour'],
     data() {
         return {
             limitHours: [{
@@ -121,6 +125,12 @@ export default {
          */
         registerHour(idHourSelected) {
             this.$emit('register-hour', [this.limitHours[idHourSelected], this.inputObservation])
+        },
+        /**
+         * Metodo que elimina una columna de la grilla
+         */
+        unRegisterHour(idHourSelected) {
+            this.$emit('unregister-hour', [this.limitHours[idHourSelected], this.inputObservation])
         }
     },
     watch: {

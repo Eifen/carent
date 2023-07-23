@@ -148,6 +148,7 @@ export default {
                     lastChild: "lastModal",
                 }, //Controla el estilo del Setting
             }, //Controla los estados de la tabla
+            listInputsDTO: {}, //Objeto que almacena los campos por los que buscar de forma temporal en sus propiedades. Hereda de fieldsInput del componente pagination.vue
             controlPagination: { init: 0, cursor: 0, regex: new RegExp("^([0-9]{1})$") }, //control de la lógica de la paginación
             controlView: { pagActual: 0, isGreater: false } //Controla la vista de la paginación
         };
@@ -196,12 +197,29 @@ export default {
          * @param {Object} dataInput Objeto que almacena la información de los input y su correspondiente columna a buscar
          */
         searchData(dataInput) {
+            //Almacenamos temporalmente la lista
+            this.listInputsDTO = dataInput
             //Filtramos el array en función al select, lo cual actualizará automaticamente
             let dataListDTO = this.tableInfo
             for (const columnToSearch in dataInput) {
-                dataListDTO = dataListDTO.filter(data => {
-                    return data[columnToSearch].toString().toLowerCase().includes(dataInput[columnToSearch].toString().toLowerCase())
-                })
+                //Valores pertenecientes a fechas
+                if (columnToSearch === "fecha_desde" || columnToSearch === "fecha_hasta") {
+                    //Por defecto la fecha inicial es 2020-07-01 y la fecha final es la actual
+                    let startDate = dataInput["fecha_desde"]
+                    let endDate = dataInput["fecha_hasta"]
+                    console.log(startDate, endDate)
+                    dataListDTO = dataListDTO.filter(data => {
+                        let dateToSearch = new Date(data["fecha"]);
+                        return dateToSearch.getTime() >= startDate.getTime() && dateToSearch.getTime() <= endDate.getTime();
+                    })
+                }
+                //Valores indistintos a fecha
+                if (columnToSearch !== "fecha_desde" && columnToSearch !== "fecha_hasta") {
+                    console.log(columnToSearch)
+                    dataListDTO = dataListDTO.filter(data => {
+                        return data[columnToSearch].toString().toLowerCase().includes(dataInput[columnToSearch].toString().toLowerCase())
+                    })
+                }
             }
 
             //Espacio de transferencia de datos
@@ -258,6 +276,11 @@ export default {
                     this.controlTable.maxLength = this.paginationLimit;
             },
         },
+        tableInfo() {
+            //Volvemos a llamar al searchData para actualizar el array con el DTO de inputs, luego de actualizar la lista
+            this.controlTable.data = this.tableInfo
+            this.searchData(this.listInputsDTO)
+        }
     },
     computed: { DTOData() { return this.$data } }, //Enviamos el objeto data como parametro
     components: { FontAwesome, Pagination },

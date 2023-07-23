@@ -93,7 +93,6 @@ Route::prefix('/')->group(function () {
             Route::post('/assign-projects', [ProjectController::class, 'getAllAssignProject']);
             Route::post('/re-assign-data', [ProjectController::class, 'reAssignUsers']); //Elimina la Session['usersAssign'] luego de reasignar
             Route::post('/update-asign-projects', [ProjectController::class, 'updateAsign']);
-            Route::post('/all-admin-hours', [ProjectController::class, 'allAdminHours']); //Devuelve todos las horas administrativas en formato del preview
         });
         //Register
         Route::prefix('/register-hours')->group(function () {
@@ -102,6 +101,9 @@ Route::prefix('/')->group(function () {
             Route::post('/get-load-hours', [ProjectController::class, 'prepareLoadHoursPerId']);
             Route::post('/add-hour', [HoursController::class, 'prepareAddHour']);
             Route::post('/add-admin-hour', [HoursController::class, 'prepareAddAdminHour']);
+            Route::post('/all-admin-hours', [ProjectController::class, 'allAdminHours']); //Devuelve todos las horas administrativas en formato del preview
+            Route::post('/control-load-hours', [HoursController::class, 'prepareControlHour']);
+            Route::post('/delete-hour', [HoursController::class, 'prepareDeleteHour']);
         });
         //Close Projects
         Route::prefix('/closure')->group(function () {

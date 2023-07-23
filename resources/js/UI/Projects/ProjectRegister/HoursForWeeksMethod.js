@@ -66,61 +66,70 @@ export const hoursForWeeksMethod = {
         /**
          * Watcher que se encarga de capturar los cambios en el selector
          */
-        inputProjectSelect(newMultiSelect) {
-            let hoursLoad = 0; // Variable de control para las horas cargadas
-            this.gridProjectInfo = [];
+        inputProjectSelect: {
+            handler(newMultiSelect) {
+                let hoursLoad = 0; // Variable de control para las horas cargadas
+                this.gridProjectInfo = [];
 
-            //Obtenemos los indices
-            newMultiSelect.forEach((select) => {
-                //Obtenemos el indice del proyecto
-                const getProjectIndex = this.projectAssociatedToCharge
-                    .map((project) => {
-                        return project.user_assigned_id;
-                    })
-                    .indexOf(select);
+                //Obtenemos los indices
+                newMultiSelect.forEach((select) => {
+                    //Obtenemos el indice del proyecto
+                    const getProjectIndex = this.projectAssociatedToCharge
+                        .map((project) => {
+                            return project.user_assigned_id;
+                        })
+                        .indexOf(select);
 
-                //Horas totales cargadas
-                hoursLoad = this.countProjectHours(select);
+                    //Horas totales cargadas
+                    hoursLoad = this.countProjectHours(select);
 
-                //Cargamos la informacion de la grilla
-                this.gridProjectInfo.push({
-                    projectAssignedId: select, //El Id del proyecto asignado
-                    hoursAssigned:
-                        this.projectAssociatedToCharge[getProjectIndex]
-                            .assigned_hours, //Horas totales asignadas
-                    hoursLoad: hoursLoad, //Horas totales cargadas
-                    description:
-                        this.projectAssociatedToCharge[getProjectIndex]
-                            .project_description, //Nombre del proyecto
+                    //Cargamos la informacion de la grilla
+                    this.gridProjectInfo.push({
+                        projectAssignedId: select, //El Id del proyecto asignado
+                        hoursAssigned:
+                            this.projectAssociatedToCharge[getProjectIndex]
+                                .assigned_hours, //Horas totales asignadas
+                        hoursLoad: hoursLoad, //Horas totales cargadas
+                        description:
+                            this.projectAssociatedToCharge[getProjectIndex]
+                                .project_description, //Nombre del proyecto
+                        hoursDiff:
+                            this.projectAssociatedToCharge[getProjectIndex]
+                                .assigned_hours - hoursLoad,
+                    });
+
+                    //Limpiamos el contador
+                    hoursLoad = 0;
                 });
-
-                //Limpiamos el contador
-                hoursLoad = 0;
-            });
+            },
+            deep: true,
         },
         /**
          * Watcher que se encarga de capturar los cambios en el selector de horas administrativas
          */
-        inputAdminSelect(newMultiSelect) {
-            this.gridAdminInfo = [];
+        inputAdminSelect: {
+            handler(newMultiSelect) {
+                this.gridAdminInfo = [];
 
-            //Obtenemos los indices
-            newMultiSelect.forEach((select) => {
-                //Obtenemos el indice del concepto
-                const getAdminIndex = this.conceptHourArray
-                    .map((admin) => {
-                        return admin.admin_hours_id;
-                    })
-                    .indexOf(select);
+                //Obtenemos los indices
+                newMultiSelect.forEach((select) => {
+                    //Obtenemos el indice del concepto
+                    const getAdminIndex = this.conceptHourArray
+                        .map((admin) => {
+                            return admin.admin_hours_id;
+                        })
+                        .indexOf(select);
 
-                //Cargamos la informacion de la grilla
-                this.gridAdminInfo.push({
-                    adminHourId: select, //El Id del concepto asignado
-                    description:
-                        this.conceptHourArray[getAdminIndex]
-                            .concept_description, //Nombre del concepto
+                    //Cargamos la informacion de la grilla
+                    this.gridAdminInfo.push({
+                        adminHourId: select, //El Id del concepto asignado
+                        description:
+                            this.conceptHourArray[getAdminIndex]
+                                .concept_description, //Nombre del concepto
+                    });
                 });
-            });
+            },
+            deep: true,
         },
     },
 };

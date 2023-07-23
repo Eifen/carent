@@ -90,11 +90,22 @@ class ProjectModel extends Model
             )
             ->get();
 
+        #Horas adicionales
+        $getAdditionalHours = DB::table('projects_additional_hours')
+            ->join('projects_departments_assigned', 'projects_additional_hours.department_assigned_id', '=', 'projects_departments_assigned.department_assigned_id')
+            ->where([
+                ['projects_departments_assigned.department_id', '=', $getDepartmentId->department_id],
+                ['projects_departments_assigned.project_id', '=', $getProject->project_id],
+                ['projects_additional_hours.status_id', '=', 1]
+            ])
+            ->get();
+
         #Acoplamos la informacion en un array asociativo
         $prepareInfo = array(
             "users" => $getUsers,
             "project" => $getProject,
-            "analyst" => $getAnalyst
+            "analyst" => $getAnalyst,
+            "additional" => $getAdditionalHours
         );
         return $prepareInfo;
     }

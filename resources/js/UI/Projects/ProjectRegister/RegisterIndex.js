@@ -4,13 +4,12 @@ import { AXIOSINTERVAL, NOTIFYINTERVAL } from "../../../app";
 import { preparDateMethod } from "./PrepareDateMethod";
 import { weeksFromDateMethod } from "./WeeksFromDateMethod";
 import { hoursForWeeksMethod } from "./HoursForWeeksMethod";
+import { registerDayMethods } from "./RegisterDay";
+import { registerAdminDayMethod } from "./RegisterAdminDay";
 
 //Componentes dedicados
 import Multiselect from "@vueform/multiselect";
 import LoadHours from "@/Components/LoadHours.vue";
-
-//Toastify
-import { toast } from "vue3-toastify";
 
 const registerApp = createApp({
     data() {
@@ -100,6 +99,8 @@ const registerApp = createApp({
          * @param {Object} dateInfo Objeto que almacena la informacion del startDate, endDate, year, startMonth y endMonth seleccionado
          */
         prepareRequest(dateInfo) {
+            this.inputProjectSelect = [];
+            this.inputAdminSelect = [];
             //Pasamos la información a la base de datos
             axios
                 .post("/projects/register-hours/get-load-hours", {
@@ -112,6 +113,43 @@ const registerApp = createApp({
                         request.data["projects_hours"],
                         request.data["admin_hours"]
                     );
+                    //Hacemos un for del intervalo de horas
+                    request.data["date_interval"].forEach((date) => {
+                        //Hacemos un foreach para cargar los proyectos que tienen fecha esa semana
+                        request.data["projects_hours"].forEach(
+                            (project, cursor) => {
+                                //Si coincide el id y la fecha, activamos el multiselect
+                                if (
+                                    project.user_id === date.user_id &&
+                                    project.register_date ===
+                                        date.register_date &&
+                                    this.inputProjectSelect.indexOf(
+                                        project.user_assigned_id
+                                    ) == -1
+                                ) {
+                                    //Se van llenando automaticamente los selectores que no esten duplicados
+                                    this.inputProjectSelect[cursor] =
+                                        project.user_assigned_id;
+                                }
+                            }
+                        );
+                        console.log(this.inputProjectSelect);
+                        //Hacemos un foreach para cargar las hroas administrativas que tienen fecha esa semana
+                        request.data["admin_hours"].forEach((admin, cursor) => {
+                            //Si coincide el id y la fecha, activamos el multiselect
+                            if (
+                                admin.user_id === date.user_id &&
+                                admin.register_date === date.register_date &&
+                                this.inputAdminSelect.indexOf(
+                                    admin.admin_hours_id
+                                ) == -1
+                            ) {
+                                //Se van llenando automaticamente los selectores
+                                this.inputAdminSelect[cursor] =
+                                    admin.admin_hours_id;
+                            }
+                        });
+                    });
 
                     //Esperamos un tiempo antes de activar la grilla
                     setTimeout(() => {
@@ -120,97 +158,6 @@ const registerApp = createApp({
                 })
                 .catch((error) => {
                     console.error(error);
-                });
-        },
-        /**
-         * Metodo que registra una hora de proyecto en la base de datos
-         * @param {*} childParam Captura una tupla donde [0] es la hora registrada y [1] es la observacion
-         * @param {*} projectAssignedId Se trata del id del proyecto seleccionado y asignado para cargar
-         */
-        registerDay(childParam, projectAssignedId) {
-            this.onCharged = true;
-            //Preparamos la informacion a enviar
-            const prepareDay = {
-                selectInfo: childParam, //Datos de los input del dia
-                assignedId: projectAssignedId, //Id del proyecto asignado por cargar
-                multiSelectProjectInfo: this.gridProjectInfo, //Informacion de los proyectos seleccionados y sus horas cargadas
-                listHour: this.listProjectHourData, //Lista de los proyectos donde el usuario ha cargado horas
-            };
-
-            axios
-                .post("/projects/register-hours/add-hour", prepareDay)
-                .then((request) => {
-                    //Verificamos que el response no sea falso
-                    if (request.status === 200 && !request.data.response)
-                        throw request.data.message;
-                    this.listProjectHourData = request.data.message;
-                    //Mensaje de confirmacion
-                    toast.success("Hora registrada exitosamente", {
-                        position: toast.POSITION.TOP_LEFT,
-                        autoClose: NOTIFYINTERVAL,
-                    });
-
-                    setTimeout(() => {
-                        this.onCharged = false;
-                    }, AXIOSINTERVAL);
-                })
-                .catch((errorMessage) => {
-                    console.error(errorMessage);
-                    toast.error(errorMessage.error, {
-                        position: toast.POSITION.TOP_LEFT,
-                        autoClose: NOTIFYINTERVAL,
-                    });
-
-                    setTimeout(() => {
-                        this.listProjectHourData = errorMessage.newList;
-                        this.onCharged = false;
-                    }, AXIOSINTERVAL);
-                });
-        },
-        /**
-         * Metodo que registra una hora administrativa en la base de datos
-         * @param {*} childParam Captura una tupla donde [0] es la hora registrada y [1] es la observacion
-         * @param {*} adminAssignedId Se trata del id del concepto seleccionado y asignado para cargar
-         */
-        registerAdminDay(childParam, adminAssignedId) {
-            //Preparar dia administrativo
-            const prepareAdminDay = {
-                selectInfo: childParam, //Datos de los input del dia
-                assignedId: adminAssignedId, //Id del admin asignado por cargar
-                listHour: this.listAdminHourData, //Lista de los conceptos donde el usuario ha cargado horas
-            };
-
-            axios
-                .post(
-                    "/projects/register-hours/add-admin-hour",
-                    prepareAdminDay
-                )
-                .then((request) => {
-                    //Verificamos que el response no sea falso
-                    if (request.status === 200 && !request.data.response)
-                        throw request.data.message;
-                    this.listAdminHourData = request.data.message;
-                    //Mensaje de confirmacion
-                    toast.success("Hora registrada exitosamente", {
-                        position: toast.POSITION.TOP_LEFT,
-                        autoClose: NOTIFYINTERVAL,
-                    });
-
-                    setTimeout(() => {
-                        this.onCharged = false;
-                    }, AXIOSINTERVAL);
-                })
-                .catch((errorMessage) => {
-                    console.error(errorMessage);
-                    toast.error(errorMessage.error, {
-                        position: toast.POSITION.TOP_LEFT,
-                        autoClose: NOTIFYINTERVAL,
-                    });
-
-                    setTimeout(() => {
-                        this.listAdminHourData = errorMessage.newList;
-                        this.onCharged = false;
-                    }, AXIOSINTERVAL);
                 });
         },
     },
@@ -257,6 +204,8 @@ const registerApp = createApp({
         preparDateMethod,
         weeksFromDateMethod,
         hoursForWeeksMethod,
+        registerDayMethods,
+        registerAdminDayMethod,
     ],
     components: { Multiselect, LoadHours },
 });
