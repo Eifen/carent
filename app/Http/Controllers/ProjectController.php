@@ -17,7 +17,7 @@ class ProjectController extends Controller
     protected $permitControl;
 
     /**
-     * Metodo inicial de la vista de clientes
+     * Metodo inicial de la vista de proyectos
      * @param mixed $request recibe la data de session del sistema
      */
     public function index(Request $request)

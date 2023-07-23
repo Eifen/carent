@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BillingController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\ConfigController;
@@ -109,6 +110,10 @@ Route::prefix('/')->group(function () {
         Route::prefix('/closure')->group(function () {
             Route::get('/', [ProjectController::class, 'index'])->name('closeProjects');
             Route::post('/prepare-info', [ProjectController::class, 'sessionCloseProjects']);
+        });
+        //Billings
+        Route::prefix('/billing')->group(function () {
+            Route::get('/', [BillingController::class, 'index'])->name('billing');
         });
     });
 });
