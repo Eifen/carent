@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Models\ConfigModel;
+use App\Models\ProjectModel;
 
 class BillingController extends Controller
 {
@@ -31,5 +32,23 @@ class BillingController extends Controller
         $this->modelInstance = new ConfigModel();
         $allData = $this->modelInstance->GetAll('billings');
         return response($allData, 200);
+    }
+
+    /**
+     * Metodo que hace un llamao al control para traer la data de un proyecto por su codigo
+     * @param Request $billingRequest almacena el objeto pasado por parametro POST a la solicitud
+     * @return Response Retorna un objeto responde con status 200 si logra crear existosamente la sesión
+     */
+    public function billingPerProject(Request $billingRequest)
+    {
+        //Creamos una instancia de sesión temporal
+        Session::put("billingProject", ProjectModel::getProjectInfo($billingRequest->input('codigoSQL')));
+        return response("Project Loaded", 200);
+    }
+
+    /** Metodo que elimina la sesión temporal*/
+    public function deleteBillingInfo()
+    {
+        if (Session::has('billingProject')) Session::forget('billingProject');
     }
 }

@@ -113,8 +113,15 @@ Route::prefix('/')->group(function () {
         });
     });
     //Billings
-    Route::prefix('/billing')->group(function () {
+    Route::prefix('/billings')->group(function () {
         Route::get('/', [BillingController::class, 'index'])->name('billing');
         Route::post('/all-projects', [BillingController::class, 'getProjectBillings']);
+        Route::post('/loading-project', [BillingController::class, 'billingPerProject']);
+        Route::put('/delete-update-data', [BillingController::class, 'deleteBillingInfo']);
+
+        //Control billing
+        Route::prefix('/control')->group(function () {
+            Route::get('/', [BillingController::class, 'index'])->name('controlBilling');
+        });
     });
 });

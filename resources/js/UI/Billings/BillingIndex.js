@@ -29,9 +29,23 @@ const billingApp = createApp({
         CrudUi.limitPagData(this, this.tableTarget, this.lengthColumns);
     },
     mounted() {
-        CrudUi.getTable("/billing/all-projects", this);
+        CrudUi.getTable("/billings/all-projects", this);
     },
-    methods: {},
+    methods: {
+        /**
+         * Metodo que crea una instancia en Sessión para pasarla temporalmente la pantalla de facturacion
+         * @param {*} idProject Almacena la ID seleccionada de la lista de projects
+         */
+        infoBilling(idProject) {
+            const paramsDTO = { codigoSQL: idProject };
+            const routesDTO = {
+                post: "/billings/loading-project",
+                redirect: "/billings/control",
+            };
+            //Llamamos al método Static que hace la consulta Axios
+            CrudUi.enableEdit(routesDTO, paramsDTO);
+        },
+    },
     computed: {},
     watch: {},
     mixins: [componentsUI, methodsUI, watchUI, dataUI],

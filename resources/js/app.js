@@ -25,3 +25,4 @@ import "./UI/Projects/ProjectClose/CloseIndex";
 import "./UI/Projects/ProjectValidate/ProjectValidateIndex";
 //Facturacion
 import "./UI/Billings/BillingIndex";
+import "./UI/Billings/BillingControl";
