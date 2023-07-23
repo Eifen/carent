@@ -59,7 +59,7 @@
                     <table class="table">
                         <thead>
                             <tr>
-                                <th class="col-sm-4 col-lg-4" colspan="2"> Horarios Reales USD</th>
+                                <th class="col-sm-4 col-lg-4" colspan="2"> Horarios Reales</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -79,20 +79,21 @@
                     <div class="close-project-label">Facturación Adicional</div>
                     <table class="table">
                         <tbody>
-                            <tr>
+                            <tr v-for="billingAditional in project.billingAditionalValue">
                                 <td class="col-sm-4 col-lg-4" align="center"></td>
-                                <td class="col-sm-4 col-lg-4" align="center">ABDC</td>
+                                <td class="col-sm-4 col-lg-4" align="center">{{ billingAditional }}</td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr>
                                 <th class="col-sm-4 col-lg-4">Total B</th>
-                                <td class="col-sm-4 col-lg-4" align="center">EFGH</td>
+                                <td class="col-sm-4 col-lg-4" align="center">{{ totalAditionalBilling }}</td>
 
                             </tr>
                             <tr>
                                 <th class="col-sm-4 col-lg-4"> Total A+B</th>
-                                <td class="col-sm-4 col-lg-4" align="center">Total</td>
+                                <td class="col-sm-4 col-lg-4" align="center">{{ totalRealFees + totalAditionalBilling }}
+                                </td>
                             </tr>
                         </tfoot>
                     </table>
@@ -152,14 +153,14 @@
                             <tr>
                                 <th class="col-sm-2 col-lg-2">Valor Monetario a recuperar HP exceso de horas</th>
                                 <td class="col-sm-2 col-lg-2" align="center">
-                                    {{ ((totalHoursAssigned - totalRealHours) * -1) * project.average }}</td>
+                                    {{ monetaryRecover(totalHoursAssigned, totalRealHours) }}</td>
                             </tr>
                         </tbody>
                         <tfoot>
                         </tfoot>
                     </table>
                     <!-- Valor monetario facturado o pendiente en USD -->
-                    <div class="close-project-label"> Valor monetario facturado o pendiente en USD</div>
+                    <div class="close-project-label"> Valor monetario facturado o pendiente</div>
                     <table class="table">
                         <thead>
                         </thead>
@@ -167,23 +168,27 @@
                             <tr>
                                 <th class="col-sm-6 col-lg-6">Valor monetario sin facturar(con base propuesta original)
                                 </th>
-                                <td class="col-sm-6 col-lg-6" align="center">Valor</td>
+                                <td class="col-sm-6 col-lg-6" align="center">{{ getUnbilled(project.valueEstimated,
+                                    totalRealFees) }}
+                                </td>
                             </tr>
                             <tr>
                                 <th class="col-sm-6 col-lg-6">Valor Monetario adicional facturado</th>
-                                <td class="col-sm-6 col-lg-6" align="center">Valor</td>
+                                <td class="col-sm-6 col-lg-6" align="center">{{ totalAditionalBilling }}</td>
                             </tr>
                             <tr>
                                 <th class="col-sm-6 col-lg-6">Valor monetario(deficit para cubrir exceso de horas) o
                                     excedente
                                 </th>
-                                <td class="col-sm-6 col-lg-6" align="center">Valor</td>
+                                <td class="col-sm-6 col-lg-6" align="center">{{
+                                    getValueDeficit(monetaryRecover(totalHoursAssigned, totalRealHours),
+                                        totalAditionalBilling) }}</td>
                             </tr>
-                            <tr>
+                            <!-- <tr>
                                 <th class="col-sm-6 col-lg-6">Valor Monetario (beneficiario) en gastos por recuperar
                                 </th>
                                 <td class="col-sm-6 col-lg-6" align="center">Valor</td>
-                            </tr>
+                            </tr> -->
                         </tbody>
                         <tfoot>
                         </tfoot>
@@ -292,6 +297,7 @@ export default {
                 'tableRealHours': [],
                 'message': '',
                 'billingValue': [],
+                'billingAditionalValue': [],
                 // 'difference' : [],
             },
             message:
@@ -342,6 +348,17 @@ export default {
             //se usa operador ternario para en una sola linea hacer una condicional y asi no usar for
             //key pregunta si es ===-1 es negativo ya que indexOf arroja un -1 cuando no encuenta una posicion
             //sino es 0 entonces realiza la busqueda que se le implemente
+        },
+        getUnbilled(valueEstimated, totalRealFees) {
+            const difference = valueEstimated - totalRealFees
+            return difference < 0 ? 0 : difference
+        },
+        getValueDeficit(monetaryReco, totalAditionalBilling) {
+            const difference = monetaryReco - totalAditionalBilling
+            return difference < 0 ? 0 : difference
+        },
+        monetaryRecover(totalHoursAssigned, totalRealHours) {
+            return ((totalHoursAssigned - totalRealHours) * -1) * this.project.average
         }
     },
     //se utilizan para calcular valores reactivos que dependen de otros datos reactivos en tu componente.
@@ -357,6 +374,12 @@ export default {
         },
         totalRealFees() {
             return this.project.billingValue.reduce((total, billingValue) => total + parseFloat(billingValue), 0);
+        },
+        totalRealFees() {
+            return this.project.billingValue.reduce((total, billingValue) => total + parseFloat(billingValue), 0);
+        },
+        totalAditionalBilling() {
+            return this.project.billingAditionalValue.reduce((total, billingValue) => total + parseFloat(billingValue), 0);
         }
     },
 
@@ -405,7 +428,8 @@ export default {
             //el valor de arriba es la propiedad que aparece en el objeto del controlador, esta en el console.log en este caso es billings
             //valor de abajo es el nombre del valor que le asigno a data
             this.loadInitial.billings.forEach(department => {
-                this.project.billingValue.push(parseFloat(department.billing_value))
+                if (department.billing_concept_id === 1) this.project.billingValue.push(parseFloat(department.billing_value))
+                if (department.billing_concept_id !== 1) this.project.billingAditionalValue.push(parseFloat(department.billing_value))
             })
 
         },
