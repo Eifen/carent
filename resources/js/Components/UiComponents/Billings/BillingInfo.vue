@@ -14,7 +14,6 @@ export default {
     },
     created() {
         //Cargamos la informacion del proyecto
-        this.$emit("init-project");
         console.log(this.infoProject)
     }
 }

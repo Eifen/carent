@@ -133,7 +133,6 @@ const registerApp = createApp({
                                 }
                             }
                         );
-                        console.log(this.inputProjectSelect);
                         //Hacemos un foreach para cargar las hroas administrativas que tienen fecha esa semana
                         request.data["admin_hours"].forEach((admin, cursor) => {
                             //Si coincide el id y la fecha, activamos el multiselect

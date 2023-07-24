@@ -1,22 +1,19 @@
 import { createApp } from "vue/dist/vue.esm-bundler";
-import { componentsUI, methodsUI, CrudUi, dataUI } from "../UIConfig";
+import { componentsUI, methodsUI, CrudUi, dataUI, watchUI } from "../UIConfig";
 import BillingInfo from "@/Components/UiComponents/Billings/BillingInfo.vue";
 
 const controlBillingApp = createApp({
     data() {
-        return {
-            updateModel: [], //Corresponde a la carga del proyecto, variable necesaria para el prepareUpdate
-        };
+        return {};
     },
-    mounted() {
-        setTimeout(() => {
-            this.isMounted = true;
-        }, 300);
+    created() {
+        //Llamamos a la sesion
+        this.getSession("/billings/delete-update-data");
     },
     methods: {},
     computed: {},
     watch: {},
-    mixins: [componentsUI, methodsUI, dataUI],
+    mixins: [componentsUI, methodsUI, dataUI, watchUI],
     components: { BillingInfo },
 });
 

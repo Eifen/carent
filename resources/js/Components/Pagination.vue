@@ -116,7 +116,6 @@ export default {
         inputDateStart(newDate, oldDate) {
             const starDate = this.inputDateStart.length != 0 ? new Date(newDate) : new Date('2020-03-01');
             const endDate = this.inputDateEnd.length != 0 ? new Date(this.inputDateEnd) : new Date()
-            console.log(endDate)
             //Hacemos el emit unicamente si el valor es menor que la fecha hasta, o la fecha hasta esta vacia
             if (starDate.getTime() <= endDate.getTime()) {
                 this.fieldsInput["fecha_desde"] = starDate;

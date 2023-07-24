@@ -20,9 +20,11 @@ class UsersController extends Controller
     public function index(Request $request)
     {
         //Enviamos la data dependiendo del estado de la sesión
-        if($request->session()->has('userId')){ $this->permitControl = true; }
+        if ($request->session()->has('userId')) {
+            $this->permitControl = true;
+        }
 
-        return view('index')->with('Session',$this->permitControl);
+        return view('index')->with('Session', $this->permitControl);
     }
 
     /**
@@ -35,7 +37,7 @@ class UsersController extends Controller
         $allData = $this->modelInstance->GetAll('users');
 
         //Retornamos toda la data
-        return response($allData,200);
+        return response($allData, 200);
     }
 
     /**
@@ -49,9 +51,9 @@ class UsersController extends Controller
         $user = UsersModel::PrepareDataUpdate($dataUser->input("codigoSQL"));
 
         //Convertidos la data a un json
-        Session::put("dataUpdate",$user);
+        Session::put("dataUpdate", $user);
 
-        return response('User loaded',200);
+        return response('User loaded', 200);
     }
 
     /**
@@ -70,7 +72,7 @@ class UsersController extends Controller
             "parishUsuario" => UsersModel::GetParish()
         ];
 
-        return response($dataInit,200);
+        return response($dataInit, 200);
     }
 
     //Registro de nuevo Usuarios
@@ -83,8 +85,8 @@ class UsersController extends Controller
 
         //Fecha de ingreso null o vacia
         $fechaIngreso = $dataUser->input('user')['DateIngreso'] != null || $dataUser->input('user')['DateIngreso'] != ''
-                        ? date("Y-m-d",strtotime($dataUser->input('user')['DateIngreso']))
-                        : null;
+            ? date("Y-m-d", strtotime($dataUser->input('user')['DateIngreso']))
+            : null;
 
         $paramsUser = array(
             mb_strtoupper($dataUser->input('user')['FirstName']),
@@ -92,7 +94,7 @@ class UsersController extends Controller
             mb_strtoupper($dataUser->input('user')['LastName']),
             mb_strtoupper($dataUser->input('user')['SecondLastName']),
             $decryptCode,
-            date("Y-m-d",strtotime($dataUser->input('user')['Birthday'])),
+            date("Y-m-d", strtotime($dataUser->input('user')['Birthday'])),
             $fechaIngreso,
             $dataUser->input('user')['Cedula'],
             $dataUser->input('user')['IdParish'],
@@ -103,11 +105,10 @@ class UsersController extends Controller
         );
 
         //Fecha de egreso null o vacia si se está editando
-        if($dataUser->input('isEdit'))
-        {
+        if ($dataUser->input('isEdit')) {
             $fechaEgreso = $dataUser->input('user')['DateEgreso'] != null || $dataUser->input('user')['DateEgreso'] != ''
-            ? date("Y-m-d",strtotime($dataUser->input('user')['DateEgreso']))
-            : null;
+                ? date("Y-m-d", strtotime($dataUser->input('user')['DateEgreso']))
+                : null;
 
             $paramsEdit = array(
                 $dataUser->input('user')['IdUser'],
@@ -116,7 +117,7 @@ class UsersController extends Controller
             );
 
             //Colocamos el status y la fecha de egreso al final del array
-            $paramsUser = array_merge($paramsUser,$paramsEdit);
+            $paramsUser = array_merge($paramsUser, $paramsEdit);
         }
 
         $paramsContact = array(
@@ -130,17 +131,28 @@ class UsersController extends Controller
         );
 
         $dataUser->input('isEdit')
-        ? ($ResponseUser = UsersModel::ControlUser($paramsUser,$paramsContact,"update"))
-        : $ResponseUser = UsersModel::ControlUser($paramsUser,$paramsContact,"create");
+            ? ($ResponseUser = UsersModel::ControlUser($paramsUser, $paramsContact, "update"))
+            : $ResponseUser = UsersModel::ControlUser($paramsUser, $paramsContact, "create");
 
         //Eliminamos el session update en caso de que exista.
-        if(Session::has('dataUpdate') && $ResponseUser['response']) Session::forget("dataUpdate");
+        if (Session::has('dataUpdate') && $ResponseUser['response']) Session::forget("dataUpdate");
 
-        return response($ResponseUser,200);
+        return response($ResponseUser, 200);
     }
 
     /**
      * Metodo que borra la session dela data Update
      */
-    public function DeleteDataUpdate(){ if(Session::has('dataUpdate')) Session::forget("dataUpdate"); }
+    public function DeleteDataUpdate()
+    {
+        if (Session::has('dataUpdate')) {
+            $getSession = json_encode(Session::get('dataUpdate'));
+            //Borramos la sesion
+            Session::forget("dataUpdate");
+            //retornamos
+            return response($getSession, 200);
+        } else {
+            return response(0, 200);
+        }
+    }
 }

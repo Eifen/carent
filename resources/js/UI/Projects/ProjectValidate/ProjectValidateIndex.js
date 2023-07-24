@@ -66,7 +66,6 @@ const validateApp = createApp({
                 loadId: idLoad,
                 loadStatus: statusId,
             };
-            console.log(params);
             axios
                 .post("/projects/register-hours/control-load-hours", params)
                 .then((request) => {

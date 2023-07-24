@@ -49,6 +49,11 @@ class BillingController extends Controller
     /** Metodo que elimina la sesión temporal*/
     public function deleteBillingInfo()
     {
-        if (Session::has('billingProject')) Session::forget('billingProject');
+        if (Session::has('billingProject')) {
+            $getBillingInfo = json_encode(Session::get('billingProject'));
+            //Eliminamos la sesion
+            Session::forget('billingProject');
+            return response($getBillingInfo, 200);
+        }
     }
 }

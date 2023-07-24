@@ -207,7 +207,6 @@ export default {
                     //Por defecto la fecha inicial es 2020-07-01 y la fecha final es la actual
                     let startDate = dataInput["fecha_desde"]
                     let endDate = dataInput["fecha_hasta"]
-                    console.log(startDate, endDate)
                     dataListDTO = dataListDTO.filter(data => {
                         let dateToSearch = new Date(data["fecha"]);
                         return dateToSearch.getTime() >= startDate.getTime() && dateToSearch.getTime() <= endDate.getTime();
@@ -215,7 +214,6 @@ export default {
                 }
                 //Valores indistintos a fecha
                 if (columnToSearch !== "fecha_desde" && columnToSearch !== "fecha_hasta") {
-                    console.log(columnToSearch)
                     dataListDTO = dataListDTO.filter(data => {
                         return data[columnToSearch].toString().toLowerCase().includes(dataInput[columnToSearch].toString().toLowerCase())
                     })

@@ -220,8 +220,22 @@ class ProjectController extends Controller
     /** Metodo que elimina la sesión temporal*/
     public function deleteProjectUpdate()
     {
-        if (Session::has('projectUpdate')) Session::forget('projectUpdate');
-        if (Session::has('closeProject')) Session::forget('closeProject');
+        //Capturamos, retornamos, y borramos las sesiones segun su tipo. Si no encuentra ninguna devuelve 0
+        switch (true) {
+                //Editar proyecto
+            case (Session::has('projectUpdate')):
+                $getProjectUpdate = json_encode(Session::get('projectUpdate'));
+                Session::forget('projectUpdate');
+                return response($getProjectUpdate, 200);
+                //Cerrar Proyecto
+            case (Session::has('closeProject')):
+                $getProjectUpdate = json_encode(Session::get('closeProject'));
+                Session::forget('closeProject');
+                return response($getProjectUpdate, 200);
+                //Ninguna sesion coincide
+            default:
+                return response(0, 200);
+        }
     }
 
     /** Metodo que retorna la Session['usersAssign'] al request y luego elimina la session */

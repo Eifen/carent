@@ -1,6 +1,6 @@
 import { createApp } from "vue/dist/vue.esm-bundler";
 import FormProjects from "../../Components/UiComponents/Projects/FormProjects.vue";
-import { componentsUI, methodsUI, CrudUi } from "../UIConfig";
+import { componentsUI, methodsUI, CrudUi, dataUI, watchUI } from "../UIConfig";
 
 const clientsControl = createApp({
     data() {
@@ -73,12 +73,11 @@ const clientsControl = createApp({
         },
     },
     components: { FormProjects },
-    mounted() {
-        setTimeout(() => {
-            this.isMounted = true;
-        }, 300);
+    created() {
+        //Habilitamos la session
+        this.getSession("/projects/delete-update-data");
     },
-    mixins: [componentsUI, methodsUI],
+    mixins: [componentsUI, methodsUI, dataUI, watchUI],
 });
 
 if (

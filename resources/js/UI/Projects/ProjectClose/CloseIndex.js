@@ -1,24 +1,21 @@
 import { createApp } from "vue/dist/vue.esm-bundler";
 import CloseProject from "@/Components/UiComponents/CloseProjects/CloseProject.vue";
-import { methodsUI, dataUI } from "../../UIConfig";
+import { methodsUI, dataUI, watchUI, componentsUI } from "../../UIConfig";
 
 const closeApp = createApp({
     data() {
-        return {
-            updateModel: {},
-        };
+        return {};
     },
 
-    mounted() {
-        setTimeout(() => {
-            this.isMounted = true;
-        }, 500);
+    created() {
+        //Llamamos a la sesion
+        this.getSession("/projects/delete-update-data");
     },
     //se transpasa, se carga y se elimina las sesiones
     //Mixin: fragmento de codigo que adquiere las propiedades del componente,
     // en este caso: adquiero las propiedades al importar esa constante methosUI
     methods: {},
-    mixins: [methodsUI, dataUI],
+    mixins: [methodsUI, dataUI, watchUI, componentsUI],
     components: { CloseProject },
     computed: {},
     watch: {},

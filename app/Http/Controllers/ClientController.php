@@ -113,7 +113,13 @@ class ClientController extends Controller
     /** Metodo que elimina la sesión temporal de clientUpdate */
     public function DeleteClientUpdate()
     {
-        if (Session::has('clientUpdate')) Session::forget('clientUpdate');
+        if (Session::has('clientUpdate')) {
+            $getClientInfo = json_encode(Session::get('clientUpdate'));
+            Session::forget('clientUpdate');
+            return response($getClientInfo, 200);
+        } else {
+            response(0, 200);
+        }
     }
     /**
      * Metodo que obtiene la información preeliminar de un cliente

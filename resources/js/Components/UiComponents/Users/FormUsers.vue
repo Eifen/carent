@@ -3,12 +3,11 @@
         <form :class="formClass.form">
             <div :class="formClass.button" @click="$emit('return-view')">Regresar</div>
             <!-- Data Principal -->
-            <legend :class="formClass.legend" v-text="isEdit ? messages.titleEdit: messages.titleCreate"></legend>
-            <div :class="formClass.requiredTitle">Campos Obligatorios (<span :class="formClass.requiredField">*</span>)</div>
-            <data-principal :scope="DTOData"
-            @active-document="enableInput"
-            @active-birthday="insertDate"
-            :enable-edit="isEdit"></data-principal>
+            <legend :class="formClass.legend" v-text="isEdit ? messages.titleEdit : messages.titleCreate"></legend>
+            <div :class="formClass.requiredTitle">Campos Obligatorios (<span :class="formClass.requiredField">*</span>)
+            </div>
+            <data-principal :scope="DTOData" @active-document="enableInput" @active-birthday="insertDate"
+                :enable-edit="isEdit"></data-principal>
             <!-- Datos de contacto -->
             <legend :class="formClass.legend" v-text="messages.contacto"></legend>
             <data-contact :scope="DTOData" :enableEdit="isEdit"></data-contact>
@@ -16,22 +15,18 @@
             <legend :class="formClass.legend" v-text="messages.empleado"></legend>
             <!-- Check Empleado Crowe -->
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="isCroweCheck"
-                v-model="inputCheckedCrowe">
+                <input class="form-check-input" type="checkbox" value="" id="isCroweCheck" v-model="inputCheckedCrowe">
                 <label class="form-check-label" for="isCroweCheck">
                     <span :class="formClass.requiredField">Este usuario es un empleado de <b>CROWE?</b></span>
                 </label>
             </div>
             <!-- Se mostrará unicamente si se hace click en el check -->
-            <data-empleado :scope="DTOData"
-            @active-ingreso="insertIngreso"
-            @active-egreso="insertEgreso"
-            :enableEdit="isEdit"></data-empleado>
+            <data-empleado :scope="DTOData" @active-ingreso="insertIngreso" @active-egreso="insertEgreso"
+                :enableEdit="isEdit"></data-empleado>
             <!-- Submit Button. Que permanece inactivo mientras que no se hayan llegano todos los datos requeridos -->
             <div :class="formClass.button"
-            :id="[!submitButton.isValid ? formClass.disableButton : isClick ? formClass.disableButton : null]"
-            @click="userEmit()"
-            v-if="submitButton.isValid">
+                :id="[!submitButton.isValid ? formClass.disableButton : isClick ? formClass.disableButton : null]"
+                @click="userEmit()" v-if="submitButton.isValid">
                 <span v-if="isEdit & !isClick">{{ messages.buttonEdit }}</span>
                 <span v-else-if="!isEdit & !isClick">{{ messages.buttonCreate }}</span>
                 <span v-else-if="isClick"><font-awesome string-icon="fa-solid fa-spinner" is-spin></font-awesome></span>
@@ -55,14 +50,14 @@ import DataEmpleado from "@/Components/UiComponents/Users/TemplatesUsers/UserEmp
 import { classConfig, dataMixin, methodsGlobalMixin, watchersGlobalMixin } from "../UiComponentsConfig";
 
 export default {
-    props:{
+    props: {
         isEdit: Boolean, //Define si el formulario es de edición o de creación
         isClick: Boolean, //Controla el estado del boton
         dataEdit: Object, //Almacena la data para update
     },
-    data(){
-        return{
-            messages:{
+    data() {
+        return {
+            messages: {
                 titleCreate: 'Estas creando a un nuevo usuario',
                 titleEdit: 'Estas modificando al usuario',
                 contacto: 'Datos de contacto',
@@ -78,8 +73,8 @@ export default {
                     documentError: '',
                     firstemailError: '',
                     secondemailError: '',
-                    ingresoError:'',
-                    egresoError:'',
+                    ingresoError: '',
+                    egresoError: '',
                 }
             },
             inputBirthday: '', //Value del input Birthday
@@ -91,9 +86,9 @@ export default {
             inputDocumentoSelect: 0, //Value del input para la selección del tipo de documento
             inputCode: '', //Value del input para el Código
             inputFirstEmail: '', //Value para el primer correo (Principal)
-            inputSecondEmail:'', //Value para el segundo correo (Secundario)
-            inputFirstPhone:'', //Value para el Telefono Principal
-            inputSecondPhone:'', //Value para el Telefono Secundario
+            inputSecondEmail: '', //Value para el segundo correo (Secundario)
+            inputFirstPhone: '', //Value para el Telefono Principal
+            inputSecondPhone: '', //Value para el Telefono Secundario
             inputCheckedCrowe: false, //Confirmacion si el usuario es empleado
             inputEstadoSelect: 0, //Almacena el value del estado
             inputMunicipioSelect: 0, //Almacena el value del municipio
@@ -116,9 +111,9 @@ export default {
                 init: [], //Data inicial
                 select: [] //Data que se mostrara
             }, //Control para los municipios
-            parish:{
-                init:[], //Data inicial
-                select:[] //Data que se mostrara
+            parish: {
+                init: [], //Data inicial
+                select: [] //Data que se mostrara
             }, //Contro para las parroquias
 
             //Espacio reservado para el control del Create / Edit
@@ -129,7 +124,7 @@ export default {
                 documentValid: false, //cedula de identidad
                 codeValid: false, //codigo de usuario
                 firstphoneValid: false, // telefono principal
-                firstemailValid:false, // correo principal
+                firstemailValid: false, // correo principal
                 isValid: false
             },
             //Constantes
@@ -138,10 +133,10 @@ export default {
     },
     components: { Calendar, FontAwesome, DataPrincipal, DataContact, DataEmpleado },
     created() { classConfig(this); createdMixin(this) },
-    mounted() { mountedMixin(this) },
+    mounted() { mountedMixin(this); },
     //Propiedad computada encarga de pasar toda la data como parametro,
-    computed: { DTOData(){ return this.$data } },
+    computed: { DTOData() { return this.$data } },
     //Insertamos los methods y los watchers
-    mixins: [userMethods, userWatchers, dataMixin, methodsGlobalMixin,watchersGlobalMixin],
+    mixins: [userMethods, userWatchers, dataMixin, methodsGlobalMixin, watchersGlobalMixin],
 }
 </script>

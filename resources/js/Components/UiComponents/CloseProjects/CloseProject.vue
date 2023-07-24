@@ -260,7 +260,7 @@
                     Plazo.
                     Detallar:
                 </div>
-                <textarea v-model="six" rows="2" cols="120"></textarea>
+                <textarea v-model="message.sixth" rows="2" cols="120"></textarea>
             </div>
         </div>
     </div>
@@ -307,7 +307,7 @@ export default {
                 'third': '',
                 'fourth': '',
                 'fifth': '',
-                'six': '',
+                'sixth': '',
             },
 
             closeproject: 'NIRVANA',
@@ -318,6 +318,57 @@ export default {
     emits: [
         'load-view'
     ],
+    created() {
+        //Si ya cargo el componente, llenamos la informacion
+        if (this.active) {
+            console.log(this.loadInitial)
+            //Nommbre del proyecto
+            this.project.name = this.loadInitial.project.project_description
+            //Nommbre del cliente
+            this.project.client = this.loadInitial.project.bussiness_name
+            //Nommbre del socio a cargo
+            this.project.partner = this.loadInitial.project.partner_name
+            //horas estimadas de valores propuesta
+            this.project.valueEstimated = parseFloat(this.loadInitial.project.project_value)
+            //Sumatoria de las honorarios estimadas
+            this.loadInitial.departments.forEach(department => {
+                this.project.hoursEstimated = parseInt(department.hours_assigned) + parseInt(this.project.hoursEstimated)
+            })
+            //Tasa promedio de valores propuesta
+            this.project.average = parseFloat(this.loadInitial.project.average_rate)
+
+            //Sumatoria de horas adicionales
+            this.loadInitial.additionalHours.forEach(department => {
+                this.project.additionalHour = parseInt(department.additional_hour) + parseInt(this.project.additionalHour)
+            })
+            //Sumatoria de honorarios adicionales
+            this.loadInitial.additionalValue.forEach(department => {
+                this.project.valueExtra = parseFloat(department.aditional_project_value) + parseFloat(this.project.valueExtra)
+            })
+            //Sumatorio de horas reales
+            this.loadInitial.projectsHours.forEach(department => {
+                this.project.hoursReal = parseFloat(department.total_hours) + parseFloat(this.project.hoursReal)
+            })
+            //Tasa promedio final colocar dos decimales
+            if (this.project.hoursReal === 0) { this.project.rateExecuted = 0; }
+            else {
+                this.project.rateExecuted = ((this.project.valueEstimated + this.project.valueExtra) / this.project.hoursReal).toFixed(3);
+            }
+            //Horas estimadas de horas por unidad
+            this.project.tableUnitHours = this.loadInitial.departments
+            //Horas reales de horas por unidad
+            this.project.tableRealHours = this.loadInitial.projectsHours
+            //Honorarios reales USD
+            //Push ingresa un valor en la ultima fila del array
+            //el valor de arriba es la propiedad que aparece en el objeto del controlador, esta en el console.log en este caso es billings
+            //valor de abajo es el nombre del valor que le asigno a data
+            this.loadInitial.billings.forEach(department => {
+                if (department.billing_concept_id === 1) this.project.billingValue.push(parseFloat(department.billing_value))
+                if (department.billing_concept_id !== 1) this.project.billingAditionalValue.push(parseFloat(department.billing_value))
+            })
+
+        }
+    },
 
     //La informacion debe cargar apenas abre el componente
     //Metodo(variable)
@@ -382,63 +433,7 @@ export default {
             return this.project.billingAditionalValue.reduce((total, billingValue) => total + parseFloat(billingValue), 0);
         }
     },
-
-
-    watch: {
-        loadInitial() {
-            console.log(this.loadInitial)
-            //Nommbre del proyecto
-            this.project.name = this.loadInitial.project.project_description
-            //Nommbre del cliente
-            this.project.client = this.loadInitial.project.bussiness_name
-            //Nommbre del socio a cargo
-            this.project.partner = this.loadInitial.project.partner_name
-            //horas estimadas de valores propuesta
-            this.project.valueEstimated = parseFloat(this.loadInitial.project.project_value)
-            //Sumatoria de las honorarios estimadas
-            this.loadInitial.departments.forEach(department => {
-                this.project.hoursEstimated = parseInt(department.hours_assigned) + parseInt(this.project.hoursEstimated)
-            })
-            //Tasa promedio de valores propuesta
-            this.project.average = parseFloat(this.loadInitial.project.average_rate)
-
-            //Sumatoria de horas adicionales
-            this.loadInitial.additionalHours.forEach(department => {
-                this.project.additionalHour = parseInt(department.additional_hour) + parseInt(this.project.additionalHour)
-            })
-            //Sumatoria de honorarios adicionales
-            this.loadInitial.additionalValue.forEach(department => {
-                this.project.valueExtra = parseFloat(department.aditional_project_value) + parseFloat(this.project.valueExtra)
-            })
-            //Sumatorio de horas reales
-            this.loadInitial.projectsHours.forEach(department => {
-                this.project.hoursReal = parseFloat(department.total_hours) + parseFloat(this.project.hoursReal)
-            })
-            //Tasa promedio final colocar dos decimales
-            if (this.project.hoursReal === 0) { this.project.rateExecuted = 0; }
-            else {
-                this.project.rateExecuted = ((this.project.valueEstimated + this.project.valueExtra) / this.project.hoursReal).toFixed(3);
-            }
-            //Horas estimadas de horas por unidad
-            this.project.tableUnitHours = this.loadInitial.departments
-            //Horas reales de horas por unidad
-            this.project.tableRealHours = this.loadInitial.projectsHours
-            //Honorarios reales USD
-            //Push ingresa un valor en la ultima fila del array
-            //el valor de arriba es la propiedad que aparece en el objeto del controlador, esta en el console.log en este caso es billings
-            //valor de abajo es el nombre del valor que le asigno a data
-            this.loadInitial.billings.forEach(department => {
-                if (department.billing_concept_id === 1) this.project.billingValue.push(parseFloat(department.billing_value))
-                if (department.billing_concept_id !== 1) this.project.billingAditionalValue.push(parseFloat(department.billing_value))
-            })
-
-        },
-
-        //Si horas reales es =0 la tasa promedio debe ser 0
-        active(newActive) {
-            if (newActive) this.$emit('load-view')
-        }
-    },
+    watch: {},
     components: { DropdownSelect },
 }
 </script>

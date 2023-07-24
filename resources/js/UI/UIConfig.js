@@ -17,6 +17,8 @@ export const dataUI = {
             lengthColumns: 50,
             maxLengthPagination: 0, //Controlan la páginación
             listData: [], //Object que almacena la data de los usuarios a mostrar en la lista
+            updateModel: {}, //Objeto que almacena la informacion del objeto a actualizar
+            isClick: false, //Controla el estado del botones de edicion
         };
     },
 };
@@ -34,17 +36,16 @@ export const methodsUI = {
                 return JSON.parse(JSON.stringify(objectToConvert));
         },
         /**
-         * Metodo que prepara la data a actualizar de una tabla. Debe existir una propiedad en data() llamada updateModel
-         * @param {Object} listDTO Obtiene los parametros de la sesion de la ruta objetivo temporal antes de eliminarla
+         * Metodo que prepara la data a actualizar de una tabla.
          * @param {String} route Almacena en un string la URL donde se ejecutara el request PUT
          */
-        prepareUpdate(listDTO, route) {
-            this.updateModel = listDTO;
-
+        getSession(route) {
             //Una vez asignado, eliminamos la sesion
             axios
                 .put(route)
-                .then((request) => {})
+                .then((request) => {
+                    this.updateModel = request.data;
+                })
                 .catch((error) => {
                     console.error(error);
                 });
@@ -64,6 +65,10 @@ export const watchUI = {
         listData() {
             this.isMounted = true;
         }, //Desactivamos el loading
+        //Detecta los cambios en el updateModel
+        updateModel() {
+            this.isMounted = true;
+        },
     },
 };
 

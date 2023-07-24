@@ -68,7 +68,112 @@ export const createdMixin = (self) => {
             self.inputValue = "";
 
             //Revisamos si edit existe
-            if (self.isEdit) self.$emit("init-project");
+            if (self.$props.isEdit) {
+                //Obtenemos los indices de clientes y usuarios
+                const indexDTO = {
+                    client: self.dataSelect.clients
+                        .map((object) => object.client_id)
+                        .indexOf(self.$props.dataEdit.project.client_id),
+                    partner: self.dataSelect.partners
+                        .map((object) => object.user_id)
+                        .indexOf(self.$props.dataEdit.project.partner_id),
+                    qualityPartner: self.dataSelect.partners
+                        .map((object) => object.user_id)
+                        .indexOf(
+                            self.$props.dataEdit.project.quality_partner_id
+                        ),
+                    manager: self.dataSelect.managers
+                        .map((object) => object.user_id)
+                        .indexOf(self.$props.dataEdit.project.manager_id),
+                };
+                //Distribuimos la informacion
+                self.inputStatusSelect = self.$props.dataEdit.project.status_id; //Posicion del estado del proyecto
+                self.inputCurrenciesSelect =
+                    self.$props.dataEdit.project.currency_id; //Select del tipo de moneda
+                self.inputCompaniesSelect =
+                    self.$props.dataEdit.project.company_id; //Select del tipo de empresa
+                self.inputProjectDescription =
+                    self.$props.dataEdit.project.project_description; //String que de la descripcion del proyecto
+                self.inputClientAssociated =
+                    self.dataSelect.clients[indexDTO.client].bussiness_name; //String que almacena la información del cliente asociado
+                self.inputManagerAssociated =
+                    self.dataSelect.managers[indexDTO.manager].user_name; //String que almacena la información del manager asociado
+                self.inputPartnerAssociated =
+                    self.dataSelect.partners[indexDTO.partner].user_name; //String que almacena la información del socio asociado
+                self.inputQualityPartnerAssociated =
+                    self.dataSelect.partners[indexDTO.qualityPartner].user_name; //String que almacena la información del socio de calidad asociado
+                self.inputHiringDate = self.$props.dataEdit.project.hiring_date; //Fecha de contratacion
+                self.inputValue = Number(
+                    self.$props.dataEdit.project.project_value
+                ).toLocaleString("de-DE"); //Monto del proyecto
+                //Horas y montos adicionales
+                self.dataSelect.additionalHours =
+                    self.$props.dataEdit.additionalHours;
+                self.dataSelect.additionalValues =
+                    self.$props.dataEdit.additionalValue;
+                //Ultimos valores de tablas de horas y montos adicionales
+                self.lastValueId = self.$props.dataEdit.lastValue;
+                self.lastHoursId = self.$props.dataEdit.lastHour;
+
+                //Almacenamos el ID del proyecto
+                self.projectId = self.$props.dataEdit.project.project_id;
+
+                //Cargamos la informacion de las horas totales adicionales y montos
+                self.asignHoursValue(self.$props.dataEdit);
+
+                //Cargamos la informacion de los departamentos
+                for (
+                    let countDepartment = 0;
+                    countDepartment < self.$props.dataEdit.departments.length;
+                    countDepartment++
+                ) {
+                    //Id del departamento
+                    const indexDepartment = self.dataSelect.departments
+                        .map((object) => object.value)
+                        .indexOf(
+                            self.$props.dataEdit.departments[countDepartment]
+                                .department_id
+                        );
+                    self.inputDepartments.push(
+                        self.$props.dataEdit.departments[countDepartment]
+                            .department_id
+                    );
+
+                    //Llenamos el multiselect
+                    self.dataSelect.managersPerDepartment.push({
+                        departmentId:
+                            self.$props.dataEdit.departments[countDepartment]
+                                .department_id,
+                        departmentName:
+                            self.dataSelect.departments[indexDepartment].label,
+                        managersDepartment: self.dataSelect.managers.filter(
+                            (colums) => {
+                                return colums.department_id
+                                    .toString()
+                                    .includes(
+                                        self.$props.dataEdit.departments[
+                                            countDepartment
+                                        ].department_id.toString()
+                                    );
+                            }
+                        ),
+                        hoursAssigned:
+                            self.$props.dataEdit.departments[countDepartment]
+                                .hours_assigned,
+                        selectManager:
+                            self.$props.dataEdit.departments[countDepartment]
+                                .manager_id,
+                    });
+
+                    //Sumamos las horas asignadas
+                    self.inputHoursAssigned =
+                        parseInt(self.inputHoursAssigned) +
+                        parseInt(
+                            self.$props.dataEdit.departments[countDepartment]
+                                .hours_assigned
+                        );
+                }
+            }
         })
         .catch((error) => {
             console.error(error);
