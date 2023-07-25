@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BillingModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Models\ConfigModel;
@@ -55,5 +56,13 @@ class BillingController extends Controller
             Session::forget('billingProject');
             return response($getBillingInfo, 200);
         }
+    }
+
+    /**
+     * Metodo que captura los parametros para el formulario de crear/actualizar factura
+     */
+    public function prepareParams()
+    {
+        return response(BillingModel::getBillingParams(), 200);
     }
 }
