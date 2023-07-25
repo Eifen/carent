@@ -3,6 +3,8 @@
         <h2 class="close-title"> Cierre de Proyecto </h2>
         <h3 class="close-subtitle"> Aspectos Financieros y/o Inversión </h3>
         <div class="close-project">
+            <!-- Boton de regresar -->
+            <div class="buttonCRUD" id="button-back" @click="$emit('return')">Regresar</div>
             <div class="close-project-date">
                 <span for="close-project-date-time"> Fecha de cierre </span>
                 <input type="date" class="form-control">
@@ -262,6 +264,10 @@
                 </div>
                 <textarea v-model="message.sixth" rows="2" cols="120"></textarea>
             </div>
+            <div class="buttonCRUD" id="button-crud">
+                Enviar
+            </div>
+
         </div>
     </div>
 </template>
@@ -316,7 +322,8 @@ export default {
     },
 
     emits: [
-        'load-view'
+        'load-view',
+        'return'
     ],
     created() {
         //Si ya cargo el componente, llenamos la informacion

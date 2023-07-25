@@ -34,6 +34,7 @@
     color:@Text-Color;
     align-items: center;
     justify-self: flex-end;
+    margin-bottom: 20px;
     grid-area: 1 / 1 / 2 / 6;
     grid-template-columns: repeat(2, 1fr);
     gap: 5px;
@@ -141,7 +142,14 @@
     //Selector de atributo
     & div[id="management-comments"]{ padding: 5px;}
 }
-
+#button-crud{
+    margin-top: 15px;
+    grid-area: 14 / 6 / 15 / 4;
+}
+#button-back{
+    margin-bottom: 30px;
+    grid-area: 1 / 1 / 2 / 6;
+}
 &-unit-hours{
     //background-color: rgb(62, 146, 135);
     color:black;
@@ -150,7 +158,4 @@
     & th{ text-align: center}
 }}
 }
-   .close-project-button{
-        .buttonCRUD();
-    }
 
