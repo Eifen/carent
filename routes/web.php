@@ -122,6 +122,7 @@ Route::prefix('/')->group(function () {
         //Control billing
         Route::prefix('/control')->group(function () {
             Route::get('/', [BillingController::class, 'index'])->name('controlBilling');
+            Route::post('get-params', [BillingController::class, 'prepareParams']);
         });
     });
 });

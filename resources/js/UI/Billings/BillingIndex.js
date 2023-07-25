@@ -17,9 +17,10 @@ const billingApp = createApp({
                 },
             },
             selectSearch: {
+                select1: "Codigo",
                 select2: "Proyecto",
-                select5: "Cliente",
-                select6: "Estatus",
+                select3: "Cliente",
+                select4: "Estatus",
             },
             tableTarget: "projects",
         };

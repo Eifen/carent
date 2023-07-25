@@ -1,0 +1,15 @@
+.billing-form-container{
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(min(100%,15rem),1fr));
+    grid-auto-flow:dense;
+
+    &-fieldset{
+        grid-column: span 3;
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        gap: 10px;
+
+        //Informacion principal
+        &[for="billing-info"]{grid-row: 1 / 2;}
+    }
+}
