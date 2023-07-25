@@ -40,7 +40,7 @@
                 <div for="value-rate">Tasa Promedio </div>
                 <!-- Contenido del label -->
                 <span id="value-hours">{{ project.hoursEstimated }}</span>
-                <span id="value-estimated-hours">{{ project.valueEstimated }}</span>
+                <span id="value-estimated-hours">{{ project.valueEstimated + project.currency_symbols }}</span>
                 <span id="value-rate">{{ project.average }}</span>
             </div>
             <!-- Facturacion Adicional -->
@@ -50,7 +50,7 @@
                 <div for="hours-additional-billing"> Honorarios Adicionales </div>
                 <!-- Contenido del label -->
                 <span id="hours-billing">{{ project.additionalHour }}</span>
-                <span id="hours-additional-billing">{{ project.valueExtra }}</span>
+                <span id="hours-additional-billing">{{ project.valueExtra + project.currency_symbols }}</span>
             </div>
             <!-- Valores finales ejecutados -->
             <div class="close-project-executed">
@@ -310,6 +310,7 @@ export default {
                 'partner': '',
 
                 'hoursEstimated': 0,
+                'currency_symbols': '',
                 'valueEstimated': 0,
                 'average': 0,
 
@@ -364,6 +365,8 @@ export default {
             this.loadInitial.departments.forEach(department => {
                 this.project.hoursEstimated = parseInt(department.hours_assigned) + parseInt(this.project.hoursEstimated)
             })
+            //Simbolo de honorarios estimados
+            this.project.currency_symbols = this.loadInitial.project.currency_symbol
             //Tasa promedio de valores propuesta
             this.project.average = parseFloat(this.loadInitial.project.average_rate)
 
