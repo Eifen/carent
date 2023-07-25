@@ -38,9 +38,16 @@
     grid-area: 1 / 1 / 2 / 6;
     grid-template-columns: repeat(2, 1fr);
     gap: 5px;
+    position: relative;
     & span[for$="date-time"]{
+        justify-self: end;
         padding: 10px;
         font-weight: bold;
+    }
+    & .input-group {
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
     }
 }
 &-label{
@@ -122,12 +129,30 @@
 &-realized-values-charged{
     align-self: start;
     grid-area: 11 / 1 / 12 / 2;
-    .table-responsive{ .configTh();}
+    .table-responsive{ .configTh();
+    }
+    #table-royal-fees{
+        height: 186px ;
+        overflow: auto;
+        position: relative;
+    }
 }
+
+.configTh{
+    table{ thead{ tr{ th{
+        background: @Label-Color;
+        text-align: center;
+    } } } }
+}
+
 &-hours-per-unit{
     align-self: start;
     grid-area: 11 / 2 / 12 / 6;
     .table-responsive{ .configTh(); }
+    #prueba1{
+        height: 186px;
+        overflow: auto;
+    }
 }
 
 &-text-area{

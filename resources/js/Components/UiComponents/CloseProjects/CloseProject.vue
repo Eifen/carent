@@ -7,7 +7,14 @@
             <div class="buttonCRUD" id="button-back" @click="$emit('return')">Regresar</div>
             <div class="close-project-date">
                 <span for="close-project-date-time"> Fecha de cierre </span>
-                <input type="date" class="form-control">
+                <div class="input-group mb-3">
+                    <input disabled type="text" placeholder="1999-11-03" class="form-control"
+                        v-model="project.dateCloseProject" aria-describedby="basic-addon1">
+                    <span class="input-group-text" id="basic-addon1">
+                        <calendar></calendar>
+                    </span>
+                </div>
+
             </div>
             <div class="close-project-label" id="data-info">Datos</div>
             <div class="close-project-label" id="value-proposed">Valores Propuesta</div>
@@ -58,25 +65,28 @@
             <!-- Valores realizados cobrados -->
             <div class="close-project-realized-values-charged">
                 <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th class="col-sm-4 col-lg-4" colspan="2"> Horarios Reales</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="billing in project.billingValue">
-                                <td class="col-sm-4 col-lg-4" align="center"></td>
-                                <td class="col-sm-4 col-lg-4" align="center">{{ billing }}</td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th class="col-sm-4 col-lg-4"> Total A </th>
-                                <td class="col-sm-4 col-lg-4" align="center">{{ totalRealFees }}</td>
-                            </tr>
-                        </tfoot>
-                    </table>
+                    <!-- Honorarios Reales -->
+                    <div class="table-royal-fees" id="table-royal-fees">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="col-sm-4 col-lg-4" colspan="2"> Honorarios Reales</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="billing in project.billingValue">
+                                    <td class="col-sm-4 col-lg-4" align="center"></td>
+                                    <td class="col-sm-4 col-lg-4" align="center">{{ billing }}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th class="col-sm-4 col-lg-4"> Total A </th>
+                                    <td class="col-sm-4 col-lg-4" align="center">{{ totalRealFees }}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
                     <!-- Facturacion adicional -->
                     <div class="close-project-label">Facturación Adicional</div>
                     <table class="table">
@@ -104,37 +114,41 @@
             <!-- Horas Por unidad -->
             <div class="close-project-hours-per-unit">
                 <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th class="col-sm-2 col-lg-2">Unidad</th>
-                                <th class="col-sm-2 col-lg-2">Estimadas</th>
-                                <th class="col-sm-2 col-lg-2">Reales</th>
-                                <th class="col-sm-2 col-lg-2">Diferencia</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Divisiones diversas -->
-                            <tr v-for="(department, position) in project.tableUnitHours" :key="position">
-                                <th class="col-sm-2 col-lg-2" align="center">{{ department.department_name }}</th>
-                                <td class="col-sm-2 col-lg-2" align="center">{{ department.hours_assigned }}</td>
-                                <td class="col-sm-2 col-lg-2" align="center">{{ getRealHours(department.department_id) }}
-                                </td>
-                                <td class="col-sm-2 col-lg-2" align="center">
-                                    {{ (department.hours_assigned - getRealHours(department.department_id)) * -1 }}</td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th class="col-sm-1 col-lg-1" align="center"> Totales </th>
-                                <td class="col-sm-1 col-lg-1" align="center">{{ totalHoursAssigned }}</td>
-                                <td class="col-sm-1 col-lg-1" align="center">{{ totalRealHours }}</td>
-                                <td class="col-sm-1 col-lg-1" align="center">{{ (totalHoursAssigned - totalRealHours) * -1
-                                }}
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
+                    <div class="prueba1" id="prueba1">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="col-sm-2 col-lg-2">Unidad</th>
+                                    <th class="col-sm-2 col-lg-2">Estimadas</th>
+                                    <th class="col-sm-2 col-lg-2">Reales</th>
+                                    <th class="col-sm-2 col-lg-2">Diferencia</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Divisiones diversas -->
+                                <tr v-for="(department, position) in project.tableUnitHours" :key="position">
+                                    <th class="col-sm-2 col-lg-2" align="center">{{ department.department_name }}</th>
+                                    <td class="col-sm-2 col-lg-2" align="center">{{ department.hours_assigned }}</td>
+                                    <td class="col-sm-2 col-lg-2" align="center">{{ getRealHours(department.department_id)
+                                    }}
+                                    </td>
+                                    <td class="col-sm-2 col-lg-2" align="center">
+                                        {{ (department.hours_assigned - getRealHours(department.department_id)) * -1 }}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th class="col-sm-1 col-lg-1" align="center"> Totales </th>
+                                    <td class="col-sm-1 col-lg-1" align="center">{{ totalHoursAssigned }}</td>
+                                    <td class="col-sm-1 col-lg-1" align="center">{{ totalRealHours }}</td>
+                                    <td class="col-sm-1 col-lg-1" align="center">{{ (totalHoursAssigned - totalRealHours) *
+                                        -1
+                                    }}
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
                     <!-- Facturacion adicional al presupuesto base -->
                     <div class="close-project-label"> Facturación Adicional al Presupuesto Base</div>
                     <table class="table">
@@ -170,8 +184,8 @@
                             <tr>
                                 <th class="col-sm-6 col-lg-6">Valor monetario sin facturar(con base propuesta original)
                                 </th>
-                                <td class="col-sm-6 col-lg-6" align="center">{{ getUnbilled(project.valueEstimated,
-                                    totalRealFees) }}
+                                <td class="col-sm-6 col-lg-6" align="center">{{ (getUnbilled(project.valueEstimated,
+                                    totalRealFees)).toFixed(3) }}
                                 </td>
                             </tr>
                             <tr>
@@ -225,7 +239,7 @@
                                     (project.average / project.rateExecuted) / 100 }}</td>
                             </tr>
                             <tr>
-                                <th class="col-sm-2 col-lg-2"> (Defecit) Eficiencia de Horas </th>
+                                <th class="col-sm-2 col-lg-2"> Exceso de Horas </th>
                                 <td class="col-sm-2 col-lg-2" align="center">{{ project.hoursEstimated - project.hoursReal
                                 }}
                                 </td>
@@ -275,6 +289,7 @@
 <script>
 
 import DropdownSelect from "@/Components/DropdownSelect.vue";
+import Calendar from "@/Components/Calendar.vue";
 
 export default {
 
@@ -304,6 +319,7 @@ export default {
                 'message': '',
                 'billingValue': [],
                 'billingAditionalValue': [],
+                'dateCloseProject': '',
                 // 'difference' : [],
             },
             message:
@@ -370,8 +386,8 @@ export default {
             //el valor de arriba es la propiedad que aparece en el objeto del controlador, esta en el console.log en este caso es billings
             //valor de abajo es el nombre del valor que le asigno a data
             this.loadInitial.billings.forEach(department => {
-                if (department.billing_concept_id === 1) this.project.billingValue.push(parseFloat(department.billing_value))
-                if (department.billing_concept_id !== 1) this.project.billingAditionalValue.push(parseFloat(department.billing_value))
+                if (department.billing_concept_id === 1 || department.billing_concept_id === 2) this.project.billingValue.push(parseFloat(department.billing_value))
+                if (department.billing_concept_id !== 1 && department.billing_concept_id !== 2) this.project.billingAditionalValue.push(parseFloat(department.billing_value))
             })
 
         }
@@ -441,7 +457,8 @@ export default {
         }
     },
     watch: {},
-    components: { DropdownSelect },
+    components: { DropdownSelect, Calendar },
+
 }
 </script>
 
