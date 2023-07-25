@@ -28,7 +28,8 @@ import {
     faPlus,
     faCheck,
     faFolder,
-    faMagnifyingGlass
+    faMagnifyingGlass,
+    faNoteSticky
 } from "@fortawesome/free-solid-svg-icons";
 //Brands Icons
 import {
@@ -64,7 +65,8 @@ library.add(
     faPlus,
     faCheck,
     faFolder,
-    faMagnifyingGlass
+    faMagnifyingGlass,
+    faNoteSticky
 );
 
 export default {

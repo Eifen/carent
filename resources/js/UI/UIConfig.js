@@ -3,6 +3,7 @@ import FontAwesome from "../Components/FontAwesome/FontAwesome.vue";
 import Loading from "../Components/Loading.vue";
 import ListingCrud from "../Components/ListingCrud.vue";
 import Calendar from "../Components/Calendar.vue";
+import DropdownSelect from "../Components/DropdownSelect.vue";
 
 import axios from "axios";
 import { AXIOSINTERVAL, NOTIFYINTERVAL } from "../app";
@@ -23,7 +24,7 @@ export const dataUI = {
     },
 };
 export const componentsUI = {
-    components: { FontAwesome, Loading, ListingCrud, Calendar },
+    components: { FontAwesome, Loading, ListingCrud, Calendar, DropdownSelect },
 };
 export const methodsUI = {
     methods: {
