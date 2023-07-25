@@ -8,10 +8,10 @@
             <div class="close-project-date">
                 <span for="close-project-date-time"> Fecha de cierre </span>
                 <div class="input-group mb-3">
-                    <input disabled type="text" placeholder="1999-11-03" class="form-control"
-                        v-model="project.dateCloseProject" aria-describedby="basic-addon1">
+                    <input disabled type="text" placeholder="1999-11-03" class="form-control" v-model="project.dateClose"
+                        aria-describedby="basic-addon1">
                     <span class="input-group-text" id="basic-addon1">
-                        <calendar></calendar>
+                        <calendar @to-input="dateCloseProject"></calendar>
                     </span>
                 </div>
             </div>
@@ -322,7 +322,7 @@ export default {
                 'message': '',
                 'billingValue': [],
                 'billingAditionalValue': [],
-                'dateCloseProject': '',
+                'dateClose': '',
 
                 'monetaryReco': 0,
 
@@ -404,6 +404,12 @@ export default {
     //Metodo(variable)
     methods: {
 
+        //metodo que captura la fecha para personalizarla usando el v-model usando el componente Calendar.vue
+        //watch contiene los parametros del año, mes y dia es por esto que se captura el emit y se le manda
+        //esos parametros
+        dateCloseProject(dateCatch) {
+            this.project.dateClose = `${dateCatch.year}-${dateCatch.month}-${dateCatch.day}`
+        },
         getInfoProject(infoProjectMethods) {
             //Axios
             axios.post('close-projects/get-data-close-project-exp', { id: infoProjectMethods })
