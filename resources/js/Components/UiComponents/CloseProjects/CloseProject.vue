@@ -14,7 +14,6 @@
                         <calendar></calendar>
                     </span>
                 </div>
-
             </div>
             <div class="close-project-label" id="data-info">Datos</div>
             <div class="close-project-label" id="value-proposed">Valores Propuesta</div>
@@ -114,7 +113,7 @@
             <!-- Horas Por unidad -->
             <div class="close-project-hours-per-unit">
                 <div class="table-responsive">
-                    <div class="prueba1" id="prueba1">
+                    <div class="prueba1" id="hours-unit-divisions">
                         <table class="table">
                             <thead>
                                 <tr>
@@ -184,8 +183,8 @@
                             <tr>
                                 <th class="col-sm-6 col-lg-6">Valor monetario sin facturar(con base propuesta original)
                                 </th>
-                                <td class="col-sm-6 col-lg-6" align="center">{{ (getUnbilled(project.valueEstimated,
-                                    totalRealFees)).toFixed(3) }}
+                                <td class="col-sm-6 col-lg-6" align="center">{{ (project.valueEstimated -
+                                    totalRealFees).toFixed(3) }}
                                 </td>
                             </tr>
                             <tr>
@@ -196,9 +195,13 @@
                                 <th class="col-sm-6 col-lg-6">Valor monetario(deficit para cubrir exceso de horas) o
                                     excedente
                                 </th>
-                                <td class="col-sm-6 col-lg-6" align="center">{{
+                                <td class="col-sm-6 col-lg-6" align="center">{{ (monetaryRecover(totalHoursAssigned,
+                                    totalRealHours) -
+                                    totalAditionalBilling).toFixed(3) }}
+                                </td>
+                                <!-- <td class="col-sm-6 col-lg-6" align="center">{{
                                     getValueDeficit(monetaryRecover(totalHoursAssigned, totalRealHours),
-                                        totalAditionalBilling) }}</td>
+                                        totalAditionalBilling) }}</td> -->
                             </tr>
                             <!-- <tr>
                                 <th class="col-sm-6 col-lg-6">Valor Monetario (beneficiario) en gastos por recuperar
@@ -320,6 +323,10 @@ export default {
                 'billingValue': [],
                 'billingAditionalValue': [],
                 'dateCloseProject': '',
+
+                'monetaryReco': 0,
+
+                'totalRealFees': 0,
                 // 'difference' : [],
             },
             message:
@@ -423,14 +430,14 @@ export default {
             //key pregunta si es ===-1 es negativo ya que indexOf arroja un -1 cuando no encuenta una posicion
             //sino es 0 entonces realiza la busqueda que se le implemente
         },
-        getUnbilled(valueEstimated, totalRealFees) {
-            const difference = valueEstimated - totalRealFees
-            return difference < 0 ? 0 : difference
-        },
-        getValueDeficit(monetaryReco, totalAditionalBilling) {
-            const difference = monetaryReco - totalAditionalBilling
-            return difference < 0 ? 0 : difference
-        },
+        // getUnbilled(valueEstimated, totalRealFees) {
+        //     const difference = valueEstimated - totalRealFees
+        //     return difference < 0 ? 0 : difference
+        // },
+        // getValueDeficit(monetaryReco, totalAditionalBilling) {
+        //     const difference = monetaryReco - totalAditionalBilling
+        //     // return difference < 0 ? 0 : difference
+        // },
         monetaryRecover(totalHoursAssigned, totalRealHours) {
             return ((totalHoursAssigned - totalRealHours) * -1) * this.project.average
         }
@@ -445,9 +452,6 @@ export default {
         },
         totalRealHours() {
             return this.project.tableRealHours.reduce((total, department) => total + parseFloat(department.total_hours), 0);
-        },
-        totalRealFees() {
-            return this.project.billingValue.reduce((total, billingValue) => total + parseFloat(billingValue), 0);
         },
         totalRealFees() {
             return this.project.billingValue.reduce((total, billingValue) => total + parseFloat(billingValue), 0);
