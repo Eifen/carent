@@ -26,7 +26,9 @@ import {
     faHashtag,
     faAt,
     faPlus,
-    faCheck
+    faCheck,
+    faFolder,
+    faMagnifyingGlass
 } from "@fortawesome/free-solid-svg-icons";
 //Brands Icons
 import {
@@ -60,7 +62,9 @@ library.add(
     faHashtag,
     faAt,
     faPlus,
-    faCheck
+    faCheck,
+    faFolder,
+    faMagnifyingGlass
 );
 
 export default {

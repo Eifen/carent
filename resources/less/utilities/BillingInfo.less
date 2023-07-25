@@ -1,0 +1,145 @@
+//Span de infor
+.spanBillingInfo{
+    span{
+        font-size: 0.9rem;
+        .info-title{
+            text-transform: uppercase;
+            font-weight: bold;
+            margin: 0px 10px;
+        }
+        .info-description{
+            display: inline-block;
+            text-transform: capitalize;
+
+            &[id="project-description"]{
+                text-transform: lowercase;
+                &::first-letter{ text-transform: uppercase}
+            }
+        }
+    }
+}
+//Span de las cartas de informacion de facturacion
+.spanCardInfo{
+    font-size: 0.8em;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+//Span de los montos
+.spanValue{
+    span{
+        font-size: 1.5rem;
+        font-weight: bold
+    }
+}
+//Contenedor
+.billing-container{
+    .styleContainer();
+    display: grid;
+    width: min(100%,80rem);
+    grid-template-columns: repeat(3,1fr);
+    grid-auto-flow: dense;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    //Titulo del proyecto
+    &-title{
+        grid-area: 1 / 1 / 2 / 3;
+        text-transform: uppercase;
+        font-size: min(5vw,1.5rem);
+        font-weight: bolder;
+        justify-self: start
+    }
+
+    //Boton
+    &-button{
+        .buttonCRUD();
+        grid-area: 1 / 3 / 2 / 4;
+        justify-self: end
+    }
+
+    //Info del proyecto
+    &-project{
+        .cardContainer();
+        grid-area: 3 / span 3 / 4;
+        border-left-color: @Thead-Color;
+        max-width: 35rem;
+        display: flex;
+        flex-direction: column;
+        .spanBillingInfo();
+    }
+
+    //Info de gastos
+    &-billings{
+        grid-area: 4 / 1 / 5 / 4;
+        display: grid;
+        grid-template-columns: repeat(auto-fill,minmax(min(100%,20rem),1fr));
+        grid-auto-flow: dense;
+        gap: 10px;
+
+        &-content{
+            .cardContainer();
+            //Posicion y color de cada card. Estimados
+            &[for="estimated"]{
+                border-left-color: @Button-Color;
+
+                div{
+                    color: @Button-Color;
+                    .spanCardInfo();
+                }
+                .spanValue();
+            }
+            //Facturado
+            &[for="billing"]{
+                border-left-color: @Sucess-Submit-Color;
+
+                div{
+                    color: @Sucess-Submit-Color;
+                    .spanCardInfo();
+                }
+                .spanValue();
+            }
+            //Notas de credito
+            &[for="credit"]{
+                border-left-color: @Button-Select-Color;
+
+                div{
+                    color: @Button-Select-Color;
+                    .spanCardInfo();
+                }
+                .spanValue();
+            }
+            //Otros gatos / No facturables
+            &[for$="bill"]{
+                border-left-color: @Failure-Submit-Color;
+
+                div{
+                    color: @Failure-Submit-Color;
+                    .spanCardInfo();
+                }
+                .spanValue();
+            }
+        }
+
+        //Boton de crear factura
+        div[for="create-bill"]{
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+    &-table{
+        grid-area: 5 / 1 / 6 / 4;
+
+        &-thead{
+            tr{ th{
+                background: @Thead-Color;
+                color: @Text-Thead-Color;
+                text-align: center;
+            }}
+        }
+    }
+}
