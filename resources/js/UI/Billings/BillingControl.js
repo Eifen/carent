@@ -27,7 +27,7 @@ const controlBillingApp = createApp({
         /**Abre el modal de creacion de factura */
         prepareCreateBilling() {
             //Cambiamos el estado del edit
-            if (this.isEdit) this.isEdit = false;
+            this.isEdit = false;
             console.log(this.isEdit);
             this.controlBillingModal.show();
         },
