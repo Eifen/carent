@@ -161,7 +161,8 @@ export class CrudUi {
                 });
 
                 setTimeout(() => {
-                    window.location.href = routesSelf.redirect;
+                    if (routesSelf.redirect.length != 0)
+                        window.location.href = routesSelf.redirect;
                 }, AXIOSINTERVAL + 200);
             })
             .catch((error) => {

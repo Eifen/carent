@@ -12,7 +12,7 @@ const usersApp = createApp({
                 column5: "Estatus",
                 settings: {
                     columnS1: "Editar",
-                    columnS2: "Permisos del Sistema",
+                    // columnS2: "Permisos del Sistema",
                 },
             },
             selectSearch: {

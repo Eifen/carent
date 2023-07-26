@@ -1,7 +1,7 @@
 <div id="billing-control">
     <loading :active="!isMounted"></loading>
     <billing-info v-if="isMounted" :info-project="proxyToJson(updateModel)" @redirect="redirectView('/billings')"
-        @billing-create="prepareCreateBilling" @billing-update="prepareUpdateBilling">
+        @billing-create="prepareCreateBilling" @billing-update="prepareUpdateBilling" :key="updateModel">
     </billing-info>
     <!-- Modal -->
     <div class="modal fade" id="billingModal" tabindex="-1">
@@ -14,7 +14,8 @@
                         @{{ updateBillingInfo.billing_concept_description }}
                         Nº @{{ updateBillingInfo.billing_number }}
                         — Control @{{ updateBillingInfo.control_number }}</h5>
-                    <button type="button" class="btn btn-info" data-bs-dismiss="modal">X</button>
+                    <button type="button" class="btn btn-info" data-bs-dismiss="modal"
+                        @click="emptyFields(true)">X</button>
                 </div>
                 <div class="modal-body">
                     <form class="billing-form-container">
@@ -23,7 +24,7 @@
                         ====================================== --}}
                         <fieldset class="billing-form-container-fieldset" for="billing-info">
                             <!-- Concepto de factura -->
-                            <div class="mb-3">
+                            <div class="mb-3" v-if="!isEdit">
                                 <label for="Concept">Tipo de factura</label>
                                 <div class="input-group">
                                     <select class="form-select" v-model="inputConcept" title="ConceptSelect">
@@ -92,11 +93,11 @@
                         ====================================== --}}
                         <fieldset class="billing-form-container-fieldset" for="billing-tax">
                             <!-- Valor del iva -->
-                            <div class="mb-3" v-if="inputConcept != 0 && inputConcept != 3 && inputConcept != 4">
+                            <div class="mb-3" v-if="inputConcept != 0 && inputConcept != 2 && inputConcept != 4">
                                 <label for="Iva">IVA</label>
                                 <div class="input-group">
                                     <select class="form-select" v-model="inputIva" title="IvaSelect">
-                                        <option value=0 disabled selected>% IVA</option>
+                                        <option value="0" disabled selected>% IVA</option>
                                         <option v-for="(select, cursor) in billingIvaSelect" :key="cursor"
                                             :value="select.iva_value">
                                             @{{ select.iva_description }}
@@ -105,7 +106,7 @@
                                 </div>
                             </div>
                             <!-- Valor de la retencion del IVA-->
-                            <div class="mb-3" v-if="inputConcept != 0 && inputConcept != 3 && inputConcept != 4">
+                            <div class="mb-3" v-if="inputConcept != 0 && inputConcept != 2 && inputConcept != 4">
                                 <label for="Ret">Retención IVA</label>
                                 <div class="input-group">
                                     <select class="form-select" v-model="inputRetIva" title="RetSelect">
@@ -118,7 +119,7 @@
                                 </div>
                             </div>
                             <!-- Valor del ISLR-->
-                            <div class="mb-3" v-if="inputConcept != 0 && inputConcept != 3 && inputConcept != 4">
+                            <div class="mb-3" v-if="inputConcept != 0 && inputConcept != 2 && inputConcept != 4">
                                 <label for="Islr">ISLR</label>
                                 <div class="input-group">
                                     <select class="form-select" v-model="inputIslr" title="IslrSelect">
@@ -143,7 +144,7 @@
                                         @{{ updateModel.project.currency_symbol }}
                                     </span>
                                     <span class="input-group-text" id="basic-addon5">
-                                        subTotal
+                                        @{{ Number(subTotal).toLocaleString('de-DE') }}
                                     </span>
                                 </div>
                             </div>
@@ -155,7 +156,7 @@
                                         @{{ updateModel.project.currency_symbol }}
                                     </span>
                                     <span class="input-group-text" id="basic-addon5">
-                                        Total
+                                        @{{ Number(subTotal - total).toLocaleString('de-DE') }}
                                     </span>
                                 </div>
                             </div>
@@ -258,7 +259,8 @@
                                         autocomplete="nope" />
                                     <dropdown-select :string-to-Search="inputNullBill"
                                         :array-object-result="billingNullInfo" column-to-search="billing_number"
-                                        :control-list="noInput" @complete-input="autoCompleteBill"></dropdown-select>
+                                        :control-list="noInput" @complete-input="autoCompleteBill"
+                                        :key="billingNullInfo"></dropdown-select>
                                 </div>
                                 <!-- Mensajes de error en factura a anular-->
                                 <div class="form-ErrorInput" v-if="errorMessage.nullBillError != ''">
@@ -284,13 +286,14 @@
                             </div>
                         </fieldset>
                         {{-- SUBMIT BUTTON --}}
-                        <button class="buttonCRUD" :disabled="isClick" v-if="!validate.isValid">
+                        <div class="buttonCRUD" :disabled="isClick" v-if="validate.isValid"
+                            @click="controlBilling()">
                             <span v-if="isEdit & !isClick">Modificar factura</span>
                             <span v-else-if="!isEdit & !isClick">Crear factura</span>
                             <span v-else-if="isClick">
                                 <font-awesome string-icon="fa-solid fa-spinner" is-spin></font-awesome>
                             </span>
-                        </button>
+                        </div>
                     </form>
                 </div>
             </div>
