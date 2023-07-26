@@ -221,6 +221,27 @@
                             </div>
                         </fieldset>
                         {{-- =====================================
+                            OBSERVACIONES
+                        ====================================== --}}
+                        <fieldset class="billing-form-container-fieldset" for="billing-observation">
+                            <!-- Descripcion de la factura -->
+                            <div class="mb-3">
+                                <label for="Observation">Observaciones</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon9">
+                                        <font-awesome string-icon="fa-solid fa-note-sticky"></font-awesome>
+                                    </span>
+                                    <textarea type="text" class="form-control" placeholder="Comentarios adicionales a la facturacion"
+                                        aria-describedby="basic-addon9" v-model="inputObservation"></textarea>
+                                </div>
+                                <!-- Mensajes de error en Descripcion-->
+                                <div class="form-ErrorInput" v-if="errorMessage.observationError != ''">
+                                    <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
+                                    @{{ errorMessage.observationError }}
+                                </div>
+                            </div>
+                        </fieldset>
+                        {{-- =====================================
                             Notas de credito
                         ====================================== --}}
                         <fieldset class="billing-form-container-fieldset" for="billing-credit">
@@ -262,6 +283,14 @@
                                 </div>
                             </div>
                         </fieldset>
+                        {{-- SUBMIT BUTTON --}}
+                        <button class="buttonCRUD" :disabled="isClick" v-if="!validate.isValid">
+                            <span v-if="isEdit & !isClick">Modificar factura</span>
+                            <span v-else-if="!isEdit & !isClick">Crear factura</span>
+                            <span v-else-if="isClick">
+                                <font-awesome string-icon="fa-solid fa-spinner" is-spin></font-awesome>
+                            </span>
+                        </button>
                     </form>
                 </div>
             </div>

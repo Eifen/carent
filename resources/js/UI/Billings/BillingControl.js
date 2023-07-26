@@ -3,6 +3,7 @@ import { componentsUI, methodsUI, CrudUi, dataUI, watchUI } from "../UIConfig";
 import BillingInfo from "@/Components/UiComponents/Billings/BillingInfo.vue";
 //Bootstrap
 import * as bootstrap from "bootstrap";
+import { billingWatch } from "./BillingControlWatch";
 
 const controlBillingApp = createApp({
     data() {
@@ -154,7 +155,7 @@ const controlBillingApp = createApp({
             }
         },
     },
-    mixins: [componentsUI, methodsUI, dataUI, watchUI],
+    mixins: [componentsUI, methodsUI, dataUI, watchUI, billingWatch],
     components: { BillingInfo },
 });
 
