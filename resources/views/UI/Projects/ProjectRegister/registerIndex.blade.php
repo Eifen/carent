@@ -55,12 +55,11 @@
         <div class="table-responsive list-container-table" v-if="inputProjectSelect.length != 0 && isSelectRange"
             v-cloak>
             {{-- Proyectos --}}
-            <table class="table table-hover table-bordered">
+            <table class="table w-auto table-hover table-bordered">
                 <thead class="list-container-table-thead">
                     <tr>
-                        <th scope="col" class="col-sm-5 col-md-3 col-lg-1" valign="middle">Proyecto</th>
-                        <th scope="col" class="col-sm-5 col-md-3 col-lg-1" valign="middle"
-                            v-for="(day,cursor) in listDayData" :key="cursor">
+                        <th scope="col" class="td-project" valign="middle">Proyecto</th>
+                        <th scope="col" valign="middle" v-for="(day,cursor) in listDayData" :key="cursor">
                             @{{ day.name }} <br> (@{{ day.date }})
                         </th>
                     </tr>
@@ -69,9 +68,14 @@
                     <tr v-if="gridProjectInfo.length != 0" v-for="(project,position) in gridProjectInfo"
                         :key="project.hoursDiff">
                         <td scope="row">
-                            @{{ project.clientName.toUpperCase() }}: @{{ project.description.toUpperCase() }}<br>
-                            <span v-if="project.hoursAssigned - project.hoursLoad != 0" class="badge bg-info text-dark">
-                                @{{ project.hoursDiff }} horas por cargar</span>
+                            <div class="td-project">
+                                @{{ project.clientName.toUpperCase() }}: @{{ project.description.toUpperCase() }}<br>
+                                <span v-if="project.hoursAssigned - project.hoursLoad != 0"
+                                    class="badge bg-info text-dark">
+                                    @{{ project.hoursDiff }} horas por cargar</span>
+                                <span v-else class="badge bg-danger text-dark">
+                                    @{{ project.hoursDiff }} horas por cargar</span>
+                            </div>
                         </td>
                         <td scope="row" align="center" valign="middle" v-for="(day,cursor) in listDayData"
                             :key="cursor">
@@ -85,6 +89,13 @@
                         </td>
                     </tr>
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Total H. proyectos</th>
+                        <td scope="row" align="center" valign="middle" v-for="(day,cursor) in listDayData"
+                            :key="cursor">@{{ totalHoursP(day.date) }}</td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
         {{-- Selector de administracion --}}
@@ -112,7 +123,7 @@
                 <tbody>
                     <tr v-for="(admin,position) in gridAdminInfo" :key="position">
                         <td scope="row">
-                            @{{ admin.description.toUpperCase() }}
+                            <div class="td-project">@{{ admin.description.toUpperCase() }}</div>
                         </td>
                         <td scope="row" align="center" valign="middle" v-for="(day,cursor) in listDayData"
                             :key="cursor">
@@ -126,6 +137,18 @@
                         </td>
                     </tr>
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Total H. Admin</th>
+                        <td scope="row" align="center" valign="middle" v-for="(day,cursor) in listDayData"
+                            :key="cursor">@{{ totalHoursA(day.date) }}</td>
+                    </tr>
+                    <tr>
+                        <th>Total Horas</th>
+                        <td scope="row" align="center" valign="middle" v-for="(day,cursor) in listDayData"
+                            :key="cursor">@{{ totalHoursP(day.date) + totalHoursA(day.date) }}</td>
+                    </tr>
+                </tfoot>
                 </thead>
             </table>
         </div>

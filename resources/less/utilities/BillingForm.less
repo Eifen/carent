@@ -1,12 +1,12 @@
 .billing-form-container{
     display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(min(100%,15rem),1fr));
-    grid-auto-flow:dense;
+    width: 100%;
 
     &-fieldset{
         grid-column: span 3;
         display: grid;
-        grid-template-columns: repeat(4,1fr);
+        grid-template-columns: repeat(auto-fill,minmax(min(100%,15rem),1fr));
+        grid-auto-flow:dense;
         gap: 10px;
 
         //Informacion principal

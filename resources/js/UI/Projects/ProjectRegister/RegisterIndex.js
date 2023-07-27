@@ -159,6 +159,22 @@ const registerApp = createApp({
                     console.error(error);
                 });
         },
+        totalHoursP(dayofWeek) {
+            return this.listProjectHourData.reduce((total, projectHour) => {
+                if (projectHour.register_date === dayofWeek)
+                    return total + parseFloat(projectHour.register_hour);
+                //Si no coincide retorna el total actual
+                return total;
+            }, 0);
+        },
+        totalHoursA(dayofWeek) {
+            return this.listAdminHourData.reduce((total, projectHour) => {
+                if (projectHour.register_date === dayofWeek)
+                    return total + parseFloat(projectHour.register_hour);
+                //Si no coincide retorna el total actual
+                return total;
+            }, 0);
+        },
     },
     computed: {},
     watch: {

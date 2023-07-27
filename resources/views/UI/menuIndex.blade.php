@@ -94,7 +94,7 @@
 
         {{-- Redireccion para validacion de horas administrativas cargadas --}}
         @if (Request::url() === URL::route('validate'))
-            @include('UI.Projects.ProjectValidate.validateIndex')
+            @include('UI.Projects.ProjectValidate.ValidateIndex')
         @endif
 
         {{-- Redirección de rutas para Carga de Horas --}}

@@ -46,7 +46,7 @@ class LoginController extends Controller
 
         if ($Login['response']) {
             Session::put('userId', $Login['userId']);
-            Session::put('userName', $Login['name']);
+            Session::put('userName', strtolower($Login['name']));
             Session::put('positionId', $Login['positionId']);
             Session::put('departmentId', $Login['departmentId']);
             Session::put('emailUser', $Login['emailUser']);
