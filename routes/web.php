@@ -110,6 +110,7 @@ Route::prefix('/')->group(function () {
         Route::prefix('/closure')->group(function () {
             Route::get('/', [ProjectController::class, 'index'])->name('closeProjects');
             Route::post('/prepare-info', [ProjectController::class, 'sessionCloseProjects']);
+            Route::post('/submit-close', [ProjectController::class, 'submitClose']);
         });
     });
     //Billings

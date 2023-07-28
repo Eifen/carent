@@ -11,7 +11,8 @@
                     <input disabled type="text" placeholder="1999-11-03" class="form-control"
                         v-model="project.dateCloseProject" aria-describedby="basic-addon1">
                     <span class="input-group-text" id="basic-addon1">
-                        <calendar></calendar>
+                        <calendar v-if="this.loadInitial.closureProject === null" @to-input="formatDate">
+                        </calendar>
                     </span>
                 </div>
 
@@ -256,31 +257,37 @@
                 <div for="first-comment"> 1-Si este Contrato posee Fianza, generar las acciones con el Área Legal de La
                     Firma para su finiquito. Detallar:
                 </div>
-                <textarea v-model="message.first" rows="2" cols="120"></textarea>
+                <textarea :disabled="this.loadInitial.closureProject !== null" v-model="message.first" rows="2"
+                    cols="120"></textarea>
                 <div for="second-comment"> 2-Si la ejecución del Proyecto en cuato a: Horas, Honorarios y Gastos,
                     estuvieron por encima de lo planificado. Cuáles fueron los motivos y las acciones tomadas para:
                 </div>
-                <textarea v-model="message.second" rows="2" cols="120"></textarea>
+                <textarea :disabled="this.loadInitial.closureProject !== null" v-model="message.second" rows="2"
+                    cols="120"></textarea>
                 <div for="third-comment"> 2.2-Recuperar la inversión en exceso ante el Cliente si fuese su
                     responsabilidad.
                     Detallar: </div>
-                <textarea v-model="message.third" rows="2" cols="120"></textarea>
+                <textarea :disabled="this.loadInitial.closureProject !== null" v-model="message.third" rows="2"
+                    cols="120"></textarea>
                 <div for="fourth-comment"> 2.3-Si fuese responsabilidad del Equipo en la Planificación y/o ejecución
                     del Trabajo. Detallar:
                 </div>
-                <textarea v-model="message.fourth" rows="2" cols="120"></textarea>
+                <textarea :disabled="this.loadInitial.closureProject !== null" v-model="message.fourth" rows="2"
+                    cols="120"></textarea>
                 <div for="fifth-comment"> 2.4-Otras acciones. Detallar:</div>
-                <textarea v-model="message.fifth" rows="2" cols="120"></textarea>
+                <textarea :disabled="this.loadInitial.closureProject !== null" v-model="message.fifth" rows="2"
+                    cols="120"></textarea>
                 <div for="sixth-comment"> 3-Si hay Facturas pendientes, mayores a sesenta (60) días.
                     Explique el porque de esa situación, el plan de Recuperación en USD y posible fecha en el Corto
                     Plazo.
                     Detallar:
                 </div>
-                <textarea v-model="message.sixth" rows="2" cols="120"></textarea>
+                <textarea :disabled="this.loadInitial.closureProject !== null" v-model="message.sixth" rows="2"
+                    cols="120"></textarea>
             </div>
-            <div class="buttonCRUD" id="button-crud">
-                Enviar
-            </div>
+            <div v-if="loadInitial.closureProject === null" class="buttonCRUD" :class="viewButton ? 'disable' : ''"
+                id="button-crud" @click="emitClose()">Cerrar
+                proyecto</div>
 
         </div>
     </div>
@@ -295,7 +302,8 @@ export default {
 
     props: {
         loadInitial: Object, //almacena el objeto para cargar la informacion del proyectos antes de que se cargue el componente
-        active: Boolean //Controla la activacion o desactivacion del componente
+        active: Boolean, //Controla la activacion o desactivacion del componente
+        viewButton: Boolean //Controla el estado  del boton
     },
     data() {
         return {
@@ -339,7 +347,8 @@ export default {
 
     emits: [
         'load-view',
-        'return'
+        'return',
+        'close-project'
     ],
     created() {
         //Si ya cargo el componente, llenamos la informacion
@@ -390,13 +399,25 @@ export default {
                 if (department.billing_concept_id !== 1 && department.billing_concept_id !== 2) this.project.billingAditionalValue.push(parseFloat(department.billing_value))
             })
 
+            if (this.loadInitial.closureProject !== null) {
+                this.project.dateCloseProject = this.loadInitial.closureProject.close_date;
+                this.message.first = this.loadInitial.closureProject.first_comment;
+                this.message.second = this.loadInitial.closureProject.second_comment;
+                this.message.third = this.loadInitial.closureProject.third_comment;
+                this.message.fourth = this.loadInitial.closureProject.fourth_comment;
+                this.message.fifth = this.loadInitial.closureProject.fifth_comment;
+                this.message.sixth = this.loadInitial.closureProject.sixth_comment;
+            }
+
         }
     },
 
     //La informacion debe cargar apenas abre el componente
     //Metodo(variable)
     methods: {
-
+        formatDate(dateEmit) {
+            this.project.dateCloseProject = `${dateEmit.year}-${dateEmit.month}-${dateEmit.day}`
+        },
         getInfoProject(infoProjectMethods) {
             //Axios
             axios.post('close-projects/get-data-close-project-exp', { id: infoProjectMethods })
@@ -425,14 +446,28 @@ export default {
         },
         getUnbilled(valueEstimated, totalRealFees) {
             const difference = valueEstimated - totalRealFees
-            return difference < 0 ? 0 : difference
+            return difference
         },
         getValueDeficit(monetaryReco, totalAditionalBilling) {
             const difference = monetaryReco - totalAditionalBilling
-            return difference < 0 ? 0 : difference
+            return difference
         },
         monetaryRecover(totalHoursAssigned, totalRealHours) {
             return ((totalHoursAssigned - totalRealHours) * -1) * this.project.average
+        },
+        emitClose() {
+            const params = {
+                projectId: this.loadInitial.project.project_id,
+                closeDate: this.project.dateCloseProject,
+                firstComment: this.message.first,
+                secondComment: this.message.second,
+                thirdComment: this.message.third,
+                fourthComment: this.message.fourth,
+                fifthComment: this.message.fifth,
+                sixthComment: this.message.sixth,
+            }
+
+            this.$emit('close-project', params);
         }
     },
     //se utilizan para calcular valores reactivos que dependen de otros datos reactivos en tu componente.

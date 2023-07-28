@@ -21,7 +21,7 @@ const projectsIndex = createApp({
                 settings: {
                     columnS1: "Editar",
                     columnS2: "Avance del proyecto",
-                    // columnS3: "Cierre de proyecto",
+                    columnS3: "Cierre de proyecto",
                 },
             },
             selectSearch: {

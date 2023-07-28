@@ -138,6 +138,7 @@ class ProjectModel extends Model
                 ->get(),
             "lastHour" => DB::table('projects_additional_hours')->orderBy('hours_id', 'desc')->value('hours_id'),
             "projectsHours" => DB::select('call sp_get_projects_hours(?)', [$projectId]),
+            "closureProject" => DB::table('projects_close_control')->where('project_id', '=', $projectId)->first(),
             "billings" => DB::select('call sp_get_billing_info(?)', [$projectId]),
 
         );
