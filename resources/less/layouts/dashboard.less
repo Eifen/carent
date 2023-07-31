@@ -19,7 +19,8 @@
     &-nav{
         display: flex;
         justify-content: space-between;
-        max-width: 90rem; //Se expandirá hasta 1440px
+        width: 100vw;
+        max-width: 100%; //Se expandirá hasta 1440px
 
         //Logo
         &-logo{
@@ -30,10 +31,15 @@
             & img{width: 100%;height: 100%; object-fit: contain;}
         }
 
+        //User name
+        #user-name{
+           span{ text-transform: capitalize;}
+        }
+
         &-links{
             list-style: none;
             display: flex;
-            margin-right: 40px;
+            margin-left: auto;
 
             &-item
             {
@@ -97,7 +103,7 @@
 }
 
 //Mobile CSS
-@media (max-width: 48rem) { //Menos  de 900px
+@media (max-width: 64rem) { //Menos  de 900px
     .header-nav
     {
         &-links
@@ -118,7 +124,8 @@
 
             &-item
             {
-                width: min(60%,18rem);
+                width: min(90%,64rem);
+                font-size: 0.8em;
                 padding-left: 10px;
                 position: relative;
 

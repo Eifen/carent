@@ -9,6 +9,7 @@ use App\Models\ConfigModel;
 use DateInterval;
 use DateTime;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class ProjectController extends Controller
 {
@@ -292,5 +293,34 @@ class ProjectController extends Controller
             ProjectModel::getProjectInfo($projectCloseId)
         );
         return response('Load Completed', 200);
+    }
+
+    public function submitClose(Request $closeRequest)
+    {
+        //Format fecha
+        $closegDate = $closeRequest->input('closeDate') != null || $closeRequest->input('closeDate') != ''
+            ? date("Y-m-d", strtotime($closeRequest->input('closeDate')))
+            : null;
+        //Inactivamos el proyecto
+        DB::table('projects')
+            ->where('project_id', '=', $closeRequest->input('projectId'))
+            ->update(["status_id" => 2]);
+        //Cargamos la informacion
+        DB::table('projects_close_control')
+            ->insert([
+                "close_date" => $closegDate,
+                "project_id" => $closeRequest->input('projectId'),
+                "first_comment" => $closeRequest->input('firstComment'),
+                "second_comment" => $closeRequest->input('secondComment'),
+                "third_comment" => $closeRequest->input('thirdComment'),
+                "fourth_comment" => $closeRequest->input('fourthComment'),
+                "fifth_comment" => $closeRequest->input('fifthComment'),
+                "sixth_comment" => $closeRequest->input('sixthComment'),
+            ]);
+
+        return response(array(
+            "response" => true,
+            "message" => "Project has been closure"
+        ), 200);
     }
 }

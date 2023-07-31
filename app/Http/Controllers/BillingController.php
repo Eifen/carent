@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Models\ConfigModel;
 use App\Models\ProjectModel;
+use Hamcrest\Type\IsNumeric;
+
+use function PHPUnit\Framework\isNull;
 
 class BillingController extends Controller
 {
@@ -64,5 +67,57 @@ class BillingController extends Controller
     public function prepareParams()
     {
         return response(BillingModel::getBillingParams(), 200);
+    }
+
+    /**
+     * Metodo que prepara la informacion para actualizar o crear una nueva factura en la base de datos
+     * @param Request $submitRequest captura los parametros de la solicitud HTTP
+     */
+    public function prepareSubmit(Request $submitRequest)
+    {
+        //Fecha de ingreso null o vacia
+        $dateBilling = $submitRequest->input('dateBilling') != null || $submitRequest->input('dateBilling') != ''
+            ? date("Y-m-d", strtotime($submitRequest->input('dateBilling')))
+            : null;
+        $paymentBilling = $submitRequest->input('datePayment') != null || $submitRequest->input('datePayment') != ''
+            ? date("Y-m-d", strtotime($submitRequest->input('datePayment')))
+            : null;
+
+        //Pasamos la data
+        $paramsToControl = array(
+            Session::get('userId'),
+            ConfigController::GetIpUser(),
+            $submitRequest->input('projectId'),
+            $submitRequest->input('concept'),
+            $submitRequest->input('numberBilling'),
+            $dateBilling,
+            $submitRequest->input('valueBilling'),
+            $submitRequest->input('iva'),
+            $submitRequest->input('retIva'),
+            $submitRequest->input('islr'),
+            $submitRequest->input('description'),
+            $submitRequest->input('numberControl'),
+            $paymentBilling,
+            $submitRequest->input('observation'),
+            is_numeric($submitRequest->input('nullId')) && $submitRequest->input('nullId') != 0  ? $submitRequest->input('nullId') : null,
+        );
+
+        if ($submitRequest->input('edit')) {
+            array_push($paramsToControl, $submitRequest->input('billingId'));
+        }
+
+        $submitRequest->input('edit')
+            ? $ResponseBilling = BillingModel::controlBilling($paramsToControl, 'update')
+            : $ResponseBilling = BillingModel::controlBilling($paramsToControl, 'create');
+
+        return response($ResponseBilling, 200);
+    }
+
+    /**
+     * Metodo que devuelve la lista de facturas luego de ser creada un o actualizar
+     */
+    public function refreshBilling(Request $refreshRequest)
+    {
+        return response(ProjectModel::getProjectInfo($refreshRequest->input('project_id')), 200);
     }
 }

@@ -1,6 +1,12 @@
 import { createApp } from "vue/dist/vue.esm-bundler";
 import CloseProject from "@/Components/UiComponents/CloseProjects/CloseProject.vue";
-import { methodsUI, dataUI, watchUI, componentsUI } from "../../UIConfig";
+import {
+    methodsUI,
+    dataUI,
+    watchUI,
+    componentsUI,
+    CrudUi,
+} from "../../UIConfig";
 
 const closeApp = createApp({
     data() {
@@ -14,7 +20,19 @@ const closeApp = createApp({
     //se transpasa, se carga y se elimina las sesiones
     //Mixin: fragmento de codigo que adquiere las propiedades del componente,
     // en este caso: adquiero las propiedades al importar esa constante methosUI
-    methods: {},
+    methods: {
+        closeProject(params) {
+            this.isClick = true;
+            CrudUi.controlCrud(
+                {
+                    post: "/projects/closure/submit-close",
+                    redirect: "/projects",
+                    self: this,
+                },
+                params
+            );
+        },
+    },
     mixins: [methodsUI, dataUI, watchUI, componentsUI],
     components: { CloseProject },
     computed: {},

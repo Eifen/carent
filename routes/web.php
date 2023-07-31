@@ -110,6 +110,7 @@ Route::prefix('/')->group(function () {
         Route::prefix('/closure')->group(function () {
             Route::get('/', [ProjectController::class, 'index'])->name('closeProjects');
             Route::post('/prepare-info', [ProjectController::class, 'sessionCloseProjects']);
+            Route::post('/submit-close', [ProjectController::class, 'submitClose']);
         });
     });
     //Billings
@@ -123,6 +124,8 @@ Route::prefix('/')->group(function () {
         Route::prefix('/control')->group(function () {
             Route::get('/', [BillingController::class, 'index'])->name('controlBilling');
             Route::post('get-params', [BillingController::class, 'prepareParams']);
+            Route::post('submit-billing', [BillingController::class, 'prepareSubmit']);
+            Route::post('refresh-billing', [BillingController::class, 'refreshBilling']);
         });
     });
 });

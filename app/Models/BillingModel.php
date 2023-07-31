@@ -20,4 +20,26 @@ class BillingModel extends Model
             "islrInfo" => DB::table('billings_deduction_islr')->where('status_id', '=', 1)->get(),
         );
     }
+
+    /**
+     * Metodo que actualiza o crea una fila en la tabla billings a traves de procedure
+     * @param Array $params corresponde al array de parametros a pasarle al procedure
+     * @param String $type corresponde al string del tipo de operacion, si update o create
+     */
+    static function controlBilling($params, $type)
+    {
+        switch ($type) {
+            case 'update':
+                DB::select('call sp_update_billing(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,@response)', $params);
+                break;
+
+            case 'create':
+                DB::select('call sp_create_billing(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,@response)', $params);
+                break;
+        }
+
+        //Convertimos el valor
+        $getResponse = DB::select('SELECT @response AS JsonResponse');
+        return json_decode($getResponse[0]->JsonResponse, true);
+    }
 }

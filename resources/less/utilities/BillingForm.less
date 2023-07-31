@@ -1,15 +1,42 @@
 .billing-form-container{
     display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(min(100%,15rem),1fr));
-    grid-auto-flow:dense;
+    width: 100%;
 
     &-fieldset{
         grid-column: span 3;
         display: grid;
-        grid-template-columns: repeat(3,1fr);
+        grid-template-columns: repeat(auto-fill,minmax(min(100%,15rem),1fr));
+        grid-auto-flow:dense;
         gap: 10px;
 
         //Informacion principal
         &[for="billing-info"]{grid-row: 1 / 2;}
+        //Iva, RET e ISLR
+        &[for="billing-tax"]{grid-row: 2 / 3;}
+        //Subtotal y Total
+        &[for="billing-total"]{
+            grid-row: 3 / 4;
+            div[class="mb-3"]{ grid-column: span 2;}
+        }
+        //Descripcion
+        &[for="billing-description"]{
+            grid-row: 4 / 5;
+            div[class="mb-3"]{ grid-column: span 4;}
+        }
+        //Payment
+        &[for="billing-payment"]{
+            grid-row: 5 / 6;
+            div[class="mb-3"]{ grid-column: span 2;}
+        }
+        //Observaciones
+        &[for="billing-observation"]{
+            grid-row: 6 / 7;
+            div[class="mb-3"]{ grid-column: span 4;}
+        }
+        //Nota de credito
+        &[for="billing-credit"]{
+            grid-row: 7 / 8;
+            div[class="mb-3"]{ grid-column: span 2;}
+        }
     }
 }
