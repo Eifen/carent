@@ -53,17 +53,20 @@
             {{-- <a href="#" id="credentials-forgot-password">Olvidé mi contraseña</a> --}}
         </div>
         <div class="login-content-social">
-            <div class="login-content-social-icon"><a href="https://www.instagram.com/crowe.ve" title="CroweInstagram">
+            <div class="login-content-social-icon"><a target="_blank" href="https://www.instagram.com/crowe.ve"
+                    title="CroweInstagram">
                     <font-awesome string-icon="fa-brands fa-instagram"></font-awesome>
                 </a></div>
-            <div class="login-content-social-icon"><a href="https://www.facebook.com/CroweVzla" title="CroweFacebook">
+            <div class="login-content-social-icon"><a target="_blank" href="https://www.facebook.com/CroweVzla"
+                    title="CroweFacebook">
                     <font-awesome string-icon="fa-brands fa-facebook"></font-awesome>
                 </a></div>
-            <div class="login-content-social-icon"><a href="https://twitter.com/crowe_vzla" title="CroweTwitter">
+            <div class="login-content-social-icon"><a target="_blank" href="https://twitter.com/crowe_vzla"
+                    title="CroweTwitter">
                     <font-awesome string-icon="fa-brands fa-twitter"></font-awesome>
                 </a></div>
-            <div class="login-content-social-icon"><a href="https://www.youtube.com/channel/UCx7ekjvHFTuGkenLjap-oFQ"
-                    title="CroweYoutube">
+            <div class="login-content-social-icon"><a target="_blank"
+                    href="https://www.youtube.com/channel/UCx7ekjvHFTuGkenLjap-oFQ" title="CroweYoutube">
                     <font-awesome string-icon="fa-brands fa-youtube"></font-awesome>
                 </a></div>
         </div>

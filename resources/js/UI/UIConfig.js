@@ -163,7 +163,7 @@ export class CrudUi {
                 setTimeout(() => {
                     if (routesSelf.redirect.length != 0)
                         window.location.href = routesSelf.redirect;
-                }, AXIOSINTERVAL + 200);
+                }, AXIOSINTERVAL + 1700);
             })
             .catch((error) => {
                 toast.error(error, {
