@@ -8,7 +8,7 @@
             <div class="close-project-date">
                 <span for="close-project-date-time"> Fecha de cierre </span>
                 <div class="input-group mb-3">
-                    <input disabled type="text" placeholder="1999-11-03" class="form-control" v-model="project.dateClose"
+                    <input disabled type="text" placeholder="DD-MM-AAAA" class="form-control" v-model="project.dateClose"
                         aria-describedby="basic-addon1">
                     <span class="input-group-text" id="basic-addon1">
                         <calendar v-if="this.loadInitial.closureProject === null" @to-input="formatDate">
@@ -232,18 +232,17 @@
                             <tr>
                                 <th class="col-sm-2 col-lg-2">Horas Reales Cargadas al CARENT</th>
                                 <td class="col-sm-2 col-lg-2" align="center">{{ project.hoursReal }}</td>
-                                <td class="col-sm-2 col-lg-2" align="center">{{ project.rateExecuted }}</td>
+                                <td class="col-sm-2 col-lg-2" align="center">{{ (project.rateExecuted) }}</td>
                             </tr>
                             <tr>
-                                <th class="col-sm-2 col-lg-2"> Porcentaje de Ejecucion</th>
+                                <th class="col-sm-2 col-lg-2"> Porcentaje de Ejecución</th>
                                 <td class="col-sm-2 col-lg-2" align="center">{{ (((project.hoursReal /
-                                    project.hoursEstimated) *
-                                    100)).toFixed(3) }}</td>
+                                    project.hoursEstimated) * 100)) + '%' }}</td>
                                 <td class="col-sm-2 col-lg-2" align="center">{{ project.rateExecuted === 0 ? 0 :
-                                    (project.average / project.rateExecuted) / 100 }}</td>
+                                    (project.average / project.rateExecuted) / 100 + '%' }}</td>
                             </tr>
                             <tr>
-                                <th class="col-sm-2 col-lg-2"> Exceso de Horas </th>
+                                <th class="col-sm-2 col-lg-2"> Exceso (Déficit) de Horas </th>
                                 <td class="col-sm-2 col-lg-2" align="center">{{ project.hoursEstimated - project.hoursReal
                                 }}
                                 </td>
@@ -394,7 +393,7 @@ export default {
             //Tasa promedio final colocar dos decimales
             if (this.project.hoursReal === 0) { this.project.rateExecuted = 0; }
             else {
-                this.project.rateExecuted = ((this.project.valueEstimated + this.project.valueExtra) / this.project.hoursReal).toFixed(3);
+                this.project.rateExecuted = parseFloat((((this.project.valueEstimated + this.project.valueExtra) / (this.project.hoursEstimated + this.project.additionalHour)) + this.project.currency_symbols));
             }
             //Horas estimadas de horas por unidad
             this.project.tableUnitHours = this.loadInitial.departments

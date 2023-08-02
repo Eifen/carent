@@ -198,7 +198,7 @@ const controlBillingApp = createApp({
                 this.updateBillingInfo.billing_date == null
                     ? ""
                     : this.updateBillingInfo.billing_date; //Fecha de emision
-            this.inputValue = this.updateBillingInfo.billing_value; //Monto
+            this.inputValue = Number(this.updateBillingInfo.billing_value).toLocaleString('de-DE'); //Monto
             this.inputIva = this.updateBillingInfo.iva_value; //Valor del iva
             this.inputRetIva = this.updateBillingInfo.retention_value; //Retencion del iva
             this.inputIslr = this.updateBillingInfo.deduction_value; //Valor del ISLR
