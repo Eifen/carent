@@ -279,13 +279,13 @@
                 <div for="fifth-comment"> 2.4-Otras acciones. Detallar:</div>
                 <textarea :disabled="this.loadInitial.closureProject !== null" v-model="message.fifth" rows="2"
                     cols="120"></textarea>
-                <div for="sixth-comment"> 3-Si hay Facturas pendientes, mayores a sesenta (60) días.
+                <!-- <div for="sixth-comment"> 3-Si hay Facturas pendientes, mayores a sesenta (60) días.
                     Explique el porque de esa situación, el plan de Recuperación en USD y posible fecha en el Corto
                     Plazo.
                     Detallar:
                 </div>
                 <textarea :disabled="this.loadInitial.closureProject !== null" v-model="message.sixth" rows="2"
-                    cols="120"></textarea>
+                    cols="120"></textarea> -->
             </div>
             <div v-if="loadInitial.closureProject === null" class="buttonCRUD" :class="viewButton ? 'disable' : ''"
                 id="button-crud" @click="emitClose()">Cerrar
