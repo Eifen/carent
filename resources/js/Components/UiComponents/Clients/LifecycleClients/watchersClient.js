@@ -84,25 +84,27 @@ export const clientWatchers = {
                 //Validacion deL NIT
                 if (
                     !nuevoNit.response ||
-                    (nuevoNit.response && newValue.length > 11)
+                    (nuevoNit.response && newValue.length > 9)
                 )
                     throw nuevoNit;
                 this.inputNit = newValue;
             } catch (error) {
-                this.inputNit = oldValue;
+                if (newValue != "") {
+                    this.inputNit = oldValue;
+                }
             }
         },
         //Rif
-        inputRif(newValue) {
+        inputRif(newValue, oldValue) {
             try {
                 const nuevoRif = Validate.RifFormat(newValue);
                 //Primer nivel de validación
                 //message[2] = Es el segundo intervalo del regex en formato ejemplo: V123456789 (123456789)
-                if (!nuevoRif.response && newValue.length <= 15)
+                if (!nuevoRif.response && newValue.length <= 10)
                     throw nuevoRif.message;
                 if (
-                    (nuevoRif.response && nuevoRif.message[2].length > 14) ||
-                    (!nuevoRif.response && newValue.length > 15)
+                    (nuevoRif.response && nuevoRif.message[2].length > 9) ||
+                    (!nuevoRif.response && newValue.length > 10)
                 )
                     throw "OutRange";
                 //Paso las validaciones
@@ -118,6 +120,10 @@ export const clientWatchers = {
                           `(${this.LimitString.RIF})`)
                     : (this.messages.error.rifError =
                           Exceptions.CatchWarning(error));
+                //Si el error es de formato, colocamos el valor anterior
+                if (error != "OutRange" && newValue != "") {
+                    this.inputRif = oldValue;
+                }
                 this.submitButton.rifValid = false;
             }
         },
@@ -129,9 +135,12 @@ export const clientWatchers = {
                 //[3] Número de telefono
                 if (!validatePhone.response && newValue.length <= 20)
                     throw validatePhone.message;
+                //Validamos que no se exceda
                 if (
                     (validatePhone.response &&
-                        validatePhone.message[3].length > 19) ||
+                        validatePhone.message[2].length +
+                            validatePhone.message[3].length >
+                            19) ||
                     (!validatePhone.response && newValue.length > 20)
                 )
                     throw "OutRange";
@@ -144,14 +153,22 @@ export const clientWatchers = {
                     if (contCode == 0) this.inputTelefono = oldValue;
                 }
                 //Pasamos las validaciones
-                this.submitButton.telefonoValid = true;
-                this.messages.error.telefonoError = "";
+                if (
+                    validatePhone.response &&
+                    newValue.length > validatePhone.message[2].length + 2
+                ) {
+                    this.submitButton.telefonoValid = true;
+                    this.messages.error.telefonoError = "";
+                } else {
+                    this.submitButton.telefonoValid = false;
+                    this.messages.error.telefonoError = "";
+                }
                 this.inputTelefono = newValue;
             } catch (error) {
                 error == "OutRange"
                     ? (this.messages.error.telefonoError =
                           Exceptions.CatchWarning(error) +
-                          newValue.length +
+                          (newValue.length - 2) +
                           `(${this.LimitString.TLF})`)
                     : (this.inputTelefono = oldValue);
                 this.submitButton.telefonoValid = false;

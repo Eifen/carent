@@ -237,9 +237,7 @@ export const projectMethods = {
          * @return {float} Retorna un valor númerico correspondiente a la tasa promedio
          */
         calculateAverageRate(projectValue, totalHours) {
-            return Number(projectValue / totalHours)
-                .toFixed(2)
-                .toLocaleString("de-DE");
+            return Number(projectValue / totalHours).toLocaleString("de-DE");
         },
     },
 };

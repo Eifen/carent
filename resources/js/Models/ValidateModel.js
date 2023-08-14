@@ -1,19 +1,19 @@
 /**
  * Objeto que establece la validacion de datos
  */
-export class Validate
-{
+export class Validate {
     /**
      * Metodo que valida el formato del string
      * @param {*} stringData  Almacena el string
      * @param {*} maxLength Define en base a cuanta longitud se quiere tomar
      */
-    static String(stringData,maxLength)
-    {
+    static String(stringData, maxLength) {
         //Mayor a 20, falla la validación
-        if(stringData.length <= maxLength) return {"response":true,"message":"Success"};
-        if(stringData.length == 0 || stringData == null) return {"response":false,"message":"EmptyString"}
-        return {"response":false,"message":"OutRange"};
+        if (stringData.length <= maxLength)
+            return { response: true, message: "Success" };
+        if (stringData.length == 0 || stringData == null)
+            return { response: false, message: "EmptyString" };
+        return { response: false, message: "OutRange" };
     }
 
     /**
@@ -21,29 +21,28 @@ export class Validate
      * @param {*} dateData Almacena el string de la fecha
      * @returns Object {response:boolean, message: string}
      */
-    static Date(dateData)
-    {
+    static Date(dateData) {
         //Formato de fecha
-        const dateRegex = new RegExp("^([0-9][0-9][0-9]{2})-([0][0-9]|[1][0-2])-([0-2][0-9]|[3][0-1])$")
-        if(dateRegex.test(dateData))
-        {
-            const splitDate = dateData.split('-'); //[0] Year, [1] Month, [2] Day
+        const dateRegex = new RegExp(
+            "^([0-9][0-9][0-9]{2})-([0][0-9]|[1][0-2])-([0-2][0-9]|[3][0-1])$"
+        );
+        if (dateRegex.test(dateData)) {
+            const splitDate = dateData.split("-"); //[0] Year, [1] Month, [2] Day
             //Ultimo día del mes ingresado
-            const lastDay = new Date(splitDate[0],splitDate[1],0);
+            const lastDay = new Date(splitDate[0], splitDate[1], 0);
 
             //Validaciones
-            switch(true)
-            {
+            switch (true) {
                 //Si supera el ultimo día
                 case splitDate[2] > lastDay.getDate():
-                    return {"response":false,"message":"InvalidDate"};
+                    return { response: false, message: "InvalidDate" };
                 //Pasa las validaciones
                 default:
-                    return {"response":true,"message":"SuccessDate"};
+                    return { response: true, message: "SuccessDate" };
             }
         }
         //No cumple con el formato
-        return {"response":false,"message":"NoDateFormat"};
+        return { response: false, message: "NoDateFormat" };
     }
 
     /**
@@ -51,28 +50,30 @@ export class Validate
      * @param {*} documentData Captura el documento ingresado
      * @return Object {response: boolean, message: string (Error o Data)}
      */
-    static FormatDocument(documentData)
-    {
-        let splitDocument = documentData.split('-');
-        let documentDTO = '';
-        const documentFormat  = new RegExp('^(V-|E-)([0-9]{1,3}(\.[0-9]{3})*|[0-9]{1-3})$');
+    static FormatDocument(documentData) {
+        let splitDocument = documentData.split("-");
+        let documentDTO = "";
+        const documentFormat = new RegExp(
+            "^(V-|E-)([0-9]{1,3}(.[0-9]{3})*|[0-9]{1-3})$"
+        );
         const numberDocument = splitDocument[1];
         const verifyNumber = this.Number(splitDocument[1]);
 
         //Separamos el documento para verificar el dato del segundo valor del array (splitDocument[1])
-        if(splitDocument.length != 2) return {"response":false,"message":"NoDocumentFormat"};
+        if (splitDocument.length != 2)
+            return { response: false, message: "NoDocumentFormat" };
 
-        if(verifyNumber.response)
-        {
+        if (verifyNumber.response) {
             //Si es un número, volvemos a unir el array luego de formatear el numero
-            splitDocument[1] = Number(numberDocument).toLocaleString('de-DE');
-            documentDTO = splitDocument.join('-');
+            splitDocument[1] = Number(numberDocument).toLocaleString("de-DE");
+            documentDTO = splitDocument.join("-");
             //Procedemos a verificar si cumple con el formato
-            if(documentFormat.test(documentDTO)) return {"response":true,"message":documentDTO};
-            return {"response":false,"message":"NoDocumentFormat"}
+            if (documentFormat.test(documentDTO))
+                return { response: true, message: documentDTO };
+            return { response: false, message: "NoDocumentFormat" };
         }
 
-        return {"response":false,"message":verifyNumber.message}
+        return { response: false, message: verifyNumber.message };
     }
 
     /**
@@ -80,11 +81,11 @@ export class Validate
      * @param {*} numberData
      * @return Object {response: boolean, message: string}
      */
-    static Number(numberData)
-    {
-        const numberFormat = new RegExp('^[0-9]+(\.[0-9]+)?$');
-        if(numberFormat.test(numberData)) return {"response":true,"message":"Success"};
-        return {"response":false, "message":"IsNotNumber"}
+    static Number(numberData) {
+        const numberFormat = new RegExp("^[0-9]+(.[0-9]+)?$");
+        if (numberFormat.test(numberData))
+            return { response: true, message: "Success" };
+        return { response: false, message: "IsNotNumber" };
     }
 
     /**
@@ -92,11 +93,13 @@ export class Validate
      * @param {*} emailData Captura el input del correo
      * @returns Object {response:boolean, message: string}
      */
-    static Email(emailData)
-    {
-        const emailFormat = new RegExp('^\\w+[\\w-\.]*\\@\\w+([-\.]\\w+)*\\.\\w+([\-\.]\\w+)*$');
-        if(emailFormat.test(emailData.toString())) return {"response":true,"message":"Success"};
-        return {"response":false, "message":"NoEmailFormat"}
+    static Email(emailData) {
+        const emailFormat = new RegExp(
+            "^\\w+[\\w-.]*\\@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$"
+        );
+        if (emailFormat.test(emailData.toString()))
+            return { response: true, message: "Success" };
+        return { response: false, message: "NoEmailFormat" };
     }
 
     /**
@@ -104,40 +107,46 @@ export class Validate
      * @param {*} phoneData Captura el input del telefono
      * @returns Object {response:boolean, message: string (Error o FormatPhone)}
      */
-    static Phone(phoneData)
-    {
-        const phoneFormat = new RegExp('^\(([0-9]{4})\)-([0-9]{3})-([0-9]{4})$');
-        let isCompleteFormat = false //Condicion para el PhoneFormat.
-        const numberFormat = new RegExp('^([0-9]{0,11})$');
-        let newFormat = ''
+    static Phone(phoneData) {
+        const phoneFormat = new RegExp("^(([0-9]{4}))-([0-9]{3})-([0-9]{4})$");
+        let isCompleteFormat = false; //Condicion para el PhoneFormat.
+        const numberFormat = new RegExp("^([0-9]{0,11})$");
+        let newFormat = "";
 
         //Verificamos si es un número
-        if(!numberFormat.test(phoneData)) return {"response":false,"message": "Failure"}
+        if (!numberFormat.test(phoneData))
+            return { response: false, message: "Failure" };
 
         //Revisamos que longitud tiene el número y asignamos el nuevo formato
-        switch(true)
-        {
-            case phoneData.length > 4 && phoneData.length <= 7 :
+        switch (true) {
+            case phoneData.length > 4 && phoneData.length <= 7:
                 //(1111)-111
-                newFormat = `(${phoneData.substring(0,4)})-${phoneData.substring(4,7)}`
+                newFormat = `(${phoneData.substring(
+                    0,
+                    4
+                )})-${phoneData.substring(4, 7)}`;
                 break;
             case phoneData.length > 7 && phoneData.length <= 11:
                 //(1111)-111-1111
-                newFormat = `(${phoneData.substring(0,4)})-${phoneData.substring(4,7)}-${phoneData.substring(7,11)}`
+                newFormat = `(${phoneData.substring(
+                    0,
+                    4
+                )})-${phoneData.substring(4, 7)}-${phoneData.substring(7, 11)}`;
                 break;
             case phoneData.length == 11:
                 isCompleteFormat = true;
                 break;
             default:
                 //1111
-                newFormat = phoneData
+                newFormat = phoneData;
                 break;
         }
 
-        if(phoneFormat.test(phoneData) && isCompleteFormat) return {"response":true,"message":newFormat};
-        if(!isCompleteFormat) return {"response":true,"message":newFormat}
+        if (phoneFormat.test(phoneData) && isCompleteFormat)
+            return { response: true, message: newFormat };
+        if (!isCompleteFormat) return { response: true, message: newFormat };
 
-        return {"response":false,"message":"Failure"}
+        return { response: false, message: "Failure" };
     }
 
     /**
@@ -145,14 +154,13 @@ export class Validate
      * @param {*} rifData Captura el valor del input del rif
      * @returns Object {"response":true/false,"message":string}
      */
-    static RifFormat(rifData)
-    {
-        const rifDTO = new RegExp('^(V|v|E|e|J|j|P|p|G|g|C|c)([0-9]{0,14})$');
+    static RifFormat(rifData) {
+        const rifDTO = new RegExp("^(V|v|E|e|J|j|P|p|G|g|C|c)([0-9]{0,9})$");
         const matchRif = rifData.match(rifDTO); //Devolvemos todas las coincidencias en el string en funcion del REGEX
         //Revisamos si coincide
-        if (matchRif != null) return {"response":true,"message":matchRif};
+        if (matchRif != null) return { response: true, message: matchRif };
         //Si no coincide
-        return {"response":false,"message":"NoInitRif"}
+        return { response: false, message: "NoInitRif" };
     }
 
     /**
@@ -160,12 +168,11 @@ export class Validate
      * @param {*} phoneClientData String que captura lo colocado en el campo Telefono principal
      * @returns Objeto en formato {response:boolean,message:string|object}
      */
-    static PhoneClient(phoneClientData)
-    {
-        const phoneClientFormat = new RegExp('^(\\+)([0-9]*)-([0-9]{0,19})$');
+    static PhoneClient(phoneClientData) {
+        const phoneClientFormat = new RegExp("^(\\+)([0-9]*)-([0-9]{0,19})$");
         const matchPhone = phoneClientData.match(phoneClientFormat);
-        if(matchPhone != null) return {"response":true,"message":matchPhone};
+        if (matchPhone != null) return { response: true, message: matchPhone };
         //Si no pasa el test
-        return {"response":false,"message":"Failure"}
+        return { response: false, message: "Failure" };
     }
 }

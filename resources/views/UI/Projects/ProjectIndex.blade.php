@@ -35,12 +35,12 @@
                         <div class="modal-preview-tbody" for="tbody-manager">@{{ previewProjectInfo.project.manager_name }}</div>
                         <div class="modal-preview-tbody" for="tbody-quality">@{{ previewProjectInfo.project.quality_partner_name }}</div>
                         <div class="modal-preview-tbody" for="tbody-hiring">@{{ previewProjectInfo.project.hiring_date }}</div>
-                        <div class="modal-preview-tbody" for="tbody-pValue">@{{ previewProjectInfo.project.project_value }}
+                        <div class="modal-preview-tbody" for="tbody-pValue">@{{ convertFormat(previewProjectInfo.project.project_value) }}
                             @{{ previewProjectInfo.project.currency_symbol }}</div>
                         <div class="modal-preview-tbody" for="tbody-hoursAssigned">@{{ totalHoursAssigned() }}</div>
                         <div class="modal-preview-tbody" for="tbody-additionalHour">@{{ totalAdditionalAssigned(1) }}</div>
-                        <div class="modal-preview-tbody" for="tbody-additionalValue">@{{ totalAdditionalAssigned(2) }}</div>
-                        <div class="modal-preview-tbody" for="tbody-averageRate">@{{ previewProjectInfo.project.average_rate }}</div>
+                        <div class="modal-preview-tbody" for="tbody-additionalValue">@{{ convertFormat(totalAdditionalAssigned(2)) + " " + previewProjectInfo.project.currency_symbol }}</div>
+                        <div class="modal-preview-tbody" for="tbody-averageRate">@{{ convertFormat(previewProjectInfo.project.average_rate) }}</div>
                         <div class="modal-preview-tbody" for="tbody-departments">
                             <div v-for="(department,position) in previewProjectInfo.departments" :key="position">
                                 <span>@{{ department.department_name }}</span>

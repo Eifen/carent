@@ -6,7 +6,7 @@
                 <span :class="scope.formClass.requiredField">*</span></label>
             <div class="input-group">
                 <span class="input-group-text" id="basic-addon7">
-                    <font-awesome string-icon="fa-solid fa-hashtag"></font-awesome>
+                    {{ findSymbol }}
                 </span>
                 <input type="text" class="form-control" id="Value" aria-describedby="basic-addon7"
                     v-model="scope.inputValue" />
@@ -59,7 +59,7 @@
                 <span :class="scope.formClass.requiredField">*</span></label>
             <div class="input-group">
                 <span class="input-group-text" id="basic-addon14">
-                    <font-awesome string-icon="fa-solid fa-hashtag"></font-awesome>
+                    {{ findSymbol }}
                 </span>
                 <input type="text" class="form-control" id="AverageRate" aria-describedby="basic-addon14"
                     v-model="scope.inputAverageRate" :disabled="true" />
@@ -86,7 +86,7 @@
             <label for="ValuesAdditional">Montos adicionales</label>
             <div class="input-group">
                 <span class="input-group-text" id="basic-addon13">
-                    <font-awesome string-icon="fa-solid fa-hashtag"></font-awesome>
+                    {{ findSymbol }}
                 </span>
                 <input type="text" class="form-control" id="ValuesAdditional" aria-describedby="basic-addon13"
                     v-model="scope.inputAdditionalValue" :disabled="true" />
@@ -181,6 +181,12 @@ export default {
     },
     mounted() {
         this.$emit("transfer-ref", this.$refs);
+    },
+    computed: {
+        findSymbol() {
+            const findIndex = this.scope.dataSelect.currencies.map(object => object.currency_id).indexOf(this.scope.inputCurrenciesSelect)
+            return this.scope.dataSelect.currencies[findIndex].currency_symbol
+        }
     },
     components: {
         FontAwesome,

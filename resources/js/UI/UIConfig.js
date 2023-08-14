@@ -52,6 +52,13 @@ export const methodsUI = {
                 });
         },
         /**
+         * Metodo que convierte un numero flotando a su formato de-DE
+         * @param {string} stringNumber Numero en formato string
+         */
+        convertFormat(stringNumber) {
+            return Number(parseFloat(stringNumber)).toLocaleString("de-DE");
+        },
+        /**
          * Metodo que redirecciona a la pantalla anterior
          * @param {String} route Almacena la URL objetivo al redireccionar
          */

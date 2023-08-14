@@ -3,8 +3,9 @@
         <form :class="formClass.form">
             <div :class="formClass.button" @click="$emit('return-view')">Regresar</div>
             <!-- Data Socio -->
-            <legend :class="formClass.legend" v-text="isEdit ? messages.titleEdit: messages.titleCreate"></legend>
-            <div :class="formClass.requiredTitle">Campos Obligatorios (<span :class="formClass.requiredField">*</span>)</div>
+            <legend :class="formClass.legend" v-text="isEdit ? messages.titleEdit : messages.titleCreate"></legend>
+            <div :class="formClass.requiredTitle">Campos Obligatorios (<span :class="formClass.requiredField">*</span>)
+            </div>
             <data-socio :scope="DTOData" :is-edit="isEdit"></data-socio>
             <!-- Datos del Cliente -->
             <legend :class="formClass.legend" v-text="messages.cliente" v-if="inputSocioSelect != 0"></legend>
@@ -14,9 +15,8 @@
             <data-contact-cliente :scope="DTOData" :is-edit="isEdit" v-if="inputSocioSelect != 0"></data-contact-cliente>
             <!-- Submit Button. Que permanece inactivo mientras que no se hayan llegano todos los datos requeridos -->
             <div :class="formClass.button"
-            :id="[!submitButton.isValid ? formClass.disableButton : isClick ? formClass.disableButton : null]"
-            v-if="submitButton.isValid"
-            @click="clientEmit()">
+                :id="[!submitButton.isValid ? formClass.disableButton : isClick ? formClass.disableButton : null]"
+                v-if="submitButton.isValid" @click="clientEmit()">
                 <span v-if="isEdit & !isClick">{{ messages.buttonEdit }}</span>
                 <span v-else-if="!isEdit & !isClick">{{ messages.buttonCreate }}</span>
                 <span v-else-if="isClick"><font-awesome string-icon="fa-solid fa-spinner" is-spin></font-awesome></span>
@@ -45,13 +45,12 @@ import FontAwesome from "@/Components/FontAwesome/FontAwesome.vue";
 import { classConfig, dataMixin, methodsGlobalMixin, watchersGlobalMixin } from "../UiComponentsConfig";
 
 export default {
-    props:{
+    props: {
         isEdit: Boolean, //Define si el formulario es de edición o de creación
         isClick: Boolean, //Controla el estado del boton
         dataEdit: Object, //Almacena la data para update
     },
-    data()
-    {
+    data() {
         return {
             messages:
             {
@@ -75,7 +74,7 @@ export default {
                 selectSocio: false,
                 rifValid: false,
                 razonSocialValid: false,
-                sectorValid:false,
+                sectorValid: false,
                 servicioValid: false,
                 paisesValid: false,
                 telefonoValid: false,
@@ -105,14 +104,14 @@ export default {
             inputFirstEmail: '', //Value del correo electronico principal de la empresa
             inputWeb: '', //Value de la pagina web
             //Constantes
-            LimitString: { NAME: 50, DIR: 200, WEB: 100, RIF: 15, TLF: 20} //Máximo de caracteres para los campos de clientes
+            LimitString: { NAME: 50, DIR: 200, WEB: 100, RIF: 10, TLF: 19 } //Máximo de caracteres para los campos de clientes
         }
     },
     //Ciclo de Vida
     created() { classConfig(this); createdMixin(this) },
     mounted() { mountedMixin(this) },
-    computed: { DTOData(){ return this.$data }}, //Metodo computado que envia la data a sus hijos a través de propiedades
+    computed: { DTOData() { return this.$data } }, //Metodo computado que envia la data a sus hijos a través de propiedades
     components: { FontAwesome, DataSocio, DataCliente, DataContactCliente },
-    mixins: [ clientWatchers, clientMethods, dataMixin, methodsGlobalMixin, watchersGlobalMixin ]
+    mixins: [clientWatchers, clientMethods, dataMixin, methodsGlobalMixin, watchersGlobalMixin]
 }
 </script>

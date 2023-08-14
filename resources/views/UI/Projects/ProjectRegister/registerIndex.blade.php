@@ -55,7 +55,7 @@
         <div class="table-responsive list-container-table" v-if="inputProjectSelect.length != 0 && isSelectRange"
             v-cloak>
             {{-- Proyectos --}}
-            <table class="table w-auto table-hover table-bordered">
+            <table class="table table-hover table-bordered">
                 <thead class="list-container-table-thead">
                     <tr>
                         <th scope="col" class="td-project" valign="middle">Proyecto</th>
@@ -114,9 +114,8 @@
             <table class="table table-hover table-bordered">
                 <thead class="list-container-table-thead">
                     <tr>
-                        <th scope="col" class="col-sm-5 col-md-3 col-lg-1" valign="middle">Administrativo</th>
-                        <th scope="col" class="col-sm-5 col-md-3 col-lg-1" valign="middle"
-                            v-for="(day,cursor) in listDayData" :key="cursor">
+                        <th scope="col" class="td-project" valign="middle">Administrativo</th>
+                        <th scope="col" valign="middle" v-for="(day,cursor) in listDayData" :key="cursor">
                             @{{ day.name }} <br> (@{{ day.date }})
                         </th>
                     </tr>
