@@ -100,12 +100,19 @@ class ProjectModel extends Model
             ])
             ->get();
 
+        #Horas cargadas
+        $getRegisterHours = DB::table('control_load_projects_hours')
+            ->join('projects_users_assigned', 'control_load_projects_hours.user_assigned_id', '=', 'projects_users_assigned.user_assigned_id')
+            ->where('projects_users_assigned.project_id', '=', $getProject->project_id)
+            ->get();
+
         #Acoplamos la informacion en un array asociativo
         $prepareInfo = array(
             "users" => $getUsers,
             "project" => $getProject,
             "analyst" => $getAnalyst,
-            "additional" => $getAdditionalHours
+            "additional" => $getAdditionalHours,
+            "registerHour" => $getRegisterHours
         );
         return $prepareInfo;
     }

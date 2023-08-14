@@ -38,6 +38,28 @@ class HoursModel extends Model
     }
 
     /**
+     * Metodo que devuelve una estructura de informacion de las horas cargadas por un usuario y sus proyectos asignados
+     * @param int $userId Id del usuario a consultar
+     * @return array Retorna un array asociativo con los siguientes campos: "projectsAssigned" = projectos asignados,
+     * "registerHours" = horas registradas a proyectos
+     */
+    static function getProjectHours($userId)
+    {
+        $assignedHours = DB::table('projects_users_assigned')
+            ->where('user_id', '=', $userId)
+            ->get();
+
+        $registerHours = DB::table('control_load_projects_hours')
+            ->where('user_id', '=', $userId)
+            ->get();
+
+        return array(
+            "projectsAssigned" => $assignedHours,
+            "registerHours" => $registerHours
+        );
+    }
+
+    /**
      * Metodo que registra una hora a proyectos
      * @param Array $paramsHours Parametros correspondientes a cada columna de la taba control_load_admin_hours
      * @param Number $loadId Captura el id de carga en caso de existir. Si no existe enviara 0
@@ -111,5 +133,17 @@ class HoursModel extends Model
                 "message" => $getNewList
             );
         }
+    }
+
+    /**
+     * Metodo que actualiza la informacion de las horas asignadas de un usuario
+     */
+    public static function updateAssignedHour($userAssigned, $assignedHours)
+    {
+        DB::table('projects_users_assigned')
+            ->where('user_assigned_id', '=', $userAssigned)
+            ->update([
+                "assigned_hours" => $assignedHours
+            ]);
     }
 }

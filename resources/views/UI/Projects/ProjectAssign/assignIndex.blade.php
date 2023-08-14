@@ -74,6 +74,18 @@
                                 v-model="managerUserAssigned[cursor].hoursAssigned" @input="totalHours($event)" />
                         </div>
                     </div>
+                    <!-- Horas registradas -->
+                    <div class="mb-3">
+                        <label for="HoursRegister">Horas registradas</label>
+                        <div class="input-group">
+                            <span class="input-group-text" id="basic-addon3">
+                                <font-awesome string-icon="fa-solid fa-hashtag"></font-awesome>
+                            </span>
+                            <input type="text" class="form-control" id="HoursRegister"
+                                aria-describedby="basic-addon3" v-model="managerUserAssigned[cursor].hourRegister"
+                                disabled />
+                        </div>
+                    </div>
                 </fieldset>
                 <fieldset>
                     {{-- Horas restantes por asignar --}}

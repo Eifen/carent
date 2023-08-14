@@ -108,11 +108,21 @@ const modalApp = createApp({
                 projectInfo["analyst"].forEach((user) => {
                     //Usuarios seleccionados
                     this.inputUsersAssigned.push(user["user_id"]);
+                    //Horas totales cargadas
+                    const filterUser = projectInfo["registerHour"].filter(
+                        (hour) => hour.user_id == user["user_id"]
+                    );
+                    const countHours = filterUser.reduce(
+                        (total, project) =>
+                            total + parseFloat(project.register_hour),
+                        0
+                    );
                     //Informacion de horas
                     this.managerUserAssigned.push({
                         idUser: user["user_id"],
                         userName: user["user_name"],
                         hoursAssigned: user["assigned_hours"],
+                        hourRegister: countHours,
                     });
                     //Restamos las horas
                     this.missinHours =

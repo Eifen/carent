@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\UsersModel;
 use App\Models\ConfigModel;
 use App\Http\Controllers\ConfigController;
+use App\Models\HoursModel;
 use Illuminate\Support\Facades\Session;
 
 class UsersController extends Controller
@@ -118,6 +119,12 @@ class UsersController extends Controller
 
             //Colocamos el status y la fecha de egreso al final del array
             $paramsUser = array_merge($paramsUser, $paramsEdit);
+
+            //Si inactivamos el usuario, tambien debemos quitarle las horas
+            if ($dataUser->input('user')['IdStatus'] == 2) {
+                $prepareRemove = HoursModel::getProjectHours($dataUser->input('user')['IdUser']);
+                HoursController::removeHoursInactiveUser($prepareRemove);
+            }
         }
 
         $paramsContact = array(

@@ -207,4 +207,23 @@ class HoursController extends Controller
 
         return [$getHourCharged, $getLoadId];
     }
+
+    /**
+     * Metodo que estatico que edita la base de datos para remover las horas restantes que le faltan a un usuario inactivo por cargar
+     * @param $infoHours recibe un array asociativo que debe contener el siguiente formato: "projectsAssigned" = projectos asignados,
+     * "registerHours" = horas registradas a proyectos
+     * @return void
+     */
+    public static function removeHoursInactiveUser($infoHours)
+    {
+        foreach ($infoHours["projectsAssigned"] as $project) {
+            $hours = array_filter($infoHours["registerHours"]->toArray(), fn ($var) => $var->user_assigned_id == $project->user_assigned_id);
+            //Sumamos el valor de las horas cargadas
+            $sumHours = array_reduce($hours, fn ($carry, $item) => $carry + floatval($item->register_hour), 0);
+            //Restamos con las horas actuales
+            $resultSubs = $project->assigned_hours - ($project->assigned_hours - $sumHours);
+            //Actualizamos la informacion en la tabla
+            HoursModel::updateAssignedHour($project->user_assigned_id, $resultSubs);
+        }
+    }
 }
