@@ -142,7 +142,7 @@ export default {
         getTotalBilling() {
             const totalBilling = this.infoProject.billings.reduce((total, billing) => {
                 //Solo hacemos la suma si el concepto es Reembolsable y no rembolsable
-                if (billing.billing_concept_id == 1 || billing.billing_concept_id == 2) return total + parseFloat(billing.billing_value);
+                if ((billing.billing_concept_id == 1 || billing.billing_concept_id == 2) && billing.status_id != 2) return total + parseFloat(billing.billing_value);
                 return total
             }, 0);
             return Number(totalBilling).toLocaleString("de-DE")
