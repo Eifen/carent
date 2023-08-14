@@ -198,7 +198,9 @@ const controlBillingApp = createApp({
                 this.updateBillingInfo.billing_date == null
                     ? ""
                     : this.updateBillingInfo.billing_date; //Fecha de emision
-            this.inputValue = Number(this.updateBillingInfo.billing_value).toLocaleString('de-DE'); //Monto
+            this.inputValue = Number(
+                this.updateBillingInfo.billing_value
+            ).toLocaleString("de-DE"); //Monto
             this.inputIva = this.updateBillingInfo.iva_value; //Valor del iva
             this.inputRetIva = this.updateBillingInfo.retention_value; //Retencion del iva
             this.inputIslr = this.updateBillingInfo.deduction_value; //Valor del ISLR
@@ -218,18 +220,11 @@ const controlBillingApp = createApp({
                 this.updateBillingInfo.billing_observations == null
                     ? ""
                     : this.updateBillingInfo.billing_observations; //Observacion de la factura
-            if (this.inputConcept == 4) {
-                //Index de la factura a anular
-                const getNullIndex = this.billingNullInfo
-                    .map((billing) => billing.billing_id)
-                    .indexOf(this.updateBillingInfo.billing_cancel_id);
-                this.inputNullBill =
-                    this.billingNullInfo[getNullIndex].billing_number; //Input de factura a anular
-            }
         },
         /**Abre el modal de creacion de factura */
         prepareCreateBilling() {
             //Cambiamos el estado del edit
+            this.emptyFields(true);
             this.isEdit = false;
             //Cargamos las facturas a anular
             this.billingNullInfo = this.prepareNullBill();
@@ -239,9 +234,9 @@ const controlBillingApp = createApp({
         /**Abre el modal de actualización de factura */
         prepareUpdateBilling(billingDTO) {
             //Cambiamos el estado del edit
+            this.emptyFields(true);
             this.isEdit = true;
-            //Cargamos las facturas a anular
-            this.billingNullInfo = this.prepareNullBill();
+            //Cargamos las facturas a modificar
             this.updateBillingInfo = billingDTO;
             console.log(this.updateBillingInfo.billing_number);
             //Almacenamos la informacion
@@ -254,10 +249,10 @@ const controlBillingApp = createApp({
         prepareNullBill() {
             return this.updateModel.billings.filter((billing) => {
                 return (
-                    billing.billing_cancel_id == null &&
                     billing.billing_concept_id != 4 &&
                     billing.billing_number != null &&
                     billing.control_number != null &&
+                    billing.status_id != 2 &&
                     billing.billing_number.length != 0
                 );
             });

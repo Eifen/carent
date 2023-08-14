@@ -62,8 +62,8 @@
                                         <calendar @to-input="formatDate"></calendar>
                                     </span>
                                     <input type="text" class="form-control" id="Date"
-                                        aria-describedby="basic-addon2" v-model="inputDate"
-                                        placeholder="Ejemplo: 1999-12-03" disabled />
+                                        aria-describedby="basic-addon2" v-model="inputDate" placeholder="YYYY-MM-DD"
+                                        disabled />
                                 </div>
                                 <!-- Mensajes de error en Nombre-->
                                 <div class="form-ErrorInput" v-if="errorMessage.dateError != ''">
@@ -79,7 +79,8 @@
                                         @{{ updateModel.project.currency_symbol }}
                                     </span>
                                     <input type="text" class="form-control" id="Value"
-                                        aria-describedby="basic-addon3" v-model="inputValue" placeholder="3.000,00" />
+                                        aria-describedby="basic-addon3" v-model="inputValue"
+                                        placeholder="##3.000,00##" />
                                 </div>
                                 <!-- Mensajes de error en Nombre-->
                                 <div class="form-ErrorInput" v-if="errorMessage.valueError != ''">
@@ -212,7 +213,7 @@
                                     </span>
                                     <input type="text" class="form-control" id="Payment"
                                         aria-describedby="basic-addon8" v-model="inputPayment"
-                                        placeholder="Ejemplo: 1999-12-03" disabled />
+                                        placeholder="Ejemplo: YYYY-MM-DD" disabled />
                                 </div>
                                 <!-- Mensajes de error en Nombre-->
                                 <div class="form-ErrorInput" v-if="errorMessage.paymentError != ''">
@@ -245,7 +246,7 @@
                         {{-- =====================================
                             Notas de credito
                         ====================================== --}}
-                        <fieldset class="billing-form-container-fieldset" for="billing-credit">
+                        <fieldset class="billing-form-container-fieldset" for="billing-credit" v-if="!isEdit">
                             <!-- Numero de factura -->
                             <div class="mb-3" v-if="inputConcept == 4">
                                 <label for="nullBill">N° de Factura a anular</label>
