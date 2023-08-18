@@ -16,7 +16,7 @@ class CloseProjectPermissions
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ((Session::has('userPermissions') && Session::get('userPermissions')['closeP'] != 1) || !Session::has('userPermission')) {
+        if ((Session::has('userPermissions') && Session::get('userPermissions')['closeP'] != 1) || !Session::has('userPermissions')) {
             return redirect('/');
         }
         return $next($request);

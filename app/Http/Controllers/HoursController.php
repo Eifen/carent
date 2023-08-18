@@ -36,10 +36,10 @@ class HoursController extends Controller
         ));
 
         //Verificamos la cantidad de horas
-        $totalHours = ($arrayProjectInfoDTO[$positionProjectInfo]["hoursLoad"] - $getLoadInfo[0]) + $hourValue;
+        $totalHours = $arrayProjectInfoDTO[$positionProjectInfo]["hoursDiff"] - $hourValue;
 
         //Si es mayor al total, retorna un error
-        if ($totalHours > $arrayProjectInfoDTO[$positionProjectInfo]["hoursAssigned"]) {
+        if ($totalHours <= 0) {
             return response(array(
                 "response" => false,
                 "message" => array(
