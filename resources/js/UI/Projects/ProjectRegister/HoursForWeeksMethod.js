@@ -8,6 +8,8 @@ export const hoursForWeeksMethod = {
          */
         hoursWeeksDistribution(dateCompare, loadProjectHours, loadAdminHours) {
             this.listDayData = [];
+            this.inputProjectsMultiSelect = [];
+            this.inputAdminMultiSelect = [];
             //Distribuimos los días de la semana
             dateCompare.forEach((day) => {
                 this.listDayData.push({

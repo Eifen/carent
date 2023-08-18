@@ -19,9 +19,7 @@ const projectsIndex = createApp({
                 column7: "Gerente",
                 column8: "Estatus",
                 settings: {
-                    columnS1: "Editar",
                     columnS2: "Avance del proyecto",
-                    columnS3: "Cierre de proyecto",
                 },
             },
             selectSearch: {
@@ -60,6 +58,23 @@ const projectsIndex = createApp({
         );
     },
     methods: {
+        configSettings(accessSession) {
+            console.log(accessSession);
+            //Verificamos los permisos
+            if (accessSession.projectP == 1) {
+                this.projectsColumns.settings = {
+                    columnS1: "Editar",
+                    ...this.projectsColumns.settings,
+                };
+            }
+            //Verificamos si puede cerrar proyectos
+            if (accessSession.closeP == 1) {
+                this.projectsColumns.settings = {
+                    ...this.projectsColumns.settings,
+                    columnS3: "Cierre de proyecto",
+                };
+            }
+        },
         createProject() {
             window.location.href = "/projects/create";
         },

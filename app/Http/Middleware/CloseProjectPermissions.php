@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Session;
+
+class CloseProjectPermissions
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next): Response
+    {
+        if ((Session::has('userPermissions') && Session::get('userPermissions')['closeP'] != 1) || !Session::has('userPermission')) {
+            return redirect('/');
+        }
+        return $next($request);
+    }
+}

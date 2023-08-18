@@ -16,7 +16,10 @@ class ClientModel extends Model
     {
         return DB::table('users')
             ->whereIn('position_id', [16, 17])
-            ->where('status_id', '=', $Status)
+            ->where([
+                ['status_id', '=', $Status],
+                ['user_id', '!=', 1],
+            ])
             ->get(['user_id', 'first_name', 'second_name', 'first_surname', 'second_surname']);
     }
 

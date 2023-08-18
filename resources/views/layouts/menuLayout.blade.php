@@ -5,12 +5,16 @@
         <ul class="header-nav-links" id="selectNav" :style="hamburgerMenu">
             <li class="header-nav-links-item" id="user-name">Conectado como, <span>{{ Session::get('userName') }}
             </li>
-            <li class="header-nav-links-item" id="01">@yield('usuarios')</li>
-            <li class="header-nav-links-item" id="02">@yield('clientes')</li>
+            @if (Session::has('userPermissions'))
+                <li class="header-nav-links-item" id="01">@yield('usuarios')</li>
+                <li class="header-nav-links-item" id="02">@yield('clientes')</li>
+            @endif
             <li class="header-nav-links-item" id="03" @mouseover="openDropDown('projects')"
                 @mouseout="closeDropDown('projects')">@yield('proyectos')</li>
-            <li class="header-nav-links-item" id="04">@yield('facturacion')</li>
-            <li class="header-nav-links-item" id="05">@yield('reportes')</li>
+            @if (Session::has('userPermissions'))
+                <li class="header-nav-links-item" id="04">@yield('facturacion')</li>
+                <li class="header-nav-links-item" id="05">@yield('reportes')</li>
+            @endif
             <li class="header-nav-links-item" id="06" @mouseover="openDropDown('account')"
                 @mouseout="closeDropDown('account')">@yield('miCuenta')</li>
         </ul>

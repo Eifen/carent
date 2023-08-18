@@ -42,7 +42,9 @@ export const projectMethods = {
                 projectValue: this.inputValue
                     .replace(/\./, "")
                     .replace(/,/, "."),
-                averageRate: this.inputAverageRate,
+                averageRate: this.inputAverageRate
+                    .replace(/\./, "")
+                    .replace(/,/, "."),
             };
 
             //Preparamos los parametros de update en caso de actualizar

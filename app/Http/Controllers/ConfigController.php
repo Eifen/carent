@@ -4,10 +4,27 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ConfigModel;
+use App\Models\UsersModel;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Mail;
 
 class ConfigController extends Controller
 {
+    protected $permitControl = false;
+    /**
+     * Metodo inicial de carga de cambio de contrasena o olvide la clave
+     * @param Request Almacena los datos de la sesion y permisos de acceder a la vista principal
+     */
+    public function index(Request $request)
+    {
+        //Enviamos la data dependiendo del estado de la sesión
+        if ($request->session()->has('userId')) {
+            $this->permitControl = true;
+        }
+
+        return view('index')->with('Session', $this->permitControl);
+    }
+
     public function LimitPag(Request $dataLimit)
     {
         $configInstance = new ConfigModel();
@@ -72,5 +89,38 @@ class ConfigController extends Controller
         ];
 
         return response($arrayInfo, 200);
+    }
+
+    /**
+     * Metodo que se encarga de preparar el update de una password
+     * @param Request $changeRequest Se encarga de capturar la solicitud HTTP del servidor
+     */
+    public function prepareUpdatePassword(Request $changeRequest)
+    {
+        //Acomodamos los parametros
+        $ParamsSession =
+            [
+                UsersModel::getUserInfo(Session::get('userId'))->user_code,
+                ConfigController::DecryptData($changeRequest->input('Codigo')),
+                ConfigController::DecryptData($changeRequest->input('Clave')),
+                ConfigController::GetIpUser()
+            ];
+
+        //Actualizamos el middleware
+        $changePassword = ConfigModel::updatePassword($ParamsSession);
+
+        //Cambiamos el estado de la password y enviamos el correo
+        if ($changePassword["response"]) {
+            Session::put('passwordChange', 0);
+
+            // $emailUser = Session::get('emailUser');
+            // Mail::send('emailTemplate.changePassword', [], function ($message) use ($emailUser) {
+            //     $message->from('sistema.carent@crowe.com.ve', 'CARENT')
+            //         ->to($emailUser)
+            //         ->subject('🚨 Se ha actualizado su contraseña en CARENT');
+            // });
+        }
+
+        return response($changePassword, 200);
     }
 }

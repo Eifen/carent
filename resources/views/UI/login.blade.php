@@ -50,7 +50,21 @@
                 </span>
             </form>
             {{-- Modal para recuperar la contraseña --}}
-            {{-- <a href="#" id="credentials-forgot-password">Olvidé mi contraseña</a> --}}
+            <a href="#" id="credentials-forgot-password" @click="showModal()">Olvidé mi
+                contraseña</a>
+            <!-- Modal -->
+            <div class="modal fade" id="modal-forgot-password" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <password-control style="margin-top:0" title="Recuperar contraseña" button-title="Recuperar"
+                            :is-click="isClick" forgot-password @recovery-password="toRecovery"></password-control>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="login-content-social">
             <div class="login-content-social-icon"><a target="_blank" href="https://www.instagram.com/crowe.ve"

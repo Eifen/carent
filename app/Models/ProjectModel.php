@@ -18,7 +18,10 @@ class ProjectModel extends Model
     {
         return DB::table('users')
             ->whereIn('position_id', $positionsArray)
-            ->where([['status_id', '=', $status]])
+            ->where([
+                ['status_id', '=', $status],
+                ['user_id', '!=', 1]
+            ])
             ->select(DB::raw('CONCAT(first_name," ",second_name," ",first_surname," ",second_surname) AS user_name'), 'user_id', 'position_id', 'department_id')
             ->get();
     }
@@ -61,7 +64,10 @@ class ProjectModel extends Model
         //Devolvemos los usuarios asignados al departamento. Con cargo menor a supervisor y el gerente asignado a esa division
         #Usuarios
         $getUsers = DB::table('users')
-            ->where('department_id', '=', $getDepartmentId->department_id)
+            ->where([
+                ['department_id', '=', $getDepartmentId->department_id],
+                ['user_id', '!=', 1]
+            ])
             ->select(DB::raw('CONCAT(first_name," ",second_name," ",first_surname," ",second_surname) AS user_name'), 'user_id', 'position_id', 'department_id')
             ->get();
 

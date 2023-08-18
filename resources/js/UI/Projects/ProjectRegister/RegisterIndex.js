@@ -42,8 +42,8 @@ const registerApp = createApp({
                 "Sabado",
                 "Domingo",
             ],
-            yearInitial: 2022, //Año inicial para el select
-            monthInitial: 0, //Mes en valor numerico inicial (Julio, para 2023) para el año inicial
+            yearInitial: 2023, //Año inicial para el select
+            monthInitial: 6, //Mes en valor numerico inicial (Julio, para 2023) para el año inicial
             isSelectRange: false, //Variable que se coloca en true cuando se selecciona el mes, semana y año del rango de fechas
             //Inputs del registro
             inputMonthSelect: 0, //Selector de meses

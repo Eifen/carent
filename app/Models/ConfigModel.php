@@ -76,4 +76,26 @@ class ConfigModel extends Model
             ->where("status_id", '=', 1)
             ->get();
     }
+
+    /**
+     * Metodo que se encarga de cambiar la contrasena
+     * @param $params Recibe los parametros a pasar al procedure
+     */
+    public static function updatePassword($params)
+    {
+        DB::select('call sp_change_password(?,?,?,?,@response)', $params);
+        $GetResponse = DB::select('SELECT @response as JsonChangeData');
+        $ResponseJson = json_decode($GetResponse[0]->JsonChangeData, true);
+
+        return $ResponseJson;
+    }
+
+    public static function recoveryPassword($params)
+    {
+        DB::select('call sp_recovery_password(?,?,@response)', $params);
+        $GetResponse = DB::select('SELECT @response as JsonChangeData');
+        $ResponseJson = json_decode($GetResponse[0]->JsonChangeData, true);
+
+        return $ResponseJson;
+    }
 }

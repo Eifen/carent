@@ -20,7 +20,6 @@
             justify-content: center;
             align-items: center;
             object-fit: contain;
-            gap: 10px;
             padding: 10px;
             border-radius: 2px;
             box-shadow: 0.1em 0.1em 0.3em @Shadow-Hover-Color;
@@ -39,20 +38,11 @@
                 }
                 //Boton (Boton de envio de formulario)
                 & .form-button{
-                    background: @Sucess-Submit-Color;
+                    .buttonCRUD();
                     width: 100%;
                     font-size: 1.2em;
-                    font-weight: bold;
-                    border: 1px solid @Sucess-Submit-Color;
-                    padding: 5px;
                     cursor: inherit;
                     transition: all ease-in 500ms;
-                    //Hover
-                    &:hover{
-                        background: @Shadow-Hover-Color;
-                        color: @Container-Color;
-                        border-color: @Shadow-Hover-Color;
-                    }
                 }
             }
             //Olvidé mi contraseña

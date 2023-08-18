@@ -1,4 +1,5 @@
 <div id="section-projects">
+    <permissions @prepare-settings="configSettings({{ json_encode(Session::get('userPermissions')) }})"></permissions>
     <loading :active="!isMounted"></loading>
     <listing-crud v-if="isMounted" :title-object="proxyToJson(projectsColumns)" :pagination-lenght="maxLengthPagination"
         :pagination-limit="lengthColumns" :table-info="proxyToJson(listData)" title-table="proyectos"

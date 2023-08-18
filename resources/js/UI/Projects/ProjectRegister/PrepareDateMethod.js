@@ -20,7 +20,7 @@ export const preparDateMethod = {
          */
         prepareMonth(yearSelected) {
             //Limpiamos los meses
-            this.inputMonthOptions = [];
+            this.inputMonthOptions = ["Seleccione un mes"];
             //Obtenemos el mes actual
             const getActualYear = new Date().getFullYear();
             let getActualMonth =

@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\LoginModel;
 use App\Http\Controllers\ConfigController;
+use App\Models\ConfigModel;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Mail;
 
 class LoginController extends Controller
 {
@@ -51,6 +53,11 @@ class LoginController extends Controller
             Session::put('departmentId', $Login['departmentId']);
             Session::put('emailUser', $Login['emailUser']);
             Session::put('passwordChange', $Login['passwordChange']);
+            #Llenamos el array de acceso
+            $prepareAccess = LoginModel::getArrayAccess($Login['userId']);
+            if ($prepareAccess != 0) {
+                Session::put('userPermissions', $prepareAccess);
+            }
         }
 
         //Retornamos la dato con un status de 200
@@ -66,5 +73,31 @@ class LoginController extends Controller
     {
         $SessionLogout->session()->flush();
         return redirect('/');
+    }
+
+    /**
+     * Metodo que se encarga de recuperar una contra
+     * @param Request $recoveryRequest almacena la informacion de la peticion HTTP axios de login.js
+     */
+    public function recovery(Request $recoveryRequest)
+    {
+        $prepareParams = array(
+            $recoveryRequest->input('userCode'),
+            ConfigController::GetIpUser()
+        );
+
+        //Llamamos a la funcion de recuperar password
+        $recoveryPassword = ConfigModel::recoveryPassword($prepareParams);
+
+        // if($recoveryPassword["response"]){
+        //     $emailUser = Session::get('emailUser');
+        //     Mail::send('emailTemplate.changePassword', ["clave" => $recoveryPassword["clave"]], function ($message) use ($emailUser) {
+        //         $message->from('sistema.carent@crowe.com.ve', 'CARENT')
+        //             ->to($emailUser)
+        //             ->subject('🚨 Se ha actualizado su contraseña en CARENT');
+        //     });
+        // }
+
+        return response($recoveryPassword, 200);
     }
 }
