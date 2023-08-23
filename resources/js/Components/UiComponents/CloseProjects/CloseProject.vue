@@ -61,7 +61,7 @@
                 <!-- Contenido del label -->
                 <span id="hours-executed">{{ project.hoursReal }}</span>
                 <!-- //Tasa promedio final = total A+B/horas reales  -->
-                <span id="rate-executed">{{ totalRealFees + totalAditionalBilling / project.hoursReal }}</span>
+                <span id="rate-executed">{{ (totalRealFees + totalAditionalBilling / project.hoursReal).toFixed(2) }}</span>
             </div>
             <!-- Valores realizados cobrados -->
             <div class="close-project-realized-values-charged">

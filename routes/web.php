@@ -47,6 +47,7 @@ Route::prefix('/')->group(function () {
                     Route::post('/getParamsInit', [UsersController::class, 'GetInitData']); //Parametros iniciales
                     Route::put('/deleteUpdateData', [UsersController::class, 'DeleteDataUpdate']); //Elimina la Session['dataUpdate']
                     Route::post('/get-access-user', [UsersController::class, 'previewAccessUser']);
+                    Route::post('/update-access-user', [UsersController::class, 'updateAccessUser']);
                     //Create
                     Route::prefix('/create')->group(function () {
                         Route::get('/', [UsersController::class, 'index'])->name('createUser');

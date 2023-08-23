@@ -11,7 +11,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content" v-if="previewUserInfo !== null">
                 <div class="modal-header">
-                    <h5 class="modal-title">@{{ previewUserInfo.nombre }} (@{{ previewUserInfo.codigo }})</h5>
+                    <h5 class="modal-title">@{{ previewUserInfo.nombre }} (@{{ previewUserInfo.código }})</h5>
                     <button type="button" class="btn btn-info" data-bs-dismiss="modal">X</button>
                 </div>
                 <div class="modal-body">
@@ -24,7 +24,7 @@
                         <div class="modal-preview-thead" for="thead-projectM">Menu proyectos</div>
                         <div class="modal-preview-thead" for="thead-billingM">Menu facturacion</div>
                         {{-- Cuerpo del encabezado --}}
-                        <div class="modal-preview-tbody" for="tbody-code">@{{ previewUserInfo.cedula }}</div>
+                        <div class="modal-preview-tbody" for="tbody-code">@{{ previewUserInfo.cédula }}</div>
                         <div class="modal-preview-tbody" for="tbody-address">@{{ previewUserInfo.correo }}</div>
                         <div class="modal-preview-tbody" for="tbody-userM">
                             <div class="form-check form-switch">

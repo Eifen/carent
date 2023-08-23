@@ -61,13 +61,59 @@ const usersApp = createApp({
             //Llamamos al método Static que hace la consulta Axios
             CrudUi.enableEdit(routesDTO, paramsDTO);
         },
+        updateAccess() {
+            let prepareParams = {};
+            //Acomodamos los permisos
+            for (const field in this.previewUserInfo) {
+                switch (true) {
+                    //Usuarios
+                    case field == "userP" && this.previewUserInfo[field]:
+                        prepareParams["userP"] = 2;
+                        break;
+                    //Clientes
+                    case field == "clientP" && this.previewUserInfo[field]:
+                        prepareParams["clientP"] = 3;
+                        break;
+                    //Proyectos
+                    case field == "projectP" && this.previewUserInfo[field]:
+                        prepareParams["projectP"] = 6;
+                        break;
+                    //Asignacion
+                    case field == "assignP" && this.previewUserInfo[field]:
+                        prepareParams["assignP"] = 7;
+                        break;
+                    //Administrativas
+                    case field == "adminP" && this.previewUserInfo[field]:
+                        prepareParams["adminP"] = 8;
+                        break;
+                    //Cierre de proyectos
+                    case field == "closeP" && this.previewUserInfo[field]:
+                        prepareParams["closeP"] = 13;
+                        break;
+                    //Billings
+                    case field == "billingP" && this.previewUserInfo[field]:
+                        prepareParams["billingP"] = 10;
+                        break;
+                }
+            }
+            //Actualizamos
+            const routesSelfDTO = {
+                post: "/usuarios/update-access-user",
+                redirect: "/usuarios",
+                self: this,
+            };
+            CrudUi.controlCrud(routesSelfDTO, {
+                user_access: prepareParams,
+                user_code: this.previewUserInfo.código,
+            });
+        },
         /**
          * MEtodo que muestra informacion del usuario y sus permisos del sistema para ser asignados
          * @param {*} idUsuario
          */
         permisosUsuarios(idUsuario) {
             const getUserId = this.listData
-                .map((objetc) => objetc.codigo)
+                .map((objetc) => objetc.código)
                 .indexOf(idUsuario);
             axios
                 .post("usuarios/get-access-user", { user_code: idUsuario })

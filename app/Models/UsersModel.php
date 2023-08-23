@@ -89,6 +89,19 @@ class UsersModel extends Model
     }
 
     /**
+     * Metodo que actualiza los permisos del usuario
+     * @param int $userCode: Almacena el codigo del usuario
+     * @return Array devuelve un array response, message
+     */
+    public static function updateAccess($userCode, $userAccess)
+    {
+        //Recorremos el array para actualizar la informacion
+        // foreach ($variable as $key => $value) {
+        //     # code...
+        // }
+    }
+
+    /**
      * Método que registra al usuario en función a los parametros proporcionados
      * @param mixed $paramsUsers Almacena los datos para la creación de usuario y registrar el movimiento
      * @param mixed $paramsContact Almacena los datos para los documentos del usuario recién creado

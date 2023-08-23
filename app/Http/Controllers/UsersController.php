@@ -171,4 +171,13 @@ class UsersController extends Controller
         $userCode = $userPreview->input('user_code');
         return response(UsersModel::getAccessInfo($userCode), 200);
     }
+
+    /**
+     * Metodo que actualiza la informacion de acceso del usuario
+     */
+    public function updateAccessUser(Request $userAccess)
+    {
+        $responseAccess = UsersModel::updateAccess($userAccess->input('user_code'), $userAccess->input('user_access'));
+        return response($responseAccess, 200);
+    }
 }
