@@ -1,5 +1,6 @@
 import { createApp } from "vue/dist/vue.esm-bundler";
 import { componentsUI, methodsUI, watchUI, CrudUi, dataUI } from "../UIConfig";
+import * as bootstrap from "bootstrap";
 
 const usersApp = createApp({
     data() {
@@ -12,16 +13,27 @@ const usersApp = createApp({
                 column5: "Estatus",
                 settings: {
                     columnS1: "Editar",
-                    // columnS2: "Permisos del Sistema",
+                    columnS2: "Asignar menú",
                 },
             },
             selectSearch: {
-                select1: "Codigo",
+                select1: "Código",
                 select2: "Nombre",
-                select3: "Cedula",
+                select3: "Cédula",
                 select4: "Correo",
             },
+            accessUser: {
+                userP: false,
+                clientP: false,
+                projectP: false,
+                assignP: false,
+                adminP: false,
+                closeP: false,
+                billingP: false,
+            },
             tableTarget: "users",
+            controlUserModal: null,
+            previewUserInfo: null,
         };
     },
     //Ante de montar, consultamos el tamaño máximo de la páginación
@@ -31,6 +43,11 @@ const usersApp = createApp({
     },
     mounted() {
         CrudUi.getTable("/usuarios/allUsers", this);
+        //Configuramos el modal
+        this.controlUserModal = new bootstrap.Modal(
+            document.getElementById("userInfoModal"),
+            { keyboard: false, backdrop: "static" }
+        );
     },
     methods: {
         //Metodo dedicados a las configuraciones de la tabla
@@ -44,8 +61,35 @@ const usersApp = createApp({
             //Llamamos al método Static que hace la consulta Axios
             CrudUi.enableEdit(routesDTO, paramsDTO);
         },
+        /**
+         * MEtodo que muestra informacion del usuario y sus permisos del sistema para ser asignados
+         * @param {*} idUsuario
+         */
         permisosUsuarios(idUsuario) {
-            console.log(this.listData[idUsuario]);
+            const getUserId = this.listData
+                .map((objetc) => objetc.codigo)
+                .indexOf(idUsuario);
+            axios
+                .post("usuarios/get-access-user", { user_code: idUsuario })
+                .then((request) => {
+                    if (request.data != 0) {
+                        //Realizamos un for de los permisos
+                        for (const key in request.data) {
+                            //Solo cambiamos la informacion si el valor es 1
+                            this.accessUser[key] =
+                                request.data[key] == 1 ? true : false;
+                        }
+                        this.controlUserModal.show();
+                        this.previewUserInfo = {
+                            ...this.listData[getUserId],
+                            ...this.accessUser,
+                        };
+                        console.log(this.previewUserInfo);
+                    }
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
         },
         crearUsuario() {
             window.location.href = "/usuarios/create";

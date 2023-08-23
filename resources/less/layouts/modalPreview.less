@@ -13,7 +13,7 @@
         padding: 5px;
         text-align: center;
         //Socio
-        &[for="thead-partner"]{
+        &[for="thead-partner"],&[for="thead-code"]{
             grid-area: 1 / 1 / 2 / 3 ;
         }
         //Direccion
@@ -92,13 +92,33 @@
         &[for="thead-managerDepartment"]{
             grid-area: 15 / 2 / 16 / 3;
         }
+        /*=================================================
+        * USUARIOS
+        *==================================================
+        */
+        //Menu usuario
+        &[for="thead-userM"]{
+            grid-area: 7 / 1 / 8 / 2;
+        }
+        //Menu cliente
+        &[for="thead-clientM"]{
+            grid-area: 7 / 2 / 8 / 3;
+        }
+        //Menu proyecto
+        &[for="thead-projectM"]{
+            grid-area: 9 / 1 / 10 / 2;
+        }
+        //Menu billing
+        &[for="thead-billingM"]{
+            grid-area: 9 / 2 / 10 / 3;
+        }
     }
 
     //Contenido
     &-tbody{
         text-align: center;
         //Socio
-        &[for="tbody-partner"]{
+        &[for="tbody-partner"],&[for="tbody-code"]{
             grid-area: 2 / 1 / 3 / 3;
         }
         //Direccion
@@ -134,7 +154,16 @@
             grid-area: 10 / 2 / 11 / 3;
         }
         //Text align para algunos campos
-        &[for="tbody-partner"],&[for="tbody-address"],&[for="tbody-client"],&[for="tbody-manager"],&[for="tbody-quality"]{
+        &[for="tbody-partner"],
+        &[for="tbody-address"],
+        &[for="tbody-client"],
+        &[for="tbody-manager"],
+        &[for="tbody-quality"],
+        &[for="tbody-code"],
+        &[for="tbody-userM"],
+        &[for="tbody-clientM"],
+        &[for="tbody-projectM"],
+        &[for="tbody-billingM"]{
             text-align: left;
         }
         /*=================================================
@@ -228,6 +257,26 @@
                     font-weight: bolder;
                 }
             }
+        }
+        /*=================================================
+        * USUARIOS
+        *==================================================
+        */
+        //Menu usuarios
+        &[for="tbody-userM"]{
+            grid-area: 8 / 1 / 9 / 2;
+        }
+        //Menu cliente
+        &[for="tbody-clientM"]{
+            grid-area: 8 / 2 / 9 / 3;
+        }
+        //Menu proyecto
+        &[for="tbody-projectM"]{
+            grid-area: 10 / 1 / 11 / 2;
+        }
+        //Menu facturacion
+        &[for="tbody-billingM"]{
+            grid-area: 10 / 2 / 11 / 3;
         }
     }
 }

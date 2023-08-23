@@ -19,9 +19,9 @@ const clientsIndex = createApp({
                 },
             },
             selectSearch: {
-                select1: "Codigo",
+                select1: "Código",
                 select2: "Socio",
-                select3: "Razon social",
+                select3: "Razón social",
                 select4: "Correo",
             },
             tableTarget: "clients",

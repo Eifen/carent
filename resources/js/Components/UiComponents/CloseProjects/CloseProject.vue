@@ -288,10 +288,9 @@
                 <textarea :disabled="this.loadInitial.closureProject !== null" v-model="message.sixth" rows="2"
                     cols="120"></textarea> -->
             </div>
-            <div v-if="loadInitial.closureProject === null" class="buttonCRUD" :class="viewButton ? 'disable' : ''"
-                id="button-crud" @click="emitClose()">Cerrar
+            <div v-if="loadInitial.closureProject === null && validate.isValid" class="buttonCRUD"
+                :class="viewButton ? 'disable' : ''" id="button-crud" @click="emitClose()">Cerrar
                 proyecto</div>
-
         </div>
     </div>
 </template>
@@ -316,12 +315,10 @@ export default {
                 'name': '',
                 'client': '',
                 'partner': '',
-
                 'hoursEstimated': 0,
                 'currency_symbols': '',
                 'valueEstimated': 0,
                 'average': 0,
-
                 'additionalHour': 0,
                 'valueExtra': 0,
                 'hoursReal': 0,
@@ -332,9 +329,7 @@ export default {
                 'billingValue': [],
                 'billingAditionalValue': [],
                 'dateClose': '',
-
                 'monetaryReco': 0,
-
                 'totalRealFees': 0,
                 // 'difference' : [],
             },
@@ -345,11 +340,13 @@ export default {
                 'third': '',
                 'fourth': '',
                 'fifth': '',
-                'sixth': '',
             },
-
-            closeproject: 'NIRVANA',
             projectclose: true,
+            validate: {
+                commentedValid: false,
+                dateValid: false,
+                isValid: false
+            }
         }
     },
 
@@ -410,7 +407,7 @@ export default {
             })
 
             if (this.loadInitial.closureProject !== null) {
-                this.project.dateCloseProject = this.loadInitial.closureProject.close_date;
+                this.project.dateClose = this.loadInitial.closureProject.close_date;
                 this.message.first = this.loadInitial.closureProject.first_comment;
                 this.message.second = this.loadInitial.closureProject.second_comment;
                 this.message.third = this.loadInitial.closureProject.third_comment;
@@ -426,7 +423,7 @@ export default {
     //Metodo(variable)
     methods: {
         formatDate(dateEmit) {
-            this.project.dateCloseProject = `${dateEmit.year}-${dateEmit.month}-${dateEmit.day}`
+            this.project.dateClose = `${dateEmit.year}-${dateEmit.month}-${dateEmit.day}`
         },
         getInfoProject(infoProjectMethods) {
             //Axios
@@ -468,7 +465,7 @@ export default {
         emitClose() {
             const params = {
                 projectId: this.loadInitial.project.project_id,
-                closeDate: this.project.dateCloseProject,
+                closeDate: this.project.dateClose,
                 firstComment: this.message.first,
                 secondComment: this.message.second,
                 thirdComment: this.message.third,
@@ -498,7 +495,54 @@ export default {
             return this.project.billingAditionalValue.reduce((total, billingValue) => total + parseFloat(billingValue), 0);
         }
     },
-    watch: {},
+    watch: {
+        message: {
+            handler(newMessage) {
+                let constMessage = 0
+                for (const message in newMessage) {
+                    if (newMessage[message].length != 0) constMessage++;
+                }
+
+                //Si el for es mayor al conteo lo activamos
+                if (constMessage == Object.keys(newMessage).length) {
+                    this.validate.commentedValid = true
+                } else {
+                    this.validate.commentedValid = false
+                }
+            },
+            deep: true,
+        },
+        validate: {
+            handler(newValidate) {
+                let constValidate = 0
+                for (const key in newValidate) {
+                    if (key.toString() != "isValid" && newValidate[key] === true) {
+                        constValidate++;
+                    }
+                }
+
+                //Si el for es mayor al conteo lo activamos
+                if (constValidate == Object.keys(newValidate).length - 1) {
+                    this.validate.isValid = true
+                } else {
+                    this.validate.isValid = false
+                }
+
+                console.log(this.validate)
+            },
+            deep: true,
+        },
+        project: {
+            handler(newProject) {
+                if (newProject.dateClose.length != 0 && newProject.dateClose.length == 10) {
+                    this.validate.dateValid = true
+                } else {
+                    this.validate.dateValid = false
+                }
+            },
+            deep: true
+        }
+    },
     components: { DropdownSelect, Calendar },
 
 }

@@ -32,8 +32,7 @@
                 <thead :class="tableClass.thead">
                     <tr>
                         <!-- Table Object -->
-                        <th scope="col" class="col-sm-5 col-md-3 col-lg-1" style="text-align:left" valign="middle"
-                            v-for="(title, cursor) in titleObject" :key="cursor">
+                        <th scope="col" align="center" valign="middle" v-for="(title, cursor) in titleObject" :key="cursor">
                             <span v-if="cursor != 'settings'">{{ title }}</span>
                             <span v-else></span>
                         </th>
@@ -45,7 +44,7 @@
                         :class="[actualIndex === controlTable.active.index ? controlTable.active.class : null]"
                         @click="controlTable.active.index = actualIndex">
                         <!-- Recorremos el array de datos -->
-                        <td class="col-sm-5 col-md-3 col-lg-1"
+                        <td align="center"
                             v-for="(columnData, cursorTable) in controlTable.data[actualIndex + controlTable.minLength]"
                             :key="cursorTable">
                             <span v-if="cursorTable == 'estatus' && columnData == 1"
@@ -75,13 +74,13 @@
                                 <div v-for="(setting, cursor) in titleObject.settings" :key="cursor">
                                     <!-- Separamos los select en base al objeto suministrado (Deben tener el mismo formato) -->
                                     <span class="aLink"
-                                        @click="$emit('columns1target', (controlTable.data[actualIndex + controlTable.minLength].codigo))"
+                                        @click="$emit('columns1target', (controlTable.data[actualIndex + controlTable.minLength].código))"
                                         v-if="cursor == 'columnS1'">{{ setting }}</span>
                                     <span class="aLink"
-                                        @click="$emit('columns2target', (controlTable.data[actualIndex + controlTable.minLength].codigo))"
+                                        @click="$emit('columns2target', (controlTable.data[actualIndex + controlTable.minLength].código))"
                                         v-if="cursor == 'columnS2'">{{ setting }}</span>
                                     <span class="aLink"
-                                        @click="$emit('columns3target', (controlTable.data[actualIndex + controlTable.minLength].codigo))"
+                                        @click="$emit('columns3target', (controlTable.data[actualIndex + controlTable.minLength].código))"
                                         v-if="cursor == 'columnS3'">{{ setting }}</span>
                                 </div>
                             </div>

@@ -67,6 +67,15 @@ class ProjectController extends Controller
             return $column;
         }, $getAdminHours["message"]);
 
+        //Filtramos por fecha
+        $getAdminHours["message"] = array_filter($getAdminHours["message"], function ($adminHour) {
+            //Obtenemos la actual
+            $actualDate = date("Y-m-d");
+            //Obtenemos la fecha anterior a un mes
+            $oneMonthDate = date("Y-m-d", strtotime("-2 months"));
+            return $adminHour->fecha >= $oneMonthDate && $adminHour->fecha <= $actualDate;
+        });
+
         //Reindexamos y convertimos nuevamente a una colleccion
         $getAdminHours["message"] = collect(array_values($getAdminHours["message"]));
         return response($getAdminHours, 200);

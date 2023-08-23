@@ -6,14 +6,14 @@
             <li class="header-nav-links-item" id="user-name">Conectado como, <span>{{ Session::get('userName') }}
             </li>
             @if (Session::has('userPermissions'))
-                <li class="header-nav-links-item" id="01">@yield('usuarios')</li>
-                <li class="header-nav-links-item" id="02">@yield('clientes')</li>
+                @yield('usuarios')
+                @yield('clientes')
             @endif
             <li class="header-nav-links-item" id="03" @mouseover="openDropDown('projects')"
                 @mouseout="closeDropDown('projects')">@yield('proyectos')</li>
             @if (Session::has('userPermissions'))
-                <li class="header-nav-links-item" id="04">@yield('facturacion')</li>
-                <li class="header-nav-links-item" id="05">@yield('reportes')</li>
+                @yield('facturacion')
+                @yield('reportes')
             @endif
             <li class="header-nav-links-item" id="06" @mouseover="openDropDown('account')"
                 @mouseout="closeDropDown('account')">@yield('miCuenta')</li>

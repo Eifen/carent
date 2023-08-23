@@ -21,6 +21,21 @@ class UsersModel extends Model
     }
 
     /**
+     * Metodo que devuelve los permisos que tiene el usuario
+     * @param int $userCode Codigo del usuario
+     */
+    public static function getAccessInfo($userCode)
+    {
+        $userId = DB::table('users')
+            ->where('user_code', '=', $userCode)
+            ->value('user_id');
+
+        $arrayAccess = LoginModel::getArrayAccess($userId);
+
+        return $arrayAccess;
+    }
+
+    /**
      * Metodo que devuelve un array con todos los estados del pais registrados
      * @return Array info del estado
      */

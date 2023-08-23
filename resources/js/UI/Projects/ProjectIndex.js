@@ -23,7 +23,7 @@ const projectsIndex = createApp({
                 },
             },
             selectSearch: {
-                select1: "Codigo",
+                select1: "Código",
                 select2: "Proyecto",
                 select3: "Socio",
                 select4: "Gerente",

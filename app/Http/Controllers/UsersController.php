@@ -162,4 +162,13 @@ class UsersController extends Controller
             return response(0, 200);
         }
     }
+
+    /**
+     * Metodo que devuelve los permisos que posee el usuario
+     */
+    public function previewAccessUser(Request $userPreview)
+    {
+        $userCode = $userPreview->input('user_code');
+        return response(UsersModel::getAccessInfo($userCode), 200);
+    }
 }
