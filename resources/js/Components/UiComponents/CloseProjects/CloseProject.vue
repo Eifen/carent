@@ -77,14 +77,15 @@
                             </thead>
                             <tbody>
                                 <tr v-for="billing in project.billingValue">
-                                    <td class="col-sm-4 col-lg-4" align="center"></td>
-                                    <td class="col-sm-4 col-lg-4" align="center">{{ billing }}</td>
+                                    <td class="col-sm-4 col-lg-4" align="center">{{ billing.description }}</td>
+                                    <td class="col-sm-4 col-lg-4" align="center">{{ formatNumber(billing.value) }}
+                                    </td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <th class="col-sm-4 col-lg-4"> Total A </th>
-                                    <td class="col-sm-4 col-lg-4" align="center">{{ totalRealFees }}</td>
+                                    <td class="col-sm-4 col-lg-4" align="center">{{ formatNumber(totalRealFees) }}</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -94,19 +95,20 @@
                     <table class="table">
                         <tbody>
                             <tr v-for="billingAditional in project.billingAditionalValue">
-                                <td class="col-sm-4 col-lg-4" align="center"></td>
-                                <td class="col-sm-4 col-lg-4" align="center">{{ billingAditional }}</td>
+                                <td class="col-sm-4 col-lg-4" align="center">{{ billingAditional.description }}</td>
+                                <td class="col-sm-4 col-lg-4" align="center">{{ formatNumber(billingAditional.value) }}</td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr>
                                 <th class="col-sm-4 col-lg-4">Total B</th>
-                                <td class="col-sm-4 col-lg-4" align="center">{{ totalAditionalBilling }}</td>
+                                <td class="col-sm-4 col-lg-4" align="center">{{ formatNumber(totalAditionalBilling) }}</td>
 
                             </tr>
                             <tr>
                                 <th class="col-sm-4 col-lg-4"> Total A+B</th>
-                                <td class="col-sm-4 col-lg-4" align="center">{{ totalRealFees + totalAditionalBilling }}
+                                <td class="col-sm-4 col-lg-4" align="center">{{ formatNumber(totalRealFees +
+                                    totalAditionalBilling) }}
                                 </td>
                             </tr>
                         </tfoot>
@@ -234,14 +236,16 @@
                             <tr>
                                 <th class="col-sm-2 col-lg-2">Horas Reales Cargadas al CARENT</th>
                                 <td class="col-sm-2 col-lg-2" align="center">{{ project.hoursReal }}</td>
-                                <td class="col-sm-2 col-lg-2" align="center">{{ (project.rateExecuted) }}</td>
+                                <td class="col-sm-2 col-lg-2" align="center">{{
+                                    formatNumber(totalRealFees / project.hoursReal) }}</td>
                             </tr>
                             <tr>
                                 <th class="col-sm-2 col-lg-2"> Porcentaje de Ejecución</th>
                                 <td class="col-sm-2 col-lg-2" align="center">{{ (((project.hoursReal /
                                     project.hoursEstimated) * 100)) + '%' }}</td>
-                                <td class="col-sm-2 col-lg-2" align="center">{{ project.rateExecuted === 0 ? 0 :
-                                    (project.average / project.rateExecuted) / 100 + '%' }}</td>
+                                <td class="col-sm-2 col-lg-2" align="center">{{ (totalRealFees / project.hoursReal) === 0 ?
+                                    0 :
+                                    (project.average / (totalRealFees / project.hoursReal)) / 100 + '%' }}</td>
                             </tr>
                             <tr>
                                 <th class="col-sm-2 col-lg-2"> Exceso (Déficit) de Horas </th>
@@ -388,11 +392,6 @@ export default {
             this.loadInitial.projectsHours.forEach(department => {
                 this.project.hoursReal = parseFloat(department.total_hours) + parseFloat(this.project.hoursReal)
             })
-            //Tasa promedio final colocar dos decimales
-            if (this.project.hoursReal === 0) { this.project.rateExecuted = 0; }
-            else {
-                this.project.rateExecuted = parseFloat((((this.project.valueEstimated + this.project.valueExtra) / (this.project.hoursEstimated + this.project.additionalHour)) + this.project.currency_symbols));
-            }
             //Horas estimadas de horas por unidad
             this.project.tableUnitHours = this.loadInitial.departments
             //Horas reales de horas por unidad
@@ -401,9 +400,52 @@ export default {
             //Push ingresa un valor en la ultima fila del array
             //el valor de arriba es la propiedad que aparece en el objeto del controlador, esta en el console.log en este caso es billings
             //valor de abajo es el nombre del valor que le asigno a data
+            let countValues = this.project.valueEstimated + this.project.valueExtra
             this.loadInitial.billings.forEach(department => {
-                if (department.billing_concept_id === 1 || department.billing_concept_id === 2) this.project.billingValue.push(parseFloat(department.billing_value))
-                if (department.billing_concept_id !== 1 && department.billing_concept_id !== 2) this.project.billingAditionalValue.push(parseFloat(department.billing_value))
+                //Valores realizados cobrados
+                switch (true) {
+                    case department.billing_concept_id === 1 || department.billing_concept_id === 2 || department.billing_concept_id === 4:
+                        const getValue = department.billing_concept_id === 4 ? (parseFloat(department.billing_value) * (-1)) : parseFloat(department.billing_value)
+                        countValues = countValues - getValue;
+                        /**
+                         * Evaluamos el monto total y lo restamos con la facturacion entrante del foreach
+                         * Si el valor da negativo o 0 lo carga en facturacion adicionales
+                         * Si el valor tiene una parte que excede el monto total y la otra no, los separa
+                         * La parte que no excede la coloca en honorarios reales y la que excede en facturacion adicional
+                         * Si el valor aun entra en el espectro del monto total lo coloca en honorarios reales
+                         */
+                        if (countValues < 0 && (countValues + getValue) <= 0) {
+                            //Valor completo para montos mayores al total
+                            this.project.billingAditionalValue.push({
+                                "description": department.billing_concept_description,
+                                "value": getValue
+                            });
+                        } else if (countValues < 0) {
+                            //Valor completo
+                            this.project.billingValue.push({
+                                "description": department.billing_concept_description,
+                                "value": (getValue + countValues) == 0 ? getValue : getValue + countValues
+                            });
+                            //Restante
+                            this.project.billingAditionalValue.push({
+                                "description": department.billing_concept_description,
+                                "value": countValues * (-1)
+                            });
+                        } else {
+                            this.project.billingValue.push({
+                                "description": department.billing_concept_description,
+                                "value": getValue
+                            });
+                        }
+                        break;
+                    //Gastos no presupuestados y otros gastos
+                    case department.billing_concept_id !== 1 && department.billing_concept_id !== 2 && department.billing_concept_id !== 4:
+                        this.project.billingAditionalValue.push({
+                            "description": department.billing_concept_description,
+                            "value": parseFloat(department.billing_value)
+                        })
+                        break;
+                }
             })
 
             if (this.loadInitial.closureProject !== null) {
@@ -424,6 +466,13 @@ export default {
     methods: {
         formatDate(dateEmit) {
             this.project.dateClose = `${dateEmit.year}-${dateEmit.month}-${dateEmit.day}`
+        },
+        /**
+         * Formatea un numero a nomenclatura europea
+         * @param {float} number Valor numerico a transformar
+         */
+        formatNumber(number) {
+            return number.toLocaleString('de-DE')
         },
         getInfoProject(infoProjectMethods) {
             //Axios
@@ -489,10 +538,10 @@ export default {
             return this.project.tableRealHours.reduce((total, department) => total + parseFloat(department.total_hours), 0);
         },
         totalRealFees() {
-            return this.project.billingValue.reduce((total, billingValue) => total + parseFloat(billingValue), 0);
+            return this.project.billingValue.reduce((total, billingValue) => total + parseFloat(billingValue.value), 0);
         },
         totalAditionalBilling() {
-            return this.project.billingAditionalValue.reduce((total, billingValue) => total + parseFloat(billingValue), 0);
+            return this.project.billingAditionalValue.reduce((total, billingValue) => total + parseFloat(billingValue.value), 0);
         }
     },
     watch: {
