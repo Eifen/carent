@@ -242,10 +242,10 @@
                             <tr>
                                 <th class="col-sm-2 col-lg-2"> Porcentaje de Ejecución</th>
                                 <td class="col-sm-2 col-lg-2" align="center">{{ (((project.hoursReal /
-                                    project.hoursEstimated) * 100)) + '%' }}</td>
+                                    project.hoursEstimated))) + '%' }}</td>
                                 <td class="col-sm-2 col-lg-2" align="center">{{ (totalRealFees / project.hoursReal) === 0 ?
                                     0 :
-                                    (project.average / (totalRealFees / project.hoursReal)) / 100 + '%' }}</td>
+                                    (((totalRealFees / project.hoursReal) / project.average)).toFixed(2) + '%' }}</td>
                             </tr>
                             <tr>
                                 <th class="col-sm-2 col-lg-2"> Exceso (Déficit) de Horas </th>
