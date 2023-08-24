@@ -62,7 +62,15 @@ const usersApp = createApp({
             CrudUi.enableEdit(routesDTO, paramsDTO);
         },
         updateAccess() {
-            let prepareParams = {};
+            let prepareParams = {
+                userP: 0,
+                clientP: 0,
+                projectP: 0,
+                assignP: 0,
+                adminP: 0,
+                closeP: 0,
+                billingP: 0,
+            };
             //Acomodamos los permisos
             for (const field in this.previewUserInfo) {
                 switch (true) {

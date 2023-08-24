@@ -2,9 +2,13 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\ConfigController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+
+use function PHPUnit\Framework\isEmpty;
 
 class UsersModel extends Model
 {
@@ -95,10 +99,53 @@ class UsersModel extends Model
      */
     public static function updateAccess($userCode, $userAccess)
     {
+        //Id del usuario
+        $userId = DB::table('users')
+            ->where('user_code', '=', $userCode)
+            ->value('user_id');
         //Recorremos el array para actualizar la informacion
-        // foreach ($variable as $key => $value) {
-        //     # code...
-        // }
+        foreach ($userAccess as $key => $value) {
+            $permissionId = DB::table('users_permissions')
+                ->where([
+                    ['user_id', '=', $userId],
+                    ['access_id', '=', $value]
+                ])
+                ->value('permission_id');
+            //Hacemos una condicion en funcion del valor de la consulta
+            if (isEmpty($permissionId)) {
+                //Insertamos si no existe
+                DB::table('user_permissions')
+                    ->insert([
+                        "user_id" => $userId,
+                        "access_id" => $value
+                    ]);
+            } else {
+                //Actualizamos
+                DB::table('user_permissions')
+                    ->where('permission_id', '=', $permissionId)
+                    ->update([
+                        "user_id" => $userId,
+                        "access_id" => $value
+                    ]);
+            }
+        }
+        //Registramos la bitacora
+        DB::select('call sp_insert_logs(?,?,?,?,?,?,?,?,?,response)', [2, 'access', ConfigController::GetIpUser(), Session::has('userId'), "users_permissions", "NA", "NA", "NA", date('Y-m-d H:i:s')]);
+        $GetResponse = DB::select('SELECT @response AS JsonResponse');
+        $arrayResponse = json_decode($GetResponse[0]->JsonResponse, true);
+
+        //Enviamos un mensaje distinto
+        if (!$arrayResponse["response"]) {
+            return array(
+                "response" => false,
+                "message" => "Error 0011: Insert log has failed (" . $arrayResponse['message'] . ")"
+            );
+        }
+
+        return array(
+            "response" => true,
+            "message" => "Los permisos del usuario han sido actualizados. En breves momentos será redireccionado..."
+        );
     }
 
     /**
