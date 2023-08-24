@@ -133,7 +133,6 @@ const controlBillingApp = createApp({
                     : 4;
 
             //Enviamos la informacion al controlador
-            console.log(prepareParams);
             CrudUi.controlCrud(
                 {
                     post: "/billings/control/submit-billing",
@@ -150,7 +149,6 @@ const controlBillingApp = createApp({
                 })
                 .then((request) => {
                     //Reasignamos la data
-                    console.log(request);
                     this.updateModel = request.data;
                     //Cerramos el modal
                     this.controlBillingModal.hide();
@@ -228,7 +226,6 @@ const controlBillingApp = createApp({
             this.isEdit = false;
             //Cargamos las facturas a anular
             this.billingNullInfo = this.prepareNullBill();
-            console.log(this.billingNullInfo);
             this.controlBillingModal.show();
         },
         /**Abre el modal de actualización de factura */
@@ -238,7 +235,6 @@ const controlBillingApp = createApp({
             this.isEdit = true;
             //Cargamos las facturas a modificar
             this.updateBillingInfo = billingDTO;
-            console.log(this.updateBillingInfo.billing_number);
             //Almacenamos la informacion
             this.inputConcept = this.updateBillingInfo.billing_concept_id; //Concepto
             this.controlBillingModal.show();

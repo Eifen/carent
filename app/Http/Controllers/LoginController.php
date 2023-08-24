@@ -89,12 +89,10 @@ class LoginController extends Controller
         //Llamamos a la funcion de recuperar password
         $recoveryPassword = ConfigModel::recoveryPassword($prepareParams);
 
-        // if($recoveryPassword["response"]){
+        // if ($recoveryPassword["response"]) {
         //     $emailUser = Session::get('emailUser');
         //     Mail::send('emailTemplate.changePassword', ["clave" => $recoveryPassword["clave"]], function ($message) use ($emailUser) {
-        //         $message->from('sistema.carent@crowe.com.ve', 'CARENT')
-        //             ->to($emailUser)
-        //             ->subject('🚨 Se ha actualizado su contraseña en CARENT');
+        //         $message->from('sistema.carent@crowe.com.ve', 'CARENT')->to($emailUser)->subject('🚨 Se ha actualizado su contraseña en CARENT');
         //     });
         // }
 

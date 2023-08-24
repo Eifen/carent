@@ -106,7 +106,6 @@ export const hoursForWeeksMethod = {
                     //Limpiamos el contador
                     hoursLoad = 0;
                 });
-                console.log(this.gridProjectInfo);
             },
             deep: true,
         },

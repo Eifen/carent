@@ -83,7 +83,7 @@ class ProjectModel extends Model
             ->join('users', 'users.user_id', '=', 'projects_users_assigned.user_id')
             ->where([
                 ["department_assigned_id", "=", $departmentAssignedId],
-                ["users.department_id", "=", $getDepartmentId->department_id]
+                // ["users.department_id", "=", $getDepartmentId->department_id]
             ])
             ->select(
                 DB::raw('CONCAT(users.first_name," ",users.second_name," ",users.first_surname," ",users.second_surname) AS user_name'),

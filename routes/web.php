@@ -84,12 +84,12 @@ Route::prefix('/')->group(function () {
             });
             //Proyectos
             Route::prefix('/projects')->group(function () {
+                Route::get('/', [ProjectController::class, 'index'])->name('projects');
+                Route::post('/all-projects', [ProjectController::class, 'getAllProjects']);
+                Route::post('/info-project', [ProjectController::class, 'prepareInfoProject']);
+                Route::put('/delete-update-data', [ProjectController::class, 'deleteProjectUpdate']); //Elimina la Session['projectUpdate']
                 Route::middleware('accessP')->group(function () {
-                    Route::get('/', [ProjectController::class, 'index'])->name('projects');
-                    Route::post('/all-projects', [ProjectController::class, 'getAllProjects']);
                     Route::post('/get-params-inits', [ProjectController::class, 'getInitData']);
-                    Route::put('/delete-update-data', [ProjectController::class, 'deleteProjectUpdate']); //Elimina la Session['projectUpdate']
-                    Route::post('/info-project', [ProjectController::class, 'prepareInfoProject']);
                     //Create
                     Route::prefix('/create')->group(function () {
                         Route::get('/', [ProjectController::class, 'index'])->name('createProject');

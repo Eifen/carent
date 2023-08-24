@@ -16,7 +16,6 @@ export const billingWatch = {
                 //Caso contrario
                 else this.validate.conceptValid = true;
                 //Condiciones para el tipo de selector
-                console.log(newConcept);
                 switch (newConcept) {
                     case 4:
                         this.validate.billingValid = false;
@@ -194,7 +193,6 @@ export const billingWatch = {
 
         validate: {
             handler(newValidate) {
-                console.log(newValidate);
                 let countValid = 0;
                 //Contamos los valores que esten en true
                 for (const field in newValidate) {

@@ -27,7 +27,6 @@ const changeApp = createApp({
             };
             //Encriptamos la data antes de llamarla por Axios
             const ParamsLogin = UsersControl.EncriptarDatos(ObjectToEncript);
-            console.log(ParamsLogin);
             //Preparamos la informacion para axios
             CrudUi.controlCrud(
                 { post: "/account/update-password", redirect: "/", self: this },

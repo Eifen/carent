@@ -121,10 +121,7 @@ export default {
     data() {
         return {}
     },
-    created() {
-        //Cargamos la informacion del proyecto
-        console.log(this.infoProject)
-    },
+    created() { },
     methods: {
         /**
          * Devuelve un monto en el formato correcto

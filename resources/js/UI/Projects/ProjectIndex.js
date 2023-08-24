@@ -43,6 +43,7 @@ const projectsIndex = createApp({
              * estimatedHour: Hora estimada
              */
             progressBarInfo: [],
+            viewCreate: false,
         };
     },
     created() {
@@ -59,13 +60,14 @@ const projectsIndex = createApp({
     },
     methods: {
         configSettings(accessSession) {
-            console.log(accessSession);
             //Verificamos los permisos
             if (accessSession.projectP == 1) {
                 this.projectsColumns.settings = {
                     columnS1: "Editar",
                     ...this.projectsColumns.settings,
                 };
+                //Activamos permisos de visualizacion
+                this.viewCreate = true;
             }
             //Verificamos si puede cerrar proyectos
             if (accessSession.closeP == 1) {

@@ -359,7 +359,6 @@ export default {
     created() {
         //Si ya cargo el componente, llenamos la informacion
         if (this.active) {
-            console.log(this.loadInitial)
             //Nommbre del proyecto
             this.project.name = this.loadInitial.project.project_description
             //Nommbre del cliente
@@ -528,8 +527,6 @@ export default {
                 } else {
                     this.validate.isValid = false
                 }
-
-                console.log(this.validate)
             },
             deep: true,
         },

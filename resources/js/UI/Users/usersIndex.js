@@ -62,45 +62,47 @@ const usersApp = createApp({
             CrudUi.enableEdit(routesDTO, paramsDTO);
         },
         updateAccess() {
+            this.isClick = true;
+            //Cada parametro tendra una tupla, si esta en false significa que esta desactivado
             let prepareParams = {
-                userP: 0,
-                clientP: 0,
-                projectP: 0,
-                assignP: 0,
-                adminP: 0,
-                closeP: 0,
-                billingP: 0,
+                userP: [2, false],
+                clientP: [4, false],
+                projectP: [6, false],
+                assignP: [7, false],
+                adminP: [8, false],
+                closeP: [13, false],
+                billingP: [10, false],
             };
             //Acomodamos los permisos
             for (const field in this.previewUserInfo) {
                 switch (true) {
                     //Usuarios
                     case field == "userP" && this.previewUserInfo[field]:
-                        prepareParams["userP"] = 2;
+                        prepareParams["userP"][1] = true;
                         break;
                     //Clientes
                     case field == "clientP" && this.previewUserInfo[field]:
-                        prepareParams["clientP"] = 3;
+                        prepareParams["clientP"][1] = true;
                         break;
                     //Proyectos
                     case field == "projectP" && this.previewUserInfo[field]:
-                        prepareParams["projectP"] = 6;
+                        prepareParams["projectP"][1] = true;
                         break;
                     //Asignacion
                     case field == "assignP" && this.previewUserInfo[field]:
-                        prepareParams["assignP"] = 7;
+                        prepareParams["assignP"][1] = true;
                         break;
                     //Administrativas
                     case field == "adminP" && this.previewUserInfo[field]:
-                        prepareParams["adminP"] = 8;
+                        prepareParams["adminP"][1] = true;
                         break;
                     //Cierre de proyectos
                     case field == "closeP" && this.previewUserInfo[field]:
-                        prepareParams["closeP"] = 13;
+                        prepareParams["closeP"][1] = true;
                         break;
                     //Billings
                     case field == "billingP" && this.previewUserInfo[field]:
-                        prepareParams["billingP"] = 10;
+                        prepareParams["billingP"][1] = true;
                         break;
                 }
             }
@@ -126,6 +128,10 @@ const usersApp = createApp({
             axios
                 .post("usuarios/get-access-user", { user_code: idUsuario })
                 .then((request) => {
+                    this.previewUserInfo = {
+                        ...this.listData[getUserId],
+                        ...this.accessUser,
+                    };
                     if (request.data != 0) {
                         //Realizamos un for de los permisos
                         for (const key in request.data) {
@@ -133,13 +139,12 @@ const usersApp = createApp({
                             this.accessUser[key] =
                                 request.data[key] == 1 ? true : false;
                         }
-                        this.controlUserModal.show();
                         this.previewUserInfo = {
                             ...this.listData[getUserId],
                             ...this.accessUser,
                         };
-                        console.log(this.previewUserInfo);
                     }
+                    this.controlUserModal.show();
                 })
                 .catch((error) => {
                     console.error(error);

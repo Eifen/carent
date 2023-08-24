@@ -36,6 +36,21 @@ class ProjectController extends Controller
     {
         $this->modelInstance = new ConfigModel();
         $allData = $this->modelInstance->GetAll('projects');
+        $arrayData = $allData["message"]->toArray();
+        if (Session::get('userId') != 1 && Session::get('userId') != 154) {
+            $arrayData = array_filter($arrayData, function ($project) {
+                return $project->manager_id == Session::get('userId');
+            });
+        }
+        //Eliminamos la informacion del manager_id
+        $arrayData = array_map(function ($column) {
+            //Desactivamos las columnas innecesarias
+            unset($column->manager_id);
+            return $column;
+        }, $arrayData);
+        //Devolvemos la coleccion
+        $allData["message"] = collect(array_values($arrayData));
+
         return response($allData, 200);
     }
 

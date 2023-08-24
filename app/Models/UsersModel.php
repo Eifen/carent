@@ -103,34 +103,23 @@ class UsersModel extends Model
         $userId = DB::table('users')
             ->where('user_code', '=', $userCode)
             ->value('user_id');
+        //Eliminamos todos los permisos que tenga ese usuario
+        DB::table('users_permissions')
+            ->where('user_id', '=', $userId)
+            ->delete();
         //Recorremos el array para actualizar la informacion
-        foreach ($userAccess as $key => $value) {
-            $permissionId = DB::table('users_permissions')
-                ->where([
-                    ['user_id', '=', $userId],
-                    ['access_id', '=', $value]
-                ])
-                ->value('permission_id');
-            //Hacemos una condicion en funcion del valor de la consulta
-            if (isEmpty($permissionId)) {
-                //Insertamos si no existe
-                DB::table('user_permissions')
+        foreach ($userAccess as $value) {
+            if ($value[1]) {
+                //Insertamos si el valor esta en true
+                DB::table('users_permissions')
                     ->insert([
                         "user_id" => $userId,
-                        "access_id" => $value
-                    ]);
-            } else {
-                //Actualizamos
-                DB::table('user_permissions')
-                    ->where('permission_id', '=', $permissionId)
-                    ->update([
-                        "user_id" => $userId,
-                        "access_id" => $value
+                        "access_id" => $value[0]
                     ]);
             }
         }
         //Registramos la bitacora
-        DB::select('call sp_insert_logs(?,?,?,?,?,?,?,?,?,response)', [2, 'access', ConfigController::GetIpUser(), Session::has('userId'), "users_permissions", "NA", "NA", "NA", date('Y-m-d H:i:s')]);
+        DB::select('call sp_insert_logs(?,?,?,?,?,?,?,?,?,@response)', [2, 'access', ConfigController::GetIpUser(), Session::has('userId'), "users_permissions", "NA", "NA", "NA", date('Y-m-d H:i:s')]);
         $GetResponse = DB::select('SELECT @response AS JsonResponse');
         $arrayResponse = json_decode($GetResponse[0]->JsonResponse, true);
 
