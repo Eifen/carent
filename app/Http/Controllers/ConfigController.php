@@ -113,12 +113,12 @@ class ConfigController extends Controller
         if ($changePassword["response"]) {
             Session::put('passwordChange', 0);
 
-            // $emailUser = Session::get('emailUser');
-            // Mail::send('emailTemplate.changePassword', [], function ($message) use ($emailUser) {
-            //     $message->from('sistema.carent@crowe.com.ve', 'CARENT')
-            //         ->to($emailUser)
-            //         ->subject('🚨 Se ha actualizado su contraseña en CARENT');
-            // });
+            $emailUser = Session::get('emailUser');
+            Mail::send('emailTemplate.changePassword', [], function ($message) use ($emailUser) {
+                $message->from('sistema.carent@crowe.com.ve', 'CARENT')
+                    ->to($emailUser)
+                    ->subject('🚨 Se ha actualizado su contraseña en CARENT');
+            });
         }
 
         return response($changePassword, 200);
