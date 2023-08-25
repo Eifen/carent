@@ -9,6 +9,7 @@ use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\HoursController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\Reports\ReportsController;
 use Illuminate\Support\Facades\URL;
 
 /*
@@ -148,6 +149,12 @@ Route::prefix('/')->group(function () {
                         Route::post('submit-billing', [BillingController::class, 'prepareSubmit']);
                         Route::post('refresh-billing', [BillingController::class, 'refreshBilling']);
                     });
+                });
+            });
+            //Reportes
+            Route::middleware('accessR')->group(function () {
+                route::prefix('/reports')->group(function () {
+                    Route::get('/', [ReportsController::class, 'index'])->name('reports');
                 });
             });
         });

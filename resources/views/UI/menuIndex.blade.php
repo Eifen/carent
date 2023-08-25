@@ -134,5 +134,9 @@
                 @endphp
             @endif
         @endif
+        {{-- Redireccion de ruta para reportes --}}
+        @if (Request::url() === URL::route('reports'))
+            @include('UI.Reports.reportsIndex')
+        @endif
     </section>
 @endsection

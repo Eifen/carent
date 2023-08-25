@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\ReportsPermission;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -61,6 +62,7 @@ class Kernel extends HttpKernel
         'accessASP' => \App\Http\Middleware\AssignProjectPermissions::class,
         'accessAHP' => \App\Http\Middleware\AdminHourPermissions::class,
         'accessB' => \App\Http\Middleware\BillingPermission::class,
+        'accessR' => \App\Http\Middleware\ReportsPermission::class,
         'changeP' => \App\Http\Middleware\ChangePasswordIsValid::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,

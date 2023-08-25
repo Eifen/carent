@@ -28,3 +28,5 @@ import "./UI/Billings/BillingIndex";
 import "./UI/Billings/BillingControl";
 //Control de contrasena
 import "./UI/changePassword";
+//Reportes
+import "./UI/Reports/ReportsIndex";
