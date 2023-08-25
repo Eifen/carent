@@ -41,8 +41,9 @@
                 <div for="value-rate">Tasa Promedio </div>
                 <!-- Contenido del label -->
                 <span id="value-hours">{{ project.hoursEstimated }}</span>
-                <span id="value-estimated-hours">{{ project.valueEstimated + project.currency_symbols }}</span>
-                <span id="value-rate">{{ project.average }}</span>
+                <span id="value-estimated-hours">{{ formatNumber(project.valueEstimated) + project.currency_symbols
+                }}</span>
+                <span id="value-rate">{{ formatNumber(project.average) }}</span>
             </div>
             <!-- Facturacion Adicional -->
             <div class="close-project-billing">
@@ -51,7 +52,7 @@
                 <div for="hours-additional-billing"> Honorarios Adicionales </div>
                 <!-- Contenido del label -->
                 <span id="hours-billing">{{ project.additionalHour }}</span>
-                <span id="hours-additional-billing">{{ project.valueExtra + project.currency_symbols }}</span>
+                <span id="hours-additional-billing">{{ formatNumber(project.valueExtra) + project.currency_symbols }}</span>
             </div>
             <!-- Valores finales ejecutados -->
             <div class="close-project-executed">
@@ -61,7 +62,8 @@
                 <!-- Contenido del label -->
                 <span id="hours-executed">{{ project.hoursReal }}</span>
                 <!-- //Tasa promedio final = total A+B/horas reales  -->
-                <span id="rate-executed">{{ ((totalRealFees + totalAditionalBilling) / project.hoursReal).toFixed(2)
+                <span id="rate-executed">{{ (formatNumber((totalRealFees + totalAditionalBilling) /
+                    project.hoursReal))
                 }}</span>
             </div>
             <!-- Valores realizados cobrados -->
@@ -173,7 +175,7 @@
                             <tr>
                                 <th class="col-sm-2 col-lg-2">Valor Monetario a recuperar HP exceso de horas</th>
                                 <td class="col-sm-2 col-lg-2" align="center">
-                                    {{ monetaryRecover(totalHoursAssigned, totalRealHours) }}</td>
+                                    {{ formatNumber(monetaryRecover(totalHoursAssigned, totalRealHours)) }}</td>
                             </tr>
                         </tbody>
                         <tfoot>
@@ -188,21 +190,22 @@
                             <tr>
                                 <th class="col-sm-6 col-lg-6">Valor monetario sin facturar(con base propuesta original)
                                 </th>
-                                <td class="col-sm-6 col-lg-6" align="center">{{ (project.valueEstimated -
-                                    totalRealFees).toFixed(3) }}
+                                <td class="col-sm-6 col-lg-6" align="center">{{ formatNumber(project.valueEstimated -
+                                    totalRealFees) }}
                                 </td>
                             </tr>
                             <tr>
                                 <th class="col-sm-6 col-lg-6">Valor Monetario adicional facturado</th>
-                                <td class="col-sm-6 col-lg-6" align="center">{{ totalAditionalBilling }}</td>
+                                <td class="col-sm-6 col-lg-6" align="center">{{ formatNumber(totalAditionalBilling) }}</td>
                             </tr>
                             <tr>
                                 <th class="col-sm-6 col-lg-6">Valor monetario(deficit para cubrir exceso de horas) o
                                     excedente
                                 </th>
-                                <td class="col-sm-6 col-lg-6" align="center">{{ (monetaryRecover(totalHoursAssigned,
-                                    totalRealHours) -
-                                    totalAditionalBilling).toFixed(3) }}
+                                <td class="col-sm-6 col-lg-6" align="center">{{
+                                    formatNumber(monetaryRecover(totalHoursAssigned,
+                                        totalRealHours) -
+                                        totalAditionalBilling) }}
                                 </td>
                                 <!-- <td class="col-sm-6 col-lg-6" align="center">{{
                                     getValueDeficit(monetaryRecover(totalHoursAssigned, totalRealHours),
@@ -231,7 +234,7 @@
                             <tr>
                                 <th class="col-sm-2 col-lg-2">Horas Cargadas al CARENT(Maestro de Trabajo)</th>
                                 <td class="col-sm-2 col-lg-2" align="center">{{ project.hoursEstimated }}</td>
-                                <td class="col-sm-2 col-lg-2" align="center">{{ project.average }}</td>
+                                <td class="col-sm-2 col-lg-2" align="center">{{ formatNumber(project.average) }}</td>
                             </tr>
                             <tr>
                                 <th class="col-sm-2 col-lg-2">Horas Reales Cargadas al CARENT</th>
@@ -241,11 +244,11 @@
                             </tr>
                             <tr>
                                 <th class="col-sm-2 col-lg-2"> Porcentaje de Ejecución</th>
-                                <td class="col-sm-2 col-lg-2" align="center">{{ (((project.hoursReal /
+                                <td class="col-sm-2 col-lg-2" align="center">{{ formatNumber(((project.hoursReal /
                                     project.hoursEstimated))) + '%' }}</td>
                                 <td class="col-sm-2 col-lg-2" align="center">{{ (totalRealFees / project.hoursReal) === 0 ?
                                     0 :
-                                    (((totalRealFees / project.hoursReal) / project.average)).toFixed(2) + '%' }}</td>
+                                    formatNumber(((totalRealFees / project.hoursReal) / project.average)) + '%' }}</td>
                             </tr>
                             <tr>
                                 <th class="col-sm-2 col-lg-2"> Exceso (Déficit) de Horas </th>
@@ -293,9 +296,14 @@
                 <textarea :disabled="this.loadInitial.closureProject !== null" v-model="message.sixth" rows="2"
                     cols="120"></textarea> -->
             </div>
-            <div v-if="loadInitial.closureProject === null && validate.isValid" class="buttonCRUD"
+            <div v-if="loadInitial.closureProject === null && validate.isValid && billingPay()" class="buttonCRUD"
                 :class="viewButton ? 'disable' : ''" id="button-crud" @click="emitClose()">Cerrar
                 proyecto</div>
+            <!-- {{-- Control de errores del boton --}} -->
+            <span class="form-ErrorInput" id="button-crud" v-else>
+                No se puede cerrar el proyecto si las fechas y comentarios están vacios, o todas las facturas no están
+                cobradas.
+            </span>
         </div>
     </div>
 </template>
@@ -466,6 +474,24 @@ export default {
     methods: {
         formatDate(dateEmit) {
             this.project.dateClose = `${dateEmit.year}-${dateEmit.month}-${dateEmit.day}`
+        },
+        /**
+         * Metodo que se encarga de revisar si el proyecto tiene todas sus facturas cobradas, caso positivo, activa el boton
+         */
+        billingPay() {
+            let countPay = 0 //Contador que revisa si todas las facturas no anuladas tienen cobro activo
+            let countBillings = 0 //Contador que revisa la cantidad de facturas sin concepto 4, es decir, nota de credito
+            this.loadInitial.billings.forEach(department => {
+                if (department.payment_date != null && department.billing_concept_id != 4) {
+                    countPay = countPay + 1 //Sumamos el contador en caso de que tenga una factura distinta de null
+                }
+                //Sacamos la cantidad de facturas sin notas de credito
+                if (department.billing_concept_id != 4) {
+                    countBillings = countBillings + 1;
+                }
+            });
+            //Retornamos en funcion de una comparacion entre las facturas cobradas y las registradas, deben ser iguales
+            return countPay == countBillings ? true : false
         },
         /**
          * Formatea un numero a nomenclatura europea
