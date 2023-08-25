@@ -482,7 +482,7 @@ export default {
             let countPay = 0 //Contador que revisa si todas las facturas no anuladas tienen cobro activo
             let countBillings = 0 //Contador que revisa la cantidad de facturas sin concepto 4, es decir, nota de credito
             this.loadInitial.billings.forEach(department => {
-                if (department.payment_date != null && department.billing_concept_id != 4) {
+                if (department.payment_date != null && department.billing_concept_id != 4 && department.billing_concept_id != 5) {
                     countPay = countPay + 1 //Sumamos el contador en caso de que tenga una factura distinta de null
                 }
                 //Sacamos la cantidad de facturas sin notas de credito
