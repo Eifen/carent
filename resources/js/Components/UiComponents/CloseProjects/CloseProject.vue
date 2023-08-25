@@ -486,7 +486,7 @@ export default {
                     countPay = countPay + 1 //Sumamos el contador en caso de que tenga una factura distinta de null
                 }
                 //Sacamos la cantidad de facturas sin notas de credito
-                if (department.billing_concept_id != 4) {
+                if (department.billing_concept_id != 4 && department.billing_concept_id != 5) {
                     countBillings = countBillings + 1;
                 }
             });
