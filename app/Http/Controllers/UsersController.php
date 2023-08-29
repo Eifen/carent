@@ -107,9 +107,9 @@ class UsersController extends Controller
 
         //Fecha de egreso null o vacia si se está editando
         if ($dataUser->input('isEdit')) {
-            $fechaEgreso = $dataUser->input('user')['DateEgreso'] != null || $dataUser->input('user')['DateEgreso'] != ''
+            $fechaEgreso = !empty($dataUser->input('user')['DateEgreso'])
                 ? date("Y-m-d", strtotime($dataUser->input('user')['DateEgreso']))
-                : null;
+                : ($dataUser->input('user')['IdStatus'] == 5 ? date("Y-m-d") : null);
 
             $paramsEdit = array(
                 $dataUser->input('user')['IdUser'],
@@ -121,7 +121,7 @@ class UsersController extends Controller
             $paramsUser = array_merge($paramsUser, $paramsEdit);
 
             //Si inactivamos el usuario, tambien debemos quitarle las horas
-            if ($dataUser->input('user')['IdStatus'] == 2) {
+            if ($dataUser->input('user')['IdStatus'] == 5 || $dataUser->input('user')['IdStatus'] == 2) {
                 $prepareRemove = HoursModel::getProjectHours($dataUser->input('user')['IdUser']);
                 HoursController::removeHoursInactiveUser($prepareRemove);
             }

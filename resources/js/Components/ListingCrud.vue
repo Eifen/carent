@@ -58,6 +58,8 @@
                                 reposo</span>
                             <span v-else-if="cursorTable == 'estatus' && columnData == 4" class="badge text-bg-warning">De
                                 vacaciones</span>
+                            <span v-else-if="cursorTable == 'estatus' && columnData == 5"
+                                class="badge text-bg-danger">Egresado</span>
                             <span v-else>{{ columnData }}</span>
                         </td>
                         <td :class="tableClass.setting"
