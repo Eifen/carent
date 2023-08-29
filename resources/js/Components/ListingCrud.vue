@@ -2,6 +2,9 @@
     <div :class="listClass" v-if="tableInfo.length != 0">
         <div :class="tableClass.title">{{ titleTable }}</div>
         <div :class="tableClass.create" v-if="viewCreate" @click="$emit('createbutton')">Crear {{ buttonTitle }}</div>
+        <json-excel class="list-container-excel" v-if="viewExcel" :data="controlTable.data" :name="titleExcel">
+            Exportar en Excel <font-awesome string-icon="fa-solid fa-file-excel"></font-awesome>
+        </json-excel>
         <!-- Búsqueda de datos en tiempo real -->
         <pagination v-if="viewSearch" :scope="DTOData" :columns-search="selectSearch" :catch-status-table="statusTable"
             @search-data="searchData">
@@ -33,7 +36,7 @@
                     <tr>
                         <!-- Table Object -->
                         <th scope="col" align="center" valign="middle" v-for="(title, cursor) in titleObject" :key="cursor">
-                            <span v-if="cursor != 'settings'">{{ title }}</span>
+                            <div class="table-th" v-if="cursor != 'settings'">{{ title }}</div>
                             <span v-else></span>
                         </th>
                     </tr>
@@ -99,6 +102,7 @@
 <script>
 import FontAwesome from "../Components/FontAwesome/FontAwesome.vue";
 import Pagination from "../Components/Pagination.vue";
+import JsonExcel from 'vue-json-excel3'
 
 export default {
     props: {
@@ -116,6 +120,8 @@ export default {
         selectSearch: Object, //Objeto que almaneca los select de búsqueda
         viewCreate: Boolean, // Boolean que se encarga de definir si ver el boton de crear
         viewSearch: Boolean, // Boolean que se encarga de definir si ver el sistema de búsqueda
+        viewExcel: Boolean, //Habilita descarga del reporte en un excel
+        titleExcel: String, //Titulo del archivo en excel, debe estar activar viewExcel
     },
     data() {
         return {
@@ -280,6 +286,6 @@ export default {
         }
     },
     computed: { DTOData() { return this.$data } }, //Enviamos el objeto data como parametro
-    components: { FontAwesome, Pagination },
+    components: { FontAwesome, Pagination, JsonExcel },
 };
 </script>

@@ -153,8 +153,11 @@ Route::prefix('/')->group(function () {
             });
             //Reportes
             Route::middleware('accessR')->group(function () {
-                route::prefix('/reports')->group(function () {
+                Route::prefix('/reports')->group(function () {
                     Route::get('/', [ReportsController::class, 'index'])->name('reports');
+                    Route::post('/list-reports', [ReportsController::class, 'getListReports']);
+                    Route::post('/list-closure-projects', [ReportsController::class, 'getClosureReport']);
+                    Route::post('/list-directive-inter', [ReportsController::class, "getDirectiveInterReport"]);
                 });
             });
         });

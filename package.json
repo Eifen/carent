@@ -28,6 +28,7 @@
         "lodash": "^4.17.21",
         "v-calendar": "^3.0.3",
         "vue": "^3.2.36",
+        "vue-json-excel3": "^1.0.1",
         "vue-loader": "^17.0.1",
         "vue3-toastify": "^0.1.6",
         "vuelidate": "^0.7.7"

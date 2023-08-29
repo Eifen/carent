@@ -8,12 +8,12 @@
                 :placeholder="'Ingrese ' + columnName" @input="emitInputSearch($event, columnName)" />
             <!-- Fechas  -->
             <input v-if="columnName == 'Fecha desde'" type="text" class="form-control" placeholder="Ejemplo: 1990-02-18"
-                id="birthday" aria-describedby="basic-addon1" v-model="inputDateStart" />
+                id="birthday" aria-describedby="basic-addon1" v-model="inputDateStart" disabled />
             <span v-if="columnName == 'Fecha desde'" class="input-group-text" id="basic-addon2">
                 <calendar @to-input="emitDateSearch($event, 'start')"></calendar>
             </span>
             <input v-if="columnName == 'Fecha hasta'" type="text" class="form-control" placeholder="Ejemplo: 1990-02-18"
-                id="birthday" aria-describedby="basic-addon1" v-model="inputDateEnd" />
+                id="birthday" aria-describedby="basic-addon1" v-model="inputDateEnd" disabled />
             <span v-if="columnName == 'Fecha hasta'" class="input-group-text" id="basic-addon2">
                 <calendar @to-input="emitDateSearch($event, 'end')"></calendar>
             </span>

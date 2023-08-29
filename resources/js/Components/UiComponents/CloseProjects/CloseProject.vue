@@ -301,7 +301,8 @@
                 proyecto</div>
             <!-- {{-- Control de errores del boton --}} -->
             <span class="form-ErrorInput" id="button-crud" v-else>
-                No se puede cerrar el proyecto si las fechas y comentarios están vacios, o todas las facturas no están
+                No se puede cerrar el proyecto si las fechas y comentarios están vacios, el proyecto ya esta cerrado o todas
+                las facturas no están
                 cobradas.
             </span>
         </div>
@@ -457,13 +458,13 @@ export default {
             })
 
             if (this.loadInitial.closureProject !== null) {
-                this.project.dateClose = this.loadInitial.closureProject.close_date;
-                this.message.first = this.loadInitial.closureProject.first_comment;
-                this.message.second = this.loadInitial.closureProject.second_comment;
-                this.message.third = this.loadInitial.closureProject.third_comment;
-                this.message.fourth = this.loadInitial.closureProject.fourth_comment;
-                this.message.fifth = this.loadInitial.closureProject.fifth_comment;
-                this.message.sixth = this.loadInitial.closureProject.sixth_comment;
+                this.project.dateClose = this.loadInitial.project.closure_date;
+                const closureJSON = JSON.parse(this.loadInitial.closureProject.closure_comments)
+                this.message.first = closureJSON.first_comment;
+                this.message.second = closureJSON.second_comment;
+                this.message.third = closureJSON.third_comment;
+                this.message.fourth = closureJSON.fourth_comment;
+                this.message.fifth = closureJSON.fifth_comment;
             }
 
         }

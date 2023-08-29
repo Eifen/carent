@@ -8,22 +8,24 @@
 
     //Titulo
     &-title{
-        grid-area: 1 / 1 / 2 / 3;
+        grid-area: 1 / 1 / 2 / 7;
         text-transform: uppercase;
+        text-align: center;
         font: bolder min(6vw,2em) sans-serif;
         padding: 20px;
     }
 
     //Create button
-    &-create{
-        grid-area: 1 / 4 / 2 / 7;
-        justify-self: end;
+    &-create,&-excel{
+        grid-area: 2 / 1 / 3 / 4;
+        justify-self: start;
+        margin-bottom: 10px;
         .buttonCRUD();
     }
 
     //Buscar
     &-search{
-        grid-area: 2 / 1 / 3 / 7;
+        grid-area: 3 / 1 / 4 / 7;
         display: grid;
         grid-template-columns: repeat(auto-fit,minmax(min(100%,30rem),1fr));
         justify-content: center;
@@ -63,7 +65,7 @@
     //Pagination
     &-pagination-container
     {
-        grid-area: 3 / 2 / 4 / 6;
+        grid-area: 4 / 2 / 5 / 6;
         justify-self: center;
         display: flex;
         justify-content: space-between;
@@ -89,13 +91,13 @@
 
     //Tabla
     &-table{
-        grid-area: 4 / 1 / 5 / 7;
+        grid-area: 5 / 1 / 6 / 7;
         .tableFormat();
     }
 
     //Tabla2
     &-table-2{
-        grid-area: 6 / 1 / 7 / 7;
+        grid-area: 7 / 1 / 8 / 7;
         margin-top: 1rem;
         .tableFormat();
     }

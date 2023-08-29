@@ -328,18 +328,16 @@ class ProjectController extends Controller
         //Inactivamos el proyecto
         DB::table('projects')
             ->where('project_id', '=', $closeRequest->input('projectId'))
-            ->update(["status_id" => 2]);
+            ->update(["status_id" => 2, "closure_date" => $closegDate]);
         //Cargamos la informacion
-        DB::table('projects_close_control')
+        DB::table('projects_closure_control')
             ->insert([
-                "close_date" => $closegDate,
                 "project_id" => $closeRequest->input('projectId'),
-                "first_comment" => $closeRequest->input('firstComment'),
-                "second_comment" => $closeRequest->input('secondComment'),
-                "third_comment" => $closeRequest->input('thirdComment'),
-                "fourth_comment" => $closeRequest->input('fourthComment'),
-                "fifth_comment" => $closeRequest->input('fifthComment'),
-                "sixth_comment" => $closeRequest->input('sixthComment'),
+                "closure_comments" => '{"first_comment": "' . $closeRequest->input('firstComment')
+                    . '","second_comment":"' . $closeRequest->input('secondComment')
+                    . '","third_comment":"' . $closeRequest->input('thirdComment')
+                    . '","fourth_comment":"' . $closeRequest->input('fourthComment')
+                    . '","fifth_comment":"' . $closeRequest->input('fifthComment') . '"}'
             ]);
 
         return response(array(

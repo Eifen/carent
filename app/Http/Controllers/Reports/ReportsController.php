@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Reports;
 
 use App\Http\Controllers\Controller;
+use App\Models\ReportsModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 
 class ReportsController extends Controller
 {
@@ -22,5 +24,38 @@ class ReportsController extends Controller
         if (Session::has('userId')) $this->permitControl = true;
 
         return view('index')->with("Session", $this->permitControl);
+    }
+
+    /**
+     * Metodo que se encarga de devolver la lista de los reportes registrados en el sistema
+     */
+    public function getListReports()
+    {
+        $getReports = DB::table('control_reports_type')
+            ->where('status_id', '=', 1)
+            ->get();
+
+        return response(array(
+            "response" => true,
+            "message" => $getReports
+        ), 200);
+    }
+
+    /**
+     * Metodo que se encarga de devolver el report de cierre de proyectos
+     */
+    public function getClosureReport()
+    {
+        return response(array(
+            "response" => true,
+            "message" => ReportsModel::getReport('closure_projects')
+        ), 200);
+    }
+
+    /**
+     * Metodo que se encarga de devolver el reporte directivo intermensual
+     */
+    public function getDirectiveInterReport()
+    {
     }
 }

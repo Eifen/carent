@@ -29,7 +29,8 @@ import {
     faCheck,
     faFolder,
     faMagnifyingGlass,
-    faNoteSticky
+    faNoteSticky,
+    faFileExcel,
 } from "@fortawesome/free-solid-svg-icons";
 //Brands Icons
 import {
@@ -66,7 +67,8 @@ library.add(
     faCheck,
     faFolder,
     faMagnifyingGlass,
-    faNoteSticky
+    faNoteSticky,
+    faFileExcel
 );
 
 export default {
