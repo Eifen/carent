@@ -15,13 +15,13 @@
         <ReportClosureProject :scope="migrateData" :key="isMounted"></ReportClosureProject>
     </div>
     <div v-if="selectReport == 2">
-        <ReportDirectiveInter :scope="migrateData" :key="isMounted"></ReportDirectiveInter>
+        <ReportDirectiveMonth :scope="migrateData" :key="isMounted"></ReportDirectiveMonth>
     </div>
 </template>
 <script>
 //Importamos los tipos de reportes
 import ReportClosureProject from '@/Components/UiComponents/Reports/ReportClosureProject.vue';
-import ReportDirectiveInter from '@/Components/UiComponents/Reports/ReportDirectiveInter.vue';
+import ReportDirectiveMonth from '@/Components/UiComponents/Reports/ReportDirectiveMonth.vue';
 export default {
     props: {
         listReports: Array //Lista de reportes que se abstraen desde la base de datos
@@ -51,6 +51,7 @@ export default {
                         throw request.data.message;
                     //Si no se activa la exceptión, asignamos el objeto
                     setTimeout(() => {
+                        console.log(request)
                         this.listData = request.data.message;
                         //Preparamos la paginación en función del tamaño del array resultante
                         if (this.listData.length < 50) {
@@ -68,13 +69,14 @@ export default {
     },
     watch: {
         selectReport(newSelect) {
+            console.log(newSelect)
             switch (newSelect) {
                 case 1:
                     this.getTable('/reports/list-closure-projects')
                     break;
-                // case 2:
-                //     this.getTable('/reports/list-directive-inter')
-                //     break;
+                case 2:
+                    this.getTable('/reports/list-directive-month')
+                    break;
             }
         },
         listData() {
@@ -84,6 +86,6 @@ export default {
     computed: {
         migrateData() { return this.$data }
     },
-    components: { ReportClosureProject, ReportDirectiveInter }
+    components: { ReportClosureProject, ReportDirectiveMonth }
 }
 </script>

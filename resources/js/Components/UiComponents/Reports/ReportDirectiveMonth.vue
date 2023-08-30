@@ -1,6 +1,6 @@
 <template>
     <div>
-        TODO: Reporte directivo intermensual
+        TODO: Reporte directivo mensual
     </div>
 </template>
 <script>

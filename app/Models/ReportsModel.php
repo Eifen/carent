@@ -17,4 +17,26 @@ class ReportsModel extends Model
         return DB::table('vw_reports_' . $reportTarget)
             ->get();
     }
+
+    /**
+     * Metodo que obtiene la informacion de los dias en un intervalo de fechas
+     * @param Date $start_date Fecha inicial
+     * @param Date $end_date Fecha final
+     */
+    public static function getTotalDays($start_date, $end_date)
+    {
+        DB::select('CALL sp_total_days(?,?,@interval)', [$start_date, $end_date]);
+        $getInterval = DB::select('SELECT @interval AS refHours');
+        return $getInterval[0]->refHours;
+    }
+
+    /**
+     * Metodo que se encarga de devolver las horas totales que cargo un usuario sea administrativas o proyectos
+     * @param Array $paramsHours Captura los parametros del procedimiento almacenado.
+     */
+    public static function getRegisterHours($paramsHours)
+    {
+        $getTotal = DB::select('call sp_report_hours(?,?,?,?)', $paramsHours);
+        return $getTotal;
+    }
 }

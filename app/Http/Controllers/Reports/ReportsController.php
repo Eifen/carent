@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Reports;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Reports\ReportDirective;
 use App\Models\ReportsModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -55,7 +56,12 @@ class ReportsController extends Controller
     /**
      * Metodo que se encarga de devolver el reporte directivo intermensual
      */
-    public function getDirectiveInterReport()
+    public function getDirectiveMonthReport()
     {
+        $monthReport = new ReportDirective();
+        return response(array(
+            "response" => true,
+            "message" => $monthReport->directiveMonthReport()
+        ), 200);
     }
 }

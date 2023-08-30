@@ -79,6 +79,20 @@ class UsersModel extends Model
     }
 
     /**
+     * Metodo que abstrae toda la informacion de los usuarios de la base de datos
+     */
+    public static function getInfoUsers()
+    {
+        return DB::select('SELECT us.user_id, CONCAT(us.first_name," ",us.second_name," ",us.first_surname," ",us.second_surname) as "user_name", us.position_id, us.department_id, uhp.position_name, uhd.department_name, us.status_id, cs.status_description
+                            FROM users us
+                            INNER JOIN users_hierarchy_positions uhp ON us.position_id = uhp.position_id
+                            INNER JOIN users_hierarchy_departments uhd ON us.department_id = uhd.department_id
+                            INNER JOIN control_status cs ON us.status_id = cs.status_id
+                            WHERE us.user_id != ?
+                            ORDER BY us.user_id ASC', [1]);
+    }
+
+    /**
      * Metodo que devuelve los datos del usuario
      * @param Int $codigo: Almacena el codigo del usuario
      * @return Array devuelve un array de referencias data["info1"] con la información del usuario
