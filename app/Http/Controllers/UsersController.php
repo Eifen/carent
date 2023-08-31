@@ -109,7 +109,7 @@ class UsersController extends Controller
         if ($dataUser->input('isEdit')) {
             $fechaEgreso = !empty($dataUser->input('user')['DateEgreso'])
                 ? date("Y-m-d", strtotime($dataUser->input('user')['DateEgreso']))
-                : ($dataUser->input('user')['IdStatus'] == 5 ? date("Y-m-d") : null);
+                : null;
 
             $paramsEdit = array(
                 $dataUser->input('user')['IdUser'],
