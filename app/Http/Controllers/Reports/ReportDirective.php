@@ -31,7 +31,7 @@ class ReportDirective extends Controller
             $adminHours = $this->adminHours($user->user_id);
             $projectHours = $this->projectHours($user->user_id);
             //Creamos el formato
-            // array_push($responseArray, array_merge($adminHours, $projectHours));
+            array_push($responseArray, $this->mergeHours($adminHours, $projectHours));
         }
         return $responseArray;
     }
@@ -78,6 +78,25 @@ class ReportDirective extends Controller
         $responseArray = array();
         //Hacemos un recorrido de las horas administrativas
         foreach ($adminHours as $admin) {
+            array_push(
+                $responseArray,
+                array(
+                    "mes" => $admin->month,
+                    "proj_hours" => 0,
+                    "admin_hours" => $admin->admin_hours
+                )
+            );
         }
+        $countMerge = 0; #Contador que se encarga de definir si el mes se repite
+        //Hacemos un recorrido de las horas a proyectos para hacer merge con las administrativas
+        foreach ($projectHours as $project) {
+            //Verificamos si ya existe el mes
+            foreach ($responseArray as $merge) {
+                //Condicion de mes
+
+            }
+        }
+
+        return $responseArray;
     }
 }
