@@ -75,11 +75,9 @@ class ReportDirective extends Controller
      */
     private function mergeHours($adminHours, $projectHours)
     {
-        $arrayAdmin = array();
-        $arrayProy = array();
+        $responseArray = array();
         //Hacemos un recorrido de las horas administrativas
-        foreach ($adminHours as $key => $value) {
-            # code...
+        foreach ($adminHours as $admin) {
         }
     }
 }

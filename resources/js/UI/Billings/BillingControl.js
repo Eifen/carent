@@ -57,7 +57,7 @@ const controlBillingApp = createApp({
             //Controles de string
             limitString: {
                 number: 20,
-                comments: 100,
+                comments: 10000,
             },
         };
     },
@@ -142,23 +142,25 @@ const controlBillingApp = createApp({
                 prepareParams
             );
 
-            //Hacemos un update de la informacion
-            axios
-                .post("/billings/control/refresh-billing", {
-                    project_id: this.updateModel.project.project_id,
-                })
-                .then((request) => {
-                    //Reasignamos la data
-                    this.updateModel = request.data;
-                    //Cerramos el modal
-                    this.controlBillingModal.hide();
-                    this.emptyFields(true);
-                    this.isClick = false;
-                })
-                .catch((error) => {
-                    console.error(error);
-                    this.isClick = false;
-                });
+            //Hacemos un update de la informacion luego de 1 segundo
+            setTimeout(() => {
+                axios
+                    .post("/billings/control/refresh-billing", {
+                        project_id: this.updateModel.project.project_id,
+                    })
+                    .then((request) => {
+                        //Reasignamos la data
+                        this.updateModel = request.data;
+                        //Cerramos el modal
+                        this.controlBillingModal.hide();
+                        this.emptyFields(true);
+                        this.isClick = false;
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        this.isClick = false;
+                    });
+            }, 1000);
         },
         //Limpia los inputs asociados a la facturacion a anular
         emptyInput() {
