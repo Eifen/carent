@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Reports\ReportDirective;
 use App\Models\ReportsModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 
@@ -63,5 +64,17 @@ class ReportsController extends Controller
             "response" => true,
             "message" => $monthReport->directiveMonthReport()
         ), 200);
+    }
+
+    /**
+     * Metodo que retorna las horas estimadas en funcion de una fecha con formato YYYY-MM
+     */
+    public function getHoursEstimatedMonth(Request $estimatedRequest)
+    {
+        $startDate = $estimatedRequest->input('date') . "-01";
+        $endDate = $estimatedRequest->input('date') . "-" . date('t', strtotime($startDate));
+
+        $reportInstance = new ReportDirective();
+        return response($reportInstance->getTotalDays($startDate, $endDate));
     }
 }

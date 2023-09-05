@@ -1,11 +1,11 @@
 <template>
     <div :class="scope.tableClass.search">
         <div class="input-group mb-3" v-for="(columnName, cursor) in columnsSearch" :key="cursor">
-            <span class="input-group-text" id="basic-addon1">{{ columnName }} </span>
+            <span v-if="columnName != 'Mes'" class="input-group-text" id="basic-addon1">{{ columnName }} </span>
             <!-- Representa el nombre de cada campo a buscar-->
-            <input v-if="columnName != 'Estatus' && columnName != 'Fecha desde' && columnName != 'Fecha hasta'" type="text"
-                class="form-control" :aria-label="columnName" aria-describedby="basic-addon1"
-                :placeholder="'Ingrese ' + columnName" @input="emitInputSearch($event, columnName)" />
+            <input v-if="columnTarget(columnName)" type="text" class="form-control" :aria-label="columnName"
+                aria-describedby="basic-addon1" :placeholder="'Ingrese ' + columnName"
+                @input="emitInputSearch($event, columnName)" />
             <!-- Fechas  -->
             <input v-if="columnName == 'Fecha desde'" type="text" class="form-control" placeholder="Ejemplo: 1990-02-18"
                 id="birthday" aria-describedby="basic-addon1" v-model="inputDateStart" disabled />
@@ -22,6 +22,24 @@
             <Multiselect v-if="columnName == 'Estatus'" v-model="multiSelectStatus" :options="multiSelectList.status"
                 placeholder="Seleccione el status" mode="single" class="form-control"
                 @input="emitSelectSearch($event, columnName)"></Multiselect>
+            <!-- Mes -->
+            <span v-if="columnName == 'Mes'" class="input-group-text" id="basic-addon1">Año</span>
+            <select v-if="columnName == 'Mes'" class="form-select form-control" v-model="inputYearSelect"
+                title="YearSelect">
+                <option v-for="(year, cursor) in listYear" :key="cursor" :value="cursor" :selected="cursor === 0"
+                    :disabled="cursor === 0">
+                    <span>{{ year }}</span>
+                </option>
+            </select>
+        </div>
+        <div v-if="inputYearSelect != 0" class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">Mes</span>
+            <select class="form-select form-control" v-model="inputMonthSelect" title="YearSelect">
+                <option v-for="(month, cursor) in listMonth" :key="cursor" :value="cursor" :selected="cursor === 0"
+                    :disabled="cursor === 0">
+                    <span>{{ month }}</span>
+                </option>
+            </select>
         </div>
     </div>
 </template>
@@ -42,15 +60,48 @@ export default {
         return {
             fieldsInput: {}, //Objeto encargado de distribuir el valor de cada input creado dinamicamente
             multiSelectStatus: null, //Captura los campos seleccionados del multiselect de estatus
+            monthReferences: [
+                "Enero",
+                "Febrero",
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Agosto",
+                "Septiembre",
+                "Octubre",
+                "Noviembre",
+                "Diciembre",
+            ], //Array de meses
             multiSelectList: {
                 "status": []
             }, //Almacena la informacion de los campos con multiselect
             inputDateStart: '', //Almacena la fecha desde
             inputDateEnd: '', //Almacena la fecha hasta
-            dtoSelectStatus: [] //Objeto de transferencia que almacena la estructura de la tabla status
+            inputYearSelect: 0, //Almacena el año seleccionado
+            inputMonthSelect: 0, //Almacena el mes seleccionado
+            dtoSelectStatus: [], //Objeto de transferencia que almacena la estructura de la tabla status
+            listMonth: [], //Formato de meses
+            listYear: ["Selecciona un año"], //Lista de years
         }
     },
     created() {
+        //Detectamos si el filtro es por meses
+        for (const key in this.columnsSearch) {
+            if (this.columnsSearch[key] == "Mes") {
+                //Cargamos los array de anos y meses
+                const nowDate = new Date();
+                for (let year = 2020; year <= nowDate.getFullYear(); year++) {
+                    this.listYear.push(year);
+                }
+                //Obtenemos el indice del año actual
+                const getYearIndex = this.listYear.indexOf(nowDate.getFullYear());
+                this.inputYearSelect = getYearIndex;
+                this.inputMonthSelect = nowDate.getMonth() + 1
+            }
+        }
+        //Obtenemos la informacion de status
         axios.post('/get-info-select', { 'table_target': this.catchStatusTable })
             .then(request => {
                 //Asignamos la data de transferencia
@@ -63,6 +114,18 @@ export default {
             .catch(error => { console.error(error) })
     },
     methods: {
+        /** Revisa si el buscador esta seleccionado en alguno particular o el general */
+        columnTarget(columnName) {
+            switch (true) {
+                case columnName != 'Estatus'
+                    && columnName != 'Fecha desde'
+                    && columnName != 'Fecha hasta'
+                    && columnName != 'Mes':
+                    return true;
+                default:
+                    return false;
+            }
+        },
         /**
          * Metodo que envia la informacion de los input al padre para filtrar la Data
          * @param {Event} inputEvent InputEvent Object para almacenar el valor del input
@@ -138,6 +201,35 @@ export default {
             } else {
                 this.inputDateEnd = oldDate
             }
+        },
+        //Detecta seleccion de año
+        inputYearSelect(newYear) {
+            this.listMonth = ["Seleccione un mes"]
+            //Cargamos los meses
+            const dateNow = new Date()
+            //Limpiamos el mes por defecto y cargamos el intervalo final
+            if (this.listYear[newYear] != dateNow.getFullYear()) this.inputMonthSelect = 0;
+            const endInterval = this.listYear[newYear] == dateNow.getFullYear() ? dateNow.getMonth() : this.monthReferences.length
+            //For de meses
+            for (let month = 0; month <= endInterval; month++) {
+                this.listMonth.push(this.monthReferences[month])
+            }
+        },
+        //Detecta seleccion de mes
+        inputMonthSelect(newMonth) {
+            const stringMonth = newMonth.toString()
+            const prepareDate = `${this.listYear[this.inputYearSelect]}-${stringMonth.padStart(2, "0")}`
+            //Formateamos el start date y el end date
+            console.log(prepareDate)
+            this.fieldsInput["mes"] = prepareDate;
+            //Actualizamos las horas estimadas
+            axios.post('/reports/get-hours-estimated', { date: prepareDate })
+                .then(request => {
+                    this.$emit('update-estimated', request.data)
+                })
+                .catch(error => { console.error(error) })
+            //Llamaos al evento personalizado
+            this.$emit('search-data', this.fieldsInput);
         }
     },
     components: { Multiselect, Calendar }

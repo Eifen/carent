@@ -21,6 +21,22 @@
         justify-self: start;
         margin-bottom: 10px;
         .buttonCRUD();
+        height: 60px;
+        line-height: 45px;
+    }
+
+    &-hours{
+        .cardContainer();
+        grid-area: 2 / 4 / 3 / 7;
+        border-left-color: @Button-Color;
+        margin-bottom: 10px;
+        box-shadow: 0.3em 0.3em 0.3em @Shadow-Hover-Color;
+
+        div{
+            color: @Button-Color;
+            .spanCardInfo();
+        }
+        .spanValue();
     }
 
     //Buscar

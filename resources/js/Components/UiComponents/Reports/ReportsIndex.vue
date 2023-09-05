@@ -70,6 +70,7 @@ export default {
     watch: {
         selectReport(newSelect) {
             console.log(newSelect)
+            this.isMounted = false
             switch (newSelect) {
                 case 1:
                     this.getTable('/reports/list-closure-projects')

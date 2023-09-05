@@ -5,9 +5,13 @@
         <json-excel class="list-container-excel" v-if="viewExcel" :data="controlTable.data" :name="titleExcel">
             Exportar en Excel <font-awesome string-icon="fa-solid fa-file-excel"></font-awesome>
         </json-excel>
+        <div class="list-container-hours" v-if="viewHours && hoursEstimated != 0">
+            <div>Cantidad de horas de Trabajo</div>
+            <span>{{ hoursEstimated }}</span>
+        </div>
         <!-- Búsqueda de datos en tiempo real -->
         <pagination v-if="viewSearch" :scope="DTOData" :columns-search="selectSearch" :catch-status-table="statusTable"
-            @search-data="searchData">
+            @search-data="searchData" @update-estimated="hoursEstimated = $event">
         </pagination>
         <!-- =====================================================================
         Paginacion
@@ -47,21 +51,26 @@
                         :class="[actualIndex === controlTable.active.index ? controlTable.active.class : null]"
                         @click="controlTable.active.index = actualIndex">
                         <!-- Recorremos el array de datos -->
-                        <td align="center"
+                        <template
                             v-for="(columnData, cursorTable) in controlTable.data[actualIndex + controlTable.minLength]"
                             :key="cursorTable">
-                            <span v-if="cursorTable == 'estatus' && columnData == 1"
-                                class="badge text-bg-success">activo</span>
-                            <span v-else-if="cursorTable == 'estatus' && columnData == 2"
-                                class="badge text-bg-danger">inactivo</span>
-                            <span v-else-if="cursorTable == 'estatus' && columnData == 3" class="badge text-bg-warning">De
-                                reposo</span>
-                            <span v-else-if="cursorTable == 'estatus' && columnData == 4" class="badge text-bg-warning">De
-                                vacaciones</span>
-                            <span v-else-if="cursorTable == 'estatus' && columnData == 5"
-                                class="badge text-bg-danger">Egresado</span>
-                            <span v-else>{{ columnData }}</span>
-                        </td>
+                            <td align="center"
+                                v-if="cursorTable != 'mes' && cursorTable != 'order' && cursorTable != 'ref_estimated'">
+                                <span v-if="cursorTable == 'estatus' && columnData == 1"
+                                    class="badge text-bg-success">activo</span>
+                                <span v-else-if="cursorTable == 'estatus' && columnData == 2"
+                                    class="badge text-bg-danger">inactivo</span>
+                                <span v-else-if="cursorTable == 'estatus' && columnData == 3"
+                                    class="badge text-bg-warning">De
+                                    reposo</span>
+                                <span v-else-if="cursorTable == 'estatus' && columnData == 4"
+                                    class="badge text-bg-warning">De
+                                    vacaciones</span>
+                                <span v-else-if="cursorTable == 'estatus' && columnData == 5"
+                                    class="badge text-bg-danger">Egresado</span>
+                                <span v-else>{{ columnData }}</span>
+                            </td>
+                        </template>
                         <td :class="tableClass.setting"
                             v-if="controlTable.data[actualIndex + controlTable.minLength] !== undefined && 'settings' in titleObject">
                             <!-- Condicion del icono del FontAwesome -->
@@ -123,11 +132,13 @@ export default {
         viewCreate: Boolean, // Boolean que se encarga de definir si ver el boton de crear
         viewSearch: Boolean, // Boolean que se encarga de definir si ver el sistema de búsqueda
         viewExcel: Boolean, //Habilita descarga del reporte en un excel
+        viewHours: Boolean, //Habilita la vista de horas
         titleExcel: String, //Titulo del archivo en excel, debe estar activar viewExcel
     },
     data() {
         return {
             listClass: "list-container",
+            hoursEstimated: 0, //Cantidad de horas estimadas, debe estar activado viewHours
             maxCursor: this.paginationLenght - 1,
             limitPage: this.paginationLenght,
             //Table Object
