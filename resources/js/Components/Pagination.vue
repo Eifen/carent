@@ -209,7 +209,7 @@ export default {
             const dateNow = new Date()
             //Limpiamos el mes por defecto y cargamos el intervalo final
             if (this.listYear[newYear] != dateNow.getFullYear()) this.inputMonthSelect = 0;
-            const endInterval = this.listYear[newYear] == dateNow.getFullYear() ? dateNow.getMonth() : this.monthReferences.length
+            const endInterval = this.listYear[newYear] == dateNow.getFullYear() ? dateNow.getMonth() : this.monthReferences.length - 1
             //For de meses
             for (let month = 0; month <= endInterval; month++) {
                 this.listMonth.push(this.monthReferences[month])
@@ -225,7 +225,9 @@ export default {
             //Actualizamos las horas estimadas
             axios.post('/reports/get-hours-estimated', { date: prepareDate })
                 .then(request => {
-                    this.$emit('update-estimated', request.data)
+                    newMonth == 0
+                        ? this.$emit('update-estimated', 0)
+                        : this.$emit('update-estimated', request.data)
                 })
                 .catch(error => { console.error(error) })
             //Llamaos al evento personalizado
