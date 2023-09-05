@@ -203,12 +203,13 @@ export default {
             }
         },
         //Detecta seleccion de año
-        inputYearSelect(newYear) {
+        inputYearSelect(newYear, oldYear) {
             this.listMonth = ["Seleccione un mes"]
             //Cargamos los meses
+            console.log(oldYear)
             const dateNow = new Date()
             //Limpiamos el mes por defecto y cargamos el intervalo final
-            if (this.listYear[newYear] != dateNow.getFullYear()) this.inputMonthSelect = 0;
+            if (oldYear != 0) this.inputMonthSelect = 0;
             const endInterval = this.listYear[newYear] == dateNow.getFullYear() ? dateNow.getMonth() : this.monthReferences.length - 1
             //For de meses
             for (let month = 0; month <= endInterval; month++) {
