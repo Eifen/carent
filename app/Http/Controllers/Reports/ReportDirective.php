@@ -134,7 +134,7 @@ class ReportDirective extends Controller
                 }
             }
             //Verificamos si se activo la bandera. Caso positivo actualizamos la informacion, negativo insertamos nueva fila
-            $flag !== 0
+            $flag != 0
                 ? $responseArray[$flag]["proj_hours"] = floatval($project->project_hours)
                 : array_push($responseArray, array(
                     "mes" => $project->month,
