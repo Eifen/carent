@@ -70,12 +70,12 @@ const projectsIndex = createApp({
                 this.viewCreate = true;
             }
             //Verificamos si puede cerrar proyectos
-            // if (accessSession.closeP == 1) {
-            //     this.projectsColumns.settings = {
-            //         ...this.projectsColumns.settings,
-            //         columnS3: "Cierre de proyecto",
-            //     };
-            // }
+            if (accessSession.closeP == 1) {
+                this.projectsColumns.settings = {
+                    ...this.projectsColumns.settings,
+                    columnS3: "Cierre de proyecto",
+                };
+            }
         },
         createProject() {
             window.location.href = "/projects/create";

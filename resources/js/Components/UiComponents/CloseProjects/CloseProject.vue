@@ -43,7 +43,7 @@
                 <span id="value-hours">{{ project.hoursEstimated }}</span>
                 <span id="value-estimated-hours">{{ formatNumber(project.valueEstimated) + project.currency_symbols
                 }}</span>
-                <span id="value-rate">{{ formatNumber(project.average) }}</span>
+                <span id="value-rate">{{ formatNumber(project.average) + project.currency_symbols }}</span>
             </div>
             <!-- Facturacion Adicional -->
             <div class="close-project-billing">
@@ -63,7 +63,7 @@
                 <span id="hours-executed">{{ project.hoursReal }}</span>
                 <!-- //Tasa promedio final = total A+B/horas reales  -->
                 <span id="rate-executed">{{ (formatNumber((totalRealFees + totalAditionalBilling) /
-                    project.hoursReal))
+                    project.hoursReal) + project.currency_symbols)
                 }}</span>
             </div>
             <!-- Valores realizados cobrados -->
@@ -409,7 +409,7 @@ export default {
             //Push ingresa un valor en la ultima fila del array
             //el valor de arriba es la propiedad que aparece en el objeto del controlador, esta en el console.log en este caso es billings
             //valor de abajo es el nombre del valor que le asigno a data
-            let countValues = this.project.valueEstimated + this.project.valueExtra
+            let countValues = this.project.valueEstimated
             this.loadInitial.billings.forEach(department => {
                 //Valores realizados cobrados
                 switch (true) {
@@ -427,23 +427,23 @@ export default {
                             //Valor completo para montos mayores al total
                             this.project.billingAditionalValue.push({
                                 "description": department.billing_concept_description,
-                                "value": getValue
+                                "value": `${getValue}$`
                             });
                         } else if (countValues < 0) {
                             //Valor completo
                             this.project.billingValue.push({
                                 "description": department.billing_concept_description,
-                                "value": (getValue + countValues) == 0 ? getValue : getValue + countValues
+                                "value": (getValue + countValues) == 0 ? `${getValue}$` : `${getValue + countValues}$`
                             });
                             //Restante
                             this.project.billingAditionalValue.push({
                                 "description": department.billing_concept_description,
-                                "value": countValues * (-1)
+                                "value": `${countValues * (-1)}$`
                             });
                         } else {
                             this.project.billingValue.push({
                                 "description": department.billing_concept_description,
-                                "value": getValue
+                                "value": `${getValue}$`
                             });
                         }
                         break;
