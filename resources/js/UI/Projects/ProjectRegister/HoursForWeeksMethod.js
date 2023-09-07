@@ -12,10 +12,21 @@ export const hoursForWeeksMethod = {
             this.inputAdminMultiSelect = [];
             //Distribuimos los días de la semana
             dateCompare.forEach((day) => {
-                this.listDayData.push({
-                    name: this.dayNames[day["day_of_week"]],
-                    date: day["register_date"],
-                });
+                const dayNow = new Date();
+                const dayActual = new Date(
+                    day["register_date"].substring(0, 4),
+                    day["register_date"].substring(5, 7) - 1,
+                    day["register_date"].substring(8, 10)
+                );
+                // Eliminar la hora de ambas fechas usando toDateString()
+                const formatNewDay = dayActual.toDateString();
+                const formatNowDay = dayNow.toDateString();
+                if (formatNowDay != formatNewDay) {
+                    this.listDayData.push({
+                        name: this.dayNames[day["day_of_week"]],
+                        date: day["register_date"],
+                    });
+                }
             });
             //Asignamos las horas a proyectos
             this.listProjectHourData = loadProjectHours;
