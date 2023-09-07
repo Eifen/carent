@@ -5,8 +5,9 @@
                 :disabled="cursor == 0">{{
                     hour.label }}</option>
         </select>
-        <textarea type="text" rows="5" class="form-control register-hour-select-hours" placeholder="Observaciones"
-            id="observation" aria-describedby="basic-addon4" autocomplete="nope" v-model="inputObservation"></textarea>
+        <textarea v-if="inputHourSelected != 0" type="text" rows="5" class="form-control register-hour-select-hours"
+            placeholder="Observaciones" id="observation" aria-describedby="basic-addon4" autocomplete="nope"
+            v-model="inputObservation"></textarea>
         <!-- Mensajes de error en Observaciones-->
         <div class="form-ErrorInput" v-if="inputObservationError != ''">
             <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
@@ -38,7 +39,7 @@ export default {
         return {
             limitHours: [{
                 value: 0,
-                label: "Hora trabajada"
+                label: "Horas trabajadas"
             }], // Array que muestra las horas en un intervalo de 0.30 a 11 horas
             intervalHours: 1 / 2, //Determina el intervalo entre horas en fracciones
             maximumHours: 12, // Multiplicador de horas
