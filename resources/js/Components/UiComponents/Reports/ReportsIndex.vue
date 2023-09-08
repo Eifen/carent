@@ -51,7 +51,6 @@ export default {
                         throw request.data.message;
                     //Si no se activa la exceptión, asignamos el objeto
                     setTimeout(() => {
-                        console.log(request)
                         this.listData = request.data.message;
                         //Preparamos la paginación en función del tamaño del array resultante
                         if (this.listData.length < 50) {
@@ -69,7 +68,6 @@ export default {
     },
     watch: {
         selectReport(newSelect) {
-            console.log(newSelect)
             this.isMounted = false
             switch (newSelect) {
                 case 1:

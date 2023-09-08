@@ -206,7 +206,6 @@ export default {
         inputYearSelect(newYear, oldYear) {
             this.listMonth = ["Seleccione un mes"]
             //Cargamos los meses
-            console.log(oldYear)
             const dateNow = new Date()
             //Limpiamos el mes por defecto y cargamos el intervalo final
             if (oldYear != 0) this.inputMonthSelect = 0;
@@ -221,7 +220,6 @@ export default {
             const stringMonth = newMonth.toString()
             const prepareDate = `${this.listYear[this.inputYearSelect]}-${stringMonth.padStart(2, "0")}`
             //Formateamos el start date y el end date
-            console.log(prepareDate)
             this.fieldsInput["mes"] = prepareDate;
             //Actualizamos las horas estimadas
             axios.post('/reports/get-hours-estimated', { date: prepareDate })
