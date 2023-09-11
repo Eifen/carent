@@ -42,12 +42,12 @@ class ReportDirective extends Controller
             $formatArray = array();
             foreach ($hoursArray as $hours) {
                 $totalHours = $hours["admin_hours"] + $hours["proj_hours"];
-                $adminPer = ($hours["admin_hours"] * 100) / ($totalHours == 0 ? 1 : $totalHours);
-                $proyPer = ($hours["proj_hours"] * 100) / ($totalHours == 0 ? 1 : $totalHours);
                 $startDate = $hours["mes"] . "-01";
                 $endDate = $hours["mes"] . "-" . date("t", strtotime($startDate)); //Obtenemos el ultimo dia del mes
                 //Capturamos la referencia de horas
                 $refHours = $this->getRefTotal($startDate, $endDate, $user); //Referencia total de horas
+                $adminPer = ($hours["admin_hours"] * 100) / ($refHours == 0 ? 1 : $refHours);
+                $proyPer = ($hours["proj_hours"] * 100) / ($refHours == 0 ? 1 : $refHours);
                 $totalPer = ($totalHours * 100) / ($refHours == 0 ? 1 : $refHours);
                 //Hacemos push para el formato
                 array_push($formatArray, array(
@@ -123,24 +123,19 @@ class ReportDirective extends Controller
                 )
             );
         }
-        $flag = 0;
         //Hacemos un recorrido de las horas a proyectos para hacer merge con las administrativas
         foreach ($projectHours as $project) {
             //Verificamos si ya existe el mes
-            foreach ($responseArray as $position => $merge) {
-                if ($merge["mes"] == $project->month) {
-                    $flag = $position; #Capturamos la posicion
-                    break;
-                }
-            }
-            //Verificamos si se activo la bandera. Caso positivo actualizamos la informacion, negativo insertamos nueva fila
-            $flag !== 0
-                ? $responseArray[$flag]["proj_hours"] = floatval($project->project_hours)
-                : array_push($responseArray, array(
+            $keySearch = array_search($project->month, array_column($responseArray, "mes"));
+            if ($keySearch === false) {
+                array_push($responseArray, array(
                     "mes" => $project->month,
                     "proj_hours" => floatval($project->project_hours),
                     "admin_hours" => 0
                 ));
+            } else {
+                $responseArray[$keySearch]["proj_hours"] = floatval($project->project_hours);
+            }
         }
 
         #Una vez terminado el merge, acomodamos el array

@@ -85,7 +85,8 @@ class ConfigController extends Controller
     {
         $tableTarget = $params->input('table_target') != '' ? $params->input('table_target') : null;
         $arrayInfo = [
-            "status" => ConfigModel::GetAllStatus($tableTarget)
+            "status" => ConfigModel::GetAllStatus($tableTarget),
+            "areas" => ConfigModel::getAllDataStatusControl('users_hierarchy_departments')
         ];
 
         return response($arrayInfo, 200);

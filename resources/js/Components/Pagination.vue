@@ -22,6 +22,10 @@
             <Multiselect v-if="columnName == 'Estatus'" v-model="multiSelectStatus" :options="multiSelectList.status"
                 placeholder="Seleccione el status" mode="single" class="form-control"
                 @input="emitSelectSearch($event, columnName)"></Multiselect>
+            <!-- Divisiones -->
+            <Multiselect v-if="columnName == 'Area'" v-model="multiSelectStatus" :options="multiSelectList.areas"
+                placeholder="Seleccione el area" mode="single" class="form-control"
+                @input="emitSelectSearch($event, columnName)"></Multiselect>
             <!-- Mes -->
             <span v-if="columnName == 'Mes'" class="input-group-text" id="basic-addon1">Año</span>
             <select v-if="columnName == 'Mes'" class="form-select form-control" v-model="inputYearSelect"
@@ -75,13 +79,15 @@ export default {
                 "Diciembre",
             ], //Array de meses
             multiSelectList: {
-                "status": []
+                "status": [],
+                "areas": []
             }, //Almacena la informacion de los campos con multiselect
             inputDateStart: '', //Almacena la fecha desde
             inputDateEnd: '', //Almacena la fecha hasta
             inputYearSelect: 0, //Almacena el año seleccionado
             inputMonthSelect: 0, //Almacena el mes seleccionado
             dtoSelectStatus: [], //Objeto de transferencia que almacena la estructura de la tabla status
+            dtoSelectArea: [], //Objeto de transferencia que almacena a estructur del las divisiones
             listMonth: [], //Formato de meses
             listYear: ["Selecciona un año"], //Lista de years
         }
@@ -106,9 +112,16 @@ export default {
             .then(request => {
                 //Asignamos la data de transferencia
                 this.dtoSelectStatus = request.data.status
+                this.dtoSelectArea = request.data.areas
                 //Status multiselect
                 for (const key in this.dtoSelectStatus) {
                     this.multiSelectList.status.push(this.dtoSelectStatus[key].status_description)
+                }
+                //Division multiselect
+                for (const key2 in this.dtoSelectArea) {
+                    if (key2 != 0) {
+                        this.multiSelectList.areas.push(this.dtoSelectArea[key2].department_name)
+                    }
                 }
             })
             .catch(error => { console.error(error) })
@@ -120,7 +133,8 @@ export default {
                 case columnName != 'Estatus'
                     && columnName != 'Fecha desde'
                     && columnName != 'Fecha hasta'
-                    && columnName != 'Mes':
+                    && columnName != 'Mes'
+                    && columnName != 'Area':
                     return true;
                 default:
                     return false;
@@ -157,6 +171,16 @@ export default {
                     //Si encuentra la Id en funcion de su descripcion, asignamos la variables
                     if (statusId.length != 0) {
                         this.fieldsInput[columnName.toLowerCase()] = statusId[0].status_id
+                    }
+                    break;
+                //Divisiones
+                case columnName === 'Area':
+                    const areaId = this.dtoSelectArea.filter(area => {
+                        return area.department_name.includes(selectTarget)
+                    })
+                    //Si encuentra la Id en funcion de sus descripcion, asignamos las variables
+                    if (areaId.length != 0) {
+                        this.fieldsInput[columnName.toLowerCase()] = selectTarget;
                     }
                     break;
             }
