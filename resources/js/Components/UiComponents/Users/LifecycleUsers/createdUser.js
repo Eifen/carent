@@ -45,7 +45,7 @@ export const createdMixin = (self) => {
                 self["inputEstadoSelect"] = self.$props.dataEdit.state_id;
                 self["inputMunicipioSelect"] =
                     self.$props.dataEdit.municipality_id;
-                self["inputParroquiaSelect "] = self.$props.dataEdit.parish_id;
+                self["inputParroquiaSelect"] = self.$props.dataEdit.parish_id;
                 self["inputDivisionSelect"] =
                     self.$props.dataEdit.department_id;
                 self["inputCargoSelect"] = self.$props.dataEdit.position_id;

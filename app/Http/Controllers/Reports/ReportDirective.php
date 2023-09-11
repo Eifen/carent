@@ -41,11 +41,11 @@ class ReportDirective extends Controller
             //Generamos el formato
             $formatArray = array();
             foreach ($hoursArray as $hours) {
-                $totalHours = $hours->admin_hours + $hours->project_hours;
-                $adminPer = ($hours->admin_hours * 100) / ($totalHours == 0 ? 1 : $totalHours);
-                $proyPer = ($hours->project_hours * 100) / ($totalHours == 0 ? 1 : $totalHours);
-                $startDate = $hours->month . "-01";
-                $endDate = $hours->month . "-" . date("t", strtotime($startDate)); //Obtenemos el ultimo dia del mes
+                $totalHours = $hours["admin_hours"] + $hours["proj_hours"];
+                $adminPer = ($hours["admin_hours"] * 100) / ($totalHours == 0 ? 1 : $totalHours);
+                $proyPer = ($hours["proj_hours"] * 100) / ($totalHours == 0 ? 1 : $totalHours);
+                $startDate = $hours["mes"] . "-01";
+                $endDate = $hours["mes"] . "-" . date("t", strtotime($startDate)); //Obtenemos el ultimo dia del mes
                 //Capturamos la referencia de horas
                 $refHours = $this->getRefTotal($startDate, $endDate, $user); //Referencia total de horas
                 $totalPer = ($totalHours * 100) / ($refHours == 0 ? 1 : $refHours);
@@ -54,10 +54,10 @@ class ReportDirective extends Controller
                     "nombre" => $user->user_name,
                     "cargo" => $user->position_name,
                     "area" => $user->department_name,
-                    "mes" => $hours->month,
-                    "proy_hours" => $hours->project_hours,
+                    "mes" => $hours["mes"],
+                    "proy_hours" => $hours["proj_hours"],
                     "percen_proy" => number_format($proyPer, 2, ",", "."),
-                    "admin_hours" => $hours->admin_hours,
+                    "admin_hours" => $hours["admin_hours"],
                     "percen_admon" => number_format($adminPer, 2, ",", "."),
                     "total_hours" => $totalHours,
                     "percen_total" => number_format($totalPer, 2, ",", "."),
@@ -111,25 +111,43 @@ class ReportDirective extends Controller
      */
     private function mergeHours($adminHours, $projectHours)
     {
-        $adminDTO = $adminHours;
-        $projectDTO = $projectHours;
-        $DTOMerge = array_replace_recursive($adminDTO, $projectDTO);
-        //Recorremos el array resultante
-        foreach ($DTOMerge as $key => $value) {
-            if (!isset($value->admin_hours)) {
-                // Si no existe la propiedad admin_hours, crearla y asignarle 0
-                $DTOMerge[$key]->admin_hours = 0;
-            }
-            if (!isset($value->project_hours)) {
-                // Si no existe la propiedad project_hours, crearla y asignarle 0
-                $DTOMerge[$key]->project_hours = 0;
-            }
+        $responseArray = array();
+        //Hacemos un recorrido de las horas administrativas
+        foreach ($adminHours as $admin) {
+            array_push(
+                $responseArray,
+                array(
+                    "mes" => $admin->month,
+                    "proj_hours" => 0,
+                    "admin_hours" => floatval($admin->admin_hours)
+                )
+            );
         }
+        $flag = 0;
+        //Hacemos un recorrido de las horas a proyectos para hacer merge con las administrativas
+        foreach ($projectHours as $project) {
+            //Verificamos si ya existe el mes
+            foreach ($responseArray as $position => $merge) {
+                if ($merge["mes"] == $project->month) {
+                    $flag = $position; #Capturamos la posicion
+                    break;
+                }
+            }
+            //Verificamos si se activo la bandera. Caso positivo actualizamos la informacion, negativo insertamos nueva fila
+            $flag !== 0
+                ? $responseArray[$flag]["proj_hours"] = floatval($project->project_hours)
+                : array_push($responseArray, array(
+                    "mes" => $project->month,
+                    "proj_hours" => floatval($project->project_hours),
+                    "admin_hours" => 0
+                ));
+        }
+
         #Una vez terminado el merge, acomodamos el array
-        usort($DTOMerge, function ($a, $b) {
-            return strtotime($a->month) - strtotime($b->month);
+        usort($responseArray, function ($a, $b) {
+            return strtotime($a["mes"]) - strtotime($b["mes"]);
         });
-        return $DTOMerge;
+        return $responseArray;
     }
 
     /**
