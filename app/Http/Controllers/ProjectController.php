@@ -85,9 +85,9 @@ class ProjectController extends Controller
         //Filtramos por fecha
         $getAdminHours["message"] = array_filter($getAdminHours["message"], function ($adminHour) {
             //Obtenemos la actual
-            $actualDate = date("Y-m-01");
+            $actualDate = date("y-m-d");
             //Obtenemos la fecha anterior a un mes
-            $oneMonthDate = date("Y-m-d", strtotime("-2 months"));
+            $oneMonthDate = date("Y-m-01", strtotime("-2 months"));
             return $adminHour->fecha >= $oneMonthDate && $adminHour->fecha <= $actualDate;
         });
 
