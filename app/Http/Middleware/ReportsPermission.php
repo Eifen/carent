@@ -16,7 +16,7 @@ class ReportsPermission
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ((Session::has('userId') && Session::get('userId') != 1) || !Session::has('userId')) {
+        if ((Session::has('userPermissions') && Session::get('userPermissions')['reportP'] != 1) || !Session::has('userPermissions')) {
             return redirect('/');
         }
         return $next($request);

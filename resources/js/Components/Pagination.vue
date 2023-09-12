@@ -26,6 +26,10 @@
             <Multiselect v-if="columnName == 'Area'" v-model="multiSelectStatus" :options="multiSelectList.areas"
                 placeholder="Seleccione el area" mode="single" class="form-control"
                 @input="emitSelectSearch($event, columnName)"></Multiselect>
+            <!-- Concepto -->
+            <Multiselect v-if="columnName == 'Concepto'" v-model="multiSelectStatus" :options="multiSelectList.concept"
+                placeholder="Seleccione el concepto" mode="single" class="form-control"
+                @input="emitSelectSearch($event, columnName)"></Multiselect>
             <!-- Mes -->
             <span v-if="columnName == 'Mes'" class="input-group-text" id="basic-addon1">Año</span>
             <select v-if="columnName == 'Mes'" class="form-select form-control" v-model="inputYearSelect"
@@ -80,7 +84,8 @@ export default {
             ], //Array de meses
             multiSelectList: {
                 "status": [],
-                "areas": []
+                "areas": [],
+                "concept": []
             }, //Almacena la informacion de los campos con multiselect
             inputDateStart: '', //Almacena la fecha desde
             inputDateEnd: '', //Almacena la fecha hasta
@@ -88,6 +93,7 @@ export default {
             inputMonthSelect: 0, //Almacena el mes seleccionado
             dtoSelectStatus: [], //Objeto de transferencia que almacena la estructura de la tabla status
             dtoSelectArea: [], //Objeto de transferencia que almacena a estructur del las divisiones
+            dtoSelectConcept: [], //Objeto de transferencia que almacena los conceptos
             listMonth: [], //Formato de meses
             listYear: ["Selecciona un año"], //Lista de years
         }
@@ -113,6 +119,7 @@ export default {
                 //Asignamos la data de transferencia
                 this.dtoSelectStatus = request.data.status
                 this.dtoSelectArea = request.data.areas
+                this.dtoSelectConcept = request.data.concept
                 //Status multiselect
                 for (const key in this.dtoSelectStatus) {
                     this.multiSelectList.status.push(this.dtoSelectStatus[key].status_description)
@@ -122,6 +129,10 @@ export default {
                     if (key2 != 0) {
                         this.multiSelectList.areas.push(this.dtoSelectArea[key2].department_name)
                     }
+                }
+                //Concepto multiselect
+                for (const key3 in this.dtoSelectConcept) {
+                    this.multiSelectList.concept.push(this.dtoSelectConcept[key3].concept_description)
                 }
             })
             .catch(error => { console.error(error) })
@@ -134,7 +145,8 @@ export default {
                     && columnName != 'Fecha desde'
                     && columnName != 'Fecha hasta'
                     && columnName != 'Mes'
-                    && columnName != 'Area':
+                    && columnName != 'Area'
+                    && columnName != 'Concepto':
                     return true;
                 default:
                     return false;
@@ -180,6 +192,16 @@ export default {
                     })
                     //Si encuentra la Id en funcion de sus descripcion, asignamos las variables
                     if (areaId.length != 0) {
+                        this.fieldsInput[columnName.toLowerCase()] = selectTarget;
+                    }
+                    break;
+                //Concepto
+                case columnName === 'Concepto':
+                    const conceptId = this.dtoSelectConcept.filter(concept => {
+                        return concept.concept_description.includes(selectTarget)
+                    })
+                    //Si encuentra la Id en funcion de sus descripcion, asignamos las variables
+                    if (conceptId.length != 0) {
                         this.fieldsInput[columnName.toLowerCase()] = selectTarget;
                     }
                     break;

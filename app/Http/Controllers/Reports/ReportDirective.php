@@ -27,6 +27,41 @@ class ReportDirective extends Controller
         $this->startDate = date('2020-03-01');
         $this->endDate = date('Y-m-d');
     }
+    public function adminHoursReport()
+    {
+        $responseArray = DB::select("SELECT * FROM control_load_admin_hours clah
+        INNER JOIN control_concept_admin_hours ccah ON clah.admin_hours_id = ccah.admin_hours_id
+        WHERE clah.register_date BETWEEN ? AND ?", [$this->startDate, $this->endDate]);
+
+        return $responseArray;
+    }
+
+    /**
+     * Metodo que se encarga de crear el formato del reporte
+     * @param Array $listToFormat Recibe la lista desde el controlador de reportes
+     */
+    public function adminHoursFormat($listToFormat)
+    {
+        $responseArray = array();
+        foreach ($listToFormat as $adminHour) {
+            $formatArray = array();
+            //Comparamos la id del usuario con la id del listToFormat
+            foreach ($this->users as $user) {
+                if ($adminHour["user_id"] == $user->user_id) {
+                    array_push($responseArray, array(
+                        "nombre" => $user->user_name,
+                        "código" => $user->user_code,
+                        "concepto" => $adminHour["concept_admin"],
+                        "horas" => $adminHour["admin_hours"]
+                    ));
+                }
+            }
+            //Cargamos el formato al array resultante
+            // array_push($responseArray, $formatArray);
+        }
+        //Importamos el nuevo array
+        return $responseArray;
+    }
     /**
      * Metodo principal de la clase que se encarga de estructurar todo el esquema del reporte directivo
      */

@@ -159,6 +159,8 @@ Route::prefix('/')->group(function () {
                     Route::post('/list-closure-projects', [ReportsController::class, 'getClosureReport']);
                     Route::post('/get-hours-estimated', [ReportsController::class, 'getHoursEstimatedMonth']);
                     Route::post('/list-directive-month', [ReportsController::class, "getDirectiveMonthReport"]);
+                    Route::post('/list-admin-hours', [ReportsController::class, "getAdminReport"]);
+                    Route::post('/admin-hours-report', [ReportsController::class, "adminIntervalReport"]);
                 });
             });
         });

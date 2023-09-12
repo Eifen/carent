@@ -48,6 +48,10 @@ class LoginModel extends Model
             "adminP" => 0,
             "closeP" => 0,
             "billingP" => 0,
+            "reportP" => 0,
+            "rclosureP" => 0,
+            "rdirectiveMP" => 0,
+            "rhorasP" => 0
         );
         if (!$userAccess->isEmpty()) {
             foreach ($userAccess as $permission) {
@@ -79,6 +83,22 @@ class LoginModel extends Model
                         //facturacion
                     case 10:
                         $arrayAccess['billingP'] = 1;
+                        break;
+                        //Reportes totales
+                    case 15:
+                        $arrayAccess["reportP"] = 1;
+                        break;
+                        //reporte de cierre
+                    case 16:
+                        $arrayAccess['rclosureP'] = 1;
+                        break;
+                        //reporte directivo mensual
+                    case 17:
+                        $arrayAccess['rdirectiveMP'] = 1;
+                        break;
+                        //reporte horas no cargables
+                    case 18:
+                        $arrayAccess['rhorasP'] = 1;
                         break;
                 }
             }

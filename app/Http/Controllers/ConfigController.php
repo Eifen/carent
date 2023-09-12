@@ -86,7 +86,8 @@ class ConfigController extends Controller
         $tableTarget = $params->input('table_target') != '' ? $params->input('table_target') : null;
         $arrayInfo = [
             "status" => ConfigModel::GetAllStatus($tableTarget),
-            "areas" => ConfigModel::getAllDataStatusControl('users_hierarchy_departments')
+            "areas" => ConfigModel::getAllDataStatusControl('users_hierarchy_departments'),
+            "concept" => ConfigModel::getAllDataStatusControl('control_concept_admin_hours')
         ];
 
         return response($arrayInfo, 200);

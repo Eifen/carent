@@ -67,6 +67,31 @@ class ReportsController extends Controller
     }
 
     /**
+     * Metodo que se encarga de devolver un reporte de todas las horas administrativas
+     */
+    public function getAdminReport()
+    {
+        $hoursReport = new ReportDirective();
+        return response(array(
+            "response" => true,
+            "message" => $hoursReport->adminHoursReport()
+        ), 200);
+    }
+
+    /**
+     * Metodo que crea el formato para el reporte y lo devuelve al axios
+     * @param Request $listRequest recibe desde HTTP la lista a formatear
+     */
+    public function adminIntervalReport(Request $listRequest)
+    {
+        $hoursReport = new ReportDirective();
+        return response(array(
+            "response" => true,
+            "message" => $hoursReport->adminHoursFormat($listRequest->input('adminList'))
+        ), 200);
+    }
+
+    /**
      * Metodo que retorna las horas estimadas en funcion de una fecha con formato YYYY-MM
      */
     public function getHoursEstimatedMonth(Request $estimatedRequest)

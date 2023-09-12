@@ -9,4 +9,58 @@
     &-select{
         grid-column: span 2;
     }
+
+    //Title
+    &-title{
+        grid-column: span 10;
+        font-size: 2em;
+        font-weight: bolder;
+        text-align: center;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+
+    //List
+    &-list{
+        grid-column: span 10;
+    }
+
+    //Search
+    &-search{
+        grid-column: span 10;
+        display: grid;
+        grid-template-columns: repeat(auto-fit,minmax(min(100%,30rem),1fr));
+        justify-content: center;
+        align-items: center;
+        grid-auto-flow: dense;
+        gap: 10px;
+        padding: 0 20px;
+
+        & .input-group-text{
+            display: inline-block;
+            background: @Background-Color;
+            width: 30%;
+            height: 60px;
+            min-width: 60px;
+            text-align: center;
+            line-height: 45px;
+            padding: 6px;
+            border: 1px solid @Text-Color;
+            white-space: pre-line;
+            word-wrap: break-word;
+
+            &[for="calendar"]{
+                width: 5%;
+            }
+
+            & .form-select{
+                .selectIntoAddon();
+            }
+        }
+
+        & .form-control{
+            border: 1px solid @Text-Color;
+            width: 65%;
+        }
+    }
 }

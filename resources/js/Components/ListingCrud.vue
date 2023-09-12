@@ -111,8 +111,8 @@
 </template>
 
 <script>
-import FontAwesome from "../Components/FontAwesome/FontAwesome.vue";
-import Pagination from "../Components/Pagination.vue";
+import FontAwesome from "@/Components/FontAwesome/FontAwesome.vue";
+import Pagination from "@/Components/Pagination.vue";
 import JsonExcel from 'vue-json-excel3'
 
 export default {
