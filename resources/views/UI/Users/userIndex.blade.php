@@ -23,6 +23,7 @@
                         <div class="modal-preview-thead" for="thead-clientM">Menu cliente</div>
                         <div class="modal-preview-thead" for="thead-projectM">Menu proyectos</div>
                         <div class="modal-preview-thead" for="thead-billingM">Menu facturacion</div>
+                        <div class="modal-preview-thead" for="thead-reportM">Menu Reportes</div>
                         {{-- Cuerpo del encabezado --}}
                         <div class="modal-preview-tbody" for="tbody-code">@{{ previewUserInfo.cédula }}</div>
                         <div class="modal-preview-tbody" for="tbody-address">@{{ previewUserInfo.correo }}</div>
@@ -67,6 +68,28 @@
                                 <input class="form-check-input" v-model="previewUserInfo.billingP" type="checkbox"
                                     :checked="previewUserInfo.billingP">
                                 <label class="form-check-label">Control de facturas</label>
+                            </div>
+                        </div>
+                        <div class="modal-preview-tbody" for="tbody-reportM">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" v-model="previewUserInfo.reportP" type="checkbox"
+                                    :checked="previewUserInfo.reportP">
+                                <label class="form-check-label">Menu reportes</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" v-model="previewUserInfo.rclosureP" type="checkbox"
+                                    :checked="previewUserInfo.rclosureP">
+                                <label class="form-check-label">Reporte de cierre de proyectos</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" v-model="previewUserInfo.rdirectiveMP" type="checkbox"
+                                    :checked="previewUserInfo.rdirectiveMP">
+                                <label class="form-check-label">Reporte directivo mensual</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" v-model="previewUserInfo.rhorasP" type="checkbox"
+                                    :checked="previewUserInfo.rhorasP">
+                                <label class="form-check-label">Reporte de horas no cargables</label>
                             </div>
                         </div>
                     </div>

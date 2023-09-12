@@ -30,6 +30,10 @@ const usersApp = createApp({
                 adminP: false,
                 closeP: false,
                 billingP: false,
+                reportP: false,
+                rclosureP: false,
+                rdirectiveMP: false,
+                rhorasP: false,
             },
             tableTarget: "users",
             controlUserModal: null,
@@ -72,6 +76,10 @@ const usersApp = createApp({
                 adminP: [8, false],
                 closeP: [13, false],
                 billingP: [10, false],
+                reportP: [15, false],
+                rclosureP: [16, false],
+                rdirectiveMP: [17, false],
+                rhorasP: [18, false],
             };
             //Acomodamos los permisos
             for (const field in this.previewUserInfo) {
@@ -103,6 +111,22 @@ const usersApp = createApp({
                     //Billings
                     case field == "billingP" && this.previewUserInfo[field]:
                         prepareParams["billingP"][1] = true;
+                        break;
+                    //Report
+                    case field == "reportP" && this.previewUserInfo[field]:
+                        prepareParams["reportP"][1] = true;
+                        break;
+                    //Reporte de cierre
+                    case field == "rclosureP" && this.previewUserInfo[field]:
+                        prepareParams["rclosureP"][1] = true;
+                        break;
+                    //Reporte directivo mensual
+                    case field == "rdirectiveMP" && this.previewUserInfo[field]:
+                        prepareParams["rdirectiveMP"][1] = true;
+                        break;
+                    //Reporte de hroas no cargables
+                    case field == "rhorasP" && this.previewUserInfo[field]:
+                        prepareParams["rhorasP"][1] = true;
                         break;
                 }
             }
