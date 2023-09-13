@@ -40,10 +40,10 @@ export const projectMethods = {
                 hiringDate: this.inputHiringDate,
                 departments: departmentDTO,
                 projectValue: this.inputValue
-                    .replace(/\./, "")
+                    .replace(/\./g, "")
                     .replace(/,/, "."),
                 averageRate: this.inputAverageRate
-                    .replace(/\./, "")
+                    .replace(/\./g, "")
                     .replace(/,/, "."),
             };
 
