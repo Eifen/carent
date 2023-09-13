@@ -81,6 +81,7 @@ const modalApp = createApp({
                     );
                     this.missinHours =
                         this.hoursAssigned + this.additionalHours;
+
                     //Informacion del cliente
                     this.clientName = request.data["project"]["bussiness_name"];
                     //Capturamos el id del departamento asignado
@@ -236,9 +237,11 @@ const modalApp = createApp({
                 if (misingHour < 0)
                     throw (
                         "No puede cargar más horas de las estipuladas (Solo " +
-                        this.hoursAssigned +
+                        (this.hoursAssigned + this.additionalHours) +
                         ". Intenta cargar " +
-                        (this.hoursAssigned + misingHour * -1) +
+                        (this.hoursAssigned +
+                            this.additionalHours +
+                            misingHour * -1) +
                         ")"
                     );
                 //Si pasa las validaciones

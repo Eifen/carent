@@ -36,7 +36,6 @@ export default {
         }
     },
     mounted() {
-        console.log(this.scope)
         //Acomodamos el array resultante de la informacion de carga de usuarios
         if (this.scope.listIntervalData) {
             console.log(this.scope.listIntervalData)
@@ -68,14 +67,13 @@ export default {
                 .then(request => {
                     this.isListMounted = true
                     this.directiveList = request.data.message
-                    console.log(this.directiveList)
                     //Acomodamos la longitud minima y su paginacion
                     if (this.directiveList.length < 50) this.directiveLength = this.directiveList.length;
                     this.directivePaginatio = Math.ceil(
                         this.directiveList.length / this.directiveLength
                     );
                 })
-                .catch(error => { console.log(error) })
+                .catch(error => { console.error(error) })
         }
     },
     components: { ListingCrud, Loading }

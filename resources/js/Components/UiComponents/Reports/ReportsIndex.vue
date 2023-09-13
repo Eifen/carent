@@ -84,7 +84,6 @@ export default {
         }
     },
     created() {
-        console.log(this.reportPermission)
     },
     methods: {
         /**
@@ -102,7 +101,6 @@ export default {
                     //Si no se activa la exceptión, asignamos el objeto
                     setTimeout(() => {
                         this.listData = request.data.message;
-                        console.log(this.listData)
                         //Preparamos la paginación en función del tamaño del array resultante
                         if (this.listData.length < 50) {
                             this.lengthColumns = this.listData.length;

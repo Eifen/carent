@@ -43,7 +43,6 @@ export default {
         }
     },
     mounted() {
-        console.log(this.scope)
         //Acomodamos el array resultante de la informacion de carga de usuarios
         if (this.scope.isMounted) {
             this.scope.listData.forEach(user => {
