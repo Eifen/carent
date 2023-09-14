@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 
+use function PHPUnit\Framework\isEmpty;
+
 class ReportsController extends Controller
 {
     //Propiedades
@@ -63,6 +65,35 @@ class ReportsController extends Controller
         return response(array(
             "response" => true,
             "message" => $monthReport->directiveMonthReport()
+        ), 200);
+    }
+
+    /**
+     * Metodo que crea el directivo mensual
+     * @param Request $dateRequest Recibe la informacion de startDate y endDate respectivamente desde el HTTP
+     */
+    public function getDirectiveTotal(Request $dateRequest)
+    {
+        $starDate = $dateRequest->input('startDate');
+        $endDate = $dateRequest->input('endDate');
+        $reportInstance = new ReportDirective($starDate, $endDate);
+        //Intervalo de fechas
+        $getInterval = $reportInstance->getTotalDays($starDate, $endDate);
+        //Procedemos a crear un primer reporte
+        $reportDTO = $reportInstance->directiveMonthReport();
+        $responseDTO = array();
+        $responseArray = array();
+        //Recorremos el array
+        foreach ($reportDTO as $user) {
+            foreach ($user as $userRegister) {
+                array_push($responseDTO, $userRegister);
+            }
+        }
+
+        return response(array(
+            "response" => true,
+            "message" => $responseDTO,
+            "refHour" => $getInterval
         ), 200);
     }
 

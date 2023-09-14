@@ -49,11 +49,20 @@
                 </span>
             </div>
         </div>
+        <!-- Reporte horas administrativas -->
         <ReportAdminHours class="reports-container-list"
-            v-if="selectReport > 2 && reportPermission.rhorasP == 1 && listIntervalData.length != 0" :scope="migrateData"
+            v-if="selectReport == 3 && reportPermission.rhorasP == 1 && listIntervalData.length != 0" :scope="migrateData"
             :key="listIntervalData">
         </ReportAdminHours>
         <div v-else-if="reportPermission.rhorasP != 1" class="not-found">
+            <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
+        </div>
+        <!-- Reporte directivo acumulado -->
+        <ReportDirectiveTotal class="reports-container-list"
+            v-if="selectReport == 4 && reportPermission.rdirectiveAP == 1 && dateEnd.length != 0" :scope="migrateData"
+            :key="dateEnd">
+        </ReportDirectiveTotal>
+        <div v-else-if="reportPermission.rdirectiveAP != 1" class="not-found">
             <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
         </div>
     </div>
@@ -63,6 +72,7 @@
 import ReportClosureProject from '@/Components/UiComponents/Reports/ReportClosureProject.vue';
 import ReportDirectiveMonth from '@/Components/UiComponents/Reports/ReportDirectiveMonth.vue';
 import ReportAdminHours from '@/Components/UiComponents/Reports/ReportAdminHours.vue';
+import ReportDirectiveTotal from '@/Components/UiComponents/Reports/ReportDirectiveTotal.vue';
 import Calendar from '@/Components/Calendar.vue';
 export default {
     props: {
@@ -178,6 +188,6 @@ export default {
     computed: {
         migrateData() { return this.$data }
     },
-    components: { ReportClosureProject, ReportDirectiveMonth, ReportAdminHours, Calendar }
+    components: { ReportClosureProject, ReportDirectiveMonth, ReportAdminHours, Calendar, ReportDirectiveTotal }
 }
 </script>

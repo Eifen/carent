@@ -51,7 +51,8 @@ class LoginModel extends Model
             "reportP" => 0,
             "rclosureP" => 0,
             "rdirectiveMP" => 0,
-            "rhorasP" => 0
+            "rhorasP" => 0,
+            "rdirectiveAP" => 0
         );
         if (!$userAccess->isEmpty()) {
             foreach ($userAccess as $permission) {
@@ -99,6 +100,10 @@ class LoginModel extends Model
                         //reporte horas no cargables
                     case 18:
                         $arrayAccess['rhorasP'] = 1;
+                        break;
+                        //reporte directivo acumulado
+                    case 19:
+                        $arrayAccess['rdirectiveAP'] = 1;
                         break;
                 }
             }

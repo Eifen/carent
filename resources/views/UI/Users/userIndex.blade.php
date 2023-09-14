@@ -91,6 +91,11 @@
                                     :checked="previewUserInfo.rhorasP">
                                 <label class="form-check-label">Reporte de horas no cargables</label>
                             </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" v-model="previewUserInfo.rdirectiveAP"
+                                    type="checkbox" :checked="previewUserInfo.rdirectiveAP">
+                                <label class="form-check-label">Reporte directivo acumulado</label>
+                            </div>
                         </div>
                     </div>
                 </div>

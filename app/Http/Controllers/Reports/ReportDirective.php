@@ -18,14 +18,14 @@ class ReportDirective extends Controller
     private $users; //Array de usuarios
     private $startDate; //Fecha inicial
     private $endDate; //Fecha final
-    public function __construct()
+    public function __construct($startDTO = '2020-03-01', $endDTO = 'Y-m-d')
     {
         //Cambiamos el formato de la fecha
         setlocale(LC_TIME, "es_ES");
         //Asignamos las propiedades
         $this->users = UsersModel::getInfoUsers();
-        $this->startDate = date('2020-03-01');
-        $this->endDate = date('Y-m-d');
+        $this->startDate = date($startDTO);
+        $this->endDate = date($endDTO);
     }
     public function adminHoursReport()
     {
@@ -86,6 +86,7 @@ class ReportDirective extends Controller
                 $totalPer = ($totalHours * 100) / ($refHours == 0 ? 1 : $refHours);
                 //Hacemos push para el formato
                 array_push($formatArray, array(
+                    "order_user" => $user->user_id,
                     "nombre" => $user->user_name,
                     "cargo" => $user->position_name,
                     "area" => $user->department_name,

@@ -161,6 +161,7 @@ Route::prefix('/')->group(function () {
                     Route::post('/list-directive-month', [ReportsController::class, "getDirectiveMonthReport"]);
                     Route::post('/list-admin-hours', [ReportsController::class, "getAdminReport"]);
                     Route::post('/admin-hours-report', [ReportsController::class, "adminIntervalReport"]);
+                    Route::post('/list-directive-total', [ReportsController::class, "getDirectiveTotal"]);
                 });
             });
         });

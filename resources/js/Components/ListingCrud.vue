@@ -55,7 +55,7 @@
                             v-for="(columnData, cursorTable) in controlTable.data[actualIndex + controlTable.minLength]"
                             :key="cursorTable">
                             <td align="center"
-                                v-if="cursorTable != 'mes' && cursorTable != 'order' && cursorTable != 'ref_estimated'">
+                                v-if="cursorTable != 'mes' && cursorTable != 'order' && cursorTable != 'ref_estimated' && cursorTable != 'order_user'">
                                 <span v-if="cursorTable == 'estatus' && columnData == 1"
                                     class="badge text-bg-success">activo</span>
                                 <span v-else-if="cursorTable == 'estatus' && columnData == 2"
@@ -134,6 +134,7 @@ export default {
         viewExcel: Boolean, //Habilita descarga del reporte en un excel
         viewHours: Boolean, //Habilita la vista de horas
         titleExcel: String, //Titulo del archivo en excel, debe estar activar viewExcel
+        hoursRef: Number, //Numero total de la referencia
     },
     data() {
         return {
@@ -189,6 +190,10 @@ export default {
         this.controlTable.minLength = this.controlPagination.init * this.paginationLimit;
         this.controlTable.maxLength = this.controlTable.minLength + this.paginationLimit;
 
+        //Asignamos las horas estimadas si son mayores que 0
+        if (this.hoursRef != 0) {
+            this.hoursEstimated = this.hoursRef
+        }
         //Asignamos el menu de paginación
         this.paginationLenght <= 1
             ? (this.controlView.isGreater = false)
