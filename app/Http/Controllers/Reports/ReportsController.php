@@ -81,18 +81,17 @@ class ReportsController extends Controller
         $getInterval = $reportInstance->getTotalDays($starDate, $endDate);
         //Procedemos a crear un primer reporte
         $reportDTO = $reportInstance->directiveMonthReport();
-        $responseDTO = array();
-        $responseArray = array();
-        //Recorremos el array
-        foreach ($reportDTO as $user) {
-            foreach ($user as $userRegister) {
-                array_push($responseDTO, $userRegister);
-            }
-        }
+        // $responseDTO = array();
+        // //Recorremos el array
+        // foreach ($reportDTO as $user) {
+        //     foreach ($user as $userRegister) {
+        //         array_push($responseDTO, $userRegister);
+        //     }
+        // }
 
         return response(array(
             "response" => true,
-            "message" => $responseDTO,
+            "message" => $reportDTO,
             "refHour" => $getInterval
         ), 200);
     }

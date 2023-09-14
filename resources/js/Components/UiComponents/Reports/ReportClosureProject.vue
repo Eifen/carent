@@ -5,7 +5,7 @@
             :pagination-lenght="scope.maxLengthPagination" :pagination-limit="scope.lengthColumns"
             :table-info="scope.listData" title-table="Reporte cierre de proyectos"
             not-found-message="No hay proyectos cerrados" :select-search="selectSearch" view-search view-excel
-            title-excel="ReporteCierreDeProyectos.xls">
+            :info-excel="scope.listData" title-excel="ReporteCierreDeProyectos.xls">
         </ListingCrud>
     </div>
 </template>

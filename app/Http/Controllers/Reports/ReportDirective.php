@@ -99,7 +99,9 @@ class ReportDirective extends Controller
                     "percen_total" => number_format($totalPer, 2, ",", "."),
                     "ref_total" => number_format($refHours, 2, ",", "."),
                     "estatus" => $user->status_id,
+                    "fecha_egreso" => $user->departure_date == null ? $user->status_description : $user->departure_date,
                     "order" => $user->order,
+                    "department_order" => $user->department_order
                 ));
             }
             //Cargamos el formato al array resultante

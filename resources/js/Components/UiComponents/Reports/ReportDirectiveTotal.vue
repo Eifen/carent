@@ -4,7 +4,7 @@
         <ListingCrud v-if="isListMounted && directivePaginatio != 0 && refTotal != 0" :title-object="reportColumns"
             :pagination-lenght="directivePaginatio" :pagination-limit="directiveLength" :table-info="directiveList"
             title-table="Reporte de horas administrativas" not-found-message="No hay horas cargadas"
-            :select-search="selectSearch" view-search view-excel title-excel="ReporteHorasNoCargables.xls"
+            :select-search="selectSearch" view-search view-excel title-excel="ReporteDirectivoAcumulado.xls"
             status-table="usuarios" view-hours :hours-ref="refTotal">
         </ListingCrud>
     </div>
@@ -49,7 +49,13 @@ export default {
         axios.post("reports/list-directive-total", { startDate: this.scope.dateStart, endDate: this.scope.dateEnd })
             .then(request => {
                 this.isListMounted = true
-                let directiveDTO = request.data.message.reduce((acum, intervalData) => {
+                let requestDTO = [];
+                request.data.message.forEach(user => {
+                    user.forEach(period => {
+                        requestDTO.push(period);
+                    });
+                });
+                let directiveDTO = requestDTO.reduce((acum, intervalData) => {
                     //Creamos una Key
                     const key = intervalData.order_user
                     if (!acum[key]) {
@@ -60,7 +66,10 @@ export default {
                             proy_hours: parseFloat(intervalData.proy_hours.replace(/\./g, "").replace(/,/, ".")),
                             admin_hours: parseFloat(intervalData.admin_hours.replace(/\./g, "").replace(/,/, ".")),
                             ref_total: parseFloat(intervalData.ref_total.replace(/\./g, "").replace(/,/, ".")),
-                            estatus: intervalData.estatus
+                            estatus: intervalData.estatus,
+                            egreso: intervalData.fecha_egreso,
+                            order: intervalData.order,
+                            department_order: intervalData.department_order
                         }
                     } else {
                         acum[key].admin_hours += parseFloat(intervalData.admin_hours.replace(/\./g, "").replace(/,/, "."))
@@ -72,6 +81,13 @@ export default {
                 //Agregamos los porcentajes y el total de horas
                 console.log(typeof directiveDTO)
                 directiveDTO = Object.values(directiveDTO)
+                //Ordenamos el array
+                directiveDTO.sort(function (a, b) {
+                    //Comparamos el orden de cargos
+                    let sort = a.department_order - b.department_order
+                    if (sort == 0) sort = a.order - b.order;
+                    return sort;
+                })
                 directiveDTO.forEach((user) => {
                     const totalHours = user.proy_hours + user.admin_hours;
                     const percenAdmin = (user.admin_hours * 100) / (user.ref_total == 0 ? 1 : user.ref_total);
@@ -82,14 +98,15 @@ export default {
                         nombre: user.nombre,
                         cargo: user.cargo,
                         area: user.area,
-                        proy_hours: Number(user.proy_hours).toLocaleString('de-DE'),
-                        percen_proy: Number(percenProy).toLocaleString('de-DE'),
-                        admin_hours: Number(user.admin_hours).toLocaleString('de-DE'),
-                        percen_admon: Number(percenAdmin).toLocaleString('de-DE'),
-                        total_hours: Number(totalHours).toLocaleString('de-DE'),
-                        percen_total: Number(percenTotal).toLocaleString('de-DE'),
-                        ref_total: Number(user.ref_total).toLocaleString('de-DE'),
-                        estatus: user.estatus
+                        tot_hor_proy: Number(user.proy_hours.toFixed(2)).toLocaleString('de-DE'),
+                        "%_hor_proy": Number(percenProy.toFixed(2)).toLocaleString('de-DE'),
+                        tot_hor_admon: Number(user.admin_hours.toFixed(2)).toLocaleString('de-DE'),
+                        "%_hor_admon": Number(percenAdmin.toFixed(2)).toLocaleString('de-DE'),
+                        tot_hor: Number(totalHours.toFixed(2)).toLocaleString('de-DE'),
+                        "%_tot_hor": Number(percenTotal.toFixed(2)).toLocaleString('de-DE'),
+                        hor_ref: Number(user.ref_total.toFixed(2)).toLocaleString('de-DE'),
+                        estatus: user.estatus,
+                        fecha_egreso: user.egreso
                     });
                 })
                 this.refTotal = request.data.refHour

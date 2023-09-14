@@ -46,7 +46,21 @@ export default {
         if (this.scope.isMounted) {
             this.scope.listData.forEach(user => {
                 user.forEach(period => {
-                    this.directiveList.push(period);
+                    this.directiveList.push({
+                        nombre: period.nombre,
+                        cargo: period.cargo,
+                        area: period.area,
+                        mes: period.mes,
+                        tot_hor_proy: period.proy_hours,
+                        "%_hor_proy": period.percen_proy,
+                        tot_hor_admon: period.admin_hours,
+                        "%_hor_admon": period.percen_admon,
+                        tot_hor: period.total_hours,
+                        "%_tot_hor": period.percen_total,
+                        hor_ref: period.ref_total,
+                        estatus: period.estatus,
+                        fecha_egreso: period.egreso
+                    });
                 });
             });
 

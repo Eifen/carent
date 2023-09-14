@@ -83,13 +83,13 @@ class UsersModel extends Model
      */
     public static function getInfoUsers()
     {
-        return DB::select('SELECT us.user_id, us.user_code, CONCAT(us.first_name," ",us.second_name," ",us.first_surname," ",us.second_surname) as "user_name", us.position_id, us.department_id, uhp.position_name, uhd.department_name, us.status_id, cs.status_description, us.admission_date, us.departure_date, uhp.order
+        return DB::select('SELECT us.user_id, us.user_code, CONCAT(us.first_name," ",us.second_name," ",us.first_surname," ",us.second_surname) as "user_name", us.position_id, us.department_id, uhp.position_name, uhd.department_name, uhd.department_order, us.status_id, cs.status_description, us.admission_date, us.departure_date, uhp.order
                             FROM users us
                             INNER JOIN users_hierarchy_positions uhp ON us.position_id = uhp.position_id
                             INNER JOIN users_hierarchy_departments uhd ON us.department_id = uhd.department_id
                             INNER JOIN control_status cs ON us.status_id = cs.status_id
                             WHERE us.user_id != ?
-                            ORDER BY uhd.department_id, uhp.order, us.user_id ASC;', [1]);
+                            ORDER BY uhd.department_order, uhp.order, us.user_id ASC;', [1]);
     }
 
     /**

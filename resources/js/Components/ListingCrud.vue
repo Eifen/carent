@@ -55,7 +55,7 @@
                             v-for="(columnData, cursorTable) in controlTable.data[actualIndex + controlTable.minLength]"
                             :key="cursorTable">
                             <td align="center"
-                                v-if="cursorTable != 'mes' && cursorTable != 'order' && cursorTable != 'ref_estimated' && cursorTable != 'order_user'">
+                                v-if="cursorTable != 'mes' && cursorTable != 'order' && cursorTable != 'ref_estimated' && cursorTable != 'fecha_egreso'">
                                 <span v-if="cursorTable == 'estatus' && columnData == 1"
                                     class="badge text-bg-success">activo</span>
                                 <span v-else-if="cursorTable == 'estatus' && columnData == 2"
