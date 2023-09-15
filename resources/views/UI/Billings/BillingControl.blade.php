@@ -1,7 +1,8 @@
 <div id="billing-control">
     <loading :active="!isMounted"></loading>
     <billing-info v-if="isMounted" :info-project="proxyToJson(updateModel)" @redirect="redirectView('/billings')"
-        @billing-create="prepareCreateBilling" @billing-update="prepareUpdateBilling" :key="updateModel">
+        @billing-create="prepareCreateBilling" @billing-update="prepareUpdateBilling" :key="updateModel"
+        @billing-delete="prepareDeleteBilling">
     </billing-info>
     <!-- Modal -->
     <div class="modal fade" id="billingModal" tabindex="-1">

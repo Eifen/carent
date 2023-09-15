@@ -148,6 +148,7 @@ Route::prefix('/')->group(function () {
                         Route::post('get-params', [BillingController::class, 'prepareParams']);
                         Route::post('submit-billing', [BillingController::class, 'prepareSubmit']);
                         Route::post('refresh-billing', [BillingController::class, 'refreshBilling']);
+                        Route::post('delete-billing', [BillingController::class, 'deleteBilling']);
                     });
                 });
             });

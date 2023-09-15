@@ -242,6 +242,39 @@ const controlBillingApp = createApp({
             this.controlBillingModal.show();
         },
         /**
+         * Metodo que elimina una factura
+         * @param {*} billingDTO Objeto que abstrae toda la informacion de la factura
+         */
+        prepareDeleteBilling(billingDTO) {
+            CrudUi.controlCrud(
+                {
+                    post: "/billings/control/delete-billing",
+                    redirect: "",
+                    self: this,
+                },
+                { billingId: billingDTO.billing_id }
+            );
+            //Hacemos un update de la informacion luego de 1 segundo
+            setTimeout(() => {
+                axios
+                    .post("/billings/control/refresh-billing", {
+                        project_id: this.updateModel.project.project_id,
+                    })
+                    .then((request) => {
+                        //Reasignamos la data
+                        this.updateModel = request.data;
+                        //Cerramos el modal
+                        this.controlBillingModal.hide();
+                        this.emptyFields(true);
+                        this.isClick = false;
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        this.isClick = false;
+                    });
+            }, 1000);
+        },
+        /**
          * Metodo que se encarga de asociar el id del proyecto a las facturaciones y abstrae los que no tengan billing_cancel_id en null
          */
         prepareNullBill() {

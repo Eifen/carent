@@ -68,6 +68,7 @@
                         <th scope="col" valign="middle">Neto a cobrar</th>
                         <th scope="col" valign="middle">Fecha Fact.</th>
                         <th scope="col" valign="middle"></th>
+                        <th scope="col" valign="middle"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -104,6 +105,10 @@
                             <font-awesome class="aLink" string-icon="fa-solid fa-magnifying-glass"
                                 @click="$emit('billing-update', billing)"></font-awesome>
                         </td>
+                        <td scope="row" align="center">
+                            <font-awesome class="aLink" string-icon="fa-solid fa-xmark"
+                                @click="$emit('billing-delete', billing)"></font-awesome>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -114,7 +119,7 @@
 //Font Awesome
 import FontAwesome from '@/Components/FontAwesome/FontAwesome.vue';
 export default {
-    emits: ["redirect", "billing-create", "billing-update"],
+    emits: ["redirect", "billing-create", "billing-update", "billing-delete"],
     props: {
         infoProject: Object, //Informacion del proyecto y sus facturaciones realizadas
     },

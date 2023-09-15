@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Session;
 use App\Models\ConfigModel;
 use App\Models\ProjectModel;
 use Hamcrest\Type\IsNumeric;
+use Illuminate\Support\Facades\DB;
 
 use function PHPUnit\Framework\isNull;
 
@@ -119,5 +120,19 @@ class BillingController extends Controller
     public function refreshBilling(Request $refreshRequest)
     {
         return response(ProjectModel::getProjectInfo($refreshRequest->input('project_id')), 200);
+    }
+
+    /**
+     * Metodo que elimina la factura
+     */
+    public function deleteBilling(Request $deleteRequest)
+    {
+        DB::table('billings')
+            ->where("billing_id", "=", $deleteRequest->input("billingId"))
+            ->delete();
+        return response(array(
+            "response" => true,
+            "message" => "Factura eliminada exitosamente"
+        ));
     }
 }
