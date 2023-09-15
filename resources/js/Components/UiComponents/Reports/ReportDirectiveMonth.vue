@@ -63,7 +63,7 @@ export default {
                         "%_tot_hor": period.percen_total,
                         hor_ref: period.ref_total,
                         estatus: period.estatus,
-                        fecha_egreso: period.egreso
+                        fecha_egreso: period.fecha_egreso
                     });
                 });
             });
