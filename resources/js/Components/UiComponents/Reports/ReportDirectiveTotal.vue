@@ -20,16 +20,18 @@ export default {
         return {
             reportColumns: {
                 column1: 'Nombre',
-                column2: 'Cargo',
-                column3: 'Area',
-                column4: 'Horas Proy',
-                column5: '% Proy',
-                column6: 'Horas Admon',
-                column7: '% Horas Admon',
-                column8: 'Total horas',
-                column9: '% Carga total',
-                column10: 'Ref Total',
-                column11: 'Estatus',
+                column2: 'Area',
+                column3: "Nivel",
+                column4: "% Carga",
+                column5: "Eval",
+                column6: 'Horas Proy',
+                column7: '% Proy',
+                column8: 'Horas Admon',
+                column9: '% Horas Admon',
+                column10: 'Total horas',
+                column11: '% Carga total',
+                column12: 'Ref Total',
+                column13: 'Estatus',
             },
             selectSearch: {
                 select1: "Nombre",
@@ -61,8 +63,9 @@ export default {
                     if (!acum[key]) {
                         acum[key] = {
                             nombre: intervalData.nombre,
-                            cargo: intervalData.cargo,
                             area: intervalData.area,
+                            nivel: intervalData.nivel,
+                            percen_carg: intervalData.percen_carg,
                             proy_hours: parseFloat(intervalData.proy_hours.replace(/\./g, "").replace(/,/, ".")),
                             admin_hours: parseFloat(intervalData.admin_hours.replace(/\./g, "").replace(/,/, ".")),
                             ref_total: parseFloat(intervalData.ref_total.replace(/\./g, "").replace(/,/, ".")),
@@ -96,8 +99,10 @@ export default {
                     //Inservamos el nuevo objeto
                     this.directiveList.push({
                         nombre: user.nombre,
-                        cargo: user.cargo,
                         area: user.area,
+                        nivel: user.nivel,
+                        "%_carga_min": Number(user.percen_carg).toLocaleString("de-DE"),
+                        eval: user.percen_carg > percenProy ? "DE" : "E",
                         tot_hor_proy: Number(user.proy_hours.toFixed(2)).toLocaleString('de-DE'),
                         "%_hor_proy": Number(percenProy.toFixed(2)).toLocaleString('de-DE'),
                         tot_hor_admon: Number(user.admin_hours.toFixed(2)).toLocaleString('de-DE'),

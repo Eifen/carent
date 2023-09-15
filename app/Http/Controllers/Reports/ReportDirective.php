@@ -88,8 +88,10 @@ class ReportDirective extends Controller
                 array_push($formatArray, array(
                     "order_user" => $user->user_id,
                     "nombre" => $user->user_name,
-                    "cargo" => $user->position_name,
                     "area" => $user->department_name,
+                    "nivel" => $user->nivel_description,
+                    "percen_carg" => $user->nivel_percen,
+                    "eval" => floatval($user->nivel_percen) > $proyPer ? "DE" : "E",
                     "mes" => $hours["mes"],
                     "proy_hours" => number_format($hours["proj_hours"], 2, ",", "."),
                     "percen_proy" => number_format($proyPer, 2, ",", "."),
@@ -100,7 +102,7 @@ class ReportDirective extends Controller
                     "ref_total" => number_format($refHours, 2, ",", "."),
                     "estatus" => $user->status_id,
                     "fecha_egreso" => $user->departure_date == null ? $user->status_description : $user->departure_date,
-                    "order" => $user->order,
+                    "order" => $user->nivel_id,
                     "department_order" => $user->department_order
                 ));
             }
