@@ -83,7 +83,7 @@ class UsersModel extends Model
      */
     public static function getInfoUsers()
     {
-        return DB::select('SELECT us.user_id, us.user_code, CONCAT(us.first_name," ",us.second_name," ",us.first_surname," ",us.second_surname) as "user_name", us.department_id, IF(uhd.department_name LIKE "%Administración%","Administración",uhd.department_name), uhd.department_order, us.status_id, cs.status_description, us.admission_date, us.departure_date, uhp.nivel_id, cnp.nivel_description, cnp.nivel_percen
+        return DB::select('SELECT us.user_id, us.user_code, CONCAT(us.first_name," ",us.second_name," ",us.first_surname," ",us.second_surname) as "user_name", us.department_id, IF(uhd.department_name LIKE "%Administración%","Administración",uhd.department_name) as "department_name", uhd.department_order, us.status_id, cs.status_description, us.admission_date, us.departure_date, uhp.nivel_id, cnp.nivel_description, cnp.nivel_percen
         FROM users us
         INNER JOIN users_hierarchy_positions uhp ON us.position_id = uhp.position_id
         INNER JOIN users_hierarchy_departments uhd ON us.department_id = uhd.department_id
