@@ -89,7 +89,7 @@ class UsersModel extends Model
         INNER JOIN users_hierarchy_departments uhd ON us.department_id = uhd.department_id
         INNER JOIN control_nivels_position cnp ON uhp.nivel_id = cnp.nivel_id
         INNER JOIN control_status cs ON us.status_id = cs.status_id
-        WHERE us.user_id != 1
+        WHERE us.user_id != ?
         ORDER BY uhd.department_order, uhp.nivel_id, us.user_id ASC;', [1]);
     }
 
