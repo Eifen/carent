@@ -8,6 +8,9 @@
         <textarea v-if="inputHourSelected != 0" type="text" rows="5" class="form-control register-hour-select-hours"
             placeholder="Observaciones" id="observation" aria-describedby="basic-addon4" autocomplete="nope"
             v-model="inputObservation"></textarea>
+        <div v-if="loadRef == 'admin' && statusLoad == 1" class="admin_message badge bg-warning text-dark">Por aprobar</div>
+        <div v-if="loadRef == 'admin' && statusLoad == 2" class="admin_message badge bg-success text-dark">Aprobada</div>
+        <div v-if="loadRef == 'admin' && statusLoad == 3" class="admin_message badge bg-danger text-dark">No aprobada</div>
         <!-- Mensajes de error en Observaciones-->
         <div class="form-ErrorInput" v-if="inputObservationError != ''">
             <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
@@ -46,6 +49,7 @@ export default {
             inputHourSelected: 0, //Controla el seleccionador de la hora
             inputObservation: "", //Controla el input de las observaciones
             inputObservationError: "", //Controla el input de errores de observaciones
+            statusLoad: "", //Solo para horas administrativas, muestra el estado de aprovacion de dicha hora
             errorMessageObservation: "minimo 7 caracteres", //Mensaje de error para el tamaño minimo de las observaciones
         }
     },
@@ -115,6 +119,7 @@ export default {
                         this.inputHourSelected = indexLimit
                         //Observacion por defecto
                         this.inputObservation = assigned["admin_load_observation"]
+                        this.statusLoad = assigned["status_load_id"]
                     }
                 })
             }

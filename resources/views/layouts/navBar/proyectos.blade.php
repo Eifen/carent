@@ -8,10 +8,10 @@
             <div class="header-nav-links-item-dropdown-content"><a href="{{ URL::route('projects') }}">Control de
                     proyectos</a></div>
         @endif
-        {{-- @if (Session::has('userPermissions') && Session::get('userPermissions')['assignP'] == 1)
+        @if (Session::has('userPermissions') && Session::get('userPermissions')['assignP'] == 1)
             <div class="header-nav-links-item-dropdown-content"><a href="{{ URL::route('assign') }}">Asignacion de
                     proyectos</a></div>
-        @endif --}}
+        @endif
         @if (Session::has('userPermissions') && Session::get('userPermissions')['adminP'] == 1)
             <div class="header-nav-links-item-dropdown-content"><a href="{{ URL::route('validate') }}">Control de horas
                     administrativas</a></div>

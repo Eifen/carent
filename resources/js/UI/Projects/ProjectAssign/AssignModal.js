@@ -1,7 +1,7 @@
 import { createApp } from "vue/dist/vue.esm-bundler";
 import { componentsUI, dataUI, CrudUi } from "../../UIConfig";
 import Multiselect from "@vueform/multiselect";
-import { AXIOSINTERVAL } from "../../../app";
+import { AXIOSINTERVAL, NOTIFYINTERVAL } from "../../../app";
 import { Validate } from "../../../Models/ValidateModel";
 
 const modalApp = createApp({
@@ -68,6 +68,7 @@ const modalApp = createApp({
                         )
                             this.managerAssigned = user["user_name"];
                     });
+                    this.usersPerDepartmentOld = this.usersPerDepartment;
                     //Luego procedemos a dar informacion del proyecto
                     this.projectName =
                         request.data["project"]["project_description"];
@@ -192,37 +193,62 @@ const modalApp = createApp({
         /**
          * Watcher que me asigna la informacion del multiselect
          */
-        inputUsersAssigned(newSelect) {
+        inputUsersAssigned(newSelect, oldSelect) {
             //Inicialmente creamos una copia del array
             const copyManager = this.managerUserAssigned;
-            //Vaciamos el array
-            this.managerUserAssigned = [];
+            console.log(newSelect, oldSelect, copyManager);
 
-            //Recorremos el nuevo multiSelect
-            newSelect.forEach((userId) => {
-                //Obtenemos el indice del usuario por departamento
-                const getIndex = this.usersPerDepartment
-                    .map((object) => object.value)
-                    .indexOf(userId);
+            //Recorremos el array anterior
+            try {
+                oldSelect.forEach((userId) => {
+                    //Obtenemos el indice en el array de copia
+                    const getNewIndex = newSelect.indexOf(userId);
+                    const getOldIndex = copyManager
+                        .map((object) => object.idUser)
+                        .indexOf(userId);
+                    //Si existe el indice y sus horas registradas son mayores que 0 no se puede eliminar
+                    if (getOldIndex !== -1 && getNewIndex === -1) {
+                        if (copyManager[getOldIndex].hourRegister > 0)
+                            throw `No se puede eliminar al usuario ${copyManager[getOldIndex].userName} ya que tiene horas cargadas. Reduzca sus horas equivalente a las que ha cargado`;
+                    }
+                });
+                console.log(this.inputUsersAssigned);
+                //Vaciamos el array
+                this.managerUserAssigned = [];
+                //Recorremos el nuevo multiSelect
+                newSelect.forEach((userId) => {
+                    //Obtenemos el indice del usuario por departamento
+                    const getIndex = this.usersPerDepartment
+                        .map((object) => object.value)
+                        .indexOf(userId);
 
-                //Obtenemos el indice de la copia
-                const getCopyIndex = copyManager
-                    .map((object) => object.idUser)
-                    .indexOf(userId);
+                    //Obtenemos el indice de la copia
+                    const getCopyIndex = copyManager
+                        .map((object) => object.idUser)
+                        .indexOf(userId);
 
-                //Si existe el indice, hacemos push de esa posicion de la copia. Caso contrario hacemos push con nuevos valores
-                if (getCopyIndex !== -1) {
-                    this.managerUserAssigned.push(copyManager[getCopyIndex]);
-                } else {
-                    this.managerUserAssigned.push({
-                        idUser: userId,
-                        userName: this.usersPerDepartment[getIndex].label,
-                        hoursAssigned: 0,
-                    });
-                }
-            });
-            //Cargamos el conteo de horas restantes
-            this.totalHours();
+                    //Si existe el indice, hacemos push de esa posicion de la copia. Caso contrario hacemos push con nuevos valores
+                    if (getCopyIndex !== -1) {
+                        this.managerUserAssigned.push(
+                            copyManager[getCopyIndex]
+                        );
+                    } else {
+                        this.managerUserAssigned.push({
+                            idUser: userId,
+                            userName: this.usersPerDepartment[getIndex].label,
+                            hoursAssigned: 0,
+                        });
+                    }
+                });
+                //Cargamos el conteo de horas restantes
+                this.totalHours();
+            } catch (errorMessage) {
+                this.inputUsersAssigned = [];
+                oldSelect.forEach((userId) => {
+                    this.inputUsersAssigned.push(userId);
+                });
+                CrudUi.errorMesssage(errorMessage);
+            }
         },
         missinHours(misingHour) {
             try {

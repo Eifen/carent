@@ -377,6 +377,20 @@ class ProjectModel extends Model
             ->get();
         $getProjectId = $assignDepartmentHours[0]->project_id;
         //Procedemos a recorrer la informacion
+        foreach ($assignHoursUsers as $position => $userAnalyst) {
+            //Por cada posicion en el array de analista, verificamos el array resultante
+            $countAnalyst = array_search($userAnalyst->user_id, array_column($asignArray, 'idUser'));
+
+            if ($countAnalyst === false) {
+                DB::table('projects_users_assigned')
+                    ->where('user_assigned_id', '=', $userAnalyst->user_assigned_id)
+                    ->delete();
+
+                $assignHoursUsers = DB::table('projects_users_assigned')
+                    ->where('department_assigned_id', '=', $departmentAssignedId)
+                    ->get();
+            } //No encontro la columna, procedemos a borrar la variable y refrescamos el array
+        }
         foreach ($asignArray as $posicion2 => $value) {
             # Verificamos que exista la fila
             if (isset($assignHoursUsers[$posicion2])) {

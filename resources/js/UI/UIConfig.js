@@ -190,4 +190,17 @@ export class CrudUi {
                 routesSelf.self.isClick = false;
             });
     }
+
+    /**
+     * Metodo que muestra un error usando toast
+     * @param {String} message Mensaje de error
+     */
+    static errorMesssage(message) {
+        setTimeout(() => {
+            toast.error(message, {
+                position: toast.POSITION.TOP_LEFT,
+                autoClose: NOTIFYINTERVAL,
+            });
+        }, AXIOSINTERVAL);
+    }
 }

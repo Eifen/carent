@@ -49,7 +49,7 @@
                         <!-- Select Users -->
                         <Multiselect v-model="inputUsersAssigned" mode="tags" :close-on-select="true"
                             :searchable="true" placeholder="Seleccione uno o más usuarios" openDirection="top"
-                            :options="usersPerDepartment"></Multiselect>
+                            :options="usersPerDepartment" :key="inputUsersAssigned"></Multiselect>
                     </div>
                 </fieldset>
                 <span class="badge text-bg-info" v-if="inputUsersAssigned != 0 && isMounted">Indique la cantidad de
