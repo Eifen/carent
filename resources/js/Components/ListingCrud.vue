@@ -2,7 +2,8 @@
     <div :class="listClass" v-if="tableInfo.length != 0">
         <div :class="tableClass.title">{{ titleTable }}</div>
         <div :class="tableClass.create" v-if="viewCreate" @click="$emit('createbutton')">Crear {{ buttonTitle }}</div>
-        <json-excel class="list-container-excel" v-if="viewExcel" :data="controlTable.data" :name="titleExcel">
+        <json-excel class="list-container-excel" v-if="viewExcel" :data="directive ? reportExcel() : controlTable.data"
+            :name="titleExcel">
             Exportar en Excel <font-awesome string-icon="fa-solid fa-file-excel"></font-awesome>
         </json-excel>
         <div class="list-container-hours" v-if="viewHours && hoursEstimated != 0">
@@ -135,6 +136,8 @@ export default {
         viewHours: Boolean, //Habilita la vista de horas
         titleExcel: String, //Titulo del archivo en excel, debe estar activar viewExcel
         hoursRef: Number, //Numero total de la referencia
+        directive: Boolean, //Valor booleano que determina si es un reporte directivo o no
+        directiveType: String, // En caso de que directive sea true verifica el tipo de directivo
     },
     data() {
         return {
@@ -280,6 +283,184 @@ export default {
             const newPage = parseInt(inputEvent.target.value) - 1;
             this.controlPagination.cursor = newPage;
         },
+        /**
+         * Metodo que se encarga de agrupar las areas y niveles, y devolver un total para producir en excel
+         */
+        reportExcel() {
+            let listExcel = this.controlTable.data.reduce((acum, field) => {
+                //Creamos un key
+                const key = field.area + "-" + field.nivel;
+                if (!acum[key]) {
+                    acum[key] = {
+                        area: field.area,
+                        nivel: field.nivel,
+                        "%_carga_min_proy": parseFloat(field["%_carga_min_proy"].replace(/\./g, "").replace(",", ".")),
+                        "%_carga_min_admon": parseFloat(field["%_carga_min_admon"].replace(/\./g, "").replace(",", ".")),
+                        hor_esp_proy: parseFloat(field["hor_esp_proy"].replace(/\./g, "").replace(",", ".")),
+                        hor_esp_admon: parseFloat(field["hor_esp_admon"].replace(/\./g, "").replace(",", ".")),
+                        hor_ref: parseFloat(field["hor_ref"].replace(/\./g, "").replace(",", ".")),
+                        tot_hor_proy: parseFloat(field["tot_hor_proy"].replace(/\./g, "").replace(",", ".")),
+                        tot_hor_admon: parseFloat(field["tot_hor_admon"].replace(/\./g, "").replace(",", ".")),
+                        tot_hor: parseFloat(field["tot_hor"].replace(/\./g, "").replace(",", ".")),
+                    }
+                } else {
+                    acum[key].hor_esp_proy += parseFloat(field["hor_esp_proy"].replace(/\./g, "").replace(",", "."))
+                    acum[key].hor_esp_admon += parseFloat(field["hor_esp_admon"].replace(/\./g, "").replace(",", "."))
+                    acum[key].hor_ref += parseFloat(field["hor_ref"].replace(/\./g, "").replace(",", "."))
+                    acum[key].tot_hor_proy += parseFloat(field["tot_hor_proy"].replace(/\./g, "").replace(",", "."))
+                    acum[key].tot_hor_admon += parseFloat(field["tot_hor_admon"].replace(/\./g, "").replace(",", "."))
+                    acum[key].tot_hor += parseFloat(field["tot_hor"].replace(/\./g, "").replace(",", "."))
+                }
+                return acum;
+            }, {});
+            //Transformamos el objeto a un array
+            listExcel = Object.values(listExcel)
+            let dataExcel = [] // Don de almacenara el array resultante
+            console.log(listExcel)
+            //Una vez acumulada la informacion por area y nivel
+            listExcel.forEach(field => {
+                this.controlTable.data.forEach(user => {
+                    if (user.area == field.area && user.nivel == field.nivel) {
+                        dataExcel.push(user)
+                    }
+                })
+                //Cargamos el total en funcion del tipo de directivo
+                switch (this.directiveType) {
+                    case 'total':
+                        //Lo que se espera
+                        dataExcel.push({
+                            nombre: "",
+                            area: "LO QUE SE ESPERA",
+                            nivel: "",
+                            "%_carga_min_proy": Number(field["%_carga_min_proy"]).toLocaleString("de-DE"),
+                            "%_carga_min_admon": Number(field["%_carga_min_admon"]).toLocaleString("de-DE"),
+                            hor_esp_proy: Number(field.hor_esp_proy.toFixed(2)).toLocaleString("de-DE"),
+                            hor_esp_admon: Number(field.hor_esp_admon.toFixed(2)).toLocaleString("de-DE"),
+                            hor_ref: Number(field.hor_ref.toFixed(2)).toLocaleString('de-DE'),
+                            eval: "",
+                            tot_hor_proy: "",
+                            "%_hor_proy": "",
+                            tot_hor_admon: "",
+                            "%_hor_admon": "",
+                            tot_hor: "",
+                            "%_tot_hor": "",
+                            estatus: "",
+                            fecha_egreso: ""
+                        })
+                        //Lo realmente cargado
+                        dataExcel.push({
+                            nombre: "",
+                            area: "LO REAL",
+                            nivel: "",
+                            "%_carga_min_proy": Number(((field.tot_hor_proy / field.tot_hor) * 100).toFixed(2)).toLocaleString("de-DE"),
+                            "%_carga_min_admon": Number(((field.tot_hor_admon / field.tot_hor) * 100).toFixed(2)).toLocaleString("de-DE"),
+                            hor_esp_proy: "",
+                            hor_esp_admon: "",
+                            hor_ref: "",
+                            eval: "",
+                            tot_hor_proy: Number(field.tot_hor_proy.toFixed(2)).toLocaleString("de-DE"),
+                            "%_hor_proy": "",
+                            tot_hor_admon: Number(field.tot_hor_admon.toFixed(2)).toLocaleString("de-DE"),
+                            "%_hor_admon": "",
+                            tot_hor: Number(field.tot_hor.toFixed(2)).toLocaleString("de-DE"),
+                            "%_tot_hor": "",
+                            estatus: "",
+                            fecha_egreso: ""
+                        })
+                        //Diferencia
+                        dataExcel.push({
+                            nombre: "",
+                            area: "DIFERENCIAL",
+                            nivel: "",
+                            "%_carga_min_proy": Number((((field.tot_hor_proy / field.tot_hor) * 100) - field["%_carga_min_proy"]).toFixed(2)).toLocaleString("de-DE"),
+                            "%_carga_min_admon": Number((((field.tot_hor_admon / field.tot_hor) * 100) - field["%_carga_min_admon"]).toFixed(2)).toLocaleString("de-DE"),
+                            hor_esp_proy: Number((field.tot_hor_proy - field.hor_esp_proy).toFixed(2)).toLocaleString("de-DE"),
+                            hor_esp_admon: Number((field.tot_hor_admon - field.hor_esp_admon).toFixed(2)).toLocaleString("de-DE"),
+                            hor_ref: "",
+                            eval: "",
+                            tot_hor_proy: "",
+                            "%_hor_proy": "",
+                            tot_hor_admon: "",
+                            "%_hor_admon": "",
+                            tot_hor: Number((field.tot_hor - field.hor_ref).toFixed(2)).toLocaleString("de-DE"),
+                            "%_tot_hor": "",
+                            estatus: "",
+                            fecha_egreso: ""
+                        })
+                        dataExcel.push({})
+                        break;
+
+                    case 'month':
+                        //Lo que se espera
+                        dataExcel.push({
+                            nombre: "",
+                            area: "LO QUE SE ESPERA",
+                            nivel: "",
+                            mes: "",
+                            "%_carga_min_proy": Number(field["%_carga_min_proy"]).toLocaleString("de-DE"),
+                            "%_carga_min_admon": Number(field["%_carga_min_admon"]).toLocaleString("de-DE"),
+                            hor_esp_proy: Number(field.hor_esp_proy.toFixed(2)).toLocaleString("de-DE"),
+                            hor_esp_admon: Number(field.hor_esp_admon.toFixed(2)).toLocaleString("de-DE"),
+                            hor_ref: Number(field.hor_ref.toFixed(2)).toLocaleString('de-DE'),
+                            eval: "",
+                            tot_hor_proy: "",
+                            "%_hor_proy": "",
+                            tot_hor_admon: "",
+                            "%_hor_admon": "",
+                            tot_hor: "",
+                            "%_tot_hor": "",
+                            estatus: "",
+                            fecha_egreso: ""
+                        })
+                        //Lo realmente cargado
+                        dataExcel.push({
+                            nombre: "",
+                            area: "LO REAL",
+                            nivel: "",
+                            mes: "",
+                            "%_carga_min_proy": Number(((field.tot_hor_proy / field.tot_hor) * 100).toFixed(2)).toLocaleString("de-DE"),
+                            "%_carga_min_admon": Number(((field.tot_hor_admon / field.tot_hor) * 100).toFixed(2)).toLocaleString("de-DE"),
+                            hor_esp_proy: "",
+                            hor_esp_admon: "",
+                            hor_ref: "",
+                            eval: "",
+                            tot_hor_proy: Number(field.tot_hor_proy.toFixed(2)).toLocaleString("de-DE"),
+                            "%_hor_proy": "",
+                            tot_hor_admon: Number(field.tot_hor_admon.toFixed(2)).toLocaleString("de-DE"),
+                            "%_hor_admon": "",
+                            tot_hor: Number(field.tot_hor.toFixed(2)).toLocaleString("de-DE"),
+                            "%_tot_hor": "",
+                            estatus: "",
+                            fecha_egreso: ""
+                        })
+                        //Diferencia
+                        dataExcel.push({
+                            nombre: "",
+                            area: "DIFERENCIAL",
+                            nivel: "",
+                            mes: "",
+                            "%_carga_min_proy": Number((((field.tot_hor_proy / field.tot_hor) * 100) - field["%_carga_min_proy"]).toFixed(2)).toLocaleString("de-DE"),
+                            "%_carga_min_admon": Number((((field.tot_hor_admon / field.tot_hor) * 100) - field["%_carga_min_admon"]).toFixed(2)).toLocaleString("de-DE"),
+                            hor_esp_proy: Number((field.tot_hor_proy - field.hor_esp_proy).toFixed(2)).toLocaleString("de-DE"),
+                            hor_esp_admon: Number((field.tot_hor_admon - field.hor_esp_admon).toFixed(2)).toLocaleString("de-DE"),
+                            hor_ref: "",
+                            eval: "",
+                            tot_hor_proy: "",
+                            "%_hor_proy": "",
+                            tot_hor_admon: "",
+                            "%_hor_admon": "",
+                            tot_hor: Number((field.tot_hor - field.hor_ref).toFixed(2)).toLocaleString("de-DE"),
+                            "%_tot_hor": "",
+                            estatus: "",
+                            fecha_egreso: ""
+                        })
+                        dataExcel.push({})
+                        break;
+                }
+            });
+
+            return dataExcel;
+        }
     },
     watch: {
         controlPagination: {

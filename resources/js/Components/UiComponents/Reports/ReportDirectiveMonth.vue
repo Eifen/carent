@@ -4,7 +4,8 @@
         <ListingCrud style="width: 90%;" v-if="scope.isMounted && directivePaginatio != 0" :title-object="reportColumns"
             :pagination-lenght="directivePaginatio" :pagination-limit="directiveLength" :table-info="directiveList"
             title-table="Reporte directivo mensual" not-found-message="No hay horas cargadas" :select-search="selectSearch"
-            view-search view-excel title-excel="ReporteDirectivoMensual.xls" status-table="usuarios" view-hours>
+            view-search view-excel title-excel="ReporteDirectivoMensual.xls" status-table="usuarios" view-hours directive
+            directive-type="month">
         </ListingCrud>
     </div>
 </template>
@@ -56,13 +57,13 @@ export default {
                         nombre: period.nombre,
                         area: period.area,
                         nivel: period.nivel,
+                        mes: period.mes,
                         "%_carga_min_proy": Number(period.percen_carg).toLocaleString("de-DE"),
                         "%_carga_min_admon": Number(100 - period.percen_carg).toLocaleString("de-DE"),
                         hor_esp_proy: Number((refTotal * (period.percen_carg / 100)).toFixed(2)).toLocaleString("de-DE"),
                         hor_esp_admon: Number((refTotal * ((100 - period.percen_carg) / 100)).toFixed(2)).toLocaleString("de-DE"),
                         hor_ref: period.ref_total,
                         eval: period.eval,
-                        mes: period.mes,
                         tot_hor_proy: period.proy_hours,
                         "%_hor_proy": period.percen_proy,
                         tot_hor_admon: period.admin_hours,

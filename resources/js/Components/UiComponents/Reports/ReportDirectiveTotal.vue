@@ -5,7 +5,7 @@
             :pagination-lenght="directivePaginatio" :pagination-limit="directiveLength" :table-info="directiveList"
             title-table="Reporte de horas administrativas" not-found-message="No hay horas cargadas"
             :select-search="selectSearch" view-search view-excel title-excel="ReporteDirectivoAcumulado.xls"
-            status-table="usuarios" view-hours :hours-ref="refTotal">
+            status-table="usuarios" view-hours :hours-ref="refTotal" directive directive-type="total">
         </ListingCrud>
     </div>
 </template>
@@ -105,7 +105,7 @@ export default {
                         nombre: user.nombre,
                         area: user.area,
                         nivel: user.nivel,
-                        "%_carga_min": Number(user.percen_carg).toLocaleString("de-DE"),
+                        "%_carga_min_proy": Number(user.percen_carg).toLocaleString("de-DE"),
                         "%_carga_min_admon": Number(100 - user.percen_carg).toLocaleString("de-DE"),
                         hor_esp_proy: Number((refTotal * (user.percen_carg / 100)).toFixed(2)).toLocaleString("de-DE"),
                         hor_esp_admon: Number((refTotal * ((100 - user.percen_carg) / 100)).toFixed(2)).toLocaleString("de-DE"),

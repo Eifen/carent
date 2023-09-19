@@ -39,7 +39,7 @@
                     v-model="scope.dataSelect.managersPerDepartment[cursor].hoursAssigned"
                     @input="$emit('total-hours', scope.dataSelect.managersPerDepartment)" />
                 <span class="input-group-text" id="basic-addon11" v-if="isEdit">
-                    <project-additional-modal modal-title="Horas Adicionales" name-modal="additionalHours"
+                    <project-additional-modal modal-title="Horas Adicionales" :name-modal="'additionalHours' + cursor"
                         table-modal-title="Lista de horas" table-modal-insert="Agregar hora adicional"
                         :last-id-table="scope.lastHoursId" :modal-columns="modalColumns" :scope-modal="scope"
                         @asign-list="asignHourList(scope.dataSelect.managersPerDepartment[cursor].departmentId)"
