@@ -5,7 +5,7 @@
             :pagination-lenght="directivePaginatio" :pagination-limit="directiveLength" :table-info="directiveList"
             title-table="Reporte de horas administrativas" not-found-message="No hay horas cargadas"
             :select-search="selectSearch" view-search view-excel title-excel="ReporteDirectivoAcumulado.xls"
-            status-table="usuarios" view-hours :hours-ref="refTotal" directive directive-type="total">
+            status-table="usuarios" view-hours :hours-ref="refTotal" directive>
         </ListingCrud>
     </div>
 </template>

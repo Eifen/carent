@@ -66,7 +66,8 @@ class ProjectModel extends Model
         $getUsers = DB::table('users')
             ->where([
                 ['department_id', '=', $getDepartmentId->department_id],
-                ['user_id', '!=', 1]
+                ['user_id', '!=', 1],
+                ['status_id', '=', 1]
             ])
             ->select(DB::raw('CONCAT(first_name," ",second_name," ",first_surname," ",second_surname) AS user_name'), 'user_id', 'position_id', 'department_id')
             ->get();

@@ -53,6 +53,7 @@ const modalApp = createApp({
                     //Reiniciamos las variables
                     this.inputUsersAssigned = [];
                     this.managerUserAssigned = [];
+                    this.usersPerDepartment = [];
                     //Si no existe algun error, asociamos la información al departamento
                     request.data["users"].forEach((user) => {
                         //Insertamos una nueva fila en usersPerDepartment
@@ -212,7 +213,6 @@ const modalApp = createApp({
                             throw `No se puede eliminar al usuario ${copyManager[getOldIndex].userName} ya que tiene horas cargadas. Reduzca sus horas equivalente a las que ha cargado`;
                     }
                 });
-                console.log(this.inputUsersAssigned);
                 //Vaciamos el array
                 this.managerUserAssigned = [];
                 //Recorremos el nuevo multiSelect
