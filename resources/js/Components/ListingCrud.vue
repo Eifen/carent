@@ -384,6 +384,71 @@ export default {
                         });
                     })
                     dataExcel.push({});
+                } else if (!this.controlTable.data[cursor + 1]) {
+                    listExcel.forEach(field => {
+                        if (user.area == field.area) {
+                            const percenTotalProy = (field.tot_hor_proy / field.tot_hor) * 100;
+                            const percenTotalAdmon = (field.tot_hor_admon / field.tot_hor) * 100;
+                            //Cargamos el total en funcion del tipo de directivo
+                            dataExcel.push({
+                                nombre: "<b>" + "Total de carga para".toUpperCase() + "</b>",
+                                nivel: "<b>" + field.nivel.toUpperCase() + "</b>",
+                                "%_carga_min_proy": Number(field["%_carga_min_proy"]).toLocaleString("de-DE"),
+                                "%_carga_min_admon": Number(field["%_carga_min_admon"]).toLocaleString("de-DE"),
+                                hor_esp_proy: Number(field.hor_esp_proy.toFixed(2)).toLocaleString("de-DE"),
+                                hor_esp_admon: Number(field.hor_esp_admon.toFixed(2)).toLocaleString("de-DE"),
+                                hor_ref: Number(field.hor_ref.toFixed(2)).toLocaleString('de-DE'),
+                                tot_hor_proy: Number(field.tot_hor_proy.toFixed(2)).toLocaleString("de-DE"),
+                                "%_hor_proy": Number(percenTotalProy.toFixed(2)).toLocaleString("de-DE"),
+                                tot_hor_admon: Number(field.tot_hor_admon.toFixed(2)).toLocaleString("de-DE"),
+                                "%_hor_admon": Number(percenTotalAdmon.toFixed(2)).toLocaleString("de-DE"),
+                                tot_hor: Number(field.tot_hor.toFixed(2)).toLocaleString("de-DE"),
+                                "%_tot_hor": Number((percenTotalAdmon + percenTotalProy).toFixed(2)).toLocaleString
+                            })
+                        };
+                    })
+                    //Reducimos para el total general
+                    let totalArea = listExcel.reduce((acum, field) => {
+                        //Creamos un key
+                        const key = field.area;
+                        if (!acum[key]) {
+                            acum[key] = {
+                                nombre: "Total de",
+                                area: field.area,
+                                hor_esp_proy: field["hor_esp_proy"],
+                                hor_esp_admon: field["hor_esp_admon"],
+                                hor_ref: field["hor_ref"],
+                                tot_hor_proy: field["tot_hor_proy"],
+                                tot_hor_admon: field["tot_hor_admon"],
+                                tot_hor: field["tot_hor"],
+                            }
+                        } else {
+                            acum[key].hor_esp_proy += field["hor_esp_proy"]
+                            acum[key].hor_esp_admon += field["hor_esp_admon"]
+                            acum[key].hor_ref += field["hor_ref"]
+                            acum[key].tot_hor_proy += field["tot_hor_proy"]
+                            acum[key].tot_hor_admon += field["tot_hor_admon"]
+                            acum[key].tot_hor += field["tot_hor"]
+                        }
+                        return acum;
+                    }, {})
+
+                    //Transformamos a array
+                    totalArea = Object.values(totalArea);
+                    console.log(totalArea)
+                    totalArea.forEach(areaTotal => {
+                        if (areaTotal.area == user.area) dataExcel.push({
+                            nombre: "<b>" + areaTotal.nombre.toUpperCase() + "</b>",
+                            area: "<b>" + areaTotal.area.toUpperCase() + "</b>",
+                            hor_esp_proy: Number(areaTotal["hor_esp_proy"].toFixed(2)).toLocaleString('de-DE'),
+                            hor_esp_admon: Number(areaTotal["hor_esp_admon"].toFixed(2)).toLocaleString('de-DE'),
+                            hor_ref: Number(areaTotal["hor_ref"].toFixed(2)).toLocaleString('de-DE'),
+                            tot_hor_proy: Number(areaTotal["tot_hor_proy"].toFixed(2)).toLocaleString('de-DE'),
+                            tot_hor_admon: Number(areaTotal["tot_hor_admon"].toFixed(2)).toLocaleString('de-DE'),
+                            tot_hor: Number(areaTotal["tot_hor"].toFixed(2)).toLocaleString('de-DE'),
+                        });
+                    })
+                    dataExcel.push({});
                 }
             });
 
