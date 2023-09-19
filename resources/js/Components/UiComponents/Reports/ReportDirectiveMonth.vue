@@ -21,16 +21,19 @@ export default {
                 column1: 'Nombre',
                 column2: 'Area',
                 column3: "Nivel",
-                column4: "% Carga",
-                column5: "Eval",
-                column6: 'Horas Proy',
-                column7: '% Proy',
-                column8: 'Horas Admon',
-                column9: '% Horas Admon',
-                column10: 'Total horas',
-                column11: '% Carga total',
-                column12: 'Ref Total',
-                column13: 'Estatus',
+                column4: "% Carga proy",
+                column5: "% Carga admon",
+                column6: "Hor Esp proy",
+                column7: "Hor Esp admon",
+                column8: 'Ref Total',
+                column9: "Eval",
+                column10: 'Horas Proy',
+                column11: '% Proy',
+                column12: 'Horas Admon',
+                column13: '% Horas Admon',
+                column14: 'Total horas',
+                column15: '% Carga total',
+                column16: 'Estatus',
             },
             selectSearch: {
                 select1: "Nombre",
@@ -48,11 +51,16 @@ export default {
         if (this.scope.isMounted) {
             this.scope.listData.forEach(user => {
                 user.forEach(period => {
+                    const refTotal = period.ref_total.replace(/\./g, "").replace(",", ".");
                     this.directiveList.push({
                         nombre: period.nombre,
                         area: period.area,
                         nivel: period.nivel,
-                        "%_carga_min": Number(period.percen_carg).toLocaleString("de-DE"),
+                        "%_carga_min_proy": Number(period.percen_carg).toLocaleString("de-DE"),
+                        "%_carga_min_admon": Number(100 - period.percen_carg).toLocaleString("de-DE"),
+                        hor_esp_proy: Number((refTotal * (period.percen_carg / 100)).toFixed(2)).toLocaleString("de-DE"),
+                        hor_esp_admon: Number((refTotal * ((100 - period.percen_carg) / 100)).toFixed(2)).toLocaleString("de-DE"),
+                        hor_ref: period.ref_total,
                         eval: period.eval,
                         mes: period.mes,
                         tot_hor_proy: period.proy_hours,
@@ -61,7 +69,6 @@ export default {
                         "%_hor_admon": period.percen_admon,
                         tot_hor: period.total_hours,
                         "%_tot_hor": period.percen_total,
-                        hor_ref: period.ref_total,
                         estatus: period.estatus,
                         fecha_egreso: period.fecha_egreso
                     });
