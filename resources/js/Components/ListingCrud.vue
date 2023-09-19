@@ -338,7 +338,7 @@ export default {
                                 tot_hor_admon: Number(field.tot_hor_admon.toFixed(2)).toLocaleString("de-DE"),
                                 "%_hor_admon": Number(percenTotalAdmon.toFixed(2)).toLocaleString("de-DE"),
                                 tot_hor: Number(field.tot_hor.toFixed(2)).toLocaleString("de-DE"),
-                                "%_tot_hor": Number((percenTotalAdmon + percenTotalProy).toFixed(2)).toLocaleString
+                                "%_tot_hor": Number((percenTotalAdmon + percenTotalProy).toFixed(2)).toLocaleString("de-DE")
                             })
                         };
                     })
@@ -403,7 +403,7 @@ export default {
                                 tot_hor_admon: Number(field.tot_hor_admon.toFixed(2)).toLocaleString("de-DE"),
                                 "%_hor_admon": Number(percenTotalAdmon.toFixed(2)).toLocaleString("de-DE"),
                                 tot_hor: Number(field.tot_hor.toFixed(2)).toLocaleString("de-DE"),
-                                "%_tot_hor": Number((percenTotalAdmon + percenTotalProy).toFixed(2)).toLocaleString
+                                "%_tot_hor": Number((percenTotalAdmon + percenTotalProy).toFixed(2)).toLocaleString('de-DE')
                             })
                         };
                     })
