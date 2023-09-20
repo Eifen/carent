@@ -2,10 +2,20 @@
     <div :class="listClass" v-if="tableInfo.length != 0">
         <div :class="tableClass.title">{{ titleTable }}</div>
         <div :class="tableClass.create" v-if="viewCreate" @click="$emit('createbutton')">Crear {{ buttonTitle }}</div>
-        <json-excel class="list-container-excel" v-if="viewExcel" :data="directive ? reportExcel() : controlTable.data"
-            :name="titleExcel">
-            Exportar en Excel <font-awesome string-icon="fa-solid fa-file-excel"></font-awesome>
-        </json-excel>
+        <div class="list-container-excel">
+            <json-excel class="list-container-excel-button" v-if="viewExcel"
+                :data="directive ? reportExcel() : controlTable.data" :name="titleExcel">
+                Exportar en Excel <font-awesome string-icon="fa-solid fa-file-excel"></font-awesome>
+            </json-excel>
+            <json-excel class="list-container-excel-button" v-if="directive" :data="reportResume()"
+                :name="titleResumeExcel">
+                Exportar resumen en excel <font-awesome string-icon="fa-solid fa-file-excel"></font-awesome>
+            </json-excel>
+            <json-excel class="list-container-excel-button" v-if="directive" :data="reportConsolidated()"
+                :name="titleConsolidatedExcel">
+                Exportar consolidado en excel <font-awesome string-icon="fa-solid fa-file-excel"></font-awesome>
+            </json-excel>
+        </div>
         <div class="list-container-hours" v-if="viewHours && hoursEstimated != 0">
             <div>Cantidad de horas de Trabajo</div>
             <span>{{ hoursEstimated }}</span>
@@ -115,6 +125,7 @@
 import FontAwesome from "@/Components/FontAwesome/FontAwesome.vue";
 import Pagination from "@/Components/Pagination.vue";
 import JsonExcel from 'vue-json-excel3'
+import { ListingMixinMethods } from '@/Components/ListingCrudExcel.js'
 
 export default {
     props: {
@@ -135,6 +146,8 @@ export default {
         viewExcel: Boolean, //Habilita descarga del reporte en un excel
         viewHours: Boolean, //Habilita la vista de horas
         titleExcel: String, //Titulo del archivo en excel, debe estar activar viewExcel
+        titleResumeExcel: String, //Titulo para el reporte de resumen de las areas y su cargabilidad
+        titleConsolidatedExcel: String, //Titulo para el reporte consolidado de las areas
         hoursRef: Number, //Numero total de la referencia
         directive: Boolean, //Valor booleano que determina si es un reporte directivo o no
         directiveType: String, // En caso de que directive sea true verifica el tipo de directivo
@@ -172,7 +185,7 @@ export default {
             }, //Controla los estados de la tabla
             listInputsDTO: {}, //Objeto que almacena los campos por los que buscar de forma temporal en sus propiedades. Hereda de fieldsInput del componente pagination.vue
             controlPagination: { init: 0, cursor: 0, regex: new RegExp("^([0-9]{1})$") }, //control de la lógica de la paginación
-            controlView: { pagActual: 0, isGreater: false } //Controla la vista de la paginación
+            controlView: { pagActual: 0, isGreater: false }, //Controla la vista de la paginación
         };
     },
     created() {
@@ -284,177 +297,6 @@ export default {
             this.controlPagination.cursor = newPage;
         },
         /**
-         * Metodo que se encarga de agrupar las areas y niveles, y devolver un total para producir en excel
-         */
-        reportExcel() {
-            let dataExcel = [] // Don de almacenara el array resultante
-            let listExcel = this.controlTable.data.reduce((acum, field) => {
-                //Creamos un key
-                const key = field.area + "-" + field.nivel;
-                if (!acum[key]) {
-                    acum[key] = {
-                        area: field.area,
-                        nivel: field.nivel,
-                        "%_carga_min_proy": this.convertNumber(field["%_carga_min_proy"]),
-                        "%_carga_min_admon": this.convertNumber(field["%_carga_min_admon"]),
-                        hor_esp_proy: this.convertNumber(field["hor_esp_proy"]),
-                        hor_esp_admon: this.convertNumber(field["hor_esp_admon"]),
-                        hor_ref: this.convertNumber(field["hor_ref"]),
-                        tot_hor_proy: this.convertNumber(field["tot_hor_proy"]),
-                        tot_hor_admon: this.convertNumber(field["tot_hor_admon"]),
-                        tot_hor: this.convertNumber(field["tot_hor"]),
-                    }
-                } else {
-                    acum[key].hor_esp_proy += this.convertNumber(field["hor_esp_proy"])
-                    acum[key].hor_esp_admon += this.convertNumber(field["hor_esp_admon"])
-                    acum[key].hor_ref += this.convertNumber(field["hor_ref"])
-                    acum[key].tot_hor_proy += this.convertNumber(field["tot_hor_proy"])
-                    acum[key].tot_hor_admon += this.convertNumber(field["tot_hor_admon"])
-                    acum[key].tot_hor += this.convertNumber(field["tot_hor"])
-                }
-                return acum;
-            }, {});
-            //Transformamos el objeto a un array
-            listExcel = Object.values(listExcel)
-            //Una vez acumulada la informacion por area y nivel
-            this.controlTable.data.forEach((user, cursor) => {
-                dataExcel.push(user);
-                if (this.controlTable.data[cursor + 1] && this.controlTable.data[cursor].area != this.controlTable.data[cursor + 1].area) {
-                    listExcel.forEach(field => {
-                        if (user.area == field.area) {
-                            const percenTotalProy = (field.tot_hor_proy / field.tot_hor) * 100;
-                            const percenTotalAdmon = (field.tot_hor_admon / field.tot_hor) * 100;
-                            //Cargamos el total en funcion del tipo de directivo
-                            dataExcel.push({
-                                nombre: "<b>" + "Total de carga para".toUpperCase() + "</b>",
-                                nivel: "<b>" + field.nivel.toUpperCase() + "</b>",
-                                "%_carga_min_proy": Number(field["%_carga_min_proy"]).toLocaleString("de-DE"),
-                                "%_carga_min_admon": Number(field["%_carga_min_admon"]).toLocaleString("de-DE"),
-                                hor_esp_proy: Number(field.hor_esp_proy.toFixed(2)).toLocaleString("de-DE"),
-                                hor_esp_admon: Number(field.hor_esp_admon.toFixed(2)).toLocaleString("de-DE"),
-                                hor_ref: Number(field.hor_ref.toFixed(2)).toLocaleString('de-DE'),
-                                tot_hor_proy: Number(field.tot_hor_proy.toFixed(2)).toLocaleString("de-DE"),
-                                "%_hor_proy": Number(percenTotalProy.toFixed(2)).toLocaleString("de-DE"),
-                                tot_hor_admon: Number(field.tot_hor_admon.toFixed(2)).toLocaleString("de-DE"),
-                                "%_hor_admon": Number(percenTotalAdmon.toFixed(2)).toLocaleString("de-DE"),
-                                tot_hor: Number(field.tot_hor.toFixed(2)).toLocaleString("de-DE"),
-                                "%_tot_hor": Number((percenTotalAdmon + percenTotalProy).toFixed(2)).toLocaleString("de-DE")
-                            })
-                        };
-                    })
-                    //Reducimos para el total general
-                    let totalArea = listExcel.reduce((acum, field) => {
-                        //Creamos un key
-                        const key = field.area;
-                        if (!acum[key]) {
-                            acum[key] = {
-                                nombre: "Total de",
-                                area: field.area,
-                                hor_esp_proy: field["hor_esp_proy"],
-                                hor_esp_admon: field["hor_esp_admon"],
-                                hor_ref: field["hor_ref"],
-                                tot_hor_proy: field["tot_hor_proy"],
-                                tot_hor_admon: field["tot_hor_admon"],
-                                tot_hor: field["tot_hor"],
-                            }
-                        } else {
-                            acum[key].hor_esp_proy += field["hor_esp_proy"]
-                            acum[key].hor_esp_admon += field["hor_esp_admon"]
-                            acum[key].hor_ref += field["hor_ref"]
-                            acum[key].tot_hor_proy += field["tot_hor_proy"]
-                            acum[key].tot_hor_admon += field["tot_hor_admon"]
-                            acum[key].tot_hor += field["tot_hor"]
-                        }
-                        return acum;
-                    }, {})
-
-                    //Transformamos a array
-                    totalArea = Object.values(totalArea);
-                    console.log(totalArea)
-                    totalArea.forEach(areaTotal => {
-                        if (areaTotal.area == user.area) dataExcel.push({
-                            nombre: "<b>" + areaTotal.nombre.toUpperCase() + "</b>",
-                            area: "<b>" + areaTotal.area.toUpperCase() + "</b>",
-                            hor_esp_proy: Number(areaTotal["hor_esp_proy"].toFixed(2)).toLocaleString('de-DE'),
-                            hor_esp_admon: Number(areaTotal["hor_esp_admon"].toFixed(2)).toLocaleString('de-DE'),
-                            hor_ref: Number(areaTotal["hor_ref"].toFixed(2)).toLocaleString('de-DE'),
-                            tot_hor_proy: Number(areaTotal["tot_hor_proy"].toFixed(2)).toLocaleString('de-DE'),
-                            tot_hor_admon: Number(areaTotal["tot_hor_admon"].toFixed(2)).toLocaleString('de-DE'),
-                            tot_hor: Number(areaTotal["tot_hor"].toFixed(2)).toLocaleString('de-DE'),
-                        });
-                    })
-                    dataExcel.push({});
-                } else if (!this.controlTable.data[cursor + 1]) {
-                    listExcel.forEach(field => {
-                        if (user.area == field.area) {
-                            const percenTotalProy = (field.tot_hor_proy / field.tot_hor) * 100;
-                            const percenTotalAdmon = (field.tot_hor_admon / field.tot_hor) * 100;
-                            //Cargamos el total en funcion del tipo de directivo
-                            dataExcel.push({
-                                nombre: "<b>" + "Total de carga para".toUpperCase() + "</b>",
-                                nivel: "<b>" + field.nivel.toUpperCase() + "</b>",
-                                "%_carga_min_proy": Number(field["%_carga_min_proy"]).toLocaleString("de-DE"),
-                                "%_carga_min_admon": Number(field["%_carga_min_admon"]).toLocaleString("de-DE"),
-                                hor_esp_proy: Number(field.hor_esp_proy.toFixed(2)).toLocaleString("de-DE"),
-                                hor_esp_admon: Number(field.hor_esp_admon.toFixed(2)).toLocaleString("de-DE"),
-                                hor_ref: Number(field.hor_ref.toFixed(2)).toLocaleString('de-DE'),
-                                tot_hor_proy: Number(field.tot_hor_proy.toFixed(2)).toLocaleString("de-DE"),
-                                "%_hor_proy": Number(percenTotalProy.toFixed(2)).toLocaleString("de-DE"),
-                                tot_hor_admon: Number(field.tot_hor_admon.toFixed(2)).toLocaleString("de-DE"),
-                                "%_hor_admon": Number(percenTotalAdmon.toFixed(2)).toLocaleString("de-DE"),
-                                tot_hor: Number(field.tot_hor.toFixed(2)).toLocaleString("de-DE"),
-                                "%_tot_hor": Number((percenTotalAdmon + percenTotalProy).toFixed(2)).toLocaleString('de-DE')
-                            })
-                        };
-                    })
-                    //Reducimos para el total general
-                    let totalArea = listExcel.reduce((acum, field) => {
-                        //Creamos un key
-                        const key = field.area;
-                        if (!acum[key]) {
-                            acum[key] = {
-                                nombre: "Total de",
-                                area: field.area,
-                                hor_esp_proy: field["hor_esp_proy"],
-                                hor_esp_admon: field["hor_esp_admon"],
-                                hor_ref: field["hor_ref"],
-                                tot_hor_proy: field["tot_hor_proy"],
-                                tot_hor_admon: field["tot_hor_admon"],
-                                tot_hor: field["tot_hor"],
-                            }
-                        } else {
-                            acum[key].hor_esp_proy += field["hor_esp_proy"]
-                            acum[key].hor_esp_admon += field["hor_esp_admon"]
-                            acum[key].hor_ref += field["hor_ref"]
-                            acum[key].tot_hor_proy += field["tot_hor_proy"]
-                            acum[key].tot_hor_admon += field["tot_hor_admon"]
-                            acum[key].tot_hor += field["tot_hor"]
-                        }
-                        return acum;
-                    }, {})
-
-                    //Transformamos a array
-                    totalArea = Object.values(totalArea);
-                    console.log(totalArea)
-                    totalArea.forEach(areaTotal => {
-                        if (areaTotal.area == user.area) dataExcel.push({
-                            nombre: "<b>" + areaTotal.nombre.toUpperCase() + "</b>",
-                            area: "<b>" + areaTotal.area.toUpperCase() + "</b>",
-                            hor_esp_proy: Number(areaTotal["hor_esp_proy"].toFixed(2)).toLocaleString('de-DE'),
-                            hor_esp_admon: Number(areaTotal["hor_esp_admon"].toFixed(2)).toLocaleString('de-DE'),
-                            hor_ref: Number(areaTotal["hor_ref"].toFixed(2)).toLocaleString('de-DE'),
-                            tot_hor_proy: Number(areaTotal["tot_hor_proy"].toFixed(2)).toLocaleString('de-DE'),
-                            tot_hor_admon: Number(areaTotal["tot_hor_admon"].toFixed(2)).toLocaleString('de-DE'),
-                            tot_hor: Number(areaTotal["tot_hor"].toFixed(2)).toLocaleString('de-DE'),
-                        });
-                    })
-                    dataExcel.push({});
-                }
-            });
-
-            return dataExcel;
-        },
-        /**
          * Metodo que convierte un numero en formato 000.000,00 a 000000.00
          * @param {*} stringConvert
          */
@@ -486,5 +328,6 @@ export default {
     },
     computed: { DTOData() { return this.$data } }, //Enviamos el objeto data como parametro
     components: { FontAwesome, Pagination, JsonExcel },
+    mixins: [ListingMixinMethods]
 };
 </script>

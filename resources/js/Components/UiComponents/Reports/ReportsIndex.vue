@@ -2,7 +2,7 @@
     <div class="reports-container">
         <div class="reports-container-select">
             <div class="input-group">
-                <select class="form-select" title="MunicipalitySelect" v-model="selectReport">
+                <select class="form-select" title="MunicipalitySelect" v-model="selectReport" :disabled="!isMounted">
                     <option value=0 selected disabled>Seleccione el reporte</option>
                     <option v-for="(select, cursor) in listReports" :key="cursor" :value="select.report_id">
                         <span>{{ select.report_description }}</span>
@@ -37,7 +37,7 @@
                 <input type="text" class="form-control" placeholder="Ejemplo: 1990-02-18" id="start_date"
                     aria-describedby="basic-addon1" v-model="dateStart" disabled />
                 <span class="input-group-text" for="calendar">
-                    <calendar @to-input="dateSearch($event, 'start')"></calendar>
+                    <calendar @to-input="dateSearch($event, 'start')" :key="dateStart"></calendar>
                 </span>
             </div>
             <div class="input-group mb-3">
@@ -54,15 +54,15 @@
             v-if="selectReport == 3 && reportPermission.rhorasP == 1 && listIntervalData.length != 0" :scope="migrateData"
             :key="listIntervalData">
         </ReportAdminHours>
-        <div v-else-if="reportPermission.rhorasP != 1" class="not-found">
+        <div v-else-if="selectReport == 3 && reportPermission.rhorasP != 1" class="not-found">
             <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
         </div>
         <!-- Reporte directivo acumulado -->
         <ReportDirectiveTotal class="reports-container-list"
             v-if="selectReport == 4 && reportPermission.rdirectiveAP == 1 && dateEnd.length != 0" :scope="migrateData"
-            :key="dateEnd">
+            :key="dateEnd" @update-mounted="isMounted = $event">
         </ReportDirectiveTotal>
-        <div v-else-if="reportPermission.rdirectiveAP != 1" class="not-found">
+        <div v-else-if="selectReport == 4 && reportPermission.rdirectiveAP != 1" class="not-found">
             <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
         </div>
     </div>
@@ -83,7 +83,7 @@ export default {
     data() {
         return {
             selectReport: 0, //Entero que captura la informacion del reporte seleccionado
-            isMounted: false, //Desactiva el loading cuando carga el componente
+            isMounted: true, //Desactiva el loading cuando carga el componente
             lengthColumns: 50,
             maxLengthPagination: 0, //Controlan la páginación
             listData: [], //Object que almacena la data de los usuarios a mostrar en la lista

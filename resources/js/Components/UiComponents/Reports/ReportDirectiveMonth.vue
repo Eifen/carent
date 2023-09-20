@@ -4,7 +4,9 @@
         <ListingCrud style="width: 90%;" v-if="scope.isMounted && directivePaginatio != 0" :title-object="reportColumns"
             :pagination-lenght="directivePaginatio" :pagination-limit="directiveLength" :table-info="directiveList"
             title-table="Reporte directivo mensual" not-found-message="No hay horas cargadas" :select-search="selectSearch"
-            view-search view-excel title-excel="ReporteDirectivoMensual.xls" status-table="usuarios" view-hours directive>
+            view-search view-excel title-excel="ReporteDirectivoMensual.xls"
+            title-resume-excel="ResumenDirectivoMensual.xls" title-consolidated-excel="ConsolidadoDirectivoMensual.xls"
+            status-table="usuarios" view-hours directive>
         </ListingCrud>
     </div>
 </template>

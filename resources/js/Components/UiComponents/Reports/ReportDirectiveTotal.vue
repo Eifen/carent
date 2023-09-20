@@ -5,6 +5,7 @@
             :pagination-lenght="directivePaginatio" :pagination-limit="directiveLength" :table-info="directiveList"
             title-table="Reporte de horas administrativas" not-found-message="No hay horas cargadas"
             :select-search="selectSearch" view-search view-excel title-excel="ReporteDirectivoAcumulado.xls"
+            title-resume-excel="ResumenDirectivoAcumulado.xls" title-consolidated-excel="ConsolidadoDirectivoAcumulado.xls"
             status-table="usuarios" view-hours :hours-ref="refTotal" directive>
         </ListingCrud>
     </div>
@@ -16,6 +17,7 @@ export default {
     props: {
         scope: Object //Importa la data del padre
     },
+    emits: ['update-mounted'],
     data() {
         return {
             reportColumns: {
@@ -50,10 +52,12 @@ export default {
     },
     mounted() {
         this.isListMounted = false;
+        this.$emit('update-mounted', this.isListMounted)
         //Pasamos como parametro el intervalo de fechas
         axios.post("reports/list-directive-total", { startDate: this.scope.dateStart, endDate: this.scope.dateEnd })
             .then(request => {
                 this.isListMounted = true
+                this.$emit('update-mounted', this.isListMounted)
                 let requestDTO = [];
                 request.data.message.forEach(user => {
                     user.forEach(period => {

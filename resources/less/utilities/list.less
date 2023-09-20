@@ -20,9 +20,27 @@
         grid-area: 2 / 1 / 3 / 4;
         justify-self: start;
         margin-bottom: 10px;
+    }
+
+    &-create{
         .buttonCRUD();
         height: 60px;
         line-height: 45px;
+    }
+
+    &-excel{
+        display: grid;
+        width: 100%;
+        grid-template-columns: repeat(auto-fill,minmax(min(50%,200px),1fr));
+        gap: 10px;
+        align-items: center;
+        &-button{
+            .buttonCRUD();
+            width: 100%;
+            align-self: center;
+            justify-self: center;
+            padding: 10px
+        }
     }
 
     &-hours{

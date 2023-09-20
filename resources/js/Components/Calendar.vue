@@ -18,6 +18,9 @@ export default {
             dateDTO: { day: 0, month: 0, year: 0 } // Objeto de transferencia
         }
     },
+    created() {
+        this.date = ''
+    },
     watch: {
         date(newDate) {
             this.dateDTO = {
