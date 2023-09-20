@@ -9,8 +9,10 @@
             placeholder="Observaciones" id="observation" aria-describedby="basic-addon4" autocomplete="nope"
             v-model="inputObservation"></textarea>
         <div v-if="loadRef == 'admin' && statusLoad == 1" class="admin_message badge bg-warning text-dark">Por aprobar</div>
-        <div v-if="loadRef == 'admin' && statusLoad == 2" class="admin_message badge bg-success text-dark">Aprobada</div>
-        <div v-if="loadRef == 'admin' && statusLoad == 3" class="admin_message badge bg-danger text-dark">No aprobada</div>
+        <div v-if="loadRef == 'admin' && statusLoad == 2" class="admin_message badge bg-success text-dark">Aprobada por {{
+            aprrovedCode }}</div>
+        <div v-if="loadRef == 'admin' && statusLoad == 3" class="admin_message badge bg-danger text-dark">No aprobada por {{
+            aprrovedCode }}</div>
         <!-- Mensajes de error en Observaciones-->
         <div class="form-ErrorInput" v-if="inputObservationError != ''">
             <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
@@ -50,6 +52,7 @@ export default {
             inputObservation: "", //Controla el input de las observaciones
             inputObservationError: "", //Controla el input de errores de observaciones
             statusLoad: "", //Solo para horas administrativas, muestra el estado de aprovacion de dicha hora
+            aprrovedCode: null, //Codigo de aprobacion para esa hora administrativa.
             errorMessageObservation: "minimo 7 caracteres", //Mensaje de error para el tamaño minimo de las observaciones
         }
     },
@@ -120,6 +123,7 @@ export default {
                         //Observacion por defecto
                         this.inputObservation = assigned["admin_load_observation"]
                         this.statusLoad = assigned["status_load_id"]
+                        this.aprrovedCode = assigned["approved_code"]
                     }
                 })
             }
