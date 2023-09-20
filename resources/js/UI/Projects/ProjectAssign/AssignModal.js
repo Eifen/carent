@@ -109,6 +109,17 @@ const modalApp = createApp({
             if (projectInfo["analyst"].length !== 0) {
                 //Recorremos la tabla de analistas (projects_users_assigned)
                 projectInfo["analyst"].forEach((user) => {
+                    //Buscamos si tiene un valor en userAssigned y si no lo encuentra lo registramos
+                    const getUserIndex = this.usersPerDepartment
+                        .map((object) => object.value)
+                        .indexOf(user["user_id"]);
+                    if (getUserIndex === -1) {
+                        this.usersPerDepartment.push({
+                            value: user["user_id"],
+                            label: user["user_name"],
+                            disabled: false,
+                        });
+                    }
                     //Usuarios seleccionados
                     this.inputUsersAssigned.push(user["user_id"]);
                     //Horas totales cargadas
