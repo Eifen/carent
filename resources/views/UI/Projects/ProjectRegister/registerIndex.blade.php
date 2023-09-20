@@ -72,9 +72,9 @@
                                 @{{ project.clientName.toUpperCase() }}: @{{ project.description.toUpperCase() }}<br>
                                 <span v-if="project.hoursAssigned - project.hoursLoad != 0"
                                     class="badge bg-info text-dark">
-                                    @{{ project.hoursDiff }} horas por cargar</span>
+                                    @{{ project.hoursDiff }} horas por cargar de @{{ project.hoursAssigned }}</span>
                                 <span v-else class="badge bg-danger text-dark">
-                                    @{{ project.hoursDiff }} horas por cargar</span>
+                                    @{{ project.hoursDiff }} horas por cargar de @{{ project.hoursAssigned }}</span>
                             </div>
                         </td>
                         <td scope="row" align="center" valign="middle" v-for="(day,cursor) in listDayData"
