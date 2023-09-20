@@ -21,13 +21,15 @@ export default {
             reportColumns: {
                 column1: 'Nombre',
                 column2: 'Código',
-                column3: 'Concepto',
-                column4: 'Total horas cargadas',
+                column3: "Area",
+                column4: 'Concepto',
+                column5: 'Total horas cargadas',
             },
             selectSearch: {
                 select1: "Código",
                 select2: "Nombre",
                 select3: "Concepto",
+                select4: "Area",
             },
             directiveList: [], //Lista directiva mensual
             directiveLength: 50, //Numero maximo por pagina

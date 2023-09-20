@@ -23,11 +23,11 @@
                 placeholder="Seleccione el status" mode="single" class="form-control"
                 @input="emitSelectSearch($event, columnName)"></Multiselect>
             <!-- Divisiones -->
-            <Multiselect v-if="columnName == 'Area'" v-model="multiSelectStatus" :options="multiSelectList.areas"
+            <Multiselect v-if="columnName == 'Area'" v-model="multiSelectAreas" :options="multiSelectList.areas"
                 placeholder="Seleccione el area" mode="single" class="form-control"
                 @input="emitSelectSearch($event, columnName)"></Multiselect>
             <!-- Concepto -->
-            <Multiselect v-if="columnName == 'Concepto'" v-model="multiSelectStatus" :options="multiSelectList.concept"
+            <Multiselect v-if="columnName == 'Concepto'" v-model="multiSelectConcepts" :options="multiSelectList.concept"
                 placeholder="Seleccione el concepto" mode="single" class="form-control"
                 @input="emitSelectSearch($event, columnName)"></Multiselect>
             <!-- Mes -->
@@ -68,6 +68,8 @@ export default {
         return {
             fieldsInput: {}, //Objeto encargado de distribuir el valor de cada input creado dinamicamente
             multiSelectStatus: null, //Captura los campos seleccionados del multiselect de estatus
+            multiSelectArea: null, //Captura los campos seleccionados del multiselect de areas
+            multiSelectConcepts: null, //Captura los campos seleccionados del multiselect de conceptos
             monthReferences: [
                 "Enero",
                 "Febrero",

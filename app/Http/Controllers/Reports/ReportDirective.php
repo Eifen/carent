@@ -51,6 +51,7 @@ class ReportDirective extends Controller
                     array_push($responseArray, array(
                         "nombre" => $user->user_name,
                         "código" => $user->user_code,
+                        "area" => $user->department_name,
                         "concepto" => $adminHour["concept_admin"],
                         "horas" => $adminHour["admin_hours"]
                     ));
