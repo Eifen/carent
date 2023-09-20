@@ -19,9 +19,9 @@ export const ListingMixinMethods = {
                     listExcel[0].forEach((field) => {
                         if (user.area == field.area) {
                             const percenTotalProy =
-                                (field.tot_hor_proy / field.tot_hor) * 100;
+                                (field.tot_hor_proy / field.hor_ref) * 100;
                             const percenTotalAdmon =
-                                (field.tot_hor_admon / field.tot_hor) * 100;
+                                (field.tot_hor_admon / field.hor_ref) * 100;
                             //Cargamos el total en funcion del tipo de directivo
                             dataExcel.push({
                                 nombre:
@@ -116,9 +116,9 @@ export const ListingMixinMethods = {
             listExcel[1].forEach((fieldTotal) => {
                 listExcel[0].forEach((field) => {
                     const percenTotalProy =
-                        (field.tot_hor_proy / field.tot_hor) * 100;
+                        (field.tot_hor_proy / field.hor_ref) * 100;
                     const percenTotalAdmon =
-                        (field.tot_hor_admon / field.tot_hor) * 100;
+                        (field.tot_hor_admon / field.hor_ref) * 100;
                     if (fieldTotal.area == field.area)
                         dataExcel.push({
                             titulo:
@@ -189,9 +189,9 @@ export const ListingMixinMethods = {
                 const percenAdmon =
                     (fieldTotal.hor_esp_admon / fieldTotal.hor_ref) * 100;
                 const percenRealProy =
-                    (fieldTotal.tot_hor_proy / fieldTotal.tot_hor) * 100;
+                    (fieldTotal.tot_hor_proy / fieldTotal.hor_ref) * 100;
                 const percenRealAdmon =
-                    (fieldTotal.tot_hor_admon / fieldTotal.tot_hor) * 100;
+                    (fieldTotal.tot_hor_admon / fieldTotal.hor_ref) * 100;
                 //Cargamos el area total
                 dataExcel.push({
                     titulo: "<b>" + fieldTotal.nombre.toUpperCase() + "</b>",
@@ -261,9 +261,9 @@ export const ListingMixinMethods = {
                 const percenAdmon =
                     (fieldTotal.hor_esp_admon / fieldTotal.hor_ref) * 100;
                 const percenRealProy =
-                    (fieldTotal.tot_hor_proy / fieldTotal.tot_hor) * 100;
+                    (fieldTotal.tot_hor_proy / fieldTotal.hor_ref) * 100;
                 const percenRealAdmon =
-                    (fieldTotal.tot_hor_admon / fieldTotal.tot_hor) * 100;
+                    (fieldTotal.tot_hor_admon / fieldTotal.hor_ref) * 100;
                 //Cargamos el area total
                 dataExcel.push({
                     titulo: "<b>" + fieldTotal.nombre.toUpperCase() + "</b>",
