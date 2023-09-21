@@ -131,10 +131,13 @@
     grid-area: 11 / 1 / 12 / 2;
     .table-responsive{ .configTh();
     }
-    #table-royal-fees{
-        height: 186px ;
+    #table-royal-fees,[for="aditionalTBill"]{
+        height: 186px;
         overflow: auto;
         position: relative;
+    }
+    [for="aditionalTBill"]{
+        height: 170px;
     }
 }
 

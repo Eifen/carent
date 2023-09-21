@@ -93,23 +93,44 @@
                     </div>
                     <!-- Facturacion adicional -->
                     <div class="close-project-label">Facturación Adicional</div>
+                    <div for="aditionalTBill">
+                        <table class="table">
+                            <tbody>
+                                <tr v-for="billingAditional in project.billingAditionalValue">
+                                    <td class="col-sm-4 col-lg-4" align="center">{{ billingAditional.description }}</td>
+                                    <td class="col-sm-4 col-lg-4" align="center">{{ formatNumber(billingAditional.value) }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th class="col-sm-4 col-lg-4">Total B</th>
+                                    <td class="col-sm-4 col-lg-4" align="center">{{ formatNumber(totalAditionalBilling) }}
+                                    </td>
+
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- Gastos-->
+                    <div class="close-project-label">Gastos</div>
                     <table class="table">
                         <tbody>
-                            <tr v-for="billingAditional in project.billingAditionalValue">
+                            <tr v-for="billingAditional in project.billingGValue">
                                 <td class="col-sm-4 col-lg-4" align="center">{{ billingAditional.description }}</td>
                                 <td class="col-sm-4 col-lg-4" align="center">{{ formatNumber(billingAditional.value) }}</td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th class="col-sm-4 col-lg-4">Total B</th>
-                                <td class="col-sm-4 col-lg-4" align="center">{{ formatNumber(totalAditionalBilling) }}</td>
+                                <th class="col-sm-4 col-lg-4">Total C</th>
+                                <td class="col-sm-4 col-lg-4" align="center">{{ formatNumber(totalBillsBilling) }}</td>
 
                             </tr>
                             <tr>
-                                <th class="col-sm-4 col-lg-4"> Total A+B</th>
+                                <th class="col-sm-4 col-lg-4"> Total A+B+C</th>
                                 <td class="col-sm-4 col-lg-4" align="center">{{ formatNumber(totalRealFees +
-                                    totalAditionalBilling) }}
+                                    totalAditionalBilling + totalBillsBilling) }}
                                 </td>
                             </tr>
                         </tfoot>
@@ -341,6 +362,7 @@ export default {
                 'message': '',
                 'billingValue': [],
                 'billingAditionalValue': [],
+                'billingGValue': [],
                 'dateClose': '',
                 'monetaryReco': 0,
                 'totalRealFees': 0,
@@ -448,7 +470,7 @@ export default {
                         break;
                     //Gastos no presupuestados y otros gastos
                     case department.billing_concept_id !== 1 && department.billing_concept_id !== 2 && department.billing_concept_id !== 4:
-                        this.project.billingAditionalValue.push({
+                        this.project.billingGValue.push({
                             "description": department.billing_concept_description,
                             "value": parseFloat(department.billing_value)
                         })
@@ -568,6 +590,9 @@ export default {
         },
         totalAditionalBilling() {
             return this.project.billingAditionalValue.reduce((total, billingValue) => total + parseFloat(billingValue.value), 0);
+        },
+        totalBillsBilling() {
+            return this.project.billingGValue.reduce((total, billingValue) => total + parseFloat(billing.value), 0);
         }
     },
     watch: {
