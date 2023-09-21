@@ -46,8 +46,8 @@
 
     <div id='body'>
         <div id="wrapper_logo">
-            <img src="https://carent.crowe.com.ve:16000/images/logo-carent.png" height="100" class="img-fluid logo"
-                alt="">
+            <img title="email-logo-recovery" src="https://carent.crowe.com.ve:16000/images/logo-carent.png" height="100"
+                class="img-fluid logo" alt="">
         </div>
         <div id="wrapper_contenido">
             <p>Se ha solicitado la recuperación de su contraseña, si usted no ha realizado esta acción por favor

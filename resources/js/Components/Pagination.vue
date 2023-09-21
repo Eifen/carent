@@ -1,20 +1,19 @@
 <template>
     <div :class="scope.tableClass.search">
         <div class="input-group mb-3" v-for="(columnName, cursor) in columnsSearch" :key="cursor">
-            <span v-if="columnName != 'Mes'" class="input-group-text" id="basic-addon1">{{ columnName }} </span>
+            <span v-if="columnName != 'Mes'" class="input-group-text">{{ columnName }} </span>
             <!-- Representa el nombre de cada campo a buscar-->
             <input v-if="columnTarget(columnName)" type="text" class="form-control" :aria-label="columnName"
-                aria-describedby="basic-addon1" :placeholder="'Ingrese ' + columnName"
-                @input="emitInputSearch($event, columnName)" />
+                :placeholder="'Ingrese ' + columnName" @input="emitInputSearch($event, columnName)" />
             <!-- Fechas  -->
             <input v-if="columnName == 'Fecha desde'" type="text" class="form-control" placeholder="Ejemplo: 1990-02-18"
-                id="birthday" aria-describedby="basic-addon1" v-model="inputDateStart" disabled />
-            <span v-if="columnName == 'Fecha desde'" class="input-group-text" id="basic-addon2">
+                id="birthday" v-model="inputDateStart" disabled />
+            <span v-if="columnName == 'Fecha desde'" class="input-group-text" for="calendar-input">
                 <calendar @to-input="emitDateSearch($event, 'start')"></calendar>
             </span>
             <input v-if="columnName == 'Fecha hasta'" type="text" class="form-control" placeholder="Ejemplo: 1990-02-18"
-                id="birthday" aria-describedby="basic-addon1" v-model="inputDateEnd" disabled />
-            <span v-if="columnName == 'Fecha hasta'" class="input-group-text" id="basic-addon2">
+                id="birthday" v-model="inputDateEnd" disabled />
+            <span v-if="columnName == 'Fecha hasta'" class="input-group-text" for="calendar-input">
                 <calendar @to-input="emitDateSearch($event, 'end')" :key="inputDateStart"></calendar>
             </span>
             <!-- Campos multiples -->

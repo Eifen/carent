@@ -8,9 +8,8 @@
             <div class="close-project-date">
                 <span for="close-project-date-time"> Fecha de cierre </span>
                 <div class="input-group mb-3">
-                    <input disabled type="text" placeholder="DD-MM-AAAA" class="form-control" v-model="project.dateClose"
-                        aria-describedby="basic-addon1">
-                    <span class="input-group-text" id="basic-addon1">
+                    <input disabled type="text" placeholder="DD-MM-AAAA" class="form-control" v-model="project.dateClose">
+                    <span class="input-group-text">
                         <calendar v-if="this.loadInitial.closureProject === null" @to-input="formatDate">
                         </calendar>
                     </span>

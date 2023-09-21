@@ -5,12 +5,11 @@
             <label for="Value">Monto
                 <span :class="scope.formClass.requiredField">*</span></label>
             <div class="input-group">
-                <span class="input-group-text" id="basic-addon7">
+                <span class="input-group-text">
                     {{ findSymbol }}
                 </span>
-                <input type="text" class="form-control" id="Value" aria-describedby="basic-addon7"
-                    v-model="scope.inputValue" />
-                <span class="input-group-text" id="basic-addon10" v-if="isEdit">
+                <input type="text" class="form-control" id="Value" v-model="scope.inputValue" />
+                <span class="input-group-text" v-if="isEdit">
                     <project-additional-modal modal-title="Montos Adicionales" name-modal="additionalValues"
                         table-modal-title="Lista de montos" table-modal-insert="Agregar monto adicional"
                         :last-id-table="scope.lastValueId" :scope-modal="scope" :modal-columns="modalColumns"
@@ -41,11 +40,11 @@
             <label for="HoursAssigned">Horas Totales
                 <span :class="scope.formClass.requiredField">*</span></label>
             <div class="input-group">
-                <span class="input-group-text" id="basic-addon9">
+                <span class="input-group-text">
                     <font-awesome string-icon="fa-solid fa-hashtag"></font-awesome>
                 </span>
-                <input type="text" class="form-control" id="HoursAssigned" aria-describedby="basic-addon9"
-                    v-model="scope.inputHoursAssigned" :disabled="true" />
+                <input type="text" class="form-control" id="HoursAssigned" v-model="scope.inputHoursAssigned"
+                    :disabled="true" />
             </div>
             <!-- Mensajes de error en Nombre-->
             <div :class="scope.formClass.failureValidation" v-if="scope.messages.error.hoursAssignedError != ''">
@@ -58,11 +57,11 @@
             <label for="AverageRate">Tasa Promedio
                 <span :class="scope.formClass.requiredField">*</span></label>
             <div class="input-group">
-                <span class="input-group-text" id="basic-addon14">
+                <span class="input-group-text">
                     {{ findSymbol }}
                 </span>
-                <input type="text" class="form-control" id="AverageRate" aria-describedby="basic-addon14"
-                    v-model="scope.inputAverageRate" :disabled="true" />
+                <input type="text" class="form-control" id="AverageRate" v-model="scope.inputAverageRate"
+                    :disabled="true" />
             </div>
             <!-- Mensajes de error en Nombre-->
             <div :class="scope.formClass.failureValidation" v-if="scope.messages.error.averageRateError != ''">
@@ -74,22 +73,22 @@
         <div class="mb-3" v-if="scope.dataSelect.additionalHours.length > 0">
             <label for="HoursAdditional">Horas Adicionales</label>
             <div class="input-group">
-                <span class="input-group-text" id="basic-addon12">
+                <span class="input-group-text">
                     <font-awesome string-icon="fa-solid fa-hashtag"></font-awesome>
                 </span>
-                <input type="text" class="form-control" id="HoursAdditional" aria-describedby="basic-addon12"
-                    v-model="scope.inputAdditionalHours" :disabled="true" />
+                <input type="text" class="form-control" id="HoursAdditional" v-model="scope.inputAdditionalHours"
+                    :disabled="true" />
             </div>
         </div>
         <!-- Montos adicionales -->
         <div class="mb-3" v-if="scope.dataSelect.additionalValues.length > 0">
             <label for="ValuesAdditional">Montos adicionales</label>
             <div class="input-group">
-                <span class="input-group-text" id="basic-addon13">
+                <span class="input-group-text">
                     {{ findSymbol }}
                 </span>
-                <input type="text" class="form-control" id="ValuesAdditional" aria-describedby="basic-addon13"
-                    v-model="scope.inputAdditionalValue" :disabled="true" />
+                <input type="text" class="form-control" id="ValuesAdditional" v-model="scope.inputAdditionalValue"
+                    :disabled="true" />
             </div>
         </div>
     </fieldset>

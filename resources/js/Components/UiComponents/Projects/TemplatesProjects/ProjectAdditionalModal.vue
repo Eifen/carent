@@ -18,12 +18,11 @@
                         :key="componentReload" @columns1target="crudAdditional($event, 'delete')"
                         @columns2target="crudAdditional($event, 'update')" :not-found-message="errorMessage"></listing-crud>
                     <div class="input-group">
-                        <span class="input-group-text" id="basic-addon13">
+                        <span class="input-group-text">
                             {{ tableModalInsert }}
                         </span>
-                        <input type="text" class="form-control" id="Value" v-model="scopeModal.additionalInput"
-                            aria-describedby="basic-addon13" />
-                        <span class="input-group-text" id="basic-addon14">
+                        <input type="text" class="form-control" id="Value" v-model="scopeModal.additionalInput" />
+                        <span class="input-group-text">
                             <font-awesome string-icon="fa-solid fa-plus" class="aLink"
                                 @click="updateModal()"></font-awesome>
                         </span>
@@ -113,6 +112,7 @@ export default {
                 this.$emit('update-modal', this.lastIdDTO)
                 //Actualizamos el limite
                 this.calculatePagination(this.listInfo);
+                this.scopeModal.additionalInput = 0
             } catch (error) {
                 alert(error);
             }

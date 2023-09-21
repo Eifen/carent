@@ -4,11 +4,11 @@
         <!-- code de usuario -->
         <div v-if="forgotPassword" class="control-password-code"
             :class="{ 'input-group': ErrorStyle.base, 'mb-3': !ErrorStyle.HasError.code }">
-            <span class="input-group-text" id="basic-addon1">
+            <span class="input-group-text">
                 <font-awesome string-icon="fa-solid fa-user"></font-awesome>
             </span>
-            <input type="text" class="form-control" placeholder="Código de Usuario" aria-label="code"
-                aria-describedby="basic-addon1" id="codeUser" v-model="codeUser.value" @input="verifyCode" />
+            <input type="text" class="form-control" placeholder="Código de Usuario" aria-label="code" id="codeUser"
+                v-model="codeUser.value" @input="verifyCode" />
         </div>
         <!-- Control de errores de code de User -->
         <span class="control-password-error-code form-ErrorInput" v-if="codeUser.IsEmpty">
@@ -17,13 +17,12 @@
         </span>
         <!-- Clave actual del User -->
         <div v-if="!forgotPassword" :class="{ 'input-group': ErrorStyle.base, 'mb-3': !ErrorStyle.HasError.oldPassword }">
-            <span class="input-group-text" id="basic-addon3">
+            <span class="input-group-text">
                 <font-awesome string-icon="fa-solid fa-lock"></font-awesome>
             </span>
             <input :type="TypeInputOldPassword" class="form-control" placeholder="Contraseña actual" aria-label="Clave"
-                aria-describedby="basic-addon2" id="oldPasswordUser" v-model="oldPasswordUser.value"
-                @input="verifyPassword()" />
-            <span class="input-group-text form-eye" id="basic-addon4" @click="changeInput('old')">
+                id="oldPasswordUser" v-model="oldPasswordUser.value" @input="verifyPassword()" />
+            <span class="input-group-text form-eye" @click="changeInput('old')">
                 <!-- Control del ojo -->
                 <font-awesome :string-icon="controlOldEye"></font-awesome>
             </span>
@@ -35,13 +34,12 @@
         </span>
         <!-- Clave nueva del User -->
         <div v-if="!forgotPassword" :class="{ 'input-group': ErrorStyle.base, 'mb-3': !ErrorStyle.HasError.newPassword }">
-            <span class="input-group-text" id="basic-addon6">
+            <span class="input-group-text">
                 <font-awesome string-icon="fa-solid fa-lock"></font-awesome>
             </span>
             <input :type="TypeInputNewPassword" class="form-control" placeholder="Contraseña nueva" aria-label="Clave"
-                aria-describedby="basic-addon5" id="newPasswordUser" v-model="newPasswordUser.value"
-                @input="verifyPassword()" />
-            <span class="input-group-text form-eye" id="basic-addon7" @click="changeInput('new')">
+                id="newPasswordUser" v-model="newPasswordUser.value" @input="verifyPassword()" />
+            <span class="input-group-text form-eye" @click="changeInput('new')">
                 <!-- Control del ojo -->
                 <font-awesome :string-icon="controlNewEye"></font-awesome>
             </span>
@@ -54,13 +52,12 @@
         <!-- Clave confirmar nueva del User -->
         <div v-if="!forgotPassword"
             :class="{ 'input-group': ErrorStyle.base, 'mb-3': !ErrorStyle.HasError.confirmNewPassword }">
-            <span class="input-group-text" id="basic-addon9">
+            <span class="input-group-text">
                 <font-awesome string-icon="fa-solid fa-lock"></font-awesome>
             </span>
             <input :type="TypeInputConfirmPassword" class="form-control" placeholder="Confirmar contraseña nueva"
-                aria-label="Clave" aria-describedby="basic-addon8" id="confirmNewPassword"
-                v-model="confirmNewPassword.value" @input="verifyPassword()" />
-            <span class="input-group-text form-eye" id="basic-addon10" @click="changeInput('confirm')">
+                aria-label="Clave" id="confirmNewPassword" v-model="confirmNewPassword.value" @input="verifyPassword()" />
+            <span class="input-group-text form-eye" @click="changeInput('confirm')">
                 <!-- Control del ojo -->
                 <font-awesome :string-icon="controlConfirmEye"></font-awesome>
             </span>

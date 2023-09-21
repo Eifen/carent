@@ -1,7 +1,7 @@
 <header class="header" id="header-nav" v-cloak>
     <nav class="header-nav">
-        <div class="header-nav-logo"><img @click="goHome" src="/images/logo-carent-menu-expandido.png"
-                title="CarentLogoMenu" /></div>
+        <div class="header-nav-logo"><img title="logo-expandido" @click="goHome"
+                src="/images/logo-carent-menu-expandido.png" title="CarentLogoMenu" /></div>
         <ul class="header-nav-links" id="selectNav" :style="hamburgerMenu">
             <li class="header-nav-links-item" id="user-name">Conectado como, <span>{{ Session::get('userName') }}
             </li>

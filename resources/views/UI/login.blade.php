@@ -1,16 +1,15 @@
 <section class="login">
     <div class="login-content" id="app-login" v-cloak>
         <div class="login-content-credentials">
-            <img id="credentials-imagen" src="/images/logo-carent.png" alt="Logo CARENT"></img>
+            <img title="logo-login" id="credentials-imagen" src="/images/logo-carent.png" alt="Logo CARENT"></img>
             <form id="credentials-form">
                 {{-- Codigo de usuario --}}
                 <div :class="{ 'input-group': ErrorStyle.base, 'mb-3': !ErrorStyle.HasError.codigo }">
-                    <span class="input-group-text" id="basic-addon1">
+                    <span class="input-group-text">
                         <font-awesome string-icon="fa-solid fa-user"></font-awesome>
                     </span>
                     <input type="text" class="form-control" placeholder="Código de Usuario" aria-label="Codigo"
-                        aria-describedby="basic-addon1" id="codigoUsuario" v-model="codigoUsuario.value"
-                        @input="verifyCode" />
+                        id="codigoUsuario" v-model="codigoUsuario.value" @input="verifyCode" />
                 </div>
                 {{-- Control de errores de Codigo de Usuario --}}
                 <span class="form-ErrorInput" v-if="codigoUsuario.IsEmpty">
@@ -19,13 +18,12 @@
                 </span>
                 {{-- Clave del Usuario --}}
                 <div :class="{ 'input-group': ErrorStyle.base, 'mb-3': !ErrorStyle.HasError.password }">
-                    <span class="input-group-text" id="basic-addon3">
+                    <span class="input-group-text">
                         <font-awesome string-icon="fa-solid fa-lock"></font-awesome>
                     </span>
                     <input :type="TypeInputPassword" class="form-control" placeholder="Contraseña" aria-label="Clave"
-                        aria-describedby="basic-addon2" id="passwordUsuario" v-model="passwordUsuario.value"
-                        @input="verifyPassword()" />
-                    <span class="input-group-text form-eye" id="basic-addon4" @click="changeInput()">
+                        id="passwordUsuario" v-model="passwordUsuario.value" @input="verifyPassword()" />
+                    <span class="input-group-text form-eye" @click="changeInput()">
                         {{-- Control del ojo --}}
                         <font-awesome :string-icon="controlEye"></font-awesome>
                     </span>
@@ -53,7 +51,7 @@
             <a href="#" id="credentials-forgot-password" @click="showModal()">Olvidé mi
                 contraseña</a>
             <!-- Modal -->
-            <div class="modal fade" id="modal-forgot-password" tabindex="-1" aria-hidden="true">
+            <div class="modal fade" id="modal-forgot-password" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">

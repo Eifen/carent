@@ -67,10 +67,10 @@
                         <label for="Hours">Horas asignadas
                             <span class="dashboard-form-container-form-title-field">*</span></label>
                         <div class="input-group">
-                            <span class="input-group-text" id="basic-addon2">
+                            <span class="input-group-text">
                                 <font-awesome string-icon="fa-solid fa-hashtag"></font-awesome>
                             </span>
-                            <input type="text" class="form-control" id="Hours" aria-describedby="basic-addon2"
+                            <input type="text" class="form-control" id="Hours"
                                 v-model="managerUserAssigned[cursor].hoursAssigned" @input="totalHours($event)" />
                         </div>
                     </div>
@@ -78,12 +78,11 @@
                     <div class="mb-3">
                         <label for="HoursRegister">Horas registradas</label>
                         <div class="input-group">
-                            <span class="input-group-text" id="basic-addon3">
+                            <span class="input-group-text">
                                 <font-awesome string-icon="fa-solid fa-hashtag"></font-awesome>
                             </span>
                             <input type="text" class="form-control" id="HoursRegister"
-                                aria-describedby="basic-addon3" v-model="managerUserAssigned[cursor].hourRegister"
-                                disabled />
+                                v-model="managerUserAssigned[cursor].hourRegister" disabled />
                         </div>
                     </div>
                 </fieldset>
@@ -92,11 +91,10 @@
                     <legend class="dashboad-form-container-form-legends">Horas restantes por asignar a usuarios</legend>
                     <div class="mb-3">
                         <div class="input-group">
-                            <span class="input-group-text" id="basic-addon3">
+                            <span class="input-group-text">
                                 <font-awesome string-icon="fa-solid fa-hashtag"></font-awesome>
                             </span>
-                            <input type="text" class="form-control" aria-describedby="basic-addon3"
-                                v-model="missinHours" :disabled="true" />
+                            <input type="text" class="form-control" v-model="missinHours" :disabled="true" />
                         </div>
                         <!-- Mensajes de error en Horas-->
                         <div class="form-ErrorInput" v-if="hoursAssignedError != ''">

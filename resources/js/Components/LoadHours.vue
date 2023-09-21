@@ -6,7 +6,7 @@
                     hour.label }}</option>
         </select>
         <textarea v-if="inputHourSelected != 0" type="text" rows="5" class="form-control register-hour-select-hours"
-            placeholder="Observaciones" id="observation" aria-describedby="basic-addon4" autocomplete="nope"
+            placeholder="Observaciones" id="observation" aria-describedby="observation" autocomplete="nope"
             v-model="inputObservation"></textarea>
         <div v-if="loadRef == 'admin' && statusLoad == 1" class="admin_message badge bg-warning text-dark">Por aprobar</div>
         <div v-if="loadRef == 'admin' && statusLoad == 2" class="admin_message badge bg-success text-dark">Aprobada por {{

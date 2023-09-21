@@ -33,7 +33,7 @@
                 @click="controlPagination.cursor = 0"></font-awesome>
             <font-awesome class="aLink" string-icon="fa-solid fa-angle-left" v-if="controlPagination.cursor != 0"
                 @click="controlPagination.cursor--"></font-awesome>
-            <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1"
+            <input type="text" class="form-control" aria-label="page" aria-describedby="page-actual"
                 :value="controlView.pagActual" @input="inputPage" />
             <!-- Se mostraran unicamente si el cursor de la paginacion es menor al máximo   -->
             <font-awesome class="aLink" string-icon="fa-solid fa-angle-right" v-if="controlPagination.cursor != maxCursor"

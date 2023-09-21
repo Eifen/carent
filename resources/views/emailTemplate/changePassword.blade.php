@@ -39,8 +39,8 @@
 
     <div id='body'>
         <div id="wrapper_logo">
-            <img src="https://carent.crowe.com.ve:16000/images/logo-carent.png" height="100" class="img-fluid logo"
-                alt="">
+            <img title="email-logo-update" src="https://carent.crowe.com.ve:16000/images/logo-carent.png" height="100"
+                class="img-fluid logo" alt="">
         </div>
         <div id="wrapper_contenido">
             <p>Se ha actualizado su contraseña en el sistema CARENT.</p>

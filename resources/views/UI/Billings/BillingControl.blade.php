@@ -42,11 +42,10 @@
                             <div class="mb-3" v-if="inputConcept != 0 && inputConcept != 5">
                                 <label for="Billing">N° de Factura</label>
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon1">
+                                    <span class="input-group-text">
                                         <font-awesome string-icon="fa-solid fa-hashtag"></font-awesome>
                                     </span>
-                                    <input type="text" class="form-control" id="Billing"
-                                        aria-describedby="basic-addon1" v-model="inputBilling"
+                                    <input type="text" class="form-control" id="Billing" v-model="inputBilling"
                                         placeholder="Ejemplo: AABB0123C-5" />
                                 </div>
                                 <!-- Mensajes de error en Nombre-->
@@ -59,12 +58,11 @@
                             <div class="mb-3" v-if="inputConcept != 0 && inputConcept != 5">
                                 <label for="Date">Fecha de emisión</label>
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon2">
+                                    <span class="input-group-text">
                                         <calendar @to-input="formatDate"></calendar>
                                     </span>
-                                    <input type="text" class="form-control" id="Date"
-                                        aria-describedby="basic-addon2" v-model="inputDate" placeholder="YYYY-MM-DD"
-                                        disabled />
+                                    <input type="text" class="form-control" id="Date" v-model="inputDate"
+                                        placeholder="YYYY-MM-DD" disabled />
                                 </div>
                                 <!-- Mensajes de error en Nombre-->
                                 <div class="form-ErrorInput" v-if="errorMessage.dateError != ''">
@@ -76,11 +74,10 @@
                             <div class="mb-3" v-if="inputConcept != 0 && inputConcept != 4">
                                 <label for="Value">Monto Factura</label>
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon3">
+                                    <span class="input-group-text">
                                         @{{ updateModel.project.currency_symbol }}
                                     </span>
-                                    <input type="text" class="form-control" id="Value"
-                                        aria-describedby="basic-addon3" v-model="inputValue"
+                                    <input type="text" class="form-control" id="Value" v-model="inputValue"
                                         placeholder="##3.000,00##" />
                                 </div>
                                 <!-- Mensajes de error en Nombre-->
@@ -142,10 +139,10 @@
                             <div class="mb-3" v-if="inputValue.length != 0">
                                 <label for="subTotal">Subtotal Factura</label>
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon4">
+                                    <span class="input-group-text">
                                         @{{ updateModel.project.currency_symbol }}
                                     </span>
-                                    <span class="input-group-text" id="basic-addon5">
+                                    <span class="input-group-text">
                                         @{{ Number(subTotal).toLocaleString('de-DE') }}
                                     </span>
                                 </div>
@@ -154,10 +151,10 @@
                             <div class="mb-3" v-if="inputValue.length != 0">
                                 <label for="Total">Neto a cobrar</label>
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon4">
+                                    <span class="input-group-text">
                                         @{{ updateModel.project.currency_symbol }}
                                     </span>
-                                    <span class="input-group-text" id="basic-addon5">
+                                    <span class="input-group-text">
                                         @{{ Number(subTotal - total).toLocaleString('de-DE') }}
                                     </span>
                                 </div>
@@ -171,11 +168,11 @@
                             <div class="mb-3" v-if="inputConcept != 0 && inputConcept != 5">
                                 <label for="Description">Descripcion de la factura</label>
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon6">
+                                    <span class="input-group-text">
                                         <font-awesome string-icon="fa-solid fa-note-sticky"></font-awesome>
                                     </span>
                                     <textarea type="text" class="form-control" placeholder="Descripción por el cual se esta facturando"
-                                        aria-describedby="basic-addon6" v-model="inputDescription"></textarea>
+                                        v-model="inputDescription"></textarea>
                                 </div>
                                 <!-- Mensajes de error en Descripcion-->
                                 <div class="form-ErrorInput" v-if="errorMessage.descriptionError != ''">
@@ -192,11 +189,10 @@
                             <div class="mb-3" v-if="inputConcept != 0 && inputConcept != 5">
                                 <label for="Control">N° de Control</label>
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon7">
+                                    <span class="input-group-text">
                                         <font-awesome string-icon="fa-solid fa-hashtag"></font-awesome>
                                     </span>
-                                    <input type="text" class="form-control" id="Control"
-                                        aria-describedby="basic-addon7" v-model="inputControl"
+                                    <input type="text" class="form-control" id="Control" v-model="inputControl"
                                         placeholder="Ejemplo: CONTROL-1" />
                                 </div>
                                 <!-- Mensajes de error en Nombre-->
@@ -209,11 +205,10 @@
                             <div class="mb-3" v-if="inputConcept != 0 && inputConcept != 4 && inputConcept != 5">
                                 <label for="Payment">Fecha de cobro</label>
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon8">
+                                    <span class="input-group-text">
                                         <calendar @to-input="formatPayment"></calendar>
                                     </span>
-                                    <input type="text" class="form-control" id="Payment"
-                                        aria-describedby="basic-addon8" v-model="inputPayment"
+                                    <input type="text" class="form-control" id="Payment" v-model="inputPayment"
                                         placeholder="Ejemplo: YYYY-MM-DD" disabled />
                                 </div>
                                 <!-- Mensajes de error en Nombre-->
@@ -231,11 +226,11 @@
                             <div class="mb-3">
                                 <label for="Observation">Observaciones</label>
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon9">
+                                    <span class="input-group-text">
                                         <font-awesome string-icon="fa-solid fa-note-sticky"></font-awesome>
                                     </span>
                                     <textarea type="text" class="form-control" placeholder="Comentarios adicionales a la facturacion"
-                                        aria-describedby="basic-addon9" v-model="inputObservation"></textarea>
+                                        v-model="inputObservation"></textarea>
                                 </div>
                                 <!-- Mensajes de error en Descripcion-->
                                 <div class="form-ErrorInput" v-if="errorMessage.observationError != ''">
@@ -252,13 +247,12 @@
                             <div class="mb-3" v-if="inputConcept == 4">
                                 <label for="nullBill">N° de Factura a anular</label>
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon10">
+                                    <span class="input-group-text">
                                         <font-awesome string-icon="fa-solid fa-hashtag"></font-awesome>
                                     </span>
                                     <input type="text" ref="billAssociated" class="form-control" id="nullBill"
-                                        aria-describedby="basic-addon10" v-model="inputNullBill"
-                                        placeholder="Escriba una factura asociada" @click="emptyInput()"
-                                        autocomplete="nope" />
+                                        v-model="inputNullBill" placeholder="Escriba una factura asociada"
+                                        @click="emptyInput()" autocomplete="nope" />
                                     <dropdown-select :string-to-Search="inputNullBill"
                                         :array-object-result="billingNullInfo" column-to-search="billing_number"
                                         :control-list="noInput" @complete-input="autoCompleteBill"
@@ -274,11 +268,11 @@
                             <div class="mb-3" v-if="inputNullBill.length != 0">
                                 <label for="nullControl">N° de Control de la factura a anular</label>
                                 <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon11">
+                                    <span class="input-group-text">
                                         <font-awesome string-icon="fa-solid fa-hashtag"></font-awesome>
                                     </span>
                                     <input type="text" class="form-control" id="nullControl"
-                                        aria-describedby="basic-addon11" v-model="inputNullControl" disabled />
+                                        v-model="inputNullControl" disabled />
                                 </div>
                                 <!-- Mensajes de error en el control-->
                                 <div class="form-ErrorInput" v-if="errorMessage.nullControlError != ''">

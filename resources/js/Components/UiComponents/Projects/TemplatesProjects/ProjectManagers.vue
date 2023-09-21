@@ -32,13 +32,13 @@
             <label for="Hours">Horas asignadas
                 <span :class="scope.formClass.requiredField">*</span></label>
             <div class="input-group">
-                <span class="input-group-text" id="basic-addon8">
+                <span class="input-group-text">
                     <font-awesome string-icon="fa-solid fa-hashtag"></font-awesome>
                 </span>
-                <input type="text" class="form-control" id="Hours" aria-describedby="basic-addon8"
+                <input type="text" class="form-control" id="Hours"
                     v-model="scope.dataSelect.managersPerDepartment[cursor].hoursAssigned"
                     @input="$emit('total-hours', scope.dataSelect.managersPerDepartment)" />
-                <span class="input-group-text" id="basic-addon11" v-if="isEdit">
+                <span class="input-group-text" v-if="isEdit">
                     <project-additional-modal modal-title="Horas Adicionales" :name-modal="'additionalHours' + cursor"
                         table-modal-title="Lista de horas" table-modal-insert="Agregar hora adicional"
                         :last-id-table="scope.lastHoursId" :modal-columns="modalColumns" :scope-modal="scope"

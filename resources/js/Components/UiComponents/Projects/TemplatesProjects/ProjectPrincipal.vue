@@ -2,13 +2,14 @@
     <fieldset :class="scope.formClass.fieldset">
         <!-- Descripcion de proyecto -->
         <div class="mb-3">
-            <label for="projectDescription">Descripción del proyecto <span :class="scope.formClass.requiredField">*</span></label>
+            <label for="projectDescription">Descripción del proyecto <span
+                    :class="scope.formClass.requiredField">*</span></label>
             <div class="input-group">
-                <span class="input-group-text" id="basic-addon1">
+                <span class="input-group-text">
                     <font-awesome string-icon="fa-solid fa-user"></font-awesome>
                 </span>
                 <input type="text" class="form-control" placeholder="Ejemplo: Auditoria para el..." id="projectDescription"
-                    aria-describedby="basic-addon1" v-model="scope.inputProjectDescription" />
+                    v-model="scope.inputProjectDescription" />
             </div>
             <!-- Mensajes de error en Nombre-->
             <div :class="scope.formClass.failureValidation" v-if="scope.messages.error.projectDescriptionError != ''">
@@ -20,23 +21,21 @@
         <div class="mb-3">
             <label for="clientAssociated">Cliente Asociado<span :class="scope.formClass.requiredField">*</span></label>
             <div class="input-group">
-                <span class="input-group-text" id="basic-addon2">
+                <span class="input-group-text">
                     <font-awesome string-icon="fa-solid fa-user"></font-awesome>
                 </span>
-                <input type="text" :ref="scope.dropDownControl.clients.ref" class="form-control" placeholder="Ejemplo: Mc Donalds" id="clientAssociated"
-                    aria-describedby="basic-addon2" v-model="scope.inputClientAssociated"/>
-                <dropdown-select :stringToSearch="scope.inputClientAssociated"
-                :arrayObjectResult="scope.dataSelect.clients"
-                columnToSearch="bussiness_name"
-                :controlList="scope.dropDownControl.clients.noInput"
-                @complete-input="autoCompleteClient"></dropdown-select>
+                <input type="text" :ref="scope.dropDownControl.clients.ref" class="form-control"
+                    placeholder="Ejemplo: Mc Donalds" id="clientAssociated" v-model="scope.inputClientAssociated" />
+                <dropdown-select :stringToSearch="scope.inputClientAssociated" :arrayObjectResult="scope.dataSelect.clients"
+                    columnToSearch="bussiness_name" :controlList="scope.dropDownControl.clients.noInput"
+                    @complete-input="autoCompleteClient"></dropdown-select>
             </div>
             <!-- Mensajes de error en Nombre-->
             <div :class="scope.formClass.failureValidation" v-if="scope.messages.error.clientAssociatedError != ''">
                 <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
                 {{ scope.messages.error.clientAssociatedError }}
             </div>
-        </div>        
+        </div>
         <!-- Estado del proyecto.-->
         <div class="mb-3">
             <label for="Status">Estado del proyecto <span :class="scope.formClass.requiredField">*</span></label>
@@ -65,13 +64,13 @@ export default {
          * Metodo que autocompleta el campo
          * @param {String} stringToAutoComplete String que se va a autorrellenar
          */
-        autoCompleteClient(stringToAutoComplete){
+        autoCompleteClient(stringToAutoComplete) {
             this.scope.inputClientAssociated = stringToAutoComplete
             this.scope.dropDownControl.clients.noInput = false
         }
     },
     mounted() {
-        this.$emit('transfer-ref',this.$refs)
+        this.$emit('transfer-ref', this.$refs)
     },
     components: { FontAwesome, DropdownSelect }
 };
