@@ -31,7 +31,7 @@ class ReportDirective extends Controller
     {
         $responseArray = DB::select("SELECT * FROM control_load_admin_hours clah
         INNER JOIN control_concept_admin_hours ccah ON clah.admin_hours_id = ccah.admin_hours_id
-        WHERE clah.register_date BETWEEN ? AND ?", [$this->startDate, $this->endDate]);
+        WHERE clah.register_date BETWEEN ? AND ? AND clah.status_load_id = ?", [$this->startDate, $this->endDate, 2]);
 
         return $responseArray;
     }
