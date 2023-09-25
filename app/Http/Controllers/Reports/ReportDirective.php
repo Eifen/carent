@@ -53,7 +53,7 @@ class ReportDirective extends Controller
                         "código" => $user->user_code,
                         "area" => $user->department_name,
                         "concepto" => $adminHour["concept_admin"],
-                        "horas" => $adminHour["admin_hours"]
+                        "horas" => number_format($adminHour["admin_hours"], 2, ",", ".")
                     ));
                 }
             }

@@ -16,6 +16,7 @@ export default {
     props: {
         scope: Object //Importa la data del padre
     },
+    emits: ['update-mounted'],
     data() {
         return {
             reportColumns: {
@@ -38,44 +39,52 @@ export default {
         }
     },
     mounted() {
-        //Acomodamos el array resultante de la informacion de carga de usuarios
-        if (this.scope.listIntervalData) {
-            let listDTO = this.scope.listIntervalData.reduce((acum, intervalData) => {
-                //Creamos una Key
-                const key = intervalData.user_id + "-" + intervalData.admin_hours_id + "-" + intervalData.concept_description
-                //Verificar si la fecha entra dentro del intervalo
-                const dateStart = new Date(this.scope.dateStart);
-                const dateEnd = new Date(this.scope.dateEnd);
-                const dateToSearch = new Date(intervalData.register_date);
+        this.isListMounted = false;
+        this.$emit('update-mounted', this.isListMounted)
+        //Cargamos la informacion
+        axios.post("/reports/list-admin-hours", { startDate: this.scope.dateStart, endDate: this.scope.dateEnd })
+            .then(request => {
+                if (request.status === 200 && !request.data.response)
+                    throw request.data.message;
+                //Si no se activa la exceptión, asignamos el objeto. Acomodamos el array resultante de la informacion de carga de usuarios
+                let listDTO = request.data.message.reduce((acum, intervalData) => {
+                    //Creamos una Key
+                    const key = intervalData.user_id + "-" + intervalData.admin_hours_id + "-" + intervalData.concept_description
+                    //Verificar si la fecha entra dentro del intervalo
+                    const dateStart = new Date(this.scope.dateStart);
+                    const dateEnd = new Date(this.scope.dateEnd);
+                    const dateToSearch = new Date(intervalData.register_date);
 
-                if (dateToSearch.getTime() >= dateStart.getTime() && dateToSearch.getTime() <= dateEnd.getTime()) {
-                    //Filtramos la informacion por clave
-                    !acum[key]
-                        ? acum[key] = {
-                            user_id: intervalData.user_id,
-                            concept_admin: intervalData.concept_description,
-                            admin_hours: parseFloat(intervalData.register_hour)
-                        }
-                        : acum[key].admin_hours += parseFloat(intervalData.register_hour)
-                }
-                return acum;
-            }, {});
-            //Convertimos a un array
-            listDTO = Object.values(listDTO)
+                    if (dateToSearch.getTime() >= dateStart.getTime() && dateToSearch.getTime() <= dateEnd.getTime()) {
+                        //Filtramos la informacion por clave
+                        !acum[key]
+                            ? acum[key] = {
+                                user_id: intervalData.user_id,
+                                concept_admin: intervalData.concept_description,
+                                admin_hours: parseFloat(intervalData.register_hour)
+                            }
+                            : acum[key].admin_hours += parseFloat(intervalData.register_hour)
+                    }
+                    return acum;
+                }, {});
+                //Convertimos a un array
+                listDTO = Object.values(listDTO)
 
-            //Lo pasamos como parametro al controlador para crear el formato
-            axios.post("reports/admin-hours-report", { adminList: listDTO })
-                .then(request => {
-                    this.isListMounted = true
-                    this.directiveList = request.data.message
-                    //Acomodamos la longitud minima y su paginacion
-                    if (this.directiveList.length < 50) this.directiveLength = this.directiveList.length;
-                    this.directivePaginatio = Math.ceil(
-                        this.directiveList.length / this.directiveLength
-                    );
-                })
-                .catch(error => { console.error(error) })
-        }
+                //Lo pasamos como parametro al controlador para crear el formato
+                axios.post("reports/admin-hours-report", { adminList: listDTO })
+                    .then(request => {
+                        this.isListMounted = true
+                        this.$emit('update-mounted', this.isListMounted)
+                        this.directiveList = request.data.message
+                        //Acomodamos la longitud minima y su paginacion
+                        if (this.directiveList.length < 50) this.directiveLength = this.directiveList.length;
+                        this.directivePaginatio = Math.ceil(
+                            this.directiveList.length / this.directiveLength
+                        );
+                    })
+                    .catch(error => { console.error(error) })
+            })
+            .catch(error => console.error(error))
     },
     components: { ListingCrud, Loading }
 }

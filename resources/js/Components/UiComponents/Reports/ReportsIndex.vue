@@ -51,8 +51,8 @@
         </div>
         <!-- Reporte horas administrativas -->
         <ReportAdminHours class="reports-container-list"
-            v-if="selectReport == 3 && reportPermission.rhorasP == 1 && listIntervalData.length != 0" :scope="migrateData"
-            :key="listIntervalData">
+            v-if="selectReport == 3 && reportPermission.rhorasP == 1 && dateEnd.length != 0" :scope="migrateData"
+            :key="dateEnd" @update-mounted="isMounted = $event">
         </ReportAdminHours>
         <div v-else-if="selectReport == 3 && reportPermission.rhorasP != 1" class="not-found">
             <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
@@ -152,9 +152,6 @@ export default {
                 case 2:
                     this.getTable('/reports/list-directive-month')
                     break;
-                case 3:
-                    this.getTable('/reports/list-admin-hours')
-                    break;
             }
         },
         listData() {
@@ -167,22 +164,6 @@ export default {
         dateEnd(newDate, oldDate) {
             //Definimos la fecha inicial
             const starDate = this.dateStart.length != 0 ? new Date(this.dateStart) : null
-            //Determinamos cada caso de intervalos
-            switch (true) {
-                //Reporte de horas administrativas
-                case newDate.length != 0 && this.selectReport == 3:
-                    const endDate = new Date(newDate);
-                    //Filtramos el array resultante por fecha
-                    if (starDate.getTime() <= endDate.getTime()) {
-                        this.listIntervalData = this.listData.filter(data => {
-                            let dateToSearch = new Date(data.register_date)
-                            return dateToSearch.getTime() >= starDate.getTime() && dateToSearch.getTime() <= endDate.getTime();
-                        })
-                    } else {
-                        this.dateEnd = oldDate
-                    }
-                    break;
-            }
         }
     },
     computed: {

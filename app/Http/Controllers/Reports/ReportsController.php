@@ -99,9 +99,9 @@ class ReportsController extends Controller
     /**
      * Metodo que se encarga de devolver un reporte de todas las horas administrativas
      */
-    public function getAdminReport()
+    public function getAdminReport(Request $dateInterval)
     {
-        $hoursReport = new ReportDirective();
+        $hoursReport = new ReportDirective($dateInterval->input('startDate'), $dateInterval->input('endDate'));
         return response(array(
             "response" => true,
             "message" => $hoursReport->adminHoursReport()
