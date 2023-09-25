@@ -102,7 +102,7 @@ export default {
             this.scope.listInfoToUpdate = this.scope.listInfoToCancel.map(object => {
                 //Una vez capturamos los valores de las columnas, las asignamos un nuevo objeto
                 const copyObject = {
-                    codigo: object.hours_id,
+                    código: object.hours_id,
                     hora: parseInt(object.additional_hour),
                     division: object.department_id,
                     fecha: object.register_date,
@@ -119,7 +119,7 @@ export default {
          */
         updateHourModal(lastHourId, departmentId) {
             this.scope.listInfoToUpdate.push({
-                codigo: lastHourId,
+                código: lastHourId,
                 monto: parseInt(this.scope.additionalInput),
                 division: departmentId,
                 fecha: new Date(Date.now()).toISOString().substring(0, 10), //Formato de fecha YYYY-mm-dd,

@@ -154,7 +154,7 @@ export default {
             this.scope.listInfoToUpdate = this.scope.listInfoToCancel.map(object => {
                 //Una vez capturamos los valores de las columnas, las asignamos un nuevo objeto
                 const copyObject = {
-                    codigo: object.value_id,
+                    código: object.value_id,
                     monto: parseFloat(object.aditional_project_value),
                     proyecto: object.project_id,
                     fecha: object.register_date,
@@ -170,7 +170,7 @@ export default {
          */
         updateValueModal(lastValueId) {
             this.scope.listInfoToUpdate.push({
-                codigo: lastValueId,
+                código: lastValueId,
                 monto: parseFloat(this.scope.additionalInput),
                 proyecto: this.scope.projectId,
                 fecha: new Date(Date.now()).toISOString().substring(0, 10), //Formato de fecha YYYY-mm-dd,
