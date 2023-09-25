@@ -89,7 +89,6 @@ export default {
                     return acum;
                 }, {});
                 //Agregamos los porcentajes y el total de horas
-                console.log(typeof directiveDTO)
                 directiveDTO = Object.values(directiveDTO)
                 //Ordenamos el array
                 directiveDTO.sort(function (a, b) {

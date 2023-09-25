@@ -67,7 +67,7 @@ export default {
         return {
             fieldsInput: {}, //Objeto encargado de distribuir el valor de cada input creado dinamicamente
             multiSelectStatus: null, //Captura los campos seleccionados del multiselect de estatus
-            multiSelectArea: null, //Captura los campos seleccionados del multiselect de areas
+            multiSelectAreas: null, //Captura los campos seleccionados del multiselect de areas
             multiSelectConcepts: null, //Captura los campos seleccionados del multiselect de conceptos
             monthReferences: [
                 "Enero",

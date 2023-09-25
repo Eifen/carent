@@ -89,7 +89,6 @@ export default {
             const getCodeIndex = this.listInfo
                 .map((object) => object.código)
                 .indexOf(paramsCatch);
-            console.log(getCodeIndex, this.listInfo)
             //Cambiamos el estado
             switch (operationUD.toLowerCase()) {
                 case 'update':

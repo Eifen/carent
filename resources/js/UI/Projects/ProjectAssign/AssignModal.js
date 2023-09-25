@@ -208,7 +208,6 @@ const modalApp = createApp({
         inputUsersAssigned(newSelect, oldSelect) {
             //Inicialmente creamos una copia del array
             const copyManager = this.managerUserAssigned;
-            console.log(newSelect, oldSelect, copyManager);
 
             //Recorremos el array anterior
             try {

@@ -40,7 +40,6 @@ export default {
     mounted() {
         //Acomodamos el array resultante de la informacion de carga de usuarios
         if (this.scope.listIntervalData) {
-            console.log(this.scope.listIntervalData)
             let listDTO = this.scope.listIntervalData.reduce((acum, intervalData) => {
                 //Creamos una Key
                 const key = intervalData.user_id + "-" + intervalData.admin_hours_id + "-" + intervalData.concept_description
