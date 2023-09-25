@@ -27,7 +27,9 @@ export const projectWatchers = {
                             this.inputHoursAssigned
                         );
                         //Asignamos el resultado al campo correspondiente
-                        this.inputAverageRate = this.controlAverage;
+                        this.controlAverage != 0
+                            ? (this.inputAverageRate = this.controlAverage)
+                            : (this.submitButton.averageRateValid = true);
                     }
                 }
             } catch (errorMessage) {
@@ -283,7 +285,9 @@ export const projectWatchers = {
                             this.inputHoursAssigned
                         );
                         //Asignamos el resultado
-                        this.inputAverageRate = this.controlAverage;
+                        this.controlAverage != 0
+                            ? (this.inputAverageRate = this.controlAverage)
+                            : (this.submitButton.averageRateValid = true);
                     }
                 }
                 if (departmentCount == this.inputDepartments.length)
