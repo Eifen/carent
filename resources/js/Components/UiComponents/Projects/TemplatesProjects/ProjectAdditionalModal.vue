@@ -28,7 +28,7 @@
                         </span>
                     </div>
                     <button type="button" class="buttonCRUD" style="margin-top: 10px" data-bs-dismiss="modal"
-                        @click="$emit('prepare-save', this.scopeModal.listInfoToUpdate)">
+                        @click="$emit('prepare-save', { info: this.scopeModal.listInfoToUpdate, id: lastIdDTO })">
                         Guardar cambios
                     </button>
                     <!-- Al guardar cambios llama al padre para que actualice la informacion del array usado en el modal -->

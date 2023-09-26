@@ -42,8 +42,8 @@ const registerApp = createApp({
                 "Sabado",
                 "Domingo",
             ],
-            yearInitial: 2023, //Año inicial para el select
-            monthInitial: 6, //Mes en valor numerico inicial (Julio, para 2023) para el año inicial
+            yearInitial: 0, //Año inicial para el select
+            monthInitial: 6, //El mes inicial es un mes anterior al actual
             isSelectRange: false, //Variable que se coloca en true cuando se selecciona el mes, semana y año del rango de fechas
             //Inputs del registro
             inputMonthSelect: 0, //Selector de meses
@@ -73,7 +73,9 @@ const registerApp = createApp({
         };
     },
     created() {
-        this.listClass = "list-container register-hour";
+        const dateNow = new Date();
+        this.yearInitial = dateNow.getFullYear() - 1
+        this.listClass = "list-container register-hour"
         //Configuramos las fechas
         this.prepareYear();
         //Preparamos la informacion a través de solicitud al axios

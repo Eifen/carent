@@ -62,7 +62,7 @@
                 <span id="hours-executed">{{ project.hoursReal }}</span>
                 <!-- //Tasa promedio final = total A+B/horas reales  -->
                 <span id="rate-executed">{{ (formatNumber((totalRealFees + totalAditionalBilling) /
-                    project.hoursReal) + project.currency_symbols)
+                    (project.hoursReal == 0 ? 1 : project.hoursReal)) + project.currency_symbols)
                 }}</span>
             </div>
             <!-- Valores realizados cobrados -->
@@ -146,6 +146,7 @@
                                 <tr>
                                     <th class="col-sm-2 col-lg-2">Unidad</th>
                                     <th class="col-sm-2 col-lg-2">Estimadas</th>
+                                    <th class="col-sm-2 col-lg-2">Adicionales</th>
                                     <th class="col-sm-2 col-lg-2">Reales</th>
                                     <th class="col-sm-2 col-lg-2">Diferencia</th>
                                 </tr>
@@ -155,19 +156,24 @@
                                 <tr v-for="(department, position) in project.tableUnitHours" :key="position">
                                     <th class="col-sm-2 col-lg-2" align="center">{{ department.department_name }}</th>
                                     <td class="col-sm-2 col-lg-2" align="center">{{ department.hours_assigned }}</td>
+                                    <td class="col-sm-2 col-lg-2" align="center">{{
+                                        getAdditionalHours(department.department_id) }}</td>
                                     <td class="col-sm-2 col-lg-2" align="center">{{ getRealHours(department.department_id)
                                     }}
                                     </td>
                                     <td class="col-sm-2 col-lg-2" align="center">
-                                        {{ (department.hours_assigned - getRealHours(department.department_id)) * -1 }}</td>
+                                        {{ (department.hours_assigned + getAdditionalHours(department.department_id) -
+                                            getRealHours(department.department_id)) * -1 }}</td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <th class="col-sm-1 col-lg-1" align="center"> Totales </th>
                                     <td class="col-sm-1 col-lg-1" align="center">{{ totalHoursAssigned }}</td>
+                                    <td class="col-sm-1 col-lg-1" align="center">{{ getAdditionalHours() }}</td>
                                     <td class="col-sm-1 col-lg-1" align="center">{{ totalRealHours }}</td>
-                                    <td class="col-sm-1 col-lg-1" align="center">{{ (totalHoursAssigned - totalRealHours) *
+                                    <td class="col-sm-1 col-lg-1" align="center">{{ (totalHoursAssigned +
+                                        getAdditionalHours() - totalRealHours) *
                                         -1
                                     }}
                                     </td>
@@ -188,14 +194,15 @@
                         <tbody>
                             <tr>
                                 <th class="col-sm-2 col-lg-2">Exceso de Horas por Facturar</th>
-                                <td class="col-sm-2 col-lg-2" align="center">{{ (totalHoursAssigned - totalRealHours) * -1
+                                <td class="col-sm-2 col-lg-2" align="center">{{
+                                    formatNumber((hoursDiffBilling(totalRealFees, totalAditionalBilling)) * -1)
                                 }}</td>
-                                <td class="col-sm-2 col-lg-2" align="center">{{ project.average }}</td>
+                                <td class="col-sm-2 col-lg-2" align="center">{{ formatNumber(project.average) }}</td>
                             </tr>
                             <tr>
                                 <th class="col-sm-2 col-lg-2">Valor Monetario a recuperar HP exceso de horas</th>
                                 <td class="col-sm-2 col-lg-2" align="center">
-                                    {{ formatNumber(monetaryRecover(totalHoursAssigned, totalRealHours)) }}</td>
+                                    {{ formatNumber(monetaryRecover(totalRealFees, totalAditionalBilling)) }}</td>
                             </tr>
                         </tbody>
                         <tfoot>
@@ -217,19 +224,6 @@
                             <tr>
                                 <th class="col-sm-6 col-lg-6">Valor Monetario adicional facturado</th>
                                 <td class="col-sm-6 col-lg-6" align="center">{{ formatNumber(totalAditionalBilling) }}</td>
-                            </tr>
-                            <tr>
-                                <th class="col-sm-6 col-lg-6">Valor monetario(deficit para cubrir exceso de horas) o
-                                    excedente
-                                </th>
-                                <td class="col-sm-6 col-lg-6" align="center">{{
-                                    formatNumber(monetaryRecover(totalHoursAssigned,
-                                        totalRealHours) -
-                                        totalAditionalBilling) }}
-                                </td>
-                                <!-- <td class="col-sm-6 col-lg-6" align="center">{{
-                                    getValueDeficit(monetaryRecover(totalHoursAssigned, totalRealHours),
-                                        totalAditionalBilling) }}</td> -->
                             </tr>
                             <!-- <tr>
                                 <th class="col-sm-6 col-lg-6">Valor Monetario (beneficiario) en gastos por recuperar
@@ -260,13 +254,14 @@
                                 <th class="col-sm-2 col-lg-2">Horas Reales Cargadas al CARENT</th>
                                 <td class="col-sm-2 col-lg-2" align="center">{{ project.hoursReal }}</td>
                                 <td class="col-sm-2 col-lg-2" align="center">{{
-                                    formatNumber(totalRealFees / project.hoursReal) }}</td>
+                                    formatNumber(totalRealFees / (project.hoursReal == 0 ? 1 : project.hoursReal)) }}</td>
                             </tr>
                             <tr>
                                 <th class="col-sm-2 col-lg-2"> Porcentaje de Ejecución</th>
                                 <td class="col-sm-2 col-lg-2" align="center">{{ formatNumber(((project.hoursReal /
                                     project.hoursEstimated))) + '%' }}</td>
-                                <td class="col-sm-2 col-lg-2" align="center">{{ (totalRealFees / project.hoursReal) === 0 ?
+                                <td class="col-sm-2 col-lg-2" align="center">{{ (totalRealFees / (project.hoursReal == 0 ? 1
+                                    : project.hoursReal)) === 0 ?
                                     0 :
                                     formatNumber(((totalRealFees / project.hoursReal) / project.average)) + '%' }}</td>
                             </tr>
@@ -358,6 +353,7 @@ export default {
                 'hoursReal': 0,
                 'rateExecuted': 0,
                 'tableUnitHours': [],
+                'tableAditionalHours': [],
                 'tableRealHours': [],
                 'message': '',
                 'billingValue': [],
@@ -392,6 +388,7 @@ export default {
     ],
     created() {
         //Si ya cargo el componente, llenamos la informacion
+        console.log(this.loadInitial)
         if (this.active) {
             //Nommbre del proyecto
             this.project.name = this.loadInitial.project.project_description
@@ -424,6 +421,8 @@ export default {
             })
             //Horas estimadas de horas por unidad
             this.project.tableUnitHours = this.loadInitial.departments
+            //Horas adicionales por unidad
+            this.project.tableAditionalHours = this.loadInitial.additionalHours
             //Horas reales de horas por unidad
             this.project.tableRealHours = this.loadInitial.projectsHours
             //Honorarios reales USD
@@ -556,8 +555,44 @@ export default {
             const difference = monetaryReco - totalAditionalBilling
             return difference
         },
-        monetaryRecover(totalHoursAssigned, totalRealHours) {
-            return ((totalHoursAssigned - totalRealHours) * -1) * this.project.average
+        getAdditionalHours(departmentId = null) {
+            let totalHours = 0
+            switch (departmentId) {
+                case null:
+                    totalHours = this.project.tableAditionalHours.reduce((total, department) => total + parseFloat(department.additional_hour), 0)
+
+                    break;
+
+                default:
+                    totalHours = this.project.tableAditionalHours.reduce((total, department) => {
+                        if (department.department_id == departmentId) return total + parseFloat(department.additional_hour)
+                        return total
+                    }, 0)
+                    break;
+            }
+            console.log(totalHours, departmentId)
+            return totalHours
+        },
+        monetaryRecover(totalBilling, totalAditionalBilling) {
+            const totalBillingAdd = totalBilling + totalAditionalBilling;
+            const totalBillingEstimated = this.billingEstimated()
+            return ((totalBillingEstimated - totalBillingAdd) * -1)
+        },
+        /**
+         * Metodo que se encarga de calcular las horas restantes que faltan por facturar
+         * @param {*} totalBilling Total de facturas emitidas
+         * @param {*} totalAdditionalBilling Total de facturas adicionales emitidas
+         */
+        hoursDiffBilling(totalBilling, totalAdditionalBilling) {
+            const totalBillingAdd = totalBilling + totalAdditionalBilling;
+            const totalBillingEstimated = this.billingEstimated();
+
+            const hoursDiff = (totalBillingEstimated - totalBillingAdd) / parseFloat(this.project.average);
+
+            return hoursDiff
+        },
+        billingEstimated() {
+            return (parseInt(this.project.hoursEstimated) + parseInt(this.project.additionalHour)) * parseFloat(this.project.average)
         },
         emitClose() {
             const params = {

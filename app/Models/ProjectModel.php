@@ -329,6 +329,7 @@ class ProjectModel extends Model
             ->join('projects_departments_assigned', 'projects_additional_hours.department_assigned_id', '=', 'projects_departments_assigned.department_assigned_id')
             ->where('projects_departments_assigned.project_id', '=', $projectId)
             ->get();
+
         //Procedemos a recorrer la informacion
         foreach ($hoursArray as $posicion3 => $hour) {
             // Buscamos el último departamento asignado que coincida con el id del departamento de la hora actual

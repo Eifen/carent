@@ -133,7 +133,7 @@ export default {
         prepareInfoTransfer(paramCatch) {
             //Emite informacion al padre
             this.$emit('reload-changes', {
-                arrayToAssign: paramCatch,
+                arrayToAssign: paramCatch.info,
                 arrayTarget: "additionalValues",
                 refs: ["value_id", "aditional_project_value", "project_id", "register_date", "status_id"]
             })

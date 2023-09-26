@@ -87,7 +87,7 @@ class ProjectController extends Controller
             //Obtenemos la actual
             $actualDate = date("y-m-d");
             //Obtenemos la fecha anterior a un mes
-            $oneMonthDate = date("Y-m-01", strtotime("-2 months"));
+            $oneMonthDate = date("Y-m-01", strtotime("-1 months"));
             return $adminHour->fecha >= $oneMonthDate && $adminHour->fecha <= $actualDate;
         });
 

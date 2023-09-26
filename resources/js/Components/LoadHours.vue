@@ -1,13 +1,13 @@
 <template>
     <div>
-        <select class="form-select" v-model="inputHourSelected" title="ConceptSelect" autocomplete="nope">
+        <select class="form-select" v-if="isEdit" v-model="inputHourSelected" title="ConceptSelect" autocomplete="nope">
             <option v-for="(hour, cursor) in limitHours" :key="cursor" :value="cursor" :selected="cursor == 0"
                 :disabled="cursor == 0">{{
                     hour.label }}</option>
         </select>
-        <textarea v-if="inputHourSelected != 0" type="text" rows="5" class="form-control register-hour-select-hours"
-            placeholder="Observaciones" id="observation" aria-describedby="observation" autocomplete="nope"
-            v-model="inputObservation"></textarea>
+        <textarea v-if="inputHourSelected != 0 && isEdit" type="text" rows="5"
+            class="form-control register-hour-select-hours" placeholder="Observaciones" id="observation"
+            aria-describedby="observation" autocomplete="nope" v-model="inputObservation"></textarea>
         <div v-if="loadRef == 'admin' && statusLoad == 1" class="admin_message badge bg-warning text-dark">Por aprobar</div>
         <div v-if="loadRef == 'admin' && statusLoad == 2" class="admin_message badge bg-success text-dark">Aprobada por {{
             aprrovedCode }}</div>
@@ -18,11 +18,11 @@
             <font-awesome string-icon="fa-solid fa-circle-exclamation"></font-awesome>
             {{ inputObservationError }}
         </div>
-        <div class="register-hour-check" v-if="inputObservation.length >= 7 && !isCharged"
+        <div class="register-hour-check" v-if="inputObservation.length >= 7 && !isCharged && isEdit"
             @click="registerHour(inputHourSelected)">
             <font-awesome string-icon="fa-solid fa-check"></font-awesome>
         </div>
-        <div class="register-hour-uncheck" v-if="inputObservation.length >= 7 && !isCharged"
+        <div class="register-hour-uncheck" v-if="inputObservation.length >= 7 && !isCharged && isEdit"
             @click="unRegisterHour(inputHourSelected)">
             <font-awesome string-icon="fa-solid fa-xmark"></font-awesome>
         </div>
@@ -54,9 +54,17 @@ export default {
             statusLoad: "", //Solo para horas administrativas, muestra el estado de aprovacion de dicha hora
             aprrovedCode: null, //Codigo de aprobacion para esa hora administrativa.
             errorMessageObservation: "minimo 7 caracteres", //Mensaje de error para el tamaño minimo de las observaciones
+            isEdit: true, //Valida si se encuentra en la fecha actual o 1 mes antes
         }
     },
     created() {
+        const dateNow = new Date();
+        const splitDate = this.associatedDay.split("-")
+        const dateAssociated = new Date(Number(splitDate[0]), Number(splitDate[1]), Number(splitDate[2]));
+        //Determinamos en intervalo se encuentra la fecha
+        let diffYear = dateNow.getFullYear() - dateAssociated.getFullYear();
+        let diffMonth = (dateNow.getMonth() + 1) - dateAssociated.getMonth();
+        diffYear === 0 && diffMonth <= 1 ? this.isEdit = true : this.isEdit = false;
         //Proceso de carga de horas\
         let fraccionCount = 0;
         for (let countHours = 0; countHours < (this.maximumHours / this.intervalHours); countHours++) {
@@ -154,6 +162,11 @@ export default {
                 //Mostramos el error
                 this.inputObservationError = error
             }
+        },
+        isEdit(newEdit) {
+            !newEdit
+                ? this.inputObservationError = "No tienes permiso para cargar esta fecha"
+                : this.inputObservationError = ""
         }
     },
     components: { Multiselect, FontAwesome }

@@ -45,8 +45,8 @@
                         @asign-list="asignHourList(scope.dataSelect.managersPerDepartment[cursor].departmentId)"
                         :list-info="scope.listInfoToUpdate"
                         @update-modal="updateHourModal($event, scope.dataSelect.managersPerDepartment[cursor].departmentId)"
-                        error-message="No posee horas adicionales"
-                        @prepare-save="prepareInfoTransfer"></project-additional-modal>
+                        error-message="No posee horas adicionales" @prepare-save="prepareInfoTransfer"
+                        :key="scope.lastHoursId"></project-additional-modal>
                 </span>
             </div>
         </div>
@@ -81,9 +81,11 @@ export default {
          * @param {*} paramCatch Captura la información del array usado para el modal
          */
         prepareInfoTransfer(paramCatch) {
+            //Actualizamos el ID
+            this.scope.lastHoursId = paramCatch.id
             //Emite informacion al padre
             this.$emit('reload-changes', {
-                arrayToAssign: paramCatch,
+                arrayToAssign: paramCatch.info,
                 arrayTarget: "additionalHours",
                 refs: ["hours_id", "additional_hour", "department_id", "register_date", "status_id"]
             })

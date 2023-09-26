@@ -315,7 +315,61 @@ export const ListingMixinMethods = {
                     "%_dif_hor_admon": Number(
                         (percenRealAdmon - percenAdmon).toFixed(2)
                     ).toLocaleString("de-DE"),
-                });
+                },{//Recuadro total de la division
+                    "%_carga_min_proy":"<b>Proy</b>",
+                    "%_carga_min_admon": "<b>Admon</b>",
+                    hor_esp_proy: "<b>Total</b>",
+                    hor_esp_admon: "<b>%_proy</b>",
+                },
+                {
+                    area: "<b>Reales</b>",
+                    "%_carga_min_proy":Number(
+                        fieldTotal["tot_hor_proy"].toFixed(2)
+                    ).toLocaleString("de-DE"),
+                    "%_carga_min_admon": Number(
+                        fieldTotal["tot_hor_admon"].toFixed(2)
+                    ).toLocaleString("de-DE"),
+                    hor_esp_proy: Number(
+                        fieldTotal["tot_hor"].toFixed(2)
+                    ).toLocaleString("de-DE"),
+                    hor_esp_admon: Number(
+                        percenRealProy.toFixed(2)
+                    ).toLocaleString("de-DE"),
+                },
+                {
+                    area: "<b>Estandar</b>",
+                    "%_carga_min_proy":Number(
+                        fieldTotal["hor_esp_proy"].toFixed(2)
+                    ).toLocaleString("de-DE"),
+                    "%_carga_min_admon": Number(
+                        fieldTotal["hor_esp_admon"].toFixed(2)
+                    ).toLocaleString("de-DE"),
+                    hor_esp_proy: Number(
+                        fieldTotal["hor_ref"].toFixed(2)
+                    ).toLocaleString("de-DE"),
+                    hor_esp_admon: Number(percenProy).toLocaleString("de-DE"),
+                },
+                {
+                    area: "<b>Diferencia</b>",
+                    "%_carga_min_proy":Number(
+                        (
+                            fieldTotal.tot_hor_proy - fieldTotal.hor_esp_proy
+                        ).toFixed(2)
+                    ).toLocaleString("de-DE"),
+                    "%_carga_min_admon": Number(
+                        (
+                            fieldTotal.tot_hor_admon - fieldTotal.hor_esp_admon
+                        ).toFixed(2)
+                    ).toLocaleString("de-DE"),
+                    hor_esp_proy: Number(
+                        (
+                            fieldTotal.tot_hor - fieldTotal.hor_ref
+                        ).toFixed(2)
+                    ).toLocaleString("de-DE"),
+                    hor_esp_admon: Number(
+                        (percenRealProy - percenProy).toFixed(2)
+                    ).toLocaleString("de-DE"),
+                },{});
             });
 
             return dataExcel;
