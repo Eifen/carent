@@ -512,6 +512,7 @@ export const ListingMixinMethods = {
             }
             //Hacemos un foreach de la lista por area
             listExcel[1].forEach((field) => {
+                console.log(hourRef.realAdmon,field.tot_hor_admon)
                 hourRef.refProy += parseFloat(field.hor_esp_proy);
                 hourRef.refAdmon += parseFloat(field.hor_esp_admon);
                 hourRef.realAdmon += parseFloat(field.tot_hor_admon);
