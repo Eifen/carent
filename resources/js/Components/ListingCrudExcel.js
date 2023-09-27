@@ -253,6 +253,7 @@ export const ListingMixinMethods = {
         reportConsolidated() {
             let dataExcel = [];
             let listExcel = this.getTotalArea();
+            let listTotal = this.getTotalAcum();
 
             //Cargamos primero el total de los niveles y luego el total general
             listExcel[1].forEach((fieldTotal) => {
@@ -371,6 +372,39 @@ export const ListingMixinMethods = {
                     ).toLocaleString("de-DE"),
                 },{});
             });
+            //Imprimimos el total
+            dataExcel.push({
+                titulo: "<b>Total General</b>",
+                "%_carga_min_proy": "<b>Proy</b>",
+                "%_carga_min_admon": "<b>Admon</b>",
+                hor_esp_proy: "<b>Total</b>",
+                hor_esp_admon: "<b>%_proy</b>",
+                hor_ref: "<b>%_admon</b>",
+            },
+            {
+                area: "<b>Reales</b>",
+                "%_carga_min_proy": Number((listTotal.realProy).toFixed(2)).toLocaleString("de-DE"),
+                "%_carga_min_admon": Number((listTotal.realAdmon).toFixed(2)).toLocaleString("de-DE"),
+                hor_esp_proy: Number((listTotal.realAdmon + listTotal.realProy).toFixed(2)).toLocaleString("de-DE"),
+                hor_esp_admon: Number((listTotal.perRealProy).toFixed(2)).toLocaleString("de-DE"),
+                hor_ref: Number((listTotal.perRealAdmon).toFixed(2)).toLocaleString("de-DE")
+            },
+            {
+                area: "<b>Estimadas</b>",
+                "%_carga_min_proy": Number((listTotal.refProy).toFixed(2)).toLocaleString("de-DE"),
+                "%_carga_min_admon": Number((listTotal.refAdmon).toFixed(2)).toLocaleString("de-DE"),
+                hor_esp_proy: Number((listTotal.refAdmon + listTotal.refProy).toFixed(2)).toLocaleString("de-DE"),
+                hor_esp_admon: Number((listTotal.perRefProy).toFixed(2)).toLocaleString("de-DE"),
+                hor_ref: Number((listTotal.perRefAdmon).toFixed(2)).toLocaleString("de-DE")
+            },
+            {
+                area: "<b>Diferencia</b>",
+                "%_carga_min_proy": Number((listTotal.realAdmon - listTotal.refAdmon).toFixed(2)).toLocaleString("de-DE"),
+                "%_carga_min_admon": Number((listTotal.realProy - listTotal.refProy).toFixed(2)).toLocaleString("de-DE"),
+                hor_esp_proy: Number(((listTotal.realAdmon + listTotal.realProy) - (listTotal.refAdmon + listTotal.refProy)).toFixed(2)).toLocaleString("de-DE"),
+                hor_esp_admon: Number((listTotal.perRealProy - listTotal.perRefProy).toFixed(2)).toLocaleString("de-DE"),
+                hor_ref: Number((listTotal.perRealAdmon - listTotal.perRefAdmon).toFixed(2)).toLocaleString("de-DE")
+            })
 
             return dataExcel;
         },
@@ -464,5 +498,31 @@ export const ListingMixinMethods = {
 
             return [listDirectiveExcel, listTotalDirectiveExcel];
         },
+        getTotalAcum(){
+            let listExcel = this.getTotalArea();
+            let hourRef = {
+                refProy: 0,
+                refAdmon: 0,
+                realProy: 0,
+                realAdmon: 0,
+                perRefProy: 0,
+                perRefAdmon: 0,
+                perRealProy: 0,
+                perRealAdmon: 0,
+            }
+            //Hacemos un foreach de la lista por area
+            listExcel[1].forEach((field) => {
+                hourRef.refProy += parseFloat(field.hor_esp_proy);
+                hourRef.refAdmon += parseFloat(field.hor_esp_admon);
+                hourRef.realAdmon += parseFloat(field.tot_hor_admon);
+                hourRef.realProy += parseFloat(field.tot_hor_proy);
+                hourRef.perRefProy += parseFloat((field.hor_esp_proy / field.hor_ref) * 100);
+                hourRef.perRefAdmon += parseFloat((field.hor_esp_admon / field.hor_ref) * 100);
+                hourRef.perRealProy += parseFloat((field.tot_hor_proy / field.hor_ref) * 100);
+                hourRef.perRealAdmon += parseFloat((field.tot_hor_admon / field.hor_ref) * 100);
+            })
+
+            return hourRef
+        }
     },
 };
