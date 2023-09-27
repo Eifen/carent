@@ -5,6 +5,7 @@
                 :disabled="cursor == 0">{{
                     hour.label }}</option>
         </select>
+        <span class="no-edit" v-if="!idEdit && infoNoEdit != 0">{{ infoNoEdit }} Horas cargadas</span>
         <textarea v-if="inputHourSelected != 0 && isEdit" type="text" rows="5"
             class="form-control register-hour-select-hours" placeholder="Observaciones" id="observation"
             aria-describedby="observation" autocomplete="nope" v-model="inputObservation"></textarea>
@@ -55,6 +56,7 @@ export default {
             aprrovedCode: null, //Codigo de aprobacion para esa hora administrativa.
             errorMessageObservation: "minimo 7 caracteres", //Mensaje de error para el tamaño minimo de las observaciones
             isEdit: true, //Valida si se encuentra en la fecha actual o 1 mes antes
+            infoNoEdit: 0
         }
     },
     created() {
@@ -111,6 +113,8 @@ export default {
                         this.inputHourSelected = indexLimit
                         //Observacion por defecto
                         this.inputObservation = assigned["project_load_observation"]
+                        //Almacenamos la hora carga si no corresponde el intervalo
+                        if (!this.isEdit) this.infoNoEdit = parseFloat(assigned["register_hour"]);
                     }
                 })
             }
@@ -132,6 +136,8 @@ export default {
                         this.inputObservation = assigned["admin_load_observation"]
                         this.statusLoad = assigned["status_load_id"]
                         this.aprrovedCode = assigned["approved_code"]
+                        //Almacenamos la hora carga si no corresponde el intervalo
+                        if (!this.isEdit) this.infoNoEdit = parseFloat(assigned["register_hour"]);
                     }
                 })
             }
