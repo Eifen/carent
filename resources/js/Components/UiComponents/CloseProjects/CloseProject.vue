@@ -587,7 +587,7 @@ export default {
             const totalBillingAdd = totalBilling + totalAdditionalBilling;
             const totalBillingEstimated = this.billingEstimated();
 
-            const hoursDiff = (totalBillingEstimated - totalBillingAdd) / parseFloat(this.project.average);
+            const hoursDiff = (totalBillingEstimated - totalBillingAdd) / (parseFloat(this.project.average) == 0 ? 1 : parseFloat(this.project.average));
 
             return hoursDiff
         },
