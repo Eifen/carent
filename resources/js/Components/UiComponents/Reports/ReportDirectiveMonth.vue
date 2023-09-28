@@ -13,6 +13,7 @@
 <script>
 import ListingCrud from '@/Components/ListingCrud.vue';
 import Loading from '@/Components/Loading.vue';
+import { globalMethodsReport } from './GlobalReportMethods';
 export default {
     props: {
         scope: Object //Importa la data del padre
@@ -59,10 +60,10 @@ export default {
                         area: period.area,
                         nivel: period.nivel,
                         mes: period.mes,
-                        "%_carga_min_proy": Number(period.percen_carg).toLocaleString("de-DE"),
-                        "%_carga_min_admon": Number(100 - period.percen_carg).toLocaleString("de-DE"),
-                        hor_esp_proy: Number((refTotal * (period.percen_carg / 100)).toFixed(2)).toLocaleString("de-DE"),
-                        hor_esp_admon: Number((refTotal * ((100 - period.percen_carg) / 100)).toFixed(2)).toLocaleString("de-DE"),
+                        "%_carga_min_proy": this.formatReportNumber(period.percen_carg),
+                        "%_carga_min_admon": this.formatReportNumber(100 - period.percen_carg),
+                        hor_esp_proy: this.formatReportNumber((refTotal * (period.percen_carg / 100))),
+                        hor_esp_admon: this.formatReportNumber((refTotal * ((100 - period.percen_carg) / 100))),
                         hor_ref: period.ref_total,
                         eval: period.eval,
                         tot_hor_proy: period.proy_hours,
@@ -93,6 +94,7 @@ export default {
             );
         }
     },
+    mixins: [globalMethodsReport],
     components: { ListingCrud, Loading }
 }
 </script>

@@ -302,7 +302,7 @@ export default {
          */
         convertNumber(stringConvert) {
             return parseFloat(stringConvert.replace(/\./g, "").replace(",", "."))
-        }
+        },
     },
     watch: {
         controlPagination: {

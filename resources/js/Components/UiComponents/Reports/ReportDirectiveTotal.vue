@@ -13,6 +13,7 @@
 <script>
 import ListingCrud from '@/Components/ListingCrud.vue';
 import Loading from '@/Components/Loading.vue';
+import { globalMethodsReport } from './GlobalReportMethods';
 export default {
     props: {
         scope: Object //Importa la data del padre
@@ -108,18 +109,18 @@ export default {
                         nombre: user.nombre,
                         area: user.area,
                         nivel: user.nivel,
-                        "%_carga_min_proy": Number(user.percen_carg).toLocaleString("de-DE"),
-                        "%_carga_min_admon": Number(100 - user.percen_carg).toLocaleString("de-DE"),
-                        hor_esp_proy: Number((refTotal * (user.percen_carg / 100)).toFixed(2)).toLocaleString("de-DE"),
-                        hor_esp_admon: Number((refTotal * ((100 - user.percen_carg) / 100)).toFixed(2)).toLocaleString("de-DE"),
-                        hor_ref: Number(user.ref_total.toFixed(2)).toLocaleString('de-DE'),
+                        "%_carga_min_proy": this.formatReportNumber(user.percen_carg),
+                        "%_carga_min_admon": this.formatReportNumber(100 - user.percen_carg),
+                        hor_esp_proy: this.formatReportNumber((refTotal * (user.percen_carg / 100))),
+                        hor_esp_admon: this.formatReportNumber((refTotal * ((100 - user.percen_carg) / 100))),
+                        hor_ref: this.formatReportNumber(user.ref_total),
                         eval: user.percen_carg > percenProy ? "DE" : "E",
-                        tot_hor_proy: Number(user.proy_hours.toFixed(2)).toLocaleString('de-DE'),
-                        "%_hor_proy": Number(percenProy.toFixed(2)).toLocaleString('de-DE'),
-                        tot_hor_admon: Number(user.admin_hours.toFixed(2)).toLocaleString('de-DE'),
+                        tot_hor_proy: this.formatReportNumber(user.proy_hours),
+                        "%_hor_proy": this.formatReportNumber(percenProy),
+                        tot_hor_admon: this.formatReportNumber(user.admin_hours),
                         "%_hor_admon": Number(percenAdmin.toFixed(2)).toLocaleString('de-DE'),
-                        tot_hor: Number(totalHours.toFixed(2)).toLocaleString('de-DE'),
-                        "%_tot_hor": Number(percenTotal.toFixed(2)).toLocaleString('de-DE'),
+                        tot_hor: this.formatReportNumber(totalHours),
+                        "%_tot_hor": this.formatReportNumber(percenTotal),
                         estatus: user.estatus,
                         fecha_egreso: user.egreso
                     });
@@ -133,6 +134,7 @@ export default {
             })
             .catch(error => { console.error(error) })
     },
+    mixins: [globalMethodsReport],
     components: { ListingCrud, Loading }
 }
 </script>
