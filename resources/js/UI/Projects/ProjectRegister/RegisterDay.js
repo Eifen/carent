@@ -44,6 +44,7 @@ export const registerDayMethods = {
                         if (getIndex != -1) {
                             this.gridProjectInfo[getIndex].hoursDiff =
                                 request.data.message["hour_diff"];
+                            this.gridProjectInfo[getIndex].colorBadge = request.data.message["hour_diff"] <= 0 ? "bg-danger" : "bg-info";
                         }
                     }, AXIOSINTERVAL);
                 })
@@ -101,6 +102,7 @@ export const registerDayMethods = {
                             this.gridProjectInfo[getIndex].hoursDiff =
                                 this.gridProjectInfo[getIndex].hoursDiff +
                                 childParam[0]["value"];
+                            this.gridProjectInfo[getIndex].colorBadge = (this.gridProjectInfo[getIndex].hoursDiff + childParam[0]["value"]) <= 0 ? "bg-danger" : "bg-info"
                         }
                     }, AXIOSINTERVAL);
                 })

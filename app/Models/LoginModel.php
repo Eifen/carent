@@ -52,7 +52,8 @@ class LoginModel extends Model
             "rclosureP" => 0,
             "rdirectiveMP" => 0,
             "rhorasP" => 0,
-            "rdirectiveAP" => 0
+            "rdirectiveAP" => 0,
+            "rproyectosP" => 0
         );
         if (!$userAccess->isEmpty()) {
             foreach ($userAccess as $permission) {
@@ -104,6 +105,10 @@ class LoginModel extends Model
                         //reporte directivo acumulado
                     case 19:
                         $arrayAccess['rdirectiveAP'] = 1;
+                        break;
+                        //Reporte de proyectos
+                    case 20:
+                        $arrayAccess['rproyectosP'] = 1;
                         break;
                 }
             }

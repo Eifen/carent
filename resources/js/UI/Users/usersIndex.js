@@ -35,6 +35,7 @@ const usersApp = createApp({
                 rdirectiveMP: false,
                 rhorasP: false,
                 rdirectiveAP: false,
+                rproyectosP: false
             },
             tableTarget: "users",
             controlUserModal: null,
@@ -82,6 +83,7 @@ const usersApp = createApp({
                 rdirectiveMP: [17, false],
                 rhorasP: [18, false],
                 rdirectiveAP: [19, false],
+                rproyectosP: [20, false],
             };
             //Acomodamos los permisos
             for (const field in this.previewUserInfo) {
@@ -133,6 +135,10 @@ const usersApp = createApp({
                     //Reporte directivo mensual
                     case field == "rdirectiveAP" && this.previewUserInfo[field]:
                         prepareParams["rdirectiveAP"][1] = true;
+                        break;
+                    //Reporte de proyectos
+                    case field == "rproyectosP" && this.previewUserInfo[field]:
+                        prepareParams["rproyectosP"][1] = true;
                         break;
                 }
             }

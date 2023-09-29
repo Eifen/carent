@@ -94,7 +94,7 @@ const registerApp = createApp({
                 console.error(error);
             });
     },
-    mounted() {},
+    mounted() { },
     methods: {
         /**
          * Metodo que se encarga se acomodar la fecha para una solicitud a la base de datos
@@ -124,7 +124,7 @@ const registerApp = createApp({
                                 if (
                                     project.user_id === date.user_id &&
                                     project.register_date ===
-                                        date.register_date &&
+                                    date.register_date &&
                                     this.inputProjectSelect.indexOf(
                                         project.user_assigned_id
                                     ) == -1
