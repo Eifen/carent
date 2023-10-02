@@ -73,8 +73,7 @@
                                 <span class="badge text-dark" v-if="project.statusLoad != 2"
                                     :class="project.colorBadge">
                                     @{{ project.hoursDiff }} horas por cargar de @{{ project.hoursAssigned }}</span>
-                                <span v-else class="badge bg-danger text-dark">Este proyecto se encuentra
-                                    cerrado</span>
+                                <span v-else class="badge bg-danger text-dark">Proyecto Cerrado</span>
                             </div>
                         </td>
                         <td scope="row" align="center" valign="middle" v-for="(day,cursor) in listDayData"
