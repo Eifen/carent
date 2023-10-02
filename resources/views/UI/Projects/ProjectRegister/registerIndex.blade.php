@@ -65,13 +65,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-if="gridProjectInfo.length != 0" v-for="(project,position) in gridProjectInfo"
-                        :key="project.hoursDiff">
+                    <tr v-if="gridProjectInfo.length != 0 && listDayData.length !=0"
+                        v-for="(project,position) in gridProjectInfo" :key="project.hoursDiff">
                         <td scope="row">
                             <div class="td-project">
                                 @{{ project.clientName.toUpperCase() }}: @{{ project.description.toUpperCase() }}<br>
-                                <span class="badge text-dark" :class="project.colorBadge">
+                                <span class="badge text-dark" v-if="project.statusLoad != 2"
+                                    :class="project.colorBadge">
                                     @{{ project.hoursDiff }} horas por cargar de @{{ project.hoursAssigned }}</span>
+                                <span v-else class="badge bg-danger text-dark">Este proyecto se encuentra
+                                    inactivo</span>
                             </div>
                         </td>
                         <td scope="row" align="center" valign="middle" v-for="(day,cursor) in listDayData"
@@ -80,13 +83,20 @@
                             <load-hours :associated-load-project="project.projectAssignedId"
                                 :info-assigned-project="listProjectHourData" :associated-day="day.date"
                                 :is-charged="onCharged" :key="listProjectHourData" load-ref="project"
+                                :status-project="project.statusLoad"
                                 @register-hour="registerDay($event,project.projectAssignedId)"
                                 @unregister-hour="unRegisterDay($event,project.projectAssignedId)">
                             </load-hours>
                         </td>
                     </tr>
+                    <tr v-else>
+                        <td scope="row">
+                            <div class="badge bg-warning text-dark">Aun no se han desbloqueado dias para esta semana
+                            </div>
+                        </td>
+                    </tr>
                 </tbody>
-                <tfoot>
+                <tfoot v-if="listDayData.length != 0">
                     <tr>
                         <th>Total H. proyectos</th>
                         <td scope="row" align="center" valign="middle" v-for="(day,cursor) in listDayData"
@@ -117,7 +127,8 @@
                         </th>
                     </tr>
                 <tbody>
-                    <tr v-for="(admin,position) in gridAdminInfo" :key="position">
+                    <tr v-if="gridAdminInfo.length != 0 && listDayData.length != 0"
+                        v-for="(admin,position) in gridAdminInfo" :key="position">
                         <td scope="row">
                             <div class="td-project">@{{ admin.description.toUpperCase() }}</div>
                         </td>
@@ -132,8 +143,14 @@
                             </load-hours>
                         </td>
                     </tr>
+                    <tr v-else>
+                        <td scope="row">
+                            <div class="badge bg-warning text-dark">Aun no se han desbloqueado dias para esta semana
+                            </div>
+                        </td>
+                    </tr>
                 </tbody>
-                <tfoot>
+                <tfoot v-if="listDayData.length != 0">
                     <tr>
                         <th>Total H. Admin</th>
                         <td scope="row" align="center" valign="middle" v-for="(day,cursor) in listDayData"

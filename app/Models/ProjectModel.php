@@ -33,15 +33,7 @@ class ProjectModel extends Model
     public static function getRegisterHoursInfo($userId)
     {
         //Horas asignadas al usuario actual (El que inicio sesion)
-        $getUsersAsign = DB::table('projects_users_assigned')
-            ->join("projects_departments_assigned", "projects_departments_assigned.department_assigned_id", "=", "projects_users_assigned.department_assigned_id")
-            ->join("projects", "projects.project_id", "=", "projects_users_assigned.project_id")
-            ->join("clients", "clients.client_id", "=", "projects.client_id")
-            ->where([
-                ["projects_users_assigned.user_id", "=", $userId],
-                ["projects.status_id", "=", 1]
-            ])
-            ->get();
+        $getUsersAsign = DB::select('call sp_get_register_projects(?)', [$userId]);
 
         //Conceptos de horas administrativas con status 1
         $getConceptHour = DB::table('control_concept_admin_hours')

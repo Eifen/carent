@@ -5,7 +5,8 @@
                 :disabled="cursor == 0">{{
                     hour.label }}</option>
         </select>
-        <span class="no-edit" v-if="!idEdit && infoNoEdit != 0">{{ infoNoEdit }} Horas cargadas</span>
+        <span class="no-edit" v-if="!isEdit && infoNoEdit != 0">{{
+            infoNoEdit }} Horas cargadas</span>
         <textarea v-if="inputHourSelected != 0 && isEdit" type="text" rows="5"
             class="form-control register-hour-select-hours" placeholder="Observaciones" id="observation"
             aria-describedby="observation" autocomplete="nope" v-model="inputObservation"></textarea>
@@ -39,6 +40,7 @@ export default {
         associatedDay: String, //Día seleccionado
         loadRef: String, //Texto que almacena el tipo de carga, project o admin
         isCharged: Boolean, //Control del boton
+        statusProject: Number //Controla el estado del proyecto, solo aplica si loadRed es project
     },
     emits: ['register-hour', 'unregister-hour'],
     data() {
@@ -56,7 +58,7 @@ export default {
             aprrovedCode: null, //Codigo de aprobacion para esa hora administrativa.
             errorMessageObservation: "minimo 7 caracteres", //Mensaje de error para el tamaño minimo de las observaciones
             isEdit: true, //Valida si se encuentra en la fecha actual o 1 mes antes
-            infoNoEdit: 0
+            infoNoEdit: 0,
         }
     },
     created() {
@@ -102,6 +104,7 @@ export default {
          * Metodo de inicializacion que configura las horas cargables a proyectos
          */
         loadProjects() {
+            this.statusProject == 2 ? this.isEdit = false : null
             const indexAssigned = this.infoAssignedProject.map(assigned => { return assigned.user_assigned_id }).indexOf(this.associatedLoadProject);
             if (indexAssigned != -1) {
                 //Si coincide asignamos la informacion de la hora cargada

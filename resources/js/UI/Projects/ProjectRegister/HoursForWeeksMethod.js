@@ -112,9 +112,11 @@ export const hoursForWeeksMethod = {
                         hoursDiff:
                             this.projectAssociatedToCharge[getProjectIndex]
                                 .assigned_hours - hoursLoad,
-                        colorBadge: (this.projectAssociatedToCharge[getProjectIndex].assigned_hours - hoursLoad) <= 0 ? "bg-danger" : "bg-info"
+                        colorBadge: (this.projectAssociatedToCharge[getProjectIndex].assigned_hours - hoursLoad) <= 0 ? "bg-danger" : "bg-info",
+                        statusLoad: this.projectAssociatedToCharge[getProjectIndex].status_id
                     });
 
+                    console.log(this.gridProjectInfo, this.projectAssociatedToCharge[getProjectIndex])
                     //Limpiamos el contador
                     hoursLoad = 0;
                 });
