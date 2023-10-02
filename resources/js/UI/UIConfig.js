@@ -135,6 +135,7 @@ export class CrudUi {
             })
             .catch((error) => {
                 console.error(error);
+                self.listData = [];
             });
     }
 
