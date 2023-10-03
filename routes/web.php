@@ -163,6 +163,7 @@ Route::prefix('/')->group(function () {
                     Route::post('/list-admin-hours', [ReportsController::class, "getAdminReport"]);
                     Route::post('/admin-hours-report', [ReportsController::class, "adminIntervalReport"]);
                     Route::post('/list-directive-total', [ReportsController::class, "getDirectiveTotal"]);
+                    Route::post('/list-logs-projects', [ReportsController::class, "getLogProject"]);
                 });
             });
         });

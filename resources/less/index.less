@@ -10,8 +10,9 @@
 @Button-Select-Color: #fd7e14;
 @Sucess-Submit-Color: #38c172;
 @Failure-Submit-Color: #e3342f;
+
 /*Background General*/
-body{
+body {
     background: @Background-Color;
     object-fit: contain;
     margin: 0;
@@ -20,19 +21,27 @@ body{
     list-style: none;
     color: @Text-Color
 }
+
 //Desactivamos mostrar contraseñas en edge
-input[type="password"]::-ms-reveal{ display: none;}
+input[type="password"]::-ms-reveal {
+    display: none;
+}
 
 /*Elementos para ocultar*/
-[v-cloak] { display: none }
+[v-cloak] {
+    display: none
+}
 
 //Deshabilitar botones
-.disable{pointer-events: none; opacity: 0.6;}
+.disable {
+    pointer-events: none;
+    opacity: 0.6;
+}
 
 //Estilo predeterminado para todos los contenedores
-.styleContainer{
+.styleContainer {
     background: @Container-Color;
-    width: min(100%,70rem);
+    width: min(100%, 70rem);
     margin: 0 auto;
     margin-top: 50px;
     border-radius: 5px;
@@ -40,7 +49,7 @@ input[type="password"]::-ms-reveal{ display: none;}
 }
 
 //Estilo predeterminado para mensajes de error
-.not-found{
+.not-found {
     width: 50%;
     text-align: center;
     margin: 10px auto;
@@ -48,12 +57,12 @@ input[type="password"]::-ms-reveal{ display: none;}
 }
 
 //Estilo para banderas de estado de la hora
-.admin_message{
+.admin_message {
     width: 100%;
 }
 
 //Tarjetas de informacion
-.cardContainer{
+.cardContainer {
     padding: 5px;
     border: 1px solid @Shadow-Hover-Color;
     border-left-width: 0.25rem;
@@ -61,18 +70,23 @@ input[type="password"]::-ms-reveal{ display: none;}
 }
 
 //Estilo para los enlaces
-.aLink{
+.aLink {
     color: inherit;
     text-decoration: none;
     transition: color 0.3s linear;
     cursor: pointer;
-    &:hover{color: @Button-Select-Color} //Desactivamos el estilo de los <a>
+
+    &:hover {
+        color: @Button-Select-Color
+    }
+
+    //Desactivamos el estilo de los <a>
 }
 
 //Estilo para todos los botones del UI
-.buttonCRUD{
+.buttonCRUD {
     background: @Button-Color;
-    width: min(90%,12rem);
+    width: min(90%, 12rem);
     text-align: center;
     font-weight: bolder;
     border: 2px solid @Button-Color;
@@ -83,17 +97,16 @@ input[type="password"]::-ms-reveal{ display: none;}
     white-space: pre-line;
     word-wrap: break-word;
     cursor: pointer;
-    &:hover{
+
+    &:hover {
         background: @Button-Select-Color;
         border-color: @Button-Select-Color;
     }
 }
 
 //Target Nav Style
-.barsBottomTarget
-{
-    &::before
-    {
+.barsBottomTarget {
+    &::before {
         content: '';
         position: absolute;
         bottom: 1vh;
@@ -107,60 +120,69 @@ input[type="password"]::-ms-reveal{ display: none;}
         transition: transform 0.5s ease-out //Barra inferior hover
     }
 
-    &:target::before{ transform: scale(1)}
+    &:target::before {
+        transform: scale(1)
+    }
 }
 
 //Mensajes de Error
-.form-ErrorInput{
+.form-ErrorInput {
     font-size: .8em;
     font-weight: bolder;
     color: @Failure-Submit-Color
 }
 
 //Login correcto
-.form-SuccessInput{
+.form-SuccessInput {
     font-size: .8em;
     font-weight: bolder;
     color: @Sucess-Submit-Color
 }
 
 //Select interno
-.selectIntoAddon{
+.selectIntoAddon {
     border-radius: 0;
     border: none;
     background-color: inherit;
 
-    &:focus{ box-shadow: none;}
+    &:focus {
+        box-shadow: none;
+    }
 }
 
 //Acomodar el multiselect tag
-.multiselect-tag{
+.multiselect-tag {
     white-space: normal;
 }
 
-.multiselect-placeholder{
+.multiselect-placeholder {
     font-size: 0.7em;
 }
 
 //CSS para columnas internas en table
-.tableFormat{
-    &-thead{
+.tableFormat {
+    &-thead {
         background: @Thead-Color;
         color: @Text-Thead-Color;
         text-align: center;
         height: 60px;
     }
 
-    & td, & tr { height: 20px;}
+    & td,
+    & tr {
+        height: 20px;
+    }
+
     //Td para los setting
-    & tbody .list-container-table-setting-container{
+    & tbody .list-container-table-setting-container {
         position: relative;
 
-        &-modal{
+        &-modal {
             background: none;
             width: 12rem;
             position: absolute;
-            top: -20px; right: 30px;
+            top: -20px;
+            right: 30px;
             z-index: 1;
             padding: 8px;
             border-radius: 5px;
@@ -175,8 +197,8 @@ input[type="password"]::-ms-reveal{ display: none;}
 }
 
 //Css para lo head
-.table-th{
-    width:200px;
+.table-th {
+    width: 200px;
     overflow: auto;
 }
 

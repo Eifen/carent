@@ -174,18 +174,40 @@ export const projectWatchers = {
                 searchQualityPartner
             );
         },
-        inputDepartments(targetDepartment) {
+        inputDepartments(targetDepartment, oldTarget) {
+            console.log(targetDepartment, oldTarget)
             if (targetDepartment.length > 0)
                 this.submitButton.departmentsValid = true;
             if (targetDepartment.length <= 0)
                 this.submitButton.departmentsValid = false;
+            let copyArray = targetDepartment
             //Inicialmente creamos una copia del array
             const copyManager = this.dataSelect.managersPerDepartment;
+            //Si estamos en edicion verificamos si el valor eliminado no tiene horas cargadas
+            if (this.isEdit && oldTarget.length > targetDepartment.length) {
+                let departmentRemove = 0;
+                oldTarget.forEach(department_id => {
+                    const detectRemove = targetDepartment.indexOf(department_id);
+                    if (detectRemove == -1) departmentRemove = department_id
+                })
+                //Si se removio un departamento, revisamos si tiene horas cargadas
+                if (departmentRemove != 0) {
+                    const indexManager = copyManager.map(object => object.departmentId).indexOf(departmentRemove)
+                    if (copyManager[indexManager].registerHour != 0) {
+                        alert(`No se puede eliminar el departamento ${copyManager[indexManager].departmentName} por que ya tiene horas cargadas`)
+                        //Colocamos el array anterior
+                        oldTarget.forEach((department_id, pos) => {
+                            this.inputDepartments[pos] = department_id
+                        })
+                    }
+                }
+            }
+            console.log(copyArray)
             //Vaciamos el array
             this.dataSelect.managersPerDepartment = [];
 
             //Recorremos el nuevo multiSelect
-            targetDepartment.forEach((departmentSelect) => {
+            copyArray.forEach((departmentSelect) => {
                 //Obtenemos el indice del usuario por departamento
                 const getIndex = this.dataSelect.departments
                     .map((object) => object.value)
@@ -218,6 +240,7 @@ export const projectWatchers = {
                         ),
                         hoursAssigned: "",
                         selectManager: 0,
+                        registerHour: 0
                     });
                     //Desactivamos la validacion de horas
                     this.submitButton.hoursAssignedValid = false;

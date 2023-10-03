@@ -132,4 +132,15 @@ class ReportsController extends Controller
         $reportInstance = new ReportDirective();
         return response($reportInstance->getTotalDays($startDate, $endDate));
     }
+
+    /**
+     * Metodo que retorna el registro de carga de todos los proyectos
+     */
+    public function getLogProject()
+    {
+        return response(array(
+            "response" => true,
+            "message" => ReportsModel::getReport('project_log')
+        ), 200);
+    }
 }

@@ -134,6 +134,7 @@ export const createdMixin = (self) => {
                             self.$props.dataEdit.departments[countDepartment]
                                 .department_id
                         );
+                    const indexProjectHour = self.$props.dataEdit.projectsHours.map(object => object.department_id).indexOf(self.$props.dataEdit.departments[countDepartment].department_id)
                     self.inputDepartments.push(
                         self.$props.dataEdit.departments[countDepartment]
                             .department_id
@@ -163,6 +164,7 @@ export const createdMixin = (self) => {
                         selectManager:
                             self.$props.dataEdit.departments[countDepartment]
                                 .manager_id,
+                        registerHour: indexProjectHour != -1 ? Number(self.$props.dataEdit.projectsHours[indexProjectHour].total_hours).toLocaleString('de-DE') : 0,
                     });
 
                     //Sumamos las horas asignadas

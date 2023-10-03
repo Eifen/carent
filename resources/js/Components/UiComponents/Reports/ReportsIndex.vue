@@ -27,8 +27,19 @@
             <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
         </div>
     </div>
+    <!-- Reporte de proyectos -->
+    <div v-if="selectReport == 5">
+        <ReportProjectsLog v-if="reportPermission.rproyectosP == 1" :scope="migrateData" :key="isMounted">
+        </ReportProjectsLog>
+        <div v-else class="not-found">
+            <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
+        </div>
+    </div>
+    <div v-else-if="selectReport == 5 && reportPermission.rproyectosP != 1" class="not-found">
+        <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
+    </div>
     <!-- Reporte horas no cargables -->
-    <div v-if="selectReport > 2" class="reports-container">
+    <div v-if="selectReport > 2 && selectReport < 5" class="reports-container">
         <!-- Fechas  -->
         <span class="reports-container-title">Ingrese el intervalo de fechas</span>
         <div class="reports-container-search">
@@ -65,14 +76,6 @@
         <div v-else-if="selectReport == 4 && reportPermission.rdirectiveAP != 1" class="not-found">
             <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
         </div>
-        <!-- Reporte de proyectos -->
-        <ReportProjects class="reports-container-list"
-            v-if="selectReport == 5 && reportPermission.rproyectosP == 1 && dateEnd.length != 0" :scope="migrateData"
-            :key="dateEnd" @update-mounted="isMounted = $event">
-        </ReportProjects>
-        <div v-else-if="selectReport == 5 && reportPermission.rproyectosPP != 1" class="not-found">
-            <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
-        </div>
     </div>
 </template>
 <script>
@@ -82,7 +85,7 @@ import ReportDirectiveMonth from '@/Components/UiComponents/Reports/ReportDirect
 import ReportAdminHours from '@/Components/UiComponents/Reports/ReportAdminHours.vue';
 import ReportDirectiveTotal from '@/Components/UiComponents/Reports/ReportDirectiveTotal.vue';
 import Calendar from '@/Components/Calendar.vue';
-import ReportProjects from './ReportProjects.vue';
+import ReportProjectsLog from '@/Components/UiComponents/Reports/ReportProjectsLog.vue';
 export default {
     props: {
         listReports: Array, //Lista de reportes que se abstraen desde la base de datos
@@ -161,6 +164,9 @@ export default {
                 case 2:
                     this.getTable('/reports/list-directive-month')
                     break;
+                case 5:
+                    this.getTable('/reports/list-logs-projects')
+                    break;
             }
         },
         listData() {
@@ -178,6 +184,6 @@ export default {
     computed: {
         migrateData() { return this.$data }
     },
-    components: { ReportClosureProject, ReportDirectiveMonth, ReportAdminHours, Calendar, ReportDirectiveTotal, ReportProjects }
+    components: { ReportClosureProject, ReportDirectiveMonth, ReportAdminHours, Calendar, ReportDirectiveTotal, ReportProjectsLog }
 }
 </script>

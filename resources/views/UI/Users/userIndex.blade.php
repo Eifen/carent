@@ -99,7 +99,7 @@
                             <div class="form-check form-switch">
                                 <input class="form-check-input" v-model="previewUserInfo.rproyectosP" type="checkbox"
                                     :checked="previewUserInfo.rproyectosP">
-                                <label class="form-check-label">Reporte de Proyectos</label>
+                                <label class="form-check-label">Reporte bitácora de Proyectos</label>
                             </div>
                         </div>
                     </div>

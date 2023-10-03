@@ -50,6 +50,16 @@
                 </span>
             </div>
         </div>
+        <!-- Horas Cargadas -->
+        <div class="mb-3" v-if="scope.dataSelect.managersPerDepartment[cursor].selectManager != 0 && isEdit">
+            <label for="HoursRegister">Horas cargadas</label>
+            <div class="input-group">
+                <span class="input-group-text">
+                    <font-awesome string-icon="fa-solid fa-hashtag"></font-awesome>
+                </span>
+                <span class="form-control">{{ scope.dataSelect.managersPerDepartment[cursor].registerHour }}</span>
+            </div>
+        </div>
     </fieldset>
 </template>
 <script>
