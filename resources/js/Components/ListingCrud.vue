@@ -65,7 +65,7 @@
                         <template
                             v-for="(columnData, cursorTable) in controlTable.data[actualIndex + controlTable.minLength]"
                             :key="cursorTable">
-                            <td align="center"
+                            <td align="center" style="width: 500px;"
                                 v-if="cursorTable != 'mes' && cursorTable != 'order' && cursorTable != 'ref_estimated' && cursorTable != 'fecha_egreso'">
                                 <span v-if="cursorTable == 'estatus' && columnData == 1"
                                     class="badge text-bg-success">activo</span>
@@ -79,8 +79,10 @@
                                     vacaciones</span>
                                 <span v-else-if="cursorTable == 'estatus' && columnData == 5"
                                     class="badge text-bg-danger">Egresado</span>
-                                <span v-else :style="whiteSpace ? 'white-space: pre' : 'white-space: none'">{{ columnData
-                                }}</span>
+                                <span v-else
+                                    :style="whiteSpace && cursorTable != 'proyecto' && cursorTable != 'cliente' ? 'white-space: pre;' : 'white-space: none'">{{
+                                        columnData
+                                    }}</span>
                             </td>
                         </template>
                         <td :class="tableClass.setting"
