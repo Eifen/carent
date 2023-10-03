@@ -4,7 +4,7 @@
         <ListingCrud style="width: 90%;" v-if="scope.isMounted && directivePaginatio != 0" :title-object="reportColumns"
             :pagination-lenght="directivePaginatio" :pagination-limit="directiveLength" :table-info="directiveList"
             title-table="Reporte bitácora de proyectos" not-found-message="No hay proyectos cargados"
-            :select-search="selectSearch" view-search view-excel title-excel="ReporteBitacoraProyectos.xls">
+            :select-search="selectSearch" view-search view-excel title-excel="ReporteBitacoraProyectos.xls" white-space>
         </ListingCrud>
     </div>
 </template>
@@ -44,10 +44,11 @@ export default {
             let areaDTO = this.scope.listData.map(object => object.department_name)
             areaDTO = Object.values(areaDTO);
             //Cargamos la informacion inicial
-            this.scope.listData.forEach((logInfo, pos) => {
-                const indexProject = this.directiveList.map(object => object.id).indexOf(logInfo.project_id)
-                if (indexProject == -1) {
-                    this.directiveList.push({
+            this.directiveList = this.scope.listData.reduce((acum, logInfo, pos) => {
+                const key = logInfo.project_id
+
+                if (!acum[key]) {
+                    acum[key] = {
                         id: logInfo.project_id,
                         cliente: logInfo.cliente,
                         proyecto: logInfo.proyecto,
@@ -58,23 +59,18 @@ export default {
                         hora_registrada: Number(logInfo.register_hour).toLocaleString('de-DE'),
                         hora_proyecto: logInfo.project_hours,
                         estatus: logInfo.estatus
-                    })
+                    }
                 } else {
-                    const lastPosition = this.scope.listData[pos - 1];
-                    this.directiveList.push({
-                        id: "",
-                        cliente: "",
-                        proyecto: "",
-                        area: lastPosition.department_name == logInfo.department_name ? "" : logInfo.department_name,
-                        cargo: logInfo.position_name,
-                        empleado: logInfo.user_name,
-                        hora_asignada: logInfo.assigned_hour,
-                        hora_registrada: Number(logInfo.register_hour).toLocaleString('de-DE'),
-                        hora_proyecto: "",
-                        estatus: ""
-                    })
+                    this.scope.listData[pos - 1].department_name == logInfo.department_name ? acum[key].area += `\n` : acum[key].area += `\n${logInfo.department_name}`;
+                    acum[key].cargo += `\n${logInfo.position_name}`;
+                    acum[key].empleado += `\n${logInfo.user_name}`;
+                    acum[key].hora_asignada += `\n${logInfo.assigned_hour}`;
+                    acum[key].hora_registrada += `\n${Number(logInfo.register_hour).toLocaleString('de-DE')}`;
                 }
+
+                return acum;
             })
+            this.directiveList = Object.values(this.directiveList)
             //Acomodamos la longitud minima y su paginacion
             if (this.directiveList.length < 50) this.directiveLength = this.directiveList.length;
             this.directivePaginatio = Math.ceil(

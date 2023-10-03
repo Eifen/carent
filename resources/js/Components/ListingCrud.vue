@@ -79,7 +79,8 @@
                                     vacaciones</span>
                                 <span v-else-if="cursorTable == 'estatus' && columnData == 5"
                                     class="badge text-bg-danger">Egresado</span>
-                                <span v-else>{{ columnData }}</span>
+                                <span v-else :style="whiteSpace ? 'white-space: pre' : 'white-space: none'">{{ columnData
+                                }}</span>
                             </td>
                         </template>
                         <td :class="tableClass.setting"
@@ -151,6 +152,7 @@ export default {
         hoursRef: Number, //Numero total de la referencia
         directive: Boolean, //Valor booleano que determina si es un reporte directivo o no
         directiveType: String, // En caso de que directive sea true verifica el tipo de directivo
+        whiteSpace: Boolean, //Si esta en true define si se aplicara el white-space: pre en la columna
     },
     data() {
         return {
