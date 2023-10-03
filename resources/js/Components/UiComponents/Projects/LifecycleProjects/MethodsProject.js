@@ -224,8 +224,6 @@ export const projectMethods = {
                 });
             }
 
-            console.log(this.inputAdditionalHours)
-
             //Formateamos
             this.inputAdditionalHours = Number(
                 this.inputAdditionalHours

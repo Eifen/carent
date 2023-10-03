@@ -388,7 +388,6 @@ export default {
     ],
     created() {
         //Si ya cargo el componente, llenamos la informacion
-        console.log(this.loadInitial)
         if (this.active) {
             //Nommbre del proyecto
             this.project.name = this.loadInitial.project.project_description
@@ -570,7 +569,6 @@ export default {
                     }, 0)
                     break;
             }
-            console.log(totalHours, departmentId)
             return totalHours
         },
         monetaryRecover(totalBilling, totalAditionalBilling) {

@@ -175,7 +175,6 @@ export const projectWatchers = {
             );
         },
         inputDepartments(targetDepartment, oldTarget) {
-            console.log(targetDepartment, oldTarget)
             if (targetDepartment.length > 0)
                 this.submitButton.departmentsValid = true;
             if (targetDepartment.length <= 0)
@@ -202,7 +201,6 @@ export const projectWatchers = {
                     }
                 }
             }
-            console.log(copyArray)
             //Vaciamos el array
             this.dataSelect.managersPerDepartment = [];
 

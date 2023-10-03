@@ -44,7 +44,7 @@ export default {
             let areaDTO = this.scope.listData.map(object => object.department_name)
             areaDTO = Object.values(areaDTO);
             //Cargamos la informacion inicial
-            this.directiveList = this.scope.listData.reduce((acum, logInfo, pos) => {
+            let listDTO = this.scope.listData.reduce((acum, logInfo, pos) => {
                 const key = logInfo.project_id
 
                 if (!acum[key]) {
@@ -69,8 +69,9 @@ export default {
                 }
 
                 return acum;
-            })
-            this.directiveList = Object.values(this.directiveList)
+            }, {})
+            listDTO = Object.values(listDTO)
+            this.directiveList = listDTO
             //Acomodamos la longitud minima y su paginacion
             if (this.directiveList.length < 50) this.directiveLength = this.directiveList.length;
             this.directivePaginatio = Math.ceil(

@@ -116,7 +116,6 @@ export const hoursForWeeksMethod = {
                         statusLoad: this.projectAssociatedToCharge[getProjectIndex].status_id
                     });
 
-                    console.log(this.gridProjectInfo, this.projectAssociatedToCharge[getProjectIndex])
                     //Limpiamos el contador
                     hoursLoad = 0;
                 });
