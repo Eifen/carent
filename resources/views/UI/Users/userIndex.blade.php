@@ -101,6 +101,11 @@
                                     :checked="previewUserInfo.rproyectosP">
                                 <label class="form-check-label">Reporte bitácora de Proyectos</label>
                             </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" v-model="previewUserInfo.rnoRegisterP"
+                                    type="checkbox" :checked="previewUserInfo.rnoRegisterP">
+                                <label class="form-check-label">Reporte de personas por cargar</label>
+                            </div>
                         </div>
                     </div>
                 </div>

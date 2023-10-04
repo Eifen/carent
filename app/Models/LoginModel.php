@@ -53,7 +53,8 @@ class LoginModel extends Model
             "rdirectiveMP" => 0,
             "rhorasP" => 0,
             "rdirectiveAP" => 0,
-            "rproyectosP" => 0
+            "rproyectosP" => 0,
+            "rnoRegisterP" => 0
         );
         if (!$userAccess->isEmpty()) {
             foreach ($userAccess as $permission) {
@@ -109,6 +110,10 @@ class LoginModel extends Model
                         //Reporte de proyectos
                     case 20:
                         $arrayAccess['rproyectosP'] = 1;
+                        break;
+                        //Reporte de personas faltas de carga
+                    case 21:
+                        $arrayAccess['rnoRegisterP'] = 1;
                         break;
                 }
             }

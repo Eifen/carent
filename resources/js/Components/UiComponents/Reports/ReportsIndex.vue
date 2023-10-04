@@ -39,7 +39,7 @@
         <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
     </div>
     <!-- Reporte horas no cargables -->
-    <div v-if="selectReport > 2 && selectReport < 5" class="reports-container">
+    <div v-if="selectReport > 2 && selectReport != 5" class="reports-container">
         <!-- Fechas  -->
         <span class="reports-container-title">Ingrese el intervalo de fechas</span>
         <div class="reports-container-search">
@@ -76,6 +76,14 @@
         <div v-else-if="selectReport == 4 && reportPermission.rdirectiveAP != 1" class="not-found">
             <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
         </div>
+        <!-- Reporte personas por cargar -->
+        <ReportNoRegisterHour class="reports-container-list"
+            v-if="selectReport == 6 && reportPermission.rnoRegisterP == 1 && dateEnd.length != 0" :scope="migrateData"
+            :key="dateEnd" @update-mounted="isMounted = $event">
+        </ReportNoRegisterHour>
+        <div v-else-if="selectReport == 6 && reportPermission.rnoRegisterP != 1" class="not-found">
+            <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
+        </div>
     </div>
 </template>
 <script>
@@ -86,6 +94,7 @@ import ReportAdminHours from '@/Components/UiComponents/Reports/ReportAdminHours
 import ReportDirectiveTotal from '@/Components/UiComponents/Reports/ReportDirectiveTotal.vue';
 import Calendar from '@/Components/Calendar.vue';
 import ReportProjectsLog from '@/Components/UiComponents/Reports/ReportProjectsLog.vue';
+import ReportNoRegisterHour from '@/Components/UiComponents/Reports/ReportNoRegisterHour.vue';
 export default {
     props: {
         listReports: Array, //Lista de reportes que se abstraen desde la base de datos
@@ -184,6 +193,6 @@ export default {
     computed: {
         migrateData() { return this.$data }
     },
-    components: { ReportClosureProject, ReportDirectiveMonth, ReportAdminHours, Calendar, ReportDirectiveTotal, ReportProjectsLog }
+    components: { ReportClosureProject, ReportDirectiveMonth, ReportAdminHours, Calendar, ReportDirectiveTotal, ReportProjectsLog, ReportNoRegisterHour }
 }
 </script>

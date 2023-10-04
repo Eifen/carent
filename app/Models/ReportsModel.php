@@ -39,4 +39,14 @@ class ReportsModel extends Model
         $getTotal = DB::select('call sp_report_hours(?,?,?,?)', $paramsHours);
         return $getTotal;
     }
+
+    /**
+     * Metodo que se encarga de agrupar las personas que no han cargado horas en un intervalo
+     * @param Array $paramsDate Recibe los valores de fecha inicial y fecha final del intervalo en las posiciones 0 y 1 respectivamente
+     */
+    public static function noRegisterHoursPersonal($paramsDate)
+    {
+        $getList = DB::select('call sp_report_no_register(?,?)', $paramsDate);
+        return $getList;
+    }
 }

@@ -143,4 +143,18 @@ class ReportsController extends Controller
             "message" => ReportsModel::getReport('project_log')
         ), 200);
     }
+
+    public function getNoRegisterReport(Request $requestDate)
+    {
+
+        $prepareDate = array(
+            date("Y-m-d", strtotime($requestDate->input("start"))),
+            date("Y-m-d", strtotime($requestDate->input("end"))),
+        );
+
+        return response(array(
+            "response" => true,
+            "message" => ReportsModel::noRegisterHoursPersonal($prepareDate)
+        ), 200);
+    }
 }
