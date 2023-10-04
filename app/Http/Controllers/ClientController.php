@@ -21,8 +21,11 @@ class ClientController extends Controller
     {
         //Corroboraros que exista un usuario
         if (Session::has('userId')) $this->permitControl = true;
+        $catchStatusMaintenance = ConfigModel::checkMaintenance();
 
-        return view('index')->with("Session", $this->permitControl);
+        return view('index')
+            ->with("Session", $this->permitControl)
+            ->with('Maintenance', $catchStatusMaintenance);
     }
 
     /**

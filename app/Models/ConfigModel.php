@@ -98,4 +98,13 @@ class ConfigModel extends Model
 
         return $ResponseJson;
     }
+
+    public static function checkMaintenance()
+    {
+        $getStatus = DB::table('control_page')
+            ->where("page_id", "=", 1)
+            ->first();
+
+        return $getStatus->status_id;
+    }
 }

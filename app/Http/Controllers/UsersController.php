@@ -25,7 +25,11 @@ class UsersController extends Controller
             $this->permitControl = true;
         }
 
-        return view('index')->with('Session', $this->permitControl);
+        $catchStatusMaintenance = ConfigModel::checkMaintenance();
+
+        return view('index')
+            ->with('Session', $this->permitControl)
+            ->with('Maintenance', $catchStatusMaintenance);
     }
 
     /**

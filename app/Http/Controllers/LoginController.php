@@ -27,7 +27,11 @@ class LoginController extends Controller
         $request->session()->put('encrypt-key', $encryptData["key"]);
         $request->session()->put('encrypt-iv', $encryptData["iv"]);
 
-        return view('index')->with('Session', $this->validacion);
+        $catchStatusMaintenance = ConfigModel::checkMaintenance();
+
+        return view('index')
+            ->with('Session', $this->validacion)
+            ->with('Maintenance', $catchStatusMaintenance);
     }
 
     /**

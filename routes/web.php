@@ -31,6 +31,7 @@ Route::prefix('/')->group(function () {
     Route::get('/', [LoginController::class, 'index']);
     Route::post('/login', [LoginController::class, 'Login']);
     Route::get('/logout', [LoginController::class, 'Logout'])->name('logout');
+    Route::get('/maintenance', [ConfigController::class, 'changeMaintenance'])->name('maintenance');
     Route::post('/recovery', [LoginController::class, 'recovery']);
     Route::post('/limit-pag', [ConfigController::class, 'LimitPag']);
     Route::middleware('auth')->group(function () {

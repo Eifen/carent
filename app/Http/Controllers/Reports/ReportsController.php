@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Reports;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Reports\ReportDirective;
+use App\Models\ConfigModel;
 use App\Models\ReportsModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
@@ -26,8 +27,11 @@ class ReportsController extends Controller
     {
         //Corroboraros que exista un usuario
         if (Session::has('userId')) $this->permitControl = true;
+        $catchStatusMaintenance = ConfigModel::checkMaintenance();
 
-        return view('index')->with("Session", $this->permitControl);
+        return view('index')
+            ->with("Session", $this->permitControl)
+            ->with('Maintenance', $catchStatusMaintenance);
     }
 
     /**

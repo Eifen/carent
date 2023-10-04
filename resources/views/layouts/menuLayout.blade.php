@@ -4,6 +4,10 @@
                 src="/images/logo-carent-menu-expandido.png" title="CarentLogoMenu" /></div>
         <ul class="header-nav-links" id="selectNav" :style="hamburgerMenu">
             <li class="header-nav-links-item" id="user-name">Conectado como, <span>{{ Session::get('userName') }}
+                    @if ($Maintenance == 1)
+                        (En mantenimiento)
+                    @endif
+                </span>
             </li>
             @if (Session::has('userPermissions'))
                 @yield('usuarios')

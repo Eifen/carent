@@ -1,0 +1,41 @@
+.maintenance-page {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    max-height: 100%;
+    position: relative;
+
+    &-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: relative;
+        z-index: -1;
+    }
+
+    &-text {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        transform: translateY(-50%);
+        color: @Label-Color;
+        font: italic bolder 2em arial;
+        text-align: center;
+        white-space: pre;
+        z-index: 1;
+    }
+
+    &-link {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        .aLink();
+        color: @Label-Color;
+        font-weight: bolder;
+        text-decoration: underline;
+
+        &:hover {
+            color: @Text-Color;
+        }
+    }
+}

@@ -7,6 +7,7 @@ use App\Models\ConfigModel;
 use App\Models\UsersModel;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
 
 class ConfigController extends Controller
 {
@@ -22,7 +23,11 @@ class ConfigController extends Controller
             $this->permitControl = true;
         }
 
-        return view('index')->with('Session', $this->permitControl);
+        $catchStatusMaintenance = ConfigModel::checkMaintenance();
+
+        return view('index')
+            ->with('Session', $this->permitControl)
+            ->with('Maintenance', $catchStatusMaintenance);
     }
 
     public function LimitPag(Request $dataLimit)
@@ -124,5 +129,14 @@ class ConfigController extends Controller
         }
 
         return response($changePassword, 200);
+    }
+
+    /**
+     * Funcion que cambia el estado del mantenimiento
+     */
+    public function changeMaintenance()
+    {
+        DB::select('call sp_change_maintenance_status()');
+        return redirect('/');
     }
 }
