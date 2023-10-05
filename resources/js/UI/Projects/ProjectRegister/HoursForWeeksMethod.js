@@ -95,6 +95,7 @@ export const hoursForWeeksMethod = {
 
                     //Horas totales cargadas
                     hoursLoad = this.countProjectHours(select);
+                    let diffHours = this.projectAssociatedToCharge[getProjectIndex].assigned_hours - hoursLoad
 
                     //Cargamos la informacion de la grilla
                     this.gridProjectInfo.push({
@@ -109,9 +110,7 @@ export const hoursForWeeksMethod = {
                         description:
                             this.projectAssociatedToCharge[getProjectIndex]
                                 .project_description, //Nombre del proyecto
-                        hoursDiff:
-                            this.projectAssociatedToCharge[getProjectIndex]
-                                .assigned_hours - hoursLoad,
+                        hoursDiff: diffHours < 0 ? 0 : diffHours,
                         colorBadge: (this.projectAssociatedToCharge[getProjectIndex].assigned_hours - hoursLoad) <= 0 ? "bg-danger" : "bg-info",
                         statusLoad: this.projectAssociatedToCharge[getProjectIndex].status_id
                     });

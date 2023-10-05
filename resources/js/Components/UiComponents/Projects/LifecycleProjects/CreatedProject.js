@@ -135,10 +135,22 @@ export const createdMixin = (self) => {
                                 .department_id
                         );
                     const indexProjectHour = self.$props.dataEdit.projectsHours.map(object => object.department_id).indexOf(self.$props.dataEdit.departments[countDepartment].department_id)
+                    //Sumamos las horas adicionales
+                    let totalAdditionalHour = self.$props.dataEdit.additionalHours.reduce((acum, additionalH) => {
+                        if (additionalH.department_id == self.$props.dataEdit.departments[countDepartment].department_id) acum = acum + parseInt(additionalH.additional_hour)
+                        return acum;
+                    }, 0)
+
+                    let totalEstimatedHour = parseInt(self.$props.dataEdit.departments[countDepartment].hours_assigned) + totalAdditionalHour
+
                     self.inputDepartments.push(
                         self.$props.dataEdit.departments[countDepartment]
                             .department_id
                     );
+
+                    if (indexProjectHour != -1) {
+                        self.$props.dataEdit.additionalHours
+                    }
 
                     //Llenamos el multiselect
                     self.dataSelect.managersPerDepartment.push({
@@ -164,7 +176,9 @@ export const createdMixin = (self) => {
                         selectManager:
                             self.$props.dataEdit.departments[countDepartment]
                                 .manager_id,
-                        registerHour: indexProjectHour != -1 ? Number(self.$props.dataEdit.projectsHours[indexProjectHour].total_hours).toLocaleString('de-DE') : 0,
+                        registerHour: indexProjectHour != -1
+                            ? (parseFloat(self.$props.dataEdit.projectsHours[indexProjectHour].total_hours) > totalEstimatedHour ? Number(totalEstimatedHour).toLocaleString('de-DE') : Number(self.$props.dataEdit.projectsHours[indexProjectHour].total_hours).toLocaleString('de-DE'))
+                            : 0,
                     });
 
                     //Sumamos las horas asignadas

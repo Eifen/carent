@@ -81,8 +81,7 @@
                             <span class="input-group-text">
                                 <font-awesome string-icon="fa-solid fa-hashtag"></font-awesome>
                             </span>
-                            <input type="text" class="form-control" id="HoursRegister"
-                                v-model="managerUserAssigned[cursor].hourRegister" disabled />
+                            <span class="form-control"> @{{ managerUserAssigned[cursor].hourRegister }}</span>
                         </div>
                     </div>
                 </fieldset>

@@ -136,7 +136,7 @@ const modalApp = createApp({
                         idUser: user["user_id"],
                         userName: user["user_name"],
                         hoursAssigned: user["assigned_hours"],
-                        hourRegister: countHours,
+                        hourRegister: countHours > user["assigned_hours"] ? user["assigned_hours"] : countHours,
                     });
                     //Restamos las horas
                     this.missinHours =
@@ -157,6 +157,7 @@ const modalApp = createApp({
                         idUser: selectUser,
                         userName: this.usersPerDepartment[getIndex].label,
                         hoursAssigned: 0,
+                        hourRegister: 0
                     });
                 });
             }
@@ -186,18 +187,29 @@ const modalApp = createApp({
          */
         asignHoursSubmit() {
             this.isClick = true;
-            //Hacemos un llamado a Axios
-            CrudUi.controlCrud(
-                {
-                    post: "/projects/assign/update-asign-projects",
-                    redirect: "/projects/assign",
-                    self: this,
-                },
-                {
-                    departmentAssignedId: this.getDepartmentAssignedId,
-                    infoAsign: this.managerUserAssigned,
-                }
-            );
+            try {
+                let isUnder = 0 //Controla si hay una variable que sus horas asignadas sean menores que las registradas
+                //Antes  de cargar la informacion verificamos que las horas asignadas no sea menores de las cargadas
+                this.managerUserAssigned.forEach(userAssign => {
+                    if (userAssign.hoursAssigned < userAssign.hourRegister) isUnder = 1
+                })
+                //Si el valor no es 0 no ejecuta la actualizacion por axios
+                if (isUnder != 0) throw "Ningun usuario puede tener mas horas registradas de las cargadas, acomode antes de enviar"
+                CrudUi.controlCrud(
+                    {
+                        post: "/projects/assign/update-asign-projects",
+                        redirect: "/projects/assign",
+                        self: this,
+                    },
+                    {
+                        departmentAssignedId: this.getDepartmentAssignedId,
+                        infoAsign: this.managerUserAssigned,
+                    }
+                );
+            } catch (error) {
+                CrudUi.errorMesssage(error)
+                this.isClick = false
+            }
         },
     },
     computed: {},
@@ -247,6 +259,7 @@ const modalApp = createApp({
                             idUser: userId,
                             userName: this.usersPerDepartment[getIndex].label,
                             hoursAssigned: 0,
+                            hourRegister: 0
                         });
                     }
                 });

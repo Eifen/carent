@@ -102,7 +102,7 @@ export const projectInfoMethods = {
                     percent: `${percentBar}%`,
                     department_id: department.department_id,
                     department_name: department.department_name,
-                    loadHour: getLoadHour,
+                    loadHour: parseFloat(getLoadHour) > parseFloat(getEstimatedHour) ? getEstimatedHour : getLoadHour,
                     estimatedHour: getEstimatedHour,
                 });
             });
