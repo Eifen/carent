@@ -56,7 +56,7 @@ export default {
                         cargo: logInfo.position_name,
                         empleado: logInfo.user_name,
                         hora_asignada: logInfo.assigned_hour,
-                        hora_registrada: Number(logInfo.register_hour).toLocaleString('de-DE'),
+                        hora_registrada: Number(parseFloat(logInfo.register_hour) > parseFloat(logInfo.assigned_hour) ? logInfo.assigned_hour : logInfo.register_hour).toLocaleString('de-DE'),
                         hora_proyecto: logInfo.project_hours,
                         estatus: logInfo.estatus
                     }
@@ -65,7 +65,7 @@ export default {
                     acum[key].cargo += `\n${logInfo.position_name}`;
                     acum[key].empleado += `\n${logInfo.user_name}`;
                     acum[key].hora_asignada += `\n${logInfo.assigned_hour}`;
-                    acum[key].hora_registrada += `\n${Number(logInfo.register_hour).toLocaleString('de-DE')}`;
+                    acum[key].hora_registrada += `\n${Number(parseFloat(logInfo.register_hour) > parseFloat(logInfo.assigned_hour) ? logInfo.assigned_hour : logInfo.register_hour).toLocaleString('de-DE')}`;
                 }
 
                 return acum;
