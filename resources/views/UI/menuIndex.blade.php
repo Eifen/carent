@@ -28,6 +28,10 @@
 {{-- Body Dashboard --}}
 @section('dashboard')
     <section class="dashboard">
+        {{-- Redireccion de rutas para la pagina principal --}}
+        @if (Request::url() === URL::route('home'))
+            @include('UI.homePage')
+        @endif
         {{-- Redireccion de rutas para control de contrasenas --}}
         @if (Request::url() === URL::route('changePassword'))
             @include('UI.changePassword')

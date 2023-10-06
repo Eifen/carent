@@ -7,6 +7,7 @@ use App\Models\UsersModel;
 use App\Models\ConfigModel;
 use App\Http\Controllers\ConfigController;
 use App\Models\HoursModel;
+use App\Models\ReportsModel;
 use Illuminate\Support\Facades\Session;
 
 class UsersController extends Controller
@@ -183,5 +184,59 @@ class UsersController extends Controller
     {
         $responseAccess = UsersModel::updateAccess($userAccess->input('user_code'), $userAccess->input('user_access'));
         return response($responseAccess, 200);
+    }
+
+    /**
+     * Metodo que devuelve la informacion de carga para al usuario conectado en el mes actual.
+     */
+    public function getLogUser()
+    {
+        $dateStart = date("Y-m-01");
+        $dateEnd = date("Y-m-t");
+        $intervalDays = intval(ReportsModel::getTotalDays($dateStart, $dateEnd)) * 8;
+        $getAreaType = 0; #Si es 0 indica que el departamento de la persona es de administracion, 1 es de auditoria
+        $getPositionNivel = 0; #Si es 0 indica que al cargo actual no se le aplica la cargabilidad
+
+        //Revisamos el tipo de area
+        if (Session::get('departmentId') <= 7 && Session::get('departmentId') > 0 || Session::get('departmentId') == 17) {
+            $getAreaType = 1;
+            $allInfo = UsersModel::getInfoUsers();
+            foreach ($allInfo as $userInfo) {
+                # Si coinciden el usuario, almacena su nivel de carga
+                if ($userInfo->user_id == Session::get('userId')) {
+                    $getPositionNivel = intval($userInfo->nivel_percen);
+                }
+            }
+        }
+        $params = array(
+            $dateStart,
+            $dateEnd,
+            Session::get("userId")
+        );
+
+        //Configuramos las horas administrativas
+        $paramsAdmin = $params;
+        array_push($paramsAdmin, 1);
+
+        //Configuramos las horas a proyectos
+        $paramsProj = $params;
+        array_push($paramsProj, 2);
+
+        $getAdminHours = ReportsModel::getRegisterHours($paramsAdmin);
+        $getProyHours = ReportsModel::getRegisterHours($paramsProj);
+
+
+        $responseArray = array(
+            "month" => date("Y-m"),
+            "estimated_hour" => $intervalDays,
+            "estimated_proy" => $getAreaType == 0 ? 0 : (($intervalDays * $getPositionNivel) / 100),
+            "estimated_admon" => $getAreaType == 0 ? $intervalDays : (($intervalDays * (100 - $getPositionNivel)) / 100),
+            "real_proy" => $getProyHours,
+            "real_admon" => $getAdminHours
+        );
+        return response(array(
+            "response" => true,
+            "message" => $responseArray
+        ), 200);
     }
 }

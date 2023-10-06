@@ -28,7 +28,7 @@ Route::prefix('/')->group(function () {
     //Control Process
     Route::post('/get-info-select', [ConfigController::class, 'getInfoSelect']);
     //Login
-    Route::get('/', [LoginController::class, 'index']);
+    Route::get('/', [LoginController::class, 'index'])->name('home');
     Route::post('/login', [LoginController::class, 'Login']);
     Route::get('/logout', [LoginController::class, 'Logout'])->name('logout');
     Route::get('/maintenance', [ConfigController::class, 'changeMaintenance'])->name('maintenance');
@@ -40,6 +40,8 @@ Route::prefix('/')->group(function () {
             Route::get('/change-password', [ConfigController::class, 'index'])->name('changePassword');
             Route::post('/update-password', [ConfigController::class, 'prepareUpdatePassword']);
         });
+        //Ruta del Dashboard
+        Route::post('/log-user-info', [UsersController::class, "getLogUser"]);
         Route::middleware('changeP')->group(function () {
             //Usuarios
             Route::middleware('accessU')->group(function () {

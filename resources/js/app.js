@@ -6,6 +6,7 @@ import "./bootstrap";
 //Espacio reservado para imports de Javascript
 import "./UI/login";
 import "./UI/header";
+import "./UI/homePage";
 //Usuarios
 import "./UI/Users/usersIndex";
 import "./UI/Users/usersControl";
