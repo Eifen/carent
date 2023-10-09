@@ -44,7 +44,7 @@
                 <span class="square" id="square-success"></span> porcentajes iguales al 100%<br>
             </div>
             <div class="home-container-info-legend">
-                <div class="legend-title">Procentajes de carga</div>
+                <div class="legend-title">Porcentajes de carga</div>
                 <b>Total:</b> @{{ formatPercen(percenTotal) }}%<br>
                 <b>Proy:</b> @{{ percenProy == 0 && listData.estimated_proy == 0 ? 100 : formatPercen(percenProy) }}%<br>
                 <b>Admon:</b> @{{ formatPercen(percenAdmon) }}%<br>
