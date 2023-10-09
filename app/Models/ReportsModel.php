@@ -36,7 +36,7 @@ class ReportsModel extends Model
      */
     public static function getRegisterHours($paramsHours)
     {
-        $getTotal = DB::select('call sp_report_hours(?,?,?,?)', $paramsHours);
+        $getTotal = DB::select('call sp_report_hours(?,?,?,?,?)', $paramsHours);
         return $getTotal;
     }
 

@@ -10,6 +10,8 @@ use App\Models\HoursModel;
 use App\Models\ReportsModel;
 use Illuminate\Support\Facades\Session;
 
+use function PHPUnit\Framework\isEmpty;
+
 class UsersController extends Controller
 {
     protected $modelInstance;
@@ -222,8 +224,19 @@ class UsersController extends Controller
         $paramsProj = $params;
         array_push($paramsProj, 2);
 
+        //Tipo de status
+        array_push($paramsAdmin, 2);
+        array_push($paramsProj, 2);
+
+        //Horas administrativas no aprobadas
+        $paramsNoAprrovedAdmin = $params;
+        array_push($paramsNoAprrovedAdmin, 1);
+        //Status
+        array_push($paramsNoAprrovedAdmin, 1);
+
         $getAdminHours = ReportsModel::getRegisterHours($paramsAdmin);
         $getProyHours = ReportsModel::getRegisterHours($paramsProj);
+        $getNoApprovedAdmon = ReportsModel::getRegisterHours($paramsNoAprrovedAdmin);
 
 
         $responseArray = array(
@@ -231,8 +244,9 @@ class UsersController extends Controller
             "estimated_hour" => $intervalDays,
             "estimated_proy" => $getAreaType == 0 ? 0 : (($intervalDays * $getPositionNivel) / 100),
             "estimated_admon" => $getAreaType == 0 ? $intervalDays : (($intervalDays * (100 - $getPositionNivel)) / 100),
-            "real_proy" => $getProyHours,
-            "real_admon" => $getAdminHours
+            "real_proy" => count($getProyHours) == 0 ? 0 : floatval($getProyHours[0]->project_hours),
+            "real_admon" => count($getAdminHours) == 0 ? 0 : floatval($getAdminHours[0]->admin_hours),
+            "real_admon_no_approved" => count($getNoApprovedAdmon) == 0 ? 0 : floatval($getNoApprovedAdmon[0]->admin_hours)
         );
         return response(array(
             "response" => true,

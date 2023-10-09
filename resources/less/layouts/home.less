@@ -1,0 +1,129 @@
+//CSS general
+.cardTitle {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 0.8em;
+}
+
+.cardDescription {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.home-container {
+    background: @Container-Color;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    grid-auto-flow: dense;
+    align-content: center;
+    justify-content: center;
+    margin-top: 50px;
+
+    &-graph {
+        // background: crimson;
+        align-self: center;
+        height: 50vh;
+        position: relative;
+
+        & #graph-month {
+            position: relative;
+            // background: red;
+            min-height: 100%;
+            min-width: 100%;
+        }
+    }
+
+    &-info {
+        align-self: start;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+        gap: 10px;
+        grid-auto-flow: dense;
+
+        &-title {
+            grid-column: 1 / -1;
+            padding: 10px;
+            text-align: center;
+            font: bolder min(6vw, 1.2em) arial;
+        }
+
+        &-card {
+            .cardContainer();
+
+            & div {
+                .cardTitle();
+            }
+
+            & span {
+                .cardDescription();
+            }
+        }
+
+        &-diff {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 7em), 1fr));
+            grid-auto-flow: dense;
+
+            &-text {
+                padding: 5px;
+                text-align: center;
+                font-size: 1em;
+                font-weight: bold;
+            }
+        }
+
+        &-legend {
+            padding: 5px;
+            justify-self: center;
+
+            & .legend-title {
+                font-size: min(6vw, 1.5em);
+                font-weight: bolder;
+            }
+
+            & .square {
+                display: inline-block;
+                width: 10px;
+                height: 10px;
+            }
+
+            & #square-danger {
+                background: @Danger-badge;
+            }
+
+            & #square-warning {
+                background: @Warning-badge;
+            }
+
+            & #square-success {
+                background: @Success-badge;
+            }
+        }
+    }
+}
+
+//Estilo para los semaforos
+.deficient {
+    border-color: @Danger-badge;
+
+    & div {
+        color: @Danger-badge
+    }
+}
+
+.warning {
+    border-color: @Warning-badge;
+
+    & div {
+        color: @Warning-badge
+    }
+}
+
+.eficient {
+    border-color: @Success-badge;
+
+    & div {
+        color: @Success-badge;
+    }
+}

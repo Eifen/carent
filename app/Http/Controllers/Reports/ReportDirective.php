@@ -123,7 +123,8 @@ class ReportDirective extends Controller
             $this->startDate,
             $this->endDate,
             $userId,
-            1
+            1,
+            2
         );
         #Obtenemos las horas registradas, cargando el array
         $getAdminHours = ReportsModel::getRegisterHours($params);
@@ -140,6 +141,7 @@ class ReportDirective extends Controller
             $this->startDate,
             $this->endDate,
             $userId,
+            2,
             2
         );
         #Obtenemos las horas registradas, cargando el array
