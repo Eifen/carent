@@ -76,7 +76,7 @@ const homeApp = createApp({
             console.log(this.listData)
             this.totalHours = this.listData.real_proy + this.listData.real_admon
             this.percenTotal = (this.totalHours * 100) / this.listData.estimated_hour;
-            this.percenProy = (this.listData.real_proy * 100) / (this.listData.estimated_proy == 0 ? 1 : this.listData.estimated_proy);
+            this.percenProy = (this.listData.real_proy * 100) / (this.listData.estimated_proy == 0 ? this.listData.estimated_hour : this.listData.estimated_proy);
             this.percenAdmon = (this.listData.real_admon * 100) / this.listData.estimated_admon;
             const style = {
                 total: this.percenStyle(this.percenTotal),
