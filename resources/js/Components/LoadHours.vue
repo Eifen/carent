@@ -59,16 +59,24 @@ export default {
             errorMessageObservation: "minimo 7 caracteres", //Mensaje de error para el tamaño minimo de las observaciones
             isEdit: true, //Valida si se encuentra en la fecha actual o 1 mes antes
             infoNoEdit: 0,
+            dayClosure: 15 //Define el dia a cerrar la carga
         }
     },
     created() {
         const dateNow = new Date();
+        dateNow.setHours(0, 0, 0, 0)
+        const dateClosure = new Date(dateNow.getFullYear(), dateNow.getMonth(), this.dayClosure)
+        const isDate = (dateNow.getTime() === dateClosure.getTime())
         const splitDate = this.associatedDay.split("-")
-        const dateAssociated = new Date(Number(splitDate[0]), Number(splitDate[1]), Number(splitDate[2]));
+        const dateAssociated = new Date(Number(splitDate[0]), Number(splitDate[1]) - 1, Number(splitDate[2]));
         //Determinamos en intervalo se encuentra la fecha
-        let diffYear = dateNow.getFullYear() - dateAssociated.getFullYear();
-        let diffMonth = (dateNow.getMonth() + 1) - dateAssociated.getMonth();
-        diffYear === 0 && diffMonth <= 1 ? this.isEdit = true : this.isEdit = false;
+        let diffYear = dateClosure.getFullYear() - dateAssociated.getFullYear();
+        let diffMonth = dateClosure.getMonth() - dateAssociated.getMonth();
+        let diffDay = (dateClosure.getTime() - dateAssociated.getTime()) / (1000 * 3600 * 24)
+        //Comparamos las fechas
+        diffYear === 0 && diffMonth <= 1
+            ? (isDate && diffDay >= this.dayClosure ? this.isEdit = false : this.isEdit = true)
+            : this.isEdit = false;
         //Proceso de carga de horas\
         let fraccionCount = 0;
         for (let countHours = 0; countHours < (this.maximumHours / this.intervalHours); countHours++) {
