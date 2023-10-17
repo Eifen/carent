@@ -59,7 +59,7 @@ export default {
             errorMessageObservation: "minimo 7 caracteres", //Mensaje de error para el tamaño minimo de las observaciones
             isEdit: true, //Valida si se encuentra en la fecha actual o 1 mes antes
             infoNoEdit: 0,
-            dayClosure: 15 //Define el dia a cerrar la carga
+            dayClosure: 28 //Define el dia a cerrar la carga
         }
     },
     created() {
@@ -74,7 +74,7 @@ export default {
         let diffMonth = dateClosure.getMonth() - dateAssociated.getMonth();
         let diffDay = (dateClosure.getTime() - dateAssociated.getTime()) / (1000 * 3600 * 24)
         //Comparamos las fechas
-        diffYear === 0 && diffMonth <= 1
+        diffYear === 0 && diffMonth <= 3
             ? (isDate && diffDay >= this.dayClosure ? this.isEdit = false : this.isEdit = true)
             : this.isEdit = false;
         //Proceso de carga de horas\
