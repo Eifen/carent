@@ -78,13 +78,13 @@ class ReportsController extends Controller
      */
     public function getDirectiveTotal(Request $dateRequest)
     {
-        $starDate = $dateRequest->input('startDate');
-        $endDate = $dateRequest->input('endDate');
+        $starDate = date('Y-m-d', strtotime($dateRequest->input('startDate')));
+        $endDate = date('Y-m-d', strtotime($dateRequest->input('endDate')));
         $reportInstance = new ReportDirective($starDate, $endDate);
         //Intervalo de fechas
         $getInterval = $reportInstance->getTotalDays($starDate, $endDate);
         //Procedemos a crear un primer reporte
-        $reportDTO = $reportInstance->directiveMonthReport();
+        $reportDTO = $reportInstance->directiveMonthReport(1);
         // $responseDTO = array();
         // //Recorremos el array
         // foreach ($reportDTO as $user) {

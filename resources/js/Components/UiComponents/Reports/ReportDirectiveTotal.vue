@@ -58,6 +58,7 @@ export default {
         axios.post("reports/list-directive-total", { startDate: this.scope.dateStart, endDate: this.scope.dateEnd })
             .then(request => {
                 this.isListMounted = true
+                console.log(request.data)
                 this.$emit('update-mounted', this.isListMounted)
                 let requestDTO = [];
                 request.data.message.forEach(user => {
@@ -85,7 +86,6 @@ export default {
                     } else {
                         acum[key].admin_hours += parseFloat(intervalData.admin_hours.replace(/\./g, "").replace(/,/, "."))
                         acum[key].proy_hours += parseFloat(intervalData.proy_hours.replace(/\./g, "").replace(/,/, "."))
-                        acum[key].ref_total += parseFloat(intervalData.ref_total.replace(/\./g, "").replace(/,/, "."))
                     }
                     return acum;
                 }, {});

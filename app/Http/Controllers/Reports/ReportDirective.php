@@ -65,8 +65,9 @@ class ReportDirective extends Controller
     }
     /**
      * Metodo principal de la clase que se encarga de estructurar todo el esquema del reporte directivo
+     * @param Int $type 1: Directivo total, 0 (default): Directivo mensual
      */
-    public function directiveMonthReport()
+    public function directiveMonthReport($type = 0)
     {
         $responseArray = array();
         foreach ($this->users as $user) {
@@ -78,8 +79,8 @@ class ReportDirective extends Controller
             $formatArray = array();
             foreach ($hoursArray as $hours) {
                 $totalHours = $hours["admin_hours"] + $hours["proj_hours"];
-                $startDate = $hours["mes"] . "-01";
-                $endDate = $hours["mes"] . "-" . date("t", strtotime($startDate)); //Obtenemos el ultimo dia del mes
+                $startDate = $type == 0 ? $hours["mes"] . "-01" : $this->startDate;
+                $endDate = $type == 0 ? $hours["mes"] . "-" . date("t", strtotime($startDate)) : $this->endDate; //Obtenemos el ultimo dia del mes
                 //Capturamos la referencia de horas
                 $refHours = $this->getRefTotal($startDate, $endDate, $user); //Referencia total de horas
                 $adminPer = ($hours["admin_hours"] * 100) / ($refHours == 0 ? 1 : $refHours);
