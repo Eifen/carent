@@ -66,7 +66,7 @@ export default {
         const dateNow = new Date();
         dateNow.setHours(0, 0, 0, 0)
         const dateClosure = new Date(dateNow.getFullYear(), dateNow.getMonth(), this.dayClosure)
-        const isDate = (dateNow.getTime() === dateClosure.getTime())
+        const isDate = (dateNow.getTime() >= dateClosure.getTime())
         const splitDate = this.associatedDay.split("-")
         const dateAssociated = new Date(Number(splitDate[0]), Number(splitDate[1]) - 1, Number(splitDate[2]));
         //Determinamos en intervalo se encuentra la fecha
