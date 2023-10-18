@@ -165,10 +165,12 @@ Route::prefix('/')->group(function () {
                     Route::post('/list-directive-month', [ReportsController::class, "getDirectiveMonthReport"]);
                     Route::post('/list-admin-hours', [ReportsController::class, "getAdminReport"]);
                     Route::post('/list-proy-hours', [ReportsController::class, "getProyReport"]);
+                    Route::post('/list-users', [ReportsController::class, "getUsersReport"]);
                     Route::post('/admin-hours-report', [ReportsController::class, "adminIntervalReport"]);
                     Route::post('/list-directive-total', [ReportsController::class, "getDirectiveTotal"]);
                     Route::post('/list-logs-projects', [ReportsController::class, "getLogProject"]);
                     Route::post('/list-no-register-hour', [ReportsController::class, "getNoRegisterReport"]);
+                    Route::post('/list-no-history-hour', [ReportsController::class, "getHistoryHoursReport"]);
                 });
             });
         });

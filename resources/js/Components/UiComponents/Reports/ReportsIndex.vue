@@ -38,8 +38,30 @@
     <div v-else-if="selectReport == 5 && reportPermission.rproyectosP != 1" class="not-found">
         <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
     </div>
+    <!-- Reporte de usuarios -->
+    <div v-if="selectReport == 8">
+        <ReportUsers v-if="reportPermission.rusersP == 1" :scope="migrateData" :key="isMounted">
+        </ReportUsers>
+        <div v-else class="not-found">
+            <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
+        </div>
+    </div>
+    <div v-else-if="selectReport == 8 && reportPermission.rusersP != 1" class="not-found">
+        <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
+    </div>
+    <!-- Reporte historico de horas -->
+    <div v-if="selectReport == 9">
+        <ReportHistoryLog v-if="reportPermission.rlogUsersP == 1" :scope="migrateData" @update-mounted="isMounted = $event">
+        </ReportHistoryLog>
+        <div v-else class="not-found">
+            <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
+        </div>
+    </div>
+    <div v-else-if="selectReport == 8 && reportPermission.rlogUsersP != 1" class="not-found">
+        <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
+    </div>
     <!-- Reporte horas no cargables -->
-    <div v-if="selectReport > 2 && selectReport != 5" class="reports-container">
+    <div v-if="selectReport > 2 && selectReport != 5 && selectReport != 8 && selectReport != 9" class="reports-container">
         <!-- Fechas  -->
         <span class="reports-container-title">Ingrese el intervalo de fechas</span>
         <div class="reports-container-search">
@@ -104,6 +126,8 @@ import Calendar from '@/Components/Calendar.vue';
 import ReportProjectsLog from '@/Components/UiComponents/Reports/ReportProjectsLog.vue';
 import ReportNoRegisterHour from '@/Components/UiComponents/Reports/ReportNoRegisterHour.vue';
 import ReportProjHours from '@/Components/UiComponents/Reports/ReportProjHours.vue';
+import ReportUsers from '@/Components/UiComponents/Reports/ReportUsers.vue';
+import ReportHistoryLog from '@/Components/UiComponents/Reports/ReportHistoryLog.vue';
 export default {
     props: {
         listReports: Array, //Lista de reportes que se abstraen desde la base de datos
@@ -185,6 +209,9 @@ export default {
                 case 5:
                     this.getTable('/reports/list-logs-projects')
                     break;
+                case 8:
+                    this.getTable('/reports/list-users')
+                    break;
             }
         },
         listData() {
@@ -202,6 +229,17 @@ export default {
     computed: {
         migrateData() { return this.$data }
     },
-    components: { ReportClosureProject, ReportDirectiveMonth, ReportAdminHours, Calendar, ReportDirectiveTotal, ReportProjectsLog, ReportNoRegisterHour, ReportProjHours }
+    components: {
+        ReportClosureProject,
+        ReportDirectiveMonth,
+        ReportAdminHours,
+        Calendar,
+        ReportDirectiveTotal,
+        ReportProjectsLog,
+        ReportNoRegisterHour,
+        ReportProjHours,
+        ReportUsers,
+        ReportHistoryLog
+    }
 }
 </script>

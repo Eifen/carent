@@ -125,6 +125,18 @@ class ReportsController extends Controller
     }
 
     /**
+     * Metodo que se encarga de devolver un reporte historico del usuario seleccionado
+     */
+    public function getHistoryHoursReport(Request $userInfo)
+    {
+        $hoursReport = new ReportDirective();
+        return response(array(
+            "response" => true,
+            "message" => $hoursReport->historyHoursReport($userInfo->input('userCode'))
+        ), 200);
+    }
+
+    /**
      * Metodo que crea el formato para el reporte y lo devuelve al axios
      * @param Request $listRequest recibe desde HTTP la lista a formatear
      */
@@ -157,6 +169,17 @@ class ReportsController extends Controller
         return response(array(
             "response" => true,
             "message" => ReportsModel::getReport('project_log')
+        ), 200);
+    }
+
+    /**
+     * Metodo que retorna el registro de todos los usuarios
+     */
+    public function getUsersReport()
+    {
+        return response(array(
+            "response" => true,
+            "message" => ReportsModel::getReport('users_log')
         ), 200);
     }
 

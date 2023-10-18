@@ -58,7 +58,6 @@ export default {
         axios.post("reports/list-directive-total", { startDate: this.scope.dateStart, endDate: this.scope.dateEnd })
             .then(request => {
                 this.isListMounted = true
-                console.log(request.data)
                 this.$emit('update-mounted', this.isListMounted)
                 let requestDTO = [];
                 request.data.message.forEach(user => {

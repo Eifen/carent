@@ -85,7 +85,9 @@ const usersApp = createApp({
                 rdirectiveAP: [19, false],
                 rproyectosP: [20, false],
                 rnoRegisterP: [21, false],
-                rproyP: [22, false]
+                rproyP: [22, false],
+                rusersP: [23, false],
+                rlogUsersP: [24, false],
             };
             //Acomodamos los permisos
             for (const field in this.previewUserInfo) {
@@ -149,6 +151,14 @@ const usersApp = createApp({
                     //Reporte de horas a proyecto
                     case field == "rproyP" && this.previewUserInfo[field]:
                         prepareParams["rproyP"][1] = true;
+                        break;
+                    //Reporte de usuarios
+                    case field == "rusersP" && this.previewUserInfo[field]:
+                        prepareParams["rusersP"][1] = true;
+                        break;
+                    //Reporte Historico
+                    case field == "rlogUsersP" && this.previewUserInfo[field]:
+                        prepareParams["rlogUsersP"][1] = true;
                         break;
                 }
             }

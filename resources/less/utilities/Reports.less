@@ -1,17 +1,17 @@
-.reports-container{
+.reports-container {
     .styleContainer();
     width: 90%;
     display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(min(100%,15rem),1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
     grid-auto-flow: dense;
 
     //Select
-    &-select{
+    &-select {
         grid-column: span 2;
     }
 
     //Title
-    &-title{
+    &-title {
         grid-column: span 10;
         font-size: 2em;
         font-weight: bolder;
@@ -21,22 +21,22 @@
     }
 
     //List
-    &-list{
+    &-list {
         grid-column: span 10;
     }
 
     //Search
-    &-search{
+    &-search {
         grid-column: span 10;
         display: grid;
-        grid-template-columns: repeat(auto-fit,minmax(min(100%,30rem),1fr));
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 30rem), 1fr));
         justify-content: center;
         align-items: center;
         grid-auto-flow: dense;
         gap: 10px;
         padding: 0 20px;
 
-        & .input-group-text{
+        & .input-group-text {
             display: inline-block;
             background: @Background-Color;
             width: 30%;
@@ -49,16 +49,16 @@
             white-space: pre-line;
             word-wrap: break-word;
 
-            &[for="calendar"]{
+            &[for="calendar"] {
                 width: 5%;
             }
 
-            & .form-select{
+            & .form-select {
                 .selectIntoAddon();
             }
         }
 
-        & .form-control{
+        & .form-control {
             border: 1px solid @Text-Color;
             width: 65%;
         }

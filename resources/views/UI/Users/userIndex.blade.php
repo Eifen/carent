@@ -111,6 +111,16 @@
                                     :checked="previewUserInfo.rproyP">
                                 <label class="form-check-label">Reporte de horas a proyectos</label>
                             </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" v-model="previewUserInfo.rusersP" type="checkbox"
+                                    :checked="previewUserInfo.rusersP">
+                                <label class="form-check-label">Reporte de usuarios</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" v-model="previewUserInfo.rlogUsersP" type="checkbox"
+                                    :checked="previewUserInfo.rlogUsersP">
+                                <label class="form-check-label">Reporte histórico de horas</label>
+                            </div>
                         </div>
                     </div>
                 </div>
