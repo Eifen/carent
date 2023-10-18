@@ -22,9 +22,8 @@
         </div>
         <ListingCrud style="width: 90%;" v-if="scope.isMounted && directivePaginatio != 0" :title-object="reportColumns"
             :pagination-lenght="directivePaginatio" :pagination-limit="directiveLength" :table-info="directiveList"
-            title-table="Reporte historico de usuario" not-found-message="Rellene la informacion del usuario"
-            :select-search="selectSearch" view-search view-excel :title-excel="titleReportExcel" white-space
-            status-table="usuarios">
+            :title-table="titleTable" not-found-message="Rellene la informacion del usuario" :select-search="selectSearch"
+            view-search view-excel :title-excel="titleReportExcel" white-space status-table="usuarios">
         </ListingCrud>
     </div>
 </template>
@@ -59,7 +58,8 @@ export default {
             inputTypeSelect: 0, //Almacena el tipo de horas
             multiSelectUser: [], // Array de objetos del multiselect de usuarios
             typeOptions: ["Selecione un tipo de hora", "Proyectos", "Administrativo", "Ambos"],
-            titleReportExcel: ""
+            titleReportExcel: "",
+            titleTable: ""
         }
     },
     created() {
@@ -87,6 +87,7 @@ export default {
                 const userName = this.multiSelectUser[indexUser].label.split(' — ')[1];
                 //Colocamos el nombre del archivo
                 this.titleReportExcel = `Reporte historico de horas de ${userName.toLowerCase()}.xls`
+                this.titleTable = `Reporte historico de ${userName}`
             }
         },
         inputTypeSelect(typeHour) {
