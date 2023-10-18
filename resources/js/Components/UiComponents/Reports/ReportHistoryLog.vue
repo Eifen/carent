@@ -81,14 +81,6 @@ export default {
     watch: {
         inputCodeUser(codeUser) {
             this.inputTypeSelect = 0
-            if (codeUser !== null) {
-                const indexUser = this.multiSelectUser.map(user => user.value).indexOf(codeUser)
-                //Capturamos el nombre
-                const userName = this.multiSelectUser[indexUser].label.split(' — ')[1];
-                //Colocamos el nombre del archivo
-                this.titleReportExcel = `Reporte historico de horas de ${userName.toLowerCase()}.xls`
-                this.titleTable = `Reporte historico de ${userName}`
-            }
         },
         inputTypeSelect(typeHour) {
             this.directiveList = []
@@ -118,6 +110,10 @@ export default {
                                     })
                                 }
                             });
+                            //Colocamos el titulo del reporte y el nombre del archivo
+                            const typeName = typeHour == 1 ? "proyectos" : "administración";
+                            this.titleReportExcel = `Historico de horas a ${typeName} de ${this.directiveList[0].nombre.toLowerCase()}.xls`
+                            this.titleTable = `Historico de horas a ${typeName} de ${this.directiveList[0].nombre}`
                         } else {
                             this.selectSearch = {
                                 ...this.selectSearch,
@@ -134,6 +130,10 @@ export default {
                                     horas_registradas: this.formatReportNumber(historyData.register_hour)
                                 })
                             })
+
+                            //Colocamos el titulo del reporte y el nombre del archivo
+                            this.titleReportExcel = `Historico de horas de ${this.directiveList[0].nombre.toLowerCase()}.xls`
+                            this.titleTable = `Historico de horas de ${this.directiveList[0].nombre}`
                         }
                         //Acomodamos la longitud minima y su paginacion
                         if (this.directiveList.length > 0 && this.directiveList.length < 50) this.directiveLength = this.directiveList.length;
