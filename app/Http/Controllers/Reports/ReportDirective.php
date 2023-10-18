@@ -36,6 +36,12 @@ class ReportDirective extends Controller
         return $responseArray;
     }
 
+    public function proyHoursReport()
+    {
+        $responseArray = DB::select("call sp_report_proy(?,?)", [$this->startDate, $this->endDate]);
+        return $responseArray;
+    }
+
     /**
      * Metodo que se encarga de crear el formato del reporte
      * @param Array $listToFormat Recibe la lista desde el controlador de reportes

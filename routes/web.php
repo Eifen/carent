@@ -164,6 +164,7 @@ Route::prefix('/')->group(function () {
                     Route::post('/get-hours-estimated', [ReportsController::class, 'getHoursEstimatedMonth']);
                     Route::post('/list-directive-month', [ReportsController::class, "getDirectiveMonthReport"]);
                     Route::post('/list-admin-hours', [ReportsController::class, "getAdminReport"]);
+                    Route::post('/list-proy-hours', [ReportsController::class, "getProyReport"]);
                     Route::post('/admin-hours-report', [ReportsController::class, "adminIntervalReport"]);
                     Route::post('/list-directive-total', [ReportsController::class, "getDirectiveTotal"]);
                     Route::post('/list-logs-projects', [ReportsController::class, "getLogProject"]);

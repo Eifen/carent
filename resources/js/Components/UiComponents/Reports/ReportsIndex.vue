@@ -84,6 +84,14 @@
         <div v-else-if="selectReport == 6 && reportPermission.rnoRegisterP != 1" class="not-found">
             <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
         </div>
+        <!-- Reporte horas a proyecto -->
+        <ReportProjHours class="reports-container-list"
+            v-if="selectReport == 7 && reportPermission.rproyP == 1 && dateEnd.length != 0" :scope="migrateData"
+            :key="dateEnd" @update-mounted="isMounted = $event">
+        </ReportProjHours>
+        <div v-else-if="selectReport == 7 && reportPermission.rproyP != 1" class="not-found">
+            <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
+        </div>
     </div>
 </template>
 <script>
@@ -95,6 +103,7 @@ import ReportDirectiveTotal from '@/Components/UiComponents/Reports/ReportDirect
 import Calendar from '@/Components/Calendar.vue';
 import ReportProjectsLog from '@/Components/UiComponents/Reports/ReportProjectsLog.vue';
 import ReportNoRegisterHour from '@/Components/UiComponents/Reports/ReportNoRegisterHour.vue';
+import ReportProjHours from '@/Components/UiComponents/Reports/ReportProjHours.vue';
 export default {
     props: {
         listReports: Array, //Lista de reportes que se abstraen desde la base de datos
@@ -193,6 +202,6 @@ export default {
     computed: {
         migrateData() { return this.$data }
     },
-    components: { ReportClosureProject, ReportDirectiveMonth, ReportAdminHours, Calendar, ReportDirectiveTotal, ReportProjectsLog, ReportNoRegisterHour }
+    components: { ReportClosureProject, ReportDirectiveMonth, ReportAdminHours, Calendar, ReportDirectiveTotal, ReportProjectsLog, ReportNoRegisterHour, ReportProjHours }
 }
 </script>

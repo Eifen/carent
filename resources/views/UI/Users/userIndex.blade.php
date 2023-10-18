@@ -106,6 +106,11 @@
                                     type="checkbox" :checked="previewUserInfo.rnoRegisterP">
                                 <label class="form-check-label">Reporte de personas por cargar</label>
                             </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" v-model="previewUserInfo.rproyP" type="checkbox"
+                                    :checked="previewUserInfo.rproyP">
+                                <label class="form-check-label">Reporte de horas a proyectos</label>
+                            </div>
                         </div>
                     </div>
                 </div>

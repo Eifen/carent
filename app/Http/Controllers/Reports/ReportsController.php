@@ -113,6 +113,18 @@ class ReportsController extends Controller
     }
 
     /**
+     * Metodo que se encarga de devolver un reporte de todas las horas administrativas
+     */
+    public function getProyReport(Request $dateInterval)
+    {
+        $hoursReport = new ReportDirective($dateInterval->input('startDate'), $dateInterval->input('endDate'));
+        return response(array(
+            "response" => true,
+            "message" => $hoursReport->proyHoursReport()
+        ), 200);
+    }
+
+    /**
      * Metodo que crea el formato para el reporte y lo devuelve al axios
      * @param Request $listRequest recibe desde HTTP la lista a formatear
      */
