@@ -22,10 +22,11 @@ export default {
         return {
             reportColumns: {
                 column1: 'Nombre',
-                column2: 'Area',
-                column3: "Proyecto",
-                column4: 'Fecha de contratación',
-                column5: 'Total horas cargadas',
+                column2: 'Código',
+                column3: 'Area',
+                column4: "Proyecto",
+                column5: 'Fecha de contratación',
+                column6: 'Total horas cargadas',
             },
             selectSearch: {
                 select1: "Nombre",
@@ -50,6 +51,7 @@ export default {
                 request.data.message.forEach(projectInfo => {
                     this.directiveList.push({
                         nombre: projectInfo.user_name,
+                        "código": projectInfo.user_code,
                         area: projectInfo.department_name,
                         proyecto: projectInfo.project_name,
                         contrato: projectInfo.hiring_date,
