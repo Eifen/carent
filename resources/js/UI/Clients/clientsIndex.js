@@ -8,15 +8,15 @@ const clientsIndex = createApp({
     data() {
         return {
             clientsColumns: {
+                settings: {
+                    columnS1: "Editar",
+                    columnS2: "Información del cliente",
+                },
                 column1: "Código",
                 column2: "Socio",
                 column3: "Razon social",
                 column4: "Correo electrónico",
                 column5: "Estatus",
-                settings: {
-                    columnS1: "Editar",
-                    columnS2: "Información del cliente",
-                },
             },
             selectSearch: {
                 select1: "Código",

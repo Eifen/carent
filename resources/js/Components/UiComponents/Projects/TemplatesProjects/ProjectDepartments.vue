@@ -107,12 +107,12 @@ export default {
     data() {
         return {
             modalColumns: {
+                settings: { columnS1: "Inactivar", columnS2: "Activar" },
                 column1: "Codigo",
                 column2: "Monto",
                 column3: "Proyecto",
                 column4: "Fecha",
                 column5: "Estatus",
-                settings: { columnS1: "Inactivar", columnS2: "Activar" },
             }
         }
     },

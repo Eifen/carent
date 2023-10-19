@@ -23,12 +23,12 @@ const assignApp = createApp({
     data() {
         return {
             assignColumns: {
+                settings: { columnS1: "Asignar" },
                 column1: "Código",
                 column2: "Proyecto",
                 column3: "Cliente",
                 column4: "Division",
                 column5: "Horas Asignadas",
-                settings: { columnS1: "Asignar" },
             },
             selectSearch: {
                 select1: "Proyecto",
@@ -56,7 +56,7 @@ const assignApp = createApp({
                 .post("/projects/assign/assign-users", {
                     department: departmentAssignedId,
                 })
-                .then((request) => {})
+                .then((request) => { })
                 .catch((error) => {
                     console.error(error);
                 });

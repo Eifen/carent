@@ -51,8 +51,8 @@
                     <tr>
                         <!-- Table Object -->
                         <th scope="col" align="center" valign="middle" v-for="(title, cursor) in titleObject" :key="cursor">
-                            <div class="table-th" v-if="cursor != 'settings'">{{ title }}</div>
-                            <span v-else></span>
+                            <span v-if="cursor == 'settings'"></span>
+                            <div class="table-th" v-else>{{ title }}</div>
                         </th>
                     </tr>
                 </thead>
@@ -61,30 +61,6 @@
                     <tr v-for="(cursorArray, actualIndex) in controlTable.maxLength" :key="cursorArray"
                         :class="[actualIndex === controlTable.active.index ? controlTable.active.class : null]"
                         @click="controlTable.active.index = actualIndex">
-                        <!-- Recorremos el array de datos -->
-                        <template
-                            v-for="(columnData, cursorTable) in controlTable.data[actualIndex + controlTable.minLength]"
-                            :key="cursorTable">
-                            <td align="center" style="width: 500px;"
-                                v-if="cursorTable != 'mes' && cursorTable != 'order' && cursorTable != 'ref_estimated' && cursorTable != 'fecha_egreso'">
-                                <span v-if="cursorTable == 'estatus' && columnData == 1"
-                                    class="badge text-bg-success">activo</span>
-                                <span v-else-if="cursorTable == 'estatus' && columnData == 2"
-                                    class="badge text-bg-danger">inactivo</span>
-                                <span v-else-if="cursorTable == 'estatus' && columnData == 3"
-                                    class="badge text-bg-warning">De
-                                    reposo</span>
-                                <span v-else-if="cursorTable == 'estatus' && columnData == 4"
-                                    class="badge text-bg-warning">De
-                                    vacaciones</span>
-                                <span v-else-if="cursorTable == 'estatus' && columnData == 5"
-                                    class="badge text-bg-danger">Egresado</span>
-                                <span v-else
-                                    :style="whiteSpace && cursorTable != 'proyecto' && cursorTable != 'cliente' ? 'white-space: pre;' : 'white-space: none'">{{
-                                        columnData
-                                    }}</span>
-                            </td>
-                        </template>
                         <td :class="tableClass.setting"
                             v-if="controlTable.data[actualIndex + controlTable.minLength] !== undefined && 'settings' in titleObject">
                             <!-- Condicion del icono del FontAwesome -->
@@ -113,6 +89,30 @@
                                 </div>
                             </div>
                         </td>
+                        <!-- Recorremos el array de datos -->
+                        <template
+                            v-for="(columnData, cursorTable) in controlTable.data[actualIndex + controlTable.minLength]"
+                            :key="cursorTable">
+                            <td align="center" style="width: 500px;"
+                                v-if="cursorTable != 'mes' && cursorTable != 'order' && cursorTable != 'ref_estimated' && cursorTable != 'fecha_egreso'">
+                                <span v-if="cursorTable == 'estatus' && columnData == 1"
+                                    class="badge text-bg-success">activo</span>
+                                <span v-else-if="cursorTable == 'estatus' && columnData == 2"
+                                    class="badge text-bg-danger">inactivo</span>
+                                <span v-else-if="cursorTable == 'estatus' && columnData == 3"
+                                    class="badge text-bg-warning">De
+                                    reposo</span>
+                                <span v-else-if="cursorTable == 'estatus' && columnData == 4"
+                                    class="badge text-bg-warning">De
+                                    vacaciones</span>
+                                <span v-else-if="cursorTable == 'estatus' && columnData == 5"
+                                    class="badge text-bg-danger">Egresado</span>
+                                <span v-else
+                                    :style="whiteSpace && cursorTable != 'proyecto' && cursorTable != 'cliente' ? 'white-space: pre;' : 'white-space: none'">{{
+                                        columnData
+                                    }}</span>
+                            </td>
+                        </template>
                     </tr>
                 </tbody>
             </table>

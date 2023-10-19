@@ -15,6 +15,11 @@ const validateApp = createApp({
     data() {
         return {
             validateColumns: {
+                settings: {
+                    columnS1: "Aprobar",
+                    columnS2: "Rechazar",
+                    columnS3: "Deshacer cambio",
+                },
                 column1: "Código",
                 column2: "Información",
                 column3: "Concepto",
@@ -22,11 +27,6 @@ const validateApp = createApp({
                 column5: "Fecha",
                 column6: "Horas cargadas",
                 column7: "Estatus",
-                settings: {
-                    columnS1: "Aprobar",
-                    columnS2: "Rechazar",
-                    columnS3: "Deshacer cambio",
-                },
             }, //Informacion de las horas
             selectSearch: {
                 select1: "Concepto",

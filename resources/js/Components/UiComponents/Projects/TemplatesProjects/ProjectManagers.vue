@@ -74,12 +74,12 @@ export default {
     data() {
         return {
             modalColumns: {
+                settings: { columnS1: "Inactivar", columnS2: "Activar" },
                 column1: "Codigo",
                 column2: "Hora",
                 column3: "Division",
                 column4: "Fecha",
                 column5: "Estatus",
-                settings: { columnS1: "Inactivar", columnS2: "Activar" },
             },
             lastDepartmentId: 0, //almacena el ultimo id seleccionado
         }

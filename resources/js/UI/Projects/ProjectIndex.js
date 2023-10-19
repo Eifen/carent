@@ -10,6 +10,9 @@ const projectsIndex = createApp({
     data() {
         return {
             projectsColumns: {
+                settings: {
+                    columnS2: "Avance del proyecto",
+                },
                 column1: "Código",
                 column2: "Proyecto",
                 column3: "Horas contratadas",
@@ -18,9 +21,6 @@ const projectsIndex = createApp({
                 column6: "Socio",
                 column7: "Gerente",
                 column8: "Estatus",
-                settings: {
-                    columnS2: "Avance del proyecto",
-                },
             },
             selectSearch: {
                 select1: "Código",

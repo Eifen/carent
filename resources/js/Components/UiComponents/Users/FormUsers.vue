@@ -132,7 +132,11 @@ export default {
         }
     },
     components: { Calendar, FontAwesome, DataPrincipal, DataContact, DataEmpleado },
-    created() { classConfig(this); createdMixin(this) },
+    created() {
+        classConfig(this);
+        createdMixin(this);
+        if (this.isEdit) this.inputCheckedCrowe = true
+    },
     mounted() { mountedMixin(this); },
     //Propiedad computada encarga de pasar toda la data como parametro,
     computed: { DTOData() { return this.$data } },

@@ -6,15 +6,15 @@ const billingApp = createApp({
     data() {
         return {
             billingsColumns: {
+                settings: {
+                    columnS1: "Informacion de facturacion",
+                },
                 column1: "Código",
                 column2: "Proyecto",
                 column3: "Cliente",
                 column4: "Fecha contratacion",
                 column5: "Monto del proyecto",
                 column6: "Estatus",
-                settings: {
-                    columnS1: "Informacion de facturacion",
-                },
             },
             selectSearch: {
                 select1: "Código",

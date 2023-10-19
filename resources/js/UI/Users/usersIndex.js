@@ -6,15 +6,15 @@ const usersApp = createApp({
     data() {
         return {
             usersColumn: {
+                settings: {
+                    columnS1: "Editar",
+                    columnS2: "Asignar menú",
+                },
                 column1: "Código",
                 column2: "Cédula",
                 column3: "Nombre",
                 column4: "Correo",
                 column5: "Estatus",
-                settings: {
-                    columnS1: "Editar",
-                    columnS2: "Asignar menú",
-                },
             },
             selectSearch: {
                 select1: "Código",
