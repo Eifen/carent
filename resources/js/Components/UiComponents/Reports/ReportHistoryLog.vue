@@ -45,7 +45,7 @@ export default {
                 column3: 'Fecha',
                 column4: 'Concepto',
                 column5: 'Proyecto',
-                column6: 'Estatus',
+                column6: 'Horas cargadas',
             },
             selectSearch: {
                 select1: "Fecha desde",
