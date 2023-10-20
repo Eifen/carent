@@ -59,7 +59,7 @@ export default {
             errorMessageObservation: "minimo 7 caracteres", //Mensaje de error para el tamaño minimo de las observaciones
             isEdit: true, //Valida si se encuentra en la fecha actual o 1 mes antes
             infoNoEdit: 0,
-            dayClosure: 21 //Define el dia a cerrar la carga
+            dayClosure: 22 //Define el dia a cerrar la carga
         }
     },
     created() {

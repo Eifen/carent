@@ -215,7 +215,7 @@ class ReportDirective extends Controller
             : $startDate;
 
         //Relacion con fecha de egreso
-        $DTOEnd = !isEmpty($userInfo->departure_date)
+        $DTOEnd = $userInfo->departure_date !== null
             ? ((strtotime($endDate) > strtotime($userInfo->departure_date)) ? $userInfo->departure_date : $endDate)
             : $endDate;
 
