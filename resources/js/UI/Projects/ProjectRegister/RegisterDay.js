@@ -46,6 +46,8 @@ export const registerDayMethods = {
                                 request.data.message["hour_diff"];
                             this.gridProjectInfo[getIndex].colorBadge = request.data.message["hour_diff"] <= 0 ? "bg-danger" : "bg-info";
                         }
+                        //Redireccionamos si esta el mantenimiento activo
+                        if (request.data.maintenance == 1) window.location.href = "/"
                     }, AXIOSINTERVAL);
                 })
                 .catch((errorMessage) => {
@@ -104,6 +106,8 @@ export const registerDayMethods = {
                                 childParam[0]["value"];
                             this.gridProjectInfo[getIndex].colorBadge = (this.gridProjectInfo[getIndex].hoursDiff + childParam[0]["value"]) <= 0 ? "bg-danger" : "bg-info"
                         }
+                        //Redireccionamos si esta el mantenimiento activo
+                        if (request.data.maintenance == 1) window.location.href = "/"
                     }, AXIOSINTERVAL);
                 })
                 .catch((errorMessage) => {

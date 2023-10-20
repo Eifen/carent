@@ -36,6 +36,8 @@ export const registerAdminDayMethod = {
 
                     setTimeout(() => {
                         this.onCharged = false;
+                        //Redireccionamos si esta el mantenimiento activo
+                        if (request.data.maintenance == 1) window.location.href = "/"
                     }, AXIOSINTERVAL);
                 })
                 .catch((errorMessage) => {
@@ -81,6 +83,8 @@ export const registerAdminDayMethod = {
 
                     setTimeout(() => {
                         this.onCharged = false;
+                        //Redireccionamos si esta el mantenimiento activo
+                        if (request.data.maintenance == 1) window.location.href = "/"
                     }, AXIOSINTERVAL);
                 })
                 .catch((errorMessage) => {

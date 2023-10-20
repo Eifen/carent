@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Models\HoursModel;
+use App\Models\ConfigModel;
 use Illuminate\Support\Facades\DB;
 
 class HoursController extends Controller
@@ -49,7 +50,8 @@ class HoursController extends Controller
                 "message" => array(
                     "newList" => DB::select('call sp_get_hours(?,?)', [$userId, 1]),
                     "error" => "No se pueden cargar mas horas a este proyecto"
-                )
+                ),
+                "maintenance" => ConfigModel::checkMaintenance()
             ), 200);
         }
 
@@ -72,7 +74,8 @@ class HoursController extends Controller
             "message" => array(
                 "hour_diff" => $totalDiff,
                 "hours_response" => HoursModel::addHour($prepareHourInfo, $getLoadInfo[1])
-            )
+            ),
+            "maintenance" => ConfigModel::checkMaintenance()
         );
 
         return response($response, 200);

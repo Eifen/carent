@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\ConfigModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -84,7 +85,8 @@ class HoursModel extends Model
 
         return array(
             "response" => true,
-            "message" => $getNewList
+            "message" => $getNewList,
+            "maintenance" => ConfigModel::checkMaintenance()
         );
     }
 
@@ -119,7 +121,8 @@ class HoursModel extends Model
 
             return array(
                 "response" => true,
-                "message" => $getNewList
+                "message" => $getNewList,
+                "maintenance" => ConfigModel::checkMaintenance()
             );
         }
 
