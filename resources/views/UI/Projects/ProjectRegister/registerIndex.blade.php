@@ -82,7 +82,8 @@
                             <load-hours :associated-load-project="project.projectAssignedId"
                                 :info-assigned-project="listProjectHourData" :associated-day="day.date"
                                 :is-charged="onCharged" :key="listProjectHourData" load-ref="project"
-                                :status-project="project.statusLoad"
+                                :status-project="project.statusLoad" :dead-line="{{ Session::get('deadLine') }}"
+                                :dead-month="{{ Session::get('deadMonth') }}"
                                 @register-hour="registerDay($event,project.projectAssignedId)"
                                 @unregister-hour="unRegisterDay($event,project.projectAssignedId)">
                             </load-hours>
@@ -137,6 +138,8 @@
                             <load-hours :associated-load-project="admin.adminHourId"
                                 :info-assigned-project="listAdminHourData" :associated-day="day.date"
                                 :is-charged="onCharged" :key="listAdminHourData" load-ref="admin"
+                                :dead-line="{{ Session::get('deadLine') }}"
+                                :dead-month="{{ Session::get('deadMonth') }}"
                                 @register-hour="registerAdminDay($event,admin.adminHourId)"
                                 @unregister-hour="unRegisterAdminDay($event,admin.adminHourId)">
                             </load-hours>

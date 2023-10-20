@@ -40,7 +40,9 @@ export default {
         associatedDay: String, //Día seleccionado
         loadRef: String, //Texto que almacena el tipo de carga, project o admin
         isCharged: Boolean, //Control del boton
-        statusProject: Number //Controla el estado del proyecto, solo aplica si loadRed es project
+        statusProject: Number, //Controla el estado del proyecto, solo aplica si loadRed es project
+        deadLine: Number, //Controla el tiempo maximo de cierre de carga, viene de la base de datos, tabla control_page
+        deadMonth: Number, //Controla la cantidad de meses de diferencia que puede existir para cargar, tabla control_page
     },
     emits: ['register-hour', 'unregister-hour'],
     data() {
@@ -59,13 +61,13 @@ export default {
             errorMessageObservation: "minimo 7 caracteres", //Mensaje de error para el tamaño minimo de las observaciones
             isEdit: true, //Valida si se encuentra en la fecha actual o 1 mes antes
             infoNoEdit: 0,
-            dayClosure: 22 //Define el dia a cerrar la carga
         }
     },
     created() {
         const dateNow = new Date();
         dateNow.setHours(0, 0, 0, 0)
-        const dateClosure = new Date(dateNow.getFullYear(), dateNow.getMonth(), this.dayClosure)
+        console.log(this.deadLine, this.deadMonth)
+        const dateClosure = new Date(dateNow.getFullYear(), dateNow.getMonth(), this.deadLine)
         const isDate = (dateNow.getTime() >= dateClosure.getTime())
         const splitDate = this.associatedDay.split("-")
         const dateAssociated = new Date(Number(splitDate[0]), Number(splitDate[1]) - 1, Number(splitDate[2]));
@@ -74,8 +76,9 @@ export default {
         let diffMonth = dateClosure.getMonth() - dateAssociated.getMonth();
         let diffDay = (dateClosure.getTime() - dateAssociated.getTime()) / (1000 * 3600 * 24)
         //Comparamos las fechas
-        diffYear === 0 && diffMonth <= 3
-            ? (isDate && diffDay >= this.dayClosure ? this.isEdit = false : this.isEdit = true)
+        console.log(isDate, diffDay, this.deadLine)
+        diffYear === 0 && diffMonth <= this.deadMonth
+            ? (isDate && diffDay >= this.deadLine ? this.isEdit = false : this.isEdit = true)
             : this.isEdit = false;
         //Proceso de carga de horas\
         let fraccionCount = 0;

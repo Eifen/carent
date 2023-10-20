@@ -107,4 +107,22 @@ class ConfigModel extends Model
 
         return $getStatus->status_id;
     }
+
+    public static function checkDeadline()
+    {
+        $getDeadline = DB::table('control_page')
+            ->where("page_id", "=", 2)
+            ->first();
+
+        return $getDeadline->page_value;
+    }
+
+    public static function checkDeadMonth()
+    {
+        $getDeadMonth = DB::table('control_page')
+            ->where("page_id", "=", 3)
+            ->first();
+
+        return $getDeadMonth->page_value;
+    }
 }

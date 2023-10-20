@@ -1,3 +1,11 @@
+{{-- Cargamos el deadline y el deadmonth --}}
+@php
+    use App\Models\ConfigModel;
+    use Illuminate\Support\Facades\Session;
+    Session::put('deadLine', ConfigModel::checkDeadline());
+    Session::put('deadMonth', ConfigModel::checkDeadMonth());
+@endphp
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
