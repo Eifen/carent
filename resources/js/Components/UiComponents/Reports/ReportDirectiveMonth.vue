@@ -6,7 +6,7 @@
             title-table="Reporte directivo mensual" not-found-message="No hay horas cargadas" :select-search="selectSearch"
             view-search view-excel title-excel="ReporteDirectivoMensual.xls"
             title-resume-excel="ResumenDirectivoMensual.xls" title-consolidated-excel="ConsolidadoDirectivoMensual.xls"
-            status-table="usuarios" view-hours directive>
+            status-table="usuarios" view-hours directive :is-admin="scope.controlAdmin" :area-id="scope.departmentId">
         </ListingCrud>
     </div>
 </template>

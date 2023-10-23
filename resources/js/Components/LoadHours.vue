@@ -66,7 +66,6 @@ export default {
     created() {
         const dateNow = new Date();
         dateNow.setHours(0, 0, 0, 0)
-        console.log(this.deadLine, this.deadMonth)
         const dateClosure = new Date(dateNow.getFullYear(), dateNow.getMonth(), this.deadLine)
         const isDate = (dateNow.getTime() >= dateClosure.getTime())
         const splitDate = this.associatedDay.split("-")
@@ -76,7 +75,6 @@ export default {
         let diffMonth = dateClosure.getMonth() - dateAssociated.getMonth();
         let diffDay = (dateClosure.getTime() - dateAssociated.getTime()) / (1000 * 3600 * 24)
         //Comparamos las fechas
-        console.log(isDate, diffDay, this.deadLine)
         diffYear === 0 && diffMonth <= this.deadMonth
             ? (isDate && diffDay >= this.deadLine ? this.isEdit = false : this.isEdit = true)
             : this.isEdit = false;

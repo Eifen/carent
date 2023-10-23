@@ -23,7 +23,7 @@
                 @input="emitSelectSearch($event, columnName)"></Multiselect>
             <!-- Divisiones -->
             <Multiselect v-if="columnName == 'Area'" v-model="multiSelectAreas" :options="multiSelectList.areas"
-                placeholder="Seleccione el area" mode="single" class="form-control"
+                placeholder="Seleccione el area" mode="single" class="form-control" :disabled="isAdmin != 1"
                 @input="emitSelectSearch($event, columnName)"></Multiselect>
             <!-- Concepto -->
             <Multiselect v-if="columnName == 'Concepto'" v-model="multiSelectConcepts" :options="multiSelectList.concept"
@@ -62,6 +62,8 @@ export default {
         scope: Object, //Hereda la data del padre
         columnsSearch: Object, //Hereda la propiedad selectSearch del padre
         catchStatusTable: String, //Captura la propiedad statusTable del padre listingCrud
+        isAdmin: Number, //Captura si el usuario es admin o no
+        areaId: Number, //Captura el ID del departamento asociado
     },
     data() {
         return {
@@ -135,6 +137,8 @@ export default {
                 for (const key3 in this.dtoSelectConcept) {
                     this.multiSelectList.concept.push(this.dtoSelectConcept[key3].concept_description)
                 }
+
+                if (this.isAdmin != 1) this.multiSelectAreas = this.multiSelectList.areas[this.areaId]
             })
             .catch(error => { console.error(error) })
     },
@@ -278,6 +282,10 @@ export default {
                 .catch(error => { console.error(error) })
             //Llamaos al evento personalizado
             this.$emit('search-data', this.fieldsInput);
+        },
+        //Detecta cambios forzados en el area
+        multiSelectAreas(newArea) {
+            if (typeof newArea !== 'undefined') this.emitSelectSearch(newArea, 'Area')
         }
     },
     components: { Multiselect, Calendar }

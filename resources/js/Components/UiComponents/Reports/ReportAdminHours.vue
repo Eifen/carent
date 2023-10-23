@@ -5,7 +5,7 @@
             :pagination-lenght="directivePaginatio" :pagination-limit="directiveLength" :table-info="directiveList"
             title-table="Reporte de horas administrativas" not-found-message="No hay horas cargadas"
             :select-search="selectSearch" view-search view-excel title-excel="ReporteHorasNoCargables.xls"
-            status-table="usuarios">
+            status-table="usuarios" :is-admin="scope.controlAdmin" :area-id="scope.departmentId">
         </ListingCrud>
     </div>
 </template>

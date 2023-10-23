@@ -131,7 +131,9 @@ import ReportHistoryLog from '@/Components/UiComponents/Reports/ReportHistoryLog
 export default {
     props: {
         listReports: Array, //Lista de reportes que se abstraen desde la base de datos
-        reportPermission: Object //Array de permisos
+        reportPermission: Object, //Array de permisos
+        isAdmin: Number, //Captura si el usuario es administrador o no
+        areaId: Number //Captura el id del departamento de la persona
     },
 
     data() {
@@ -144,10 +146,15 @@ export default {
             listIntervalData: [], //Object que almacena la data de horas en funcion de un intervalo
             dateStart: "", //Fecha inicial
             dateEnd: "", //Fecha final
-            notFoundMessage: "La visualización de este reporte requiere elevación. Comuníquese con el administrador del sistema"
+            notFoundMessage: "La visualización de este reporte requiere elevación. Comuníquese con el administrador del sistema",
+            controlAdmin: 0,
+            departmentId: 0
         }
     },
     created() {
+        //Pasamos la informacion del id del departamento y si es el administrador del sistema
+        this.controlAdmin = this.isAdmin;
+        this.departmentId = this.areaId;
     },
     methods: {
         /**

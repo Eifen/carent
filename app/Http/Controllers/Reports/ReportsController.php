@@ -54,9 +54,30 @@ class ReportsController extends Controller
      */
     public function getClosureReport()
     {
+        $getClosureReport = ReportsModel::getReport('closure_projects');
+        $closureDTO = $getClosureReport->toArray();
+        $getClosureReport = array_filter($closureDTO, function ($infoClosure) {
+            //Condiciones de visualizacion
+            switch (Session::get('isAdmin')) {
+                case 1: //Administradores
+                    return 1;
+                default:
+                    $isPartner = $infoClosure->partner_id === Session::get('userId');
+                    $isManager = $infoClosure->manager_id === Session::get('userId');
+                    return $isManager ? $isManager : ($isPartner ? $isPartner : $isManager);
+            }
+        });
+
+        //Quitamos las propiedades innecesarias
+        $getClosureReport = array_map(function ($infoClosure) {
+            unset($infoClosure->partner_id);
+            unset($infoClosure->manager_id);
+            return $infoClosure;
+        }, $getClosureReport);
+
         return response(array(
             "response" => true,
-            "message" => ReportsModel::getReport('closure_projects')
+            "message" => collect(array_values($getClosureReport))
         ), 200);
     }
 
@@ -166,9 +187,30 @@ class ReportsController extends Controller
      */
     public function getLogProject()
     {
+        $getProjectLog = ReportsModel::getReport('project_log');
+        $closureDTO = $getProjectLog->toArray();
+        $getProjectLog = array_filter($closureDTO, function ($infoLog) {
+            //Condiciones de visualizacion
+            switch (Session::get('isAdmin')) {
+                case 1: //Administradores
+                    return 1;
+                default:
+                    $isPartner = $infoLog->partner_id === Session::get('userId');
+                    $isManager = $infoLog->manager_id === Session::get('userId');
+                    return $isManager ? $isManager : ($isPartner ? $isPartner : $isManager);
+            }
+        });
+
+        //Quitamos las propiedades innecesarias
+        $getProjectLog = array_map(function ($infoLog) {
+            unset($infoLog->partner_id);
+            unset($infoLog->manager_id);
+            return $infoLog;
+        }, $getProjectLog);
+
         return response(array(
             "response" => true,
-            "message" => ReportsModel::getReport('project_log')
+            "message" => collect(array_values($getProjectLog))
         ), 200);
     }
 

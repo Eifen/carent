@@ -5,7 +5,7 @@
             :pagination-lenght="directivePaginatio" :pagination-limit="directiveLength" :table-info="directiveList"
             title-table="Reporte de personas por cargar" not-found-message="No hay usuarios faltos de carga"
             :select-search="selectSearch" view-search view-excel title-excel="ReportePersonasPorCargar.xls"
-            status-table="usuarios">
+            status-table="usuarios" :is-admin="scope.controlAdmin" :area-id="scope.departmentId">
         </ListingCrud>
     </div>
 </template>

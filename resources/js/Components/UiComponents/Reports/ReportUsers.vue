@@ -5,7 +5,7 @@
             :pagination-lenght="directivePaginatio" :pagination-limit="directiveLength" :table-info="directiveList"
             title-table="Reporte bitácora de proyectos" not-found-message="No hay proyectos cargados"
             :select-search="selectSearch" view-search view-excel title-excel="ReporteBitacoraProyectos.xls" white-space
-            status-table="usuarios">
+            status-table="usuarios" :is-admin="scope.controlAdmin" :area-id="scope.departmentId">
         </ListingCrud>
     </div>
 </template>

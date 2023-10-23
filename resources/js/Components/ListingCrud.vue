@@ -22,7 +22,7 @@
         </div>
         <!-- Búsqueda de datos en tiempo real -->
         <pagination v-if="viewSearch" :scope="DTOData" :columns-search="selectSearch" :catch-status-table="statusTable"
-            @search-data="searchData" @update-estimated="hoursEstimated = $event">
+            :is-admin="isAdmin" :area-id="areaId" @search-data="searchData" @update-estimated="hoursEstimated = $event">
         </pagination>
         <!-- =====================================================================
         Paginacion
@@ -155,6 +155,8 @@ export default {
         directive: Boolean, //Valor booleano que determina si es un reporte directivo o no
         directiveType: String, // En caso de que directive sea true verifica el tipo de directivo
         whiteSpace: Boolean, //Si esta en true define si se aplicara el white-space: pre en la columna
+        isAdmin: Number, //Captura si el usuario es administrador o no, unicamente para el filtro de area
+        areaId: Number, //Selecciona automaticamente el id del departamento si el usuario es administrador
     },
     data() {
         return {

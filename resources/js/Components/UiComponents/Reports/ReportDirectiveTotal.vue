@@ -6,7 +6,8 @@
             title-table="Reporte de horas administrativas" not-found-message="No hay horas cargadas"
             :select-search="selectSearch" view-search view-excel title-excel="ReporteDirectivoAcumulado.xls"
             title-resume-excel="ResumenDirectivoAcumulado.xls" title-consolidated-excel="ConsolidadoDirectivoAcumulado.xls"
-            status-table="usuarios" view-hours :hours-ref="refTotal" directive>
+            status-table="usuarios" view-hours :hours-ref="refTotal" directive :is-admin="scope.controlAdmin"
+            :area-id="scope.departmentId">
         </ListingCrud>
     </div>
 </template>

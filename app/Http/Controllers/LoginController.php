@@ -57,6 +57,7 @@ class LoginController extends Controller
             Session::put('departmentId', $Login['departmentId']);
             Session::put('emailUser', $Login['emailUser']);
             Session::put('passwordChange', $Login['passwordChange']);
+            Session::put('isAdmin', $Login['isAdmin']);
             #Llenamos el array de acceso
             $prepareAccess = LoginModel::getArrayAccess($Login['userId']);
             if ($prepareAccess != 0) {
