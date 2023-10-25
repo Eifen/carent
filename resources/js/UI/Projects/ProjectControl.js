@@ -58,14 +58,16 @@ const clientsControl = createApp({
             //Pasamos la data Proyectos
             //Asociamos los parametros del Edit
             this.paramsDTOEdit = dataParams;
+            const departmentsEdit = JSON.parse(JSON.stringify(this.paramsDTOEdit.departments))
             try {
                 let isUnder = 0
-                this.paramsDTOEdit.departments.forEach(paramInfo => {
+                departmentsEdit.forEach(paramInfo => {
+                    const hourRegister = typeof paramInfo.registerHour === 'number' ? paramInfo.registerHour : parseFloat(paramInfo.registerHour.replace(/\./g, "").replace(/,/, "."))
                     let aditionalHour = this.paramsDTOEdit.additionalHours.reduce((acum, aditionalH) => {
                         if (aditionalH.department_id == paramInfo.departmentId) acum = acum + aditionalH.additional_hour;
                         return acum
                     }, 0)
-                    if (parseFloat(parseInt(paramInfo.hoursAssigned) + aditionalHour) < parseFloat(paramInfo.registerHour.replace(/\./g, "").replace(/,/, "."))) isUnder = 1;
+                    if (parseFloat(parseInt(paramInfo.hoursAssigned) + aditionalHour) < hourRegister) isUnder = 1;
                 })
                 //Si isUnder no es 0 no deja hacer el update
                 if (isUnder != 0) throw "Ningún proyecto puede tener menos horas asignadas que horas registradas. Revise y vuelva a enviar"
