@@ -221,6 +221,7 @@ class ProjectController extends Controller
                 $hiringDate,
                 $dataProject->input('project')['projectValue'],
                 $dataProject->input('project')['averageRate'],
+                $dataProject->input('project')['quotas'],
                 Session::get('userId'),
                 ConfigController::GetIpUser()
             )

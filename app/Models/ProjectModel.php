@@ -172,10 +172,10 @@ class ProjectModel extends Model
         //Separamos el tipo de proceso
         switch ($typeControl) {
             case 'create':
-                DB::select('call sp_new_projects(?,?,?,?,?,?,?,?,?,?,?,?,?,@response)', $paramsToProcedure);
+                DB::select('call sp_new_projects(?,?,?,?,?,?,?,?,?,?,?,?,?,?,@response)', $paramsToProcedure);
                 break;
             case 'update':
-                DB::select('call sp_update_projects(?,?,?,?,?,?,?,?,?,?,?,?,?,?,@response)', $paramsToProcedure);
+                DB::select('call sp_update_projects(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,@response)', $paramsToProcedure);
                 break;
         }
         //Capturamos el JSON

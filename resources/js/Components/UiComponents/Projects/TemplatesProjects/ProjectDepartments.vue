@@ -24,6 +24,20 @@
                 {{ scope.messages.error.valueError }}
             </div>
         </div>
+        <!-- Cuotas a pagar -->
+        <div class="mb-3" v-if="scope.inputValue != 0">
+            <label for="Value">Cuotas a facturar</label>
+            <div class="input-group">
+                <select class="form-select" v-model="scope.inputQuotas" title="ManagersSelect">
+                    <option :value="0" selected disabled>
+                        Seleccione una opción
+                    </option>
+                    <option v-for="(select2) in 3" :key="select2" :value="select2">
+                        {{ select2 }} cuotas
+                    </option>
+                </select>
+            </div>
+        </div>
         <!-- Divisiones -->
         <div class="mb-3">
             <label for="Departments">Divisiones

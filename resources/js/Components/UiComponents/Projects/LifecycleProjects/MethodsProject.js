@@ -45,6 +45,7 @@ export const projectMethods = {
                 averageRate: this.inputAverageRate
                     .replace(/\./g, "")
                     .replace(/,/, "."),
+                quotas: this.inputQuotas == 0 ? 1 : this.inputQuotas
             };
 
             //Preparamos los parametros de update en caso de actualizar

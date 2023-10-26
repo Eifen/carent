@@ -10,22 +10,22 @@
                 <div>Horas estimadas</div>
                 <span>@{{ listData.estimated_hour }}</span>
             </div>
-            <div class="home-container-info-card" :class="percenStyle(percenTotal)">
-                <div>Horas reales cargadas al carent</div>
-                <span>@{{ totalHours }}</span>
-            </div>
             <div class="home-container-info-card">
                 <div>Horas estimadas a proyectos</div>
                 <span>@{{ listData.estimated_proy.toFixed(0) }}</span>
+            </div>
+            <div class="home-container-info-card">
+                <div>Horas estimadas a administración</div>
+                <span>@{{ listData.estimated_admon.toFixed(0) }}</span>
+            </div>
+            <div class="home-container-info-card" :class="percenStyle(percenTotal)">
+                <div>Horas reales cargadas al carent</div>
+                <span>@{{ totalHours }}</span>
             </div>
             <div class="home-container-info-card"
                 :class="percenStyle((percenProy == 0 && listData.estimated_proy == 0 ? 100 : percenProy), true)">
                 <div>Horas a proyectos cargadas al carent</div>
                 <span>@{{ listData.real_proy }}</span>
-            </div>
-            <div class="home-container-info-card">
-                <div>Horas estimadas a administración</div>
-                <span>@{{ listData.estimated_admon.toFixed(0) }}</span>
             </div>
             <div class="home-container-info-card" :class="percenStyle(percenAdmon, true)">
                 <div>Horas a administración cargadas al carent</div>

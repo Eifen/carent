@@ -99,6 +99,7 @@ export default {
             inputHoursAssigned: Number(0).toLocaleString("de-DE"), //Horas totales asignadas
             inputAdditionalHours: Number(0).toLocaleString("de-DE"), //Horas adicionales
             inputAdditionalValue: Number(0).toLocaleString("de-DE"), //Montos adicionales
+            inputQuotas: 0, //Cantidad de cuotas maximas a emitir para facturar
             lastValueId: 0, //Almacena el ultimo ID del array de montos adicionales
             lastHoursId: 0, //Almacena el ultimo ID del array de horas adicionales
             projectId: 0, //Almacena el ID del proyecto para el formulario de edit
