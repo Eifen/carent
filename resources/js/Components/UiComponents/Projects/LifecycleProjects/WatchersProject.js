@@ -231,9 +231,7 @@ export const projectWatchers = {
                             this.dataSelect.departments[getIndex].label,
                         managersDepartment: this.dataSelect.managers.filter(
                             (colums) => {
-                                return colums.department_id
-                                    .toString()
-                                    .includes(departmentSelect.toString());
+                                return colums.department_id == departmentSelect;
                             }
                         ),
                         hoursAssigned: "",

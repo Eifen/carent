@@ -165,13 +165,7 @@ export const createdMixin = (self) => {
                             self.dataSelect.departments[indexDepartment].label,
                         managersDepartment: self.dataSelect.managers.filter(
                             (colums) => {
-                                return colums.department_id
-                                    .toString()
-                                    .includes(
-                                        self.$props.dataEdit.departments[
-                                            countDepartment
-                                        ].department_id.toString()
-                                    );
+                                return colums.department_id == self.$props.dataEdit.departments[countDepartment].department_id;
                             }
                         ),
                         hoursAssigned:
