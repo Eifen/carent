@@ -149,6 +149,7 @@ const modalApp = createApp({
             if (projectInfo["analyst"].length === 0) {
                 this.inputUsersAssigned[0] =
                     projectInfo["project"]["manager_id"];
+                console.log(this.inputUsersAssigned)
                 //Informacion de horas
                 this.inputUsersAssigned.forEach((selectUser) => {
                     const getIndex = this.usersPerDepartment
