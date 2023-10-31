@@ -524,7 +524,6 @@ export default {
                 }
             });
             //Retornamos en funcion de una comparacion entre las facturas cobradas y las registradas, deben ser iguales
-            console.log(countPay, countBillings, countQuotasBilling, this.project.quotasBilling)
             return countPay == countBillings && countQuotasBilling == this.project.quotasBilling ? true : false
         },
         /**

@@ -56,7 +56,6 @@ const modalApp = createApp({
                     this.usersPerDepartment = [];
                     //Si no existe algun error, asociamos la información al departamento
                     request.data["users"].forEach((user) => {
-                        console.log(user)
                         //Insertamos una nueva fila en usersPerDepartment
                         this.usersPerDepartment.push({
                             value: user.user_id,
@@ -149,7 +148,6 @@ const modalApp = createApp({
             if (projectInfo["analyst"].length === 0) {
                 this.inputUsersAssigned[0] =
                     projectInfo["project"]["manager_id"];
-                console.log(this.inputUsersAssigned)
                 //Informacion de horas
                 this.inputUsersAssigned.forEach((selectUser) => {
                     const getIndex = this.usersPerDepartment

@@ -41,7 +41,6 @@ export default {
     mounted() {
         if (this.scope.isMounted) {
             //Cargamos la informacion inicial
-            console.log(this.scope.listData)
             const reportDTO = this.scope.listData.reduce((acum, billing) => {
                 const key = billing.project_id
 
@@ -60,7 +59,6 @@ export default {
                         quotas: acum[key].cuotas_por_facturar,
                         payment: acum[key].facturar_por_cobrar,
                     }
-                    console.log(billing.project_id, billing.payment_date, billing.payment_date === null, billingCompare.payment)
                     //Si la factura es mayor a la cuota, restamos de las cuotas por facturar
                     //Si la factura no ha sido cobrada, aumentando el valor de las facturas por cobrar
                     acum[key].cuotas_por_facturar = parseFloat(billing.billing_value) >= parseFloat(billing.quotas_value)

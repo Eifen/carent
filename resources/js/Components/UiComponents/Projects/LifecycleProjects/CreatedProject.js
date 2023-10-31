@@ -122,7 +122,6 @@ export const createdMixin = (self) => {
                 self.asignHoursValue(self.$props.dataEdit);
 
                 //Cuotas por pagar
-                console.log(self.$props.dataEdit.project)
                 self.inputQuotas = self.$props.dataEdit.project.project_quotas;
 
                 //Cargamos la informacion de los departamentos
