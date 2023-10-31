@@ -56,6 +56,7 @@ const modalApp = createApp({
                     this.usersPerDepartment = [];
                     //Si no existe algun error, asociamos la información al departamento
                     request.data["users"].forEach((user) => {
+                        console.log(user)
                         //Insertamos una nueva fila en usersPerDepartment
                         this.usersPerDepartment.push({
                             value: user.user_id,
