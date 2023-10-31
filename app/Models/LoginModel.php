@@ -57,7 +57,8 @@ class LoginModel extends Model
             "rnoRegisterP" => 0,
             "rproyP" => 0,
             "rusersP" => 0,
-            "rlogUsersP" => 0
+            "rlogUsersP" => 0,
+            "rQuotasP" => 0,
         );
         if (!$userAccess->isEmpty()) {
             foreach ($userAccess as $permission) {
@@ -129,6 +130,10 @@ class LoginModel extends Model
                         //Reporte historico
                     case 24:
                         $arrayAccess['rlogUsersP'] = 1;
+                        break;
+                        //Reporte de cuotas y facturas por cobrar
+                    case 25:
+                        $arrayAccess['rQuotasP'] = 1;
                         break;
                 }
             }

@@ -238,4 +238,12 @@ class ReportsController extends Controller
             "message" => ReportsModel::noRegisterHoursPersonal($prepareDate)
         ), 200);
     }
+
+    public function getQuotasReport()
+    {
+        return response(array(
+            "response" => true,
+            "message" => ReportsModel::getReport('billing_quotas')
+        ), 200);
+    }
 }

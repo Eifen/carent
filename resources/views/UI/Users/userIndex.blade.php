@@ -121,6 +121,11 @@
                                     :checked="previewUserInfo.rlogUsersP">
                                 <label class="form-check-label">Reporte histórico de horas</label>
                             </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" v-model="previewUserInfo.rQuotasP" type="checkbox"
+                                    :checked="previewUserInfo.rQuotasP">
+                                <label class="form-check-label">Reporte de quotas y facturas por cobrar</label>
+                            </div>
                         </div>
                     </div>
                 </div>

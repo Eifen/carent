@@ -60,8 +60,20 @@
     <div v-else-if="selectReport == 8 && reportPermission.rlogUsersP != 1" class="not-found">
         <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
     </div>
+    <!-- Reporte cuotas y facturar por cobrar -->
+    <div v-if="selectReport == 10">
+        <ReportQuotas v-if="reportPermission.rQuotasP == 1" :scope="migrateData" :key="isMounted">
+        </ReportQuotas>
+        <div v-else class="not-found">
+            <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
+        </div>
+    </div>
+    <div v-else-if="selectReport == 8 && reportPermission.rQuotasP != 1" class="not-found">
+        <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
+    </div>
     <!-- Reporte horas no cargables -->
-    <div v-if="selectReport > 2 && selectReport != 5 && selectReport != 8 && selectReport != 9" class="reports-container">
+    <div v-if="selectReport > 2 && selectReport != 5 && selectReport != 8 && selectReport != 9 && selectReport != 10"
+        class="reports-container">
         <!-- Fechas  -->
         <span class="reports-container-title">Ingrese el intervalo de fechas</span>
         <div class="reports-container-search">
@@ -128,6 +140,7 @@ import ReportNoRegisterHour from '@/Components/UiComponents/Reports/ReportNoRegi
 import ReportProjHours from '@/Components/UiComponents/Reports/ReportProjHours.vue';
 import ReportUsers from '@/Components/UiComponents/Reports/ReportUsers.vue';
 import ReportHistoryLog from '@/Components/UiComponents/Reports/ReportHistoryLog.vue';
+import ReportQuotas from '@/Components/UiComponents/Reports/ReportQuotas.vue';
 export default {
     props: {
         listReports: Array, //Lista de reportes que se abstraen desde la base de datos
@@ -219,6 +232,9 @@ export default {
                 case 8:
                     this.getTable('/reports/list-users')
                     break;
+                case 10:
+                    this.getTable('/reports/list-quotas')
+                    break;
             }
         },
         listData() {
@@ -246,7 +262,8 @@ export default {
         ReportNoRegisterHour,
         ReportProjHours,
         ReportUsers,
-        ReportHistoryLog
+        ReportHistoryLog,
+        ReportQuotas
     }
 }
 </script>

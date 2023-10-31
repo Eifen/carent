@@ -21,18 +21,20 @@ export default {
                 column1: "ID",
                 column2: 'Cliente',
                 column3: 'Proyecto',
-                column4: 'Area',
-                column5: 'Cargo',
-                column6: 'Empleado',
-                column7: 'Horas asignadas',
-                column8: 'Horas registradas',
-                column9: 'Horas totales del proyecto',
-                column10: 'Estatus',
+                column4: 'Socio',
+                column5: 'Area',
+                column6: 'Cargo',
+                column7: 'Empleado',
+                column8: 'Horas asignadas',
+                column9: 'Horas registradas',
+                column10: 'Horas totales del proyecto',
+                column11: 'Estatus',
             },
             selectSearch: {
                 select1: "Cliente",
                 select2: "Proyecto",
-                select3: "Estatus"
+                select3: "Socio",
+                select4: "Estatus"
             },
             directiveList: [], //Lista directiva mensual
             directiveLength: 50, //Numero maximo por pagina
@@ -52,6 +54,7 @@ export default {
                         id: logInfo.project_id,
                         cliente: logInfo.cliente,
                         proyecto: logInfo.proyecto,
+                        socio: logInfo.partner_name,
                         area: logInfo.department_name,
                         cargo: logInfo.position_name,
                         empleado: logInfo.user_name,

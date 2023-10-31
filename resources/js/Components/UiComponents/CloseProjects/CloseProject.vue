@@ -316,7 +316,8 @@
                 proyecto</div>
             <!-- {{-- Control de errores del boton --}} -->
             <span class="form-ErrorInput" id="button-crud" v-else>
-                No se puede cerrar el proyecto si las fechas y comentarios están vacios, el proyecto ya esta cerrado o todas
+                No se puede cerrar el proyecto si las fechas y comentarios están vacios, el proyecto ya esta cerrado, no se
+                han emitido factura a sus cuotas minimas o todas
                 las facturas no están
                 cobradas.
             </span>
@@ -357,6 +358,7 @@ export default {
                 'tableRealHours': [],
                 'message': '',
                 'billingValue': [],
+                'quotasBilling': 0,
                 'billingAditionalValue': [],
                 'billingGValue': [],
                 'dateClose': '',
@@ -397,6 +399,8 @@ export default {
             this.project.partner = this.loadInitial.project.partner_name
             //horas estimadas de valores propuesta
             this.project.valueEstimated = parseFloat(this.loadInitial.project.project_value)
+            //Almacenamos sus cuotas
+            this.project.quotasBilling = this.loadInitial.project.project_quotas;
             //Sumatoria de las honorarios estimadas
             this.loadInitial.departments.forEach(department => {
                 this.project.hoursEstimated = parseInt(department.hours_assigned) + parseInt(this.project.hoursEstimated)
@@ -496,11 +500,16 @@ export default {
             this.project.dateClose = `${dateEmit.year}-${dateEmit.month}-${dateEmit.day}`
         },
         /**
-         * Metodo que se encarga de revisar si el proyecto tiene todas sus facturas cobradas, caso positivo, activa el boton
+         * Metodo que se encarga de revisar si el proyecto tiene todas sus facturas cobradas, caso positivo, activa el boton. Ademas revisa si posee la misma cantidad de facturas o mayor de las establecidas en la cuota
          */
         billingPay() {
             let countPay = 0 //Contador que revisa si todas las facturas no anuladas tienen cobro activo
             let countBillings = 0 //Contador que revisa la cantidad de facturas sin concepto 4, es decir, nota de credito
+            let countQuotasBilling = 0 //Contador que revisa si las facturas emitidas poseen el monto de la cuota
+            let quotasValue = parseFloat(this.project.valueEstimated) / (parseFloat(this.project.quotasBilling) == 0 ? 1 : parseFloat(this.project.quotasBilling));
+            //Revisamos si tiene facturas asociadas a sus cuotas
+            if (this.loadInitial.billings.length < this.project.quotasBilling) return false
+            //Caso contrario
             this.loadInitial.billings.forEach(department => {
                 if (department.payment_date != null && department.billing_concept_id != 4 && department.billing_concept_id != 5) {
                     countPay = countPay + 1 //Sumamos el contador en caso de que tenga una factura distinta de null
@@ -509,9 +518,14 @@ export default {
                 if (department.billing_concept_id != 4 && department.billing_concept_id != 5) {
                     countBillings = countBillings + 1;
                 }
+                //Revisamos si existen facturas bajo el mismo monto que la cuota
+                if (department.billing_concept_id != 4 && department.billing_concept_id != 5 && parseFloat(department.billing_value) == quotasValue) {
+                    countQuotasBilling = countQuotasBilling + 1;
+                }
             });
             //Retornamos en funcion de una comparacion entre las facturas cobradas y las registradas, deben ser iguales
-            return countPay == countBillings ? true : false
+            console.log(countPay, countBillings, countQuotasBilling, this.project.quotasBilling)
+            return countPay == countBillings && countQuotasBilling == this.project.quotasBilling ? true : false
         },
         /**
          * Formatea un numero a nomenclatura europea

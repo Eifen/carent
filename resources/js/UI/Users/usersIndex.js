@@ -88,6 +88,7 @@ const usersApp = createApp({
                 rproyP: [22, false],
                 rusersP: [23, false],
                 rlogUsersP: [24, false],
+                rQuotasP: [25, false],
             };
             //Acomodamos los permisos
             for (const field in this.previewUserInfo) {
@@ -159,6 +160,10 @@ const usersApp = createApp({
                     //Reporte Historico
                     case field == "rlogUsersP" && this.previewUserInfo[field]:
                         prepareParams["rlogUsersP"][1] = true;
+                        break;
+                    //Reporta cuotas
+                    case field == "rQuotasP" && this.previewUserInfo[field]:
+                        prepareParams["rQuotasP"][1] = true
                         break;
                 }
             }

@@ -34,6 +34,10 @@
                 <span>{{ infoProject.project.currency_symbol + getEstimated }}</span>
             </div>
             <div class="billing-container-billings-content" for="billing">
+                <div>{{ infoProject.project.project_quotas }} Cuota/s a facturar a monto</div>
+                <span>{{ infoProject.project.currency_symbol + getQuotas }}</span>
+            </div>
+            <div class="billing-container-billings-content" for="billing">
                 <div>Monto Facturado</div>
                 <span>{{ infoProject.project.currency_symbol + getTotalBilling() }}</span>
             </div>
@@ -193,6 +197,11 @@ export default {
     computed: {
         /** Devuelve el monto estimado en el formato correcto*/
         getEstimated() { return Number(parseFloat(this.infoProject.project.project_value)).toLocaleString("de-DE") },
+        /** Devuelve el monto facturar en cuotas */
+        getQuotas() {
+            const billingQuota = parseFloat(this.infoProject.project.project_value) / (this.infoProject.project.project_quotas == 0 ? 1 : this.infoProject.project.project_quotas)
+            return Number(billingQuota.toFixed(2)).toLocaleString("de-DE");
+        }
     },
     components: { FontAwesome }
 }
