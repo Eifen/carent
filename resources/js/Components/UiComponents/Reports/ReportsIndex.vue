@@ -71,8 +71,19 @@
     <div v-else-if="selectReport == 8 && reportPermission.rQuotasP != 1" class="not-found">
         <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
     </div>
+    <!-- Reporte de clientes -->
+    <div v-if="selectReport == 11">
+        <ReportClients v-if="reportPermission.rClientsP == 1" :scope="migrateData" :key="isMounted">
+        </ReportClients>
+        <div v-else class="not-found">
+            <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
+        </div>
+    </div>
+    <div v-else-if="selectReport == 8 && reportPermission.rQuotasP != 1" class="not-found">
+        <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
+    </div>
     <!-- Reporte horas no cargables -->
-    <div v-if="selectReport > 2 && selectReport != 5 && selectReport != 8 && selectReport != 9 && selectReport != 10"
+    <div v-if="selectReport > 2 && selectReport != 5 && selectReport != 8 && selectReport != 9 && selectReport != 10 && selectReport != 11"
         class="reports-container">
         <!-- Fechas  -->
         <span class="reports-container-title">Ingrese el intervalo de fechas</span>
@@ -141,6 +152,8 @@ import ReportProjHours from '@/Components/UiComponents/Reports/ReportProjHours.v
 import ReportUsers from '@/Components/UiComponents/Reports/ReportUsers.vue';
 import ReportHistoryLog from '@/Components/UiComponents/Reports/ReportHistoryLog.vue';
 import ReportQuotas from '@/Components/UiComponents/Reports/ReportQuotas.vue';
+import ReportClients from '@/Components/UiComponents/Reports/ReportClients.vue'
+
 export default {
     props: {
         listReports: Array, //Lista de reportes que se abstraen desde la base de datos
@@ -235,6 +248,9 @@ export default {
                 case 10:
                     this.getTable('/reports/list-quotas')
                     break;
+                case 11:
+                    this.getTable('/reports/list-clients');
+                    break;
             }
         },
         listData() {
@@ -263,7 +279,8 @@ export default {
         ReportProjHours,
         ReportUsers,
         ReportHistoryLog,
-        ReportQuotas
+        ReportQuotas,
+        ReportClients
     }
 }
 </script>

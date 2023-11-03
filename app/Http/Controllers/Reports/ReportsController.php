@@ -246,4 +246,12 @@ class ReportsController extends Controller
             "message" => ReportsModel::getReport('billing_quotas')
         ), 200);
     }
+
+    public function getClientsReport()
+    {
+        return response(array(
+            "response" => true,
+            "message" => ReportsModel::getReport('clients_log')
+        ), 200);
+    }
 }
