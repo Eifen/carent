@@ -102,6 +102,7 @@ class ReportDirective extends Controller
                 array_push($formatArray, array(
                     "order_user" => $user->user_id,
                     "nombre" => $user->user_name,
+                    "correo" => $user->primary_email,
                     "area" => $user->department_name,
                     "nivel" => $user->nivel_description,
                     "mes" => $hours["mes"],
