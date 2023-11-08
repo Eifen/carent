@@ -32,7 +32,7 @@
                     <option :value="0" selected disabled>
                         Seleccione una opción
                     </option>
-                    <option v-for="(select2) in 3" :key="select2" :value="select2">
+                    <option v-for="(select2) in 12" :key="select2" :value="select2">
                         {{ select2 }} cuotas
                     </option>
                 </select>
