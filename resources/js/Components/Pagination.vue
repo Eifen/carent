@@ -129,8 +129,13 @@ export default {
                 }
                 //Division multiselect
                 for (const key2 in this.dtoSelectArea) {
-                    if (key2 != 0) {
+                    if (key2 != 0 && !this.dtoSelectArea[key2].department_name.includes("Administración")) {
                         this.multiSelectList.areas.push(this.dtoSelectArea[key2].department_name)
+                    }
+
+                    if (key2 != 0 && this.dtoSelectArea[key2].department_name.includes("Administración")) {
+                        const findArea = this.multiSelectList.areas.find(area => area == 'Administración')
+                        typeof findArea === 'undefined' ? this.multiSelectList.areas.push('Administración') : null;
                     }
                 }
                 //Concepto multiselect
@@ -138,7 +143,16 @@ export default {
                     this.multiSelectList.concept.push(this.dtoSelectConcept[key3].concept_description)
                 }
 
-                if (this.isAdmin != 1) this.multiSelectAreas = this.multiSelectList.areas[this.areaId]
+                //Administracion
+                if (this.isAdmin != 1) {
+                    console.log(this.dtoSelectArea[this.areaId])
+                    if (!this.dtoSelectArea[this.areaId].department_name.includes("Administración")) {
+                        this.multiSelectAreas = this.multiSelectList.areas[this.areaId]
+                    } else {
+                        const findIndex = this.multiSelectList.areas.findIndex(area => area == 'Administración')
+                        findIndex !== -1 ? this.multiSelectAreas = this.multiSelectList.areas[findIndex] : null
+                    }
+                }
             })
             .catch(error => { console.error(error) })
     },
