@@ -27,7 +27,8 @@ export default {
                 column4: 'Area',
                 column5: "Proyecto",
                 column6: 'Fecha de contratación',
-                column7: 'Total horas cargadas',
+                column7: 'Horas asignadas',
+                column8: 'Total horas cargadas',
             },
             selectSearch: {
                 select1: "Nombre",
@@ -57,6 +58,7 @@ export default {
                         area: projectInfo.department_name,
                         proyecto: projectInfo.project_name,
                         contrato: projectInfo.hiring_date,
+                        horas_asignadas: projectInfo.assigned_hours,
                         horas_registradas: this.formatReportNumber(projectInfo.register_hour)
                     })
                 })
