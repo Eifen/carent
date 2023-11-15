@@ -59,7 +59,7 @@ export default {
                         proyecto: projectInfo.project_name,
                         contrato: projectInfo.hiring_date,
                         horas_asignadas: projectInfo.assigned_hours,
-                        horas_registradas: this.formatReportNumber(projectInfo.register_hour)
+                        horas_registradas: parseFloat(projectInfo.register_hour) > parseFloat(projectInfo.assigned_hours) ? projectInfo.assigned_hours : this.formatReportNumber(projectInfo.register_hour)
                     })
                 })
                 //Acomodamos la longitud minima y su paginacion
