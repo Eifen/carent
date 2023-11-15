@@ -147,7 +147,7 @@ export default {
                 if (this.isAdmin != 1) {
                     console.log(this.dtoSelectArea[this.areaId])
                     if (!this.dtoSelectArea[this.areaId].department_name.includes("Administración")) {
-                        this.multiSelectAreas = this.multiSelectList.areas[this.areaId]
+                        this.multiSelectAreas = this.dtoSelectArea[this.areaId].department_name
                     } else {
                         const findIndex = this.multiSelectList.areas.findIndex(area => area == 'Administración')
                         findIndex !== -1 ? this.multiSelectAreas = this.multiSelectList.areas[findIndex] : null
