@@ -22,14 +22,16 @@ export default {
             reportColumns: {
                 column1: "Código",
                 column2: 'Proyecto',
-                column3: 'Monto',
-                column4: 'Cuotas',
-                column5: 'Monto Cuotas',
-                column6: 'Cuotas por facturar',
-                column7: 'Facturas por cobrar'
+                column3: "Cliente",
+                column4: 'Monto',
+                column5: 'Cuotas',
+                column6: 'Monto Cuotas',
+                column7: 'Cuotas por facturar',
+                column8: 'Facturas por cobrar'
             },
             selectSearch: {
                 select1: "Proyecto",
+                select2: "Cliente"
             },
             directiveList: [], //Lista directiva mensual
             directiveLength: 50, //Numero maximo por pagina
@@ -48,7 +50,8 @@ export default {
                     acum[key] = {
                         "código": billing.project_id,
                         proyecto: billing.project_description,
-                        monto: this.formatReportNumber(parseFloat(billing.project_value)),
+                        cliente: billing.bussiness_name,
+                        monto: this.formatReportNumber(parseFloat(billing.project_value)) + billing.currency_symbol,
                         cuotas: billing.project_quotas,
                         monto_cuotas: this.formatReportNumber(parseFloat(billing.quotas_value)),
                         cuotas_por_facturar: billing.project_quotas,
