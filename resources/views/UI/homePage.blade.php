@@ -2,10 +2,18 @@
     <loading :active="!isMounted"></loading>
     <div class="home-container" v-if="isMounted">
         <div class="home-container-graph" id="graph">
-            <Bar id="graph-month" :options="updateOptions" :data="updateChart"></Bar>
+            <div class="graph-title">Seleccione un mes del periodo @{{ actualYear }}</div>
+            <select class="form-select graph-select" title="MonthSelect" v-model="monthSelect">
+                <option v-for="(month, position) in listMonth" :key="position" :value="month.index">
+                    @{{ month.name }}
+                </option>
+            </select>
+            <Bar id="graph-month" :options="updateOptions" :data="updateChart" :key="listData"></Bar>
         </div>
         <div class="home-container-info">
-            <div class="home-container-info-title">Este es el avance de tu cargabilidad para @{{ chartData.datasets[0].label }}</div>
+            <div class="home-container-info-title">
+                Este es el avance de tu cargabilidad para @{{ chartData.datasets[0].label }}
+            </div>
             <div class="home-container-info-card">
                 <div>Horas estimadas</div>
                 <span>@{{ listData.estimated_hour }}</span>

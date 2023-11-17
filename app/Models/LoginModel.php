@@ -59,7 +59,8 @@ class LoginModel extends Model
             "rusersP" => 0,
             "rlogUsersP" => 0,
             "rQuotasP" => 0,
-            "rClientsP" => 0
+            "rClientsP" => 0,
+            "dCargaH" => 0,
         );
         if (!$userAccess->isEmpty()) {
             foreach ($userAccess as $permission) {
@@ -139,6 +140,10 @@ class LoginModel extends Model
                         //Reporte de clientes
                     case 26:
                         $arrayAccess['rClientsP'] = 1;
+                        break;
+                        //Deshabilitar carga de horas
+                    case 27:
+                        $arrayAccess['dCargaH'] = 1;
                         break;
                 }
             }

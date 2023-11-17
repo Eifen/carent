@@ -84,6 +84,7 @@
                                 :is-charged="onCharged" :key="listProjectHourData" load-ref="project"
                                 :status-project="project.statusLoad" :dead-line="{{ Session::get('deadLine') }}"
                                 :dead-month="{{ Session::get('deadMonth') }}"
+                                :users-permission="{{ json_encode(Session::get('userPermissions')) }}"
                                 @register-hour="registerDay($event,project.projectAssignedId)"
                                 @unregister-hour="unRegisterDay($event,project.projectAssignedId)">
                             </load-hours>
@@ -140,6 +141,7 @@
                                 :is-charged="onCharged" :key="listAdminHourData" load-ref="admin"
                                 :dead-line="{{ Session::get('deadLine') }}"
                                 :dead-month="{{ Session::get('deadMonth') }}"
+                                :users-permission="{{ json_encode(Session::get('userPermissions')) }}"
                                 @register-hour="registerAdminDay($event,admin.adminHourId)"
                                 @unregister-hour="unRegisterAdminDay($event,admin.adminHourId)">
                             </load-hours>

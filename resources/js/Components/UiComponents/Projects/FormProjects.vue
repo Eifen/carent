@@ -139,7 +139,7 @@ export default {
                 isValid: false, //Gestiona si cumple todos los campos requeridos
             },
             //Constantes
-            LimitString: { DESCRIPTION: 200, NAME: 50 },
+            LimitString: { DESCRIPTION: 200, NAME: 100 },
             dropDownControl: {
                 clients: { noInput: false, ref: "clientAssociated" },
                 manager: { noInput: false, ref: "managerAssociated" },

@@ -113,11 +113,12 @@ export class CrudUi {
      * Metodo que se encarga de traer del modelo toda la información de la tabla seleccionada en función de su ruta. Va en el mounted
      * @param {String} route Almacena la URL que debe hacer request Axios
      * @param {Object} self Hereda el metodo data() del componente padre
+     * @param {Object} params Sincroniza los parametros, si no usamos es null por defecto
      */
-    static getTable(route, self) {
+    static getTable(route, self, params = null) {
         //Cargamos toda la data
         axios
-            .post(route)
+            .post(route, params)
             .then((request) => {
                 if (request.status === 200 && !request.data.response)
                     throw request.data.message;

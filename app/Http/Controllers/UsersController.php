@@ -191,10 +191,10 @@ class UsersController extends Controller
     /**
      * Metodo que devuelve la informacion de carga para al usuario conectado en el mes actual.
      */
-    public function getLogUser()
+    public function getLogUser(Request $dateRequest)
     {
-        $dateStart = date("Y-m-01");
-        $dateEnd = date("Y-m-t");
+        $dateStart = date("Y-m-d", strtotime($dateRequest->input("date")));
+        $dateEnd = date("Y-m-t", strtotime($dateStart));
         $intervalDays = intval(ReportsModel::getTotalDays($dateStart, $dateEnd)) * 8;
         $getAreaType = 0; #Si es 0 indica que el departamento de la persona es de administracion, 1 es de auditoria
         $getPositionNivel = 0; #Si es 0 indica que al cargo actual no se le aplica la cargabilidad
@@ -240,7 +240,7 @@ class UsersController extends Controller
 
 
         $responseArray = array(
-            "month" => date("Y-m"),
+            "month" => date("Y-m", strtotime($dateStart)),
             "estimated_hour" => $intervalDays,
             "estimated_proy" => $getAreaType == 0 ? 0 : (($intervalDays * $getPositionNivel) / 100),
             "estimated_admon" => $getAreaType == 0 ? $intervalDays : (($intervalDays * (100 - $getPositionNivel)) / 100),

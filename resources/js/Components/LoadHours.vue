@@ -43,6 +43,7 @@ export default {
         statusProject: Number, //Controla el estado del proyecto, solo aplica si loadRed es project
         deadLine: Number, //Controla el tiempo maximo de cierre de carga, viene de la base de datos, tabla control_page
         deadMonth: Number, //Controla la cantidad de meses de diferencia que puede existir para cargar, tabla control_page
+        usersPermission: Object //User permission
     },
     emits: ['register-hour', 'unregister-hour'],
     data() {
@@ -76,7 +77,7 @@ export default {
         let diffDay = (dateClosure.getTime() - dateAssociated.getTime()) / (1000 * 3600 * 24)
         //Comparamos las fechas
         diffYear === 0 && diffMonth <= this.deadMonth
-            ? (isDate && diffDay >= this.deadLine ? this.isEdit = false : this.isEdit = true)
+            ? (isDate && diffDay >= this.deadLine && this.usersPermission.dCargaH == 0 ? this.isEdit = false : this.isEdit = true)
             : this.isEdit = false;
         //Proceso de carga de horas\
         let fraccionCount = 0;

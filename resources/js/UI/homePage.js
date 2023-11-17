@@ -8,7 +8,7 @@ const homeApp = createApp({
     data() {
         return {
             chartData: {
-                labels: ['Horas estimadas', 'Horas cargadas totales', 'Horas proyectos', 'Horas administrativas'],
+                labels: ['Horas estimadas', 'Horas cargadas', 'Horas proyectos', 'Horas admon'],
                 datasets: [{
                     axis: 'y',
                     label: '',
@@ -21,29 +21,40 @@ const homeApp = createApp({
                 indexAxis: 'y'
             },
             months: [
-                { name: 'Enero', index: "01" },
-                { name: 'Febrero', index: "02" },
-                { name: 'Marzo', index: "03" },
-                { name: 'Abril', index: "04" },
-                { name: 'Mayo', index: "05" },
-                { name: 'Junio', index: "06" },
                 { name: 'Julio', index: "07" },
                 { name: 'Agosto', index: "08" },
                 { name: 'Septiembre', index: "09" },
                 { name: 'Octubre', index: "10" },
                 { name: 'Noviembre', index: "11" },
                 { name: 'Diciembre', index: "12" },
+                { name: 'Enero', index: "01" },
+                { name: 'Febrero', index: "02" },
+                { name: 'Marzo', index: "03" },
+                { name: 'Abril', index: "04" },
+                { name: 'Mayo', index: "05" },
+                { name: 'Junio', index: "06" },
             ],
             isGraph: false,
             totalHours: 0, //Almacena el total de horas
             percenTotal: 0,
             percenProy: 0,
             percenAdmon: 0, //Almacena los porcentajes cargados
+            actualMonth: 0, //Almacena el mes actual
+            actualYear: '', //Almacena el ano actual
+            listMonth: [], //Lista de meses para el select
+            monthSelect: 0 //Mes seleccionado
         }
     },
     mounted() {
-        //Llamamos a la informacion del usuario
-        CrudUi.getTable("/log-user-info", this)
+        //
+        const now = new Date();
+        this.actualMonth = (now.getMonth() > 5) ? (now.getMonth() - 6) : (6 + now.getMonth())
+        this.actualYear = `${now.getFullYear()} - ${now.getFullYear() + 1}`
+        this.monthSelect = now.getMonth() + 1
+        //Creamos la lista de meses hasta la fecha
+        for (let cursorMonth = 0; cursorMonth <= (this.actualMonth); cursorMonth++) {
+            this.listMonth.push(this.months[cursorMonth])
+        }
     },
     methods: {
         /**
@@ -73,6 +84,7 @@ const homeApp = createApp({
     },
     watch: {
         listData() {
+            console.log(this.listData)
             this.totalHours = this.listData.real_proy + this.listData.real_admon
             this.percenTotal = (this.totalHours * 100) / this.listData.estimated_hour;
             this.percenProy = (this.listData.real_proy * 100) / (this.listData.estimated_proy == 0 ? this.listData.estimated_hour : this.listData.estimated_proy);
@@ -87,6 +99,7 @@ const homeApp = createApp({
             this.months.forEach(month => {
                 if (month.index == monthReference) {
                     // Cargamos los charts
+                    console.log("aca", monthReference, month.index)
                     this.chartData.datasets[0] = {
                         label: month.name,
                         data: [this.listData.estimated_hour, this.totalHours, this.listData.real_proy, this.listData.real_admon],
@@ -94,6 +107,12 @@ const homeApp = createApp({
                     }
                 }
             })
+        },
+        monthSelect(newselect) {
+            console.log(newselect)
+            const year = new Date().getFullYear()
+            //Llamamos a la informacion del usuario
+            CrudUi.getTable("/log-user-info", this, { date: `${year}-${newselect}-01` });
         }
     },
     mixins: [componentsUI, dataUI, methodsUI, watchUI],
