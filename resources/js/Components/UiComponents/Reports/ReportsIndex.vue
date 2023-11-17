@@ -57,7 +57,7 @@
             <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
         </div>
     </div>
-    <div v-else-if="selectReport == 8 && reportPermission.rlogUsersP != 1" class="not-found">
+    <div v-else-if="selectReport == 9 && reportPermission.rlogUsersP != 1" class="not-found">
         <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
     </div>
     <!-- Reporte cuotas y facturar por cobrar -->
@@ -68,7 +68,7 @@
             <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
         </div>
     </div>
-    <div v-else-if="selectReport == 8 && reportPermission.rQuotasP != 1" class="not-found">
+    <div v-else-if="selectReport == 10 && reportPermission.rQuotasP != 1" class="not-found">
         <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
     </div>
     <!-- Reporte de clientes -->
@@ -79,7 +79,7 @@
             <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
         </div>
     </div>
-    <div v-else-if="selectReport == 8 && reportPermission.rQuotasP != 1" class="not-found">
+    <div v-else-if="selectReport == 11 && reportPermission.rQuotasP != 1" class="not-found">
         <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
     </div>
     <!-- Reporte horas no cargables -->
