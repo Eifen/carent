@@ -33,6 +33,11 @@
                                     :checked="previewUserInfo.userP">
                                 <label class="form-check-label">Control de usuario</label>
                             </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" v-model="previewUserInfo.dCargaH" type="checkbox"
+                                    :checked="previewUserInfo.dCargaH">
+                                <label class="form-check-label">Deshabilitar bloqueo de horas</label>
+                            </div>
                         </div>
                         <div class="modal-preview-tbody" for="tbody-clientM">
                             <div class="form-check form-switch">
@@ -82,8 +87,8 @@
                                 <label class="form-check-label">Reporte de cierre de proyectos</label>
                             </div>
                             <div class="form-check form-switch">
-                                <input class="form-check-input" v-model="previewUserInfo.rdirectiveMP" type="checkbox"
-                                    :checked="previewUserInfo.rdirectiveMP">
+                                <input class="form-check-input" v-model="previewUserInfo.rdirectiveMP"
+                                    type="checkbox" :checked="previewUserInfo.rdirectiveMP">
                                 <label class="form-check-label">Reporte directivo mensual</label>
                             </div>
                             <div class="form-check form-switch">

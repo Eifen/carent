@@ -90,6 +90,7 @@ const usersApp = createApp({
                 rlogUsersP: [24, false],
                 rQuotasP: [25, false],
                 rClientsP: [26, false],
+                dCargaH: [27, false],
             };
             //Acomodamos los permisos
             for (const field in this.previewUserInfo) {
@@ -169,6 +170,10 @@ const usersApp = createApp({
                     //Reporta clientes
                     case field == "rClientsP" && this.previewUserInfo[field]:
                         prepareParams["rClientsP"][1] = true
+                        break;
+                    //Deshabilitar carga
+                    case field == "dCargaH" && this.previewUserInfo[field]:
+                        prepareParams["dCargaH"][1] = true
                         break;
                 }
             }
