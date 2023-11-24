@@ -84,7 +84,6 @@ const homeApp = createApp({
     },
     watch: {
         listData() {
-            console.log(this.listData)
             this.totalHours = this.listData.real_proy + this.listData.real_admon
             this.percenTotal = (this.totalHours * 100) / this.listData.estimated_hour;
             this.percenProy = (this.listData.real_proy * 100) / (this.listData.estimated_proy == 0 ? this.listData.estimated_hour : this.listData.estimated_proy);
@@ -99,7 +98,6 @@ const homeApp = createApp({
             this.months.forEach(month => {
                 if (month.index == monthReference) {
                     // Cargamos los charts
-                    console.log("aca", monthReference, month.index)
                     this.chartData.datasets[0] = {
                         label: month.name,
                         data: [this.listData.estimated_hour, this.totalHours, this.listData.real_proy, this.listData.real_admon],
@@ -109,7 +107,6 @@ const homeApp = createApp({
             })
         },
         monthSelect(newselect) {
-            console.log(newselect)
             const year = new Date().getFullYear()
             //Llamamos a la informacion del usuario
             CrudUi.getTable("/log-user-info", this, { date: `${year}-${newselect}-01` });

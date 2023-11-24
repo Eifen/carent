@@ -63,6 +63,7 @@ class ProjectController extends Controller
     public function allAdminHours()
     {
         $this->modelInstance = new ConfigModel();
+        $getDeadMonth = ConfigModel::checkDeadMonth();
         $getAdminHours = $this->modelInstance->GetAll('projects_admin');
         //Filtramos la información del departamento del usuario. Para devolver las de sus division
         $arrayDTO = $getAdminHours["message"]->toArray();
@@ -86,11 +87,11 @@ class ProjectController extends Controller
         }, $getAdminHours["message"]);
 
         //Filtramos por fecha
-        $getAdminHours["message"] = array_filter($getAdminHours["message"], function ($adminHour) {
+        $getAdminHours["message"] = array_filter($getAdminHours["message"], function ($adminHour) use ($getDeadMonth) {
             //Obtenemos la actual
             $actualDate = date("y-m-d");
             //Obtenemos la fecha anterior a un mes
-            $oneMonthDate = date("Y-m-01", strtotime("-3 months"));
+            $oneMonthDate = date("Y-m-01", strtotime("-$getDeadMonth months"));
             return $adminHour->fecha >= $oneMonthDate && $adminHour->fecha <= $actualDate;
         });
 

@@ -138,4 +138,18 @@ class BillingController extends Controller
             "message" => "Factura eliminada exitosamente"
         ));
     }
+
+    public function updateProjectCuotas(Request $updateRequest)
+    {
+        DB::table('projects')
+            ->where("project_id", "=", $updateRequest->input("project_id"))
+            ->update([
+                "project_quotas" => $updateRequest->input('quota_update')
+            ]);
+
+        return response(array(
+            "response" => true,
+            "message" => "Cuota actualizada correctamente"
+        ));
+    }
 }

@@ -65,7 +65,6 @@ export default {
          * @param {String} stringToAutoComplete String que se va a autorrellenar
          */
         autoCompleteClient(stringToAutoComplete) {
-            console.log(stringToAutoComplete)
             this.scope.inputClientAssociated = stringToAutoComplete
             this.scope.dropDownControl.clients.noInput = false
         }

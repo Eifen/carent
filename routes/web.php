@@ -144,6 +144,7 @@ Route::prefix('/')->group(function () {
                     Route::post('/all-projects', [BillingController::class, 'getProjectBillings']);
                     Route::post('/loading-project', [BillingController::class, 'billingPerProject']);
                     Route::put('/delete-update-data', [BillingController::class, 'deleteBillingInfo']);
+                    Route::put('/update-cuotas', [BillingController::class, 'updateProjectCuotas']);
 
                     //Control billing
                     Route::prefix('/control')->group(function () {

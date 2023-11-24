@@ -34,8 +34,16 @@
                 <span>{{ infoProject.project.currency_symbol + getEstimated }}</span>
             </div>
             <div class="billing-container-billings-content" for="billing">
-                <div>{{ infoProject.project.project_quotas }} Cuota/s a facturar a monto</div>
-                <span>{{ infoProject.project.currency_symbol + getQuotas }}</span>
+                <div>Cuota/s maximas a facturar</div>
+                <select class="form-select" v-model="actualQuotas" title="ActualCuotas"
+                    @change="updateQuotas(actualQuotas, infoProject.project.project_id)">
+                    <option :value="0" selected disabled>
+                        Seleccione una opción
+                    </option>
+                    <option v-for="(select2) in 12" :key="select2" :value="select2">
+                        {{ select2 }} cuotas
+                    </option>
+                </select>
             </div>
             <div class="billing-container-billings-content" for="billing">
                 <div>Monto Facturado</div>
@@ -128,9 +136,13 @@ export default {
         infoProject: Object, //Informacion del proyecto y sus facturaciones realizadas
     },
     data() {
-        return {}
+        return {
+            actualQuotas: 0 //Indica las facturas maximas a facturar
+        }
     },
-    created() { },
+    created() {
+        this.actualQuotas = this.infoProject.project.project_quotas
+    },
     methods: {
         /**
          * Devuelve un monto en el formato correcto
@@ -192,6 +204,17 @@ export default {
             }
             //Caso contrario devolvemos 0
             return 0
+        },
+        /**
+         * Se conecta con el servidor para actualizar las cuotas del proyecto
+         * @param {*} quotaToUpdate Almacena las cuotas a cambiar
+         * @param {Number} projectId Almacena el id del proyecto
+         */
+        updateQuotas(quotaToUpdate, projectId) {
+            axios.put('./update-cuotas', { project_id: projectId, quota_update: quotaToUpdate })
+                .catch(error => {
+                    console.error(error)
+                })
         }
     },
     computed: {

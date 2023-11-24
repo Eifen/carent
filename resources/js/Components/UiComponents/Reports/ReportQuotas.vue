@@ -25,9 +25,8 @@ export default {
                 column3: "Cliente",
                 column4: 'Monto',
                 column5: 'Cuotas',
-                column6: 'Monto Cuotas',
-                column7: 'Cuotas por facturar',
-                column8: 'Facturas por cobrar'
+                column6: 'Cuotas por facturar',
+                column7: 'Facturas por cobrar'
             },
             selectSearch: {
                 select1: "Proyecto",
@@ -42,9 +41,28 @@ export default {
     },
     mounted() {
         if (this.scope.isMounted) {
+            //Almacenamos la cantidad de facturas
+            const billingHistory = Object.values(this.scope.listData.reduce((acum, billing) => {
+                const key = billing.project_id
+
+                if (!acum[key]) {
+                    acum[key] = {
+                        id: billing.project_id,
+                        billing_total: 1,
+                        total_quota_value: parseFloat(billing.billing_value)
+                    }
+                } else {
+                    acum[key].billing_total += 1
+                    acum[key].total_quota_value += parseFloat(billing.billing_value)
+                }
+
+                return acum
+            }, {}))
+
             //Cargamos la informacion inicial
             const reportDTO = this.scope.listData.reduce((acum, billing) => {
                 const key = billing.project_id
+                const findTotal = billingHistory.find(billing => billing.id == key).total_quota_value
 
                 if (!acum[key]) {
                     acum[key] = {
@@ -53,18 +71,19 @@ export default {
                         cliente: billing.bussiness_name,
                         monto: this.formatReportNumber(parseFloat(billing.project_value)) + billing.currency_symbol,
                         cuotas: billing.project_quotas,
-                        monto_cuotas: this.formatReportNumber(parseFloat(billing.quotas_value)),
-                        cuotas_por_facturar: billing.project_quotas,
+                        cuotas_por_facturar: parseFloat(billing.project_value) <= findTotal ? 0 : billing.project_quotas,
                         facturar_por_cobrar: billing.payment_date === null ? 1 : 0
                     }
                 } else {
                     const billingCompare = {
-                        quotas: acum[key].cuotas_por_facturar,
+                        value: findTotal,
                         payment: acum[key].facturar_por_cobrar,
+                        quotas: acum[key].cuotas_por_facturar,
                     }
                     //Si la factura es mayor a la cuota, restamos de las cuotas por facturar
                     //Si la factura no ha sido cobrada, aumentando el valor de las facturas por cobrar
-                    acum[key].cuotas_por_facturar = parseFloat(billing.billing_value) >= parseFloat(billing.quotas_value)
+                    if (acum[key]["código"] == 2) console.log(billingCompare.quotas)
+                    acum[key].cuotas_por_facturar = parseFloat(billing.project_value) <= billingCompare.value
                         ? (billingCompare.quotas == 0 ? 0 : (billingCompare.quotas - 1))
                         : (billingCompare.quotas >= billing.project_quotas ? billing.project_quotas : billingCompare.quotas + 1);
 

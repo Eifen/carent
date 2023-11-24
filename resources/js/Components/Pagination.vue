@@ -144,8 +144,7 @@ export default {
                 }
 
                 //Administracion
-                if (this.isAdmin != 1) {
-                    console.log(this.dtoSelectArea[this.areaId])
+                if (this.isAdmin != 1 && (typeof this.areaId !== 'undefined')) {
                     if (!this.dtoSelectArea[this.areaId].department_name.includes("Administración")) {
                         this.multiSelectAreas = this.dtoSelectArea[this.areaId].department_name
                     } else {

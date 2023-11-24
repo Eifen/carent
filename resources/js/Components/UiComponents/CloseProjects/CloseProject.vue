@@ -504,27 +504,26 @@ export default {
          */
         billingPay() {
             let countPay = 0 //Contador que revisa si todas las facturas no anuladas tienen cobro activo
-            let countBillings = 0 //Contador que revisa la cantidad de facturas sin concepto 4, es decir, nota de credito
-            let countQuotasBilling = 0 //Contador que revisa si las facturas emitidas poseen el monto de la cuota
-            let quotasValue = parseFloat(this.project.valueEstimated) / (parseFloat(this.project.quotasBilling) == 0 ? 1 : parseFloat(this.project.quotasBilling));
+            let countBillings = 0 //Contador que revisa la cantidad de facturas de solo abono
+            let quotasValue = 0 //Suma todas las facturas
+            let countQuotasBilling = 0 //Contador que revisa si las facturas emitidas totales cumplen con el monto del proyecto. Caso positivo se coloca en 1
             //Revisamos si tiene facturas asociadas a sus cuotas
             if (this.loadInitial.billings.length < this.project.quotasBilling) return false
             //Caso contrario
             this.loadInitial.billings.forEach(department => {
-                if (department.payment_date != null && department.billing_concept_id != 4 && department.billing_concept_id != 5) {
+                if (department.payment_date != null && (department.billing_concept_id == 1 || department.billing_concept_id == 2)) {
                     countPay = countPay + 1 //Sumamos el contador en caso de que tenga una factura distinta de null
                 }
                 //Sacamos la cantidad de facturas sin notas de credito
-                if (department.billing_concept_id != 4 && department.billing_concept_id != 5) {
+                if (department.billing_concept_id == 1 || department.billing_concept_id == 2) {
                     countBillings = countBillings + 1;
-                }
-                //Revisamos si existen facturas bajo el mismo monto que la cuota
-                if (department.billing_concept_id != 4 && department.billing_concept_id != 5 && parseFloat(department.billing_value) == quotasValue) {
-                    countQuotasBilling = countQuotasBilling + 1;
+                    quotasValue += parseFloat(department.billing_value)
                 }
             });
+            //Revisamos el numero de cuotas
+            countQuotasBilling = parseFloat(this.loadInitial.project.project_value) <= quotasValue ? 1 : 0
             //Retornamos en funcion de una comparacion entre las facturas cobradas y las registradas, deben ser iguales
-            return countPay == countBillings && countQuotasBilling == this.project.quotasBilling ? true : false
+            return countPay == countBillings && countQuotasBilling == 1 ? true : false
         },
         /**
          * Formatea un numero a nomenclatura europea
@@ -638,7 +637,7 @@ export default {
             return this.project.billingAditionalValue.reduce((total, billingValue) => total + parseFloat(billingValue.value), 0);
         },
         totalBillsBilling() {
-            return this.project.billingGValue.reduce((total, billingValue) => total + parseFloat(billing.value), 0);
+            return this.project.billingGValue.reduce((total, billingValue) => total + parseFloat(billingValue.value), 0);
         }
     },
     watch: {
