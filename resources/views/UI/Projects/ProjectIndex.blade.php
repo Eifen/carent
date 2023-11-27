@@ -26,9 +26,11 @@
                         <div class="modal-preview-thead" for="thead-hiring">Fecha de contratación</div>
                         <div class="modal-preview-thead" for="thead-pValue">Monto del proyecto</div>
                         <div class="modal-preview-thead" for="thead-hoursAssigned">Horas asignadas</div>
-                        <div class="modal-preview-thead" for="thead-averageRate">Tasa promedio</div>
+                        <div class="modal-preview-thead" for="thead-averageRate">Tasa promedio inicial</div>
                         <div class="modal-preview-thead" for="thead-additionalHour">Horas totales adicionales</div>
                         <div class="modal-preview-thead" for="thead-additionalValue">Montos totales adicionales</div>
+                        <div class="modal-preview-thead" for="thead-totalHours">Horas totales</div>
+                        <div class="modal-preview-thead" for="thead-averageNow">Tasa Promedio Final</div>
                         <div class="modal-preview-thead" for="thead-department">División</div>
                         <div class="modal-preview-thead" for="thead-managerDepartment">Gerente</div>
                         {{-- Cuerpo del encabezado --}}
@@ -43,6 +45,8 @@
                         <div class="modal-preview-tbody" for="tbody-additionalHour">@{{ totalAdditionalAssigned(1) }}</div>
                         <div class="modal-preview-tbody" for="tbody-additionalValue">@{{ convertFormat(totalAdditionalAssigned(2)) + " " + previewProjectInfo.project.currency_symbol }}</div>
                         <div class="modal-preview-tbody" for="tbody-averageRate">@{{ convertFormat(previewProjectInfo.project.average_rate) }}</div>
+                        <div class="modal-preview-tbody" for="tbody-totalHours">@{{ totalHoursAssigned() + totalAdditionalAssigned(1) }}</div>
+                        <div class="modal-preview-tbody" for="tbody-averageNow">@{{ convertFormat((parseFloat(previewProjectInfo.project.project_value) + totalAdditionalAssigned(2)) / (totalHoursAssigned() + totalAdditionalAssigned(1))) }}</div>
                         <div class="modal-preview-tbody" for="tbody-departments">
                             <div v-for="(department,position) in previewProjectInfo.departments" :key="position">
                                 <span>@{{ department.department_name }}</span>

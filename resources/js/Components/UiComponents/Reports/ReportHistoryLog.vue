@@ -4,7 +4,7 @@
         <div class="reports-container" v-if="scope.isMounted">
             <span class="reports-container-title">Ingrese información del usuario</span>
             <div class="reports-container-search">
-                <div class="input-group mb-3">
+                <div class="input-group mb-3" v-if="scope.controlAdmin == 1">
                     <span class="input-group-text">Nombre</span>
                     <Multiselect v-model="inputCodeUser" :options="multiSelectUser" placeholder="Seleccione un usuario"
                         mode="single" class="form-control" :searchable="true"></Multiselect>
@@ -76,6 +76,13 @@ export default {
                         disabled: false
                     })
                 })
+
+                //Seleccion automatica
+                if (this.scope.controlAdmin != 1) {
+                    console.log(request.data.message)
+                    const findIndex = request.data.message.findIndex(user => user.user_code == this.scope.controlUser)
+                    this.inputCodeUser = request.data.message[findIndex].user_code
+                }
             })
     },
     watch: {

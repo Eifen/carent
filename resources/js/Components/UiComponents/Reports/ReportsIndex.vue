@@ -159,7 +159,8 @@ export default {
         listReports: Array, //Lista de reportes que se abstraen desde la base de datos
         reportPermission: Object, //Array de permisos
         isAdmin: Number, //Captura si el usuario es administrador o no
-        areaId: Number //Captura el id del departamento de la persona
+        areaId: Number, //Captura el id del departamento de la persona
+        userCode: Number //Captura el id del usuario conectado
     },
 
     data() {
@@ -174,13 +175,16 @@ export default {
             dateEnd: "", //Fecha final
             notFoundMessage: "La visualización de este reporte requiere elevación. Comuníquese con el administrador del sistema",
             controlAdmin: 0,
-            departmentId: 0
+            departmentId: 0,
+            controlUser: 0
         }
     },
     created() {
         //Pasamos la informacion del id del departamento y si es el administrador del sistema
         this.controlAdmin = this.isAdmin;
         this.departmentId = this.areaId;
+        this.controlUser = this.userCode
+
     },
     methods: {
         /**

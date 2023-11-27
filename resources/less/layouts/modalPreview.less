@@ -1,162 +1,207 @@
-.modal-preview{
+.modal-preview {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%,20rem),1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
     grid-auto-flow: dense;
     overflow: auto;
     gap: 10px 2px;
 
     //Encabezados
-    &-thead{
+    &-thead {
         background: @Thead-Color;
         color: @Text-Thead-Color;
         font-weight: bolder;
         padding: 5px;
         text-align: center;
+
         //Socio
-        &[for="thead-partner"],&[for="thead-code"]{
-            grid-area: 1 / 1 / 2 / 3 ;
+        &[for="thead-partner"],
+        &[for="thead-code"] {
+            grid-area: 1 / 1 / 2 / 3;
         }
+
         //Direccion
-        &[for="thead-address"],&[for="thead-client"]{
+        &[for="thead-address"],
+        &[for="thead-client"] {
             grid-area: 3 / 1 / 4 / 3;
         }
+
         /*=================================================
         * CLIENTES
         *==================================================
         */
         //Rif
-        &[for="thead-rif"]{
+        &[for="thead-rif"] {
             grid-area: 5 / 1 / 6 / 2;
         }
+
         //Nit
-        &[for="thead-nit"]{
+        &[for="thead-nit"] {
             grid-area: 5 / 2 / 6 / 3;
         }
+
         //Pais
-        &[for="thead-country"]{
+        &[for="thead-country"] {
             grid-area: 7 / 1 / 8 / 2;
         }
+
         //Telefono
-        &[for="thead-phone"]{
+        &[for="thead-phone"] {
             grid-area: 7 / 2 / 8 / 3;
         }
+
         //Sector
-        &[for="thead-sector"]{
+        &[for="thead-sector"] {
             grid-area: 9 / 1 / 10 / 2;
         }
+
         //Servicio
-        &[for="thead-service"]{
+        &[for="thead-service"] {
             grid-area: 9 / 2 / 10 / 3;
         }
+
         /*=================================================
         * PROYECTOS
         *==================================================
         */
         //Gerente del proyecto
-        &[for="thead-manager"]{
+        &[for="thead-manager"] {
             grid-area: 5 / 1 / 6 / 3;
         }
+
         //Socio de calidad
-        &[for="thead-quality"]{
+        &[for="thead-quality"] {
             grid-area: 7 / 1 / 8 / 3;
         }
+
         //Fecha de contratacion
-        &[for="thead-hiring"]{
+        &[for="thead-hiring"] {
             grid-area: 9 / 1 / 10 / 2;
         }
+
         //Monto del proyecto
-        &[for="thead-pValue"]{
+        &[for="thead-pValue"] {
             grid-area: 9 / 2 / 10 / 3;
         }
+
         //Horas asignadas
-        &[for="thead-hoursAssigned"]{
+        &[for="thead-hoursAssigned"] {
             grid-area: 11 / 1 / 12 / 2;
         }
+
         //Tasa promedio
-        &[for="thead-averageRate"]{
+        &[for="thead-averageRate"] {
             grid-area: 11 / 2 / 12 / 3;
         }
+
         //Horas adicionales totales
-        &[for="thead-additionalHours"]{
+        &[for="thead-additionalHours"] {
             grid-area: 13 / 1 / 14 / 2;
         }
+
         //Montos adicionales totales
-        &[for="thead-additionalValue"]{
+        &[for="thead-additionalValue"] {
             grid-area: 13 / 2 / 14 / 3;
         }
-        //Departamento
-        &[for="thead-department"]{
+
+        //Horas y Tasa totales
+        &[for="thead-totalHours"] {
             grid-area: 15 / 1 / 16 / 2;
         }
-        //Gerente
-        &[for="thead-managerDepartment"]{
+
+        &[for="thead-averageNow"] {
             grid-area: 15 / 2 / 16 / 3;
         }
+
+        //Departamento
+        &[for="thead-department"] {
+            grid-area: 17 / 1 / 18 / 2;
+        }
+
+        //Gerente
+        &[for="thead-managerDepartment"] {
+            grid-area: 17 / 2 / 18 / 3;
+        }
+
         /*=================================================
         * USUARIOS
         *==================================================
         */
         //Menu usuario
-        &[for="thead-userM"]{
+        &[for="thead-userM"] {
             grid-area: 7 / 1 / 8 / 2;
         }
+
         //Menu cliente
-        &[for="thead-clientM"]{
+        &[for="thead-clientM"] {
             grid-area: 7 / 2 / 8 / 3;
         }
+
         //Menu proyecto
-        &[for="thead-projectM"]{
+        &[for="thead-projectM"] {
             grid-area: 9 / 1 / 10 / 2;
         }
+
         //Menu billing
-        &[for="thead-billingM"]{
+        &[for="thead-billingM"] {
             grid-area: 9 / 2 / 10 / 3;
         }
+
         //Menu report
-        &[for="thead-reportM"]{
+        &[for="thead-reportM"] {
             grid-area: 11 / 1 / 12 / 2;
         }
     }
 
     //Contenido
-    &-tbody{
+    &-tbody {
         text-align: center;
+
         //Socio
-        &[for="tbody-partner"],&[for="tbody-code"]{
+        &[for="tbody-partner"],
+        &[for="tbody-code"] {
             grid-area: 2 / 1 / 3 / 3;
         }
+
         //Direccion
-        &[for="tbody-address"],&[for="tbody-client"]{
+        &[for="tbody-address"],
+        &[for="tbody-client"] {
             grid-area: 4 / 1 / 5 / 3;
         }
+
         /*=================================================
         * CLIENTES
         *==================================================
         */
         //Rif
-        &[for="tbody-rif"]{
+        &[for="tbody-rif"] {
             grid-area: 6 / 1 / 7 / 2;
         }
+
         //Nit
-        &[for="tbody-nit"]{
+        &[for="tbody-nit"] {
             grid-area: 6 / 2 / 7 / 3;
         }
+
         //Pais
-        &[for="tbody-country"]{
+        &[for="tbody-country"] {
             grid-area: 8 / 1 / 9 / 2;
         }
+
         //Telefono
-        &[for="tbody-phone"]{
+        &[for="tbody-phone"] {
             grid-area: 8 / 2 / 9 / 3;
         }
+
         //Sector
-        &[for="tbody-sector"]{
+        &[for="tbody-sector"] {
             grid-area: 10 / 1 / 11 / 2;
         }
+
         //Servicio
-        &[for="tbody-service"]{
+        &[for="tbody-service"] {
             grid-area: 10 / 2 / 11 / 3;
         }
+
         //Text align para algunos campos
         &[for="tbody-partner"],
         &[for="tbody-address"],
@@ -167,50 +212,69 @@
         &[for="tbody-userM"],
         &[for="tbody-clientM"],
         &[for="tbody-projectM"],
-        &[for="tbody-billingM"]{
+        &[for="tbody-billingM"] {
             text-align: left;
         }
+
         /*=================================================
         * PROYECTOS
         *==================================================
         */
         //Gerente del proyecto
-        &[for="tbody-manager"]{
+        &[for="tbody-manager"] {
             grid-area: 6 / 1 / 7 / 3;
         }
+
         //Socio de calidad
-        &[for="tbody-quality"]{
+        &[for="tbody-quality"] {
             grid-area: 8 / 1 / 9 / 3;
         }
+
         //Fecha de contratacion
-        &[for="tbody-hiring"]{
+        &[for="tbody-hiring"] {
             grid-area: 10 / 1 / 11 / 2;
         }
+
         //Monto del proyecto
-        &[for="tbody-pValue"]{
+        &[for="tbody-pValue"] {
             grid-area: 10 / 2 / 11 / 3;
         }
+
         //Horas asignadas
-        &[for="tbody-hoursAssigned"]{
+        &[for="tbody-hoursAssigned"] {
             grid-area: 12 / 1 / 13 / 2;
         }
+
         //Tasa promedio
-        &[for="tbody-averageRate"]{
+        &[for="tbody-averageRate"] {
             grid-area: 12 / 2 / 13 / 3;
         }
+
         //Horas adicionales totales
-        &[for="tbody-additionalHours"]{
+        &[for="tbody-additionalHours"] {
             grid-area: 14 / 1 / 15 / 2;
         }
+
         //Montos adicionales totales
-        &[for="tbody-additionalValue"]{
+        &[for="tbody-additionalValue"] {
             grid-area: 14 / 2 / 15 / 3;
         }
+
+        //Horas y Tasa Totales
+        &[for="tbody-totalHours"] {
+            grid-area: 16 / 1 / 17 / 2;
+        }
+
+        &[for="tbody-averageNow"] {
+            grid-area: 16 / 2 / 17 / 3;
+        }
+
         //Departamentos asignados
-        &[for="tbody-departments"]{
-            grid-area: 16 / 1 / 17 / 3;
+        &[for="tbody-departments"] {
+            grid-area: 18 / 1 / 19 / 3;
+
             //Configuramos un grid interno para distribuir gerente y division
-            & div{
+            & div {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0px 2px;
@@ -219,41 +283,50 @@
                 padding: 5px;
                 margin-bottom: 10px;
                 border-bottom: solid 2px @Thead-Color;
-                &:last-child{ margin-bottom: 0px; border-bottom: none;}
+
+                &:last-child {
+                    margin-bottom: 0px;
+                    border-bottom: none;
+                }
             }
         }
-        //Barra de progreso
-        &[for="tbody-progress"]{
-            grid-area: 17 / 1 / 17 / 3;
 
-            & div{
+        //Barra de progreso
+        &[for="tbody-progress"] {
+            grid-area: 19 / 1 / 20 / 3;
+
+            & div {
                 display: grid;
-                grid-template-columns: repeat(5,1fr);
+                grid-template-columns: repeat(5, 1fr);
                 gap: 10px 2px;
                 align-items: center;
                 margin-bottom: 10px;
                 border-bottom: solid 2px @Thead-Color;
-                &:last-child{ margin-bottom: 0px; border-bottom: none;}
+
+                &:last-child {
+                    margin-bottom: 0px;
+                    border-bottom: none;
+                }
 
                 //Nombre de la division
-                & span[id$="title"]{
+                & span[id$="title"] {
                     grid-area: 1 / 1 / 2 / 6;
                 }
 
                 //Horas cargadas
-                & span[id$="load"]{
+                & span[id$="load"] {
                     grid-area: 2 / 1 / 3 / 3;
                     font-size: 0.9em;
                 }
 
                 //Horas estimadas
-                & span[id$="estimated"]{
+                & span[id$="estimated"] {
                     grid-area: 2 / 4 / 3 / 6;
                     font-size: 0.9em;
                 }
 
                 //Barra de progreso
-                & div[class="progress"]{
+                & div[class="progress"] {
                     grid-area: 3 / 1 / 4 / 6;
                     display: flex;
                     border-radius: 0px;
@@ -262,28 +335,33 @@
                 }
             }
         }
+
         /*=================================================
         * USUARIOS
         *==================================================
         */
         //Menu usuarios
-        &[for="tbody-userM"]{
+        &[for="tbody-userM"] {
             grid-area: 8 / 1 / 9 / 2;
         }
+
         //Menu cliente
-        &[for="tbody-clientM"]{
+        &[for="tbody-clientM"] {
             grid-area: 8 / 2 / 9 / 3;
         }
+
         //Menu proyecto
-        &[for="tbody-projectM"]{
+        &[for="tbody-projectM"] {
             grid-area: 10 / 1 / 11 / 2;
         }
+
         //Menu facturacion
-        &[for="tbody-billingM"]{
+        &[for="tbody-billingM"] {
             grid-area: 10 / 2 / 11 / 3;
         }
+
         //Menu reporte
-        &[for="tbody-reportM"]{
+        &[for="tbody-reportM"] {
             grid-area: 12 / 1 / 13 / 2;
         }
     }
