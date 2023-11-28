@@ -174,6 +174,7 @@ Route::prefix('/')->group(function () {
                     Route::post('/list-no-history-hour', [ReportsController::class, "getHistoryHoursReport"]);
                     Route::post('/list-quotas', [ReportsController::class, "getQuotasReport"]);
                     Route::post('/list-clients', [ReportsController::class, "getClientsReport"]);
+                    Route::post('/list-billings', [ReportsController::class, "getBillingsReport"]);
                 });
             });
         });

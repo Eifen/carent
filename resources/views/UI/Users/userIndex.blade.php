@@ -136,6 +136,11 @@
                                     :checked="previewUserInfo.rClientsP">
                                 <label class="form-check-label">Reporte de clientes</label>
                             </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" v-model="previewUserInfo.rBillingsP" type="checkbox"
+                                    :checked="previewUserInfo.rBillingsP">
+                                <label class="form-check-label">Reporte de clientes</label>
+                            </div>
                         </div>
                     </div>
                 </div>

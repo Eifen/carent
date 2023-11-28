@@ -49,4 +49,18 @@ class ReportsModel extends Model
         $getList = DB::select('call sp_report_no_register(?,?)', $paramsDate);
         return $getList;
     }
+
+    /**
+     * Metodo que devuelve las facturas dependiendo de la fecha ingresada
+     */
+    public static function billingsReport($paramsDate)
+    {
+        $getBillings = DB::select('SELECT bs.billing_date, cs.bussiness_name, bs.billing_value, CONCAT(us.first_name," ",us.first_surname) as partner_name  FROM billings bs
+        INNER JOIN projects ps ON bs.project_id = ps.project_id
+        INNER JOIN clients cs ON ps.client_id = cs.client_id
+        INNER JOIN users us ON ps.partner_id = us.user_id
+        WHERE bs.billing_date BETWEEN ? AND ?', $paramsDate);
+
+        return $getBillings;
+    }
 }

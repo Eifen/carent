@@ -137,6 +137,14 @@
         <div v-else-if="selectReport == 7 && reportPermission.rproyP != 1" class="not-found">
             <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
         </div>
+        <!-- Reporte Facturas -->
+        <ReportBillingsLog class="reports-container-list"
+            v-if="selectReport == 12 && reportPermission.rBillingsP == 1 && dateEnd.length != 0" :scope="migrateData"
+            :key="dateEnd" @update-mounted="isMounted = $event">
+        </ReportBillingsLog>
+        <div v-else-if="selectReport == 12 && reportPermission.rBillingsP != 1" class="not-found">
+            <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
+        </div>
     </div>
 </template>
 <script>
@@ -153,6 +161,7 @@ import ReportUsers from '@/Components/UiComponents/Reports/ReportUsers.vue';
 import ReportHistoryLog from '@/Components/UiComponents/Reports/ReportHistoryLog.vue';
 import ReportQuotas from '@/Components/UiComponents/Reports/ReportQuotas.vue';
 import ReportClients from '@/Components/UiComponents/Reports/ReportClients.vue'
+import ReportBillingsLog from '@/Components/UiComponents/Reports/ReportBillingsLog.vue';
 
 export default {
     props: {
@@ -284,7 +293,8 @@ export default {
         ReportUsers,
         ReportHistoryLog,
         ReportQuotas,
-        ReportClients
+        ReportClients,
+        ReportBillingsLog
     }
 }
 </script>
