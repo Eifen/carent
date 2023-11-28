@@ -27,31 +27,39 @@ export default {
                 column5: 'Socio',
             },
             selectSearch: {
-                select1: "Socio",
                 select2: "Cliente",
                 select3: "Referencia"
             },
             directiveList: [], //Lista directiva mensual
             directiveLength: 50, //Numero maximo por pagina
             directivePaginatio: 0, //Numero maximo de paginas
-            isListMounted: false
+            isListMounted: false,
+            arrayDTO: [] //Almacena el array de facturas
         }
     },
     mounted() {
+        if (this.scope.controlUser.position != 16 || this.scope.controlUser.code == '0001') this.selectSearch = { select1: "Socio", ...this.selectSearch }
         this.isListMounted = false;
         this.$emit('update-mounted', this.isListMounted)
         //Cargamos la informacion
-        axios.post("/reports/list-billings", { start: this.scope.dateStart, end: this.scope.dateEnd })
+        axios.post("/reports/list-billings", {
+            start: this.scope.dateStart,
+            end: this.scope.dateEnd
+        })
             .then(request => {
                 this.isListMounted = true;
+                this.arrayDTO = request.data.message
+                ///Si es socio filtramos el array
+                if (this.scope.controlUser.position == 16 && this.scope.controlUser.code != '0001')
+                    this.arrayDTO = this.arrayDTO.filter(billingInfo => billingInfo.partner_name.toLowerCase() == this.scope.controlUser.name.toLowerCase());
                 this.$emit('update-mounted', this.isListMounted)
                 //Acomodamos el array a enviar
-                request.data.message.forEach(billingInfo => {
+                this.arrayDTO.forEach(billingInfo => {
                     this.directiveList.push({
                         fecha: billingInfo.billing_date,
                         referencia: billingInfo.billing_number,
                         cliente: billingInfo.bussiness_name,
-                        monto: this.formatReportNumber(billingInfo.billing_value),
+                        monto: this.formatReportNumber(billingInfo.billing_value) + billingInfo.currency_symbol,
                         socio: billingInfo.partner_name,
                     })
                 })

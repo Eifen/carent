@@ -436,7 +436,7 @@ export default {
             this.loadInitial.billings.forEach(department => {
                 //Valores realizados cobrados
                 switch (true) {
-                    case department.billing_concept_id === 1 || department.billing_concept_id === 2 || department.billing_concept_id === 4:
+                    case department.billing_concept_id === 1 || department.billing_concept_id === 2 || department.billing_concept_id === 4 || department.billing_concept_id == 6:
                         const getValue = department.billing_concept_id === 4 ? (parseFloat(department.billing_value) * (-1)) : parseFloat(department.billing_value)
                         countValues = countValues - getValue;
                         /**
@@ -471,7 +471,7 @@ export default {
                         }
                         break;
                     //Gastos no presupuestados y otros gastos
-                    case department.billing_concept_id !== 1 && department.billing_concept_id !== 2 && department.billing_concept_id !== 4:
+                    case department.billing_concept_id !== 1 && department.billing_concept_id !== 2 && department.billing_concept_id !== 4 && department.billing_concept_id !== 6:
                         this.project.billingGValue.push({
                             "description": department.billing_concept_description,
                             "value": parseFloat(department.billing_value)
@@ -511,11 +511,11 @@ export default {
             if (this.loadInitial.billings.length < this.project.quotasBilling) return false
             //Caso contrario
             this.loadInitial.billings.forEach(department => {
-                if (department.payment_date != null && (department.billing_concept_id == 1 || department.billing_concept_id == 2)) {
+                if (department.payment_date != null && (department.billing_concept_id == 1 || department.billing_concept_id == 2 || department.billing_concept_id == 6)) {
                     countPay = countPay + 1 //Sumamos el contador en caso de que tenga una factura distinta de null
                 }
                 //Sacamos la cantidad de facturas sin notas de credito
-                if (department.billing_concept_id == 1 || department.billing_concept_id == 2) {
+                if (department.billing_concept_id == 1 || department.billing_concept_id == 2 || department.billing_concept_id == 6) {
                     countBillings = countBillings + 1;
                     quotasValue += parseFloat(department.billing_value)
                 }

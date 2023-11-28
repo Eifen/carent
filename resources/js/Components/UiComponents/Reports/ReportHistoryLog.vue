@@ -80,7 +80,7 @@ export default {
                 //Seleccion automatica
                 if (this.scope.controlAdmin != 1) {
                     console.log(request.data.message)
-                    const findIndex = request.data.message.findIndex(user => user.user_code == this.scope.controlUser)
+                    const findIndex = request.data.message.findIndex(user => user.user_code == this.scope.controlUser.code)
                     this.inputCodeUser = request.data.message[findIndex].user_code
                 }
             })

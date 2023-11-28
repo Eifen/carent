@@ -55,10 +55,11 @@ class ReportsModel extends Model
      */
     public static function billingsReport($paramsDate)
     {
-        $getBillings = DB::select('SELECT bs.billing_date, bs.billing_number, cs.bussiness_name, bs.billing_value, CONCAT(us.first_name," ",us.first_surname) as partner_name  FROM billings bs
+        $getBillings = DB::select('SELECT bs.billing_date, bs.billing_number, cs.bussiness_name, bs.billing_value, ccs.currency_symbol, CONCAT(us.first_name," ",us.first_surname) as partner_name  FROM billings bs
         INNER JOIN projects ps ON bs.project_id = ps.project_id
         INNER JOIN clients cs ON ps.client_id = cs.client_id
         INNER JOIN users us ON ps.partner_id = us.user_id
+        INNER JOIN control_currencies ccs ON ps.currency_id = ccs.currency_id
         WHERE bs.billing_date BETWEEN ? AND ?', $paramsDate);
 
         return $getBillings;
