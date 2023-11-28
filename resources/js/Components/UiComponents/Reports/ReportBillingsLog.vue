@@ -21,13 +21,15 @@ export default {
         return {
             reportColumns: {
                 column1: 'Fecha',
-                column2: 'Cliente',
-                column3: 'Monto',
-                column4: 'Socio',
+                column2: 'Referencia',
+                column3: 'Cliente',
+                column4: 'Monto',
+                column5: 'Socio',
             },
             selectSearch: {
                 select1: "Socio",
                 select2: "Cliente",
+                select3: "Referencia"
             },
             directiveList: [], //Lista directiva mensual
             directiveLength: 50, //Numero maximo por pagina
@@ -47,6 +49,7 @@ export default {
                 request.data.message.forEach(billingInfo => {
                     this.directiveList.push({
                         fecha: billingInfo.billing_date,
+                        referencia: billingInfo.billing_number,
                         cliente: billingInfo.bussiness_name,
                         monto: this.formatReportNumber(billingInfo.billing_value),
                         socio: billingInfo.partner_name,
