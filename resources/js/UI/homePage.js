@@ -41,6 +41,8 @@ const homeApp = createApp({
             percenAdmon: 0, //Almacena los porcentajes cargados
             actualMonth: 0, //Almacena el mes actual
             actualYear: '', //Almacena el ano actual
+            initPeriod: 0, //Year inicial del periodo
+            finishPeriod: 0, //Year final del periodo
             listMonth: [], //Lista de meses para el select
             monthSelect: 0 //Mes seleccionado
         }
@@ -48,9 +50,22 @@ const homeApp = createApp({
     mounted() {
         //
         const now = new Date();
+        const month = now.getMonth() + 1
         this.actualMonth = (now.getMonth() > 5) ? (now.getMonth() - 6) : (6 + now.getMonth())
-        this.actualYear = `${now.getFullYear()} - ${now.getFullYear() + 1}`
-        this.monthSelect = now.getMonth() + 1
+        this.monthSelect = month.toString().padStart(2, "0")
+        console.log(this.monthSelect)
+        //Preparamos el period dependiendo del mes actual
+        if (month >= 1 && month < 6) {
+            this.initPeriod = now.getFullYear() - 1
+            this.finishPeriod = now.getFullYear()
+        }
+        //En caso que empiece el nuevo ciclo
+        if (month >= 7 && month < 12) {
+            this.initPeriod = now.getFullYear()
+            this.finishPeriod = now.getFullYear() + 1
+        }
+        //Preparamos el texto
+        this.actualYear = `${this.initPeriod} - ${this.finishPeriod}`
         //Creamos la lista de meses hasta la fecha
         for (let cursorMonth = 0; cursorMonth <= (this.actualMonth); cursorMonth++) {
             this.listMonth.push(this.months[cursorMonth])
@@ -107,7 +122,8 @@ const homeApp = createApp({
             })
         },
         monthSelect(newselect) {
-            const year = new Date().getFullYear()
+            let year = this.initPeriod
+            if (parseInt(newselect) >= 1 && newselect < 6) year = this.finishPeriod
             //Llamamos a la informacion del usuario
             CrudUi.getTable("/log-user-info", this, { date: `${year}-${newselect}-01` });
         }
