@@ -1,5 +1,6 @@
 <div id="home-page" v-cloak>
     <loading :active="!isMounted"></loading>
+    <div class="home-alert" v-if="isMounted">Recordatorio: La cargabilidad de cada mes se cierra el día 08</div>
     <div class="home-container" v-if="isMounted">
         <div class="home-container-graph" id="graph">
             <div class="graph-title">Seleccione un mes del periodo @{{ actualYear }}</div>

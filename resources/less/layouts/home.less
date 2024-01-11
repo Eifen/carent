@@ -5,9 +5,21 @@
     font-size: 0.8em;
 }
 
+#home-page {
+    overflow: hidden;
+}
+
 .cardDescription {
     font-size: 1.5em;
     font-weight: bold;
+}
+
+.home-alert {
+    color: @Danger-badge;
+    font: bolder 2em arial;
+    margin-top: 50px;
+    text-align: center;
+    animation: textAlert 8s infinite;
 }
 
 .home-container {
@@ -17,7 +29,7 @@
     grid-auto-flow: dense;
     align-content: center;
     justify-content: center;
-    margin-top: 50px;
+    margin-top: 5px;
 
     &-graph {
         // background: crimson;
@@ -135,5 +147,21 @@
 
     & div {
         color: @Success-badge;
+    }
+}
+
+@keyframes textAlert {
+    0% {
+        transform: translateX(100%);
+    }
+
+    25%,
+    50%,
+    75% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-100%);
     }
 }
