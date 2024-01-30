@@ -9,7 +9,7 @@
 <script>
 import { setupCalendar, Calendar, DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
-import FontAwesome from "../Components/FontAwesome/FontAwesome.vue";
+import FontAwesome from "@/Components/FontAwesome/FontAwesome.vue";
 
 export default {
     data() {

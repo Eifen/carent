@@ -63,6 +63,7 @@ class Kernel extends HttpKernel
         'accessAHP' => \App\Http\Middleware\AdminHourPermissions::class,
         'accessB' => \App\Http\Middleware\BillingPermission::class,
         'accessR' => \App\Http\Middleware\ReportsPermission::class,
+        'admin' => \App\Http\Middleware\AdminDashboardPermissions::class,
         'changeP' => \App\Http\Middleware\ChangePasswordIsValid::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,

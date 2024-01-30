@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\BillingController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Redirect;
@@ -175,6 +176,12 @@ Route::prefix('/')->group(function () {
                     Route::post('/list-quotas', [ReportsController::class, "getQuotasReport"]);
                     Route::post('/list-clients', [ReportsController::class, "getClientsReport"]);
                     Route::post('/list-billings', [ReportsController::class, "getBillingsReport"]);
+                });
+            });
+            //Admin
+            Route::middleware('admin')->group(function () {
+                Route::prefix('/admin')->group(function () {
+                    Route::get('/', [AdminController::class, 'index'])->name('admin');
                 });
             });
         });

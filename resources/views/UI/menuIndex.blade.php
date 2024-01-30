@@ -142,5 +142,9 @@
         @if (Request::url() === URL::route('reports'))
             @include('UI.Reports.reportsIndex')
         @endif
+        {{-- Redireccion de ruta para admin --}}
+        @if (Request::url() === URL::route('admin'))
+            @include('UI.Admin.adminIndex')
+        @endif
     </section>
 @endsection
