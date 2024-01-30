@@ -1,4 +1,4 @@
-<div id="admin-index">
+<div id="admin-index" class="reports-container">
     <!-- Fechas  -->
     <span class="reports-container-title">Ingrese el intervalo de fechas</span>
     <div class="reports-container-search">
@@ -18,5 +18,15 @@
                 <calendar @to-input="dateSearch($event, 'end')"></calendar>
             </span>
         </div>
+    </div>
+    {{-- Reporte menores al 99% --}}
+    <div v-if="dateEnd.length != 0" class="reports-container-list">
+        <loading :active="!isMounted"></loading>
+        <listing-crud v-if="isMounted && directivePaginatio != 0 && refTotal != 0" :title-object="reportColumns"
+            :pagination-lenght="directivePaginatio" :pagination-limit="directiveLength" :table-info="directiveList"
+            title-table="Personas entre 99 y 99.9%" not-found-message="No hay horas cargadas"
+            :select-search="selectSearch" view-search status-table="usuarios" view-hours :hours-ref="refTotal"
+            :is-admin="1">
+        </listing-crud>
     </div>
 </div>

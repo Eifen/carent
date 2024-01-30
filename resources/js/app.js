@@ -31,3 +31,5 @@ import "./UI/Billings/BillingControl";
 import "./UI/changePassword";
 //Reportes
 import "./UI/Reports/ReportsIndex";
+//Admin
+import "./UI/Admin/AdminIndex"

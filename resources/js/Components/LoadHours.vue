@@ -76,7 +76,7 @@ export default {
         let diffMonth = dateClosure.getMonth() - dateAssociated.getMonth();
         let diffDay = (dateClosure.getTime() - dateAssociated.getTime()) / (1000 * 3600 * 24)
         //Comparamos las fechas
-        diffYear === 0 && diffMonth <= this.deadMonth || diffMonth === -(13 - this.deadMonth) && dateAssociated.getMonth() === (13 - this.deadMonth)
+        diffYear === 0 && diffMonth <= this.deadMonth || ((13 + diffMonth) <= this.deadMonth) && diffYear === 1
             ? (isDate && diffDay >= this.deadLine && this.usersPermission.dCargaH == 0 ? this.isEdit = false : this.isEdit = true)
             : this.isEdit = false;
         //Proceso de carga de horas\
