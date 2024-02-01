@@ -3,8 +3,8 @@
         <Loading :active="!isListMounted"></Loading>
         <ListingCrud v-if="isListMounted && directivePaginatio != 0 && refTotal != 0" :title-object="reportColumns"
             :pagination-lenght="directivePaginatio" :pagination-limit="directiveLength" :table-info="directiveList"
-            title-table="Reporte de horas administrativas" not-found-message="No hay horas cargadas"
-            :select-search="selectSearch" view-search view-excel title-excel="ReporteDirectivoAcumulado.xls"
+            title-table="Reporte acumulado" not-found-message="No hay horas cargadas" :select-search="selectSearch"
+            view-search view-excel title-excel="ReporteDirectivoAcumulado.xls"
             title-resume-excel="ResumenDirectivoAcumulado.xls" title-consolidated-excel="ConsolidadoDirectivoAcumulado.xls"
             status-table="usuarios" view-hours :hours-ref="refTotal" directive :is-admin="scope.controlAdmin"
             :area-id="scope.departmentId">

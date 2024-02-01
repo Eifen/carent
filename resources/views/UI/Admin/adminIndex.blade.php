@@ -21,12 +21,13 @@
     </div>
     {{-- Reporte menores al 99% --}}
     <div v-if="dateEnd.length != 0" class="reports-container-list">
+        <div class="buttonCRUD" @click="refixAll" v-if="isMounted">Acomodar a todos</div>
         <loading :active="!isMounted"></loading>
         <listing-crud v-if="isMounted && directivePaginatio != 0 && refTotal != 0" :title-object="reportColumns"
             :pagination-lenght="directivePaginatio" :pagination-limit="directiveLength" :table-info="directiveList"
             title-table="Personas entre 99 y 99.9%" not-found-message="No hay horas cargadas"
             :select-search="selectSearch" view-search status-table="usuarios" view-hours :hours-ref="refTotal"
-            :is-admin="1">
+            :is-admin="1" :key="directiveList" @columnS1Target="refixUser">
         </listing-crud>
     </div>
 </div>

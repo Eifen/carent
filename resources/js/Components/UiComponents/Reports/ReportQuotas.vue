@@ -3,9 +3,9 @@
         <Loading :active="!scope.isMounted"></Loading>
         <ListingCrud style="width: 90%;" v-if="scope.isMounted && directivePaginatio != 0" :title-object="reportColumns"
             :pagination-lenght="directivePaginatio" :pagination-limit="directiveLength" :table-info="directiveList"
-            title-table="Reporte bitácora de proyectos" not-found-message="No hay proyectos cargados"
-            :select-search="selectSearch" view-search view-excel title-excel="ReporteBitacoraProyectos.xls" white-space
-            status-table="usuarios" :is-admin="scope.controlAdmin" :area-id="scope.departmentId">
+            title-table="Reporte de Cuotas" not-found-message="No hay cuotas cargadas" :select-search="selectSearch"
+            view-search view-excel title-excel="ReporteCuotas.xls" white-space status-table="usuarios"
+            :is-admin="scope.controlAdmin" :area-id="scope.departmentId">
         </ListingCrud>
     </div>
 </template>

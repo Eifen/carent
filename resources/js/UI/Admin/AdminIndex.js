@@ -13,8 +13,10 @@ const adminApp = createApp({
                 },
                 column1: "ID",
                 column2: 'Nombre',
-                column3: '% Carga total',
-                column4: 'Estatus',
+                column3: 'Referencia horas',
+                column4: 'Horas totales',
+                column5: '% Carga total',
+                column6: 'Estatus',
             },
             selectSearch: {
                 select1: "Nombre",
@@ -25,7 +27,11 @@ const adminApp = createApp({
             directiveLength: 50, //Numero maximo por pagina
             directivePaginatio: 0, //Numero maximo de paginas
             refTotal: 0, //Numero total de horas a cargar
+            isCharge: false //Condicion para carga de fecha
         };
+    },
+    mounted() {
+        this.isCharge = true
     },
     methods: {
         /**
@@ -47,6 +53,8 @@ const adminApp = createApp({
         * Muestra las personas que tienen carga 99 a 99.9%
         */
         showReport() {
+            this.isMounted = false
+            this.directiveList = []
             //Pasamos como parametro el intervalo de fechas
             axios.post("reports/list-directive-total", { startDate: this.dateStart, endDate: this.dateEnd })
                 .then(request => {
@@ -96,8 +104,10 @@ const adminApp = createApp({
                         //Inservamos el nuevo objeto
                         if (percenTotal >= 99 && percenTotal < 100) {
                             this.directiveList.push({
-                                ID: user.id,
+                                "código": user.id,
                                 nombre: user.nombre,
+                                ref_total: user.ref_total,
+                                total_hours: totalHours,
                                 "%_tot_hor": this.formatReportNumber(percenTotal),
                                 estatus: user.estatus,
                             });
@@ -112,6 +122,40 @@ const adminApp = createApp({
                     this.isMounted = true
                 })
                 .catch(error => { console.error(error) })
+        },
+        refixUser(userCode) {
+            console.log(userCode)
+            const userTarget = this.directiveList.find((user) => user["código"] === userCode)
+            const userIndex = this.directiveList.findIndex((user) => user["código"] === userCode)
+            const paramsRefix = {
+                userId: userCode,
+                endDate: this.dateEnd,
+                diffHour: userTarget.ref_total - userTarget.total_hours
+            }
+            const routesSelfDTO = {
+                post: '/admin/refix',
+                redirect: "",
+                self: this
+            }
+
+            CrudUi.controlCrud(routesSelfDTO, paramsRefix)
+            this.directiveList = this.directiveList.filter(user => user["código"] !== userCode)
+        },
+
+        refixAll() {
+            const paramsRefix = {
+                users: this.directiveList,
+                endDate: this.dateEnd
+            }
+
+            const routesSelfDTO = {
+                post: '/admin/refix/all',
+                redirect: "",
+                self: this
+            }
+
+            CrudUi.controlCrud(routesSelfDTO, paramsRefix);
+            this.directiveList = []
         }
     },
     computed: {},

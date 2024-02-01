@@ -182,6 +182,8 @@ Route::prefix('/')->group(function () {
             Route::middleware('admin')->group(function () {
                 Route::prefix('/admin')->group(function () {
                     Route::get('/', [AdminController::class, 'index'])->name('admin');
+                    Route::post('/refix', [AdminController::class, 'refix']);
+                    Route::post('/refix/all', [AdminController::class, 'refixAll']);
                 });
             });
         });
