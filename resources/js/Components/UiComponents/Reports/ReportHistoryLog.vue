@@ -45,7 +45,8 @@ export default {
                 column3: 'Fecha',
                 column4: 'Concepto',
                 column5: 'Proyecto',
-                column6: 'Horas cargadas',
+                column6: 'Observación',
+                column7: 'Horas cargadas',
             },
             selectSearch: {
                 select1: "Fecha desde",
@@ -113,6 +114,7 @@ export default {
                                         fecha: historyData.register_date,
                                         concepto: historyData.concept_description,
                                         proyecto: historyData.proy_description,
+                                        observacion: historyData.observation,
                                         horas_registradas: this.formatReportNumber(historyData.register_hour)
                                     })
                                 }
@@ -134,6 +136,7 @@ export default {
                                     fecha: historyData.register_date,
                                     concepto: historyData.concept_description,
                                     proyecto: historyData.proy_description,
+                                    observacion: historyData.observation,
                                     horas_registradas: this.formatReportNumber(historyData.register_hour)
                                 })
                             })
