@@ -267,4 +267,17 @@ class ReportsController extends Controller
             "message" => ReportsModel::billingsReport($paramsDate)
         ), 200);
     }
+
+    public function getBillingsProjReport(Request $requestDate)
+    {
+        $paramsDate = array(
+            $requestDate->input("end"),
+            $requestDate->input("start"),
+        );
+
+        return response(array(
+            "response" => true,
+            "message" => ReportsModel::billingsProjReport($paramsDate)
+        ), 200);
+    }
 }

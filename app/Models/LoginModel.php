@@ -150,6 +150,10 @@ class LoginModel extends Model
                     case 28:
                         $arrayAccess['rBillingsP'] = 1;
                         break;
+                        //Reporte de proyectos facturas
+                    case 29:
+                        $arrayAccess['rProjectBillings'] = 1;
+                        break;
                 }
             }
             return $arrayAccess;

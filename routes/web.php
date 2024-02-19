@@ -176,6 +176,7 @@ Route::prefix('/')->group(function () {
                     Route::post('/list-quotas', [ReportsController::class, "getQuotasReport"]);
                     Route::post('/list-clients', [ReportsController::class, "getClientsReport"]);
                     Route::post('/list-billings', [ReportsController::class, "getBillingsReport"]);
+                    Route::post('/list-billings-proj', [ReportsController::class, "getBillingsProjReport"]);
                 });
             });
             //Admin
