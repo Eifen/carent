@@ -24,11 +24,13 @@ export default {
                 column2: 'Cliente',
                 column3: 'Proyecto',
                 column4: 'Monto propuesto',
-                column5: 'Monto cobrado'
+                column5: 'Monto cobrado',
+                column6: 'Estatus',
             },
             selectSearch: {
                 select1: "Cliente",
                 select2: "Proyecto",
+                select3: "Estatus"
             },
             directiveList: [], //Lista directiva mensual
             directiveLength: 50, //Numero maximo por pagina
@@ -57,6 +59,7 @@ export default {
                         proyecto: billingInfo.project_description,
                         monto: billingInfo.project_value + ' ' + billingInfo.currency_symbol,
                         billings: billingInfo.billings + ' ' + billingInfo.currency_symbol,
+                        estatus: billingInfo.status_id
                     })
                 })
                 //Acomodamos la longitud minima y su paginacion

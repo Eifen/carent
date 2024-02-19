@@ -70,14 +70,14 @@ class ReportsModel extends Model
      */
     public static function billingsProjReport($paramsDate)
     {
-        $getBillings = DB::select('SELECT ps.hiring_date, cs.bussiness_name, ps.project_description, ps.project_value, ccs.currency_symbol, SUM(bs.billing_value) as "billings" FROM billings bs
+        $getBillings = DB::select('SELECT ps.hiring_date, cs.bussiness_name, ps.project_description, ps.project_value, ccs.currency_symbol, SUM(bs.billing_value) as "billings", ps.status_id FROM billings bs
         INNER JOIN projects ps ON bs.project_id = ps.project_id
         INNER JOIN clients cs ON ps.client_id = cs.client_id
-        INNER JOIN control_currencies ccs ON ps.currency_id AND ccs.currency_id
+        INNER JOIN control_currencies ccs ON ps.currency_id = ccs.currency_id
         WHERE bs.payment_date IS NOT NULL
         AND ps.closure_date <= ? OR ps.closure_date IS NULL
         AND ps.hiring_date <= ?
-        GROUP BY ps.project_id, ps.hiring_date, cs.bussiness_name, ps.project_description, ps.project_value, ccs.currency_symbol', $paramsDate);
+        GROUP BY ps.project_id, ps.hiring_date, cs.bussiness_name, ps.project_description, ps.project_value, ccs.currency_symbol, ps.status_id', $paramsDate);
         return $getBillings;
     }
 }
