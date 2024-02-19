@@ -271,8 +271,8 @@ class ReportsController extends Controller
     public function getBillingsProjReport(Request $requestDate)
     {
         $paramsDate = array(
-            $requestDate->input("end"),
             $requestDate->input("start"),
+            $requestDate->input("end"),
         );
 
         return response(array(

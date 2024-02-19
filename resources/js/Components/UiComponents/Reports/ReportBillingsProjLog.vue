@@ -57,8 +57,8 @@ export default {
                         fecha: billingInfo.hiring_date,
                         cliente: billingInfo.bussiness_name,
                         proyecto: billingInfo.project_description,
-                        monto: billingInfo.project_value + ' ' + billingInfo.currency_symbol,
-                        billings: billingInfo.billings + ' ' + billingInfo.currency_symbol,
+                        monto: this.formatReportNumber(billingInfo.project_value) + ' ' + billingInfo.currency_symbol,
+                        billings: this.formatReportNumber(billingInfo.billings) + ' ' + billingInfo.currency_symbol,
                         estatus: billingInfo.status_id
                     })
                 })

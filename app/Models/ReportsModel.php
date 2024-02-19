@@ -75,8 +75,7 @@ class ReportsModel extends Model
         INNER JOIN clients cs ON ps.client_id = cs.client_id
         INNER JOIN control_currencies ccs ON ps.currency_id = ccs.currency_id
         WHERE bs.payment_date IS NOT NULL
-        AND ps.closure_date <= ? OR ps.closure_date IS NULL
-        AND ps.hiring_date <= ?
+        AND ps.closure_date BETWEEN ? AND ? OR ps.closure_date IS NULL
         GROUP BY ps.project_id, ps.hiring_date, cs.bussiness_name, ps.project_description, ps.project_value, ccs.currency_symbol, ps.status_id', $paramsDate);
         return $getBillings;
     }
