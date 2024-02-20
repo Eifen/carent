@@ -23,14 +23,18 @@ export default {
                 column1: 'Fecha',
                 column2: 'Cliente',
                 column3: 'Proyecto',
-                column4: 'Monto propuesto',
-                column5: 'Monto cobrado',
-                column6: 'Estatus',
+                column4: 'SocioC',
+                column5: 'SocioP',
+                column6: 'Monto propuesto',
+                column7: 'Monto cobrado',
+                column8: 'Estatus',
             },
             selectSearch: {
                 select1: "Cliente",
                 select2: "Proyecto",
-                select3: "Estatus"
+                select3: "Estatus",
+                select4: "SocioC",
+                select5: "SocioP"
             },
             directiveList: [], //Lista directiva mensual
             directiveLength: 50, //Numero maximo por pagina
@@ -57,6 +61,8 @@ export default {
                         fecha: billingInfo.hiring_date,
                         cliente: billingInfo.bussiness_name,
                         proyecto: billingInfo.project_description,
+                        socioC: billingInfo.quality_partner_name,
+                        socioP: billingInfo.partner_name,
                         monto: this.formatReportNumber(billingInfo.project_value) + ' ' + billingInfo.currency_symbol,
                         billings: this.formatReportNumber(billingInfo.billings) + ' ' + billingInfo.currency_symbol,
                         estatus: billingInfo.status_id

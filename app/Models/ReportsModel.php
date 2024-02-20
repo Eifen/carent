@@ -70,13 +70,15 @@ class ReportsModel extends Model
      */
     public static function billingsProjReport($paramsDate)
     {
-        $getBillings = DB::select('SELECT ps.hiring_date, cs.bussiness_name, ps.project_description, ps.project_value, ccs.currency_symbol, SUM(bs.billing_value) as "billings", ps.status_id FROM billings bs
+        $getBillings = DB::select('SELECT ps.hiring_date, cs.bussiness_name, ps.project_description, ps.project_value, ccs.currency_symbol, CONCAT(us.first_name," ",us.first_surname) as partner_name, CONCAT(us2.first_name," ",us2.first_surname) as quality_partner_name, SUM(bs.billing_value) as "billings", ps.status_id FROM billings bs
         INNER JOIN projects ps ON bs.project_id = ps.project_id
+        INNER JOIN users us ON ps.partner_id = us.user_id
+        INNER JOIN users us2 ON ps.quality_partner_id = us2.user_id
         INNER JOIN clients cs ON ps.client_id = cs.client_id
         INNER JOIN control_currencies ccs ON ps.currency_id = ccs.currency_id
         WHERE bs.payment_date IS NOT NULL
         AND ps.closure_date BETWEEN ? AND ? OR ps.closure_date IS NULL
-        GROUP BY ps.project_id, ps.hiring_date, cs.bussiness_name, ps.project_description, ps.project_value, ccs.currency_symbol, ps.status_id', $paramsDate);
+        GROUP BY ps.project_id, ps.hiring_date, cs.bussiness_name, ps.project_description, ps.project_value, ccs.currency_symbol, ps.status_id, us.first_name, us.first_surname, us2.first_name, us2.first_surname', $paramsDate);
         return $getBillings;
     }
 }
