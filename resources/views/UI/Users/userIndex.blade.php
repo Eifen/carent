@@ -142,7 +142,7 @@
                                 <label class="form-check-label">Reporte de facturas</label>
                             </div>
                             <div class="form-check form-switch">
-                                <input class="form-check-input" v-model="previewUserInfo.rProjectBillingsP"
+                                <input class="form-check-input" v-model="previewUserInfo.rProjectBillings"
                                     type="checkbox" :checked="previewUserInfo.rProjectBillings">
                                 <label class="form-check-label">Reporte de proyectos-facturas</label>
                             </div>
