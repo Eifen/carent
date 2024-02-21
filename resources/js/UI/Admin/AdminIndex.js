@@ -102,7 +102,7 @@ const adminApp = createApp({
                         const totalHours = user.proy_hours + user.admin_hours;
                         const percenTotal = (totalHours * 100) / (user.ref_total == 0 ? 1 : user.ref_total);
                         //Inservamos el nuevo objeto
-                        if (percenTotal >= 99 && percenTotal < 100) {
+                        if (percenTotal >= 90 && percenTotal < 100) {
                             this.directiveList.push({
                                 "código": user.id,
                                 nombre: user.nombre,
