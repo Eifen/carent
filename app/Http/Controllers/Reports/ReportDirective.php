@@ -98,6 +98,7 @@ class ReportDirective extends Controller
                 $adminPer = ($hours["admin_hours"] * 100) / ($refHours == 0 ? 1 : $refHours);
                 $proyPer = ($hours["proj_hours"] * 100) / ($refHours == 0 ? 1 : $refHours);
                 $totalPer = ($totalHours * 100) / ($refHours == 0 ? 1 : $refHours);
+                $nivelPer = $user->department_name == 'Administración' || $user->department_name == 'Conapdis' ? $refHours : $user->nivel_percen;
                 //Hacemos push para el formato
                 array_push($formatArray, array(
                     "order_user" => $user->user_id,
@@ -107,7 +108,7 @@ class ReportDirective extends Controller
                     "nivel" => $user->nivel_description,
                     "mes" => $hours["mes"],
                     "percen_carg" => $user->department_name == 'Administración' || $user->department_name == 'Conapdis' ? 0 : $user->nivel_percen,
-                    "eval" => floatval($user->nivel_percen) > $proyPer ? "DE" : "E",
+                    "eval" => floatval($user->nivel_percen) >= ($user->department_name == 'Administración' || $user->department_name == 'Conapdis' ? $hours["admin_hours"] : $proyPer) ? "DE" : "E",
                     "proy_hours" => number_format($hours["proj_hours"], 2, ",", "."),
                     "percen_proy" => number_format($proyPer, 2, ",", "."),
                     "admin_hours" => number_format($hours["admin_hours"], 2, ",", "."),
