@@ -90,8 +90,8 @@ class UsersModel extends Model
         INNER JOIN control_nivels_position cnp ON uhp.nivel_id = cnp.nivel_id
         INNER JOIN users_contact uc ON us.user_id = uc.user_id
         INNER JOIN control_status cs ON us.status_id = cs.status_id
-        WHERE us.user_id != ?
-        ORDER BY uhd.department_order, uhp.nivel_id, us.user_id ASC;', [1]);
+        WHERE us.user_id NOT IN (?,?)
+        ORDER BY uhd.department_order, uhp.nivel_id, us.user_id ASC;', [1, 267]);
     }
 
     /**

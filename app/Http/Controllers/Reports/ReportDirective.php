@@ -106,7 +106,7 @@ class ReportDirective extends Controller
                     "area" => $user->department_name,
                     "nivel" => $user->nivel_description,
                     "mes" => $hours["mes"],
-                    "percen_carg" => $user->nivel_percen,
+                    "percen_carg" => $user->department_name == 'Administración' || $user->department_name == 'Conapdis' ? 0 : $user->nivel_percen,
                     "eval" => floatval($user->nivel_percen) > $proyPer ? "DE" : "E",
                     "proy_hours" => number_format($hours["proj_hours"], 2, ",", "."),
                     "percen_proy" => number_format($proyPer, 2, ",", "."),
