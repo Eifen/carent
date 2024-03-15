@@ -11,6 +11,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\HoursController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\Reports\ReportsController;
+use App\Http\Controllers\EvaluationsController;
 use Illuminate\Support\Facades\URL;
 
 /*
@@ -155,6 +156,116 @@ Route::prefix('/')->group(function () {
                         Route::post('refresh-billing', [BillingController::class, 'refreshBilling']);
                         Route::post('delete-billing', [BillingController::class, 'deleteBilling']);
                     });
+                });
+            });
+            //Evaluaciones
+            Route::prefix('/evaluaciones')->group(function () {
+                Route::get('/', [EvaluationsController::class, 'index'])->name('evaluations');
+                Route::post('/allEvaluations', [EvaluationsController::class, 'GetAllEvaluations']);
+
+
+                // Periodos
+                Route::prefix('/periodos')->group(function () {
+                    // Route::middleware('accessASP')->group(function () {
+                    Route::get('/', [EvaluationsController::class, 'index'])->name('periods');
+                    Route::post('/allPeriods', [EvaluationsController::class, 'GetAllPeriods']);
+                    Route::post('/getParamsInits', [EvaluationsController::class, 'GetInitData']); //Parametros iniciales
+                    Route::post('/getParamsInits', [EvaluationsController::class, 'GetInitData']); //Parametros iniciales
+                    Route::put('/deleteUpdateData', [EvaluationsController::class, 'DeletePeriodUpdate']); //Elimina la Session['clientUpdate']
+
+                    //Create
+                    Route::prefix('/create')->group(function () {
+                        Route::get('/', [EvaluationsController::class, 'index'])->name('createPeriod');
+                        Route::post('/newPeriod', [EvaluationsController::class, 'EvaluationControl']);
+                    });
+                    //Update
+                    //                    Route::prefix('/update')->group(function () {
+                    //                        Route::get('/', [EvaluationsController::class, 'index'])->name('updatePeriod');
+                    //                        Route::post('/loadingPeriod', [EvaluationsController::class, 'periodPerCode']);
+                    //                        Route::post('/updatePeriod', [EvaluationsController::class, 'PeriodControl']);
+                    //                    });
+                    Route::prefix('/update')->group(function () {
+                        Route::get('/', [EvaluationsController::class, 'index'])->name('updatePeriod');
+                        Route::post('/loadingPeriod', [EvaluationsController::class, 'periodPerCode']);
+                        Route::post('/updatePeriod', [EvaluationsController::class, 'periodControl']);
+                    });
+                });
+
+                //Proyectos para evaluar
+                // Route::middleware('accessC')->group(function () {
+                Route::prefix('/proyecto-para-evaluar')->group(function () {
+                    Route::get('/', [EvaluationsController::class, 'index'])->name('evaluationsProject');
+                    Route::post('/allEvaluationsProject', [EvaluationsController::class, 'GetAllEvaluationsProject']);
+                    Route::post('/info-User', [EvaluationsController::class, 'prepareInfoUserProject']);
+                    Route::put('/deleteUpdateData', [UsersController::class, 'DeleteDataUpdate']); //Elimina la Session['dataUpdate']
+                    Route::post('/controlData', [EvaluationsController::class, 'controlData']); //Elimina la Session['dataUpdate']
+
+
+                    //Planilla de evaluacion
+                    // Route::middleware('accessC')->group(function () {
+                    Route::prefix('/planilla')->group(function () {
+                        Route::get('/', [EvaluationsController::class, 'index'])->name('evaluationsForm');
+                        Route::post('/loadingAuEva', [EvaluationsController::class, 'AuEvaPerCode']);
+                        Route::put('/deleteAuEva', [EvaluationsController::class, 'DeleteAuEvaUpdate']);
+                        Route::get('/AuEvaInfo', [EvaluationsController::class, 'index'])->name('evaluationsInfo');
+                        Route::post('/loadingEva', [EvaluationsController::class, 'EvaPerCode']);
+                        Route::put('/deleteEva', [EvaluationsController::class, 'DeleteEvaInfo']);
+                        // Route::post('/allEvaluationsPromotion', [EvaluationsController::class, 'GetAllEvaluationsPromotion']);
+                    });
+                });
+
+                //Listado de del personal por evaluar // Listado del personal
+                // Route::middleware('accessC')->group(function () {
+                Route::prefix('/listado-del-personal')->group(function () {
+                    Route::get('/', [EvaluationsController::class, 'index'])->name('evaluationsList');
+                    Route::post('/allEvaluationsList', [EvaluationsController::class, 'GetAllEvaluationsList']);
+                    //ruta para realizar evaluaciones
+                    Route::get('/evaluacion', [EvaluationsController::class, 'index'])->name('evaluationsEvaluator');
+                    Route::post('/loadingevaluator', [EvaluationsController::class, 'EvaluatorPerCode']);
+                    Route::put('/deleteEvaluator', [EvaluationsController::class, 'DeleteEvaluatorUpdate']);
+                    Route::post('/controlData', [EvaluationsController::class, 'controlData']);
+
+                    //RUTA PARA UPLOAD
+                    Route::post('EnvioDatos', [EvaluationsController::class, 'Insertar']);
+                    Route::post('/datos', [EvaluationsController::class, 'GetInitMemo']); //Parametros iniciales
+                    Route::post('/downmemo', [EvaluationsController::class, 'DownInitMemo']); //Parametros iniciales
+
+
+                });
+
+                //Promociones y Ascensos
+                // Route::middleware('accessC')->group(function () {
+                Route::prefix('/promociones-ascensos')->group(function () {
+                    Route::get('/', [EvaluationsController::class, 'index'])->name('evaluationsPromotion');
+                    Route::post('/allEvaluationsPromotion', [EvaluationsController::class, 'GetAllEvaluationsPromotion']);
+                });
+
+                //Reporte de evaluaciones
+                // Route::middleware('accessC')->group(function () {
+                Route::prefix('/reporte-de-evaluaciones')->group(function () {
+                    Route::get('/', [EvaluationsController::class, 'index'])->name('evaluationsReport');
+                    Route::post('/allEvaluationsReport', [EvaluationsController::class, 'GetAllEvaluationsReport']);
+                    Route::post('/info-User', [EvaluationsController::class, 'prepareInfoUser']);
+                    Route::post('/getModalsInits', [EvaluationsController::class, 'GetModalData']); //Parametros iniciales
+                    Route::post('/list-reports-ev', [EvaluationsController::class, 'getListReportsEvaluation']);
+                    Route::post('/aprocontrol', [EvaluationsController::class, 'controlPotitionapro']);
+
+
+                    //RUTA PARA DESCARGAR
+                    //  Route::post('/download{file}',[EvaluationsController::class,'download']);
+                });
+
+                // //Planilla de evaluacion
+                // // Route::middleware('accessC')->group(function () {
+                // Route::prefix('/planilla')->group(function () {
+                //     Route::get('/', [EvaluationsController::class, 'index'])->name('evaluationsForm');
+                //     Route::post('/loadingUser', [UsersController::class, 'UserPerCode']);
+                //     // Route::post('/allEvaluationsPromotion', [EvaluationsController::class, 'GetAllEvaluationsPromotion']);
+                // });
+                //Planilla de evaluacion dos
+                // Route::middleware('accessC')->group(function () {
+                Route::prefix('/planilla-dos')->group(function () {
+                    Route::get('/', [EvaluationsController::class, 'index'])->name('evaluationsFormTwo');
                 });
             });
             //Reportes

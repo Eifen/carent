@@ -17,6 +17,10 @@
     @include('layouts.navBar.facturacion')
 @endsection
 
+@section('evaluaciones')
+    @include('layouts.navBar.evaluaciones')
+@endsection
+
 @section('reportes')
     @include('layouts.navBar.reportes')
 @endsection
@@ -137,6 +141,62 @@
                     exit();
                 @endphp
             @endif
+        @endif
+        {{-- Redireccion de ruta para evaluaciones --}}
+        @if (Request::url() === URL::route('evaluations'))
+            @include('UI.Evaluations.evaluationsIndex')
+        @endif
+
+        {{-- Redirección de rutas para Periodos --}}
+        @if (Request::url() === URL::route('periods'))
+            @include('UI.Evaluations.EvaluationsPeriod.evaluationsIndexPeriod')
+        @endif
+
+        @if (Request::url() === URL::route('createPeriod'))
+            @include('UI.Evaluations.EvaluationsPeriod.evaluationsCreatePeriod')
+        @endif
+
+        @if (Request::url() === URL::route('updatePeriod'))
+            @include('UI.Evaluations.EvaluationsPeriod.evaluationsUpdatePeriod')
+        @endif
+
+        {{-- Redirección de rutas para Proyectos para evaluar --}}
+        @if (Request::url() === URL::route('evaluationsProject'))
+            @include('UI.Evaluations.EvaluationsProject.evaluationsIndexProject')
+        @endif
+
+        @if (Request::url() === URL::route('evaluationsForm'))
+            @include('UI.Evaluations.EvaluationsProject.evaluationsCreateAutoevaluation')
+        @endif
+        @if (Request::url() === URL::route('evaluationsInfo'))
+            @include('UI.Evaluations.EvaluationsProject.evaluationsInfoAutoevaluation')
+        @endif
+
+        {{-- Redirección de rutas para Reporte de evaluaciones --}}
+        @if (Request::url() === URL::route('evaluationsReport'))
+            @include('UI.Evaluations.EvaluationsReport.evaluationsIndexReport')
+        @endif
+
+        {{-- Redirección de rutas para Listado de evaluaciones --}}
+        @if (Request::url() === URL::route('evaluationsList'))
+            @include('UI.Evaluations.EvaluationsList.evaluationsIndexList')
+        @endif
+        @if (Request::url() === URL::route('evaluationsEvaluator'))
+            @include('UI.Evaluations.EvaluationsList.evaluationsEvaluator')
+        @endif
+
+        {{-- Redirección de rutas para Promociones y ascensos --}}
+        @if (Request::url() === URL::route('evaluationsPromotion'))
+            @include('UI.Evaluations.EvaluationsPromotion.evaluationsIndexPromotion')
+        @endif
+
+        {{-- Redirección de rutas para formulario
+            @if (Request::url() === URL::route('evaluationsForm'))
+                @include('UI.Evaluations.EvaluationsForm.evaluationsIndexForm')
+            @endif --}}
+        {{-- Redirección de rutas para el segundo formulario --}}
+        @if (Request::url() === URL::route('evaluationsFormTwo'))
+            @include('UI.Evaluations.EvaluationsForm.evaluationsIndexFormTwo')
         @endif
         {{-- Redireccion de ruta para reportes --}}
         @if (Request::url() === URL::route('reports'))
