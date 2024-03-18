@@ -19,7 +19,8 @@
         @if (
             (Session::has('userPermissions') && Session::get('userPermissions')['projectP'] == 1) ||
                 (Session::has('userPermissions') && Session::get('userPermissions')['closeP'] == 1) ||
-                Session::get('userId') === 14)
+                Session::get('userId') === 14 ||
+                Session::get('userId') === 6)
             <div class="header-nav-links-item-dropdown-content"><a href="{{ URL::route('evaluationsProject') }}">Proyecto
                     para Evaluar</a></div>
         @endif
@@ -27,7 +28,7 @@
         @if (
             (Session::has('userPermissions') && Session::get('userPermissions')['projectP'] == 1) ||
                 (Session::has('userPermissions') && Session::get('userPermissions')['closeP'] == 1) ||
-                Session::get('userId') === 68)
+                Session::get('userId') === 6)
             <div class="header-nav-links-item-dropdown-content"><a href="{{ URL::route('evaluationsList') }}">Listado
                     del Personal</a></div>
         @endif
