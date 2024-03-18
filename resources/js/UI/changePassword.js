@@ -41,5 +41,5 @@ const changeApp = createApp({
 
 if (document.getElementById("config-password") !== null) {
     changeApp.mount("#config-password");
-    window.location.hash = "#07";
+    window.location.hash = "#06";
 }
