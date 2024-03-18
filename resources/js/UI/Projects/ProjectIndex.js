@@ -115,6 +115,7 @@ const projectsIndex = createApp({
             axios
                 .post("/projects/info-project", { project_id: idProject })
                 .then((request) => {
+                    console.log(request.data)
                     this.previewProjectInfo = request.data;
                     //Asignamos las horas estimadas y cargadas por proyecto
                     this.showProgressHours(this.previewProjectInfo);
