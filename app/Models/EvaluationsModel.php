@@ -21,7 +21,7 @@ class EvaluationsModel extends Model
         //Separamos el tipo de proceso
         switch ($typeControl) {
             case 'create':
-                DB::select('INSERT INTO `evaluations_period`(`evaluation_period`, `evaluation_period_date_from`, `evaluation_period_date_until`, `evaluation_period_description`, `evaluation_period_observation`, `evaluation_type_id`, `evaluation_method_id`, `status_id`) VALUES (?,?,?,?,?,?,?,?)', $dataRequest);
+                $response = DB::select('INSERT INTO `evaluations_period`(`evaluation_period`, `evaluation_period_date_from`, `evaluation_period_date_until`, `evaluation_period_description`, `evaluation_period_observation`, `evaluation_type_id`, `evaluation_method_id`, `status_id`) VALUES (?,?,?,?,?,?,?,?)', $dataRequest);
                 break;
             case 'update':
                 $query = DB::table('evaluations_period')->where('evaluation_period_id', $dataRequest['idperiod'])->update($dataRequest['dats']);
@@ -32,10 +32,17 @@ class EvaluationsModel extends Model
         }
 
         //Capturamos el JSON
-        $GetResponse = DB::select('SELECT @response AS JsonResponse');
-        $response = json_decode($GetResponse[0]->JsonResponse, true);
+        if (is_array($response)) {
+            return array(
+                "response" => true,
+                "message" => "Periodo creado exitosamente"
+            );
+        };
 
-        return $response;
+        return array(
+            "response" => false,
+            "message" => "Ha ocurrido un error"
+        );
     }
     /**
      * Metodo que devuelve todos los status activos. Campo Id y data_status
@@ -77,7 +84,7 @@ class EvaluationsModel extends Model
      */
     static public function getInfoEvaluationsProject($user_code)
     {
-        return DB::select('call sp_get_evaluations_project(?)', [$user_code]);
+        return DB::select('call sp_get_info_evaluation(?)', [$user_code]);
     }
 
     // /**

@@ -47,25 +47,25 @@ const planillaControl = createApp({
          * Metodo que crea un nuevo periodo
          * @param {*} dataParams Recibe la data que proviene de formulario
          */
-        // newPeriod(dataParams) {
-        //     this.isClick = true;
-        //     this.paramsDTOEvaluations = dataParams;
-        //
-        //     //AXIOS Create periodo
-        //     const paramsToPost = {
-        //         evaluations_period: JSON.parse(
-        //             JSON.stringify(this.paramsDTOEvaluations),
-        //
-        //         ),
-        //         isEdit: false,
-        //     };
-        //     const routesSelfDTO = {
-        //         post: "/evaluaciones/periodos/create/newPeriod",
-        //         redirect: "/evaluaciones/periodos",
-        //         self: this,
-        //     };
-        //     CrudUi.controlCrud(routesSelfDTO, paramsToPost);
-        // },
+        newPeriod(dataParams) {
+            this.isClick = true;
+            this.paramsDTOEvaluations = dataParams;
+
+            //AXIOS Create periodo
+            const paramsToPost = {
+                evaluations_period: JSON.parse(
+                    JSON.stringify(this.paramsDTOEvaluations),
+
+                ),
+                isEdit: false,
+            };
+            const routesSelfDTO = {
+                post: "/evaluaciones/periodos/create/newPeriod",
+                redirect: "/evaluaciones/periodos",
+                self: this,
+            };
+            CrudUi.controlCrud(routesSelfDTO, paramsToPost);
+        },
 
     },
     components: { EvaluationForm },

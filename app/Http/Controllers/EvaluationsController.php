@@ -254,38 +254,8 @@ class EvaluationsController extends Controller
         //Corroboraros que exista un usuario
         //        if (Session::has('userId')) $this->permitControl = true;
         $idcurrentuser = Session::get('userId');
-        $du = DB::table('projects_users_assigned')
-            ->select(
-                'user_id',
-                'projects_users_assigned.project_id',
-                'project_description',
-                'assigned_hours',
-                'evaluation_period_date_from',
-                'evaluation_period_date_until',
-                'projects_departments_assigned.department_id',
-                'projects_departments_assigned.manager_id'
-            )
-            ->join('projects', 'projects_users_assigned.project_id', '=', 'projects.project_id')
-            ->join(
-                'projects_closure_control',
-                'projects_users_assigned.project_id',
-                '=',
-                'projects_closure_control.project_id'
-            )
-            ->join(
-                'evaluations_period',
-                'projects_closure_control.evaluation_period_id',
-                '=',
-                'evaluations_period.evaluation_period_id'
-            )
-            ->join(
-                'projects_departments_assigned',
-                'projects_users_assigned.department_assigned_id',
-                '=',
-                'projects_departments_assigned.department_assigned_id'
-            )
-            ->where('projects_users_assigned.user_id', $idcurrentuser)
-            ->where('projects.status_id', 2)
+        $du = DB::table('vw_evaluations_projects_preview')
+            ->where('user_id', $idcurrentuser)
             ->get();
         foreach ($du as $row => $value) {
             $datefrom = Carbon::parse($value->evaluation_period_date_from);
@@ -301,7 +271,7 @@ class EvaluationsController extends Controller
         if ($this->nestedjson) {
             $nestedres = ["response" => true, "message" => $this->nestedjson];
         } else {
-            $nestedres = ["response" => false, "message" => "Error"];
+            $nestedres = ["response" => false, "message" => $du];
         }
         //        dd('Project', $du, $this->nestedjson[0], $nestedres, $allData);
 
@@ -487,91 +457,12 @@ class EvaluationsController extends Controller
      */
     public function prepareInfoUserProject(Request $userRequest)
     {
-        $getReports = DB::table('evaluations')
-            ->select(
-                DB::raw("CONCAT(evaluator.first_name,' ',evaluator.second_name,' ',
-                evaluator.first_surname,' ',evaluator.second_surname) as evaluador"),
-                'projects.project_description as proyecto',
-                'cargoactual.position_name as cargoactual',
-                'ultipopuesto.position_name as ultipopuesto',
-                'ultiasc.position_name as ultiasc',
-                'evaluations_detail_user.dt_section1_total'
-            )
-            ->join(
-                'projects_closure_control',
-                'evaluations.clousure_control_id',
-                '=',
-                'projects_closure_control.closure_id'
-            )
-            ->join(
-                'projects',
-                'projects_closure_control.project_id',
-                '=',
-                'projects.project_id'
-            )
-            ->join(
-                'users',
-                'evaluations.user_evaluated_id',
-                '=',
-                'users.user_id'
-            )
-            ->join(
-                'users as evaluator',
-                'evaluations.user_evaluator_id',
-                '=',
-                'evaluator.user_id'
-            )
-            ->join(
-                'evaluations_promotions',
-                'evaluations.evaluation_promotion_id',
-                '=',
-                'evaluations_promotions.evaluations_promotion_id'
-            )
-            ->join(
-                'users_hierarchy_positions as ultiasc',
-                'evaluations_promotions.approved_position',
-                '=',
-                'ultiasc.position_id'
-            )
-            ->join(
-                'users_hierarchy_positions as cargoactual',
-                'users.position_id',
-                '=',
-                'cargoactual.position_id'
-            )
-            ->join(
-                'users_hierarchy_positions as ultipopuesto',
-                'evaluations_promotions.position_propouse',
-                '=',
-                'ultipopuesto.position_id'
-            )
-            ->join(
-                'users_hierarchy_departments',
-                'evaluations.type_format',
-                '=',
-                'users_hierarchy_departments.department_id'
-            )
-            ->join(
-                'evaluations_detail_user',
-                'evaluations.evaluation_detail_user_id',
-                '=',
-                'evaluations_detail_user.evaluation_detail_user_id'
-            )
-            ->where('user_evaluated_id', $userRequest->user_code['coduser'])
-            ->where('projects_closure_control.project_id', $userRequest->user_code['código'])
-            ->get();
+        $userInfo = array(
+            $userRequest->input('user_code')['coduser'],
+            $userRequest->input('user_code')['código']
+        );
 
-        foreach ($getReports as $row) {
-            $row->dt_section1_total = json_decode($row->dt_section1_total);
-        }
-
-        if ($getReports) {
-            $nestedres = ["response" => true, "message" => $getReports];
-        } else {
-            $nestedres = ["response" => false, "message" => "Error"];
-        }
-
-        return response($nestedres, 200);
+        return response(DB::select('call sp_get_info_evaluation(?,?)', $userInfo), 200);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////

@@ -18,8 +18,8 @@ const evaluationsIndexProject = createApp({
                 column2: "Código User",
                 column3: "Proyecto",
                 settings: {
-                    columnS2: "Autoevaluación",
                     columnS1: "Consultar Evaluación",
+                    columnS2: "Autoevaluación",
                     columnS3: "Información Evaluación",
                 },
             },
@@ -33,10 +33,6 @@ const evaluationsIndexProject = createApp({
             cargoSelect: null,
             acumu: { auto: 0, eva: 0 },
         };
-    },
-    created() {
-        //Hacemos el llamado al método estatico
-        CrudUi.limitPagData(this, this.tableTarget, this.lengthColumns);
     },
     mounted() {
         CrudUi.getTable(
@@ -60,17 +56,19 @@ const evaluationsIndexProject = createApp({
          * @param {int} idUser
          */
         infoEvaluation(idUser) {
-            console.log(idUser)
             //Reiniciamos el preview
             this.previewUserInfo = null;
             //Abrimos el modal
             this.controlUserModal.show();
+            console.log(JSON.parse(JSON.stringify(this.listData.find(list => list['código'] === idUser))))
             //Cargamos su información
             axios
-                .post("/evaluaciones/proyecto-para-evaluar/info-User", { user_code: idUser })
+                .post("/evaluaciones/proyecto-para-evaluar/info-User", {
+                    user_code: JSON.parse(JSON.stringify(this.listData.find(list => list['código'] === idUser)))
+                })
                 .then((request) => {
-                    this.previewUserInfo = request.data.message[0];
-                    this.promemodal(request.data.message[0]['dt_section1_total'])
+                    this.previewUserInfo = request.data[0];
+                    this.promemodal(JSON.parse(this.previewUserInfo['dt_section1_total']))
                 })
                 .catch((error) => {
                     console.error(error);

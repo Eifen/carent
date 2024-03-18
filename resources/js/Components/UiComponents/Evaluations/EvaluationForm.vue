@@ -1384,7 +1384,12 @@ export default {
         };
     },
     mounted() {
+        console.log(this.dte)
         switch (this.dte.department) {
+            case 1:
+                this.questions = this.haask.planilladep8
+                this.settoform(this.questions)
+                break;
             case 11:
                 console.log('oficinal de cumplimiento id - 11')
                 this.questions = this.haask.planilladep2
