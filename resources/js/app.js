@@ -33,24 +33,3 @@ import "./UI/changePassword";
 import "./UI/Reports/ReportsIndex";
 //Admin
 import "./UI/Admin/AdminIndex"
-//Evaluaciones
-import "./UI/Evaluations/EvaluationsIndex";
-//Evaluaciones - Periodos
-import "./UI/Evaluations/EvaluationsPeriod/EvaluationsPeriodIndex";
-import "./UI/Evaluations/EvaluationsPeriod/EvaluationsPeriodControl";
-//Evaluaciones - Proyectos para evaluar
-import "./UI/Evaluations/EvaluationsProject/EvaluationsProjectIndex";
-import "./UI/Evaluations/EvaluationsProject/EvaluationsProjectControl";
-import "./UI/Evaluations/EvaluationsProject/EvaluationsProjectInfo";
-
-//Evaluaciones - Reportes
-import "./UI/Evaluations/EvaluationsReport/EvaluationsReportIndex";
-//Evaluaciones - Listado
-import "./UI/Evaluations/EvaluationsList/EvaluationsListIndex";
-import "./UI/Evaluations/EvaluationsList/EvaluationsEvaluatorControl";
-//Evaluaciones - Promociones y ascensos
-import "./UI/Evaluations/EvaluationsPromotion/EvaluationsPromotionIndex";
-//Evaluaciones - formularios
-import "./UI/Evaluations/EvaluationsForm/EvaluationsFormIndex";
-//Evaluaciones - formularios - dos
-import "./UI/Evaluations/EvaluationsForm/EvaluationsFormTwoIndex";

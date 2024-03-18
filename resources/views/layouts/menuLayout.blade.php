@@ -19,9 +19,7 @@
                 @yield('facturacion')
                 @yield('reportes')
             @endif
-            <li class="header-nav-links-item" id="06" @mouseover="openDropDown('evaluations')"
-                @mouseout="closeDropDown('evaluations')">@yield('evaluaciones')</li>
-            <li class="header-nav-links-item" id="07" @mouseover="openDropDown('account')"
+            <li class="header-nav-links-item" id="06" @mouseover="openDropDown('account')"
                 @mouseout="closeDropDown('account')">@yield('miCuenta')</li>
         </ul>
         <div class="header-nav-toggle" v-if="!open">
