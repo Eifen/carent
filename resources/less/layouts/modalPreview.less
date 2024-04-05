@@ -112,14 +112,22 @@
             grid-area: 15 / 2 / 16 / 3;
         }
 
+        &[for="thead-averageFinal"] {
+            grid-area: 17 / 2 / 18 / 3;
+        }
+
+        &[for="thead-finalHours"] {
+            grid-area: 17 / 1 / 18 / 2;
+        }
+
         //Departamento
         &[for="thead-department"] {
-            grid-area: 17 / 1 / 18 / 2;
+            grid-area: 19 / 1 / 20 / 2;
         }
 
         //Gerente
         &[for="thead-managerDepartment"] {
-            grid-area: 17 / 2 / 18 / 3;
+            grid-area: 19 / 2 / 20 / 3;
         }
 
         /*=================================================
@@ -269,9 +277,17 @@
             grid-area: 16 / 2 / 17 / 3;
         }
 
+        &[for="tbody-averageFinal"] {
+            grid-area: 18 / 2 / 19 / 3;
+        }
+
+        &[for="tbody-finalHours"] {
+            grid-area: 18 / 1 / 19 / 2;
+        }
+
         //Departamentos asignados
         &[for="tbody-departments"] {
-            grid-area: 18 / 1 / 19 / 3;
+            grid-area: 20 / 1 / 21 / 3;
 
             //Configuramos un grid interno para distribuir gerente y division
             & div {
@@ -293,7 +309,7 @@
 
         //Barra de progreso
         &[for="tbody-progress"] {
-            grid-area: 19 / 1 / 20 / 3;
+            grid-area: 21 / 1 / 22 / 3;
 
             & div {
                 display: grid;
