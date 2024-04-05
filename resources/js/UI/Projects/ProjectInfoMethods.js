@@ -164,5 +164,19 @@ export const projectInfoMethods = {
                 (parseFloat(loadHour) * 100) / parseFloat(estimatedHour);
             return getPercent >= 100 ? 100 : getPercent.toFixed(0);
         },
+        totalHoursRegistered() {
+            let totalHours = 0
+            this.previewProjectInfo["projectsHours"].forEach(project => {
+                const findAssigned = this.previewProjectInfo["departments"].find(department => department.department_id === project.department_id)
+                const hours = parseFloat(project.total_hours) > parseFloat(findAssigned.hours_assigned) ? parseFloat(findAssigned.hours_assigned) : parseFloat(project.total_hours)
+                totalHours += parseFloat(hours)
+            })
+
+            return totalHours;
+        },
+        averageFinal() {
+            if (parseFloat(this.totalHoursRegistered()) == 0) return '0';
+            return (parseFloat(this.previewProjectInfo.project.project_value) + this.totalAdditionalAssigned(2)) / (parseFloat(this.totalHoursRegistered()))
+        }
     },
 };

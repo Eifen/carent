@@ -64,7 +64,8 @@ export const methodsUI = {
          * @param {string} stringNumber Numero en formato string
          */
         convertFormat(stringNumber) {
-            return Number(parseFloat(stringNumber)).toLocaleString("de-DE");
+            const DTOstring = parseFloat(stringNumber).toFixed(2)
+            return Number(parseFloat(DTOstring)).toLocaleString("de-DE");
         },
         /**
          * Metodo que redirecciona a la pantalla anterior
