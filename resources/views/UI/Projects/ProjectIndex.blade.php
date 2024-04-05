@@ -25,13 +25,13 @@
                         <div class="modal-preview-thead" for="thead-quality">Socio de calidad</div>
                         <div class="modal-preview-thead" for="thead-hiring">Fecha de contratación</div>
                         <div class="modal-preview-thead" for="thead-pValue">Monto del proyecto</div>
-                        <div class="modal-preview-thead" for="thead-hoursAssigned">Horas asignadas</div>
+                        <div class="modal-preview-thead" for="thead-hoursAssigned">Horas iniciales contratadas</div>
                         <div class="modal-preview-thead" for="thead-averageRate">Tasa promedio inicial</div>
-                        <div class="modal-preview-thead" for="thead-additionalHour">Horas totales adicionales</div>
+                        <div class="modal-preview-thead" for="thead-additionalHour">Horas adicionales contratadas</div>
                         <div class="modal-preview-thead" for="thead-additionalValue">Montos totales adicionales</div>
-                        <div class="modal-preview-thead" for="thead-totalHours">Horas totales</div>
+                        <div class="modal-preview-thead" for="thead-totalHours">Horas totales contratadas</div>
                         <div class="modal-preview-thead" for="thead-averageNow">Tasa Promedio total</div>
-                        <div class="modal-preview-thead" for="thead-finalHours">Horas finales</div>
+                        <div class="modal-preview-thead" for="thead-finalHours">Horas finales cargadas</div>
                         <div class="modal-preview-thead" for="thead-averageFinal">Tasa Promedio final</div>
                         <div class="modal-preview-thead" for="thead-department">División</div>
                         <div class="modal-preview-thead" for="thead-managerDepartment">Gerente</div>

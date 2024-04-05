@@ -32,7 +32,7 @@ export default {
                 column11: 'Horas registradas',
                 column12: 'Horas estimadas',
                 column13: 'Tasa promedio inicial',
-                column14: 'Horas totales',
+                column14: 'Horas totales asignadas',
                 column15: 'Tasa promedio total',
                 column16: 'Total horas registradas',
                 column17: 'Rentabilidad actual (Tasa Final)',
@@ -72,8 +72,8 @@ export default {
                         hora_registrada: Number(parseFloat(logInfo.register_hour) > parseFloat(logInfo.assigned_hour) ? logInfo.assigned_hour : logInfo.register_hour),
                         hora_proyecto: logInfo.project_hours,
                         av_est: logInfo.tasa,
-                        hor_tot: logInfo.assigned_hour,
-                        av_tot: 0,
+                        hor_tot_asig: logInfo.assigned_hour,
+                        av_tot_asig: 0,
                         hor_tot_real: Number(parseFloat(logInfo.register_hour) > parseFloat(logInfo.assigned_hour) ? logInfo.assigned_hour : logInfo.register_hour),
                         av_tot_rent: 0,
                         estatus: logInfo.estatus
@@ -84,7 +84,7 @@ export default {
                     acum[key].empleado += `\n${logInfo.user_name}`;
                     acum[key].hora_asignada += `\n${logInfo.assigned_hour}`;
                     acum[key].hora_registrada += `\n${Number(parseFloat(logInfo.register_hour) > parseFloat(logInfo.assigned_hour) ? logInfo.assigned_hour : logInfo.register_hour).toLocaleString('de-DE')}`;
-                    acum[key].hor_tot += logInfo.assigned_hour
+                    acum[key].hor_tot_asig += logInfo.assigned_hour
                     acum[key].hor_tot_real += Number(parseFloat(logInfo.register_hour) > parseFloat(logInfo.assigned_hour) ? logInfo.assigned_hour : logInfo.register_hour)
                 }
 
@@ -95,14 +95,14 @@ export default {
             console.log(listDTO)
 
             listDTO.forEach((project, index) => {
-                if (project.hor_tot != 0) listDTO[index].av_tot = this.formatReportNumber(project.monto_real[0] / project.hor_tot)
+                if (project.hor_tot_asig != 0) listDTO[index].av_tot_asig = this.formatReportNumber(project.monto_real[0] / project.hor_tot_asig)
                 if (project.hor_tot_real != 0) listDTO[index].av_tot_rent = this.formatReportNumber(project.monto_real[0] / project.hor_tot_real)
                 //Agregamos el simbolo
                 listDTO[index].monto_est = `${this.formatReportNumber(project.monto_est[0])} ${project.monto_est[1]}`
                 listDTO[index].monto_real = `${this.formatReportNumber(project.monto_real[0])} ${project.monto_real[1]}`
                 //Formateamos los valores
                 listDTO[index].av_est = this.formatReportNumber(project.av_est)
-                listDTO[index].hor_tot = this.formatReportNumber(project.hor_tot)
+                listDTO[index].hor_tot_asig = this.formatReportNumber(project.hor_tot_asig)
                 listDTO[index].hor_tot_real = this.formatReportNumber(project.hor_tot_real)
             })
 
