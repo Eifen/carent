@@ -92,8 +92,6 @@ export default {
             }, {})
             listDTO = Object.values(listDTO)
 
-            console.log(listDTO)
-
             listDTO.forEach((project, index) => {
                 if (project.hor_tot_asig != 0) listDTO[index].av_tot_asig = this.formatReportNumber(project.monto_real[0] / project.hor_tot_asig)
                 if (project.hor_tot_real != 0) listDTO[index].av_tot_rent = this.formatReportNumber(project.monto_real[0] / project.hor_tot_real)

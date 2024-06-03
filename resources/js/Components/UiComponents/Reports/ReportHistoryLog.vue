@@ -22,8 +22,9 @@
         </div>
         <ListingCrud style="width: 90%;" v-if="scope.isMounted && directivePaginatio != 0" :title-object="reportColumns"
             :pagination-lenght="directivePaginatio" :pagination-limit="directiveLength" :table-info="directiveList"
-            :title-table="titleTable" not-found-message="Rellene la informacion del usuario" :select-search="selectSearch"
-            view-search view-excel :title-excel="titleReportExcel" white-space status-table="usuarios">
+            :title-table="titleTable" not-found-message="Rellene la informacion del usuario"
+            :select-search="selectSearch" view-search view-excel :title-excel="titleReportExcel" white-space
+            status-table="usuarios">
         </ListingCrud>
     </div>
 </template>
@@ -80,7 +81,6 @@ export default {
 
                 //Seleccion automatica
                 if (this.scope.controlAdmin != 1) {
-                    console.log(request.data.message)
                     const findIndex = request.data.message.findIndex(user => user.user_code == this.scope.controlUser.code)
                     this.inputCodeUser = request.data.message[findIndex].user_code
                 }

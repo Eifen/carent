@@ -124,7 +124,6 @@ const adminApp = createApp({
                 .catch(error => { console.error(error) })
         },
         refixUser(userCode) {
-            console.log(userCode)
             const userTarget = this.directiveList.find((user) => user["código"] === userCode)
             const userIndex = this.directiveList.findIndex((user) => user["código"] === userCode)
             const paramsRefix = {

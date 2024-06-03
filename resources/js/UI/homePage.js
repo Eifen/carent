@@ -53,9 +53,8 @@ const homeApp = createApp({
         const month = now.getMonth() + 1
         this.actualMonth = (now.getMonth() > 5) ? (now.getMonth() - 6) : (6 + now.getMonth())
         this.monthSelect = month.toString().padStart(2, "0")
-        console.log(this.monthSelect)
         //Preparamos el period dependiendo del mes actual
-        if (month >= 1 && month < 6) {
+        if (month >= 1 && month <= 6) {
             this.initPeriod = now.getFullYear() - 1
             this.finishPeriod = now.getFullYear()
         }
@@ -123,7 +122,7 @@ const homeApp = createApp({
         },
         monthSelect(newselect) {
             let year = this.initPeriod
-            if (parseInt(newselect) >= 1 && newselect < 6) year = this.finishPeriod
+            if (parseInt(newselect) >= 1 && newselect <= 6) year = this.finishPeriod
             //Llamamos a la informacion del usuario
             CrudUi.getTable("/log-user-info", this, { date: `${year}-${newselect}-01` });
         }

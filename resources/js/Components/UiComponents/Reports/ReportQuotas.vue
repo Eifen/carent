@@ -82,7 +82,7 @@ export default {
                     }
                     //Si la factura es mayor a la cuota, restamos de las cuotas por facturar
                     //Si la factura no ha sido cobrada, aumentando el valor de las facturas por cobrar
-                    if (acum[key]["código"] == 2) console.log(billingCompare.quotas)
+                    // if (acum[key]["código"] == 2) console.log(billingCompare.quotas)
                     acum[key].cuotas_por_facturar = parseFloat(billing.project_value) <= billingCompare.value
                         ? (billingCompare.quotas == 0 ? 0 : (billingCompare.quotas - 1))
                         : (billingCompare.quotas >= billing.project_quotas ? billing.project_quotas : billingCompare.quotas + 1);
