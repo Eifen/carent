@@ -171,7 +171,6 @@ export const projectInfoMethods = {
                 const hours = (parseFloat(project.total_hours) > (parseFloat(findAssigned.hours_assigned) + this.totalAdditionalAssigned(1))) ? parseFloat(findAssigned.hours_assigned) : parseFloat(project.total_hours)
                 totalHours += parseFloat(hours)
                 parseFloat(project.total_hours)
-                console.log(totalHours)
             })
 
             return totalHours;
