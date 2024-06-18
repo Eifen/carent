@@ -5,9 +5,9 @@
             :pagination-lenght="directivePaginatio" :pagination-limit="directiveLength" :table-info="directiveList"
             title-table="Reporte acumulado" not-found-message="No hay horas cargadas" :select-search="selectSearch"
             view-search view-excel title-excel="ReporteDirectivoAcumulado.xls"
-            title-resume-excel="ResumenDirectivoAcumulado.xls" title-consolidated-excel="ConsolidadoDirectivoAcumulado.xls"
-            status-table="usuarios" view-hours :hours-ref="refTotal" directive :is-admin="scope.controlAdmin"
-            :area-id="scope.departmentId">
+            title-resume-excel="ResumenDirectivoAcumulado.xls"
+            title-consolidated-excel="ConsolidadoDirectivoAcumulado.xls" status-table="usuarios" view-hours
+            :hours-ref="refTotal" directive :is-admin="scope.controlAdmin" :area-id="scope.departmentId">
         </ListingCrud>
     </div>
 </template>
@@ -40,6 +40,8 @@ export default {
                 column15: 'Total horas',
                 column16: '% Carga total',
                 column17: 'Estatus',
+                column18: 'Dif. Horas Proy',
+                column19: '% Dif. Proy'
             },
             selectSearch: {
                 select1: "Nombre",
@@ -106,6 +108,7 @@ export default {
                     const percenProy = (user.proy_hours * 100) / (user.ref_total == 0 ? 1 : user.ref_total);
                     const percenTotal = (totalHours * 100) / (user.ref_total == 0 ? 1 : user.ref_total);
                     const refTotal = user.ref_total;
+                    const proyEsp = parseFloat((refTotal * (user.percen_carg / 100)).toFixed(0))
                     //Inservamos el nuevo objeto
                     this.directiveList.push({
                         nombre: user.nombre,
@@ -114,8 +117,8 @@ export default {
                         nivel: user.nivel,
                         "%_carga_min_proy": this.formatReportNumber(user.percen_carg),
                         "%_carga_min_admon": this.formatReportNumber(100 - user.percen_carg),
-                        hor_esp_proy: this.formatReportNumber((refTotal * (user.percen_carg / 100))),
-                        hor_esp_admon: this.formatReportNumber((refTotal * ((100 - user.percen_carg) / 100))),
+                        hor_esp_proy: this.formatReportNumber(proyEsp),
+                        hor_esp_admon: this.formatReportNumber(parseFloat((refTotal * ((100 - user.percen_carg) / 100)).toFixed(0))),
                         hor_ref: this.formatReportNumber(user.ref_total),
                         eval: user.percen_carg > percenProy ? "DE" : "E",
                         tot_hor_proy: this.formatReportNumber(user.proy_hours),
@@ -125,6 +128,8 @@ export default {
                         tot_hor: this.formatReportNumber(totalHours),
                         "%_tot_hor": this.formatReportNumber(percenTotal),
                         estatus: user.estatus,
+                        dif_hours: this.formatReportNumber(parseFloat(user.proy_hours) - proyEsp),
+                        '%_dif': this.formatReportNumber(parseFloat(percenProy) - parseFloat(user.percen_carg)),
                         fecha_egreso: user.egreso
                     });
                 })

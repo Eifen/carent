@@ -51,7 +51,8 @@
     </div>
     <!-- Reporte historico de horas -->
     <div v-if="selectReport == 9">
-        <ReportHistoryLog v-if="reportPermission.rlogUsersP == 1" :scope="migrateData" @update-mounted="isMounted = $event">
+        <ReportHistoryLog v-if="reportPermission.rlogUsersP == 1" :scope="migrateData"
+            @update-mounted="isMounted = $event">
         </ReportHistoryLog>
         <div v-else class="not-found">
             <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
@@ -147,8 +148,8 @@
         </div>
         <!-- Reporte Facturas Proyectos -->
         <ReportBillingsProjLog class="reports-container-list"
-            v-if="selectReport == 13 && reportPermission.rProjectBillings == 1 && dateEnd.length != 0" :scope="migrateData"
-            :key="dateEnd" @update-mounted="isMounted = $event">
+            v-if="selectReport == 13 && reportPermission.rProjectBillings == 1 && dateEnd.length != 0"
+            :scope="migrateData" :key="dateEnd" @update-mounted="isMounted = $event">
         </ReportBillingsProjLog>
         <div v-else-if="selectReport == 13 && reportPermission.rProjectBillings != 1" class="not-found">
             <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>

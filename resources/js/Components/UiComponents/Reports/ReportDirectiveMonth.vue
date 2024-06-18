@@ -3,8 +3,8 @@
         <Loading :active="!scope.isMounted"></Loading>
         <ListingCrud style="width: 90%;" v-if="scope.isMounted && directivePaginatio != 0" :title-object="reportColumns"
             :pagination-lenght="directivePaginatio" :pagination-limit="directiveLength" :table-info="directiveList"
-            title-table="Reporte directivo mensual" not-found-message="No hay horas cargadas" :select-search="selectSearch"
-            view-search view-excel title-excel="ReporteDirectivoMensual.xls"
+            title-table="Reporte directivo mensual" not-found-message="No hay horas cargadas"
+            :select-search="selectSearch" view-search view-excel title-excel="ReporteDirectivoMensual.xls"
             title-resume-excel="ResumenDirectivoMensual.xls" title-consolidated-excel="ConsolidadoDirectivoMensual.xls"
             status-table="usuarios" view-hours directive :is-admin="scope.controlAdmin" :area-id="scope.departmentId">
         </ListingCrud>
@@ -38,6 +38,8 @@ export default {
                 column15: 'Total horas',
                 column16: '% Carga total',
                 column17: 'Estatus',
+                column18: 'Dif. Horas Proy',
+                column19: 'Dif. % Proy'
             },
             selectSearch: {
                 select1: "Nombre",
@@ -56,6 +58,8 @@ export default {
             this.scope.listData.forEach(user => {
                 user.forEach(period => {
                     const refTotal = period.ref_total.replace(/\./g, "").replace(",", ".");
+                    const proyEsp = parseFloat((refTotal * (period.percen_carg / 100)).toFixed(0))
+                    const admonEsp = parseFloat((refTotal * ((100 - period.percen_carg) / 100)).toFixed(0))
                     this.directiveList.push({
                         nombre: period.nombre,
                         area: period.area,
@@ -64,8 +68,8 @@ export default {
                         mes: period.mes,
                         "%_carga_min_proy": this.formatReportNumber(period.percen_carg),
                         "%_carga_min_admon": this.formatReportNumber(100 - period.percen_carg),
-                        hor_esp_proy: this.formatReportNumber((refTotal * (period.percen_carg / 100))),
-                        hor_esp_admon: this.formatReportNumber((refTotal * ((100 - period.percen_carg) / 100))),
+                        hor_esp_proy: this.formatReportNumber(proyEsp),
+                        hor_esp_admon: this.formatReportNumber(admonEsp),
                         hor_ref: period.ref_total,
                         eval: period.eval,
                         tot_hor_proy: period.proy_hours,
@@ -75,6 +79,8 @@ export default {
                         tot_hor: period.total_hours,
                         "%_tot_hor": period.percen_total,
                         estatus: period.estatus,
+                        dif_hours: this.formatReportNumber(parseFloat(period.proy_hours) - proyEsp),
+                        '%_dif': this.formatReportNumber(parseFloat(period.percen_proy) - parseFloat(period.percen_carg)),
                         fecha_egreso: period.fecha_egreso
                     });
                 });

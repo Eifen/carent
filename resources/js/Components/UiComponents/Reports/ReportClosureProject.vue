@@ -33,6 +33,8 @@ export default {
                 column12: 'Horas Reales',
                 column13: 'Honorarios Reales',
                 column14: 'Tasa promedio real',
+                column15: 'Diferencial facturado',
+                column16: 'Diferencial tasa'
             },
             selectSearch: {
                 select1: "Código",
@@ -45,9 +47,8 @@ export default {
         }
     },
     mounted() {
+        console.log(this.scope.listData)
     },
     components: { ListingCrud, Loading }
 }
 </script>
-
-
