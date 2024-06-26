@@ -165,7 +165,7 @@
                                         getAdditionalHours(department.department_id) }}</td>
                                     <td class="col-sm-2 col-lg-2" align="center">{{
                                         getRealHours(department.department_id)
-                                        }}
+                                    }}
                                     </td>
                                     <td class="col-sm-2 col-lg-2" align="center">
                                         {{ (department.hours_assigned + getAdditionalHours(department.department_id) -
@@ -179,9 +179,7 @@
                                     <td class="col-sm-1 col-lg-1" align="center">{{ getAdditionalHours() }}</td>
                                     <td class="col-sm-1 col-lg-1" align="center">{{ totalRealHours }}</td>
                                     <td class="col-sm-1 col-lg-1" align="center">{{ (totalHoursAssigned +
-                                        getAdditionalHours() - totalRealHours) *
-                                        -1
-                                        }}
+                                        getAdditionalHours() - totalRealHours) }}
                                     </td>
                                 </tr>
                             </tfoot>
@@ -202,7 +200,7 @@
                                 <th class="col-sm-2 col-lg-2">Exceso de Horas por Facturar</th>
                                 <td class="col-sm-2 col-lg-2" align="center">{{
                                     formatNumber((hoursDiffBilling(totalRealFees, totalAditionalBilling)) * -1)
-                                    }}</td>
+                                }}</td>
                                 <td class="col-sm-2 col-lg-2" align="center">{{ formatNumber(project.average) }}</td>
                             </tr>
                             <tr>
