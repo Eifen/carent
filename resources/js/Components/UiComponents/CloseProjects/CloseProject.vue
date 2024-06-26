@@ -8,7 +8,8 @@
             <div class="close-project-date">
                 <span for="close-project-date-time"> Fecha de cierre </span>
                 <div class="input-group mb-3">
-                    <input disabled type="text" placeholder="DD-MM-AAAA" class="form-control" v-model="project.dateClose">
+                    <input disabled type="text" placeholder="DD-MM-AAAA" class="form-control"
+                        v-model="project.dateClose">
                     <span class="input-group-text">
                         <calendar v-if="this.loadInitial.closureProject === null" @to-input="formatDate">
                         </calendar>
@@ -41,7 +42,7 @@
                 <!-- Contenido del label -->
                 <span id="value-hours">{{ project.hoursEstimated }}</span>
                 <span id="value-estimated-hours">{{ formatNumber(project.valueEstimated) + project.currency_symbols
-                }}</span>
+                    }}</span>
                 <span id="value-rate">{{ formatNumber(project.average) + project.currency_symbols }}</span>
             </div>
             <!-- Facturacion Adicional -->
@@ -51,7 +52,8 @@
                 <div for="hours-additional-billing"> Honorarios Adicionales </div>
                 <!-- Contenido del label -->
                 <span id="hours-billing">{{ project.additionalHour }}</span>
-                <span id="hours-additional-billing">{{ formatNumber(project.valueExtra) + project.currency_symbols }}</span>
+                <span id="hours-additional-billing">{{ formatNumber(project.valueExtra) + project.currency_symbols
+                    }}</span>
             </div>
             <!-- Valores finales ejecutados -->
             <div class="close-project-executed">
@@ -63,7 +65,7 @@
                 <!-- //Tasa promedio final = total A+B/horas reales  -->
                 <span id="rate-executed">{{ (formatNumber((totalRealFees + totalAditionalBilling) /
                     (project.hoursReal == 0 ? 1 : project.hoursReal)) + project.currency_symbols)
-                }}</span>
+                    }}</span>
             </div>
             <!-- Valores realizados cobrados -->
             <div class="close-project-realized-values-charged">
@@ -98,14 +100,16 @@
                             <tbody>
                                 <tr v-for="billingAditional in project.billingAditionalValue">
                                     <td class="col-sm-4 col-lg-4" align="center">{{ billingAditional.description }}</td>
-                                    <td class="col-sm-4 col-lg-4" align="center">{{ formatNumber(billingAditional.value) }}
+                                    <td class="col-sm-4 col-lg-4" align="center">{{ formatNumber(billingAditional.value)
+                                        }}
                                     </td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <th class="col-sm-4 col-lg-4">Total B</th>
-                                    <td class="col-sm-4 col-lg-4" align="center">{{ formatNumber(totalAditionalBilling) }}
+                                    <td class="col-sm-4 col-lg-4" align="center">{{ formatNumber(totalAditionalBilling)
+                                        }}
                                     </td>
 
                                 </tr>
@@ -118,7 +122,8 @@
                         <tbody>
                             <tr v-for="billingAditional in project.billingGValue">
                                 <td class="col-sm-4 col-lg-4" align="center">{{ billingAditional.description }}</td>
-                                <td class="col-sm-4 col-lg-4" align="center">{{ formatNumber(billingAditional.value) }}</td>
+                                <td class="col-sm-4 col-lg-4" align="center">{{ formatNumber(billingAditional.value) }}
+                                </td>
                             </tr>
                         </tbody>
                         <tfoot>
@@ -158,12 +163,13 @@
                                     <td class="col-sm-2 col-lg-2" align="center">{{ department.hours_assigned }}</td>
                                     <td class="col-sm-2 col-lg-2" align="center">{{
                                         getAdditionalHours(department.department_id) }}</td>
-                                    <td class="col-sm-2 col-lg-2" align="center">{{ getRealHours(department.department_id)
-                                    }}
+                                    <td class="col-sm-2 col-lg-2" align="center">{{
+                                        getRealHours(department.department_id)
+                                        }}
                                     </td>
                                     <td class="col-sm-2 col-lg-2" align="center">
-                                        {{ (department.hours_assigned + getAdditionalHours(department.department_id) -
-                                            getRealHours(department.department_id)) * -1 }}</td>
+                                        {{ (getRealHours(department.department_id) - (department.hours_assigned +
+                                        getAdditionalHours(department.department_id))) }}</td>
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -175,7 +181,7 @@
                                     <td class="col-sm-1 col-lg-1" align="center">{{ (totalHoursAssigned +
                                         getAdditionalHours() - totalRealHours) *
                                         -1
-                                    }}
+                                        }}
                                     </td>
                                 </tr>
                             </tfoot>
@@ -196,7 +202,7 @@
                                 <th class="col-sm-2 col-lg-2">Exceso de Horas por Facturar</th>
                                 <td class="col-sm-2 col-lg-2" align="center">{{
                                     formatNumber((hoursDiffBilling(totalRealFees, totalAditionalBilling)) * -1)
-                                }}</td>
+                                    }}</td>
                                 <td class="col-sm-2 col-lg-2" align="center">{{ formatNumber(project.average) }}</td>
                             </tr>
                             <tr>
@@ -223,7 +229,8 @@
                             </tr>
                             <tr>
                                 <th class="col-sm-6 col-lg-6">Valor Monetario adicional facturado</th>
-                                <td class="col-sm-6 col-lg-6" align="center">{{ formatNumber(totalAditionalBilling) }}</td>
+                                <td class="col-sm-6 col-lg-6" align="center">{{ formatNumber(totalAditionalBilling) }}
+                                </td>
                             </tr>
                             <!-- <tr>
                                 <th class="col-sm-6 col-lg-6">Valor Monetario (beneficiario) en gastos por recuperar
@@ -254,21 +261,24 @@
                                 <th class="col-sm-2 col-lg-2">Horas Reales Cargadas al CARENT</th>
                                 <td class="col-sm-2 col-lg-2" align="center">{{ project.hoursReal }}</td>
                                 <td class="col-sm-2 col-lg-2" align="center">{{
-                                    formatNumber(totalRealFees / (project.hoursReal == 0 ? 1 : project.hoursReal)) }}</td>
+                                    formatNumber(totalRealFees / (project.hoursReal == 0 ? 1 : project.hoursReal)) }}
+                                </td>
                             </tr>
                             <tr>
                                 <th class="col-sm-2 col-lg-2"> Porcentaje de Ejecución</th>
                                 <td class="col-sm-2 col-lg-2" align="center">{{ formatNumber(((project.hoursReal /
                                     project.hoursEstimated))) + '%' }}</td>
-                                <td class="col-sm-2 col-lg-2" align="center">{{ (totalRealFees / (project.hoursReal == 0 ? 1
+                                <td class="col-sm-2 col-lg-2" align="center">{{ (totalRealFees / (project.hoursReal == 0
+                                    ? 1
                                     : project.hoursReal)) === 0 ?
                                     0 :
                                     formatNumber(((totalRealFees / project.hoursReal) / project.average)) + '%' }}</td>
                             </tr>
                             <tr>
                                 <th class="col-sm-2 col-lg-2"> Exceso (Déficit) de Horas </th>
-                                <td class="col-sm-2 col-lg-2" align="center">{{ project.hoursEstimated - project.hoursReal
-                                }}
+                                <td class="col-sm-2 col-lg-2" align="center">{{ project.hoursEstimated -
+                                    project.hoursReal
+                                    }}
                                 </td>
                             </tr>
                         </tbody>
@@ -316,7 +326,8 @@
                 proyecto</div>
             <!-- {{-- Control de errores del boton --}} -->
             <span class="form-ErrorInput" id="button-crud" v-else>
-                No se puede cerrar el proyecto si las fechas y comentarios están vacios, el proyecto ya esta cerrado, no se
+                No se puede cerrar el proyecto si las fechas y comentarios están vacios, el proyecto ya esta cerrado, no
+                se
                 han emitido factura a sus cuotas minimas o todas
                 las facturas no están
                 cobradas.
@@ -690,4 +701,3 @@ export default {
 
 }
 </script>
-
