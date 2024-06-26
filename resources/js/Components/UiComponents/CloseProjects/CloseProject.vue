@@ -168,8 +168,8 @@
                                         }}
                                     </td>
                                     <td class="col-sm-2 col-lg-2" align="center">
-                                        {{ (getRealHours(department.department_id) - (department.hours_assigned +
-                                        getAdditionalHours(department.department_id))) }}</td>
+                                        {{ (department.hours_assigned + getAdditionalHours(department.department_id) -
+                                            getRealHours(department.department_id)) }}</td>
                                 </tr>
                             </tbody>
                             <tfoot>
