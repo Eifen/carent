@@ -66,6 +66,7 @@ const homeApp = createApp({
         //Preparamos el texto
         this.actualYear = `${this.initPeriod} - ${this.finishPeriod}`
         //Creamos la lista de meses hasta la fecha
+        if (this.actualMonth === 0) this.listMonth.push(this.months[this.months.length - 1])
         for (let cursorMonth = 0; cursorMonth <= (this.actualMonth); cursorMonth++) {
             this.listMonth.push(this.months[cursorMonth])
         }
@@ -122,7 +123,7 @@ const homeApp = createApp({
         },
         monthSelect(newselect) {
             let year = this.initPeriod
-            if (parseInt(newselect) >= 1 && newselect <= 6) year = this.finishPeriod
+            if (parseInt(newselect) >= 1 && newselect <= 6 && this.actualMonth !== 0) year = this.finishPeriod
             //Llamamos a la informacion del usuario
             CrudUi.getTable("/log-user-info", this, { date: `${year}-${newselect}-01` });
         }
