@@ -40,12 +40,12 @@
         </div>
         <!-- Divisiones -->
         <div class="mb-3">
-            <label for="Departments">Divisiones
+            <label for="Departments">Área
                 <span :class="scope.formClass.requiredField">*</span></label>
             <!-- Departamentos -->
             <div class="input-group">
                 <Multiselect v-model="scope.inputDepartments" mode="tags" :close-on-select="true" :searchable="true"
-                    placeholder="Seleccione una o varias divisiones" openDirection="top"
+                    placeholder="Seleccione una o varias areas" openDirection="top"
                     :options="scope.dataSelect.departments"></Multiselect>
             </div>
         </div>

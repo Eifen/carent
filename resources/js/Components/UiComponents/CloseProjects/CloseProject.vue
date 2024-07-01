@@ -165,7 +165,7 @@
                                         getAdditionalHours(department.department_id) }}</td>
                                     <td class="col-sm-2 col-lg-2" align="center">{{
                                         getRealHours(department.department_id)
-                                    }}
+                                        }}
                                     </td>
                                     <td class="col-sm-2 col-lg-2" align="center">
                                         {{ (department.hours_assigned + getAdditionalHours(department.department_id) -
@@ -200,7 +200,7 @@
                                 <th class="col-sm-2 col-lg-2">Exceso de Horas por Facturar</th>
                                 <td class="col-sm-2 col-lg-2" align="center">{{
                                     formatNumber((hoursDiffBilling(totalRealFees, totalAditionalBilling)) * -1)
-                                }}</td>
+                                    }}</td>
                                 <td class="col-sm-2 col-lg-2" align="center">{{ formatNumber(project.average) }}</td>
                             </tr>
                             <tr>
@@ -293,7 +293,7 @@
                 </div>
                 <textarea :disabled="this.loadInitial.closureProject !== null" v-model="message.first" rows="2"
                     cols="120"></textarea>
-                <div for="second-comment"> 2-Si la ejecución del Proyecto en cuato a: Horas, Honorarios y Gastos,
+                <div for="second-comment"> 2-Si la ejecución del Proyecto en cuanto a: Horas, Honorarios y Gastos,
                     estuvieron por encima de lo planificado. Cuáles fueron los motivos y las acciones tomadas para:
                 </div>
                 <textarea :disabled="this.loadInitial.closureProject !== null" v-model="message.second" rows="2"
