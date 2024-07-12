@@ -52,8 +52,8 @@ export default {
                     const key = intervalData.user_id + "-" + intervalData.admin_hours_id + "-" + intervalData.concept_description
                     //Verificar si la fecha entra dentro del intervalo
                     const dateStart = new Date(this.scope.dateStart);
-                    const dateEnd = new Date(this.scope.dateEnd);
                     const dateToSearch = new Date(intervalData.register_date);
+                    const dateEnd = new Date(this.scope.dateEnd);
 
                     if (dateToSearch.getTime() >= dateStart.getTime() && dateToSearch.getTime() <= dateEnd.getTime()) {
                         //Filtramos la informacion por clave
