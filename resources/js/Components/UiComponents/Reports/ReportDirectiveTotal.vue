@@ -25,28 +25,26 @@ export default {
             reportColumns: {
                 column1: 'Nombre',
                 column2: 'Area',
-                column3: 'Correo',
-                column4: "Nivel",
-                column5: "% Carga proy",
-                column6: "% Carga admon",
-                column7: "Hor Esp proy",
-                column8: "Hor Esp admon",
-                column9: 'Ref Total',
-                column10: "Eval",
-                column11: 'Horas Proy',
-                column12: '% Proy',
-                column13: 'Horas Admon',
-                column14: '% Horas Admon',
-                column15: 'Total horas',
-                column16: '% Carga total',
-                column17: 'Estatus',
-                column18: 'Dif. Horas Proy',
-                column19: '% Dif. Proy'
+                column3: "Nivel",
+                column4: "% Carga proy",
+                column5: "% Carga admon",
+                column6: "Hor Esp proy",
+                column7: "Hor Esp admon",
+                column8: 'Ref Total',
+                column9: "Eval",
+                column10: 'Horas Proy',
+                column11: '% Proy',
+                column12: 'Horas Admon',
+                column13: '% Horas Admon',
+                column14: 'Total horas',
+                column15: '% Carga total',
+                column16: 'Estatus',
+                column17: 'Dif. Horas Proy',
+                column18: '% Dif. Proy'
             },
             selectSearch: {
                 select1: "Nombre",
-                select2: "Estatus",
-                select3: "Area"
+                select2: "Estatus"
             },
             directiveList: [], //Lista directiva mensual
             directiveLength: 50, //Numero maximo por pagina
@@ -76,7 +74,6 @@ export default {
                         acum[key] = {
                             nombre: intervalData.nombre,
                             area: intervalData.area,
-                            correo: intervalData.correo,
                             nivel: intervalData.nivel,
                             percen_carg: intervalData.percen_carg,
                             proy_hours: parseFloat(intervalData.proy_hours.replace(/\./g, "").replace(/,/, ".")),
@@ -113,7 +110,6 @@ export default {
                     this.directiveList.push({
                         nombre: user.nombre,
                         area: user.area,
-                        correo: user.correo,
                         nivel: user.nivel,
                         "%_carga_min_proy": this.formatReportNumber(user.percen_carg),
                         "%_carga_min_admon": this.formatReportNumber(100 - user.percen_carg),

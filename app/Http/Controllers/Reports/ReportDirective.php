@@ -63,7 +63,7 @@ class ReportDirective extends Controller
                     array_push($responseArray, array(
                         "nombre" => $user->user_name,
                         "código" => $user->user_code,
-                        "area" => $user->department_name,
+                        "area" => $user->department_prefix,
                         "concepto" => $adminHour["concept_admin"],
                         "horas" => number_format($adminHour["admin_hours"], 2, ",", ".")
                     ));
@@ -98,17 +98,16 @@ class ReportDirective extends Controller
                 $adminPer = ($hours["admin_hours"] * 100) / ($refHours == 0 ? 1 : $refHours);
                 $proyPer = ($hours["proj_hours"] * 100) / ($refHours == 0 ? 1 : $refHours);
                 $totalPer = ($totalHours * 100) / ($refHours == 0 ? 1 : $refHours);
-                $nivelPer = $user->department_name == 'Administración' || $user->department_name == 'Conapdis' ? $refHours : $user->nivel_percen;
+                $nivelPer = $user->department_prefix == 'ADMON' || $user->department_prefix == 'COP' ? $refHours : $user->nivel_percen;
                 //Hacemos push para el formato
                 array_push($formatArray, array(
                     "order_user" => $user->user_id,
                     "nombre" => $user->user_name,
-                    "correo" => $user->primary_email,
-                    "area" => $user->department_name,
+                    "area" => $user->department_prefix,
                     "nivel" => $user->nivel_description,
                     "mes" => $hours["mes"],
-                    "percen_carg" => $user->department_name == 'Administración' || $user->department_name == 'Conapdis' ? 0 : $user->nivel_percen,
-                    "eval" => floatval($user->nivel_percen) >= ($user->department_name == 'Administración' || $user->department_name == 'Conapdis' ? $hours["admin_hours"] : $proyPer) ? "DE" : "E",
+                    "percen_carg" => $user->department_prefix == 'ADMON' || $user->department_prefix == 'COP' ? 0 : $user->nivel_percen,
+                    "eval" => floatval($user->nivel_percen) >= ($user->department_prefix == 'ADMON' || $user->department_prefix == 'COP' ? $hours["admin_hours"] : $proyPer) ? "DE" : "E",
                     "proy_hours" => number_format($hours["proj_hours"], 2, ",", "."),
                     "percen_proy" => number_format($proyPer, 2, ",", "."),
                     "admin_hours" => number_format($hours["admin_hours"], 2, ",", "."),
@@ -117,7 +116,7 @@ class ReportDirective extends Controller
                     "percen_total" => number_format($totalPer, 2, ",", "."),
                     "ref_total" => number_format($refHours, 2, ",", "."),
                     "estatus" => $user->status_id,
-                    "fecha_egreso" => $user->departure_date == null ? $user->status_description : $user->departure_date,
+                    "fecha_egreso" => $user->departure_date == null ? $user->status_prefix : $user->departure_date,
                     "order" => $user->nivel_id,
                     "department_order" => $user->department_order
                 ));

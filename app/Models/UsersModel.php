@@ -83,7 +83,7 @@ class UsersModel extends Model
      */
     public static function getInfoUsers()
     {
-        return DB::select('SELECT us.user_id, us.user_code, CONCAT(us.first_name," ",us.second_name," ",us.first_surname," ",us.second_surname) as "user_name", us.department_id, IF(uhd.department_name LIKE "%Administración%","Administración",uhd.department_name) as "department_name", uhd.department_order, us.status_id, cs.status_description, us.admission_date, us.departure_date, uhp.nivel_id, cnp.nivel_description, cnp.nivel_percen, uc.primary_email
+        return DB::select('SELECT us.user_id, us.user_code, CONCAT(us.first_surname," ",us.second_surname," ",us.first_name," ",us.second_name) as "user_name", us.department_id, IF(uhd.department_prefix LIKE "%ADM%","ADMON",uhd.department_prefix) as "department_prefix", uhd.department_order, us.status_id, cs.status_prefix, us.admission_date, us.departure_date, uhp.nivel_id, cnp.nivel_description, cnp.nivel_percen, uc.primary_email
         FROM users us
         INNER JOIN users_hierarchy_positions uhp ON us.position_id = uhp.position_id
         INNER JOIN users_hierarchy_departments uhd ON us.department_id = uhd.department_id
@@ -91,7 +91,7 @@ class UsersModel extends Model
         INNER JOIN users_contact uc ON us.user_id = uc.user_id
         INNER JOIN control_status cs ON us.status_id = cs.status_id
         WHERE us.user_id NOT IN (?,?)
-        ORDER BY uhd.department_order, uhp.nivel_id, us.user_id ASC;', [1, 267]);
+        ORDER BY uhd.department_order, uhp.nivel_id, us.first_surname, us.second_surname, us.first_name, us.second_name ASC;', [1, 267]);
     }
 
     /**
