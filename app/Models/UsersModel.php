@@ -91,7 +91,7 @@ class UsersModel extends Model
         INNER JOIN users_contact uc ON us.user_id = uc.user_id
         INNER JOIN control_status cs ON us.status_id = cs.status_id
         WHERE us.user_id NOT IN (?,?)
-        ORDER BY uhd.department_order, uhp.nivel_id, us.first_surname, us.second_surname, us.first_name, us.second_name ASC;', [1, 267]);
+        ORDER BY uhd.department_order, uhp.nivel_id, us.first_surname, us.first_name ASC;', [1, 267]);
     }
 
     /**
