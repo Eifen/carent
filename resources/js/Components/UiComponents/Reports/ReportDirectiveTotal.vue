@@ -92,13 +92,6 @@ export default {
                 }, {});
                 //Agregamos los porcentajes y el total de horas
                 directiveDTO = Object.values(directiveDTO)
-                //Ordenamos el array
-                directiveDTO.sort(function (a, b) {
-                    //Comparamos el orden de cargos
-                    let sort = a.department_order - b.department_order
-                    if (sort == 0) sort = a.order - b.order;
-                    return sort;
-                })
                 directiveDTO.forEach((user) => {
                     const totalHours = user.proy_hours + user.admin_hours;
                     const percenAdmin = (user.admin_hours * 100) / (user.ref_total == 0 ? 1 : user.ref_total);
