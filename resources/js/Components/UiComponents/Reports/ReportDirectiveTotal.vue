@@ -94,13 +94,19 @@ export default {
                 directiveDTO = Object.values(directiveDTO)
                 //Ordenamos el array
                 directiveDTO.sort(function (a, b) {
-                    //Comparamos el orden de cargos
-                    let sort = a.department_order - b.department_order
-                    if (sort == 0) sort = a.order - b.order;
-                    if (sort == 0) sort = a.nombre > b.nombre;
-                    return sort;
-                })
-                //Ordenamos por nombre
+                    // Comparamos el orden de cargos
+                    let sort = a.department_order - b.department_order;
+                    if (sort !== 0) return sort;
+
+                    // Si el orden de cargos es igual, comparamos el orden
+                    sort = a.order - b.order;
+                    if (sort !== 0) return sort;
+
+                    // Si el orden también es igual, comparamos por nombre
+                    if (a.nombre > b.nombre) return 1;
+                    if (a.nombre < b.nombre) return -1;
+                    return 0;
+                });
 
                 directiveDTO.forEach((user) => {
                     const totalHours = user.proy_hours + user.admin_hours;
