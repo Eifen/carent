@@ -22,15 +22,21 @@ export default {
             reportColumns: {
                 column1: "Código",
                 column2: 'Proyecto',
-                column3: "Cliente",
-                column4: 'Monto',
-                column5: 'Cuotas',
-                column6: 'Cuotas por facturar',
-                column7: 'Facturas por cobrar'
+                column3: 'Socio',
+                column4: 'Fecha Contrato',
+                column5: "Cliente",
+                column6: 'Monto',
+                column7: 'Cuotas',
+                column8: 'Cuotas por facturar',
+                column9: 'Facturas por cobrar',
+                column10: 'Monto por facturar'
             },
             selectSearch: {
                 select1: "Proyecto",
-                select2: "Cliente"
+                select2: 'Socio',
+                select3: "Cliente",
+                select4: 'Fecha desde',
+                select5: 'Fecha hasta'
             },
             directiveList: [], //Lista directiva mensual
             directiveLength: 50, //Numero maximo por pagina
@@ -68,11 +74,14 @@ export default {
                     acum[key] = {
                         "código": billing.project_id,
                         proyecto: billing.project_description,
+                        socio: billing.partner_name,
+                        fecha: billing.hiring_date,
                         cliente: billing.bussiness_name,
                         monto: this.formatReportNumber(parseFloat(billing.project_value)) + billing.currency_symbol,
                         cuotas: billing.project_quotas,
                         cuotas_por_facturar: parseFloat(billing.project_value) <= findTotal ? 0 : billing.project_quotas,
-                        facturar_por_cobrar: billing.payment_date === null ? 1 : 0
+                        facturar_por_cobrar: billing.payment_date === null ? 1 : 0,
+                        monto_por_facturar: this.formatReportNumber(parseFloat(billing.project_value) - parseFloat(findTotal)) + billing.currency_symbol
                     }
                 } else {
                     const billingCompare = {
