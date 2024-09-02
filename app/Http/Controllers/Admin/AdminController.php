@@ -36,7 +36,7 @@ class AdminController extends Controller
             "register_date" => $registerDate,
             "register_hour" => $refixInfo->input('diffHour'),
             "admin_load_observation" => "Carga automatica por el sistema",
-            "admin_hours_id" => 3,
+            "admin_hours_id" => 26,
             "approved_by" => 1,
             "approved_date" => $registerDate,
             "status_load_id" => 2
@@ -62,7 +62,7 @@ class AdminController extends Controller
                 "register_date" => $registerDate,
                 "register_hour" => $diffHours,
                 "admin_load_observation" => "Carga automatica por el sistema",
-                "admin_hours_id" => 3,
+                "admin_hours_id" => 26,
                 "approved_by" => 1,
                 "approved_date" => $registerDate,
                 "status_load_id" => 2
