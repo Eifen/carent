@@ -44,7 +44,8 @@ export default {
             },
             selectSearch: {
                 select1: "Nombre",
-                select2: "Estatus"
+                select2: "Estatus",
+                select3: "Area"
             },
             directiveList: [], //Lista directiva mensual
             directiveLength: 50, //Numero maximo por pagina

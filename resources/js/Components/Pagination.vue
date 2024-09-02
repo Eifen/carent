@@ -26,9 +26,9 @@
                 placeholder="Seleccione el area" mode="single" class="form-control" :disabled="isAdmin != 1"
                 @input="emitSelectSearch($event, columnName)"></Multiselect>
             <!-- Concepto -->
-            <Multiselect v-if="columnName == 'Concepto'" v-model="multiSelectConcepts" :options="multiSelectList.concept"
-                placeholder="Seleccione el concepto" mode="single" class="form-control"
-                @input="emitSelectSearch($event, columnName)"></Multiselect>
+            <Multiselect v-if="columnName == 'Concepto'" v-model="multiSelectConcepts"
+                :options="multiSelectList.concept" placeholder="Seleccione el concepto" mode="single"
+                class="form-control" @input="emitSelectSearch($event, columnName)"></Multiselect>
             <!-- Mes -->
             <span v-if="columnName == 'Mes'" class="input-group-text" id="basic-addon1">Año</span>
             <select v-if="columnName == 'Mes'" class="form-select form-control" v-model="inputYearSelect"
@@ -210,7 +210,7 @@ export default {
                     })
                     //Si encuentra la Id en funcion de sus descripcion, asignamos las variables
                     if (areaId.length != 0) {
-                        this.fieldsInput[columnName.toLowerCase()] = selectTarget;
+                        this.fieldsInput[columnName.toLowerCase()] = areaId[0].department_prefix;
                     }
                     break;
                 //Concepto
