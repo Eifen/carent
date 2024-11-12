@@ -3,7 +3,7 @@
         <Loading :active="!scope.isMounted"></Loading>
         <ListingCrud style="width: 90%;" v-if="scope.isMounted" :title-object="reportColumns"
             :pagination-lenght="scope.maxLengthPagination" :pagination-limit="scope.lengthColumns"
-            :table-info="scope.listData" title-table="Reporte cierre de proyectos"
+            :table-info="directiveList" title-table="Reporte cierre de proyectos"
             not-found-message="No hay proyectos cerrados" :select-search="selectSearch" view-search view-excel
             :info-excel="scope.listData" title-excel="ReporteCierreDeProyectos.xls">
         </ListingCrud>
@@ -45,10 +45,29 @@ export default {
                 select5: "Fecha desde",
                 select6: "Fecha hasta",
             },
+            directiveList: []
         }
     },
     mounted() {
         console.log(this.scope.listData)
+        if (this.scope.isMounted) {
+            let listDTO = this.scope.listData.reduce((acum, closureInfo, pos) => {
+                const key = closureInfo['código']
+
+                if (!acum[key]) {
+                    acum[key] = {
+                        ...closureInfo,
+                        dif_factu: Number(parseFloat(closureInfo.honorarios_reales) - (parseFloat(closureInfo.honorarios_estimados) + parseFloat(closureInfo.honorarios_adicionales))).toLocaleString('de-DE'),
+                        dif_tasa: Number(parseFloat(closureInfo.tasa_promedio_real) - parseFloat(closureInfo.tasa_promedio_total)).toLocaleString('de-DE'),
+                    }
+                }
+
+                return acum;
+            }, {})
+
+            console.log(listDTO)
+            this.directiveList = Object.values(listDTO).sort((a, b) => b['código'] - a['código'])
+        }
     },
     components: { ListingCrud, Loading }
 }

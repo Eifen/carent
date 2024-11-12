@@ -27,17 +27,6 @@
             <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
         </div>
     </div>
-    <!-- Reporte de proyectos -->
-    <div v-if="selectReport == 5">
-        <ReportProjectsLog v-if="reportPermission.rproyectosP == 1" :scope="migrateData" :key="isMounted">
-        </ReportProjectsLog>
-        <div v-else class="not-found">
-            <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
-        </div>
-    </div>
-    <div v-else-if="selectReport == 5 && reportPermission.rproyectosP != 1" class="not-found">
-        <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
-    </div>
     <!-- Reporte de usuarios -->
     <div v-if="selectReport == 8">
         <ReportUsers v-if="reportPermission.rusersP == 1" :scope="migrateData" :key="isMounted">
@@ -84,7 +73,7 @@
         <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
     </div>
     <!-- Reporte horas no cargables -->
-    <div v-if="selectReport > 2 && selectReport != 5 && selectReport != 8 && selectReport != 9 && selectReport != 10 && selectReport != 11"
+    <div v-if="selectReport > 2 && selectReport != 8 && selectReport != 9 && selectReport != 10 && selectReport != 11"
         class="reports-container">
         <!-- Fechas  -->
         <span class="reports-container-title">Ingrese el intervalo de fechas</span>
@@ -120,6 +109,14 @@
             :key="dateEnd" @update-mounted="isMounted = $event">
         </ReportDirectiveTotal>
         <div v-else-if="selectReport == 4 && reportPermission.rdirectiveAP != 1" class="not-found">
+            <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
+        </div>
+        <!-- Reporte de proyectos -->
+        <ReportProjectsLog class="reports-container-list"
+            v-if="selectReport == 5 && reportPermission.rproyectosP == 1 && dateEnd.length != 0" :scope="migrateData"
+            :key="dateEnd" @update-mounted="isMounted = $event">
+        </ReportProjectsLog>
+        <div v-else-if="selectReport == 5 && reportPermission.rproyectosP != 1" class="not-found">
             <div class="badge bg-warning text-dark">{{ notFoundMessage }}</div>
         </div>
         <!-- Reporte personas por cargar -->
