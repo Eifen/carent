@@ -4,7 +4,8 @@
         <ListingCrud style="width: 90%;" v-if="isListMounted && directivePaginatio != 0" :title-object="reportColumns"
             :pagination-lenght="directivePaginatio" :pagination-limit="directiveLength" :table-info="directiveList"
             title-table="Reporte bitácora de proyectos" not-found-message="No hay proyectos cargados"
-            :select-search="selectSearch" view-search view-excel title-excel="ReporteBitacoraProyectos.xls" white-space>
+            :select-search="selectSearch" view-search view-excel title-excel="ReporteBitacoraProyectos.xls" white-space
+            :excel-view="listDTO2">
         </ListingCrud>
     </div>
 </template>
@@ -49,7 +50,8 @@ export default {
             directiveLength: 50, //Numero maximo por pagina
             directivePaginatio: 0, //Numero maximo de paginas
             isListMounted: false,
-            arrayDTO: [] //Almacena el array de facturas
+            arrayDTO: [], //Almacena el array de facturas
+            listDTO2: [] //Almacena el array a exportar a excel
         }
     },
     mounted() {
@@ -67,6 +69,42 @@ export default {
                 let areaDTO = this.arrayDTO.map(object => object.department_name)
                 areaDTO = Object.values(areaDTO);
                 //Cargamos la informacion inicial
+                this.listDTO2 = this.scope.listData.reduce((acum, logInfo, pos) => {
+                    const key = logInfo.project_id + "-" + logInfo.user_name
+
+                    if (!acum[key]) {
+                        acum[key] = {
+                            id: logInfo.project_id,
+                            cliente: logInfo.cliente,
+                            proyecto: logInfo.proyecto,
+                            socio: logInfo.partner_name,
+                            area: logInfo.department_name,
+                            cargo: logInfo.position_name,
+                            empleado: logInfo.user_name,
+                            monto_est: [logInfo.monto, logInfo.moneda],
+                            monto_real: [(parseFloat(logInfo.monto) + parseFloat(logInfo.monto_adicional)), logInfo.moneda],
+                            hora_asignada: logInfo.assigned_hour,
+                            hora_registrada: Number(parseFloat(logInfo.register_hour) > parseFloat(logInfo.assigned_hour) ? logInfo.assigned_hour : logInfo.register_hour),
+                            hora_proyecto: logInfo.project_hours,
+                            av_est: logInfo.tasa,
+                            hor_tot_asig: logInfo.assigned_hour,
+                            av_tot_asig: 0,
+                            hor_tot_real: Number(parseFloat(logInfo.register_hour) > parseFloat(logInfo.assigned_hour) ? logInfo.assigned_hour : logInfo.register_hour),
+                            av_tot_rent: 0,
+                            estatus: logInfo.estatus
+                        }
+                    } else {
+                        acum[key].hora_asignada += logInfo.assigned_hour;
+                        acum[key].hora_registrada += Number(parseFloat(logInfo.register_hour) > parseFloat(logInfo.assigned_hour) ? logInfo.assigned_hour : logInfo.register_hour);
+                        acum[key].hor_tot_asig += logInfo.assigned_hour
+                        acum[key].hor_tot_real += Number(parseFloat(logInfo.register_hour) > parseFloat(logInfo.assigned_hour) ? logInfo.assigned_hour : logInfo.register_hour)
+                    }
+
+                    return acum;
+                }, {})
+
+                this.listDTO2 = Object.values(this.listDTO2)
+
                 let listDTO = this.scope.listData.reduce((acum, logInfo, pos) => {
                     const key = logInfo.project_id
 

@@ -4,7 +4,7 @@
         <div :class="tableClass.create" v-if="viewCreate" @click="$emit('createbutton')">Crear {{ buttonTitle }}</div>
         <div class="list-container-excel">
             <json-excel class="list-container-excel-button" v-if="viewExcel"
-                :data="directive ? reportExcel() : controlTable.data" :name="titleExcel">
+                :data="excelView ? excelView : directive ? reportExcel() : controlTable.data" :name="titleExcel">
                 Exportar en Excel <font-awesome string-icon="fa-solid fa-file-excel"></font-awesome>
             </json-excel>
             <json-excel class="list-container-excel-button" v-if="directive" :data="reportResume()"
@@ -36,9 +36,10 @@
             <input type="text" class="form-control" aria-label="page" aria-describedby="page-actual"
                 :value="controlView.pagActual" @input="inputPage" />
             <!-- Se mostraran unicamente si el cursor de la paginacion es menor al máximo   -->
-            <font-awesome class="aLink" string-icon="fa-solid fa-angle-right" v-if="controlPagination.cursor != maxCursor"
-                @click="controlPagination.cursor++"></font-awesome>
-            <font-awesome class="aLink" string-icon="fa-solid fa-angles-right" v-if="controlPagination.cursor != maxCursor"
+            <font-awesome class="aLink" string-icon="fa-solid fa-angle-right"
+                v-if="controlPagination.cursor != maxCursor" @click="controlPagination.cursor++"></font-awesome>
+            <font-awesome class="aLink" string-icon="fa-solid fa-angles-right"
+                v-if="controlPagination.cursor != maxCursor"
                 @click="controlPagination.cursor = maxCursor"></font-awesome>
             <span :class="tableClass.infoPag">Página {{ controlView.pagActual }} de {{ limitPage }}</span>
         </div>
@@ -50,7 +51,8 @@
                 <thead :class="tableClass.thead">
                     <tr>
                         <!-- Table Object -->
-                        <th scope="col" align="center" valign="middle" v-for="(title, cursor) in titleObject" :key="cursor">
+                        <th scope="col" align="center" valign="middle" v-for="(title, cursor) in titleObject"
+                            :key="cursor">
                             <span v-if="cursor == 'settings'"></span>
                             <div class="table-th" v-else>{{ title }}</div>
                         </th>
@@ -68,7 +70,8 @@
                                 :spin="actualIndex === controlTable.hover.index ? true : false"
                                 :style="actualIndex === controlTable.hover.index ? controlTable.hover.style : null"
                                 @mouseover="controlTable.hover.index = actualIndex"
-                                @mouseout="controlTable.hover.index = -1" @click="showSetting(actualIndex)"></font-awesome>
+                                @mouseout="controlTable.hover.index = -1"
+                                @click="showSetting(actualIndex)"></font-awesome>
                             <!-- Configuramos el modal de operaciones de la tabla -->
                             <div :class="tableClass.modal"
                                 :id="actualIndex === controlTable.maxLength - 1 ? controlTable.setting.lastChild : null"
@@ -157,6 +160,7 @@ export default {
         whiteSpace: Boolean, //Si esta en true define si se aplicara el white-space: pre en la columna
         isAdmin: Number, //Captura si el usuario es administrador o no, unicamente para el filtro de area
         areaId: Number, //Selecciona automaticamente el id del departamento si el usuario es administrador
+        excelView: Array, //Almacena un data a mostrar por sobre la vista en la descarga de excel (opcional)
     },
     data() {
         return {
