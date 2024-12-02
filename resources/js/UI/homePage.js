@@ -59,7 +59,7 @@ const homeApp = createApp({
             this.finishPeriod = now.getFullYear()
         }
         //En caso que empiece el nuevo ciclo
-        if (month >= 7 && month < 12) {
+        if (month >= 7 && month <= 12) {
             this.initPeriod = now.getFullYear()
             this.finishPeriod = now.getFullYear() + 1
         }
