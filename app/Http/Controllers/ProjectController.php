@@ -70,8 +70,8 @@ class ProjectController extends Controller
         $getAdminHours["message"] = array_filter($arrayDTO, function ($adminHour) {
             //Condiciones especiales de visualizacio para usuarios
             switch (Session::get('userId')) {
-                    //Root o administrador
-                case 1:
+                //Root o administrador
+                case 1 || 299:
                     return true;
                     //Por defecto solo retorna las horas de ese departamento sin importar el tipo de concepto
                 default:
@@ -252,7 +252,7 @@ class ProjectController extends Controller
     {
         //Capturamos, retornamos, y borramos las sesiones segun su tipo. Si no encuentra ninguna devuelve 0
         switch (true) {
-                //Editar proyecto
+            //Editar proyecto
             case (Session::has('projectUpdate')):
                 $getProjectUpdate = json_encode(Session::get('projectUpdate'));
                 Session::forget('projectUpdate');
