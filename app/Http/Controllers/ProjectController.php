@@ -71,9 +71,12 @@ class ProjectController extends Controller
             //Condiciones especiales de visualizacio para usuarios
             switch (Session::get('userId')) {
                 //Root o administrador
-                case 1 || 299:
+                case 1:
                     return true;
                     //Por defecto solo retorna las horas de ese departamento sin importar el tipo de concepto
+                case 299:
+                    return true;
+
                 default:
                     return $adminHour->department_id === Session::get('departmentId');
             }
