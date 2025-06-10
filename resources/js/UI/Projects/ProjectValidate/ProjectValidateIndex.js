@@ -27,6 +27,7 @@ const validateApp = createApp({
                 column5: "Fecha",
                 column6: "Horas cargadas",
                 column7: "Estatus",
+                column8: "Area"
             }, //Informacion de las horas
             selectSearch: {
                 select1: "Concepto",
