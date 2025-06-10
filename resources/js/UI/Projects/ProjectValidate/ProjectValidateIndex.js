@@ -34,6 +34,7 @@ const validateApp = createApp({
                 select3: "Fecha desde",
                 select4: "Fecha hasta",
                 select5: "Estatus",
+                select6: "Area"
             },
             //Seleccionamos la tabla
             tableTarget: "vw_projects_admin_preview",
