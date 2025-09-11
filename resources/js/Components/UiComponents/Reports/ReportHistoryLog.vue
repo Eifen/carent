@@ -48,6 +48,7 @@ export default {
                 column5: 'Proyecto',
                 column6: 'Observación',
                 column7: 'Horas cargadas',
+                column8: 'Aprobadas por',
             },
             selectSearch: {
                 select1: "Fecha desde",
@@ -115,7 +116,8 @@ export default {
                                         concepto: historyData.concept_description,
                                         proyecto: historyData.proy_description,
                                         observacion: historyData.observation,
-                                        horas_registradas: this.formatReportNumber(historyData.register_hour)
+                                        horas_registradas: this.formatReportNumber(historyData.register_hour),
+                                        aprobadas_por: historyData.user_approved
                                     })
                                 }
                             });
@@ -137,7 +139,8 @@ export default {
                                     concepto: historyData.concept_description,
                                     proyecto: historyData.proy_description,
                                     observacion: historyData.observation,
-                                    horas_registradas: this.formatReportNumber(historyData.register_hour)
+                                    horas_registradas: this.formatReportNumber(historyData.register_hour),
+                                    aprobadas_por: historyData.user_approved
                                 })
                             })
 
