@@ -20,10 +20,12 @@ export default {
             reportColumns: {
                 column1: "Código",
                 column2: 'Cliente',
-                column3: 'SocioC',
-                column4: 'Proyecto',
-                column5: 'SocioP',
-                column6: 'Estatus',
+                column3: "Teléfono",
+                column4: "Correo",
+                column5: 'SocioC',
+                column6: 'Proyecto',
+                column7: 'SocioP',
+                column8: 'Estatus',
             },
             selectSearch: {
                 select1: "Código",
@@ -44,6 +46,8 @@ export default {
                 this.directiveList.push({
                     "código": clients.client_code,
                     "cliente": clients.bussiness_name,
+                    "teléfono": clients.tax_phone,
+                    "correo": clients.tax_email,
                     "socioc": clients.partner_client,
                     "proyecto": clients.project_description,
                     "sociop": clients.partner_project,
